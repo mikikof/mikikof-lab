@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公共圏、二度の構造転換 — SNSと生成AIの時代に | A Visual Essay</title>
+<meta name="description" content="18世紀のコーヒーハウスから、21世紀のアルゴリズムへ。SNSと生成AIが揺らす『公共圏』のゆくえを、ハーバーマスの議論を軸に五章でたどるビジュアル・エッセイ。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400;1,9..144,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* ============ BACKGROUND PALETTE (common) ============ */
+  --bg: #f7fafd;
+  --bg-card: #ffffff;
+  --bg-soft: #eff4fb;
+  --bg-tint: #e0ecf9;
+  --bg-deep: #2a1218;
+  --bg-wash: #dce8f6;
+
+  /* ============ ACCENT PRIMARY: Burgundy ============ */
+  --accent-primary-deep: #4a0f1e;
+  --accent-primary: #7a2034;
+  --accent-primary-bright: #a83c58;
+  --accent-primary-light: #d07a8e;
+  --accent-primary-pale: #ecd1da;
+  --accent-primary-wash: #f5e6ea;
+
+  /* ============ ACCENT SECONDARY: Cream ============ */
+  --accent-secondary-deep: #5c4a20;
+  --accent-secondary: #a68b3e;
+  --accent-secondary-bright: #c9a95b;
+  --accent-secondary-light: #dcc488;
+  --accent-secondary-pale: #ecdfb8;
+  --accent-secondary-wash: #f5edd3;
+
+  /* ============ NEUTRALS ============ */
+  --ink: #0b1424;
+  --text: #1a2541;
+  --mute: #5b6a82;
+  --mute-soft: #8594ae;
+  --line: #d6e0ee;
+  --line-soft: #e8edf5;
+
+  /* ============ UTILITY ============ */
+  --mixed: #8a6740;
+  --gold: #f4b93a;
+  --white: #ffffff;
+
+  /* ============ FONTS ============ */
+  --f-jp-display: 'Zen Old Mincho', 'Noto Serif JP', serif;
+  --f-jp-body: 'Zen Kaku Gothic New', 'Hiragino Sans', sans-serif;
+  --f-la-display: 'Fraunces', 'Playfair Display', Georgia, serif;
+  --f-la-body: 'DM Sans', system-ui, sans-serif;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--f-jp-body);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 2.0;
+  letter-spacing: 0.025em;
+  font-feature-settings: 'palt' 1;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(circle at 1px 1px, rgba(122,32,52,0.06) 1px, transparent 0);
+  background-size: 28px 28px;
+}
+
+::selection { background: var(--accent-primary); color: var(--white); }
+
+a { color: inherit; text-decoration: none; }
+
+/* ============ TOP NAV ============ */
+.topnav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 1.1rem 2.5rem;
+  background: rgba(247, 250, 253, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.4s var(--ease);
+}
+.topnav-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+.topnav-mark {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1.25rem;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+}
+.topnav-sub {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--mute);
+  letter-spacing: 0.05em;
+}
+.topnav-back {
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mute);
+  transition: color 0.25s var(--ease);
+}
+.topnav-back:hover { color: var(--accent-secondary); }
+
+/* ============ HERO ============ */
+.hero {
+  min-height: 100vh;
+  padding: 8rem 2rem 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.hero-kicker {
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--accent-primary-bright);
+  margin-bottom: 3rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  animation: fadeUp 1.1s var(--ease-out) 0.1s both;
+}
+.hero-kicker::before,
+.hero-kicker::after {
+  content: '';
+  width: 36px; height: 1px;
+  background: var(--accent-primary-bright);
+}
+.hero-title {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: clamp(3rem, 9vw, 7.5rem);
+  letter-spacing: 0.05em;
+  line-height: 0.98;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 2.25rem;
+  animation: fadeUp 1.3s var(--ease-out) 0.3s both;
+}
+.hero-title .pop {
+  color: var(--accent-primary);
+  font-style: normal;
+  position: relative;
+  display: inline-block;
+}
+.hero-title .pop::after {
+  content: '';
+  position: absolute;
+  left: -4%;
+  bottom: 0.08em;
+  width: 108%;
+  height: 0.14em;
+  background: var(--accent-secondary-bright);
+  z-index: -1;
+  opacity: 0.6;
+}
+.hero-sub {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.15rem, 2.2vw, 1.7rem);
+  color: var(--accent-primary);
+  letter-spacing: 0.02em;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  animation: fadeUp 1.3s var(--ease-out) 0.5s both;
+}
+.hero-sub .x {
+  margin: 0 0.5em;
+  color: var(--accent-secondary);
+  font-style: normal;
+  font-weight: 800;
+}
+.hero-lede {
+  max-width: 640px;
+  font-size: 1.15rem;
+  font-weight: 500;
+  line-height: 2.15;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 4rem;
+  animation: fadeUp 1.3s var(--ease-out) 0.7s both;
+}
+.hero-lede strong {
+  font-weight: 500;
+  color: var(--accent-primary-deep);
+  border-bottom: 2px solid var(--accent-primary-pale);
+  padding: 0 0.1em;
+}
+.hero-lede strong.pop {
+  color: var(--accent-secondary-deep);
+  border-bottom-color: var(--accent-secondary-pale);
+}
+.scroll-cue {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  font-family: var(--f-la-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--mute);
+  animation: fadeUp 1.3s var(--ease-out) 1.1s both;
+}
+.scroll-cue::after {
+  content: '';
+  width: 1px; height: 48px;
+  background: linear-gradient(to bottom, var(--mute), transparent);
+  animation: scrollBar 2.2s var(--ease) infinite;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scrollBar {
+  0% { transform: scaleY(0); transform-origin: top; opacity: 0.3; }
+  40% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+  60% { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
+  100% { transform: scaleY(0); transform-origin: bottom; opacity: 0.3; }
+}
+
+/* ============ CHAPTER BASE ============ */
+.chapter {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 7rem 2rem 5rem;
+  position: relative;
+}
+.ch-kicker {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+.ch-num {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.3rem;
+  color: var(--accent-secondary);
+  letter-spacing: 0.02em;
+}
+.ch-cat {
+  font-family: var(--f-la-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--mute);
+  padding-left: 1.25rem;
+  border-left: 1px solid var(--line);
+}
+.ch-title {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: clamp(2.25rem, 5vw, 3.6rem);
+  letter-spacing: 0.06em;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 0.85rem;
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.ch-title .en {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.38em;
+  color: var(--mute-soft);
+  letter-spacing: 0.03em;
+}
+.ch-subtitle {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  color: var(--accent-primary-bright);
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--line);
+}
+.ch-lede {
+  max-width: 780px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 2.2;
+  color: var(--ink);
+  margin-bottom: 4rem;
+}
+.ch-lede strong {
+  font-weight: 500;
+  color: var(--ink);
+  background: linear-gradient(transparent 62%, var(--accent-secondary-bright) 62%, var(--accent-secondary-bright) 88%, transparent 88%);
+  background-size: 100% 100%;
+  padding: 0 0.1em;
+  opacity: 0.95;
+}
+.ch-lede em {
+  font-style: normal;
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  color: var(--accent-primary-deep);
+  letter-spacing: 0.03em;
+}
+.ch-body {
+  max-width: 780px;
+}
+.ch-body p {
+  font-size: 1.08rem;
+  font-weight: 500;
+  line-height: 2.1;
+  margin-bottom: 1.75rem;
+  color: var(--ink);
+}
+.ch-body p strong {
+  font-weight: 700;
+  color: var(--ink);
+}
+.ch-body p em {
+  font-style: normal;
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  color: var(--accent-primary-deep);
+  background: linear-gradient(transparent 65%, var(--accent-primary-pale) 65%);
+  padding: 0 0.15em;
+}
+
+/* Blockquote for direct citations */
+blockquote.cite {
+  margin: 2.5rem 0;
+  padding: 1.5rem 2rem;
+  background: var(--bg-card);
+  border-left: 4px solid var(--accent-primary);
+  border-radius: 0 4px 4px 0;
+  font-family: var(--f-jp-display);
+  font-weight: 500;
+  font-size: 1.1rem;
+  line-height: 1.95;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+blockquote.cite footer {
+  margin-top: 0.75rem;
+  font-family: var(--f-la-body);
+  font-size: 0.85rem;
+  color: var(--mute);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+/* Pull quote */
+.pull-quote {
+  margin: 3.5rem -2rem;
+  padding: 2.5rem 3rem;
+  background: var(--bg-card);
+  border-left: 4px solid var(--accent-secondary);
+  border-radius: 0 4px 4px 0;
+  position: relative;
+}
+.pull-quote::before {
+  content: '\201C';
+  position: absolute;
+  top: -0.3rem;
+  left: 1.5rem;
+  font-family: var(--f-la-display);
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--accent-secondary);
+  opacity: 0.4;
+  font-weight: 800;
+}
+.pull-quote p {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 2;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  margin-bottom: 0;
+}
+.pull-quote .attribution {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--mute);
+  margin-top: 1rem;
+  letter-spacing: 0.05em;
+}
+
+/* ============ CH1: ENLIGHTENMENT TIMELINE ============ */
+.enl-timeline {
+  max-width: 900px;
+  margin: 4rem auto 2rem;
+  padding: 3rem 2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  position: relative;
+}
+.enl-caption {
+  text-align: center;
+  font-family: var(--f-la-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--mute);
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.enl-caption .ja {
+  display: block;
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.15em;
+  text-transform: none;
+  color: var(--ink);
+  margin-bottom: 0.4rem;
+}
+.enl-spine {
+  position: relative;
+  padding-left: 2.5rem;
+}
+.enl-spine::before {
+  content: '';
+  position: absolute;
+  left: 0.6rem;
+  top: 0.2rem;
+  bottom: 0.2rem;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent-primary-pale), var(--accent-primary), var(--accent-primary-deep));
+}
+.enl-item {
+  position: relative;
+  margin-bottom: 2rem;
+}
+.enl-item:last-child { margin-bottom: 0; }
+.enl-item::before {
+  content: '';
+  position: absolute;
+  left: -2.1rem;
+  top: 0.5rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--accent-primary);
+  transition: transform 0.3s var(--ease);
+}
+.enl-item:hover::before {
+  transform: scale(1.5);
+  background: var(--accent-primary);
+}
+.enl-year {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--accent-primary-bright);
+  letter-spacing: 0.08em;
+  margin-bottom: 0.3rem;
+}
+.enl-name {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.12rem;
+  line-height: 1.55;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  margin-bottom: 0.35rem;
+}
+.enl-desc {
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.85;
+  color: var(--text);
+}
+
+/* ============ CH2: LAYER DIAGRAM ============ */
+.layer-diagram {
+  max-width: 780px;
+  margin: 4rem auto 2rem;
+  padding: 3rem 2.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.layer-caption {
+  text-align: center;
+  font-family: var(--f-la-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--mute);
+  margin-bottom: 2.5rem;
+}
+.layer-caption .ja {
+  display: block;
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.15em;
+  text-transform: none;
+  color: var(--ink);
+  margin-bottom: 0.35rem;
+}
+.layer {
+  padding: 1.5rem 1.75rem;
+  border-radius: 3px;
+  margin-bottom: 0.5rem;
+  border: 1px solid var(--line-soft);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  transition: transform 0.3s var(--ease);
+}
+.layer:hover {
+  transform: translateX(4px);
+}
+.layer.l-state {
+  background: var(--accent-primary-wash);
+  border-color: var(--accent-primary-pale);
+}
+.layer.l-public {
+  background: linear-gradient(135deg, var(--accent-primary-wash) 0%, var(--accent-secondary-wash) 100%);
+  border-color: var(--accent-secondary-pale);
+  border-width: 2px;
+  transform: scale(1.02);
+  position: relative;
+  z-index: 2;
+}
+.layer.l-private {
+  background: var(--bg-soft);
+  border-color: var(--line);
+}
+.layer-num {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.35rem;
+  color: var(--accent-primary);
+  min-width: 2.2rem;
+  text-align: center;
+}
+.layer.l-public .layer-num { color: var(--accent-secondary-deep); }
+.layer.l-private .layer-num { color: var(--mute); }
+.layer-text {
+  flex: 1;
+}
+.layer-name {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1.15rem;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  margin-bottom: 0.25rem;
+}
+.layer-desc {
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--text);
+}
+.layer-en {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.82rem;
+  color: var(--mute);
+  letter-spacing: 0.02em;
+  margin-top: 0.25rem;
+}
+
+/* ============ CH3: COMPARE CARDS ============ */
+.compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  margin: 3rem 0 2rem;
+  position: relative;
+}
+.compare::before {
+  content: 'then / now';
+  position: absolute;
+  top: -1.1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--accent-secondary-deep);
+  background: var(--bg);
+  padding: 0.35rem 1rem;
+  z-index: 5;
+  border: 1px solid var(--accent-secondary-pale);
+  border-radius: 999px;
+  letter-spacing: 0.08em;
+}
+.cmp-card {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  padding: 2.75rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+  border-radius: 4px;
+}
+.cmp-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -20px rgba(74, 15, 30, 0.22);
+}
+.cmp-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 5px;
+}
+.cmp-card.primary::before { background: var(--accent-primary); }
+.cmp-card.secondary::before { background: var(--accent-secondary); }
+.cmp-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line);
+}
+.cmp-name {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1.6rem;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+}
+.cmp-card.primary .cmp-name { color: var(--accent-primary-deep); }
+.cmp-card.secondary .cmp-name { color: var(--accent-secondary-deep); }
+.cmp-label {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--mute);
+  letter-spacing: 0.02em;
+}
+.cmp-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.cmp-row {
+  display: grid;
+  grid-template-columns: 8rem 1fr;
+  gap: 1rem;
+  align-items: baseline;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px dashed var(--line-soft);
+}
+.cmp-row:last-child { border-bottom: none; padding-bottom: 0; }
+.cmp-key {
+  font-family: var(--f-la-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+.cmp-val {
+  font-size: 0.98rem;
+  font-weight: 500;
+  line-height: 1.75;
+  color: var(--ink);
+}
+
+/* ============ CH4: AI REGULATION TIMELINE ============ */
+.ai-timeline {
+  max-width: 960px;
+  margin: 4rem auto 2rem;
+  padding: 3rem 2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.ai-caption {
+  text-align: center;
+  font-family: var(--f-la-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--mute);
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.ai-caption .ja {
+  display: block;
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.15em;
+  text-transform: none;
+  color: var(--ink);
+  margin-bottom: 0.35rem;
+}
+.ai-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.ai-row {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr 4rem;
+  gap: 1.25rem;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-radius: 3px;
+  border: 1px solid var(--line-soft);
+  background: var(--bg-soft);
+  transition: transform 0.3s var(--ease);
+}
+.ai-row:hover {
+  transform: translateX(4px);
+  background: var(--accent-primary-wash);
+  border-color: var(--accent-primary-pale);
+}
+.ai-date {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--accent-primary-bright);
+  letter-spacing: 0.05em;
+}
+.ai-event {
+  font-size: 0.98rem;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--ink);
+}
+.ai-event strong {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.03em;
+}
+.ai-region {
+  text-align: right;
+  font-family: var(--f-la-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  color: var(--mute);
+}
+.ai-row.region-eu .ai-region { color: var(--accent-primary); }
+.ai-row.region-jp .ai-region { color: var(--accent-secondary-deep); }
+.ai-row.region-us .ai-region { color: var(--mixed); }
+
+/* ============ REFERENCES ============ */
+.refs {
+  max-width: 820px;
+  margin: 6rem auto 2rem;
+  padding: 3rem 2.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.refs-head {
+  font-family: var(--f-la-body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--mute);
+  margin-bottom: 1.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.refs-list {
+  list-style: none;
+  counter-reset: ref;
+}
+.refs-list li {
+  counter-increment: ref;
+  padding-left: 2.5rem;
+  position: relative;
+  margin-bottom: 1.25rem;
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: var(--ink);
+}
+.refs-list li::before {
+  content: '[' counter(ref) ']';
+  position: absolute;
+  left: 0;
+  top: 0.1rem;
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 600;
+  color: var(--accent-primary);
+}
+.ref-author { font-weight: 700; }
+.ref-title { margin-left: 0.3em; }
+.ref-meta {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--mute);
+  font-family: var(--f-la-body);
+  margin-top: 0.2rem;
+  letter-spacing: 0.01em;
+}
+.ref-meta a { color: var(--accent-primary); text-decoration: underline; }
+.refs-note {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line-soft);
+  font-size: 0.85rem;
+  color: var(--mute);
+  line-height: 1.8;
+  font-weight: 400;
+}
+
+/* ============ FOOTER ============ */
+.footer {
+  border-top: 1px solid var(--line);
+  background: var(--bg-soft);
+  margin-top: 4rem;
+  padding: 5rem 2rem 3rem;
+  text-align: center;
+}
+.footer-mark {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 2.5rem;
+  letter-spacing: 0.15em;
+  color: var(--ink);
+  margin-bottom: 0.75rem;
+}
+.footer-tag {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--mute);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.02em;
+}
+.footer-back {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.6rem 1.5rem;
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--mute);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  transition: all 0.25s var(--ease);
+}
+.footer-back:hover {
+  color: var(--ink);
+  border-color: var(--accent-primary);
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 960px) {
+  .topnav { padding: 0.9rem 1.25rem; }
+  .chapter { padding: 5rem 1.25rem 3.5rem; }
+  .compare { grid-template-columns: 1fr; gap: 2.5rem; }
+  .compare::before { display: none; }
+  .cmp-card { padding: 2rem 1.75rem; }
+  .cmp-row { grid-template-columns: 7rem 1fr; }
+  .pull-quote { margin: 2.5rem 0; padding: 2rem 1.75rem; }
+  .pull-quote p { font-size: 1.15rem; }
+  .refs { padding: 2rem 1.5rem; }
+  .ai-row { grid-template-columns: 6rem 1fr; row-gap: 0.35rem; }
+  .ai-region { grid-column: 2; text-align: left; }
+  .enl-timeline { padding: 2rem 1.25rem; }
+}
+@media (max-width: 600px) {
+  body { font-size: 15px; }
+  .cmp-name { font-size: 1.35rem; }
+  .hero-kicker { font-size: 0.7rem; letter-spacing: 0.3em; }
+  .hero-kicker::before, .hero-kicker::after { width: 20px; }
+  .layer { padding: 1.1rem 1.25rem; gap: 1rem; }
+  .layer-num { font-size: 1.15rem; min-width: 1.6rem; }
+  .layer-name { font-size: 1.02rem; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-brand">
+    <span class="topnav-mark">圏</span>
+    <span class="topnav-sub">a visual essay</span>
+  </div>
+  <a href="../../" class="topnav-back">← all articles</a>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="hero-kicker">Thought · 思想 · 2026</div>
+
+  <h1 class="hero-title">公共圏、二度の<span class="pop">構造転換</span></h1>
+
+  <div class="hero-sub">Coffeehouse<span class="x">×</span>Algorithm</div>
+
+  <p class="hero-lede">
+    18世紀の<strong>コーヒーハウス</strong>から、21世紀の<strong class="pop">アルゴリズム</strong>へ。<br>
+    私たちが議論する場所は、いま二度目の構造転換を迎えています。<br>
+    SNSと生成AIが揺らす「公共圏」のゆくえを、五つの章からたどります。
+  </p>
+
+  <div class="scroll-cue">scroll</div>
+</section>
+
+<!-- ==================== CHAPTER 1 ==================== -->
+<section class="chapter" id="ch1">
+  <div class="ch-kicker">
+    <span class="ch-num">01</span>
+    <span class="ch-cat">Chapter One · Origin</span>
+  </div>
+  <h2 class="ch-title">コーヒーハウスの誕生 <span class="en">The Birth of the Public</span></h2>
+  <div class="ch-subtitle">18世紀、議論の場所が生まれた</div>
+
+  <p class="ch-lede">
+    印刷技術、識字率、ジャーナリズム。
+    三つの糸が編まれて、市民の議論が成立する<strong>場所</strong>が立ち上がった時代があります。
+    <em>公共圏</em>の物語は、ここから始まります。
+  </p>
+
+  <div class="ch-body">
+    <p>
+      17世紀末のロンドン。船乗りが持ち帰ったコーヒー豆を煮出す店が、にわかに増えました。
+      客は身分を問わず、同じ一杯の前で話し込みます。
+      議員も商人も、詩人も職人も、同じ木の卓を囲みました。
+    </p>
+
+    <p>
+      その頃、出版統制は緩みつつあります。
+      1695年、英国で<em>出版許可法(Licensing of the Press Act)</em>が失効しました。
+      王室の事前検閲を受けずに、新聞や小冊子を刷れる時代の始まりです。
+      1702年には世界最初の日刊紙『デイリー・クーラント』が創刊します。
+      識字率は上がり、ジャーナリズムが商売として立ち上がりました。
+    </p>
+
+    <p>
+      ドイツの社会哲学者<strong>ユルゲン・ハーバーマス</strong>は、1962年の著書『公共性の構造転換』で、
+      この18世紀の英仏独に生まれた領域を<em>市民的公共性(bürgerliche Öffentlichkeit)</em>と名付けました。
+      それまでの社会には、王の宮廷と、人々の私生活しかなかった、と彼は書きます。
+    </p>
+
+    <blockquote class="cite" data-ref="2">
+      公共性は、市民社会の中で、権力に対抗する批判的機能を果たす空間として成立した。
+      <footer>— ハーバーマス『公共性の構造転換』1962年</footer>
+    </blockquote>
+
+    <p>
+      サロン、コーヒーハウス、新聞。
+      この三つが、<em>王権と家庭のあいだ</em>に新しい領域を切り拓きます。
+      ジョン・ロックの『統治二論』、モンテスキューの『法の精神』、ルソーの『社会契約論』。
+      これらの書物が、印刷物となって市民の手に渡りました。
+      ディドロとダランベールが編んだ『百科全書』は、啓蒙の光を民衆に届ける試みです。
+    </p>
+
+    <p>
+      印刷革命なしに啓蒙はなく、啓蒙なしにフランス革命はありません。
+      <em>公共圏は、近代民主主義の前提条件</em>でした。
+      人々は、コーヒーの湯気の向こうで、王権を論じ、自由を語り、やがて自分たちを「市民」と呼び始めます。
+    </p>
+
+    <p>
+      ハーバーマスの議論の要は、空間ではなく<strong>様式</strong>にあります。
+      誰が話したかではなく、どう話したかが問われる場所。
+      身分や出自を括弧に入れ、理由の強さで勝ち負けが決まる場所。
+      彼はそれを<em>理性的討議(rationale Diskussion)</em>と呼びました。
+    </p>
+
+    <p>
+      もちろん、現実の18世紀の公共圏は、男性の、有産階級の、白人の、限られた場所でした。
+      のちの研究者、とりわけナンシー・フレイザーが指摘したように、
+      そこには女性も労働者もマイノリティも、ほぼ含まれていません。
+      「市民的公共性」は理念であって、実態ではないと言うべきです。
+    </p>
+
+    <p>
+      けれど、理念の力はそれでも強いものです。
+      議論には、参加資格ではなく、論拠の質が重要だ──この原則が打ち立てられたこと。
+      そのこと自体が、のちの民主主義の礎となりました。
+    </p>
+
+    <!-- ======= VISUAL: Enlightenment Timeline ======= -->
+    <div class="enl-timeline">
+      <div class="enl-caption">
+        <span class="ja">公共圏の第一次形成 ── 18世紀ヨーロッパ</span>
+        Formation of the Public Sphere · 1695–1789
+      </div>
+      <div class="enl-spine">
+        <div class="enl-item">
+          <div class="enl-year">1695 · London</div>
+          <div class="enl-name">出版許可法 失効</div>
+          <div class="enl-desc">王室による事前検閲が緩み、新聞・小冊子が自由に刷られる素地が整う。</div>
+        </div>
+        <div class="enl-item">
+          <div class="enl-year">1702 · London</div>
+          <div class="enl-name">『デイリー・クーラント』創刊</div>
+          <div class="enl-desc">世界最初の日刊新聞。時事の共有と論評が、商業的に成り立つ文化が始動。</div>
+        </div>
+        <div class="enl-item">
+          <div class="enl-year">1709 · London</div>
+          <div class="enl-name">『タトラー』創刊</div>
+          <div class="enl-desc">アディソンとスティールの文芸雑誌。コーヒーハウスの会話が紙面に運ばれる。</div>
+        </div>
+        <div class="enl-item">
+          <div class="enl-year">1751–72 · Paris</div>
+          <div class="enl-name">『百科全書』刊行</div>
+          <div class="enl-desc">ディドロとダランベールが編んだ全28巻。啓蒙の知を、職人と市民の手に。</div>
+        </div>
+        <div class="enl-item">
+          <div class="enl-year">1762 · Paris</div>
+          <div class="enl-name">ルソー『社会契約論』</div>
+          <div class="enl-desc">「人間は自由なものとして生まれたのに、至るところで鎖に縛られている」という一文で始まる古典。</div>
+        </div>
+        <div class="enl-item">
+          <div class="enl-year">1789 · Paris</div>
+          <div class="enl-name">フランス革命</div>
+          <div class="enl-desc">印刷と議論が準備した理念が、街頭と議場に流れ出す瞬間。公共圏は政治を動かす力となる。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 2 ==================== -->
+<section class="chapter" id="ch2">
+  <div class="ch-kicker">
+    <span class="ch-num">02</span>
+    <span class="ch-cat">Chapter Two · Idea</span>
+  </div>
+  <h2 class="ch-title">ハーバーマスの問い <span class="en">The Habermasian Question</span></h2>
+  <div class="ch-subtitle">「市民的公共性」は、なぜ重要か</div>
+
+  <p class="ch-lede">
+    フランクフルト学派の第二世代が、60年代に投げかけた問い。
+    私たちの議論は、本当に<strong>公共的</strong>なのか。
+    その問いは、いまの日本の高校の公民教科書にも、遠い影を落としています。
+  </p>
+
+  <div class="ch-body">
+    <p>
+      ハーバーマスの中心概念は<em>理性的討議</em>です。
+      個人が自分の利害から一歩離れ、他者にも共有可能な理由で語り合うこと。
+      その討議から<strong>世論(öffentliche Meinung)</strong>が醸成され、政治権力を監視します。
+      市民社会と国家のあいだで、公共圏は緩衝材のように働くと考えられました。
+    </p>
+
+    <p>
+      興味深いのは、同じ時代の米国の哲学者、ジョン・ロールズが似たことを別の角度から語っていた点です。
+      ロールズは1993年の『政治的リベラリズム』で<em>公共的理性(public reason)</em>を説きます。
+      宗教的・道徳的な深い信念は、多様なまま共存させる。
+      公的な場で政治を語るときには、市民の誰もが共有しうる論拠のみを用いる。
+      これは倫理・公民の教科書にも出てくる、社会契約論の現代的な展開です。
+    </p>
+
+    <p>
+      この発想は、ルソーやロックの古典的な契約論とつながります。
+      「人が従うべきルールは、その人自身が理性的に同意しうるもの」という原則です。
+      啓蒙は、王の恣意ではなく、市民の合意によって政治を縛ろうとしました。
+      ハーバーマスもロールズも、その系譜に立つ哲学者と言えます。
+    </p>
+
+    <!-- ======= VISUAL: Three Layer Diagram ======= -->
+    <div class="layer-diagram">
+      <div class="layer-caption">
+        <span class="ja">ハーバーマスの三層モデル</span>
+        Three Layers of Society
+      </div>
+      <div class="layer l-state">
+        <div class="layer-num">03</div>
+        <div class="layer-text">
+          <div class="layer-name">国家</div>
+          <div class="layer-desc">法と権力を行使する公的機構。警察、議会、行政。</div>
+          <div class="layer-en">The State</div>
+        </div>
+      </div>
+      <div class="layer l-public">
+        <div class="layer-num">02</div>
+        <div class="layer-text">
+          <div class="layer-name">公共圏</div>
+          <div class="layer-desc">市民が集い、理性的に議論する空間。新聞・雑誌・公開討議の場。世論はここで育つ。</div>
+          <div class="layer-en">The Public Sphere</div>
+        </div>
+      </div>
+      <div class="layer l-private">
+        <div class="layer-num">01</div>
+        <div class="layer-text">
+          <div class="layer-name">私的領域</div>
+          <div class="layer-desc">家庭と経済活動。個人の生と仕事、信仰と消費が営まれる領域。</div>
+          <div class="layer-en">The Private Sphere</div>
+        </div>
+      </div>
+    </div>
+
+    <p>
+      ところが、ハーバーマス自身、後年この楽観を揺るがせます。
+      20世紀のマス・メディアは、公共圏の性格を変えました。
+      ラジオ、テレビ、広告。それらは議論の空間を、<em>受動的な視聴の空間</em>へ傾けます。
+      公衆(public)は観衆(audience)へ、議論は番組の消費へ近づきました。
+    </p>
+
+    <p>
+      ハーバーマスはこの過程を<em>公共圏の再封建化</em>と呼びます。
+      封建制では、王侯貴族の華美な儀礼が民衆の眼前で演じられました。
+      それは議論ではなく、権力の<strong>自己顕示</strong>の場です。
+      20世紀のマス・メディアは、形を変えて同じ構造を再現しつつあると、彼は指摘しました。
+    </p>
+
+    <p>
+      1962年の時点で、すでに公共圏は衰えの兆しを見せていた──。
+      これが彼の初期の診断です。
+      ただし当時、ハーバーマス自身は希望も失いませんでした。
+      理性的討議の理念は、制度として、教育として、なお立て直せると考えたからです。
+    </p>
+
+    <p>
+      60年前の本は、いま読み返すと、別の意味で予言的に響きます。
+      テレビが公衆を観衆に変えた、というハーバーマスの嘆きは、
+      SNSと生成AIが加えた変化の<strong>前奏</strong>にすぎなかったのかもしれません。
+    </p>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 3 ==================== -->
+<section class="chapter" id="ch3">
+  <div class="ch-kicker">
+    <span class="ch-num">03</span>
+    <span class="ch-cat">Chapter Three · Fragmentation</span>
+  </div>
+  <h2 class="ch-title">SNSがもたらした断片化 <span class="en">The Fragmented Sphere</span></h2>
+  <div class="ch-subtitle">千の個室、ひとつの広場の不在</div>
+
+  <p class="ch-lede">
+    2000年代後半、SNSは「誰もが発言者になる」時代を開きました。
+    発言は民主化された、はずです。
+    けれど議論は、どこへ向かったのか。
+    <strong>広場</strong>は、いま、どこにあるのでしょうか。
+  </p>
+
+  <div class="ch-body">
+    <p>
+      2004年、ハーバード大学の学生寮からFacebookが生まれました。
+      2006年にTwitter(現X)、2010年にInstagram。
+      プラットフォームは利用者の関心に沿って投稿を並べ替えます。
+      誰と、何を、どの順で見るかは、アルゴリズムが決めます。
+    </p>
+
+    <p>
+      ハーバード・ロー・スクールの<strong>キャス・サンスティーン</strong>は、
+      2017年の著書『#Republic』で、この仕組みを<em>エコーチェンバー</em>と呼びました。
+      似た声だけが響き合う反響室。
+      異論は届かず、共感だけが増幅されます。
+      社会心理学でいう<strong>集団極性化(group polarization)</strong>の現象が、
+      プラットフォームの設計によって組織的に促進されてしまう、と彼は警告します。
+    </p>
+
+    <blockquote class="cite" data-ref="3">
+      民主主義の生命線は、意図して選ばなかった話題や人物に偶然出会えることにある。
+      SNSはその<em>偶然の遭遇(serendipity)</em>を、かつてないほど希薄にする。
+      <footer>— サンスティーン『#Republic』2017年(本稿における要約)</footer>
+    </blockquote>
+
+    <p>
+      一方で、SNSは従来動員が難しかった層に声を与えました。
+      2017年、女優アリッサ・ミラノの一投稿から広まった<strong>#MeToo</strong>は、
+      最初の1年で46言語、1900万件のツイートを記録します。
+      黒人青年の死をきっかけに生まれた<strong>#BlackLivesMatter</strong>は、累計3000万件を超えました。
+    </p>
+
+    <p>
+      社会運動の民主化。これは間違いなく光の側面です。
+      しかし運動内部にも、声の濃淡があります。
+      Mueller らの実証研究(2021年)によれば、
+      #MeToo の投稿では白人女性の声が過剰に代表され、
+      黒人女性は「警察や司法における差別的扱い」に焦点を寄せる傾向が見られました。
+      <em>同じハッシュタグの下でも、何を問題と感じるかは異なる</em>のです。
+    </p>
+
+    <p>
+      もうひとつ、新しい規範の形として現れたのが<strong>キャンセルカルチャー</strong>です。
+      特定の言動をした人物を、SNSを通じて集団的に非難し、
+      仕事や社会的地位を失わせる動き。
+      違法ではないが、許さない──法と道徳の中間に、<em>第三の制裁</em>が立ち上がりました。
+    </p>
+
+    <p>
+      誰がその境界を引くのか。
+      メディア論の<strong>タールトン・ガレスピー</strong>は
+      『Custodians of the Internet』(2018年)で、
+      プラットフォームのモデレーターを「インターネットの管理人」と名付けました。
+      彼らは利用規約を作り、違反投稿を削除し、あるいは可視化を下げます。
+      その決定は、私たちの議論の地平を、静かに形づくっていきます。
+    </p>
+
+    <p>
+      近年のモデレーションの中心は、削除ではなく<em>縮小(reduction)</em>だとガレスピーは言います。
+      疑わしい投稿は、消すより、推奨から外す。
+      見えなくなるけれど、存在はしている。
+      公然と制裁しない、静かな規律化の技法です。
+    </p>
+
+    <p>
+      オーストラリアの法学者<strong>ニコラス・スゾア</strong>の『Lawless』(2019年)は、
+      この私企業の権力に対して、憲法的な制約をかけるべきだと主張します。
+      18世紀の公共圏を守ったのが、言論の自由という「国家に対する盾」だったとすれば、
+      21世紀の公共圏を守るのは、<em>プラットフォームに対する盾</em>でなければならない──。
+      彼はそれを<strong>デジタル立憲主義</strong>と呼びます。
+    </p>
+
+    <p>
+      承認欲求の問題も、忘れられません。
+      社会学者アーヴィング・ゴフマンが1959年の『日常生活における自己呈示』で示したように、
+      人は他者の視線を意識して自分を演じます。
+      SNSはその「舞台」を、24時間、地球規模で拡張しました。
+      国内の調査では、Z世代の約7割が「SNSでの評価が気分に影響する」と答えています。
+    </p>
+
+    <p>
+      コーヒーハウスの匿名の客は、会話から帰宅すれば私に戻れました。
+      SNSの投稿は、アカウントに刻まれ、検索され、保存されます。
+      <em>私と公の境界</em>が、画面のなかで滲んでいます。
+    </p>
+
+    <!-- ======= VISUAL: Compare Cards ======= -->
+    <div class="compare">
+      <div class="cmp-card primary">
+        <div class="cmp-head">
+          <span class="cmp-name">18世紀<br>コーヒーハウス</span>
+          <span class="cmp-label">The Coffeehouse</span>
+        </div>
+        <div class="cmp-rows">
+          <div class="cmp-row">
+            <span class="cmp-key">Place</span>
+            <span class="cmp-val">物理的な店舗。サロン、新聞、同業組合の会館。</span>
+          </div>
+          <div class="cmp-row">
+            <span class="cmp-key">Access</span>
+            <span class="cmp-val">男性・有産階級が中心。ただし一杯のコーヒー代で身分は括弧に。</span>
+          </div>
+          <div class="cmp-row">
+            <span class="cmp-key">Order</span>
+            <span class="cmp-val">到着順・発言順。全員が同じ話題を前に向かい合う。</span>
+          </div>
+          <div class="cmp-row">
+            <span class="cmp-key">Gatekeeper</span>
+            <span class="cmp-val">編集者、校正者、出版人。プロの選別を経て紙面に載る。</span>
+          </div>
+          <div class="cmp-row">
+            <span class="cmp-key">Memory</span>
+            <span class="cmp-val">その場で消えるか、書物として編まれるかのどちらか。</span>
+          </div>
+        </div>
+      </div>
+      <div class="cmp-card secondary">
+        <div class="cmp-head">
+          <span class="cmp-name">21世紀<br>アルゴリズム</span>
+          <span class="cmp-label">The Algorithm</span>
+        </div>
+        <div class="cmp-rows">
+          <div class="cmp-row">
+            <span class="cmp-key">Place</span>
+            <span class="cmp-val">プラットフォーム。タイムライン、レコメンド、グループチャット。</span>
+          </div>
+          <div class="cmp-row">
+            <span class="cmp-key">Access</span>
+            <span class="cmp-val">原理的に万人。ただし可視化はアルゴリズムが選別する。</span>
+          </div>
+          <div class="cmp-row">
+            <span class="cmp-key">Order</span>
+            <span class="cmp-val">関心度・親密度で並び替え。誰が何を見るかは個別最適。</span>
+          </div>
+          <div class="cmp-row">
+            <span class="cmp-key">Gatekeeper</span>
+            <span class="cmp-val">アルゴリズムとモデレーター。削除よりも、推奨から外す。</span>
+          </div>
+          <div class="cmp-row">
+            <span class="cmp-key">Memory</span>
+            <span class="cmp-val">半永久に残り、検索され、スクリーンショットで拡散する。</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 4 ==================== -->
+<section class="chapter" id="ch4">
+  <div class="ch-kicker">
+    <span class="ch-num">04</span>
+    <span class="ch-cat">Chapter Four · Authorship Lost</span>
+  </div>
+  <h2 class="ch-title">生成AIと「出所」の消失 <span class="en">When the Source Vanishes</span></h2>
+  <div class="ch-subtitle">発話者のいない言葉が、議論の前提を揺るがす</div>
+
+  <p class="ch-lede">
+    誰が書いたのか分からない文章。誰が発したか判定できない映像。
+    生成AIは、公共圏の根にある<strong>発話者</strong>という概念を、静かに溶かします。
+    <em>出所・検証・訂正</em>── 三つの条件が、いま同時に揺らいでいます。
+  </p>
+
+  <div class="ch-body">
+    <p>
+      2022年11月、OpenAI がChatGPT を公開しました。
+      2年後、生成AIは広告、報道、教育、行政にまで浸透します。
+      文章、画像、音声、映像──いずれも、人間の手を介さずに生成できる時代の到来です。
+    </p>
+
+    <p>
+      そして2025年5月、韓国大統領選。
+      中央選挙管理委員会によるディープフェイクの削除要請は、投票前の段階で9818件に達しました。
+      2024年の国会議員選挙と比べ、およそ10倍の増加です。
+      野党候補の李在明氏が妻に悪口を言う偽映像も流通しました。
+      <em>真実と捏造の境目</em>が、技術によってぼやけはじめた年です。
+    </p>
+
+    <p>
+      日本でも、2024年、海上保安庁のパンフレットが炎上しました。
+      生成AIで作成されたイラストが、特定のイラストレーターの画風に酷似していたのです。
+      結果として、冊子は公開中止。
+      文化庁は同年4月、『AIと著作権に関する考え方について』を取りまとめ、
+      学習段階と生成段階を分けて判断する枠組みを示しました。
+    </p>
+
+    <p>
+      日本の著作権法<em>第30条の4</em>は、学習段階での著作物利用を原則合法と定めています。
+      情報解析のための利用は、権利者の許諾なくできる。
+      ただし「著作権者の利益を不当に害する場合」は例外になります。
+      <strong>スタイル模倣はどこからが不当な害か</strong>。
+      この線引きは、いまも文化審議会で議論の途上です。
+    </p>
+
+    <p>
+      もうひとつ、厄介な問題が<em>ハルシネーション</em>です。
+      生成AIは、学習データに存在しない情報を、自然な文章として作り出してしまいます。
+      内在的ハルシネーション(矛盾の生成)と外在的ハルシネーション(虚構の生成)の二つがあります。
+      OpenAI は2025年9月、GPT-5 でもこの現象は完全には防げないと認めました。
+    </p>
+
+    <p>
+      ここで、公共圏の根本に立ち戻ります。
+      議論が成り立つには、最低限三つの条件があると言われます。
+      誰がいつ発言したか分かること(<em>出所</em>)。
+      その発言の真偽が確かめられること(<em>検証</em>)。
+      誤りがあれば正せること(<em>訂正</em>)。
+      国際政治学者の佐藤仁は、生成AIがこの三条件すべてを揺るがしていると指摘します。
+    </p>
+
+    <div class="pull-quote">
+      <p>議論の場は、広場から競技場に、知らぬ間に姿を変えていきます。</p>
+      <div class="attribution">— 本稿・第四章より</div>
+    </div>
+
+    <p>
+      発話者が不明になると、責任の割り当ても壊れます。
+      基盤モデルを提供した企業、アプリとして公開した開発者、プロンプトを書いた利用者、
+      それを拡散した発信者──。
+      法律学では、どこに責任を帰すべきかが未決着です。
+      法学者<strong>フランク・パスカレ</strong>は『Black Box Society』(2015年)で、
+      アルゴリズムの不透明さの前で、市民は<em>説明される権利</em>を失いつつあると論じました。
+    </p>
+
+    <p>
+      各国政府は、答えを急いでいます。
+      EU は2024年、包括的なAI規制として<em>AI法(AI Act)</em>を発効させました。
+      2025年8月には、汎用AI(GPAI)への規制が動き始めます。
+      7月には欧州委員会が『汎用AIの行動規範』を公開し、
+      透明性、著作権、安全性の三章構成で運用指針を示しました。
+    </p>
+
+    <p>
+      日本は2025年6月、『人工知能関連技術の研究開発及び活用の推進に関する法律』、通称<strong>AI推進法</strong>を公布。
+      同年9月、全面施行されました。
+      罰則を伴わないソフトロー型。
+      同3月、総務省と経済産業省は『AI事業者ガイドライン』第1.1版を発表しています。
+    </p>
+
+    <p>
+      米国は2022年、科学技術政策局(OSTP)が<em>AI権利章典の青写真(Blueprint for an AI Bill of Rights)</em>を公表しました。
+      安全性、差別からの保護、データプライバシー、通知・説明、人的代替案。
+      五つの原則が示されます。
+      しかし2025年12月、トランプ政権は州レベルのAI規制を連邦で無効化する大統領令に署名。
+      規制の振り子は、大西洋を挟んで逆方向に振れ始めています。
+    </p>
+
+    <!-- ======= VISUAL: AI Regulation Timeline ======= -->
+    <div class="ai-timeline">
+      <div class="ai-caption">
+        <span class="ja">生成AIをめぐる規範形成 ── 主要国の動き</span>
+        The Shaping of AI Norms · 2022–2025
+      </div>
+      <div class="ai-rows">
+        <div class="ai-row region-us">
+          <span class="ai-date">2022 · 10</span>
+          <span class="ai-event">米国OSTP、<strong>AI権利章典の青写真</strong>を公表。5原則を提示。</span>
+          <span class="ai-region">US</span>
+        </div>
+        <div class="ai-row region-us">
+          <span class="ai-date">2022 · 11</span>
+          <span class="ai-event">OpenAI が<strong>ChatGPT</strong>を公開。生成AIの大衆化の始まり。</span>
+          <span class="ai-region">US</span>
+        </div>
+        <div class="ai-row region-jp">
+          <span class="ai-date">2024 · 04</span>
+          <span class="ai-event">日本・文化庁『<strong>AIと著作権に関する考え方について</strong>』。</span>
+          <span class="ai-region">JP</span>
+        </div>
+        <div class="ai-row region-eu">
+          <span class="ai-date">2024 · 08</span>
+          <span class="ai-event">EU <strong>AI法</strong> 発効。段階的な適用スケジュールを開始。</span>
+          <span class="ai-region">EU</span>
+        </div>
+        <div class="ai-row region-jp">
+          <span class="ai-date">2025 · 03</span>
+          <span class="ai-event">総務省・経産省『<strong>AI事業者ガイドライン</strong>』第1.1版 公表。</span>
+          <span class="ai-region">JP</span>
+        </div>
+        <div class="ai-row region-jp">
+          <span class="ai-date">2025 · 06</span>
+          <span class="ai-event">日本『<strong>AI推進法</strong>』公布。罰則なしのソフトロー型。</span>
+          <span class="ai-region">JP</span>
+        </div>
+        <div class="ai-row region-eu">
+          <span class="ai-date">2025 · 07</span>
+          <span class="ai-event">欧州委員会『<strong>汎用AIの行動規範</strong>』公開。透明性・著作権・安全性。</span>
+          <span class="ai-region">EU</span>
+        </div>
+        <div class="ai-row region-eu">
+          <span class="ai-date">2025 · 08</span>
+          <span class="ai-event">EU AI法の<strong>汎用AI規制</strong>が適用開始。</span>
+          <span class="ai-region">EU</span>
+        </div>
+        <div class="ai-row region-jp">
+          <span class="ai-date">2025 · 09</span>
+          <span class="ai-event">日本 AI推進法 <strong>全面施行</strong>。AI戦略本部が始動。</span>
+          <span class="ai-region">JP</span>
+        </div>
+        <div class="ai-row region-us">
+          <span class="ai-date">2025 · 12</span>
+          <span class="ai-event">米・トランプ政権、<strong>州のAI規制を連邦で覆す大統領令</strong>に署名。</span>
+          <span class="ai-region">US</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 5 ==================== -->
+<section class="chapter" id="ch5">
+  <div class="ch-kicker">
+    <span class="ch-num">05</span>
+    <span class="ch-cat">Chapter Five · A Question Returned</span>
+  </div>
+  <h2 class="ch-title">熟議は取り戻せるか <span class="en">Can Deliberation Come Back?</span></h2>
+  <div class="ch-subtitle">二度目の構造転換に、私たちが返す答え</div>
+
+  <p class="ch-lede">
+    ハーバーマスは、93歳になって再び筆を取りました。
+    60年前の自分の問いを、いま、もう一度問い直すために。
+    公共圏の<strong>二度目の構造転換</strong>に、私たちはどう応えるのでしょうか。
+  </p>
+
+  <div class="ch-body">
+    <p>
+      2022年、ハーバーマスは雑誌『Theory, Culture &amp; Society』に論文を寄稿しました。
+      題は「公共圏のさらなる構造転換に関する省察と仮説」。
+      62年の著書『公共性の構造転換』からの、<em>二度目の更新</em>です。
+    </p>
+
+    <p>
+      彼は書きます。
+      デジタル化は、読者や視聴者に過ぎなかったすべての人を、潜在的な著者に変えた、と。
+      この新しい民主化には大きな解放の可能性があるはずでした。
+      しかし、編集者や職業的なフィルタを欠いたままの発言は、
+      <em>シリコンバレーの巨大企業</em>と<em>極右ネットワーク</em>によって増幅される。
+      公共コミュニケーションの性格そのものが、変質しつつある──。
+    </p>
+
+    <p>
+      ハーバーマスの診断は、悲観的に見えます。
+      ただし彼は、デジタルをやめろとは言いません。
+      むしろ、プラットフォームに<strong>編集の責任</strong>を課すこと、
+      ジャーナリズムへの公的支援を厚くすること、
+      市民社会の討議を制度として支えること──を提案しています。
+      18世紀にコーヒーハウスが自然発生したように、
+      21世紀の公共圏も、意識的に<em>作り直す</em>必要がある、という立場です。
+    </p>
+
+    <p>
+      日本の受験生が学ぶ教科書にも、この変化は影を落としています。
+      高等学校の情報科目は、かつての「情報モラル」から<em>デジタル・シティズンシップ</em>へ、
+      軸足を動かしつつあります。
+      ルールを守るだけの消極的な態度から、
+      デジタル社会に<strong>自律的に参加する</strong>ための行動倫理へ。
+      公民の時間に学ぶ社会契約論や公共的理性が、
+      スマートフォンの画面の前で試されています。
+    </p>
+
+    <p>
+      18世紀の啓蒙が「臣民から市民へ」の転換だったとすれば、
+      いま問われているのは「視聴者から市民へ」の転換と言えるかもしれません。
+      臣民は王の命令を受けました。市民は自分で判断します。
+      視聴者は与えられたものを見ます。そして、市民は<em>出所を確かめ、検証し、訂正する</em>。
+    </p>
+
+    <p>
+      生成AIは道具です。敵ではありません。
+      問題は、その道具を使う私たちの側の、議論の作法にあります。
+      偽映像を見抜く力。画風の模倣がなぜ問題かを言葉にする力。
+      アルゴリズムに選ばれなかった情報にも手を伸ばす姿勢。
+      こうした小さな所作が、公共圏の<strong>次の形</strong>を編んでいきます。
+    </p>
+
+    <p>
+      ハーバーマスの議論は、受験勉強の外にあります。
+      公共的理性も、社会契約論も、試験の得点とは関わりなく、世界で動き続けます。
+      けれど、公民の教科書で理念を学んだ受験生が、
+      画面を開くたびにその理念を<em>実地で試される</em>──。
+      これは、少し、誇ってよい境遇ではないでしょうか。
+    </p>
+
+    <p>
+      18世紀、コーヒーの湯気の向こうで「市民」という言葉が生まれました。
+      21世紀、アルゴリズムの向こうで、その言葉は<em>もう一度</em>試されています。
+      公共圏は、二度目の構造転換のただ中にあります。
+      その次の一行を書くのは、いまこの記事を読み終えたあなたかもしれません。
+    </p>
+  </div>
+</section>
+
+<!-- ==================== REFERENCES ==================== -->
+<section class="refs">
+  <div class="refs-head">参考文献 · References</div>
+  <ol class="refs-list">
+    <li>
+      <span class="ref-author">Jürgen Habermas</span>
+      <span class="ref-title">“Reflections and Hypotheses on a Further Structural Transformation of the Political Public Sphere”</span>
+      <span class="ref-meta">Theory, Culture &amp; Society, 39(4), 145–171, 2022 / <a href="https://journals.sagepub.com/doi/10.1177/02632764221112341">journals.sagepub.com</a></span>
+    </li>
+    <li>
+      <span class="ref-author">ユルゲン・ハーバーマス</span>
+      <span class="ref-title">『公共性の構造転換 ── 市民社会の一カテゴリーについての探究』</span>
+      <span class="ref-meta">細谷貞雄・山田正行 訳, 未来社, 1994年(原著1962年, 第二版1990年)</span>
+    </li>
+    <li>
+      <span class="ref-author">Cass R. Sunstein</span>
+      <span class="ref-title">“#Republic: Divided Democracy in the Age of Social Media”</span>
+      <span class="ref-meta">Princeton University Press, 2017 / <a href="https://press.princeton.edu/books/hardcover/9780691175515/republic">press.princeton.edu</a></span>
+    </li>
+    <li>
+      <span class="ref-author">Tarleton Gillespie</span>
+      <span class="ref-title">“Custodians of the Internet: Platforms, Content Moderation, and the Hidden Decisions That Shape Social Media”</span>
+      <span class="ref-meta">Yale University Press, 2018 / <a href="https://yalebooks.yale.edu/book/9780300261431/custodians-of-the-internet/">yalebooks.yale.edu</a></span>
+    </li>
+    <li>
+      <span class="ref-author">Nicolas P. Suzor</span>
+      <span class="ref-title">“Lawless: The Secret Rules That Govern our Digital Lives”</span>
+      <span class="ref-meta">Cambridge University Press, 2019 / <a href="https://nic.suzor.net/lawless/">nic.suzor.net/lawless</a></span>
+    </li>
+    <li>
+      <span class="ref-author">Frank Pasquale</span>
+      <span class="ref-title">“The Black Box Society: The Secret Algorithms That Control Money and Information”</span>
+      <span class="ref-meta">Harvard University Press, 2015 / <a href="https://www.hup.harvard.edu/books/9780674970847">hup.harvard.edu</a></span>
+    </li>
+    <li>
+      <span class="ref-author">中西亮太</span>
+      <span class="ref-title">「ロールズの公共的理性と教育 ── 政治的構想と包括的教説の区別をめぐって」</span>
+      <span class="ref-meta">『教育学研究』第91巻第2号, 235–247頁, 2024年 / <a href="https://www.jstage.jst.go.jp/article/kyoiku/91/2/91_235/_article/-char/ja">J-STAGE</a></span>
+    </li>
+    <li>
+      <span class="ref-author">Aaron Mueller, Zach Wood-Doughty, Silvio Amir, Mark Dredze, Alicia L. Nobles</span>
+      <span class="ref-title">“Demographic Representation and Collective Storytelling in the Me Too Twitter Hashtag Activism Movement”</span>
+      <span class="ref-meta">Proceedings of the ACM on Human-Computer Interaction (CSCW), 5(CSCW1), 2021 / <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8920314/">PMC</a></span>
+    </li>
+    <li>
+      <span class="ref-author">文化庁著作権課</span>
+      <span class="ref-title">「AIと著作権に関する考え方について」(文化審議会著作権分科会法制度小委員会)</span>
+      <span class="ref-meta">令和6年4月(2024年) / <a href="https://www.bunka.go.jp/seisaku/chosakuken/aiandcopyright.html">bunka.go.jp</a></span>
+    </li>
+    <li>
+      <span class="ref-author">総務省・経済産業省</span>
+      <span class="ref-title">「AI事業者ガイドライン(第1.1版)」</span>
+      <span class="ref-meta">令和7年3月28日(2025年) / <a href="https://www.soumu.go.jp/main_content/001002576.pdf">soumu.go.jp</a></span>
+    </li>
+    <li>
+      <span class="ref-author">内閣府</span>
+      <span class="ref-title">「AI法 全面施行 ── 次なるフェーズへ」(人工知能関連技術の研究開発及び活用の推進に関する法律)</span>
+      <span class="ref-meta">2025年10月 / <a href="https://www.cao.go.jp/press/new_wave/20251003.html">cao.go.jp</a></span>
+    </li>
+    <li>
+      <span class="ref-author">White House Office of Science and Technology Policy</span>
+      <span class="ref-title">“Blueprint for an AI Bill of Rights: Making Automated Systems Work for the American People”</span>
+      <span class="ref-meta">October 2022 / <a href="https://bidenwhitehouse.archives.gov/ostp/ai-bill-of-rights/">bidenwhitehouse.archives.gov</a></span>
+    </li>
+    <li>
+      <span class="ref-author">ジェトロ(日本貿易振興機構)</span>
+      <span class="ref-title">「欧州委、AI法に基づく『汎用AIの行動規範』公開(EU)」</span>
+      <span class="ref-meta">2025年7月 / <a href="https://www.jetro.go.jp/biznews/2025/07/de121f2f4895b6f0.html">jetro.go.jp</a></span>
+    </li>
+    <li>
+      <span class="ref-author">日本経済新聞</span>
+      <span class="ref-title">「韓国大統領選挙で『ディープフェイク』10倍に ── 2024年総選挙比、削除追いつかず」</span>
+      <span class="ref-meta">2025年5月27日 / <a href="https://www.nikkei.com/article/DGXZQOGM23BPA0T20C25A5000000/">nikkei.com</a></span>
+    </li>
+    <li>
+      <span class="ref-author">佐藤仁</span>
+      <span class="ref-title">「生成AIとSNSが『議論の前提』を崩す ── ハーバーマスの公共性・熟議の視点」</span>
+      <span class="ref-meta">Yahoo!ニュース エキスパート, 2024年 / <a href="https://news.yahoo.co.jp/expert/articles/ae824ab3d986fffd7d3ff38f318c30bef56c1466">news.yahoo.co.jp</a></span>
+    </li>
+  </ol>
+  <div class="refs-note">
+    本記事は上記ソースをもとに、受験生向けに編集・再構成したものです。
+    正確な記述については原典をご参照ください。
+    外国語文献の邦題・訳語は本稿独自のもので、邦訳書がある場合も書誌情報として原題を優先した箇所があります。
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="footer">
+  <div class="footer-mark">圏</div>
+  <div class="footer-tag">A Visual Essay · 公共圏、二度の構造転換</div>
+  <a href="../../" class="footer-back">← all articles</a>
+</footer>
+
+</body>
+</html>
