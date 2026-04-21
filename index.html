@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mikikof-lab — 受験生のための学習ツール集</title>
+<meta name="description" content="受験生のための学習ツール集。ビジュアル・エッセイ、一問一答、各種教材を横断的に公開しています。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400;1,9..144,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7fafd;
+  --bg-card: #ffffff;
+  --bg-soft: #eff4fb;
+  --ink: #0b1424;
+  --text: #1a2541;
+  --mute: #5b6a82;
+  --mute-soft: #8594ae;
+  --line: #d6e0ee;
+  --line-soft: #e8edf5;
+  --accent: #1e3a8a;
+  --accent-bright: #2e5cd6;
+  --accent-pale: #dae6fa;
+  --pop: #d9451c;
+  --pop-pale: #fde0d0;
+  --gold: #f4b93a;
+
+  --tool-essays: #1e3a8a;
+  --tool-quiz: #1f6148;
+  --tool-coming: #8594ae;
+
+  --f-jp-display: 'Zen Old Mincho', 'Noto Serif JP', serif;
+  --f-jp-body: 'Zen Kaku Gothic New', 'Hiragino Sans', sans-serif;
+  --f-la-display: 'Fraunces', 'Playfair Display', Georgia, serif;
+  --f-la-body: 'DM Sans', system-ui, sans-serif;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--f-jp-body);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 2.0;
+  letter-spacing: 0.025em;
+  font-feature-settings: 'palt' 1;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: radial-gradient(circle at 1px 1px, rgba(30,58,138,0.06) 1px, transparent 0);
+  background-size: 28px 28px;
+  pointer-events: none;
+}
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--accent); color: #fff; }
+
+/* ============ HERO ============ */
+.hero {
+  min-height: 85vh;
+  padding: 9rem 2rem 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+}
+.hero-kicker {
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.hero-kicker::before,
+.hero-kicker::after {
+  content: '';
+  width: 36px; height: 1px;
+  background: var(--accent-bright);
+}
+.hero-title {
+  font-family: var(--f-la-display);
+  font-weight: 800;
+  font-style: italic;
+  font-size: clamp(3.5rem, 10vw, 8rem);
+  letter-spacing: -0.01em;
+  line-height: 0.95;
+  color: var(--ink);
+  margin-bottom: 1.5rem;
+}
+.hero-title .dot {
+  color: var(--pop);
+  font-style: normal;
+}
+.hero-sub-jp {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  letter-spacing: 0.2em;
+  color: var(--ink);
+  margin-bottom: 2.5rem;
+}
+.hero-lede {
+  max-width: 640px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 2.1;
+  color: var(--text);
+}
+.hero-lede strong {
+  font-weight: 500;
+  color: var(--accent);
+  border-bottom: 2px solid var(--accent-pale);
+}
+
+/* ============ TOOLS SECTION ============ */
+.tools {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 4rem 2rem 7rem;
+}
+.tools-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 3.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.tools-title {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1.8rem;
+  letter-spacing: 0.15em;
+  color: var(--ink);
+}
+.tools-title .en {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.6em;
+  color: var(--mute);
+  margin-left: 0.8rem;
+  letter-spacing: 0.03em;
+}
+.tools-meta {
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 2rem;
+}
+
+.tool-card {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  padding: 2.5rem 2.25rem 2.75rem;
+  border-radius: 4px;
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease), border-color 0.4s var(--ease);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  min-height: 340px;
+}
+.tool-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 6px;
+  height: 100%;
+  background: var(--tool-accent, var(--accent));
+}
+.tool-card.essays { --tool-accent: var(--tool-essays); }
+.tool-card.quiz   { --tool-accent: var(--tool-quiz); }
+.tool-card.coming { --tool-accent: var(--tool-coming); }
+
+.tool-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 48px -20px rgba(30, 58, 138, 0.22);
+  border-color: var(--tool-accent);
+}
+.tool-card.coming {
+  cursor: default;
+  opacity: 0.6;
+}
+.tool-card.coming:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--line);
+}
+
+.tool-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.75rem;
+  font-size: 0.72rem;
+  font-family: var(--f-la-body);
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+.tool-num {
+  color: var(--mute-soft);
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.2rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+.tool-status {
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.62rem;
+}
+.tool-status.live {
+  color: var(--tool-accent);
+  border: 1px solid var(--tool-accent);
+  background: rgba(30, 58, 138, 0.03);
+}
+.tool-status.coming {
+  color: var(--mute);
+  border: 1px solid var(--line);
+}
+
+.tool-name {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1.85rem;
+  line-height: 1.35;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+.tool-en {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1rem;
+  color: var(--mute);
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.02em;
+}
+.tool-desc {
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.9;
+  color: var(--text);
+  margin-bottom: 2rem;
+  flex-grow: 1;
+}
+
+.tool-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--f-la-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--tool-accent);
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line-soft);
+  transition: gap 0.3s var(--ease);
+}
+.tool-card:hover .tool-cta { gap: 1.25rem; }
+.tool-card.coming .tool-cta { color: var(--mute-soft); }
+
+/* ============ FOOTER ============ */
+.footer {
+  border-top: 1px solid var(--line);
+  background: var(--bg-soft);
+  padding: 5rem 2rem 3rem;
+  text-align: center;
+}
+.footer-mark {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 2.4rem;
+  letter-spacing: 0;
+  color: var(--ink);
+  margin-bottom: 1rem;
+}
+.footer-mark .dot { color: var(--pop); font-style: normal; }
+.footer-tag {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--mute);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.15em;
+}
+.footer-meta {
+  font-family: var(--f-la-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--mute-soft);
+}
+
+@media (max-width: 700px) {
+  .hero { padding: 6rem 1.25rem 4rem; min-height: auto; }
+  .tools { padding: 2rem 1.25rem 4rem; }
+  .tools-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .tool-card { padding: 2rem 1.75rem 2.25rem; min-height: auto; }
+  .tool-name { font-size: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="hero-kicker">mikikof · lab</div>
+  <h1 class="hero-title">mikikof<span class="dot">.</span>lab</h1>
+  <div class="hero-sub-jp">受験生のための、学習ツール実験室</div>
+  <p class="hero-lede">
+    教科書では分断されている知識を、<strong>別のかたち</strong>で学び直すための場所。
+    ビジュアル・エッセイ、一問一答、さまざまな角度から、あなたの学びを立体化します。
+  </p>
+</section>
+
+<!-- ==================== TOOLS ==================== -->
+<section class="tools">
+  <div class="tools-head">
+    <h2 class="tools-title">収容ツール <span class="en">The Tools</span></h2>
+    <div class="tools-meta">collection</div>
+  </div>
+
+  <div class="tools-grid">
+
+    <!-- Tool 1: Visual Essay Lab -->
+    <a href="essays/" class="tool-card essays">
+      <div class="tool-meta">
+        <span class="tool-num">01</span>
+        <span class="tool-status live">live</span>
+      </div>
+      <div class="tool-name">Visual Essay Lab</div>
+      <div class="tool-en">Visual essays for thinking students</div>
+      <p class="tool-desc">
+        教科書で分断されている知識を、ひとつの物語として読み解くビジュアル・エッセイ集。
+        世界史・情報・経済・理系・時事まで、横断的に扱います。
+      </p>
+      <div class="tool-cta">enter the lab →</div>
+    </a>
+
+    <!-- Tool 2: Quiz (coming soon) -->
+    <div class="tool-card quiz coming">
+      <div class="tool-meta">
+        <span class="tool-num">02</span>
+        <span class="tool-status coming">coming soon</span>
+      </div>
+      <div class="tool-name">一問一答</div>
+      <div class="tool-en">Interactive quiz collection</div>
+      <p class="tool-desc">
+        スライドや講義資料から自動で生成する、インタラクティブな一問一答集。
+        スキマ時間の定着学習に。
+      </p>
+      <div class="tool-cta">launching soon</div>
+    </div>
+
+    <!--
+      新しいツールを追加する場合、上記の tool-card をコピーして調整してください。
+      カテゴリクラス: essays / quiz / coming
+      ステータスクラス: live / coming
+    -->
+
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="footer">
+  <div class="footer-mark">mikikof<span class="dot">.</span>lab</div>
+  <div class="footer-tag">受験生のための、学習ツール実験室</div>
+  <div class="footer-meta">by a thinking machine and a human hand</div>
+</footer>
+
+</body>
+</html>

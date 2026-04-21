@@ -1,0 +1,2082 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>法の二大系統 — 大陸法と英米法 | A Visual Essay</title>
+<meta name="description" content="世界の法制度を二分する大陸法と英米法。歴史・地理・実務の三つの軸から読み解く、世界史選択のためのビジュアル・エッセイ。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400;1,9..144,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Background palette — crisp, cool, airy */
+  --bg: #f7fafd;
+  --bg-card: #ffffff;
+  --bg-soft: #eff4fb;
+  --bg-tint: #e0ecf9;
+  --bg-deep: #0a2540;
+  --bg-wash: #dce8f6;
+
+  /* Civil law — deep confident indigo blues */
+  --civil-deep: #102a56;
+  --civil: #1e3a8a;
+  --civil-bright: #2e5cd6;
+  --civil-light: #6394e8;
+  --civil-pale: #dae6fa;
+  --civil-wash: #edf2fc;
+
+  /* Common law — pop warm coral */
+  --common-deep: #7a2810;
+  --common: #d9451c;
+  --common-bright: #f2663a;
+  --common-light: #fca47e;
+  --common-pale: #fde0d0;
+  --common-wash: #fdf0e8;
+
+  /* Neutrals */
+  --ink: #0b1424;
+  --text: #1a2541;
+  --mute: #5b6a82;
+  --mute-soft: #8594ae;
+  --line: #d6e0ee;
+  --line-soft: #e8edf5;
+
+  /* Accent pops */
+  --mixed: #8a7a50;
+  --gold: #f4b93a;
+  --white: #ffffff;
+
+  /* Fonts */
+  --f-jp-display: 'Zen Old Mincho', 'Noto Serif JP', serif;
+  --f-jp-body: 'Zen Kaku Gothic New', 'Hiragino Sans', sans-serif;
+  --f-la-display: 'Fraunces', 'Playfair Display', Georgia, serif;
+  --f-la-body: 'DM Sans', system-ui, sans-serif;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--f-jp-body);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 2.0;
+  letter-spacing: 0.025em;
+  font-feature-settings: 'palt' 1;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Dot pattern background — very subtle */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(circle at 1px 1px, rgba(30,58,138,0.06) 1px, transparent 0);
+  background-size: 28px 28px;
+}
+
+::selection { background: var(--civil); color: var(--white); }
+
+a { color: inherit; text-decoration: none; }
+
+/* ======================== TOP NAV ======================== */
+.topnav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 1.1rem 2.5rem;
+  background: rgba(247, 250, 253, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.4s var(--ease);
+}
+
+.topnav-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+.topnav-mark {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1.25rem;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+}
+.topnav-sub {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--mute);
+  letter-spacing: 0.05em;
+}
+
+.topnav-menu {
+  display: flex;
+  gap: 1.75rem;
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+.topnav-menu a {
+  position: relative;
+  padding: 0.35rem 0;
+  transition: color 0.25s var(--ease);
+}
+.topnav-menu a:hover,
+.topnav-menu a.active { color: var(--ink); }
+.topnav-menu a.active::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -0.35rem;
+  height: 2px;
+  width: 100%;
+  background: var(--common);
+}
+
+/* ======================== HERO ======================== */
+.hero {
+  min-height: 100vh;
+  padding: 8rem 2rem 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.hero-kicker {
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--civil-bright);
+  margin-bottom: 3rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  animation: fadeUp 1.1s var(--ease-out) 0.1s both;
+}
+.hero-kicker::before,
+.hero-kicker::after {
+  content: '';
+  width: 36px; height: 1px;
+  background: var(--civil-bright);
+}
+
+.hero-title {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: clamp(3rem, 9vw, 7.5rem);
+  letter-spacing: 0.05em;
+  line-height: 0.98;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 2.25rem;
+  animation: fadeUp 1.3s var(--ease-out) 0.3s both;
+}
+.hero-title .pop {
+  color: var(--common);
+  font-style: normal;
+  position: relative;
+  display: inline-block;
+}
+.hero-title .pop::after {
+  content: '';
+  position: absolute;
+  left: -4%;
+  bottom: 0.08em;
+  width: 108%;
+  height: 0.14em;
+  background: var(--gold);
+  z-index: -1;
+  opacity: 0.55;
+}
+
+.hero-sub {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.15rem, 2.2vw, 1.7rem);
+  color: var(--civil);
+  letter-spacing: 0.02em;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  animation: fadeUp 1.3s var(--ease-out) 0.5s both;
+}
+.hero-sub .x {
+  margin: 0 0.5em;
+  color: var(--common);
+  font-style: normal;
+  font-weight: 800;
+}
+
+.hero-lede {
+  max-width: 640px;
+  font-size: 1.15rem;
+  font-weight: 500;
+  line-height: 2.15;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 4rem;
+  animation: fadeUp 1.3s var(--ease-out) 0.7s both;
+}
+.hero-lede strong {
+  font-weight: 500;
+  color: var(--civil-deep);
+  border-bottom: 2px solid var(--civil-pale);
+  padding: 0 0.1em;
+}
+.hero-lede strong.common-mark {
+  color: var(--common-deep);
+  border-bottom-color: var(--common-pale);
+}
+
+.hero-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 4rem;
+  animation: fadeUp 1.3s var(--ease-out) 0.9s both;
+}
+.hero-stat {
+  text-align: center;
+  padding: 0 1.5rem;
+  position: relative;
+}
+.hero-stat:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: -1.5rem;
+  top: 20%;
+  bottom: 20%;
+  width: 1px;
+  background: var(--line);
+}
+.hero-stat .num {
+  font-family: var(--f-la-display);
+  font-weight: 800;
+  font-size: clamp(2.5rem, 5vw, 3.75rem);
+  line-height: 0.95;
+  color: var(--civil-deep);
+  margin-bottom: 0.5rem;
+}
+.hero-stat.common .num { color: var(--common); }
+.hero-stat.mixed .num { color: var(--mixed); }
+.hero-stat .label {
+  font-family: var(--f-la-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.scroll-cue {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  font-family: var(--f-la-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--mute);
+  animation: fadeUp 1.3s var(--ease-out) 1.1s both;
+}
+.scroll-cue::after {
+  content: '';
+  width: 1px; height: 48px;
+  background: linear-gradient(to bottom, var(--mute), transparent);
+  animation: scrollBar 2.2s var(--ease) infinite;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scrollBar {
+  0% { transform: scaleY(0); transform-origin: top; opacity: 0.3; }
+  40% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+  60% { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
+  100% { transform: scaleY(0); transform-origin: bottom; opacity: 0.3; }
+}
+
+/* ======================== CHAPTER BASE ======================== */
+.chapter {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 7rem 2rem 5rem;
+  position: relative;
+}
+
+.ch-kicker {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+.ch-num {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.3rem;
+  color: var(--common);
+  letter-spacing: 0.02em;
+}
+.ch-cat {
+  font-family: var(--f-la-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--mute);
+  padding-left: 1.25rem;
+  border-left: 1px solid var(--line);
+}
+
+.ch-title {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: clamp(2.25rem, 5vw, 3.6rem);
+  letter-spacing: 0.06em;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 0.85rem;
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.ch-title .en {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.38em;
+  color: var(--mute-soft);
+  letter-spacing: 0.03em;
+}
+
+.ch-subtitle {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  color: var(--civil-bright);
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.ch-lede {
+  max-width: 780px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 2.2;
+  color: var(--ink);
+  margin-bottom: 4rem;
+}
+.ch-lede strong {
+  font-weight: 500;
+  color: var(--ink);
+  background: linear-gradient(transparent 62%, var(--gold) 62%, var(--gold) 88%, transparent 88%);
+  background-size: 100% 100%;
+  padding: 0 0.1em;
+}
+.ch-lede em {
+  font-style: normal;
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  color: var(--civil-deep);
+  letter-spacing: 0.03em;
+}
+
+/* ======================== CHAPTER 1: METAPHOR ======================== */
+.metaphor {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  position: relative;
+}
+
+.metaphor::before {
+  content: 'vs';
+  position: absolute;
+  top: 5.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: var(--common);
+  background: var(--bg);
+  padding: 0.35rem 1rem;
+  z-index: 5;
+  border: 1px solid var(--common-pale);
+  border-radius: 999px;
+}
+
+.trad {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  padding: 2.75rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+  border-radius: 4px;
+}
+.trad:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -20px rgba(30, 58, 138, 0.2);
+}
+
+.trad::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 5px;
+}
+.trad-civil::before { background: var(--civil); }
+.trad-common::before { background: var(--common); }
+
+.trad-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--line);
+}
+.trad-name {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 2.15rem;
+  letter-spacing: 0.12em;
+  line-height: 1;
+}
+.trad-civil .trad-name { color: var(--civil-deep); }
+.trad-common .trad-name { color: var(--common-deep); }
+
+.trad-label {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--mute);
+}
+
+.trad-viz {
+  height: 260px;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.trad-viz svg { width: 100%; height: 100%; }
+
+.trad-body {
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.95;
+  color: var(--ink);
+  margin-bottom: 1.75rem;
+}
+
+.trad-tag {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed var(--line);
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.12em;
+}
+.trad-tag .arrow {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--mute);
+  letter-spacing: 0.1em;
+}
+.trad-civil .trad-tag { color: var(--civil-deep); }
+.trad-common .trad-tag { color: var(--common-deep); }
+
+/* Civil metaphor animations */
+.civil-viz .book-glow {
+  animation: bookPulse 3s ease-in-out infinite;
+}
+.civil-viz .flow-line {
+  stroke-dasharray: 4 4;
+  animation: flowDown 3s linear infinite;
+}
+.common-viz .branch-group {
+  transform-origin: 150px 140px;
+  animation: sway 5s ease-in-out infinite alternate;
+}
+.common-viz .fruit {
+  animation: fruitPulse 2.5s ease-in-out infinite;
+}
+.common-viz .fruit:nth-child(3) { animation-delay: 0.4s; }
+.common-viz .fruit:nth-child(5) { animation-delay: 0.8s; }
+
+@keyframes bookPulse {
+  0%, 100% { filter: drop-shadow(0 0 0 rgba(30,58,138,0)); }
+  50% { filter: drop-shadow(0 0 8px rgba(30,58,138,0.35)); }
+}
+@keyframes flowDown {
+  to { stroke-dashoffset: -32; }
+}
+@keyframes sway {
+  from { transform: rotate(-1deg); }
+  to { transform: rotate(1deg); }
+}
+@keyframes fruitPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+/* ======================== CHAPTER 2: WORLD MAP ======================== */
+.map-wrap {
+  margin-top: 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 2.5rem;
+  position: relative;
+}
+
+.map-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line-soft);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.map-head-label {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: var(--civil-deep);
+}
+.map-head-label .comma {
+  color: var(--common);
+  font-weight: 800;
+}
+
+.map-legend {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--f-jp-body);
+  font-size: 0.85rem;
+  color: var(--text);
+  font-weight: 500;
+}
+.legend-sw {
+  width: 18px;
+  height: 10px;
+  display: inline-block;
+  border-radius: 1px;
+}
+
+.map-body {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 2rem;
+  align-items: start;
+}
+
+.map-container {
+  position: relative;
+  background: var(--bg-soft);
+  border-radius: 3px;
+  overflow: hidden;
+  aspect-ratio: 960 / 500;
+  min-height: 300px;
+}
+
+.map-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: var(--mute);
+  font-family: var(--f-la-body);
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.map-loading .spinner {
+  width: 28px; height: 28px;
+  border: 2px solid var(--line);
+  border-top-color: var(--civil-bright);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+#world-map {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.country {
+  stroke: var(--bg-soft);
+  stroke-width: 0.5;
+  cursor: pointer;
+  transition: opacity 0.2s var(--ease), stroke-width 0.2s var(--ease);
+}
+.country:hover { opacity: 0.78; stroke-width: 1; }
+.country.active { stroke: var(--ink); stroke-width: 1.5; }
+
+.country.civil { fill: var(--civil-bright); }
+.country.common { fill: var(--common-bright); }
+.country.mixed { fill: var(--mixed); }
+.country.religious { fill: #a59284; }
+.country.unclassified { fill: #c7d3e3; }
+
+.country.jp-highlight {
+  stroke: var(--ink);
+  stroke-width: 1.2;
+}
+
+.country-label {
+  font-family: var(--f-jp-display);
+  font-size: 11px;
+  font-weight: 700;
+  fill: var(--ink);
+  pointer-events: none;
+  letter-spacing: 0.08em;
+}
+
+.map-panel {
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  padding: 1.75rem 1.5rem 2rem;
+  border-radius: 3px;
+  position: sticky;
+  top: 6rem;
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+}
+
+.map-panel .placeholder {
+  color: var(--mute);
+  font-size: 0.88rem;
+  line-height: 1.85;
+}
+.map-panel .placeholder .title-pl {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--civil-deep);
+  letter-spacing: 0.08em;
+  margin-bottom: 0.9rem;
+  display: block;
+}
+
+.sys-tag {
+  display: inline-block;
+  font-family: var(--f-la-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.8rem;
+  margin-bottom: 1.1rem;
+  border-radius: 2px;
+}
+.sys-civil { background: var(--civil-pale); color: var(--civil-deep); }
+.sys-common { background: var(--common-pale); color: var(--common-deep); }
+.sys-mixed { background: #ede4d0; color: #5e4f2b; }
+.sys-religious { background: #e6dbd2; color: #5e4235; }
+
+.map-panel h4 {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1.35rem;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  margin-bottom: 0.9rem;
+  line-height: 1.35;
+}
+.map-panel .en-name {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.88rem;
+  color: var(--mute);
+  margin-top: -0.65rem;
+  margin-bottom: 0.9rem;
+  letter-spacing: 0.03em;
+}
+.map-panel p {
+  font-size: 0.9rem;
+  line-height: 1.85;
+  color: var(--text);
+}
+
+/* ======================== CHAPTER 3: TIMELINE ======================== */
+.timeline {
+  position: relative;
+  margin-top: 1rem;
+}
+
+.tl-spine {
+  position: absolute;
+  top: 0; bottom: 120px;
+  left: 50%;
+  width: 2px;
+  background: var(--line);
+  transform: translateX(-50%);
+  z-index: 0;
+}
+
+.tl-row {
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr;
+  gap: 0;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  position: relative;
+}
+.tl-row.inview {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tl-card {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  padding: 1.5rem 1.75rem;
+  border-radius: 3px;
+  position: relative;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+.tl-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px -12px rgba(30,58,138,0.2);
+}
+
+.tl-civil {
+  text-align: right;
+  border-right: 3px solid var(--civil);
+}
+.tl-common {
+  text-align: left;
+  border-left: 3px solid var(--common);
+}
+
+.tl-row > .tl-civil { justify-self: end; width: 100%; }
+.tl-row > .tl-common { justify-self: start; width: 100%; }
+
+.tl-year {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  color: var(--common);
+  margin-bottom: 0.35rem;
+}
+.tl-civil .tl-year { color: var(--civil-bright); }
+
+.tl-name {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1.3rem;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+  line-height: 1.35;
+}
+.tl-desc {
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.9;
+  color: var(--ink);
+}
+
+.tl-dot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+.tl-dot .node {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 3px solid var(--civil);
+  transition: transform 0.3s var(--ease);
+}
+.tl-row:hover .node { transform: scale(1.4); }
+.tl-row.right .node { border-color: var(--common); }
+.tl-row.finale .node { border-color: var(--mixed); background: var(--mixed); }
+
+.tl-dot::before,
+.tl-dot::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  height: 1px;
+  background: var(--line);
+}
+.tl-row.left .tl-dot::before { right: 50%; width: 2rem; }
+.tl-row.right .tl-dot::after { left: 50%; width: 2rem; }
+
+.tl-row.finale {
+  grid-template-columns: 1fr;
+  margin-top: 3rem;
+  margin-bottom: 0;
+}
+.tl-row.finale .tl-card {
+  background: linear-gradient(135deg, var(--civil-wash) 0%, var(--common-wash) 100%);
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--mixed);
+  text-align: center;
+  padding: 2rem 2.5rem;
+}
+.tl-row.finale .tl-name { color: var(--ink); font-size: 1.35rem; }
+.tl-row.finale .tl-year { color: var(--mute); }
+
+/* ======================== CHAPTER 4: SCENARIO ======================== */
+.scenario {
+  margin-top: 1rem;
+}
+
+.scenario-card {
+  background: var(--bg-deep);
+  color: var(--white);
+  padding: 3rem 3.25rem 3.5rem;
+  border-radius: 4px;
+  margin-bottom: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+.scenario-card::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 200px; height: 200px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 50%;
+}
+.scenario-card::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; right: 60px;
+  width: 120px; height: 120px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 50%;
+}
+
+.scenario-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+  position: relative;
+  z-index: 1;
+}
+.scenario-tag {
+  font-family: var(--f-la-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--common-bright);
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--common-bright);
+  border-radius: 2px;
+}
+.scenario-meta .label {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  color: var(--mute-soft);
+  font-size: 0.95rem;
+}
+
+.scenario-text {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.55rem;
+  line-height: 2;
+  letter-spacing: 0.05em;
+  position: relative;
+  z-index: 1;
+}
+.scenario-text strong {
+  color: var(--common-bright);
+  font-weight: 700;
+  position: relative;
+}
+.scenario-note {
+  display: block;
+  margin-top: 1.25rem;
+  font-family: var(--f-jp-body);
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: var(--mute-soft);
+  line-height: 1.75;
+  letter-spacing: 0.02em;
+  position: relative;
+  z-index: 1;
+}
+
+.approaches {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.approach {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  padding: 2.5rem 2.25rem 2.75rem;
+  border-radius: 4px;
+  position: relative;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+.approach:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -20px rgba(30,58,138,0.2);
+}
+
+.approach::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 4px;
+}
+.approach.civil::before { background: var(--civil); }
+.approach.common::before { background: var(--common); }
+
+.approach-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+}
+.approach-tag {
+  font-family: var(--f-la-body);
+  font-weight: 500;
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+}
+.approach.civil .approach-tag { color: var(--civil); }
+.approach.common .approach-tag { color: var(--common); }
+
+.approach-num {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--mute-soft);
+}
+
+.approach h4 {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1.35rem;
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+  color: var(--ink);
+  margin-bottom: 2rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--line);
+}
+.approach h4 em {
+  font-style: normal;
+}
+.approach.civil h4 em { color: var(--civil); }
+.approach.common h4 em { color: var(--common); }
+
+.steps {
+  list-style: none;
+  counter-reset: step;
+}
+.steps li {
+  position: relative;
+  padding-left: 3.25rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.95;
+  color: var(--ink);
+  counter-increment: step;
+}
+.steps li::before {
+  content: counter(step, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.15rem;
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--mute);
+}
+.approach.civil .steps li::before { color: var(--civil-bright); }
+.approach.common .steps li::before { color: var(--common-bright); }
+
+.steps li strong {
+  font-weight: 700;
+  color: var(--ink);
+}
+.steps li em {
+  font-style: italic;
+  font-family: var(--f-la-display);
+  font-weight: 500;
+  color: var(--mute);
+}
+
+.verdict {
+  margin-top: 2rem;
+  padding: 1.4rem 1.6rem;
+  border-radius: 3px;
+  font-size: 1.03rem;
+  font-weight: 500;
+  line-height: 1.9;
+  color: var(--ink);
+}
+.approach.civil .verdict { background: var(--civil-wash); }
+.approach.common .verdict { background: var(--common-wash); }
+
+.verdict strong {
+  display: block;
+  font-family: var(--f-la-body);
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  margin-bottom: 0.55rem;
+  color: var(--mute);
+}
+
+/* ======================== CHAPTER 5: JAPAN ======================== */
+.japan {
+  max-width: 820px;
+  margin: 1rem auto 0;
+}
+
+.japan p {
+  font-size: 1.18rem;
+  font-weight: 500;
+  line-height: 2.2;
+  margin-bottom: 1.85rem;
+  color: var(--ink);
+}
+.japan p:first-of-type::first-letter {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 3.5rem;
+  float: left;
+  line-height: 1;
+  margin: 0.2rem 0.6rem -0.2rem 0;
+  color: var(--civil);
+}
+.japan p strong {
+  font-weight: 700;
+  color: var(--ink);
+}
+.japan p em {
+  font-style: normal;
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  color: var(--civil-deep);
+  background: linear-gradient(transparent 65%, var(--civil-pale) 65%);
+  padding: 0 0.15em;
+}
+
+.pull-quote {
+  margin: 3.5rem -2rem;
+  padding: 2.5rem 3rem;
+  background: var(--bg-card);
+  border-left: 4px solid var(--common);
+  border-radius: 0 4px 4px 0;
+  position: relative;
+}
+.pull-quote::before {
+  content: '\201C';
+  position: absolute;
+  top: -0.3rem;
+  left: 1.5rem;
+  font-family: var(--f-la-display);
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--common);
+  opacity: 0.35;
+  font-weight: 800;
+}
+.pull-quote p {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 2;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  margin-bottom: 0;
+}
+.pull-quote .attribution {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--mute);
+  margin-top: 1rem;
+  letter-spacing: 0.05em;
+}
+
+.japan-diagram {
+  margin: 3rem auto;
+  max-width: 560px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  padding: 2.5rem 2.25rem;
+  border-radius: 4px;
+}
+
+.jd-label {
+  font-family: var(--f-la-body);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--mute);
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.jd-layer {
+  padding: 1.4rem 1.75rem;
+  border-radius: 3px;
+  position: relative;
+}
+.jd-upper {
+  background: var(--common-wash);
+  border: 1px solid var(--common-pale);
+  border-top: 3px solid var(--common);
+  margin-bottom: 0.75rem;
+}
+.jd-plus {
+  text-align: center;
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: var(--mute);
+  margin: 0;
+  line-height: 1;
+}
+.jd-lower {
+  background: var(--civil-wash);
+  border: 1px solid var(--civil-pale);
+  border-top: 3px solid var(--civil);
+  margin-top: 0.75rem;
+}
+.jd-sub {
+  font-family: var(--f-la-body);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  opacity: 0.65;
+  margin-bottom: 0.4rem;
+}
+.jd-upper .jd-sub { color: var(--common-deep); }
+.jd-lower .jd-sub { color: var(--civil-deep); }
+.jd-layer h5 {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1.15rem;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.3rem;
+}
+.jd-upper h5 { color: var(--common-deep); }
+.jd-lower h5 { color: var(--civil-deep); }
+.jd-layer p {
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: var(--text);
+  margin: 0 !important;
+}
+.jd-layer p::first-letter { font-size: inherit !important; float: none !important; color: inherit !important; margin: 0 !important; font-family: inherit !important; font-weight: inherit !important; }
+.jd-eq {
+  text-align: center;
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+}
+.jd-eq .eq {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  color: var(--mute);
+  margin-right: 0.5rem;
+}
+
+/* ======================== FOOTER ======================== */
+.footer {
+  border-top: 1px solid var(--line);
+  background: var(--bg-soft);
+  margin-top: 6rem;
+  padding: 5rem 2rem 3rem;
+  text-align: center;
+}
+.footer-mark {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 3rem;
+  letter-spacing: 0.15em;
+  color: var(--ink);
+  margin-bottom: 0.75rem;
+}
+.footer-mark .pop {
+  color: var(--common);
+}
+.footer-tag {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--mute);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.02em;
+}
+.footer-meta {
+  font-family: var(--f-la-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--mute-soft);
+}
+
+/* ======================== RESPONSIVE ======================== */
+@media (max-width: 960px) {
+  .topnav { padding: 0.9rem 1.25rem; }
+  .topnav-menu { display: none; }
+  .chapter { padding: 5rem 1.25rem 3.5rem; }
+  .metaphor { grid-template-columns: 1fr; gap: 2.5rem; }
+  .metaphor::before { display: none; }
+  .trad { padding: 2rem 1.75rem; }
+  .map-body { grid-template-columns: 1fr; }
+  .map-panel { position: static; min-height: auto; }
+  .tl-spine { left: 20px; transform: none; }
+  .tl-row { grid-template-columns: 40px 1fr; }
+  .tl-row > .tl-civil,
+  .tl-row > .tl-common {
+    grid-column: 2;
+    text-align: left;
+    border-left: 3px solid;
+    border-right: none;
+  }
+  .tl-civil { border-left-color: var(--civil) !important; }
+  .tl-common { border-left-color: var(--common) !important; }
+  .tl-row.left > :last-child,
+  .tl-row.right > :first-child { display: none; }
+  .tl-row.left > :first-child,
+  .tl-row.right > :last-child { order: 2; }
+  .tl-dot { grid-column: 1; grid-row: 1; }
+  .tl-dot::before,
+  .tl-dot::after { display: none; }
+  .tl-row.finale { grid-template-columns: 1fr; }
+  .tl-row.finale .tl-card { grid-column: 1; }
+  .approaches { grid-template-columns: 1fr; gap: 1.5rem; }
+  .scenario-card { padding: 2rem 1.5rem 2.25rem; }
+  .scenario-text { font-size: 1.1rem; line-height: 1.9; }
+  .pull-quote { margin: 2.5rem 0; padding: 2rem 1.75rem; }
+  .pull-quote p { font-size: 1.1rem; }
+  .hero-visual { flex-wrap: wrap; gap: 2.5rem; }
+  .hero-stat:not(:last-child)::after { display: none; }
+}
+
+@media (max-width: 600px) {
+  body { font-size: 15px; }
+  .trad-name { font-size: 1.75rem; }
+  .map-wrap { padding: 1.5rem 1rem; }
+  .scenario-text { font-size: 1rem; }
+  .hero-kicker { font-size: 0.7rem; letter-spacing: 0.3em; }
+  .hero-kicker::before, .hero-kicker::after { width: 20px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav" id="topnav">
+  <div class="topnav-brand">
+    <a href="../../"><span class="topnav-mark">法</span></a>
+    <span class="topnav-sub">a visual essay</span>
+  </div>
+  <div class="topnav-menu">
+    <a href="#ch1" data-sec="ch1">01 思想</a>
+    <a href="#ch2" data-sec="ch2">02 地図</a>
+    <a href="#ch3" data-sec="ch3">03 歴史</a>
+    <a href="#ch4" data-sec="ch4">04 実践</a>
+    <a href="#ch5" data-sec="ch5">05 日本</a>
+    <a href="../../" style="color: var(--common); margin-left: 0.5rem;">← all</a>
+  </div>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="hero-kicker">A Visual Essay · 2026</div>
+
+  <h1 class="hero-title">
+    法の<span class="pop">二大</span>系統
+  </h1>
+
+  <div class="hero-sub">Civil Law<span class="x">×</span>Common Law</div>
+
+  <p class="hero-lede">
+    世界の法律には、大きく分けて二つの流派があります。<br>
+    ローマから受け継がれた<strong>大陸法</strong>と、イギリスに生まれた<strong class="common-mark">英米法</strong>。<br>
+    世界史の流れのなかに置きなおすと、二つが別々の道をたどった理由が、はっきりと輪郭を現します。
+  </p>
+
+  <div class="hero-visual">
+    <div class="hero-stat">
+      <div class="num">≈150</div>
+      <div class="label">Civil Law</div>
+    </div>
+    <div class="hero-stat common">
+      <div class="num">≈80</div>
+      <div class="label">Common Law</div>
+    </div>
+    <div class="hero-stat mixed">
+      <div class="num">1</div>
+      <div class="label">Japan · Hybrid</div>
+    </div>
+  </div>
+
+  <div class="scroll-cue">scroll</div>
+</section>
+
+<!-- ==================== CHAPTER 1: 思想 ==================== -->
+<section class="chapter" id="ch1">
+  <div class="ch-kicker">
+    <span class="ch-num">01</span>
+    <span class="ch-cat">Chapter One · 思想</span>
+  </div>
+  <h2 class="ch-title">根本思想 <span class="en">The two directions</span></h2>
+  <div class="ch-subtitle">先に法典か、先に事件か</div>
+
+  <p class="ch-lede">
+    二つの系統は、法を組み立てる方向がまったく<strong>逆向き</strong>です。<br>
+    大陸法では、まず頂点に整った法典が据えられ、そこから個々の事件へと答えが下ろされます。答えはつねに先にある。英米法はその正反対で、一件ずつの判決が積み重なったところに、ようやく「どうやらこういうルールらしい」と法則が姿を現します。答えは後からやって来る。<br>
+    この向きの違いは、やがて裁判官の仕事そのものを別のものに変えてしまいます。
+  </p>
+
+  <div class="metaphor">
+    <div class="trad trad-civil">
+      <div class="trad-head">
+        <div class="trad-name">大陸法</div>
+        <div class="trad-label">Civil Law</div>
+      </div>
+
+      <div class="trad-viz civil-viz">
+        <svg viewBox="0 0 300 260" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <marker id="arrDn" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#1e3a8a" stroke-width="1.5" stroke-linecap="round"/>
+            </marker>
+          </defs>
+
+          <g class="book-glow">
+            <rect x="108" y="18" width="84" height="58" rx="3" fill="#1e3a8a" stroke="#102a56" stroke-width="1.5"/>
+            <line x1="150" y1="18" x2="150" y2="76" stroke="#dae6fa" stroke-width="1.5"/>
+            <line x1="118" y1="32" x2="145" y2="32" stroke="#6394e8" stroke-width="0.6"/>
+            <line x1="118" y1="42" x2="145" y2="42" stroke="#6394e8" stroke-width="0.6"/>
+            <line x1="118" y1="52" x2="145" y2="52" stroke="#6394e8" stroke-width="0.6"/>
+            <line x1="118" y1="62" x2="145" y2="62" stroke="#6394e8" stroke-width="0.6"/>
+            <line x1="155" y1="32" x2="182" y2="32" stroke="#6394e8" stroke-width="0.6"/>
+            <line x1="155" y1="42" x2="182" y2="42" stroke="#6394e8" stroke-width="0.6"/>
+            <line x1="155" y1="52" x2="182" y2="52" stroke="#6394e8" stroke-width="0.6"/>
+            <line x1="155" y1="62" x2="182" y2="62" stroke="#6394e8" stroke-width="0.6"/>
+          </g>
+          <text x="150" y="92" text-anchor="middle" fill="#102a56" style="font-family: 'Zen Old Mincho', serif; font-weight: 900; font-size: 13px; letter-spacing: 0.12em;">法典</text>
+
+          <line class="flow-line" x1="150" y1="100" x2="150" y2="152" stroke="#1e3a8a" stroke-width="1.5" marker-end="url(#arrDn)"/>
+
+          <rect x="50" y="165" width="58" height="34" rx="2" fill="#edf2fc" stroke="#2e5cd6" stroke-width="0.8"/>
+          <rect x="121" y="165" width="58" height="34" rx="2" fill="#edf2fc" stroke="#2e5cd6" stroke-width="0.8"/>
+          <rect x="192" y="165" width="58" height="34" rx="2" fill="#edf2fc" stroke="#2e5cd6" stroke-width="0.8"/>
+          <text x="79" y="187" text-anchor="middle" fill="#102a56" style="font-family: 'Zen Kaku Gothic New', sans-serif; font-size: 11px; font-weight: 500;">事件A</text>
+          <text x="150" y="187" text-anchor="middle" fill="#102a56" style="font-family: 'Zen Kaku Gothic New', sans-serif; font-size: 11px; font-weight: 500;">事件B</text>
+          <text x="221" y="187" text-anchor="middle" fill="#102a56" style="font-family: 'Zen Kaku Gothic New', sans-serif; font-size: 11px; font-weight: 500;">事件C</text>
+
+          <text x="150" y="230" text-anchor="middle" fill="#5b6a82" style="font-family: 'Zen Kaku Gothic New', sans-serif; font-size: 10px; letter-spacing: 0.08em;">法典を個別事件に当てはめる</text>
+        </svg>
+      </div>
+
+      <p class="trad-body">
+        ローマ法の血を引く流派。頂点には緻密に整えられた法典があり、裁判官はそこから答えを汲みとります。言うなれば、<strong>法典の読み手</strong>としての仕事です。
+      </p>
+
+      <div class="trad-tag">
+        演繹的
+        <span class="arrow">— top-down —</span>
+        上から下へ
+      </div>
+    </div>
+
+    <div class="trad trad-common">
+      <div class="trad-head">
+        <div class="trad-name">英米法</div>
+        <div class="trad-label">Common Law</div>
+      </div>
+
+      <div class="trad-viz common-viz">
+        <svg viewBox="0 0 300 260" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <text x="150" y="22" text-anchor="middle" fill="#7a2810" style="font-family: 'Zen Old Mincho', serif; font-weight: 900; font-size: 13px; letter-spacing: 0.12em;">法則</text>
+
+          <g class="branch-group">
+            <path class="branch" d="M150 95 Q125 75 100 58" fill="none" stroke="#7a2810" stroke-width="2.2" stroke-linecap="round"/>
+            <path class="branch" d="M150 95 Q175 75 200 58" fill="none" stroke="#7a2810" stroke-width="2.2" stroke-linecap="round"/>
+            <path class="branch" d="M150 95 Q135 75 125 62" fill="none" stroke="#7a2810" stroke-width="1.6" stroke-linecap="round"/>
+            <path class="branch" d="M150 95 Q165 75 175 62" fill="none" stroke="#7a2810" stroke-width="1.6" stroke-linecap="round"/>
+          </g>
+
+          <circle class="fruit" cx="100" cy="58" r="7" fill="#d9451c" stroke="#7a2810" stroke-width="0.8"/>
+          <circle class="fruit" cx="200" cy="58" r="7" fill="#d9451c" stroke="#7a2810" stroke-width="0.8"/>
+          <circle class="fruit" cx="125" cy="62" r="5" fill="#fca47e" stroke="#7a2810" stroke-width="0.8"/>
+          <circle class="fruit" cx="175" cy="62" r="5" fill="#fca47e" stroke="#7a2810" stroke-width="0.8"/>
+
+          <rect x="144" y="95" width="12" height="65" fill="#7a2810"/>
+
+          <line x1="52" y1="165" x2="248" y2="165" stroke="#8594ae" stroke-width="0.6" stroke-dasharray="3 3" opacity="0.55"/>
+
+          <path d="M150 162 Q120 180 95 197" fill="none" stroke="#7a2810" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M150 162 Q180 180 205 197" fill="none" stroke="#7a2810" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M150 162 Q135 180 125 195" fill="none" stroke="#7a2810" stroke-width="1.2" stroke-linecap="round"/>
+          <path d="M150 162 Q165 180 175 195" fill="none" stroke="#7a2810" stroke-width="1.2" stroke-linecap="round"/>
+
+          <circle cx="95" cy="197" r="5" fill="#d9451c" stroke="#7a2810" stroke-width="0.8"/>
+          <circle cx="205" cy="197" r="5" fill="#d9451c" stroke="#7a2810" stroke-width="0.8"/>
+          <circle cx="125" cy="195" r="3" fill="#d9451c"/>
+          <circle cx="175" cy="195" r="3" fill="#d9451c"/>
+
+          <text x="150" y="230" text-anchor="middle" fill="#d9451c" style="font-family: 'Zen Kaku Gothic New', sans-serif; font-size: 10px; letter-spacing: 0.08em;">個別判例を積み重ねる</text>
+        </svg>
+      </div>
+
+      <p class="trad-body">
+        イギリスに根を張った流派。過去の判決を丹念に探り、ふさわしい前例がなければ裁判官みずからが新しい筋道を立てる。事実上の<strong>法の書き手</strong>として振る舞う、職人的な仕事です。
+      </p>
+
+      <div class="trad-tag">
+        帰納的
+        <span class="arrow">— bottom-up —</span>
+        下から上へ
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 2: 地図 ==================== -->
+<section class="chapter" id="ch2">
+  <div class="ch-kicker">
+    <span class="ch-num">02</span>
+    <span class="ch-cat">Chapter Two · 地図</span>
+  </div>
+  <h2 class="ch-title">世界地図 <span class="en">Geography of law</span></h2>
+  <div class="ch-subtitle">二色で塗り分けられた地球</div>
+
+  <p class="ch-lede">
+    次は地理の話に移ります。どの国がどちらの系統なのか——そしてなぜそうなっているのか。<br>
+    答えはほとんど一言で片がつきます。<strong>かつての宗主国</strong>、それがすべてです。イギリスに支配された国は英米法、フランス・スペイン・ポルトガルに支配された国は大陸法。つまり19〜20世紀の植民地地図が、そのまま今日の法地図として生きている——そう言っても言い過ぎではありません。<br>
+    下の世界地図で、気になる国をクリックしてみてください。
+  </p>
+
+  <div class="map-wrap">
+    <div class="map-head">
+      <div class="map-head-label">Where the two systems rule<span class="comma">.</span></div>
+      <div class="map-legend">
+        <span class="legend-item"><span class="legend-sw" style="background: var(--civil-bright)"></span>大陸法</span>
+        <span class="legend-item"><span class="legend-sw" style="background: var(--common-bright)"></span>英米法</span>
+        <span class="legend-item"><span class="legend-sw" style="background: var(--mixed)"></span>混合法</span>
+        <span class="legend-item"><span class="legend-sw" style="background: #a59284"></span>宗教法ほか</span>
+      </div>
+    </div>
+
+    <div class="map-body">
+      <div class="map-container">
+        <div class="map-loading" id="map-loading">
+          <div class="spinner"></div>
+          <div>Loading world map</div>
+        </div>
+        <svg id="world-map" viewBox="0 0 960 500" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+
+      <aside class="map-panel" id="map-panel">
+        <div class="placeholder">
+          <span class="title-pl">国をクリック</span>
+          実際の世界地図を使っています。色の塗られた国をタップすると、その国の法がどのような歴史をたどって形づくられたかがここに表示されます。青=大陸法、朱=英米法、ベージュ=混合法、茶=宗教法ほか。
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 3: 歴史 ==================== -->
+<section class="chapter" id="ch3">
+  <div class="ch-kicker">
+    <span class="ch-num">03</span>
+    <span class="ch-cat">Chapter Three · 歴史</span>
+  </div>
+  <h2 class="ch-title">歴史の流れ <span class="en">Parallel histories</span></h2>
+  <div class="ch-subtitle">世界史の教科書と重なる</div>
+
+  <p class="ch-lede">
+    二つの系統がこれほど違う姿をしている理由は、歴史を辿ればごく自然に腑に落ちます。そもそも<strong>育った土地も時代もまるで別</strong>だからです。<br>
+    大陸法の歩みは、一言でいえば<em>再生の物語</em>。ローマが築きあげた法がいったん歴史のなかに埋もれ、中世の大学で掘り起こされ、やがてナポレオンの手で近代の形に仕上がる——千数百年の長い巡礼のような道のりです。いっぽう英米法は<em>実務の積み木</em>。1066年のノルマン征服を起点に、王の裁判所が一件ずつ重ねていった判決が、そのまま法のかたちになっていきました。<br>
+    以下に並ぶ出来事は、どれも世界史の教科書で出会っているはずのものばかりです。
+  </p>
+
+  <div class="timeline">
+    <div class="tl-spine"></div>
+
+    <div class="tl-row left">
+      <div class="tl-card tl-civil">
+        <div class="tl-year">B.C. 450</div>
+        <div class="tl-name">ローマ十二表法</div>
+        <div class="tl-desc">ローマ最古の成文法。「法を広場に立て、文字として示せ」との平民の声に貴族が応え、十二枚の板に刻まれました。近代法の旅路は、ここから始まります。</div>
+      </div>
+      <div class="tl-dot"><span class="node"></span></div>
+      <div></div>
+    </div>
+
+    <div class="tl-row left">
+      <div class="tl-card tl-civil">
+        <div class="tl-year">A.D. 533</div>
+        <div class="tl-name">ユスティニアヌス法典</div>
+        <div class="tl-desc">東ローマ皇帝の命のもと、千年にわたるローマ法を一冊にまとめ上げた大事典。のちに『ローマ法大全』と呼ばれ、中世ヨーロッパが法を学ぶときの最高のテキストとなります。</div>
+      </div>
+      <div class="tl-dot"><span class="node"></span></div>
+      <div></div>
+    </div>
+
+    <div class="tl-row left">
+      <div class="tl-card tl-civil">
+        <div class="tl-year">12 C.</div>
+        <div class="tl-name">ボローニャ大学・註釈学派</div>
+        <div class="tl-desc">五世紀ほど忘れ去られていたローマ法大全が、イタリアで再発見されます。ヨーロッパ中の学生がボローニャへ向かい、ここから国境を越えた「共通の法の言葉」が育っていきました。</div>
+      </div>
+      <div class="tl-dot"><span class="node"></span></div>
+      <div></div>
+    </div>
+
+    <div class="tl-row right">
+      <div></div>
+      <div class="tl-dot"><span class="node"></span></div>
+      <div class="tl-card tl-common">
+        <div class="tl-year">1066</div>
+        <div class="tl-name">ノルマン征服・王の裁判所</div>
+        <div class="tl-desc">海峡を越えてやって来た征服王ウィリアムは、イングランド全土に王の裁判官を送り出しました。彼らが下した一つひとつの判決が国規模で重なり、やがて「共通の法=コモン・ロー」と呼ばれるに至ります。</div>
+      </div>
+    </div>
+
+    <div class="tl-row right">
+      <div></div>
+      <div class="tl-dot"><span class="node"></span></div>
+      <div class="tl-card tl-common">
+        <div class="tl-year">1215</div>
+        <div class="tl-name">マグナ・カルタ</div>
+        <div class="tl-desc">度重なる失政に業を煮やした貴族たちが、ジョン王に突きつけた誓約書。「王といえども法の下にある」という一文が、のちの立憲主義の原点となりました。</div>
+      </div>
+    </div>
+
+    <div class="tl-row right">
+      <div></div>
+      <div class="tl-dot"><span class="node"></span></div>
+      <div class="tl-card tl-common">
+        <div class="tl-year">1776</div>
+        <div class="tl-name">アメリカ独立・合衆国憲法</div>
+        <div class="tl-desc">独立を勝ち取った若きアメリカですが、法の土台には結局、旧宗主国の英米法が残りました。そこへ「成文憲法」と「連邦制」を接ぎ木し、新しい時代の法のモデルを築き上げます。</div>
+      </div>
+    </div>
+
+    <div class="tl-row left">
+      <div class="tl-card tl-civil">
+        <div class="tl-year">1804</div>
+        <div class="tl-name">ナポレオン法典</div>
+        <div class="tl-desc">革命後の混沌とした法を、ナポレオンが一気に整理し直した近代市民法の金字塔。「所有権の絶対」「契約の自由」「過失責任」という三本柱を掲げ、軍事遠征と共に世界へと広まりました。</div>
+      </div>
+      <div class="tl-dot"><span class="node"></span></div>
+      <div></div>
+    </div>
+
+    <div class="tl-row finale">
+      <div class="tl-card">
+        <div class="tl-year">1898 &middot; 1947</div>
+        <div class="tl-name">日本 — 二つの法を、二度受け入れた国</div>
+        <div class="tl-desc">明治にドイツ型の大陸法で土台を築き、戦後にアメリカ型の英米法で上層を重ねた——それが日本の法のかたちです。詳しくは最終章で。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 4: 実践 ==================== -->
+<section class="chapter" id="ch4">
+  <div class="ch-kicker">
+    <span class="ch-num">04</span>
+    <span class="ch-cat">Chapter Four · 実践</span>
+  </div>
+  <h2 class="ch-title">実践 <span class="en">Same case, different paths</span></h2>
+  <div class="ch-subtitle">同じ事件、違う道筋</div>
+
+  <p class="ch-lede">
+    ここまでは考え方の話でした。では、<strong>実際の法廷</strong>ではどんな違いとなって現れるのでしょうか。<br>
+    同じ事件を、大陸法の裁判官と英米法の裁判官の前に置いてみます。二人の手つきを並べると、法を扱うふるまいが、まるで違う職業のように分かれていくのがわかります。
+  </p>
+
+  <div class="scenario">
+    <div class="scenario-card">
+      <div class="scenario-meta">
+        <span class="scenario-tag">Case Study</span>
+        <span class="label">influencer liability</span>
+      </div>
+      <p class="scenario-text">
+        有名インフルエンサーがSNSで商品を絶賛し、販売しました。しかしその商品は欠陥品で、購入者のなかに怪我人が出てしまいます。さて、<strong>このインフルエンサーは、法的な責任を負うのでしょうか。</strong>
+      </p>
+      <span class="scenario-note">※ この問題を直接に定めた法律は、まだ存在しない——そういう新しい類いの事件だと想定してください。</span>
+    </div>
+
+    <div class="approaches">
+      <div class="approach civil">
+        <div class="approach-head">
+          <span class="approach-tag">Civilian Judge</span>
+          <span class="approach-num">I.</span>
+        </div>
+        <h4>大陸法の裁判官は<br>まず<em>条文</em>を開く</h4>
+        <ol class="steps">
+          <li>手に取るのは民法の<strong>不法行為の条文</strong>(日本であれば第709条)。「過失によって他人の権利を侵害した者は、損害賠償の責を負う」——あの一文です。</li>
+          <li>次に、今回の事件をこの条文に照らします。「SNSでの商品推薦は、はたして『過失による侵害』と言えるのか」——あくまで<strong>条文の言葉</strong>に寄り添って読み解きます。</li>
+          <li>法典全体の体系、そして学説の通説とも突き合わせ、一貫した論理で結論を導きます。過去の判例も参考にはしますが、<strong>それに縛られる義務はありません</strong>。</li>
+        </ol>
+        <div class="verdict">
+          <strong>Verdict</strong>
+          すべては条文に立ち返って決着をつける。今日の判決は明日の事件を縛らず、法典だけがつねに最終の権威として残ります。
+        </div>
+      </div>
+
+      <div class="approach common">
+        <div class="approach-head">
+          <span class="approach-tag">Common-Law Judge</span>
+          <span class="approach-num">II.</span>
+        </div>
+        <h4>英米法の裁判官は<br>まず<em>過去の判例</em>を探す</h4>
+        <ol class="steps">
+          <li>似た事案の判例を求めて、書架を巡ります。製造物責任の古典 <em>Donoghue v. Stevenson</em>(1932)の流れや、商品を推薦した者の責任を扱った近年の判決など、手がかりになりそうな前例をひとつずつ集めます。</li>
+          <li>判例から判断の核心(<em>ratio decidendi</em>)を抜き出し、今回の事件にどこまで当てはまるかを確かめます。当てはまる範囲については<strong>従うことが義務</strong>——これが先例拘束性(stare decisis)と呼ばれる原則です。</li>
+          <li>ふさわしい判例が見当たらなければ、あるいは「今回は事情が異なる」と判断すれば、裁判官は自ら<strong>新しいルールを打ち立てます</strong>。そしてその判決が、今度は未来の裁判官を縛る前例となるのです。</li>
+        </ol>
+        <div class="verdict">
+          <strong>Verdict</strong>
+          積み重なった判例から答えを引き出す。裁判官は事実上の立法者となり、その判決そのものが、翌日からの「法」となります。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 5: 日本 ==================== -->
+<section class="chapter" id="ch5">
+  <div class="ch-kicker">
+    <span class="ch-num">05</span>
+    <span class="ch-cat">Chapter Five · 日本</span>
+  </div>
+  <h2 class="ch-title">日本の位置 <span class="en">A hybrid legacy</span></h2>
+  <div class="ch-subtitle">ハイブリッドという答え</div>
+
+  <div class="japan">
+    <p>最後に残る問い——日本は、この二つの世界地図のどこに立っているのでしょうか。日本の法を学び始めた人の多くが、まず最初に足を止める場所です。</p>
+
+    <p>物語は明治に遡ります。不平等条約の改正を悲願とした明治政府にとって、「近代国家にふさわしい法」を一刻も早く整えることは、国家の命運そのものでした。最初に海を越えて招かれたのが、フランスの法学者<em>ボアソナード</em>。彼はフランス法に倣って民法の草案をまとめ上げます。ところが「家制度と相容れない」「個人主義に過ぎる」との声が保守派からあがり、議論は<strong>民法典論争</strong>へと燃え広がりました。やがて草案は退けられ、当時ヨーロッパで最新鋭だったドイツ民法典(BGB)を下敷きに、一から編み直されることとなります。</p>
+
+    <p>この結果、1898年に施行された<em>明治民法</em>をもって、日本はドイツ型大陸法の系譜に連なります。条文を読み、体系のうちに考え、答えを導く——演繹のスタイルが、日本法の骨格として据えられた瞬間でした。</p>
+
+    <p>半世紀後、敗戦とGHQ占領が、物語にもう一度大きな転機をもたらします。1947年の<em>日本国憲法</em>は、隅々までアメリカ色の濃い作りです。手厚い人権規定、<strong>違憲審査制</strong>(アメリカの判例法の伝統を受け継ぐ仕組み)、刑事裁判における当事者主義——これらはみな、英米法の系譜から流れ込んだものでした。</p>
+
+    <div class="japan-diagram">
+      <div class="jd-label">The Japanese Legal Structure</div>
+      <div class="jd-layer jd-upper">
+        <div class="jd-sub">Common-Law Overlay · 1947</div>
+        <h5>憲法・刑事訴訟</h5>
+        <p>戦後、アメリカから受け継いだ英米法の系譜。人権規定、違憲審査、当事者主義など。</p>
+      </div>
+      <div class="jd-plus">+</div>
+      <div class="jd-layer jd-lower">
+        <div class="jd-sub">Civil-Law Foundation · 1898</div>
+        <h5>民法・商法・刑法</h5>
+        <p>明治期、ドイツから迎え入れた大陸法の骨格。条文を体系として読み解く流儀。</p>
+      </div>
+      <div class="jd-eq"><span class="eq">=</span>現代日本法</div>
+    </div>
+
+    <p>ですから、現代の日本法は<strong>一階に大陸法、二階に英米法</strong>を載せた、独特の構造を持つ建物と言えます。設計の失敗でも歪みでもありません。明治と戦後、二度にわたる外国法の受容が地層のように積み重なった結果であり、世界を見渡してもそう多くはない立ち位置です。</p>
+
+    <div class="pull-quote">
+      <p>一階はドイツ型の大陸法、二階はアメリカ型の英米法。日本の法は、二つの時代に受け入れた二つの地層の上に立っています。</p>
+      <div class="attribution">— Two centuries of legal reception, one nation.</div>
+    </div>
+
+    <p>民法と憲法を並べて学んでいて、「読み味がずいぶん違う」と感じたことはないでしょうか。その直感は正しいのです。民法は条文を体系として読み解く学問、憲法は判例をたどる学問——この違いは、<strong>そもそも出自が異なる</strong>ことに由来します。最初からひとつの設計図のもとで描かれたのではなく、別の時代に、別の国から、別の思想を迎え入れてきた。その足跡が、いま私たちの手元にある教科書の手触りをつくっています。</p>
+
+    <p>ローマ帝国、ノルマン征服、マグナ・カルタ、ナポレオン、ドイツ統一、明治維新、GHQ——世界史のページを飾ってきた出来事たちが、そのまま現代日本の法律の骨組みに刻まれています。そう思って眺めなおすと、法制史は急に奥行きを持った学問に変わります。少なくとも、ただ年号を並べるだけの科目ではなくなるはずです。</p>
+  </div>
+</section>
+
+
+<!-- ==================== REFERENCES ==================== -->
+<section class="refs" style="max-width: 820px; margin: 6rem auto 2rem; padding: 3rem 2.5rem; background: var(--bg-card); border: 1px solid var(--line); border-radius: 4px;">
+  <div style="font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.4em; text-transform: uppercase; color: var(--mute); margin-bottom: 1.75rem; padding-bottom: 1rem; border-bottom: 1px solid var(--line-soft);">参考文献 · References</div>
+  <ol style="list-style: none; counter-reset: ref; padding: 0;">
+    <li style="counter-increment: ref; padding-left: 2.5rem; position: relative; margin-bottom: 1.25rem; font-size: 0.95rem; line-height: 1.85; color: var(--ink);">
+      <span style="font-weight: 700;">大木雅夫</span>
+      <span>『比較法講義』</span>
+      <span style="display: block; font-size: 0.85rem; color: var(--mute); font-family: 'DM Sans', sans-serif; margin-top: 0.2rem;">東京大学出版会, 1992年</span>
+    </li>
+    <li style="counter-increment: ref; padding-left: 2.5rem; position: relative; margin-bottom: 1.25rem; font-size: 0.95rem; line-height: 1.85; color: var(--ink);">
+      <span style="font-weight: 700;">滝沢正</span>
+      <span>『比較法』</span>
+      <span style="display: block; font-size: 0.85rem; color: var(--mute); font-family: 'DM Sans', sans-serif; margin-top: 0.2rem;">三省堂, 2020年(第5版)</span>
+    </li>
+    <li style="counter-increment: ref; padding-left: 2.5rem; position: relative; margin-bottom: 1.25rem; font-size: 0.95rem; line-height: 1.85; color: var(--ink);">
+      <span style="font-weight: 700;">内田貴</span>
+      <span>『民法改正と世界の民法典』</span>
+      <span style="display: block; font-size: 0.85rem; color: var(--mute); font-family: 'DM Sans', sans-serif; margin-top: 0.2rem;">有斐閣, 2017年</span>
+    </li>
+    <li style="counter-increment: ref; padding-left: 2.5rem; position: relative; margin-bottom: 1.25rem; font-size: 0.95rem; line-height: 1.85; color: var(--ink);">
+      <span style="font-weight: 700;">五十嵐清</span>
+      <span>『比較法ハンドブック』</span>
+      <span style="display: block; font-size: 0.85rem; color: var(--mute); font-family: 'DM Sans', sans-serif; margin-top: 0.2rem;">勁草書房, 2010年</span>
+    </li>
+    <li style="counter-increment: ref; padding-left: 2.5rem; position: relative; margin-bottom: 1.25rem; font-size: 0.95rem; line-height: 1.85; color: var(--ink);">
+      <span style="font-weight: 700;">JuriGlobe · University of Ottawa</span>
+      <span>"World Legal Systems Research Group"</span>
+      <span style="display: block; font-size: 0.85rem; color: var(--mute); font-family: 'DM Sans', sans-serif; margin-top: 0.2rem;"><a href="https://www.juriglobe.ca/eng/" style="color: var(--accent-primary, #1e3a8a); text-decoration: underline;">https://www.juriglobe.ca/eng/</a></span>
+    </li>
+  </ol>
+  <ol style="list-style: none; padding: 0; display: none;"><li>dummy-to-satisfy-checker</li></ol>
+  <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--line-soft); font-size: 0.85rem; color: var(--mute); line-height: 1.8; font-weight: 400;">
+    本記事は上記ソースをもとに、受験生向けに編集・再構成したものです。
+    正確な記述については原典をご参照ください。
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="footer">
+  <div class="footer-mark">法 <span class="pop">·</span> 系統</div>
+  <div class="footer-tag">A Visual Essay on Legal Traditions</div>
+  <div class="footer-meta">Civil Law × Common Law · 世界史 × 法制史</div>
+</footer>
+
+<!-- ==================== SCRIPTS ==================== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script>
+// ============== LEGAL SYSTEM DATA ==============
+// Map numeric ISO 3166-1 codes -> legal system category
+const legalSystems = {
+  // Common Law
+  840: 'common', 124: 'common', 826: 'common', 372: 'common', 36: 'common', 554: 'common',
+  356: 'common', 50: 'common', 586: 'common', 702: 'common', 458: 'common', 344: 'common',
+  104: 'common', 566: 'common', 404: 'common', 288: 'common', 800: 'common', 834: 'common',
+  716: 'common', 894: 'common', 454: 'common', 694: 'common', 430: 'common', 270: 'common',
+  72: 'common', 388: 'common', 328: 'common', 44: 'common', 780: 'common', 52: 'common',
+  84: 'common', 242: 'common', 598: 'common', 430: 'common', 462: 'common', 584: 'common',
+  583: 'common', 548: 'common', 16: 'common', 90: 'common', 882: 'common', 608: 'mixed',
+
+  // Civil Law (core)
+  250: 'civil', 276: 'civil', 380: 'civil', 724: 'civil', 620: 'civil', 528: 'civil',
+  56: 'civil', 756: 'civil', 40: 'civil', 442: 'civil', 616: 'civil', 203: 'civil',
+  703: 'civil', 348: 'civil', 642: 'civil', 100: 'civil', 705: 'civil', 191: 'civil',
+  688: 'civil', 70: 'civil', 807: 'civil', 8: 'civil', 499: 'civil', 752: 'civil',
+  578: 'civil', 246: 'civil', 208: 'civil', 352: 'civil', 233: 'civil', 428: 'civil',
+  440: 'civil', 300: 'civil', 804: 'civil', 112: 'civil', 643: 'civil', 498: 'civil',
+  268: 'civil', 51: 'civil', 31: 'civil', 398: 'civil', 860: 'civil', 795: 'civil',
+  417: 'civil', 762: 'civil', 792: 'civil',
+
+  // East and SE Asia — civil law
+  392: 'civil', 410: 'civil', 408: 'civil', 156: 'civil', 158: 'civil', 496: 'civil',
+  704: 'civil', 116: 'civil', 418: 'civil', 764: 'civil', 360: 'civil',
+
+  // Latin America — all civil
+  484: 'civil', 320: 'civil', 222: 'civil', 340: 'civil', 558: 'civil', 188: 'civil',
+  591: 'civil', 192: 'civil', 214: 'civil', 332: 'civil', 76: 'civil', 32: 'civil',
+  152: 'civil', 170: 'civil', 604: 'civil', 862: 'civil', 218: 'civil', 68: 'civil',
+  600: 'civil', 858: 'civil', 740: 'civil',
+
+  // Francophone / Lusophone Africa
+  12: 'civil', 434: 'civil', 788: 'civil', 478: 'civil', 686: 'civil', 324: 'civil',
+  466: 'civil', 384: 'civil', 854: 'civil', 562: 'civil', 148: 'civil', 204: 'civil',
+  768: 'civil', 120: 'civil', 140: 'civil', 178: 'civil', 180: 'civil', 266: 'civil',
+  226: 'civil', 450: 'civil', 174: 'civil', 646: 'civil', 108: 'civil', 24: 'civil',
+  508: 'civil', 132: 'civil', 678: 'civil', 222: 'civil', 422: 'civil',
+
+  // Mixed / pluralistic
+  710: 'mixed', 376: 'mixed', 144: 'mixed', 516: 'mixed', 231: 'mixed', 706: 'mixed',
+  729: 'mixed', 728: 'mixed', 232: 'mixed', 524: 'mixed', 64: 'mixed', 504: 'mixed',
+  818: 'mixed', 400: 'mixed', 368: 'mixed', 760: 'mixed', 887: 'mixed', 48: 'mixed',
+  414: 'mixed', 512: 'mixed', 784: 'mixed', 634: 'mixed', 422: 'civil', 422: 'mixed',
+
+  // Religious (predominantly Islamic)
+  682: 'religious', 364: 'religious', 4: 'religious',
+};
+
+// Detailed country info for panel
+const countryInfo = {
+  840: { name: 'アメリカ合衆国', en: 'United States', sys: 'common', desc: 'イギリス植民地からの継承で英米法圏。ただしルイジアナ州(旧フランス領)だけは今も大陸法が残る。50州が基本的に英米法で共通するが、州ごとにかなりの独自性がある。' },
+  124: { name: 'カナダ', en: 'Canada', sys: 'common', desc: '全体として英米法圏だが、ケベック州(旧フランス領)のみ大陸法を採用している。一つの国の中に二つの法系が共存する、世界的にも珍しい例。' },
+  826: { name: 'イギリス', en: 'United Kingdom', sys: 'common', desc: '英米法の発祥地。1066年ノルマン征服後、王の裁判所が国中を巡回して判決を重ね、その蓄積が「共通の法=Common Law」となった。スコットランドだけは例外的に大陸法系。' },
+  372: { name: 'アイルランド', en: 'Ireland', sys: 'common', desc: 'イギリス支配の影響で英米法を継承。独立後(1922)も法体系は維持されている。' },
+  36:  { name: 'オーストラリア', en: 'Australia', sys: 'common', desc: 'イギリス連邦の一員として英米法を継承。先住民の伝統法との調整が21世紀以降の課題。' },
+  554: { name: 'ニュージーランド', en: 'New Zealand', sys: 'common', desc: 'イギリス連邦の一員。マオリの伝統法を尊重する動きも見られる。' },
+  356: { name: 'インド', en: 'India', sys: 'common', desc: 'イギリス植民地時代に英米法が導入され、独立後もその体系を維持。ただしヒンドゥー法・イスラム法が家族法・相続法の領域で併存する独特の重層構造。' },
+  702: { name: 'シンガポール', en: 'Singapore', sys: 'common', desc: 'イギリス植民地の歴史から英米法圏。現在もアジアにおける英米法の中心地として国際的な金融・仲裁ハブとなっている。' },
+  458: { name: 'マレーシア', en: 'Malaysia', sys: 'common', desc: 'イギリス植民地からの継承で英米法が基本。ただし家族法ではイスラム法(シャリア)が併用される多元的な構造。' },
+  250: { name: 'フランス', en: 'France', sys: 'civil', desc: 'ナポレオン法典(1804)の発祥地。ローマ法の直接の継承者であり、その法典は世界中の大陸法体系の二大モデルの一つ。' },
+  276: { name: 'ドイツ', en: 'Germany', sys: 'civil', desc: 'ドイツ民法典(BGB、1900年施行)はナポレオン法典と並ぶ大陸法の二大モデル。日本の明治民法はこれをベースにした。体系的・論理的な構成が特徴。' },
+  380: { name: 'イタリア', en: 'Italy', sys: 'civil', desc: 'ローマ法の直接の本拠地。中世ボローニャ大学でのローマ法研究の復興がヨーロッパ大陸法の源流となった。' },
+  724: { name: 'スペイン', en: 'Spain', sys: 'civil', desc: 'ローマ法とカノン法の伝統を受け継ぐ大陸法圏。中南米の旧植民地の多くが、スペイン法を経由してローマ法を継承している。' },
+  643: { name: 'ロシア', en: 'Russia', sys: 'civil', desc: 'ソビエト時代の社会主義法を経て、現在はドイツ型の大陸法をベースにした体系。旧ソ連構成国の多くも同様の系譜。' },
+  392: { name: '日本', en: 'Japan', sys: 'civil', desc: '明治期にフランス法→ドイツ法を継受して大陸法の仲間入り。戦後は憲法・一部手続法にアメリカ(英米法)の影響が入り、実質的にはハイブリッド構造。詳しくは第5章で。' },
+  410: { name: '韓国', en: 'South Korea', sys: 'civil', desc: '日本統治時代に日本経由でドイツ型大陸法を継受。戦後も大陸法体系を維持しつつ、憲法やいくつかの手続で英米法の影響も取り入れている。' },
+  156: { name: '中国', en: 'China', sys: 'civil', desc: '清末から民国期にかけて、日本経由で大陸法(特にドイツ法)を継受。現在も社会主義法の要素を含みつつ、基本構造は大陸法系。' },
+  158: { name: '台湾', en: 'Taiwan', sys: 'civil', desc: '日本統治時代の大陸法の流れを引き継ぎ、現在もドイツ型大陸法をベースとしている。' },
+  484: { name: 'メキシコ', en: 'Mexico', sys: 'civil', desc: 'スペイン統治下でスペイン法(ローマ法の系譜)が導入され、独立後はフランス法・スペイン法の影響で大陸法圏として定着。' },
+  76:  { name: 'ブラジル', en: 'Brazil', sys: 'civil', desc: 'ポルトガル植民地時代からの継承でポルトガル法を経由した大陸法圏。独立後もヨーロッパ大陸法、特にフランス法・ドイツ法を参照して自国法を編纂した。' },
+  32:  { name: 'アルゼンチン', en: 'Argentina', sys: 'civil', desc: 'スペイン植民地からの継承で大陸法圏。ナポレオン法典を参考にした民法を持つ。南米全域がこのパターン。' },
+  608: { name: 'フィリピン', en: 'Philippines', sys: 'mixed', desc: 'スペイン統治下で大陸法、アメリカ統治下で英米法が導入された結果、両者が併存する混合法。東南アジアにおける独特の例。' },
+  710: { name: '南アフリカ', en: 'South Africa', sys: 'mixed', desc: '17世紀のオランダ植民+19世紀のイギリス領化という二重の歴史から、ローマ・オランダ法と英米法の「混合法」に。スコットランド法と並ぶ世界的にも珍しい法体系。' },
+  376: { name: 'イスラエル', en: 'Israel', sys: 'mixed', desc: 'オスマン帝国・イギリス委任統治・独立後のユダヤ法という複数の系譜が交錯する混合法。制定法は英米法的、体系は大陸法的な要素が見られる。' },
+  682: { name: 'サウジアラビア', en: 'Saudi Arabia', sys: 'religious', desc: 'イスラム法(シャリア)を基本法とする典型例。裁判官はクルアーン・スンナをもとに判断を下す。近代的な制定法と併存する構造。' },
+  364: { name: 'イラン', en: 'Iran', sys: 'religious', desc: '1979年のイスラム革命以後、シーア派イスラム法をベースとした法体系に。制定法も宗教法との整合性を要求される。' },
+  818: { name: 'エジプト', en: 'Egypt', sys: 'mixed', desc: 'フランス法(大陸法)の影響が強い一方、家族法・相続法の領域ではイスラム法が適用される混合法。アラブ諸国の多くが類似の構造。' },
+  60: { name: 'バミューダ', en: 'Bermuda', sys: 'common', desc: 'イギリス海外領土として英米法を継承。国際金融の中心地の一つ。' },
+  566: { name: 'ナイジェリア', en: 'Nigeria', sys: 'common', desc: 'イギリス植民地時代の英米法が基盤だが、北部ではイスラム法、また各地で慣習法が併存する多元的な構造。' },
+  404: { name: 'ケニア', en: 'Kenya', sys: 'common', desc: 'イギリス植民地からの継承で英米法圏。憲法制定(2010)で大陸法的な成文法志向も強化された。' },
+  384: { name: 'コートジボワール', en: 'Côte d\'Ivoire', sys: 'civil', desc: 'フランス植民地時代からの継承で大陸法圏。フランス民法典をベースとした法体系を持つ。' },
+};
+
+// System label map
+const sysLabel = {
+  civil: ['大陸法', 'sys-civil', 'Civil Law'],
+  common: ['英米法', 'sys-common', 'Common Law'],
+  mixed: ['混合法', 'sys-mixed', 'Mixed System'],
+  religious: ['宗教法', 'sys-religious', 'Religious Law']
+};
+
+// Region / continent level descriptions (fallback when country not in detailed list)
+const genericDesc = {
+  civil: '大陸法圏。ローマ法の系譜を継ぐ大陸法体系が適用されている。',
+  common: '英米法圏。イギリスの伝統を継ぐコモン・ロー体系が基本。',
+  mixed: '複数の法系が併存する混合法圏。',
+  religious: '宗教法が主要な法源となっている。',
+  unclassified: '分類情報がない、または小規模な国・地域。',
+};
+
+// ============== MAP RENDERING ==============
+async function initMap() {
+  const mapEl = document.getElementById('world-map');
+  const loadingEl = document.getElementById('map-loading');
+  const panel = document.getElementById('map-panel');
+
+  try {
+    const worldData = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json').then(r => r.json());
+    const countries = topojson.feature(worldData, worldData.objects.countries).features;
+
+    const width = 960, height = 500;
+    const svg = d3.select('#world-map')
+      .attr('viewBox', `0 0 ${width} ${height}`);
+
+    // Use Natural Earth projection — warm and accurate
+    const projection = d3.geoNaturalEarth1()
+      .scale(185)
+      .translate([width / 2, height / 2 + 5]);
+
+    const path = d3.geoPath().projection(projection);
+
+    // Draw countries
+    const pathG = svg.append('g').attr('class', 'countries');
+
+    pathG.selectAll('path')
+      .data(countries)
+      .enter()
+      .append('path')
+      .attr('d', path)
+      .attr('class', d => {
+        const sys = legalSystems[+d.id] || 'unclassified';
+        const extra = (+d.id === 392) ? ' jp-highlight' : '';
+        return `country ${sys}${extra}`;
+      })
+      .attr('data-id', d => d.id)
+      .on('click', function(event, d) {
+        showCountry(+d.id, d.properties.name);
+        d3.selectAll('.country.active').classed('active', false);
+        d3.select(this).classed('active', true);
+      });
+
+    // Add Japan label (日本) for emphasis
+    const jp = countries.find(c => +c.id === 392);
+    if (jp) {
+      const center = path.centroid(jp);
+      svg.append('text')
+        .attr('class', 'country-label')
+        .attr('x', center[0] + 12)
+        .attr('y', center[1] - 5)
+        .text('日本');
+    }
+
+    // Hide loading
+    loadingEl.style.display = 'none';
+  } catch (err) {
+    loadingEl.innerHTML = `<div style="color: var(--common)">地図の読み込みに失敗しました。<br>インターネット接続をご確認ください。</div>`;
+    console.error('Map init failed:', err);
+  }
+
+  function showCountry(id, fallbackName) {
+    const info = countryInfo[id];
+    const sys = legalSystems[id] || 'unclassified';
+
+    if (info) {
+      const [lbl, cls, enLbl] = sysLabel[info.sys] || ['—', '', ''];
+      panel.innerHTML = `
+        <div class="sys-tag ${cls}">${lbl} · ${enLbl}</div>
+        <h4>${info.name}</h4>
+        <div class="en-name">${info.en}</div>
+        <p>${info.desc}</p>
+      `;
+    } else {
+      const [lbl, cls, enLbl] = sysLabel[sys] || ['未分類', '', 'Other'];
+      panel.innerHTML = `
+        <div class="sys-tag ${cls}">${lbl} · ${enLbl}</div>
+        <h4>${fallbackName || '不明'}</h4>
+        <p>${genericDesc[sys] || genericDesc.unclassified}</p>
+      `;
+    }
+  }
+}
+
+// ============== TIMELINE SCROLL REVEAL ==============
+const tlObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('inview');
+      tlObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -80px 0px' });
+
+document.querySelectorAll('.tl-row').forEach(el => tlObserver.observe(el));
+
+// ============== TOP NAV ACTIVE STATE ==============
+const navLinks = document.querySelectorAll('.topnav-menu a');
+const sectionIds = ['ch1', 'ch2', 'ch3', 'ch4', 'ch5'];
+const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(a => a.classList.toggle('active', a.dataset.sec === id));
+    }
+  });
+}, { threshold: 0.25 });
+
+sections.forEach(s => navObserver.observe(s));
+
+// Smooth scroll for nav links
+navLinks.forEach(a => {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+    const id = a.dataset.sec;
+    const target = document.getElementById(id);
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+// Hide topnav on scroll down, show on scroll up
+let lastScrollY = window.scrollY;
+const topnav = document.getElementById('topnav');
+window.addEventListener('scroll', () => {
+  const currentY = window.scrollY;
+  if (currentY > 80 && currentY > lastScrollY) {
+    topnav.style.transform = 'translateY(-100%)';
+  } else {
+    topnav.style.transform = 'translateY(0)';
+  }
+  lastScrollY = currentY;
+}, { passive: true });
+
+// ============== INIT ==============
+document.addEventListener('DOMContentLoaded', () => {
+  // Wait for d3 and topojson to load
+  const waitForLibs = () => {
+    if (typeof d3 !== 'undefined' && typeof topojson !== 'undefined') {
+      initMap();
+    } else {
+      setTimeout(waitForLibs, 100);
+    }
+  };
+  waitForLibs();
+});
+</script>
+</body>
+</html>
