@@ -1,0 +1,2086 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>特許が守ってきたもの — 蒸気機関から、ポケモンボールまで | Visual Essay</title>
+<meta name="description" content="ヴェネツィア1474年からパルワールド2024年まで。ワットの蒸気機関、ハーバー・ボッシュ法、青色LED、FATファイルシステム、そして任天堂対Pocketpairの最新訴訟で辿る、特許制度500年の科学技術史。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400;1,9..144,600&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* ============ BACKGROUND PALETTE (common) ============ */
+  --bg: #f7fafd;
+  --bg-card: #ffffff;
+  --bg-soft: #eff4fb;
+  --bg-tint: #e0ecf9;
+  --bg-deep: #0a2540;
+  --bg-wash: #dce8f6;
+
+  /* ============ Navy × Amber PALETTE ============ */
+  --accent-primary-deep: #0b1a3a;
+  --accent-primary: #1c357a;
+  --accent-primary-bright: #3357cc;
+  --accent-primary-light: #6b8bd0;
+  --accent-primary-pale: #cfdaf2;
+  --accent-primary-wash: #e8eef8;
+
+  --accent-secondary-deep: #6b3d00;
+  --accent-secondary: #c17900;
+  --accent-secondary-bright: #e89a1a;
+  --accent-secondary-light: #f4c773;
+  --accent-secondary-pale: #f7e1b3;
+  --accent-secondary-wash: #faeed1;
+
+  /* ============ NEUTRALS ============ */
+  --ink: #0b1424;
+  --text: #1a2541;
+  --mute: #5b6a82;
+  --mute-soft: #8594ae;
+  --line: #d6e0ee;
+  --line-soft: #e8edf5;
+
+  --mixed: #8a7a50;
+  --gold: #f4b93a;
+  --white: #ffffff;
+
+  --f-jp-display: 'Zen Old Mincho', 'Noto Serif JP', serif;
+  --f-jp-body: 'Zen Kaku Gothic New', 'Hiragino Sans', sans-serif;
+  --f-la-display: 'Fraunces', 'Playfair Display', Georgia, serif;
+  --f-la-body: 'DM Sans', system-ui, sans-serif;
+  --f-mono: 'JetBrains Mono', 'SF Mono', monospace;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--f-jp-body);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 2.0;
+  letter-spacing: 0.025em;
+  font-feature-settings: 'palt' 1;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(circle at 1px 1px, rgba(28,53,122,0.06) 1px, transparent 0);
+  background-size: 28px 28px;
+}
+
+::selection { background: var(--accent-primary); color: var(--white); }
+
+a { color: inherit; text-decoration: none; }
+
+/* ============ TOP NAV ============ */
+.topnav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 1.1rem 2.5rem;
+  background: rgba(247, 250, 253, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.4s var(--ease);
+}
+
+.topnav-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+.topnav-mark {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1.25rem;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+}
+.topnav-sub {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--mute);
+  letter-spacing: 0.05em;
+}
+
+.topnav-quick {
+  display: flex;
+  gap: 1.4rem;
+  font-family: var(--f-la-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+.topnav-quick a { transition: color 0.25s var(--ease); }
+.topnav-quick a:hover { color: var(--accent-secondary); }
+.topnav-back {
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mute);
+  transition: color 0.25s var(--ease);
+}
+.topnav-back:hover { color: var(--accent-secondary); }
+
+/* ============ HERO ============ */
+.hero {
+  min-height: 100vh;
+  padding: 8rem 2rem 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.hero-kicker {
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--accent-primary-bright);
+  margin-bottom: 3rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  animation: fadeUp 1.1s var(--ease-out) 0.1s both;
+}
+.hero-kicker::before,
+.hero-kicker::after {
+  content: '';
+  width: 36px; height: 1px;
+  background: var(--accent-primary-bright);
+}
+
+.hero-title {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: clamp(3rem, 9vw, 7.5rem);
+  letter-spacing: 0.05em;
+  line-height: 0.98;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 2.25rem;
+  animation: fadeUp 1.3s var(--ease-out) 0.3s both;
+}
+.hero-title .pop {
+  color: var(--accent-secondary);
+  font-style: normal;
+  position: relative;
+  display: inline-block;
+}
+.hero-title .pop::after {
+  content: '';
+  position: absolute;
+  left: -4%;
+  bottom: 0.08em;
+  width: 108%;
+  height: 0.14em;
+  background: var(--gold);
+  z-index: -1;
+  opacity: 0.55;
+}
+
+.hero-sub {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.15rem, 2.2vw, 1.7rem);
+  color: var(--accent-primary);
+  letter-spacing: 0.02em;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  animation: fadeUp 1.3s var(--ease-out) 0.5s both;
+}
+.hero-sub .x {
+  margin: 0 0.5em;
+  color: var(--accent-secondary);
+  font-style: normal;
+  font-weight: 800;
+}
+
+.hero-lede {
+  max-width: 660px;
+  font-size: 1.15rem;
+  font-weight: 500;
+  line-height: 2.15;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 3.5rem;
+  animation: fadeUp 1.3s var(--ease-out) 0.7s both;
+}
+.hero-lede strong {
+  font-weight: 500;
+  color: var(--accent-primary-deep);
+  border-bottom: 2px solid var(--accent-primary-pale);
+  padding: 0 0.1em;
+}
+.hero-lede strong.pop {
+  color: var(--accent-secondary-deep);
+  border-bottom-color: var(--accent-secondary-pale);
+}
+
+/* Hero tokens */
+.hero-tokens {
+  display: flex;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 900px;
+  margin-bottom: 3rem;
+  animation: fadeUp 1.3s var(--ease-out) 0.95s both;
+}
+.hero-token {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 1.25rem 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 150px;
+  transition: transform 0.35s var(--ease), border-color 0.35s var(--ease);
+}
+.hero-token:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent-secondary-light);
+}
+.hero-token-icon {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1.8rem;
+  color: var(--accent-secondary);
+}
+.hero-token-year {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.88rem;
+  color: var(--mute);
+  letter-spacing: 0.05em;
+}
+.hero-token-label {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ink);
+  letter-spacing: 0.08em;
+}
+
+.scroll-cue {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  font-family: var(--f-la-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--mute);
+  animation: fadeUp 1.3s var(--ease-out) 1.2s both;
+}
+.scroll-cue::after {
+  content: '';
+  width: 1px; height: 48px;
+  background: linear-gradient(to bottom, var(--mute), transparent);
+  animation: scrollBar 2.2s var(--ease) infinite;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scrollBar {
+  0% { transform: scaleY(0); transform-origin: top; opacity: 0.3; }
+  40% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+  60% { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
+  100% { transform: scaleY(0); transform-origin: bottom; opacity: 0.3; }
+}
+
+/* ============ CHAPTER BASE ============ */
+.chapter {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 7rem 2rem 5rem;
+  position: relative;
+}
+
+.ch-kicker {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+.ch-num {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.3rem;
+  color: var(--accent-secondary);
+  letter-spacing: 0.02em;
+}
+.ch-cat {
+  font-family: var(--f-la-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--mute);
+  padding-left: 1.25rem;
+  border-left: 1px solid var(--line);
+}
+
+.ch-title {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: clamp(2.25rem, 5vw, 3.6rem);
+  letter-spacing: 0.06em;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 0.85rem;
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.ch-title .en {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.38em;
+  color: var(--mute-soft);
+  letter-spacing: 0.03em;
+}
+
+.ch-subtitle {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  color: var(--accent-primary-bright);
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.ch-lede {
+  max-width: 780px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 2.2;
+  color: var(--ink);
+  margin-bottom: 4rem;
+}
+.ch-lede strong {
+  font-weight: 500;
+  color: var(--ink);
+  background: linear-gradient(transparent 62%, var(--gold) 62%, var(--gold) 88%, transparent 88%);
+  background-size: 100% 100%;
+  padding: 0 0.1em;
+}
+.ch-lede em {
+  font-style: normal;
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  color: var(--accent-primary-deep);
+  letter-spacing: 0.03em;
+}
+
+.ch-body {
+  max-width: 780px;
+}
+.ch-body p {
+  font-size: 1.08rem;
+  font-weight: 500;
+  line-height: 2.1;
+  margin-bottom: 1.75rem;
+  color: var(--ink);
+}
+.ch-body p strong {
+  font-weight: 700;
+  color: var(--ink);
+}
+.ch-body p em {
+  font-style: normal;
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  color: var(--accent-primary-deep);
+  background: linear-gradient(transparent 65%, var(--accent-primary-pale) 65%);
+  padding: 0 0.15em;
+}
+.ch-body p code {
+  font-family: var(--f-mono);
+  font-size: 0.92em;
+  background: var(--accent-primary-wash);
+  color: var(--accent-primary-deep);
+  padding: 0.12em 0.45em;
+  border-radius: 3px;
+  letter-spacing: 0;
+}
+
+/* Blockquote cite */
+blockquote.cite {
+  margin: 2.5rem 0;
+  padding: 1.5rem 2rem;
+  background: var(--bg-card);
+  border-left: 4px solid var(--accent-primary);
+  border-radius: 0 4px 4px 0;
+  font-family: var(--f-jp-display);
+  font-weight: 500;
+  font-size: 1.1rem;
+  line-height: 1.95;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+blockquote.cite footer {
+  margin-top: 0.75rem;
+  font-family: var(--f-la-body);
+  font-size: 0.85rem;
+  color: var(--mute);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+/* Pull quote */
+.pull-quote {
+  margin: 3.5rem 0;
+  padding: 2.5rem 3rem;
+  background: var(--bg-card);
+  border-left: 4px solid var(--accent-secondary);
+  border-radius: 0 4px 4px 0;
+  position: relative;
+}
+.pull-quote::before {
+  content: '\201C';
+  position: absolute;
+  top: -0.3rem;
+  left: 1.5rem;
+  font-family: var(--f-la-display);
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--accent-secondary);
+  opacity: 0.35;
+  font-weight: 800;
+}
+.pull-quote p {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.4rem;
+  line-height: 2;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  margin-bottom: 0;
+}
+.pull-quote .attribution {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--mute);
+  margin-top: 1rem;
+  letter-spacing: 0.05em;
+}
+
+/* ============ INTERACTIVE: TIMELINE ============ */
+.tl-wrap {
+  margin: 4rem 0 3rem;
+  max-width: 100%;
+}
+.tl-head {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  margin-bottom: 1.75rem;
+}
+.tl-kicker {
+  font-family: var(--f-la-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--accent-secondary);
+}
+.tl-title {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+}
+.tl-scroll {
+  overflow-x: auto;
+  padding: 2rem 0.5rem 2rem;
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+  position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+.tl-scroll::-webkit-scrollbar { height: 6px; }
+.tl-scroll::-webkit-scrollbar-track { background: transparent; }
+.tl-scroll::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+.tl-track {
+  display: flex;
+  gap: 0;
+  min-width: 1400px;
+  position: relative;
+  padding: 2rem 1rem;
+}
+.tl-track::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 2rem;
+  right: 2rem;
+  height: 2px;
+  background: linear-gradient(to right,
+    var(--accent-primary-pale),
+    var(--accent-primary-light) 30%,
+    var(--accent-secondary) 80%);
+  transform: translateY(-50%);
+}
+.tl-node {
+  flex: 1 1 0;
+  min-width: 150px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+.tl-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--accent-primary);
+  position: relative;
+  z-index: 2;
+  transition: transform 0.25s var(--ease), background 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+.tl-node.recent .tl-dot { border-color: var(--accent-secondary); }
+.tl-node:hover .tl-dot,
+.tl-node.active .tl-dot {
+  transform: scale(1.35);
+  background: var(--accent-secondary);
+  border-color: var(--accent-secondary-deep);
+}
+.tl-year {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--accent-primary-deep);
+  margin-top: 0.85rem;
+  transition: color 0.25s var(--ease);
+}
+.tl-node.active .tl-year { color: var(--accent-secondary-deep); }
+.tl-label {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--text);
+  margin-top: 0.35rem;
+  text-align: center;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  padding: 0 0.5rem;
+}
+.tl-node.top .tl-year { order: -2; margin-top: 0; margin-bottom: 0.85rem; }
+.tl-node.top .tl-label { order: -1; margin-top: 0; margin-bottom: 0.35rem; }
+.tl-node.top .tl-dot { order: 0; }
+.tl-detail {
+  min-height: 80px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 1.5rem 1.75rem;
+  margin-top: 1rem;
+  font-size: 0.98rem;
+  line-height: 1.95;
+  color: var(--text);
+}
+.tl-detail strong {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  color: var(--accent-primary-deep);
+}
+
+/* ============ INTERACTIVE: PV DIAGRAM ============ */
+.pv-wrap {
+  margin: 4rem 0 3rem;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 2.5rem 2rem;
+}
+.pv-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.pv-title {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--ink);
+  letter-spacing: 0.06em;
+}
+.pv-kicker {
+  font-family: var(--f-la-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--accent-secondary);
+  font-weight: 700;
+}
+.pv-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+.pv-svg-wrap { position: relative; }
+.pv-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.pv-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.pv-toggle {
+  display: flex;
+  gap: 0.65rem;
+}
+.pv-btn {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  font-family: var(--f-la-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mute);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.25s var(--ease);
+}
+.pv-btn.active {
+  color: var(--white);
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+}
+.pv-btn:hover:not(.active) { border-color: var(--accent-primary); }
+.pv-meta {
+  font-size: 0.95rem;
+  line-height: 1.9;
+  color: var(--text);
+}
+.pv-meta dt {
+  font-family: var(--f-la-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--mute);
+  margin-top: 0.75rem;
+}
+.pv-meta dd {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  color: var(--accent-primary-deep);
+  font-size: 1.05rem;
+  margin-top: 0.15rem;
+}
+.pv-meta .pv-big {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--accent-secondary);
+  line-height: 1;
+  display: block;
+  margin-top: 0.25rem;
+}
+
+/* ============ INTERACTIVE: HABER-BOSCH SLIDER ============ */
+.hb-wrap {
+  margin: 4rem 0 3rem;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 2.5rem 2rem;
+}
+.hb-head {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.hb-kicker {
+  font-family: var(--f-la-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--accent-secondary);
+  margin-bottom: 0.5rem;
+}
+.hb-title {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--ink);
+  letter-spacing: 0.06em;
+}
+.hb-equation {
+  font-family: var(--f-mono);
+  font-size: 1.25rem;
+  letter-spacing: 0.05em;
+  color: var(--accent-primary-deep);
+  text-align: center;
+  padding: 1rem 0;
+  margin-bottom: 2rem;
+}
+.hb-equation sub { font-size: 0.7em; }
+.hb-equation .arrow {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  color: var(--accent-secondary);
+  margin: 0 0.5em;
+}
+.hb-sliders {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+.hb-slider {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.hb-slider-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.hb-slider-label {
+  font-family: var(--f-la-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+.hb-slider-value {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--accent-primary-deep);
+}
+.hb-slider input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--accent-primary-pale);
+  border-radius: 2px;
+  outline: none;
+}
+.hb-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent-secondary);
+  border: 2px solid var(--white);
+  box-shadow: 0 2px 6px rgba(193,121,0,0.3);
+  cursor: pointer;
+  transition: transform 0.2s var(--ease);
+}
+.hb-slider input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+.hb-slider input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent-secondary);
+  border: 2px solid var(--white);
+  cursor: pointer;
+}
+.hb-yield-wrap {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.5rem 1.75rem;
+  background: var(--accent-primary-wash);
+  border-radius: 4px;
+}
+.hb-yield-label {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 0.98rem;
+  color: var(--accent-primary-deep);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+.hb-yield-bar {
+  flex: 1;
+  height: 14px;
+  background: var(--white);
+  border-radius: 7px;
+  overflow: hidden;
+  position: relative;
+}
+.hb-yield-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--accent-secondary-light), var(--accent-secondary));
+  transition: width 0.3s var(--ease);
+  border-radius: 7px;
+}
+.hb-yield-value {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.6rem;
+  color: var(--accent-secondary-deep);
+  min-width: 5ch;
+  text-align: right;
+}
+.hb-note {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--mute);
+  line-height: 1.85;
+  letter-spacing: 0.02em;
+}
+.hb-note strong { color: var(--accent-primary-deep); font-weight: 700; }
+
+/* ============ INTERACTIVE: ROUNDED CORNER ============ */
+.rc-wrap {
+  margin: 4rem 0 3rem;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 2.5rem 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+.rc-head {
+  grid-column: 1 / -1;
+  margin-bottom: 0.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.rc-kicker {
+  font-family: var(--f-la-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--accent-secondary);
+  margin-bottom: 0.5rem;
+}
+.rc-title {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--ink);
+  letter-spacing: 0.06em;
+}
+.rc-phone-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.rc-phone {
+  width: 180px;
+  height: 340px;
+  background: linear-gradient(160deg, var(--accent-primary-deep), var(--accent-primary));
+  border: 3px solid var(--accent-primary-deep);
+  border-radius: 45px;
+  position: relative;
+  transition: border-radius 0.1s linear;
+  box-shadow: 0 24px 60px -24px rgba(28,53,122,0.5);
+}
+.rc-phone::before {
+  content: '';
+  position: absolute;
+  top: 12px; left: 12px; right: 12px; bottom: 12px;
+  background: var(--bg-deep);
+  border-radius: inherit;
+  border: 1px solid var(--accent-primary-light);
+}
+.rc-phone::after {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 4px;
+  background: var(--accent-primary-bright);
+  border-radius: 2px;
+  opacity: 0.4;
+}
+.rc-icons {
+  position: absolute;
+  top: 45px;
+  left: 24px;
+  right: 24px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.rc-icons span {
+  aspect-ratio: 1;
+  background: var(--accent-secondary);
+  border-radius: 6px;
+  opacity: 0.75;
+}
+.rc-icons span:nth-child(2) { background: var(--accent-primary-bright); }
+.rc-icons span:nth-child(3) { background: var(--accent-secondary-light); }
+.rc-icons span:nth-child(4) { background: var(--accent-primary-pale); }
+.rc-icons span:nth-child(5) { background: var(--accent-secondary-light); }
+.rc-icons span:nth-child(6) { background: var(--gold); }
+.rc-icons span:nth-child(7) { background: var(--accent-primary-light); }
+.rc-icons span:nth-child(8) { background: var(--accent-secondary); }
+.rc-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.rc-slider-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.rc-slider-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.rc-slider-label {
+  font-family: var(--f-la-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+.rc-slider-value {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.35rem;
+  color: var(--accent-secondary-deep);
+}
+.rc-slider input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--accent-primary-pale);
+  border-radius: 2px;
+  outline: none;
+}
+.rc-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent-secondary);
+  border: 2px solid var(--white);
+  box-shadow: 0 2px 6px rgba(193,121,0,0.3);
+  cursor: pointer;
+}
+.rc-zone {
+  padding: 1rem 1.25rem;
+  background: var(--accent-primary-wash);
+  border-radius: 4px;
+  font-size: 0.92rem;
+  line-height: 1.8;
+  color: var(--accent-primary-deep);
+  min-height: 92px;
+}
+.rc-zone strong {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  color: var(--accent-secondary-deep);
+}
+.rc-zone.inside { background: var(--accent-secondary-wash); color: var(--accent-secondary-deep); }
+
+/* ============ INTERACTIVE: CLAIM DISSECTOR ============ */
+.cd-wrap {
+  margin: 4rem 0 3rem;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 2.5rem 2rem;
+}
+.cd-head {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.cd-kicker {
+  font-family: var(--f-la-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--accent-secondary);
+  margin-bottom: 0.5rem;
+}
+.cd-title {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--ink);
+  letter-spacing: 0.06em;
+}
+.cd-grid {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  gap: 2rem;
+}
+.cd-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+.cd-btn {
+  text-align: left;
+  padding: 1rem 1.25rem;
+  font-family: var(--f-jp-body);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--line);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.25s var(--ease);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.cd-btn .cd-btn-num {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.75rem;
+  color: var(--accent-secondary);
+  letter-spacing: 0.1em;
+}
+.cd-btn:hover {
+  border-left-color: var(--accent-secondary);
+  background: var(--bg-card);
+}
+.cd-btn.active {
+  background: var(--accent-primary-wash);
+  border-left-color: var(--accent-secondary);
+  color: var(--accent-primary-deep);
+}
+.cd-panel {
+  background: var(--accent-primary-deep);
+  color: var(--bg);
+  border-radius: 4px;
+  padding: 2rem 1.75rem;
+  min-height: 280px;
+  position: relative;
+  overflow: hidden;
+}
+.cd-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--accent-secondary);
+}
+.cd-panel-label {
+  font-family: var(--f-la-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent-secondary-light);
+  margin-bottom: 1rem;
+}
+.cd-panel-title {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: 0.06em;
+  margin-bottom: 1rem;
+  color: var(--bg);
+}
+.cd-panel-code {
+  font-family: var(--f-mono);
+  font-size: 0.85rem;
+  color: var(--accent-secondary-light);
+  margin-bottom: 1.25rem;
+  letter-spacing: 0.02em;
+}
+.cd-panel-body {
+  font-size: 0.98rem;
+  line-height: 2;
+  color: var(--bg-tint);
+  font-weight: 400;
+}
+.cd-panel-body em {
+  font-style: normal;
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  color: var(--accent-secondary-light);
+  letter-spacing: 0.03em;
+}
+
+/* ============ STAT ROW ============ */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin: 3.5rem 0;
+}
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--accent-primary);
+  border-radius: 3px;
+  padding: 1.75rem 1.5rem 1.5rem;
+}
+.stat-card.amber { border-top-color: var(--accent-secondary); }
+.stat-num {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 2.5rem;
+  line-height: 1;
+  color: var(--accent-primary-deep);
+  margin-bottom: 0.5rem;
+}
+.stat-card.amber .stat-num { color: var(--accent-secondary-deep); }
+.stat-label {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  margin-bottom: 0.4rem;
+}
+.stat-sub {
+  font-family: var(--f-la-body);
+  font-size: 0.82rem;
+  color: var(--mute);
+  letter-spacing: 0.02em;
+  line-height: 1.65;
+}
+
+/* ============ REFERENCES ============ */
+.refs {
+  max-width: 820px;
+  margin: 6rem auto 2rem;
+  padding: 3rem 2.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.refs-head {
+  font-family: var(--f-la-body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--mute);
+  margin-bottom: 1.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.refs-list {
+  list-style: none;
+  counter-reset: ref;
+}
+.refs-list li {
+  counter-increment: ref;
+  padding-left: 2.5rem;
+  position: relative;
+  margin-bottom: 1.25rem;
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: var(--ink);
+}
+.refs-list li::before {
+  content: '[' counter(ref) ']';
+  position: absolute;
+  left: 0;
+  top: 0.1rem;
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 600;
+  color: var(--accent-secondary);
+}
+.ref-author { font-weight: 700; }
+.ref-title { margin-left: 0.3em; }
+.ref-meta {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--mute);
+  font-family: var(--f-la-body);
+  margin-top: 0.2rem;
+  letter-spacing: 0.01em;
+}
+.ref-meta a { color: var(--accent-primary); text-decoration: underline; word-break: break-all; }
+.refs-note {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line-soft);
+  font-size: 0.85rem;
+  color: var(--mute);
+  line-height: 1.8;
+  font-weight: 400;
+}
+
+/* ============ FOOTER ============ */
+.footer {
+  border-top: 1px solid var(--line);
+  background: var(--bg-soft);
+  margin-top: 4rem;
+  padding: 5rem 2rem 3rem;
+  text-align: center;
+}
+.footer-mark {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 2.2rem;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+  margin-bottom: 0.75rem;
+}
+.footer-tag {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--mute);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.02em;
+}
+.footer-back {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.6rem 1.5rem;
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--mute);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  transition: all 0.25s var(--ease);
+}
+.footer-back:hover {
+  color: var(--ink);
+  border-color: var(--accent-primary);
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 960px) {
+  .topnav { padding: 0.9rem 1.25rem; }
+  .topnav-quick { display: none; }
+  .chapter { padding: 5rem 1.25rem 3.5rem; }
+  .pv-grid { grid-template-columns: 1fr; }
+  .hb-sliders { grid-template-columns: 1fr; }
+  .rc-wrap { grid-template-columns: 1fr; }
+  .cd-grid { grid-template-columns: 1fr; }
+  .stat-row { grid-template-columns: 1fr; }
+  .pull-quote { margin: 2.5rem 0; padding: 2rem 1.75rem; }
+  .pull-quote p { font-size: 1.1rem; }
+  .refs { padding: 2rem 1.5rem; }
+  .hero-tokens { gap: 0.75rem; }
+  .hero-token { min-width: 120px; padding: 1rem 1rem 0.85rem; }
+}
+@media (max-width: 600px) {
+  body { font-size: 15px; }
+  .hero-kicker { font-size: 0.7rem; letter-spacing: 0.3em; }
+  .hero-kicker::before, .hero-kicker::after { width: 20px; }
+  .ch-body p { font-size: 1rem; }
+  .hb-equation { font-size: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-brand">
+    <span class="topnav-mark">特許</span>
+    <span class="topnav-sub">a visual essay</span>
+  </div>
+  <div class="topnav-quick">
+    <a href="#ch1">01 起源</a>
+    <a href="#ch2">02 蒸気</a>
+    <a href="#ch3">03 化学・半導体</a>
+    <a href="#ch4">04 ソフトウェア</a>
+    <a href="#ch5">05 現代</a>
+  </div>
+  <a href="../../" class="topnav-back">← all</a>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="hero-kicker">A Visual Essay · 2026 · Science & Tech</div>
+
+  <h1 class="hero-title">
+    特許が<span class="pop">守ってきた</span>もの
+  </h1>
+
+  <div class="hero-sub">Steam Engines<span class="x">×</span>Poké Balls</div>
+
+  <p class="hero-lede">
+    1474年のヴェネツィア、1769年のワット、1908年のハーバー。<br>
+    500年のあいだ人類は、<strong>独占20年</strong>と引き換えに技術を公開する、という奇妙な取引を続けてきました。<br>
+    任天堂が『Palworld』を訴えた<strong class="pop">2024年の東京地裁</strong>まで、その地層を一本の線で辿ります。
+  </p>
+
+  <div class="hero-tokens">
+    <div class="hero-token">
+      <div class="hero-token-icon">⚙</div>
+      <div class="hero-token-year">1769</div>
+      <div class="hero-token-label">蒸気</div>
+    </div>
+    <div class="hero-token">
+      <div class="hero-token-icon">⚗</div>
+      <div class="hero-token-year">1908</div>
+      <div class="hero-token-label">化学</div>
+    </div>
+    <div class="hero-token">
+      <div class="hero-token-icon">⬡</div>
+      <div class="hero-token-year">1993</div>
+      <div class="hero-token-label">半導体</div>
+    </div>
+    <div class="hero-token">
+      <div class="hero-token-icon">⌘</div>
+      <div class="hero-token-year">1996</div>
+      <div class="hero-token-label">ビット</div>
+    </div>
+    <div class="hero-token">
+      <div class="hero-token-icon">◉</div>
+      <div class="hero-token-year">2024</div>
+      <div class="hero-token-label">ゲーム</div>
+    </div>
+  </div>
+
+  <div class="scroll-cue">scroll</div>
+</section>
+
+<!-- ==================== CHAPTER 1 ==================== -->
+<section class="chapter" id="ch1">
+  <div class="ch-kicker">
+    <span class="ch-num">01</span>
+    <span class="ch-cat">Chapter One · 起源</span>
+  </div>
+  <h2 class="ch-title">独占という発明 <span class="en">The First Bargain</span></h2>
+  <div class="ch-subtitle">職人の知恵を守るための、社会の約束</div>
+
+  <p class="ch-lede">
+    ヴェネツィア共和国が1474年に成立させた<strong>成文特許法</strong>が、500年後の iPhone と任天堂の訴訟にまで直結します。<em>独占と公開の取引</em>という設計思想は、一度もつくり変えられていません。
+  </p>
+
+  <div class="ch-body">
+    <p>1474年3月19日。ヴェネツィア共和国の元老院は、一つの条例を可決しました。街に住む職人が新しい装置を発明したなら、10年のあいだ独占的にそれを作る権利を認める、というものです。</p>
+
+    <p>この条例は、世界で最初の成文特許法として記憶されます。イタリア語で <em>privilegi</em>、ラテン語で <em>brevet</em> と呼ばれた当時の権利は、ガラス工芸と造船で知られたヴェネツィアが、職人の知恵を他都市から守るための設計でした。条文には「<strong>新規で、公共に有用で、以前に知られていない発明</strong>」という三条件が書かれています。500年後、世界中の特許制度が掲げる新規性・進歩性・産業上利用可能性という基準は、この三語から歩き始めました。</p>
+
+    <p>イングランドは1624年に専売条例を発し、王による気まぐれな独占の乱発を抑えながら、発明者の権利だけは明確に残しました。アメリカは1788年に批准された合衆国憲法第1条第8節第8項に「<strong>科学と有用な技芸の進歩を促進するため、著作者および発明者に、一定期間の独占権を与える</strong>」と刻み、1790年の特許法は国務長官トマス・ジェファソン自身が起草と審査を担いました。日本では明治18年、1885年4月18日に専売特許条例が施行され、第1号の特許は堀田瑞松の漆塗り防錆塗料に与えられました。</p>
+
+    <blockquote class="cite" data-ref="10">
+      Congress shall have Power … To promote the Progress of Science and useful Arts, by securing for limited Times to Authors and Inventors the exclusive Right to their respective Writings and Discoveries.
+      <footer>— U.S. Constitution, Article I, Section 8, Clause 8 (1788)</footer>
+    </blockquote>
+
+    <p>なぜ、国家はわざわざ独占を認めるのでしょうか。経済学者ケネス・アロウは1962年の論文で、アイデアは<em>非競合的</em>で、一度公開されれば誰でもタダで使えるため、保護がないと発明への投資が過少になると論じました。ウィリアム・ノードハウスは1969年、特許の長さと社会的損失のトレードオフを数式で書きます。独占の死荷重と、発明による新しい富。両者のあいだで人類は、<strong>20年</strong>という長さに落ち着きました。</p>
+
+    <p>特許とは取引です。発明者は技術のすべてを公開する。代わりに社会は、一定期間の独占を与える。公開があるからこそ、次の発明者はその肩に乗れる。独占があるからこそ、発明者は研究に投資できる。この緊張関係のなかで、500年の技術史が書かれてきました。</p>
+
+    <!-- =========== INTERACTIVE: TIMELINE =========== -->
+    <div class="tl-wrap">
+      <div class="tl-head">
+        <span class="tl-kicker">Interactive · Milestones</span>
+        <span class="tl-title">500年の特許史 — 節点をタップ</span>
+      </div>
+      <div class="tl-scroll">
+        <div class="tl-track" id="tl-track">
+          <div class="tl-node" data-k="venice"><div class="tl-dot"></div><div class="tl-year">1474</div><div class="tl-label">ヴェネツィア<br>成文特許法</div></div>
+          <div class="tl-node" data-k="statute"><div class="tl-dot"></div><div class="tl-year">1624</div><div class="tl-label">英 専売条例<br>Statute of Monopolies</div></div>
+          <div class="tl-node" data-k="watt"><div class="tl-dot"></div><div class="tl-year">1769</div><div class="tl-label">ワット<br>蒸気機関特許</div></div>
+          <div class="tl-node" data-k="usact"><div class="tl-dot"></div><div class="tl-year">1790</div><div class="tl-label">米 最初の特許法<br>ジェファソン起草</div></div>
+          <div class="tl-node" data-k="jpact"><div class="tl-dot"></div><div class="tl-year">1885</div><div class="tl-label">日本<br>専売特許条例</div></div>
+          <div class="tl-node" data-k="haber"><div class="tl-dot"></div><div class="tl-year">1908</div><div class="tl-label">ハーバー<br>アンモニア合成</div></div>
+          <div class="tl-node" data-k="led"><div class="tl-dot"></div><div class="tl-year">1993</div><div class="tl-label">中村修二<br>青色LED</div></div>
+          <div class="tl-node" data-k="fat"><div class="tl-dot"></div><div class="tl-year">1996</div><div class="tl-label">Microsoft<br>FAT特許</div></div>
+          <div class="tl-node recent" data-k="apple"><div class="tl-dot"></div><div class="tl-year">2011</div><div class="tl-label">Apple対Samsung<br>提訴</div></div>
+          <div class="tl-node recent" data-k="alice"><div class="tl-dot"></div><div class="tl-year">2014</div><div class="tl-label">Alice判決<br>抽象的アイデア</div></div>
+          <div class="tl-node recent" data-k="palworld"><div class="tl-dot"></div><div class="tl-year">2024</div><div class="tl-label">任天堂対<br>Pocketpair</div></div>
+        </div>
+      </div>
+      <div class="tl-detail" id="tl-detail">
+        <strong>タップで詳細を表示。</strong>
+        ヴェネツィアから今日まで、特許制度は技術の姿に合わせて、ゆっくりと書き換えられてきました。
+      </div>
+    </div>
+
+    <p>「独占は悪」ではなく「限定された独占こそ公共の利益をつくる」。ヴェネツィア元老院の前提は単純ですが、この単純さに、技術と国家の付き合い方の原型があります。以降の章では、この原型がどのような発明の前で、どう試されてきたかを見ていきます。</p>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 2 ==================== -->
+<section class="chapter" id="ch2">
+  <div class="ch-kicker">
+    <span class="ch-num">02</span>
+    <span class="ch-cat">Chapter Two · 熱と機械</span>
+  </div>
+  <h2 class="ch-title">蒸気と特許 <span class="en">Steam and the Monopoly</span></h2>
+  <div class="ch-subtitle">熱を仕事に変える装置が、国家経済を書き換えた</div>
+
+  <p class="ch-lede">
+    ジェームズ・ワットが1769年に取得した分離凝縮器の特許は、産業革命の動力源を<strong>25年間</strong>の独占下に置きました。そのあいだ熱効率は約三倍に引き上げられ、世界の炭鉱と工場の姿は一変します。
+  </p>
+
+  <div class="ch-body">
+    <p>グラスゴー大学で数学器械の修理をしていた若者、ジェームズ・ワットは、1763年にトマス・ニューコメンが発明した大気圧機関の模型を分解しました。この機関は炭鉱の排水用として普及していましたが、シリンダーを冷やして蒸気を凝縮させるたびに、次の加熱でまた温めなおす必要があり、燃料の無駄が多すぎたのです。</p>
+
+    <p>ワットの閃きは、<em>凝縮を別の容器で行うこと</em>でした。シリンダーは熱いまま、凝縮器は冷たいままに保つ。1765年、彼は散歩の途中でこの着想を得て、1769年に英国特許第913号「蒸気と燃料の消費を削減する新しい方法」を取得します。1775年、ワットと出資者マシュー・ボールトンは、議会の特別法により特許期間を<strong>25年</strong>に延長し、1800年まで独占を握りました。</p>
+
+    <p>熱力学の言葉で翻訳すれば、ワットの工夫は<em>シリンダー壁の熱損失を抑え、熱効率を約三倍</em>に引き上げたものでした。後年、フランスのサディ・カルノーが1824年に『火の動力についての考察』で理論化する、熱機関の効率限界という発想を、ワットは経験のなかで先取りしていました。高校物理で学ぶカルノーサイクル <code>η = 1 − T_c/T_h</code> の基礎は、この時点で産業現場に先回りしていたのです。</p>
+
+    <!-- =========== INTERACTIVE: PV DIAGRAM =========== -->
+    <div class="pv-wrap">
+      <div class="pv-head">
+        <div>
+          <div class="pv-kicker">Interactive · PV Diagram</div>
+          <div class="pv-title">蒸気サイクルの「囲まれた面積」が仕事量</div>
+        </div>
+      </div>
+      <div class="pv-grid">
+        <div class="pv-svg-wrap">
+          <svg class="pv-svg" viewBox="0 0 360 300" xmlns="http://www.w3.org/2000/svg">
+            <!-- Axes -->
+            <line x1="50" y1="260" x2="330" y2="260" stroke="#5b6a82" stroke-width="1"/>
+            <line x1="50" y1="260" x2="50" y2="30" stroke="#5b6a82" stroke-width="1"/>
+            <polygon points="330,260 325,256 325,264" fill="#5b6a82"/>
+            <polygon points="50,30 46,35 54,35" fill="#5b6a82"/>
+            <text x="340" y="265" font-family="Fraunces" font-style="italic" font-size="13" fill="#5b6a82">V</text>
+            <text x="42" y="24" font-family="Fraunces" font-style="italic" font-size="13" fill="#5b6a82">P</text>
+
+            <!-- Grid -->
+            <g stroke="#e8edf5" stroke-width="0.5">
+              <line x1="50" y1="100" x2="330" y2="100"/>
+              <line x1="50" y1="160" x2="330" y2="160"/>
+              <line x1="50" y1="220" x2="330" y2="220"/>
+              <line x1="130" y1="30" x2="130" y2="260"/>
+              <line x1="210" y1="30" x2="210" y2="260"/>
+              <line x1="290" y1="30" x2="290" y2="260"/>
+            </g>
+
+            <!-- Newcomen cycle (dashed, smaller loop) -->
+            <g id="pv-newcomen" style="display:none;">
+              <path d="M 90 230 L 260 230 L 260 190 L 90 190 Z"
+                    fill="rgba(107,61,0,0.10)" stroke="#6b3d00" stroke-width="1.5" stroke-dasharray="4 3"/>
+              <text x="175" y="213" text-anchor="middle" font-family="Zen Old Mincho" font-weight="700" font-size="11" fill="#6b3d00">Newcomen</text>
+            </g>
+
+            <!-- Watt cycle (solid, larger loop) -->
+            <g id="pv-watt">
+              <path d="M 75 240 C 75 160 135 70 220 70 C 295 70 305 130 305 180 C 305 235 230 255 140 255 C 95 255 75 250 75 240 Z"
+                    fill="rgba(193,121,0,0.18)" stroke="#c17900" stroke-width="2"/>
+              <text x="190" y="155" text-anchor="middle" font-family="Zen Old Mincho" font-weight="700" font-size="12" fill="#6b3d00">Watt</text>
+              <!-- Arrow indicating direction -->
+              <circle id="pv-dot" r="5" fill="#1c357a">
+                <animateMotion dur="6s" repeatCount="indefinite"
+                  path="M 75 240 C 75 160 135 70 220 70 C 295 70 305 130 305 180 C 305 235 230 255 140 255 C 95 255 75 250 75 240 Z"/>
+              </circle>
+            </g>
+
+            <text x="190" y="290" text-anchor="middle" font-family="Zen Kaku Gothic New" font-weight="500" font-size="11" fill="#5b6a82">囲まれた面積 = 1サイクルの仕事量</text>
+          </svg>
+        </div>
+        <div>
+          <div class="pv-controls">
+            <div class="pv-toggle">
+              <button class="pv-btn active" data-cycle="watt">Watt (分離凝縮器)</button>
+              <button class="pv-btn" data-cycle="both">Newcomen と比較</button>
+            </div>
+          </div>
+          <dl class="pv-meta">
+            <dt>英国特許第913号 · 1769</dt>
+            <dd id="pv-patent">蒸気と燃料の消費を削減する新しい方法</dd>
+            <dt>熱効率の向上</dt>
+            <dd><span class="pv-big" id="pv-eff">×3.0</span></dd>
+            <dt>独占期間(議会延長後)</dt>
+            <dd>1769 → 1800 (計25年)</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <p>ところが、ワットの独占には陰もありました。コーンウォールの鉱山技師リチャード・トレヴィシックは、1790年代末から高圧蒸気機関の研究を始めます。ワットの特許の核は「別容器での凝縮」にあり、高圧蒸気を直接排気する方式なら凝縮器を必要としません。<em>特許を避ける設計</em>でした。</p>
+
+    <p>トレヴィシックは1804年、世界最初の蒸気機関車を走らせました。ワットは高圧を「ボイラーの爆発が危険だ」と嫌い、トレヴィシックの実験を押しとどめようとしました。しかし特許が切れる1800年を待って、高圧技術は一気に花開きます。鉄道と蒸気船が、19世紀の地図を書き換えました。</p>
+
+    <div class="pull-quote">
+      <p>特許は技術を促したのか、それとも縛ったのか。ワットの25年は、いまだ経済史家を割る問いです。</p>
+      <div class="attribution">— Selgin & Turner (2011), Boldrin & Levine (2008) の対立する解釈から</div>
+    </div>
+
+    <p>経済学者ボルドリンとレヴィンは『知的独占に反対する』(2008年)で、ワットの特許こそ産業革命を30年遅らせた元凶だと断じました。一方、2011年に経済史家セルギンとターナーは、ワット期の高圧蒸気が現実に危険だったことを示し、遅れを特許だけに帰すのは誤りだと反論します。議論は今も続いています。</p>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 3 ==================== -->
+<section class="chapter" id="ch3">
+  <div class="ch-kicker">
+    <span class="ch-num">03</span>
+    <span class="ch-cat">Chapter Three · 化学と半導体</span>
+  </div>
+  <h2 class="ch-title">空気を食べ物に、結晶を光に <span class="en">From Air to Fertilizer, From Silicon to Light</span></h2>
+  <div class="ch-subtitle">20世紀の発明が、70億人を養い、夜を照らした</div>
+
+  <p class="ch-lede">
+    <strong>1908年のハーバー特許</strong>と<strong>1993年の青色LED</strong>は、化学と半導体物理の到達点であり、特許制度の<em>光と影</em>をそのまま映します。高校化学と物理の教科書が、そのまま法廷の言葉になる章です。
+  </p>
+
+  <div class="ch-body">
+    <p>1908年10月13日、カールスルーエ工科大学の物理化学者フリッツ・ハーバーが「窒素と水素からアンモニアを合成する方法」の特許を出願しました。ドイツ特許番号 <code>DE235421</code>。空気の8割を占める窒素と、石炭から作った水素から、肥料の原料であるアンモニアを直接合成する方法でした。</p>
+
+    <!-- =========== INTERACTIVE: HABER-BOSCH =========== -->
+    <div class="hb-wrap">
+      <div class="hb-head">
+        <div class="hb-kicker">Interactive · Chemical Equilibrium</div>
+        <div class="hb-title">ハーバー・ボッシュ法 — ルシャトリエの原理で収率を探る</div>
+      </div>
+      <div class="hb-equation">N<sub>2</sub> + 3 H<sub>2</sub> <span class="arrow">⇌</span> 2 NH<sub>3</sub> &nbsp;&nbsp; ΔH = −92 kJ/mol</div>
+      <div class="hb-sliders">
+        <div class="hb-slider">
+          <div class="hb-slider-head">
+            <span class="hb-slider-label">温度</span>
+            <span class="hb-slider-value"><span id="hb-temp-val">500</span> °C</span>
+          </div>
+          <input type="range" id="hb-temp" min="300" max="700" value="500" step="10">
+        </div>
+        <div class="hb-slider">
+          <div class="hb-slider-head">
+            <span class="hb-slider-label">圧力</span>
+            <span class="hb-slider-value"><span id="hb-pres-val">200</span> atm</span>
+          </div>
+          <input type="range" id="hb-pres" min="1" max="1000" value="200" step="1">
+        </div>
+      </div>
+      <div class="hb-yield-wrap">
+        <div class="hb-yield-label">アンモニア収率</div>
+        <div class="hb-yield-bar">
+          <div class="hb-yield-fill" id="hb-fill" style="width: 40%;"></div>
+        </div>
+        <div class="hb-yield-value" id="hb-yield">40%</div>
+      </div>
+      <div class="hb-note" id="hb-note">
+        <strong>200 atm × 500 °C:</strong> BASFのカール・ボッシュが1913年に採用した工業条件。高圧で平衡を右に寄せつつ、反応速度を確保するために温度は下げすぎない。鉄触媒がこの妥協点を実現しました。
+      </div>
+    </div>
+
+    <p>反応式は単純そうに見えます。<code>N₂ + 3H₂ ⇌ 2NH₃</code>。高校化学で学ぶ、可逆反応の代表例です。しかしこの平衡は、常温常圧では極端に左に偏り、アンモニアはほとんど生成しません。<em>ルシャトリエの原理</em>に従えば、分子数が減る右側に寄せるには圧力を上げるべきで、発熱反応なので温度を下げたい。ただし温度を下げすぎると反応速度そのものが遅くなる。この矛盾を解くのは、触媒でした。</p>
+
+    <p>特許を買い取ったBASF社の技術者カール・ボッシュは、<strong>200気圧・500℃・鉄触媒</strong>という妥協点を1913年に工業化します。ルートヴィヒスハーフェン近郊のオパウ工場は、わずか1年で日産40トンのアンモニアを生み出しました。1918年、ハーバーはノーベル化学賞を受賞。2008年のネイチャー・ジオサイエンス誌は、この方法がなければ<strong>世界人口の半分は食糧を得られない</strong>と推計しました。</p>
+
+    <p>特許が「発明者を報いる」機能を果たしたことは、疑いようがありません。一方で、この話にはもうひとつの側面があります。ハーバーは第一次大戦中、毒ガス兵器の開発も主導しました。ボッシュは独自の工業化技術で独自の特許を得、その体系は後に<em>ハーバー・ボッシュ法</em>と呼ばれます。知財の名誉は、誰に、どれだけ帰属するのか。この問いは、85年後の日本で再び爆発します。</p>
+
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-num">1993</div>
+        <div class="stat-label">GaN青色LED 実用化</div>
+        <div class="stat-sub">日亜化学工業・中村修二が開発。赤・緑と合わせて白色光への道が開く</div>
+      </div>
+      <div class="stat-card amber">
+        <div class="stat-num">¥604億</div>
+        <div class="stat-label">東京地裁 相当対価認定額</div>
+        <div class="stat-sub">2004年1月30日。中村が日亜化学に請求した200億円を満額認容</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">2014</div>
+        <div class="stat-label">ノーベル物理学賞</div>
+        <div class="stat-sub">赤﨑勇・天野浩・中村修二の3氏が共同受賞。対象は青色LEDの発明</div>
+      </div>
+    </div>
+
+    <p>徳島県の日亜化学工業に勤める中村修二は、1993年、窒化ガリウム(GaN)を用いた実用的な青色発光ダイオードの開発に成功します。赤と緑のLEDはすでにありましたが、青だけは1960年代から世界中の研究機関が挑んで失敗していた難題でした。青が加わってはじめて、光の三原色の合成、つまり白色LEDと大型ディスプレイへの道が開けます。</p>
+
+    <p>青色LEDの物理的な鍵は、半導体の<em>バンドギャップ</em>にあります。発光する光の波長 λ は、プランク定数を h、光速を c、バンドギャップのエネルギーを <code>E_g</code> とすれば、<code>λ = hc / E_g</code> で決まります。青は約450nmの短波長で、ワイドバンドギャップを持つ材料が要る。GaN は約3.4 eV のギャップを持ち合わせていましたが、純度の高い結晶を作る方法がなかったのです。中村は「ツーフロー MOCVD 法」という独自技術でこれを突破しました。</p>
+
+    <p>2001年、中村は転職先のカリフォルニア大学サンタバーバラ校から、かつての雇用主である日亜化学を提訴します。争点は<strong>特許第2628404号、通称404特許</strong>。発明者として受け取った対価は、入社時の出願報奨金2万円と、登録報奨金1万円を合わせた<em>3万円</em>。会社が青色LEDで1993年から2001年までに得た売上は、推定で8,000億円を超えていました。</p>
+
+    <p>2004年1月、東京地裁は中村への相当対価を604億円と認定し、請求額200億円の満額支払いを命じます。日本企業が従業員個人に支払う賠償としては前代未聞でした。高裁で和解が成立し、最終的な支払額は8億4,000万円に減額されます。この事件は日本の特許法35条「職務発明規定」の大改正につながり、2004年の改正では発明者と使用者の契約で対価を定められるようになりました。</p>
+
+    <p>中村は2014年、赤﨑勇・天野浩とともにノーベル物理学賞を受賞します。受賞後の記者会見で彼はこう語りました。「<em>日本のサラリーマンは、会社のために発明しても、ほとんど報われない。</em>」特許制度は発明者のためにあるのか、それとも資本を持つ企業のためにあるのか。この問いは、21世紀になっても決着していません。</p>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 4 ==================== -->
+<section class="chapter" id="ch4">
+  <div class="ch-kicker">
+    <span class="ch-num">04</span>
+    <span class="ch-cat">Chapter Four · ビットと幾何学</span>
+  </div>
+  <h2 class="ch-title">ファイルと丸い角 <span class="en">Bits and Geometry in Court</span></h2>
+  <div class="ch-subtitle">ファイル管理方法、丸い角、スライド — それは発明か</div>
+
+  <p class="ch-lede">
+    ソフトウェア時代に入り、<em>発明の境界</em>はあいまいになりました。マイクロソフトの<strong>FAT特許</strong>とアップルの<strong>デザイン特許</strong>は、その輪郭を決める最前線でした。指先の操作ひとつが、数百億円の重さを持つ時代になります。
+  </p>
+
+  <div class="ch-body">
+    <p>1996年、マイクロソフトは米国特許第5,579,517号を取得しました。通称<em>FAT特許</em>。ディスク上のファイルを管理する表構造を保護するものでした。</p>
+
+    <p>FAT、つまりファイル・アロケーション・テーブルは、MS-DOS 時代から使われてきたファイルシステムです。ディスクを固定サイズのクラスタに分割し、各ファイルがどのクラスタにまたがって書かれているかを、一枚の表で管理します。一つのクラスタの末尾に「次はここ」という番号を書く、連結リスト式の単純な設計です。</p>
+
+    <p>データ構造そのものは、大学1年の情報科目で習う連結リストに過ぎません。それが「発明」として特許を取れるのか。この問いが長年ソフトウェア特許を揺らしてきました。</p>
+
+    <p>2004年、公益特許財団(PUBPAT)はFAT特許の再審査を請求します。2006年、米国特許商標庁は「マイクロソフト実装の長いファイル名処理には新規性がある」として特許を維持しました。2009年、マイクロソフトはオランダのカーナビメーカー <strong>TomTom</strong> を提訴します。TomTom の製品は Linux をベースにしており、そのファイルシステムが VFAT の長いファイル名規格を侵害しているという主張でした。</p>
+
+    <p>1か月後に和解が成立し、TomTom は VFAT 長いファイル名をサポートから外しました。この訴訟は、マイクロソフトが <em>Linux そのもの</em>を特許で攻める最初の事例として記録されます。その後、Android スマートフォン1台あたり5ドルから15ドルのライセンス料が、HTC、サムスンなどからマイクロソフトに支払われ、2013年にはサムスン単独で年10億ドルを超えました。Android の収益の一部が、実は背後でマイクロソフトに流れていました。</p>
+
+    <div class="pull-quote">
+      <p>Android 1台あたり5〜15ドル。製造も販売もしていない相手から、見えない水脈が流れつづける。</p>
+      <div class="attribution">— Microsoft と HTC・Samsung の和解条件(2011〜2014)</div>
+    </div>
+
+    <p>同じ頃、もうひとつの法廷で、まったく別の争いが続いていました。2011年4月、アップルはサムスンを米連邦地裁に提訴します。争点は、iPhone の<em>物理的な形</em>と、画面の挙動でした。</p>
+
+    <p>アップルが掲げた特許は多岐に渡りましたが、なかでも有名なのが米意匠特許 <code>D618,677</code>、<strong>「角の丸い長方形の前面」</strong>でした。薄い直方体、丸い角、縁の立ち上がり、16個のカラーアイコンが並ぶ黒い画面。これらが意匠として保護される、というアップルの主張です。</p>
+
+    <!-- =========== INTERACTIVE: ROUNDED CORNER =========== -->
+    <div class="rc-wrap">
+      <div class="rc-head">
+        <div class="rc-kicker">Interactive · Design Patent Zone</div>
+        <div class="rc-title">角の丸さを変えて、特許範囲の線引きを試す</div>
+      </div>
+      <div class="rc-phone-wrap">
+        <div class="rc-phone" id="rc-phone">
+          <div class="rc-icons">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+      <div class="rc-panel">
+        <div class="rc-slider-wrap">
+          <div class="rc-slider-head">
+            <span class="rc-slider-label">角の丸み</span>
+            <span class="rc-slider-value"><span id="rc-val">45</span> px</span>
+          </div>
+          <div class="rc-slider">
+            <input type="range" id="rc-slider" min="0" max="90" value="45" step="1">
+          </div>
+        </div>
+        <div class="rc-zone inside" id="rc-zone">
+          <strong>特許範囲内 (≈ 20〜60 px):</strong>
+          アップル意匠特許 D618,677 の想定領域。2012年の陪審は「通常の消費者はこの範囲の角丸を iPhone と混同する」と判定しました。
+        </div>
+      </div>
+    </div>
+
+    <p>「丸い角の長方形」を独占できるのか。この主張は世界中で議論を呼びました。司法は2012年、サムスンに対し10億ドル超の賠償を命じます。その後、控除・再審理が繰り返され、2016年には最高裁まで行きました。最高裁はデザイン特許の損害賠償算定を見直し、2018年5月の再審理で陪審はサムスンに<strong>5億3,900万ドル</strong>の支払いを命じます。そのうち5億3,300万ドルがデザイン特許分、残りの530万ドルが実用特許でした。1か月後、両社は和解に達し、内容は非公開となりました。</p>
+
+    <p>同時に争われたユーティリティ特許の「スライド・トゥ・アンロック」と「ピンチ・トゥ・ズーム」は、別の運命をたどりました。スライド解除は2017年まで争われ、サムスンに1億2,000万ドルの支払いが確定します。一方ピンチ・ズームのほうは、2005年に Ferren と Hillis が申請した先行技術(米特許第7,844,915号)があったため、USPTO が主要クレームを無効と判断しました。</p>
+
+    <p>アップルの指で画面を捻る操作の背後には、<em>静電容量方式のマルチタッチ技術</em>があります。ガラスの下に縦横の電極を張り巡らし、指が近づくと電極間の静電容量が変化する。その微小な変化を位置情報に変換します。高校物理で習うコンデンサの容量式 <code>C = εS/d</code> の、d が指によって変わる、と考えると近い。この物理原理そのものは特許の対象ではなく、特許が守るのは<em>具体的な実装方法</em>だけです。</p>
+
+    <p>2014年6月、米国最高裁は「アリス判決」(Alice Corp. v. CLS Bank)で、ソフトウェア特許の判断基準を大きく絞りました。争点は「金融取引の仲介」という抽象的アイデアを、汎用コンピューターに実装しただけで特許にできるかでした。判決は <strong>No</strong>。抽象的アイデアを機械で動かすだけでは、発明の高みには届かない。この判決以降、多くのソフトウェア特許が無効化されました。</p>
+
+    <p>何が発明で、何が単なる作業手順か。ヴェネツィア元老院が1474年に書いた三語は、ビットの世界ではっきりと答えを出せずにいます。</p>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 5 ==================== -->
+<section class="chapter" id="ch5">
+  <div class="ch-kicker">
+    <span class="ch-num">05</span>
+    <span class="ch-cat">Chapter Five · 現代の焦点</span>
+  </div>
+  <h2 class="ch-title">ポケモンボールは発明か <span class="en">Is a Game Mechanic an Invention?</span></h2>
+  <div class="ch-subtitle">2024年9月、東京地裁。500年の制度が向き合う、新しい問い</div>
+
+  <p class="ch-lede">
+    任天堂と株式会社ポケモンが <strong>Pocketpair</strong> を提訴した3件の特許は、「捕獲・騎乗・戦闘」という<em>操作そのもの</em>を対象にしています。ゲームのルールを発明として囲い込めるのか、その答えは、まだ誰も持っていません。
+  </p>
+
+  <div class="ch-body">
+    <p>2024年9月19日、任天堂と株式会社ポケモンは、東京地方裁判所に対し、Pocketpair 社の『Palworld / パルワールド』が自社の特許権を侵害しているとして提訴しました。請求額は<strong>損害賠償1,000万円</strong>と、日本国内での販売差止。世界中のゲーム開発者が注視する裁判となりました。</p>
+
+    <p>問題は、訴えられた特許の中身です。被告 Pocketpair が11月に開示した請求項は、3件の日本特許でした。特許第7545191号、第7493117号、第7528390号。それぞれ<em>捕獲・成功率表示・騎乗</em>という、ゲームプレイの核の動作を対象にしています。</p>
+
+    <!-- =========== INTERACTIVE: CLAIM DISSECTOR =========== -->
+    <div class="cd-wrap">
+      <div class="cd-head">
+        <div class="cd-kicker">Interactive · Claim Dissection</div>
+        <div class="cd-title">任天堂が主張する「3つの動作」を分解する</div>
+      </div>
+      <div class="cd-grid">
+        <div class="cd-buttons" id="cd-buttons">
+          <button class="cd-btn active" data-k="capture">
+            <span class="cd-btn-num">Claim 1</span>
+            <span>捕獲アイテムの投擲と成功判定</span>
+          </button>
+          <button class="cd-btn" data-k="rate">
+            <span class="cd-btn-num">Claim 2</span>
+            <span>捕獲成功率のインジケーター表示</span>
+          </button>
+          <button class="cd-btn" data-k="ride">
+            <span class="cd-btn-num">Claim 3</span>
+            <span>キャラクターへの騎乗と空中移動</span>
+          </button>
+          <button class="cd-btn" data-k="timing">
+            <span class="cd-btn-num">Issue</span>
+            <span>出願日はすべて『Palworld』リリース後</span>
+          </button>
+        </div>
+        <div class="cd-panel" id="cd-panel">
+          <div class="cd-panel-label">特許クレーム解剖 · JP Patent Office</div>
+          <div class="cd-panel-title" id="cd-panel-title">Claim 1 · 捕獲メカニクス</div>
+          <div class="cd-panel-code" id="cd-panel-code">特許第 7,545,191 号 / 出願 2024-02-26 / 登録 2024-08</div>
+          <div class="cd-panel-body" id="cd-panel-body">
+            アナログスティックで<em>照準</em>し、ボタン押下で<em>捕獲アイテムを投擲</em>。ヒットした対象キャラクターに対し確率判定を行い、成功すれば所有状態を<em>プレイヤー帰属</em>に変更する。ポケモンのモンスターボール投擲が典型例。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p>興味深いのは、3件とも出願日が<strong>2024年2月から7月</strong>で、『Palworld』のリリース(2024年1月19日)より後だという事実です。ただし出願には「親出願」と呼ばれる先行特許があり、任天堂は親出願の優先日を主張しています。これが<em>後追い特許</em>ではないか、という論争の核心です。</p>
+
+    <p>2025年10月、日本特許庁は任天堂の関連出願の一つを拒絶しました。第三者が提出した先行技術として、Ark: Survival Evolved、Craftopia、Monster Hunter 4、Pokémon GO などが挙げられ、「同様の捕獲メカニクスは既に公知」と判断されたのです。同年11月、米国特許商標庁も別の関連特許について審査を再開しました。</p>
+
+    <p>任天堂の特許戦は、今回が初めてではありません。1983年、ユニバーサル・スタジオは任天堂のアーケード版『ドンキーコング』が映画『キングコング』の商標を侵害していると提訴しました。任天堂は、ユニバーサル自身がかつての裁判でキングコングはパブリックドメインだと主張していたと反論。ニューヨーク連邦地裁は任天堂側に軍配を上げ、ユニバーサルは弁護士費用など180万ドルを支払いました。</p>
+
+    <p>しかし1991年の Galoob 対任天堂は逆の結果に終わります。Galoob の『ゲームジーニー』というゲーム改造装置について、任天堂は著作権侵害だと訴えましたが、判決は改造用途での使用はフェアユースとされ、任天堂は1,500万ドルを支払わされました。「保護するべき線引き」は、常に揺らぎ続けてきました。</p>
+
+    <p>現代の特許訴訟には、別の影もあります。米スタンフォード大学の調査によると、<em>特許主張主体(NPE)</em>と呼ばれる製造しない特許権者が2012年の全米特許訴訟の<strong>61%</strong>を起こしており、米国企業は2011年だけで290億ドルの訴訟コストを負担しました。ところが実際に侵害が認められるのは1%未満で、87%が訴訟前に和解します。訴訟を起こすだけで儲かる構造、いわゆる<em>パテント・トロール</em>が、制度の裏側を侵食しています。</p>
+
+    <p>それでは、任天堂対パルワールドは、どちらに分類されるのでしょうか。任天堂はゲームを作り、売っている実施企業です。トロール的な振る舞いからは遠い。ただし、ゲームの操作そのものを特許で守ろうとすれば、業界全体が萎縮する可能性もあります。2025年現在、判決は出ていません。裁判長は中島基至。判決が出るのは2026年以降と予測されています。</p>
+
+    <div class="pull-quote">
+      <p>1474年、ヴェネツィア元老院が想定したのは、ガラス細工や造船の装置でした。500年後、特許はゲームのキャラクターを投げる動作にまで届こうとしています。</p>
+    </div>
+
+    <p>技術と社会の変化に制度が追いつく速度は、常に遅い。新しい領域に入るたび、ヴェネツィアの三語「新規・有用・未知」は、裁判官によって書き直されます。特許は発明を守ってきたのか、縛ってきたのか。その答えは、まだ誰も確定できずにいます。次の500年、発明の名に値するものが何か、それを決めるのは、いまの教室で教科書を開いているあなたたち自身かもしれません。</p>
+  </div>
+</section>
+
+<!-- ==================== REFERENCES ==================== -->
+<section class="refs">
+  <div class="refs-head">参考文献 · References</div>
+  <ol class="refs-list">
+    <li>
+      <span class="ref-author">Nintendo Co., Ltd.</span>
+      <span class="ref-title">"Filing Lawsuit for Infringement of Patent Rights against Pocketpair, Inc."</span>
+      <span class="ref-meta">News Release, 2024-09-19. <a href="https://www.nintendo.co.jp/corporate/release/en/2024/240919.html">https://www.nintendo.co.jp/corporate/release/en/2024/240919.html</a></span>
+    </li>
+    <li>
+      <span class="ref-author">Northern Kentucky Law Review</span>
+      <span class="ref-title">"Patenting Basic Mechanics of a Video Game Genre: Nintendo v. Pocketpair"</span>
+      <span class="ref-meta">2024–2025. <a href="https://northernkentuckylawreview.com/blog/patenting-basic-mechanics-of-a-video-game-genre-nintendo-v-pocketpair">northernkentuckylawreview.com</a></span>
+    </li>
+    <li>
+      <span class="ref-author">Britannica</span>
+      <span class="ref-title">"James Watt — Biography, Inventions, Steam Engine"</span>
+      <span class="ref-meta">Encyclopædia Britannica. <a href="https://www.britannica.com/biography/James-Watt">britannica.com/biography/James-Watt</a></span>
+    </li>
+    <li>
+      <span class="ref-author">Selgin, George &amp; Turner, John L.</span>
+      <span class="ref-title">"Strong Steam, Weak Patents, or the Myth of Watt's Innovation-Blocking Monopoly, Exploded"</span>
+      <span class="ref-meta">Journal of Law and Economics, Vol. 54, No. 4 (2011). <a href="https://www.journals.uchicago.edu/doi/10.1086/658495">journals.uchicago.edu</a></span>
+    </li>
+    <li>
+      <span class="ref-author">ScienceDaily</span>
+      <span class="ref-title">"100 Years Of Ammonia Synthesis: How A Single Patent Changed The World"</span>
+      <span class="ref-meta">2008-09-29 (Erisman et al., Nature Geoscience). <a href="https://www.sciencedaily.com/releases/2008/09/080929095708.htm">sciencedaily.com</a></span>
+    </li>
+    <li>
+      <span class="ref-author">DPMA (German Patent &amp; Trade Mark Office)</span>
+      <span class="ref-title">"Carl Bosch — Milestones of Great Inventors"</span>
+      <span class="ref-meta">DE235421 patent record. <a href="https://www.dpma.de/english/our_office/publications/milestones/greatinventors/carlbosch/index.html">dpma.de</a></span>
+    </li>
+    <li>
+      <span class="ref-author">Slate (John Dupuis)</span>
+      <span class="ref-title">"Shuji Nakamura fought for fair patent compensation, won the Physics Nobel for blue LEDs"</span>
+      <span class="ref-meta">2014-10. <a href="https://slate.com/technology/2014/10/shuji-nakamura-fought-for-fair-patent-compensation-won-the-physics-nobel-for-blue-leds-along-with-two-others.html">slate.com</a></span>
+    </li>
+    <li>
+      <span class="ref-author">Wikipedia</span>
+      <span class="ref-title">"File Allocation Table" / "Microsoft FAT patents"</span>
+      <span class="ref-meta"><a href="https://en.wikipedia.org/wiki/File_Allocation_Table">en.wikipedia.org/wiki/File_Allocation_Table</a></span>
+    </li>
+    <li>
+      <span class="ref-author">Mintz (Smartphone Wars series)</span>
+      <span class="ref-title">"The Last Jury: Samsung Owes $539M for Infringing Apple's Patents"</span>
+      <span class="ref-meta">2018-05-31. <a href="https://www.mintz.com/insights-center/viewpoints/2018-05-31-smartphone-wars-last-jury-samsung-owes-539m-infringing-apples">mintz.com</a></span>
+    </li>
+    <li>
+      <span class="ref-author">U.S. Supreme Court</span>
+      <span class="ref-title">"Alice Corp. v. CLS Bank International, 573 U.S. 208 (2014)"</span>
+      <span class="ref-meta">Justia Supreme Court Center. <a href="https://supreme.justia.com/cases/federal/us/573/208/">supreme.justia.com</a></span>
+    </li>
+    <li>
+      <span class="ref-author">USPTO</span>
+      <span class="ref-title">"Milestones in U.S. Patenting"</span>
+      <span class="ref-meta">U.S. Patent and Trademark Office. <a href="https://www.uspto.gov/patents/milestones">uspto.gov/patents/milestones</a></span>
+    </li>
+    <li>
+      <span class="ref-author">WIPO</span>
+      <span class="ref-title">"The Economics of Intellectual Property" Chapter 2</span>
+      <span class="ref-meta">World Intellectual Property Organization, 2011. <a href="https://www.wipo.int/edocs/pubdocs/en/wipo_pub_944_2011-chapter2.pdf">wipo.int (PDF)</a></span>
+    </li>
+    <li>
+      <span class="ref-author">Electronic Frontier Foundation</span>
+      <span class="ref-title">"Patent Trolls" resource</span>
+      <span class="ref-meta">EFF. <a href="https://www.eff.org/issues/resources-patent-troll-victims">eff.org/issues/resources-patent-troll-victims</a></span>
+    </li>
+    <li>
+      <span class="ref-author">Primary Sources of Copyright (1450–1900)</span>
+      <span class="ref-title">"Venetian Statute on Industrial Brevets, Venice (1474)"</span>
+      <span class="ref-meta">University of Cambridge / CREATe. <a href="https://www.copyrighthistory.org/cam/tools/request/showRecord.php?id=commentary_i_1474">copyrighthistory.org</a></span>
+    </li>
+    <li>
+      <span class="ref-author">Wikipedia</span>
+      <span class="ref-title">"Apple Inc. v. Samsung Electronics Co." / "Shuji Nakamura" / "Universal City Studios v. Nintendo"</span>
+      <span class="ref-meta"><a href="https://en.wikipedia.org/wiki/Apple_Inc._v._Samsung_Electronics_Co.">en.wikipedia.org</a></span>
+    </li>
+  </ol>
+  <div class="refs-note">
+    本記事は上記ソースをもとに、大学受験生向けに編集・再構成したものです。
+    特許番号・訴訟額・日付などの具体数値は、各原典をご確認ください。
+    2025年11月時点で任天堂対 Pocketpair 訴訟は継続中であり、記事中の「判決は2026年以降」は予測です。
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="footer">
+  <div class="footer-mark">特許が守ってきたもの</div>
+  <div class="footer-tag">A Visual Essay · Science &amp; Technology</div>
+  <a href="../../" class="footer-back">← all articles</a>
+</footer>
+
+<!-- ==================== SCRIPTS ==================== -->
+<script>
+// ============ Hide top nav on scroll down ============
+let lastScrollY = window.scrollY;
+const topnav = document.querySelector('.topnav');
+window.addEventListener('scroll', () => {
+  const currentY = window.scrollY;
+  if (currentY > lastScrollY && currentY > 200) {
+    topnav.style.transform = 'translateY(-100%)';
+  } else {
+    topnav.style.transform = 'translateY(0)';
+  }
+  lastScrollY = currentY;
+}, { passive: true });
+
+// ============ Timeline ============
+const tlData = {
+  venice:   { y: '1474', t: 'ヴェネツィア元老院・成文特許法', d: 'ガラス工芸と造船のための保護。新規・有用・未知という<strong>三条件</strong>の原型がここに現れます。10年の独占。' },
+  statute:  { y: '1624', t: '英 専売条例 Statute of Monopolies', d: '王による独占の乱発を抑える一方、発明者の権利は明確に残す。近代特許法の直接の祖先です。' },
+  watt:     { y: '1769', t: 'ジェームズ・ワット・蒸気機関特許', d: '分離凝縮器の発明。英国特許第913号、のちに議会特別法で<strong>1800年まで25年</strong>の独占に延長。' },
+  usact:    { y: '1790', t: '米 最初の特許法 (ジェファソン起草)', d: 'トマス・ジェファソン自身が特許審査を担当。1790年7月31日、第1号は Samuel Hopkins のカリ製法。' },
+  jpact:    { y: '1885', t: '日本 専売特許条例', d: '明治18年4月18日施行。第1号特許は<strong>堀田瑞松</strong>の漆塗り防錆塗料。日本の近代特許制度の始点。' },
+  haber:    { y: '1908', t: 'ハーバー・アンモニア合成', d: 'DE235421 を BASF に譲渡。Bosch が1913年工業化。2008年 Nature Geoscience 推計で<strong>世界人口の半分を養う</strong>。' },
+  led:      { y: '1993', t: '中村修二・青色LED実用化', d: '日亜化学で GaN 系実用化。2001年に中村が会社を提訴、2004年一審で<strong>604億円</strong>の相当対価。2014年ノーベル物理学賞。' },
+  fat:      { y: '1996', t: 'Microsoft FAT特許 (\'517)', d: 'ファイル・アロケーション・テーブル特許取得。後に Android 1台につき<strong>$5〜15</strong>のライセンス料に発展。' },
+  apple:    { y: '2011', t: 'Apple 対 Samsung 提訴開始', d: '角の丸い長方形、スライド解除、ピンチズームなどを争点に、世界中で50件超の訴訟に拡大。' },
+  alice:    { y: '2014', t: 'Alice 判決 (米最高裁)', d: '抽象的アイデアを汎用PCに実装しただけでは特許にならない。<strong>ソフトウェア特許</strong>の振り分け基準が転換。' },
+  palworld: { y: '2024', t: '任天堂 対 Pocketpair 提訴', d: '9月19日、東京地裁。捕獲・成功率表示・騎乗の3特許を争点に、請求額<strong>1,000万円</strong>と差止。2025年時点で係属中。' }
+};
+document.querySelectorAll('.tl-node').forEach(node => {
+  node.addEventListener('click', () => {
+    document.querySelectorAll('.tl-node').forEach(n => n.classList.remove('active'));
+    node.classList.add('active');
+    const k = node.dataset.k;
+    const d = tlData[k];
+    const detail = document.getElementById('tl-detail');
+    detail.innerHTML = '<strong>' + d.y + ' · ' + d.t + '</strong><br>' + d.d;
+  });
+});
+
+// ============ PV Diagram toggle ============
+document.querySelectorAll('.pv-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.pv-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const mode = btn.dataset.cycle;
+    const newco = document.getElementById('pv-newcomen');
+    const eff = document.getElementById('pv-eff');
+    const patent = document.getElementById('pv-patent');
+    if (mode === 'both') {
+      newco.style.display = 'block';
+      eff.textContent = 'Watt ÷ Newcomen';
+      patent.textContent = '両サイクルの差がワット特許の守備範囲';
+    } else {
+      newco.style.display = 'none';
+      eff.textContent = '×3.0';
+      patent.textContent = '蒸気と燃料の消費を削減する新しい方法';
+    }
+  });
+});
+
+// ============ Haber-Bosch yield simulation ============
+// Simplified empirical model: yield decreases with temperature, increases with pressure (log).
+// Calibrated so that 500°C, 200 atm gives ~40% (close to industrial reality).
+function hbYield(T, P) {
+  // T in Celsius, P in atm
+  // Use pressure effect: log(P) normalized
+  const pressureTerm = Math.min(1, Math.log10(P) / Math.log10(1000));
+  // Temperature penalty: higher T = less yield (exothermic equilibrium shifts left)
+  const tempNorm = (T - 300) / 400; // 0..1 across 300..700
+  const tempTerm = 1 - tempNorm * 0.85;
+  // Rate consideration: at very low T, reaction kinetic is too slow -> lower apparent yield
+  const rateTerm = T < 400 ? (T - 300) / 100 * 0.5 + 0.5 : 1;
+  let y = 65 * pressureTerm * tempTerm * rateTerm;
+  y = Math.max(1, Math.min(95, y));
+  return Math.round(y);
+}
+function hbNote(T, P, y) {
+  if (P >= 150 && P <= 300 && T >= 450 && T <= 550) {
+    return '<strong>' + P + ' atm × ' + T + ' °C:</strong> BASFのカール・ボッシュが1913年に採用した工業条件。高圧で平衡を右に寄せつつ、反応速度を確保するために温度は下げすぎない。鉄触媒がこの妥協点を実現しました。';
+  } else if (P < 50) {
+    return '<strong>低圧条件:</strong> 平衡は左に偏り、アンモニアはほとんど得られません。大気圧下で窒素と水素を混ぜても、反応はほぼ進みません。';
+  } else if (T > 600) {
+    return '<strong>高温条件:</strong> 反応速度は速いものの、発熱反応のためルシャトリエの原理で平衡が左に寄り、収率が落ちます。触媒があっても限界があります。';
+  } else if (T < 400) {
+    return '<strong>低温条件:</strong> 平衡的には有利でも、反応速度が遅すぎて実用になりません。鉄触媒の活性温度域(400℃以上)を下回っています。';
+  } else if (P > 500) {
+    return '<strong>超高圧条件:</strong> 理論収率は高いものの、圧力容器の材料コストと安全性が指数関数的に増加します。工業的には1,000 atm に達することはまれです。';
+  }
+  return '<strong>現在条件 (' + T + ' °C / ' + P + ' atm):</strong> 収率は温度と圧力の妥協で決まります。高圧で平衡を右に、高温で反応速度を稼ぐ、両者の均衡点が工業条件です。';
+}
+const hbTemp = document.getElementById('hb-temp');
+const hbPres = document.getElementById('hb-pres');
+const hbTempVal = document.getElementById('hb-temp-val');
+const hbPresVal = document.getElementById('hb-pres-val');
+const hbFill = document.getElementById('hb-fill');
+const hbYieldEl = document.getElementById('hb-yield');
+const hbNoteEl = document.getElementById('hb-note');
+function updateHB() {
+  const T = parseInt(hbTemp.value);
+  const P = parseInt(hbPres.value);
+  hbTempVal.textContent = T;
+  hbPresVal.textContent = P;
+  const y = hbYield(T, P);
+  hbFill.style.width = y + '%';
+  hbYieldEl.textContent = y + '%';
+  hbNoteEl.innerHTML = hbNote(T, P, y);
+}
+hbTemp.addEventListener('input', updateHB);
+hbPres.addEventListener('input', updateHB);
+updateHB();
+
+// ============ Rounded corner slider ============
+const rcSlider = document.getElementById('rc-slider');
+const rcVal = document.getElementById('rc-val');
+const rcPhone = document.getElementById('rc-phone');
+const rcZone = document.getElementById('rc-zone');
+function updateRC() {
+  const v = parseInt(rcSlider.value);
+  rcVal.textContent = v;
+  rcPhone.style.borderRadius = v + 'px';
+  if (v >= 20 && v <= 60) {
+    rcZone.className = 'rc-zone inside';
+    rcZone.innerHTML = '<strong>特許範囲内 (≈ 20〜60 px):</strong> アップル意匠特許 D618,677 の想定領域。2012年の陪審は「通常の消費者はこの範囲の角丸を iPhone と混同する」と判定しました。';
+  } else if (v < 20) {
+    rcZone.className = 'rc-zone';
+    rcZone.innerHTML = '<strong>鋭角ゾーン (0〜19 px):</strong> 角の丸みがほとんどない、従来型ガラケー・BlackBerry 系のデザイン。アップルの意匠クレームからは外れます。';
+  } else {
+    rcZone.className = 'rc-zone';
+    rcZone.innerHTML = '<strong>過度な丸み (61 px〜):</strong> 卵型や「薬」型になり、もはや長方形ではありません。iPhone と混同されないため、意匠特許の範囲外と解釈されるでしょう。';
+  }
+}
+rcSlider.addEventListener('input', updateRC);
+updateRC();
+
+// ============ Claim dissector ============
+const cdData = {
+  capture: {
+    title: 'Claim 1 · 捕獲メカニクス',
+    code: '特許第 7,545,191 号 / 出願 2024-02-26',
+    body: 'アナログスティックで<em>照準</em>し、ボタン押下で<em>捕獲アイテムを投擲</em>。ヒットした対象キャラクターに対し確率判定を行い、成功すれば所有状態を<em>プレイヤー帰属</em>に変更する。ポケモンのモンスターボール投擲が典型例。'
+  },
+  rate: {
+    title: 'Claim 2 · 成功率インジケーター',
+    code: '特許第 7,493,117 号 / 出願 2024-03-05',
+    body: '投擲前に、対象キャラクターの<em>捕獲成功率</em>を画面上に表示する仕組み。『ポケモンLegends アルセウス』や『Palworld』に共通する「捕獲率 45%」のような UI がこれに該当します。'
+  },
+  ride: {
+    title: 'Claim 3 · 騎乗と空中移動',
+    code: '特許第 7,528,390 号 / 出願 2024-07-16',
+    body: 'プレイヤーキャラクターが他の<em>キャラクターに騎乗</em>し、地上・空中を移動できるしくみ。『Legendsアルセウス』のブレイビアー騎乗や『Palworld』の飛行パル騎乗が対象になります。'
+  },
+  timing: {
+    title: 'Issue · 出願タイミング問題',
+    code: 'Palworld リリース 2024-01-19 / 親出願 vs 分割出願',
+    body: '3件の特許はいずれも<em>Palworld 公開後の出願</em>です。任天堂は「親出願(2021年以前)からの分割出願」と主張し、優先日の遡及を狙っています。この親出願の正当性が本訴訟の核心の一つです。'
+  }
+};
+document.querySelectorAll('.cd-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.cd-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const k = btn.dataset.k;
+    const d = cdData[k];
+    document.getElementById('cd-panel-title').textContent = d.title;
+    document.getElementById('cd-panel-code').textContent = d.code;
+    document.getElementById('cd-panel-body').innerHTML = d.body;
+  });
+});
+
+// ============ Smooth-scroll anchor ============
+document.querySelectorAll('.topnav-quick a').forEach(a => {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+
+</body>
+</html>
