@@ -21,6 +21,12 @@
 - [11. answers-grid](#11-answers-grid) ― 学習ノート答え合わせ一括表示
 - [12. summary-tree](#12-summary-tree) ― まとめツリー図
 - [13. review-container](#13-review-container) ― 復習チャレンジ(ランダム10問)
+- [14. sort-game](#14-sort-game) ― 分類ゲーム(undo対応、タップでゾーン配置)
+- [15. compare-timeline](#15-compare-timeline) ― 旧/新の対比タイムライン(モバイルは縦積み)
+- [16. featured-card](#16-featured-card) ― 3カード中央を強調するフィーチャーパターン
+- [17. slider-sim](#17-slider-sim) ― スライダー+ドロップダウン型シミュレーター
+
+※ メニュー(目次ドロワー)とリセットは template.html に標準装備済み。コピーは不要。
 
 ---
 
@@ -1166,6 +1172,576 @@ function showReviewResult() {
 
 ---
 
+## 14. sort-game
+
+8〜10枚の「行為カード」を4ゾーンに振り分ける分類ゲーム。**undo対応**(配置後のチップをクリックで取り戻せる)で、何度でも再配置可能。法律の適用先判断・概念マッピングなど幅広く応用可。
+
+### CSS
+```css
+.sort-game { margin-top: 16px; }
+.sort-stack {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  padding: 14px; background: var(--navy-bg);
+  border-radius: 8px; margin-bottom: 14px;
+  min-height: 70px; border: 1px dashed var(--navy-pale);
+}
+.sort-card {
+  padding: 11px 16px;
+  background: white; border: 2px solid var(--navy-pale);
+  border-radius: 6px; font-size: 15px;
+  cursor: pointer; transition: all 0.25s;
+  font-weight: 500; max-width: 300px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+.sort-card:hover { border-color: var(--navy); transform: translateY(-2px); }
+.sort-card.selected {
+  border-color: var(--accent-gold);
+  background: rgba(201,169,97,0.12);
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 6px 16px rgba(201,169,97,0.25);
+}
+.sort-card.placed { display: none; }
+.sort-zones {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+}
+.sort-zone {
+  background: white; border: 2px dashed var(--navy-pale);
+  border-radius: 8px; padding: 14px;
+  min-height: 120px; cursor: pointer;
+  transition: all 0.25s;
+}
+.sort-zone:hover { border-color: var(--navy); background: var(--navy-bg); }
+.sort-zone.highlight {
+  border-color: var(--accent-gold); border-style: solid;
+  background: rgba(201,169,97,0.08);
+}
+.sort-zone-head {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  font-size: 16px; color: var(--navy-darkest); margin-bottom: 6px;
+}
+.sort-zone-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.1em;
+  color: var(--text-sub); margin-bottom: 12px; font-weight: 700;
+}
+.sort-placed-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.sort-placed-chip {
+  padding: 6px 12px; font-size: 13px;
+  border-radius: 12px; font-weight: 600;
+  line-height: 1.5; cursor: pointer;
+  transition: all 0.2s;
+}
+.sort-placed-chip:hover { transform: scale(0.97); filter: brightness(0.92); }
+.sort-placed-chip::after {
+  content: ' ✕'; opacity: 0;
+  font-size: 11px; margin-left: 2px;
+  transition: opacity 0.2s;
+}
+.sort-placed-chip:hover::after { opacity: 1; }
+.sort-placed-chip.ok {
+  background: rgba(30,130,76,0.12); color: var(--ok-green);
+  border: 1px solid var(--ok-green);
+}
+.sort-placed-chip.ng {
+  background: rgba(200,16,46,0.1); color: var(--accent-red);
+  border: 1px solid var(--accent-red);
+}
+.sort-status {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-top: 16px;
+  padding: 12px 18px; background: var(--navy-darkest);
+  color: white; border-radius: 6px; font-size: 14px;
+  font-weight: 500;
+}
+.sort-status-score {
+  font-family: 'JetBrains Mono', monospace; font-weight: 700;
+  color: var(--accent-gold); font-size: 16px;
+}
+.sort-reset {
+  padding: 6px 16px; background: transparent;
+  color: white; border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 14px; cursor: pointer; font-size: 13px;
+  font-family: 'Noto Serif JP', serif; font-weight: 600;
+}
+.sort-reveal-row {
+  display: none; margin-top: 14px;
+  padding: 14px 16px;
+  background: var(--navy-bg);
+  border-left: 3px solid var(--accent-gold);
+  font-size: 14px; line-height: 1.75;
+  border-radius: 0 4px 4px 0; font-weight: 500;
+}
+.sort-reveal-row.show { display: block; }
+
+@media (max-width: 1100px) { .sort-zones { grid-template-columns: 1fr; } }
+```
+
+### HTML
+```html
+<div class="sort-game">
+  <div class="sort-stack" id="sortStack"><!-- JS populates --></div>
+  <div class="sort-zones">
+    <div class="sort-zone" onclick="dropCard('zoneA')">
+      <div class="sort-zone-head">[[ゾーンA タイトル]]</div>
+      <div class="sort-zone-sub">[[英字タグ]]</div>
+      <div class="sort-placed-list" data-list="zoneA"></div>
+    </div>
+    <!-- B, C, D と続ける -->
+  </div>
+  <div class="sort-status">
+    <span>カードを選ぶ → ゾーンをタップで分類</span>
+    <span>正解:<span class="sort-status-score" id="sortScore">0 / N</span></span>
+    <button class="sort-reset" onclick="resetSort()">リセット</button>
+  </div>
+  <div class="sort-reveal-row" id="sortReveal"></div>
+</div>
+```
+
+### JS
+```javascript
+const sortDeck = [
+  { text: '[[行為1]]', zone: 'zoneA', explain: '[[解説]]' },
+  // 8〜10 件
+];
+const sortZoneLabels = { zoneA: '[[ゾーンA]]', zoneB: '[[ゾーンB]]', zoneC: '[[ゾーンC]]', zoneD: '[[ゾーンD]]' };
+const sortTotal = sortDeck.length;
+let sortSelected = null;
+let sortCorrect = 0;
+
+function buildSort() {
+  const stack = document.getElementById('sortStack');
+  stack.innerHTML = '';
+  sortCorrect = 0;
+  const order = sortDeck.map((_, i) => i).sort(() => Math.random() - 0.5);
+  order.forEach(i => {
+    const card = document.createElement('div');
+    card.className = 'sort-card';
+    card.textContent = sortDeck[i].text;
+    card.dataset.idx = i;
+    card.onclick = () => pickSort(card);
+    stack.appendChild(card);
+  });
+  Object.keys(sortZoneLabels).forEach(z => {
+    const list = document.querySelector('[data-list="' + z + '"]');
+    if (list) list.innerHTML = '';
+  });
+  document.getElementById('sortScore').textContent = '0 / ' + sortTotal;
+  document.getElementById('sortReveal').classList.remove('show');
+}
+function pickSort(card) {
+  if (card.classList.contains('placed')) return;
+  document.querySelectorAll('.sort-card.selected').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.sort-zone.highlight').forEach(z => z.classList.remove('highlight'));
+  card.classList.add('selected');
+  sortSelected = card;
+  document.querySelectorAll('.sort-zone').forEach(z => z.classList.add('highlight'));
+}
+function dropCard(zone) {
+  if (!sortSelected) return;
+  const idx = parseInt(sortSelected.dataset.idx);
+  const item = sortDeck[idx];
+  const correct = item.zone === zone;
+  const list = document.querySelector('[data-list="' + zone + '"]');
+  const chip = document.createElement('div');
+  chip.className = 'sort-placed-chip ' + (correct ? 'ok' : 'ng');
+  chip.textContent = item.text;
+  chip.dataset.cardIdx = idx;
+  chip.title = (correct ? '正解:' : '不正解。正解は「' + sortZoneLabels[item.zone] + '」 ') + item.explain + ' ─ クリックで戻す';
+  chip.onclick = () => undoChip(chip);
+  list.appendChild(chip);
+  sortSelected.classList.add('placed');
+  sortSelected.classList.remove('selected');
+  document.querySelectorAll('.sort-zone.highlight').forEach(z => z.classList.remove('highlight'));
+  sortSelected = null;
+  if (correct) sortCorrect++;
+  updateSortStatus();
+}
+function undoChip(chip) {
+  const idx = parseInt(chip.dataset.cardIdx);
+  if (chip.classList.contains('ok')) sortCorrect = Math.max(0, sortCorrect - 1);
+  chip.remove();
+  const card = document.querySelector('.sort-card[data-idx="' + idx + '"]');
+  if (card) card.classList.remove('placed');
+  document.getElementById('sortReveal').classList.remove('show');
+  updateSortStatus();
+}
+function updateSortStatus() {
+  const placed = document.querySelectorAll('.sort-card.placed').length;
+  document.getElementById('sortScore').textContent = sortCorrect + ' / ' + sortTotal;
+  if (placed === sortTotal) {
+    const rev = document.getElementById('sortReveal');
+    rev.innerHTML = '<strong>結果:' + sortCorrect + '/' + sortTotal + ' 正解。</strong>チップをクリックで戻して再配置できる。';
+    rev.classList.add('show');
+  }
+}
+function resetSort() { buildSort(); }
+buildSort();
+// onResetHook に buildSort を登録
+```
+
+---
+
+## 15. compare-timeline
+
+旧/新など2系列のタイムラインを横並びで比較。モバイルでは自動で縦積みに変わり、各セルに「旧法」「新法」のラベルが付く。
+
+### CSS
+```css
+.cmt-timeline { margin-top: 18px; }
+.cmt-head {
+  display: grid; grid-template-columns: 80px 1fr 1fr;
+  gap: 10px; margin-bottom: 8px;
+}
+.cmt-head > div {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.15em;
+  font-weight: 700; text-align: center;
+  padding: 8px 12px; border-radius: 4px;
+}
+.cmt-head-step { background: transparent; }
+.cmt-head-old { background: rgba(200,16,46,0.12); color: var(--accent-red-dark); }
+.cmt-head-new { background: rgba(30,130,76,0.12); color: var(--ok-green); }
+
+.cmt-step {
+  display: grid; grid-template-columns: 80px 1fr 1fr;
+  gap: 10px; margin-bottom: 6px;
+  align-items: stretch;
+}
+.cmt-step-num {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: var(--navy-darkest); color: var(--accent-gold);
+  border-radius: 6px; padding: 8px;
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 700; font-size: 20px;
+}
+.cmt-step-num small {
+  display: block; font-size: 9px;
+  color: rgba(255,255,255,0.5);
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.15em; margin-bottom: 2px;
+}
+.cmt-cell {
+  padding: 12px 16px;
+  border-radius: 6px; cursor: pointer;
+  transition: all 0.25s;
+  font-size: 14px; line-height: 1.65;
+  font-weight: 500;
+}
+.cmt-cell-old { background: rgba(200,16,46,0.06); border: 1px solid rgba(200,16,46,0.18); }
+.cmt-cell-new { background: rgba(30,130,76,0.05); border: 1px solid rgba(30,130,76,0.18); }
+.cmt-cell-head {
+  font-family: 'Noto Sans JP', sans-serif; font-weight: 700;
+  font-size: 15.5px; color: var(--navy-darkest);
+  margin-bottom: 6px; line-height: 1.45;
+}
+.cmt-cell-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; color: var(--text-sub);
+  margin-top: 6px; letter-spacing: 0.05em; font-weight: 600;
+}
+.cmt-cell-detail {
+  display: none; margin-top: 10px;
+  padding-top: 10px; border-top: 1px dashed var(--navy-pale);
+  font-size: 13.5px; color: var(--text-main); line-height: 1.75;
+}
+.cmt-cell.open .cmt-cell-detail { display: block; }
+
+/* タブレット(1100px以下)では新法を省略 */
+@media (max-width: 1100px) {
+  .cmt-step, .cmt-head { grid-template-columns: 60px 1fr; }
+  .cmt-cell-new, .cmt-head-new { display: none; }
+}
+
+/* スマホ(720px以下)では縦積みで両方表示 */
+@media (max-width: 720px) {
+  .cmt-head { display: none; }
+  .cmt-step { display: block; margin-bottom: 18px; }
+  .cmt-step-num {
+    display: inline-flex; width: auto; padding: 6px 14px 6px 10px;
+    flex-direction: row; gap: 8px; margin-bottom: 10px; font-size: 16px;
+  }
+  .cmt-cell-old, .cmt-cell-new { display: block; margin-bottom: 8px; }
+  .cmt-cell-old::before {
+    content: '[[旧法ラベル]]'; display: inline-block;
+    font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+    color: var(--accent-red); font-weight: 700; letter-spacing: 0.12em;
+    background: rgba(200,16,46,0.12); padding: 3px 9px;
+    border-radius: 3px; margin-bottom: 8px;
+  }
+  .cmt-cell-new::before {
+    content: '[[新法ラベル]]'; display: inline-block;
+    font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+    color: var(--ok-green); font-weight: 700; letter-spacing: 0.12em;
+    background: rgba(30,130,76,0.12); padding: 3px 9px;
+    border-radius: 3px; margin-bottom: 8px;
+  }
+}
+```
+
+### HTML
+```html
+<div class="cmt-timeline">
+  <div class="cmt-head">
+    <div class="cmt-head-step">STEP</div>
+    <div class="cmt-head-old">[[旧系列タイトル]]</div>
+    <div class="cmt-head-new">[[新系列タイトル]]</div>
+  </div>
+  <div class="cmt-step">
+    <div class="cmt-step-num"><small>STEP</small>1</div>
+    <div class="cmt-cell cmt-cell-old" onclick="this.classList.toggle('open')">
+      <div class="cmt-cell-head">[[旧STEP1 見出し]]</div>
+      <div>[[本文]]
+      <div class="cmt-cell-meta">[[メタ情報]]</div></div>
+      <div class="cmt-cell-detail">[[展開時の詳細]]</div>
+    </div>
+    <div class="cmt-cell cmt-cell-new" onclick="this.classList.toggle('open')">
+      <!-- 新 STEP1 同様 -->
+    </div>
+  </div>
+  <!-- STEP 2, 3, ... -->
+</div>
+```
+
+### JS
+HTML内 `onclick` で完結。追加不要。
+
+---
+
+## 16. featured-card
+
+3枚カードのうち中央の1枚を「重要」として強調するパターン。紺のグラデ背景+金バッジ+内部に追加解説ブロック(callout)を仕込める。
+
+### CSS
+```css
+.feat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.7fr 1fr;
+  gap: 14px;
+  align-items: stretch;
+}
+.feat-card {
+  background: var(--navy-bg);
+  padding: 18px 20px;
+  border-radius: 8px;
+  border-left: 3px solid var(--accent-red);
+}
+.feat-card.featured {
+  background: linear-gradient(160deg, var(--navy-darkest) 0%, var(--navy-dark) 100%);
+  color: white;
+  border-left: 4px solid var(--accent-gold);
+  box-shadow: 0 12px 32px rgba(15,40,71,0.3);
+  position: relative;
+  padding: 24px 26px 20px;
+}
+.feat-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--accent-red);
+  letter-spacing: 0.15em; font-weight: 700; margin-bottom: 8px;
+}
+.feat-card.featured .feat-tag { color: var(--accent-gold); }
+.feat-name {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  font-size: 17px; color: var(--navy-darkest);
+  margin-bottom: 10px; line-height: 1.35;
+}
+.feat-card.featured .feat-name {
+  color: white; font-size: 23px; margin-bottom: 4px;
+}
+.feat-alias {
+  font-size: 13.5px; color: rgba(255,255,255,0.8);
+  margin-bottom: 12px; font-weight: 500;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed rgba(255,255,255,0.15);
+}
+.feat-desc {
+  font-size: 14px; line-height: 1.75;
+  color: var(--text-main); font-weight: 500;
+}
+.feat-card.featured .feat-desc {
+  color: rgba(255,255,255,0.92); font-size: 14.5px;
+}
+.feat-badge {
+  position: absolute; top: -12px; right: 16px;
+  background: var(--accent-gold);
+  color: var(--navy-darkest);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 11px; font-weight: 700;
+  padding: 5px 12px; border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(201,169,97,0.4);
+}
+.feat-callout {
+  margin-top: 14px; padding: 14px 16px;
+  background: rgba(201,169,97,0.12);
+  border-left: 3px solid var(--accent-gold);
+  border-radius: 0 4px 4px 0;
+  font-size: 13.5px; line-height: 1.75;
+  color: rgba(255,255,255,0.92);
+  font-weight: 500;
+}
+.feat-callout strong { color: var(--accent-gold); font-weight: 700; }
+
+@media (max-width: 1100px) { .feat-grid { grid-template-columns: 1fr; } }
+```
+
+### HTML
+```html
+<div class="feat-grid">
+  <div class="feat-card">
+    <div class="feat-tag">[[タグA]]</div>
+    <div class="feat-name">[[用語A]]</div>
+    <div class="feat-desc">[[説明A]]</div>
+  </div>
+  <div class="feat-card featured">
+    <div class="feat-badge">KEY · [[強調理由]]</div>
+    <div class="feat-tag">[[タグ中央]]</div>
+    <div class="feat-name">[[重要用語]]</div>
+    <div class="feat-alias">通称:<strong>[[別名]]</strong></div>
+    <div class="feat-desc">[[本体解説]]</div>
+    <div class="feat-callout">
+      <strong>[[有名事例名]]</strong> — [[事例の要点]]
+    </div>
+  </div>
+  <div class="feat-card">
+    <!-- カードC -->
+  </div>
+</div>
+```
+
+---
+
+## 17. slider-sim
+
+ドロップダウン+スライダーを動かすと、リアルタイムに結果が変化するシミュレーター。`pw-calc` の発展形。クーリング・オフ判定(契約種別×経過日数)、統計計算、物理シミュレーションなどに応用可。
+
+### CSS
+```css
+.ssm {
+  background: linear-gradient(160deg, var(--navy-darkest) 0%, var(--navy-dark) 100%);
+  border-radius: 10px; padding: 28px 32px;
+  color: white; margin-top: 16px;
+  box-shadow: 0 12px 40px rgba(15,40,71,0.3);
+}
+.ssm-title {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 22px; margin-bottom: 20px;
+  color: var(--accent-gold); font-weight: 700;
+}
+.ssm-controls { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; margin-bottom: 22px; }
+.ssm-group label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.8); margin-bottom: 10px; font-weight: 700;
+}
+.ssm-select {
+  width: 100%; padding: 12px 14px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 6px;
+  color: white; font-size: 16px;
+  font-family: 'Noto Sans JP', sans-serif;
+  cursor: pointer; font-weight: 500;
+}
+.ssm-select option { background: var(--navy-darkest); color: white; }
+.ssm-slider-val {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 36px; font-weight: 700;
+  color: var(--accent-gold);
+  margin-bottom: 10px; line-height: 1;
+}
+.ssm-slider-val .unit {
+  font-size: 16px; color: rgba(255,255,255,0.6);
+  margin-left: 6px; font-weight: 500;
+}
+input[type="range"].ssm-range {
+  -webkit-appearance: none; width: 100%; height: 4px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 2px; outline: none;
+}
+input[type="range"].ssm-range::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 18px; height: 18px;
+  background: var(--accent-gold); border-radius: 50%;
+  cursor: pointer; border: 3px solid var(--navy-darkest);
+}
+.ssm-result {
+  padding: 22px 24px;
+  background: rgba(0,0,0,0.25);
+  border-radius: 8px;
+  border-left: 4px solid var(--accent-gold);
+  margin-top: 8px;
+}
+.ssm-verdict {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 30px; font-weight: 700;
+  margin-bottom: 8px;
+}
+.ssm-verdict.ok { color: #5ED47C; }
+.ssm-verdict.warn { color: var(--accent-gold); }
+.ssm-verdict.ng { color: var(--accent-red); }
+.ssm-detail {
+  font-size: 15px; color: rgba(255,255,255,0.85);
+  line-height: 1.8; font-weight: 500;
+}
+.ssm-detail strong { color: var(--accent-gold); font-weight: 700; }
+.ssm-note {
+  margin-top: 16px; padding: 12px 16px;
+  background: rgba(201,169,97,0.1);
+  border-left: 3px solid var(--accent-gold);
+  font-size: 14px; color: rgba(255,255,255,0.85);
+  border-radius: 0 4px 4px 0;
+  line-height: 1.75; font-weight: 500;
+}
+
+@media (max-width: 1100px) { .ssm-controls { grid-template-columns: 1fr; } }
+```
+
+### HTML
+```html
+<div class="ssm">
+  <div class="ssm-title">◆ [[シミュレーターのタイトル]]</div>
+  <div class="ssm-controls">
+    <div class="ssm-group">
+      <label>[[カテゴリ選択ラベル]]</label>
+      <select class="ssm-select" id="ssmType">
+        <option value="v1" data-x="[[パラメータ1]]">[[選択肢1]]</option>
+        <option value="v2" data-x="[[パラメータ2]]">[[選択肢2]]</option>
+      </select>
+    </div>
+    <div class="ssm-group">
+      <label>[[数値ラベル]]</label>
+      <div class="ssm-slider-val"><span id="ssmValN">0</span><span class="unit">[[単位]]</span></div>
+      <input type="range" class="ssm-range" id="ssmN" min="0" max="30" value="0" step="1">
+    </div>
+  </div>
+  <div class="ssm-result">
+    <div class="ssm-verdict" id="ssmVerdict">[[判定]]</div>
+    <div class="ssm-detail" id="ssmDetail">[[詳細説明]]</div>
+  </div>
+  <div class="ssm-note" id="ssmNote">⚠ [[注意書き]]</div>
+</div>
+```
+
+### JS
+```javascript
+function updateSSM() {
+  const type = document.getElementById('ssmType').value;
+  const n = parseInt(document.getElementById('ssmN').value);
+  document.getElementById('ssmValN').textContent = n;
+  // 判定ロジック - 単元固有で書き換える
+  const verdict = document.getElementById('ssmVerdict');
+  const detail = document.getElementById('ssmDetail');
+  // …
+}
+document.getElementById('ssmType').addEventListener('change', updateSSM);
+document.getElementById('ssmN').addEventListener('input', updateSSM);
+updateSSM();
+// onResetHook で updateSSM をリセットに含めること
+```
+
+---
+
 ## 部品の組み合わせ例
 
 典型的なスライドの中身は、上記パーツの組み合わせで作れる:
@@ -1174,9 +1750,32 @@ function showReviewResult() {
 - **3分類スライド**: `cia-grid`(CIA、三権分立、記憶階層など)
 - **歴史/事件解説**: `body-text` + `case-expander` × 3〜5
 - **対比スライド**: `filter-toggle` + 展開式メリデメ
-- **計算体感スライド**: `pw-calc`(応用可:指数関数、速度計算、確率計算)
+- **強調カードスライド**: `feat-grid`(中央のカードを大きく目立たせる)
+- **計算体感スライド**: `pw-calc` / `slider-sim`(応用可:指数関数、速度計算、確率計算)
+- **分類ゲームスライド**: `sort-game`(8〜10枚を4ゾーンに振り分け、undo対応)
+- **対比タイムライン**: `compare-timeline`(旧/新・Before/After・2系列を可視化)
 - **答え合わせスライド**: `answers-grid` + 一括表示ボタン
 - **まとめスライド**: `summary-tree`
 - **復習スライド**: `review-container` + 12問プール
 
 新しい部品が必要になったら、**ここに追記してから使う**。その場限りの一発屋スタイルは避ける。
+
+## onResetHook との連動(リセット対応)
+
+template.html の `resetAllInteractions()` は、以下の共通コンポーネントを自動リセットする:
+
+- `.note-blank.reveal`、`.case-expander.open`、`.case-inline-opt`、`.case-inline-fb`
+- `.quiz-option`(correct/incorrect)、`.quiz-feedback.show`
+- `.practice-item.revealed`、`.answer-row.revealed`
+- review-container の開始状態
+
+**単元固有のインタラクション**(sort-game、slider-sim、compare-timeline、featured-card 内のクイズなど)は、template.html 末尾の `if (typeof onResetHook === 'function') onResetHook();` に対応する `onResetHook` 関数を定義して登録する:
+
+```javascript
+function onResetHook() {
+  buildSort();          // sort-game をリセット
+  updateSSM();          // slider-sim をリセット
+  document.querySelectorAll('.cmt-cell.open').forEach(c => c.classList.remove('open'));
+  // ...
+}
+```

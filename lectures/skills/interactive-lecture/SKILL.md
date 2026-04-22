@@ -30,9 +30,9 @@ description: 授業用インタラクティブHTMLスライドサイトを制作
 
 ---
 
-## 1. 全体構成(標準:15〜20スライド)
+## 1. 全体構成(標準:15〜25スライド)
 
-過去の07情報セキュリティをベースとした標準構成:
+過去の06情報に関する法規・07情報セキュリティをベースとした標準構成:
 
 ```
 ┌────────────────────────────────────────────────┐
@@ -59,6 +59,15 @@ description: 授業用インタラクティブHTMLスライドサイトを制作
 ```
 
 セクション数は単元により 2〜5 に変動する。
+
+### 標準装備(template.html に含まれる・外さないこと)
+
+- **進捗バー**(topbar 直下の細いグラデーション帯、現在位置をリアルタイム反映)
+- **スライド目次ドロワー**(topbar右端の `MENU` / `M` キー):セクションごとに自動グルーピング、PRACTICE/INTERACTIVE/REVIEW の自動タグ付け、現在スライドをハイライト、項目タップでジャンプ
+- **インタラクション一括リセット**(ドロワー内の赤点線ボタン):note-blank・quiz・practice・case・answers-grid・review を初期化(単元固有のインタラクションは `onResetHook` に登録)
+- **PC+スマホ ユニバーサル対応**:同一URLでPC(投影)は横長スライド、スマホ(復習)は縦に最適化された表示
+- **キーボード**:← → / SPACE / PageUp / PageDown / Home / End / F(全画面) / M(メニュー) / ESC(メニュー閉じる)
+- **タッチスワイプ**:水平40px以上かつ水平>垂直、800ms以内で左右送り。縦スクロールは干渉しない
 
 ---
 
@@ -92,6 +101,30 @@ body { font-family: 'Noto Sans JP', sans-serif; }
 .slide-title, .title-main, .section-heading { font-family: 'Noto Serif JP', serif; }
 .eyebrow, .page-indicator { font-family: 'JetBrains Mono', monospace; }
 ```
+
+#### 書体の使い分けルール
+
+- **Noto Serif JP(明朝)**:「見出し」「スライドタイトル」「定義用語名」「セクション大見出し」「実習の問題文」など、<strong>視線を止めて読む短い要素</strong> に限定。
+- **Noto Sans JP(ゴシック)**:本文、解説、事例の長文、タイムラインのセル本文、メニュー項目など、<strong>連続して読む全ての長文</strong>。連続文に明朝を使うとスマホ・低解像度投影で読みづらくなるため禁止。
+- **JetBrains Mono**:ラベル・メタ情報・ページ番号・コード系の等幅表示専用。
+
+#### 標準フォントサイズ・太さ(2026年改訂・投影視認性基準)
+
+本文系は以下を下回らない:
+
+| 要素 | サイズ | 太さ | 備考 |
+|---|---|---|---|
+| `.body-text` | 19px | 500 | 本文段落 |
+| `.def-box .def-desc` | 16px | 500 | 定義ボックスの説明 |
+| `.practice-text` | 16px | 500 | 実習の問題文 |
+| `.case-content` | 16px | 500 | 事例展開の本文 |
+| `.quiz-question` | 19px | 600 | クイズの問題文 |
+| `.quiz-option` | 16.5px | 500 | クイズの選択肢 |
+| `.quiz-feedback` | 16px | 500 | 解説 |
+| `.slide-subtitle` | clamp(17, 1.7vw, 22)px | 500 | リード文 |
+| `.section-heading` | 30px | 700 | 節見出し |
+
+スマホでは `@media (max-width: 720px)` で各要素が一段階縮小(本文15px、問題文14.5px など)。template.html にベース実装済み。
 
 Google Fonts は以下で読み込む:
 
@@ -152,6 +185,44 @@ Google Fonts は以下で読み込む:
 ```
 
 ---
+
+## 3.3 ユニバーサル対応(PC投影 + スマホ復習)
+
+同一URLで以下を満たすこと。template.html にベースは入っているが、単元固有の新しいコンポーネントを追加したときは必ずモバイル対応を書き足す:
+
+### Viewport + セーフエリア
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+```
+
+iPhoneのホームインジケータに隠されないよう、bottombar と slide は `env(safe-area-inset-bottom)` を使って自動で余白を確保している。
+
+### ブレイクポイント
+
+- **> 1100px** : PC・投影向け(2カラム以上のグリッド、フル装飾)
+- **720–1100px** : タブレット・狭いラップトップ(1カラムに畳む)
+- **≤ 720px** : スマホ縦画面(topbarサブタイトル非表示、slide-title-small非表示、本文1段階縮小、全グリッドを1カラムに、SVGもmax-width縮小)
+- **≤ 380px** : iPhone SE など超狭幅(更に調整)
+- **`(max-height: 500px) and (orientation: landscape)`** : スマホ横向き
+
+新規コンポーネントを作るときは、`@media (max-width: 720px)` で以下を必ず書く:
+
+1. 2カラム以上のグリッドは `grid-template-columns: 1fr` に畳む
+2. SVGや固定幅の図は `max-width` を 280〜300px 程度に
+3. 本文は 14.5〜15px、太字を500以上に
+4. 余白(padding/gap)は縦方向に余裕を残す(bottombar に隠されないよう)
+
+### スマホ時のUI差分
+
+- topbar: 40pxに縮小、サブタイトル非表示、MENUボタン小型化
+- bottombar: slide-title-small・keyboard-hint 非表示、前後ボタン+ページ番号のみ
+- スライド送り:左右スワイプが有効(水平40px以上・800ms以内・縦スクロールと干渉しない)
+
+### 納品前の検証
+
+- 1100px幅のラップトップ、720pxのタブレット、375pxのiPhone 14、320pxのiPhone SE、landscape phoneで崩れないこと
+- Safari レスポンシブモード(⌃⌘R)または `python3 -m http.server 8000` + 実機で確認
 
 ## 4. ナビゲーション(全スライド共通)
 
@@ -327,6 +398,26 @@ function toggleFullscreen() {
 - **原因**: 判定後に `pointer-events: none` を付けていない
 - **対策**: `answerQuiz()` 内で全 option に `pointerEvents = 'none'`
 
+### 9.8 本文に明朝体を使うと読みづらい(特にスマホ)
+- **原因**: `font-family: 'Noto Serif JP'` を case-content や dm-cell-head のような連続読み要素に適用していた
+- **対策**: 明朝は見出し・用語名・問題文などの短い要素のみに限定。連続文はすべて Noto Sans に(3.2節 書体の使い分けルール参照)
+
+### 9.9 語群(候補リスト)で正解が先に色付きで見えている
+- **原因**: 正解にうっかり赤・太字スタイルをインラインで付けて「ハイライト」にしてしまう
+- **対策**: 語群の全候補は同じ中立スタイル。答えは「クリック展開の先」だけに表示させる。制作後、必ず <strong>他人が見て答えが判別不能か</strong> チェック
+
+### 9.10 分類ゲームなどで一度配置したら戻せない
+- **原因**: カードに `.placed` を付けて `pointer-events: none` にしていた
+- **対策**: 配置後のチップをクリックで取り戻せる(undo)実装を標準に。高校生は試行錯誤しながら理解するので、全て一方通行UIは学習効率を下げる
+
+### 9.11 bottombar に本文の最終行が隠される(スマホ)
+- **原因**: `.slide { bottom: 44px }` のみだとiPhoneのホームインジケータ領域+最終行のマージン不足で下端に食い込む
+- **対策**: `bottom: calc(44px + env(safe-area-inset-bottom))` + スライドの `padding-bottom: 40px` を最低確保。`<meta viewport-fit=cover>` も必須
+
+### 9.12 SVG内のtextを書き換えると元のラベルが失われる
+- **原因**: `label.textContent = answers[target]` で全置換してしまう
+- **対策**: 複数語のラベル(例「政令・省令」)は書き換え時も全文を渡す。初期表示の `(2) · 省令` のような複合情報は書き換え対象外か、辞書に完全形を持たせる
+
 ---
 
 ## 10. 納品前の最終確認
@@ -334,12 +425,16 @@ function toggleFullscreen() {
 `lectures/CLAUDE.md` セクション7のチェックリストに準拠:
 
 - [ ] 学習ノート全項番 + 全実習の網羅
-- [ ] 答え後出し徹底
+- [ ] 答え後出し徹底(語群・一覧でも正解色付けしない)
 - [ ] デザイントークン遵守
 - [ ] セクション仕切りが中央配置
-- [ ] バーとの衝突なし
-- [ ] 矢印/スペース/タッチ/F キー全て動作
-- [ ] 幅1100px以下で崩れない
+- [ ] バーとの衝突なし(モバイルは safe-area 対応)
+- [ ] 矢印/スペース/F/M/ESC キー全て動作
+- [ ] スワイプで前後移動(スマホ/タブレット)
+- [ ] MENU ドロワーが開閉、目次から任意スライドに飛べる
+- [ ] インタラクション全リセットが機能する(単元固有要素は `onResetHook` に登録)
+- [ ] 幅 1100px / 720px / 380px / landscape phone すべてで崩れない
+- [ ] 本文・連続文にNoto Serif JP(明朝)を使っていない
 - [ ] NG表現なし
 - [ ] 最新事例が含まれている(該当する場合)
 - [ ] examples/ に凍結コピー
@@ -351,6 +446,18 @@ function toggleFullscreen() {
 
 | ファイル | 内容 |
 |---|---|
-| `template.html` | 空の骨組みHTML(コピーして articles/ に配置) |
-| `components.md` | 13種の再利用可能パーツカタログ |
-| `examples/07-information-security.html` | 完成例(情報セキュリティ) |
+| `template.html` | 空の骨組みHTML(メニュー・リセット・スマホ対応を含む完成済み基盤。コピーして articles/ に配置) |
+| `components.md` | 再利用可能パーツカタログ(標準+2026年追加分) |
+| `examples/06-information-law.html` | **最新リファレンス**(情報に関する法規)。メニュー・リセット・スマホ対応・リッチインタラクション6種の完全実装例 |
+| `examples/07-information-security.html` | 旧リファレンス(情報セキュリティ)。レイアウト確認用 |
+
+新規単元を作るときは必ず `examples/06-information-law.html` を開いて、以下の実装を参照すること:
+
+- インタラクション多数(穴埋め・分類ゲーム・タイムライン比較・シミュレーター)と `onResetHook` の連動
+- スマホ時のタイムライン縦積み表示
+- SVGの選択ハイライト(pym-tier.selected の金枠+グロー)
+- フィッシング風スマホUIのCSS専用実装
+- case-expander 内部に quiz を連動させるパターン
+- 「県立聖女学院」のような覚え方カード(暗記術)
+
+この単元で確立された新パターンは、今後の単元にも積極的に転用する。
