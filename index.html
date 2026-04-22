@@ -27,6 +27,7 @@
   --gold: #f4b93a;
 
   --tool-essays: #1e3a8a;
+  --tool-lectures: #7a3a1e;
   --tool-quiz: #1f6148;
   --tool-coming: #8594ae;
 
@@ -193,9 +194,10 @@ a { color: inherit; text-decoration: none; }
   height: 100%;
   background: var(--tool-accent, var(--accent));
 }
-.tool-card.essays { --tool-accent: var(--tool-essays); }
-.tool-card.quiz   { --tool-accent: var(--tool-quiz); }
-.tool-card.coming { --tool-accent: var(--tool-coming); }
+.tool-card.essays   { --tool-accent: var(--tool-essays); }
+.tool-card.lectures { --tool-accent: var(--tool-lectures); }
+.tool-card.quiz     { --tool-accent: var(--tool-quiz); }
+.tool-card.coming   { --tool-accent: var(--tool-coming); }
 
 .tool-card:hover {
   transform: translateY(-6px);
@@ -370,10 +372,25 @@ a { color: inherit; text-decoration: none; }
       <div class="tool-cta">enter the lab →</div>
     </a>
 
-    <!-- Tool 2: Quiz (coming soon) -->
-    <div class="tool-card quiz coming">
+    <!-- Tool 2: Interactive Lecture Lab -->
+    <a href="lectures/" class="tool-card lectures">
       <div class="tool-meta">
         <span class="tool-num">02</span>
+        <span class="tool-status live">live</span>
+      </div>
+      <div class="tool-name">Interactive Lecture Lab</div>
+      <div class="tool-en">Interactive HTML slides for the classroom</div>
+      <p class="tool-desc">
+        情報Ⅰ等の単元解説を、授業投影と自習復習の両方で使えるスライドサイトに。
+        手を動かしながら理解を深めるインタラクティブ教材です。
+      </p>
+      <div class="tool-cta">enter the lab →</div>
+    </a>
+
+    <!-- Tool 3: Quiz (coming soon) -->
+    <div class="tool-card quiz coming">
+      <div class="tool-meta">
+        <span class="tool-num">03</span>
         <span class="tool-status coming">coming soon</span>
       </div>
       <div class="tool-name">一問一答</div>

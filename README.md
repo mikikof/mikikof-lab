@@ -15,7 +15,18 @@ mikikof-lab/
 │   ├── scripts/
 │   └── articles/
 │       └── civil-vs-common-law/
-└── (将来) quiz/             ツール02:一問一答(未実装)
+├── lectures/               ツール02:授業用インタラクティブHTMLスライド
+│   ├── index.html
+│   ├── CLAUDE.md           授業サイト制作専用の指示書
+│   ├── skills/
+│   │   └── interactive-lecture/
+│   │       ├── SKILL.md
+│   │       ├── template.html
+│   │       ├── components.md
+│   │       └── examples/
+│   └── articles/
+│       └── 07-information-security/
+└── (将来) quiz/             ツール03:一問一答(未実装)
 ```
 
 ## 公開URL(GitHub Pages)
@@ -23,6 +34,8 @@ mikikof-lab/
 - ポータル: `https://mikikof.github.io/mikikof-lab/`
 - コラム集: `https://mikikof.github.io/mikikof-lab/essays/`
 - コラム記事: `https://mikikof.github.io/mikikof-lab/essays/articles/{slug}/`
+- 授業サイト: `https://mikikof.github.io/mikikof-lab/lectures/`
+- 授業単元ページ: `https://mikikof.github.io/mikikof-lab/lectures/articles/{slug}/`
 
 ## 初回セットアップ
 
@@ -49,6 +62,16 @@ bash scripts/new-article.sh "your-slug" "記事タイトル"
 ```
 
 詳しくは `essays/CLAUDE.md` を参照。
+
+## 新しい授業単元を作る(授業サイト)
+
+```bash
+cd lectures/
+# Claude Code に「第N回 ○○ の授業サイトを作って、学習ノートは添付の通り」と依頼
+# → skills/interactive-lecture/SKILL.md に従って articles/{slug}/index.html を生成
+```
+
+詳しくは `lectures/CLAUDE.md` を参照。
 
 ## 新しいツールを追加する
 

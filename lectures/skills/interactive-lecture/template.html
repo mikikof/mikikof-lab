@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<!--
+═══════════════════════════════════════════════════════════════════
+  template.html / 授業用インタラクティブHTMLスライドサイト
+  interactive-lecture skill の骨組みテンプレート
+
+  使い方:
+    1. このファイルを lectures/articles/<番号>-<スラッグ>/index.html にコピー
+    2. [[...]] で囲まれたプレースホルダを実際の内容に置換
+    3. 中身のスライドは components.md からコピーして挿入
+═══════════════════════════════════════════════════════════════════
+-->
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[[単元タイトル]] | [[講義名]]</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600;700;900&family=Noto+Sans+JP:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════
+   DESIGN TOKENS (変更禁止)
+   ══════════════════════════════════════════════════════ */
+:root {
+  --navy-darkest: #0F2847;
+  --navy-dark: #1B3A5B;
+  --navy: #2C5F8D;
+  --navy-light: #4A7FA8;
+  --navy-pale: #D4E1EF;
+  --navy-bg: #F3F6FB;
+  --accent-red: #C8102E;
+  --accent-red-dark: #8B0A1F;
+  --accent-gold: #C9A961;
+  --text-main: #1A2332;
+  --text-sub: #5A6378;
+  --white: #FFFFFF;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  font-family: 'Noto Sans JP', sans-serif;
+  color: var(--text-main);
+  background: var(--navy-darkest);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.slide-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════════════════════
+   SLIDE BASE (変更禁止 - バーとの衝突回避)
+   ══════════════════════════════════════════════════════ */
+.slide {
+  position: absolute;
+  top: 47px;
+  bottom: 52px;
+  left: 0;
+  right: 0;
+  padding: 4vh 5vw;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(30px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  background: var(--white);
+  overflow-y: auto;
+}
+.slide.active {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(0);
+}
+
+/* ══════════════════════════════════════════════════════
+   TOP BAR
+   ══════════════════════════════════════════════════════ */
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 44px;
+  background: linear-gradient(180deg, var(--navy-darkest) 0%, var(--navy-dark) 100%);
+  color: rgba(255,255,255,0.9);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  z-index: 100;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+.topbar-title { font-family: 'Noto Serif JP', serif; font-weight: 600; margin-right: 20px; }
+.topbar-subtitle { color: rgba(255,255,255,0.6); font-size: 12px; flex: 1; }
+.topbar-chapter { font-family: 'JetBrains Mono', monospace; color: var(--accent-gold); letter-spacing: 0.1em; font-size: 11px; }
+
+.progress {
+  position: fixed;
+  top: 44px; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-red) 0%, var(--accent-gold) 100%);
+  z-index: 99;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 8px rgba(201, 169, 97, 0.5);
+}
+
+/* ══════════════════════════════════════════════════════
+   BOTTOM BAR
+   ══════════════════════════════════════════════════════ */
+.bottombar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 52px;
+  background: var(--navy-darkest);
+  color: rgba(255,255,255,0.85);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  z-index: 100;
+  font-size: 13px;
+}
+.bottombar-nav { display: flex; gap: 12px; align-items: center; }
+.nav-btn {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: white;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 16px;
+}
+.nav-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.page-indicator { font-family: 'JetBrains Mono', monospace; margin-left: auto; margin-right: 16px; color: rgba(255,255,255,0.7); font-size: 12px; letter-spacing: 0.08em; }
+.slide-title-small { flex: 1; margin-left: 16px; font-size: 12px; color: rgba(255,255,255,0.5); font-family: 'Noto Serif JP', serif; max-width: 40vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.keyboard-hint { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.4); margin-left: 10px; }
+
+/* ══════════════════════════════════════════════════════
+   TYPOGRAPHY
+   ══════════════════════════════════════════════════════ */
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent-red);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.slide-title {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  color: var(--navy-darkest);
+  font-size: clamp(32px, 4.5vw, 56px);
+  line-height: 1.15; margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.slide-subtitle {
+  font-size: clamp(16px, 1.6vw, 22px);
+  color: var(--text-sub); font-weight: 400;
+  margin-bottom: 32px;
+}
+.section-heading {
+  font-family: 'Noto Serif JP', serif; font-weight: 600;
+  color: var(--navy-dark); font-size: 28px;
+  margin-bottom: 20px; padding-left: 18px;
+  border-left: 4px solid var(--accent-red);
+  line-height: 1.3;
+}
+.body-text { font-size: 18px; line-height: 1.8; color: var(--text-main); }
+.highlight {
+  background: linear-gradient(180deg, transparent 60%, rgba(201,169,97,0.4) 60%);
+  font-weight: 700; padding: 0 2px;
+}
+
+/* ══════════════════════════════════════════════════════
+   TITLE SLIDE (最初と最後)
+   ══════════════════════════════════════════════════════ */
+.title-slide {
+  display: flex; flex-direction: column; justify-content: center;
+  background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy-dark) 60%, var(--navy) 100%);
+  color: white; padding: 0 10vw;
+  overflow: hidden;
+}
+.title-slide::before {
+  content: ''; position: absolute; top: 0; right: 0;
+  width: 45%; height: 100%;
+  background:
+    radial-gradient(circle at 70% 30%, rgba(201,169,97,0.15) 0%, transparent 50%),
+    radial-gradient(circle at 30% 70%, rgba(200,16,46,0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+.title-slide::after {
+  content: ''; position: absolute; top: 50%; right: 8vw;
+  width: 300px; height: 300px;
+  border: 1px solid rgba(201,169,97,0.3); border-radius: 50%;
+  transform: translateY(-50%);
+  animation: rotate 40s linear infinite;
+}
+@keyframes rotate { to { transform: translateY(-50%) rotate(360deg); } }
+.title-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 13px;
+  letter-spacing: 0.3em; color: var(--accent-gold); margin-bottom: 24px;
+}
+.title-main {
+  font-family: 'Noto Serif JP', serif; font-weight: 900;
+  font-size: clamp(60px, 8vw, 120px);
+  line-height: 1; margin-bottom: 20px; letter-spacing: -0.02em;
+  position: relative; z-index: 2;
+}
+.title-sub {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(22px, 2.5vw, 34px); font-weight: 300;
+  color: rgba(255,255,255,0.85); margin-bottom: 60px;
+  letter-spacing: 0.05em;
+}
+.title-meta {
+  display: flex; gap: 40px;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  color: rgba(255,255,255,0.6); letter-spacing: 0.15em;
+  position: relative; z-index: 2;
+}
+.title-meta-item strong { color: var(--accent-gold); margin-right: 8px; }
+
+/* ══════════════════════════════════════════════════════
+   SECTION DIVIDER (中央配置を !important で強制)
+   ══════════════════════════════════════════════════════ */
+.section-divider {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center !important;
+  align-items: center !important;
+  background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy) 100%);
+  color: white;
+  position: absolute;
+  padding: 0 5vw !important;
+  overflow: hidden !important;
+  text-align: center;
+}
+.section-divider > * { position: relative; z-index: 2; }
+.section-divider::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(201,169,97,0.1) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(200,16,46,0.08) 0%, transparent 40%);
+  z-index: 1;
+}
+.section-number {
+  font-family: 'JetBrains Mono', monospace; font-size: 14px;
+  letter-spacing: 0.3em; color: var(--accent-gold); margin-bottom: 20px;
+}
+.section-title-big {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(48px, 7vw, 90px); font-weight: 900;
+  line-height: 1; margin-bottom: 18px; text-align: center;
+}
+.section-tagline {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(18px, 2vw, 26px); font-weight: 300;
+  color: rgba(255,255,255,0.75); letter-spacing: 0.05em;
+}
+
+/* ══════════════════════════════════════════════════════
+   COMPONENT STYLES
+   (必要なパーツだけ components.md からコピーして追加)
+   ══════════════════════════════════════════════════════ */
+
+/* --- def-box (用語定義) --- */
+.def-box {
+  background: var(--navy-bg);
+  border: 1px solid var(--navy-pale);
+  border-radius: 6px;
+  padding: 28px 32px;
+  margin-bottom: 16px;
+}
+.def-box .def-label {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent-red);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.15em; margin-bottom: 6px;
+}
+.def-box .def-term {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  font-size: 22px; color: var(--navy-darkest); margin-bottom: 10px;
+}
+.def-box .def-desc { font-size: 15px; line-height: 1.7; color: var(--text-main); }
+
+/* --- note-blank (穴埋めクリック展開) --- */
+.note-blank {
+  display: inline-block;
+  min-width: 120px;
+  padding: 2px 14px;
+  background: var(--navy-pale);
+  border-bottom: 2px solid var(--navy);
+  color: var(--navy-dark);
+  font-weight: 700;
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
+}
+.note-blank.reveal {
+  background: var(--accent-gold);
+  color: var(--navy-darkest);
+  border-bottom-color: var(--accent-red);
+  animation: reveal 0.5s;
+}
+@keyframes reveal {
+  0% { transform: scale(0.9); opacity: 0.5; }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* --- two-col レイアウト --- */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 30px;
+}
+
+/* --- small screen safety --- */
+@media (max-width: 1100px) {
+  .two-col { grid-template-columns: 1fr; }
+}
+
+/* --- スクロールバー --- */
+.slide::-webkit-scrollbar { width: 6px; }
+.slide::-webkit-scrollbar-track { background: transparent; }
+.slide::-webkit-scrollbar-thumb { background: var(--navy-pale); border-radius: 3px; }
+
+@media print {
+  .topbar, .bottombar, .progress { display: none; }
+}
+
+/*
+  ══════════════════════════════════════════════════════
+  ここから下に、components.md から必要なコンポーネントを
+  コピーして追加する。例:
+    - .cia-grid / .cia-card  (3分類カード)
+    - .case-expander         (事例展開)
+    - .quiz-container        (選択問題)
+    - .practice-list         (実習リスト)
+    - .pw-calc               (パスワード計算機)
+    - .filter-toggle         (2項対比)
+    - .answers-grid          (答え合わせ一括)
+    - .review-container      (復習チャレンジ)
+    - .summary-tree          (まとめツリー)
+    - .malware-grid          (3カードクイズ)
+  ══════════════════════════════════════════════════════
+*/
+
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     TOP BAR
+     ══════════════════════════════════════════════════════ -->
+<div class="topbar">
+  <span class="topbar-title">[[単元タイトル]]</span>
+  <span class="topbar-subtitle">[[講義名]] | [[教材の参照範囲 例: 学習ノート p.XX-YY]]</span>
+  <span class="topbar-chapter">CHAPTER · [[番号]]</span>
+</div>
+<div class="progress" id="progressBar"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDES
+     ══════════════════════════════════════════════════════ -->
+<div class="slide-container" id="slideContainer">
+
+<!-- ═════ SLIDE 1: TITLE ═════ -->
+<div class="slide title-slide active" data-title="タイトル">
+  <div class="title-label">CHAPTER · [[番号]] / [[英語サブタイトル]]</div>
+  <h1 class="title-main">[[単元<br>タイトル]]</h1>
+  <p class="title-sub">― [[日本語サブタイトル(内容の要約)]] ―</p>
+  <div class="title-meta">
+    <div class="title-meta-item"><strong>UNIT</strong>[[第○回]]</div>
+    <div class="title-meta-item"><strong>PAGES</strong>p.[[XX]] - [[YY]]</div>
+    <div class="title-meta-item"><strong>ITEMS</strong>[[項目数]] points / [[実習数]] practices</div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 2: AGENDA ═════ -->
+<div class="slide" data-title="このサイトで扱う内容">
+  <div class="eyebrow">AGENDA / 全体構成</div>
+  <h2 class="slide-title">このサイトで扱う内容</h2>
+  <p class="slide-subtitle">[[学習ノート対応範囲の説明]]</p>
+  <!-- agenda-grid を components.md からコピーして挿入 -->
+</div>
+
+<!-- ═════ SLIDE 3: SECTION 1 DIVIDER ═════ -->
+<div class="slide section-divider" data-title="第1節 [[節タイトル]]">
+  <div class="section-number">SECTION · 01</div>
+  <h2 class="section-title-big">[[節タイトル<br>(改行推奨)]]</h2>
+  <p class="section-tagline">― [[節の主旨]] ―</p>
+</div>
+
+<!-- ═════ SLIDE 4〜: CONTENT ═════ -->
+<!--
+  以下、各節のコンテンツスライドを配置。
+  components.md を参照してパーツを組む。
+
+  典型構成:
+    - 定義スライド (def-box + note-blank)
+    - 解説スライド (section-heading + body-text + two-col)
+    - 事例展開スライド (case-expander)
+    - クイズ/実習スライド (quiz-container or practice-list)
+    - 分類カード (cia-grid, malware-grid 等)
+    - インタラクティブ計算機 (pw-calc 等、必要に応じて)
+
+  節が終わるごとに section-divider を挟む。
+-->
+
+<!-- ═════ SLIDE N-3: 答え合わせ ═════ -->
+<!-- answers-grid を components.md から -->
+
+<!-- ═════ SLIDE N-2: まとめツリー ═════ -->
+<!-- summary-tree を components.md から -->
+
+<!-- ═════ SLIDE N-1: 復習チャレンジ ═════ -->
+<!-- review-container を components.md から -->
+
+<!-- ═════ SLIDE N: END CARD ═════ -->
+<div class="slide title-slide" data-title="完了">
+  <div class="title-label">END OF CHAPTER · [[番号]]</div>
+  <h1 class="title-main" style="font-size: clamp(40px, 6vw, 80px);">お疲れさま<br>でした</h1>
+  <p class="title-sub">[[単元の要点を1〜2行で]]</p>
+  <div class="title-meta">
+    <div class="title-meta-item"><strong>COVERED</strong>学習ノート [[対応範囲]] + 実習[[N]]〜[[M]]</div>
+  </div>
+</div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     BOTTOM BAR
+     ══════════════════════════════════════════════════════ -->
+<div class="bottombar">
+  <div class="bottombar-nav">
+    <button class="nav-btn" id="prevBtn" onclick="goToSlide(currentSlide - 1)" title="前へ">◀</button>
+    <button class="nav-btn" id="nextBtn" onclick="goToSlide(currentSlide + 1)" title="次へ">▶</button>
+  </div>
+  <div class="slide-title-small" id="slideTitleSmall">タイトル</div>
+  <span class="keyboard-hint">← → / SPACE / F (全画面)</span>
+  <div class="page-indicator" id="pageIndicator">01 / XX</div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// NAVIGATION (全スライド共通・変更禁止)
+// ══════════════════════════════════════════════════════════
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+let currentSlide = 0;
+
+function goToSlide(n) {
+  if (n < 0 || n >= totalSlides) return;
+  slides[currentSlide].classList.remove('active');
+  currentSlide = n;
+  slides[currentSlide].classList.add('active');
+  slides[currentSlide].scrollTop = 0;
+  updateUI();
+}
+
+function updateUI() {
+  const pct = ((currentSlide + 1) / totalSlides) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('pageIndicator').textContent =
+    String(currentSlide + 1).padStart(2, '0') + ' / ' + String(totalSlides).padStart(2, '0');
+  document.getElementById('slideTitleSmall').textContent =
+    slides[currentSlide].dataset.title || '';
+  document.getElementById('prevBtn').disabled = currentSlide === 0;
+  document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+    e.preventDefault(); goToSlide(currentSlide + 1);
+  } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+    e.preventDefault(); goToSlide(currentSlide - 1);
+  } else if (e.key === 'Home') { goToSlide(0); }
+  else if (e.key === 'End') { goToSlide(totalSlides - 1); }
+  else if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); }
+});
+
+let touchStartX = 0;
+document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
+document.addEventListener('touchend', (e) => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 60) {
+    if (dx < 0) goToSlide(currentSlide + 1);
+    else goToSlide(currentSlide - 1);
+  }
+}, { passive: true });
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
+}
+
+updateUI();
+
+// ══════════════════════════════════════════════════════════
+// NOTE BLANK REVEAL (穴埋め)
+// ══════════════════════════════════════════════════════════
+document.querySelectorAll('.note-blank').forEach(b => {
+  b.addEventListener('click', () => {
+    if (b.classList.contains('reveal')) {
+      b.classList.remove('reveal');
+      b.textContent = 'クリックで正解';
+    } else {
+      b.classList.add('reveal');
+      b.textContent = b.dataset.answer;
+    }
+  });
+});
+
+// ══════════════════════════════════════════════════════════
+// 以下、components.md から必要な関数をコピーして追加
+// 例:
+//   - toggleCase()       事例展開
+//   - answerQuiz()       選択問題
+//   - revealPractice()   実習評価
+//   - revealAnswer()     答え合わせグリッド
+//   - updatePwCalc()     パスワード計算機
+//   - switchFilter()     2項対比タブ
+//   - startReview()      復習チャレンジ
+// ══════════════════════════════════════════════════════════
+
+</script>
+</body>
+</html>

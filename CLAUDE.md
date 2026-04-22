@@ -11,6 +11,7 @@
 | ツール名 | フォルダ | 公開URL | 専用指示書 |
 |---|---|---|---|
 | **Visual Essay Lab**(コラム集) | `essays/` | `/essays/` | [essays/CLAUDE.md](essays/CLAUDE.md) |
+| **Interactive Lecture Lab**(授業用HTMLスライド) | `lectures/` | `/lectures/` | [lectures/CLAUDE.md](lectures/CLAUDE.md) |
 | (将来) 一問一答 | `quiz/` | `/quiz/` | `quiz/CLAUDE.md` |
 | (将来) その他ツール | — | — | — |
 
@@ -28,6 +29,15 @@
 - 読み物系の成果物全般
 
 → [`essays/CLAUDE.md`](essays/CLAUDE.md) を読み、以降はその指示に従う
+
+### ▶ 授業スライド(lectures)に行くキーワード
+
+- 「授業」「スライド」「レクチャー」「単元」「情報Ⅰ」「情報数理入門」
+- 「学習ノート」「共通テスト対策」「授業投影用」「生徒の復習用」
+- 「インタラクティブ教材」「HTMLスライドサイト」
+- 授業で使う Web教材全般
+
+→ [`lectures/CLAUDE.md`](lectures/CLAUDE.md) を読み、以降はその指示に従う
 
 ### ▶ 一問一答(quiz)に行くキーワード(将来)
 
@@ -123,6 +133,7 @@ GitHub Pages で公開される際のURL:
 ## Appendix: 現在の状態
 
 - [x] Visual Essay Lab(コラム集) — 稼働中
+- [x] Interactive Lecture Lab(授業用HTMLスライド) — 稼働中
 - [ ] 一問一答ツール — ローカル開発中、統合検討中
 - [ ] その他のツール — 未定
 
