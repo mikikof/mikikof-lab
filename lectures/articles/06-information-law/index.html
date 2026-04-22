@@ -1,0 +1,4046 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>情報に関する法規 | 第1章 情報社会と問題解決</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600;700;900&family=Noto+Sans+JP:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy-darkest: #0F2847;
+  --navy-dark: #1B3A5B;
+  --navy: #2C5F8D;
+  --navy-light: #4A7FA8;
+  --navy-pale: #D4E1EF;
+  --navy-bg: #F3F6FB;
+  --accent-red: #C8102E;
+  --accent-red-dark: #8B0A1F;
+  --accent-gold: #C9A961;
+  --text-main: #1A2332;
+  --text-sub: #5A6378;
+  --white: #FFFFFF;
+  --ok-green: #1E824C;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  font-family: 'Noto Sans JP', sans-serif;
+  color: var(--text-main);
+  background: var(--navy-darkest);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.slide-container { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+
+.slide {
+  position: absolute;
+  top: 47px; bottom: 52px; left: 0; right: 0;
+  padding: 4vh 5vw;
+  opacity: 0; pointer-events: none;
+  transform: translateX(30px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  background: var(--white);
+  overflow-y: auto;
+}
+.slide.active { opacity: 1; pointer-events: all; transform: translateX(0); }
+
+/* ───── TOPBAR / BOTTOMBAR ───── */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; height: 44px;
+  background: linear-gradient(180deg, var(--navy-darkest) 0%, var(--navy-dark) 100%);
+  color: rgba(255,255,255,0.9);
+  display: flex; align-items: center; padding: 0 24px;
+  z-index: 100; font-size: 13px; letter-spacing: 0.05em;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+.topbar-title { font-family: 'Noto Serif JP', serif; font-weight: 600; margin-right: 20px; }
+.topbar-subtitle { color: rgba(255,255,255,0.6); font-size: 12px; flex: 1; }
+.topbar-chapter { font-family: 'JetBrains Mono', monospace; color: var(--accent-gold); letter-spacing: 0.1em; font-size: 11px; }
+.progress {
+  position: fixed; top: 44px; left: 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent-red) 0%, var(--accent-gold) 100%);
+  z-index: 99;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 8px rgba(201, 169, 97, 0.5);
+}
+.bottombar {
+  position: fixed; bottom: 0; left: 0; right: 0; height: 52px;
+  background: var(--navy-darkest); color: rgba(255,255,255,0.85);
+  display: flex; align-items: center; padding: 0 24px;
+  z-index: 100; font-size: 13px;
+}
+.bottombar-nav { display: flex; gap: 12px; align-items: center; }
+.nav-btn {
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+  color: white; width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s; font-size: 16px;
+}
+.nav-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.page-indicator { font-family: 'JetBrains Mono', monospace; margin-left: auto; margin-right: 16px; color: rgba(255,255,255,0.7); font-size: 12px; letter-spacing: 0.08em; }
+.slide-title-small { flex: 1; margin-left: 16px; font-size: 12px; color: rgba(255,255,255,0.5); font-family: 'Noto Serif JP', serif; max-width: 40vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.keyboard-hint { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.4); margin-left: 10px; }
+
+/* ───── TYPOGRAPHY ───── */
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent-red);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.slide-title {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  color: var(--navy-darkest);
+  font-size: clamp(32px, 4.4vw, 56px);
+  line-height: 1.15; margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+.slide-subtitle {
+  font-size: clamp(17px, 1.7vw, 22px);
+  color: var(--text-sub); font-weight: 500;
+  margin-bottom: 30px;
+  line-height: 1.7;
+}
+.section-heading {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  color: var(--navy-dark); font-size: 30px;
+  margin-bottom: 20px; padding-left: 16px;
+  border-left: 4px solid var(--accent-red);
+  line-height: 1.3;
+}
+.body-text { font-size: 19px; line-height: 1.85; color: var(--text-main); font-weight: 500; }
+.highlight {
+  background: linear-gradient(180deg, transparent 60%, rgba(201,169,97,0.4) 60%);
+  font-weight: 700; padding: 0 2px;
+}
+
+/* ───── TITLE / SECTION DIVIDER ───── */
+.title-slide {
+  display: flex; flex-direction: column; justify-content: center;
+  background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy-dark) 60%, var(--navy) 100%);
+  color: white; padding: 0 10vw;
+  overflow: hidden;
+}
+.title-slide::before {
+  content: ''; position: absolute; top: 0; right: 0;
+  width: 45%; height: 100%;
+  background:
+    radial-gradient(circle at 70% 30%, rgba(201,169,97,0.15) 0%, transparent 50%),
+    radial-gradient(circle at 30% 70%, rgba(200,16,46,0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+.title-slide::after {
+  content: ''; position: absolute; top: 50%; right: 8vw;
+  width: 300px; height: 300px;
+  border: 1px solid rgba(201,169,97,0.3); border-radius: 50%;
+  transform: translateY(-50%);
+  animation: rotate 40s linear infinite;
+}
+@keyframes rotate { to { transform: translateY(-50%) rotate(360deg); } }
+.title-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 13px;
+  letter-spacing: 0.3em; color: var(--accent-gold); margin-bottom: 24px;
+}
+.title-main {
+  font-family: 'Noto Serif JP', serif; font-weight: 900;
+  font-size: clamp(56px, 7.5vw, 110px);
+  line-height: 1; margin-bottom: 20px; letter-spacing: -0.02em;
+  position: relative; z-index: 2;
+}
+.title-sub {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(20px, 2.3vw, 30px); font-weight: 300;
+  color: rgba(255,255,255,0.85); margin-bottom: 50px;
+  letter-spacing: 0.05em;
+}
+.title-meta {
+  display: flex; gap: 40px; flex-wrap: wrap;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  color: rgba(255,255,255,0.6); letter-spacing: 0.15em;
+  position: relative; z-index: 2;
+}
+.title-meta-item strong { color: var(--accent-gold); margin-right: 8px; }
+
+.section-divider {
+  display: flex !important; flex-direction: column;
+  justify-content: center !important; align-items: center !important;
+  background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy) 100%);
+  color: white; position: absolute;
+  padding: 0 5vw !important; overflow: hidden !important;
+  text-align: center;
+}
+.section-divider > * { position: relative; z-index: 2; }
+.section-divider::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(201,169,97,0.1) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(200,16,46,0.08) 0%, transparent 40%);
+  z-index: 1;
+}
+.section-number {
+  font-family: 'JetBrains Mono', monospace; font-size: 14px;
+  letter-spacing: 0.3em; color: var(--accent-gold); margin-bottom: 20px;
+}
+.section-title-big {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(44px, 6.5vw, 86px); font-weight: 900;
+  line-height: 1.05; margin-bottom: 18px; text-align: center;
+}
+.section-tagline {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(17px, 1.9vw, 24px); font-weight: 300;
+  color: rgba(255,255,255,0.75); letter-spacing: 0.05em;
+}
+
+/* ───── AGENDA ───── */
+.agenda-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 18px; margin-top: 28px;
+}
+.agenda-item {
+  padding: 24px 28px; background: var(--navy-bg);
+  border-left: 4px solid var(--navy); border-radius: 4px;
+  transition: all 0.3s;
+  display: flex; gap: 20px; align-items: flex-start;
+}
+.agenda-item:hover { background: var(--navy-pale); transform: translateX(4px); }
+.agenda-num {
+  font-family: 'Noto Serif JP', serif; font-size: 38px; font-weight: 700;
+  color: var(--accent-red); line-height: 1; min-width: 52px;
+}
+.agenda-content h3 {
+  font-family: 'Noto Serif JP', serif; font-weight: 700; font-size: 22px;
+  color: var(--navy-darkest); margin-bottom: 8px;
+}
+.agenda-content p { font-size: 15px; color: var(--text-sub); line-height: 1.7; font-weight: 500; }
+
+/* ───── DEF BOX ───── */
+.def-box {
+  background: var(--navy-bg); border: 1px solid var(--navy-pale);
+  border-radius: 6px; padding: 26px 30px; margin-bottom: 14px;
+}
+.def-box .def-label {
+  font-family: 'JetBrains Mono', monospace; color: var(--accent-red);
+  font-size: 12px; font-weight: 700; letter-spacing: 0.15em; margin-bottom: 8px;
+}
+.def-box .def-term {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  font-size: 24px; color: var(--navy-darkest); margin-bottom: 10px;
+}
+.def-box .def-desc { font-size: 16px; line-height: 1.85; color: var(--text-main); font-weight: 500; }
+
+/* ───── NOTE BLANK ───── */
+.note-blank {
+  display: inline-block; min-width: 120px;
+  padding: 2px 14px;
+  background: var(--navy-pale);
+  border-bottom: 2px solid var(--navy);
+  color: var(--navy-dark); font-weight: 700;
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.note-blank:hover { background: #BDD0E6; }
+.note-blank.reveal {
+  background: var(--accent-gold);
+  color: var(--navy-darkest);
+  border-bottom-color: var(--accent-red);
+  animation: reveal 0.5s;
+}
+@keyframes reveal {
+  0% { transform: scale(0.9); opacity: 0.5; }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.two-col {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 30px; margin-top: 24px;
+}
+
+/* ───── QUIZ ───── */
+.quiz-container { max-width: 940px; margin: 26px auto 0; }
+.quiz-question {
+  background: var(--navy-darkest); color: white;
+  padding: 20px 28px; border-radius: 6px 6px 0 0;
+  font-size: 19px; line-height: 1.65;
+  font-family: 'Noto Serif JP', serif; font-weight: 600;
+}
+.quiz-question-num {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent-gold); font-size: 12px;
+  letter-spacing: 0.2em; margin-bottom: 10px; display: block; font-weight: 700;
+}
+.quiz-options {
+  background: var(--white); border: 1px solid var(--navy-pale); border-top: none;
+  border-radius: 0 0 6px 6px; padding: 18px;
+}
+.quiz-option {
+  padding: 15px 20px; margin-bottom: 10px;
+  background: var(--navy-bg);
+  border: 2px solid transparent; border-radius: 4px;
+  cursor: pointer; transition: all 0.2s;
+  display: flex; gap: 14px; align-items: flex-start; font-size: 16.5px;
+  font-weight: 500; line-height: 1.65;
+}
+.quiz-option:hover { border-color: var(--navy); background: var(--navy-pale); }
+.quiz-option:last-child { margin-bottom: 0; }
+.quiz-option-letter {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; color: var(--navy); min-width: 26px; font-size: 15px;
+}
+.quiz-option.correct { background: rgba(30,130,76,0.1); border-color: var(--ok-green); }
+.quiz-option.correct .quiz-option-letter { color: var(--ok-green); }
+.quiz-option.incorrect {
+  background: rgba(200,16,46,0.08); border-color: var(--accent-red); opacity: 0.6;
+}
+.quiz-feedback {
+  display: none; margin-top: 16px;
+  padding: 18px 22px; background: var(--navy-bg);
+  border-left: 4px solid var(--accent-gold);
+  font-size: 16px; line-height: 1.8;
+  border-radius: 0 4px 4px 0;
+  font-weight: 500;
+}
+.quiz-feedback.show { display: block; animation: fadeIn 0.4s; }
+.quiz-feedback strong { color: var(--navy-darkest); }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ───── PRACTICE LIST ───── */
+.practice-list { margin-top: 22px; }
+.practice-item {
+  display: flex; gap: 18px;
+  padding: 16px 20px;
+  background: var(--white); border: 1px solid var(--navy-pale);
+  border-radius: 6px; margin-bottom: 12px;
+  transition: all 0.25s; cursor: pointer;
+  align-items: flex-start; flex-wrap: wrap;
+}
+.practice-item:hover { background: var(--navy-bg); }
+.practice-letter {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  color: var(--navy); min-width: 36px; font-size: 19px;
+}
+.practice-text { flex: 1; font-size: 16px; line-height: 1.75; min-width: 0; font-weight: 500; }
+.practice-verdict {
+  padding: 5px 14px; border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.1em; white-space: nowrap;
+  min-width: 64px; text-align: center;
+  background: transparent; color: var(--navy);
+  border: 1px dashed var(--navy-light);
+  transition: all 0.3s;
+}
+.practice-item.revealed .practice-verdict { border-style: solid; letter-spacing: 0.15em; }
+.practice-item.revealed.ok .practice-verdict {
+  background: var(--ok-green); color: white; border-color: var(--ok-green);
+}
+.practice-item.revealed.ng .practice-verdict {
+  background: var(--accent-red); color: white; border-color: var(--accent-red);
+}
+.practice-item.revealed .practice-reason {
+  display: block; margin-top: 10px;
+  padding: 12px 16px;
+  background: var(--navy-bg);
+  border-left: 3px solid var(--accent-gold);
+  font-size: 14px; color: var(--text-main);
+  line-height: 1.7; width: 100%; font-weight: 500;
+}
+.practice-reason { display: none; }
+
+/* ───── 法のピラミッド ───── */
+.pyramid-wrap { display: grid; grid-template-columns: 1.1fr 1fr; gap: 36px; margin-top: 18px; align-items: center; }
+.pyramid-svg { width: 100%; max-width: 460px; margin: 0 auto; }
+.pyramid-tier {
+  cursor: pointer; transition: all 0.3s;
+}
+.pyramid-tier:hover .pyramid-rect { filter: brightness(1.08); }
+.pyramid-rect {
+  transition: fill 0.4s;
+}
+.pyramid-label {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  fill: white; text-anchor: middle;
+  pointer-events: none;
+}
+.pyramid-blank {
+  fill: var(--navy-pale); stroke: var(--navy); stroke-width: 2;
+  stroke-dasharray: 6 4;
+}
+.pyramid-tier.filled-ho .pyramid-rect { fill: #5a87b4; stroke: none; stroke-dasharray: none; }
+.pyramid-tier.filled-sei .pyramid-rect { fill: #7ba0c4; stroke: none; stroke-dasharray: none; }
+.pyramid-tier.filled-jo .pyramid-rect { fill: #9cb8d5; stroke: none; stroke-dasharray: none; }
+.pyramid-choices {
+  background: var(--navy-bg); padding: 22px 24px; border-radius: 8px;
+}
+.pyramid-choices h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; letter-spacing: 0.2em;
+  color: var(--accent-red); margin-bottom: 16px; font-weight: 700;
+}
+.pyramid-choice-group {
+  margin-bottom: 18px;
+}
+.pyramid-choice-label {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  font-size: 16px; color: var(--navy-darkest); margin-bottom: 10px;
+  line-height: 1.5;
+}
+.pyramid-options { display: flex; gap: 8px; flex-wrap: wrap; }
+.pyramid-opt {
+  padding: 8px 16px; background: var(--white);
+  border: 2px solid var(--navy-pale);
+  border-radius: 22px; cursor: pointer;
+  font-size: 15px; font-weight: 700;
+  transition: all 0.2s;
+  line-height: 1.3;
+}
+.pyramid-opt:hover { border-color: var(--navy); }
+.pyramid-opt.correct { background: var(--ok-green); color: white; border-color: var(--ok-green); }
+.pyramid-opt.wrong { background: rgba(200,16,46,0.1); color: var(--accent-red); border-color: var(--accent-red); opacity: 0.7; }
+.pyramid-opt.disabled { pointer-events: none; opacity: 0.5; }
+
+/* ═══════════════════════════════════════
+   PYRAMID MEANING (なぜこの階層なのか)
+   ═══════════════════════════════════════ */
+.pym-wrap {
+  display: grid; grid-template-columns: 1fr 1.1fr;
+  gap: 32px; margin-top: 18px; align-items: start;
+}
+.pym-svg-box { text-align: center; }
+.pym-svg { width: 100%; max-width: 400px; }
+.pym-tier { cursor: pointer; transition: all 0.3s; }
+.pym-tier:hover polygon { filter: brightness(1.15); }
+.pym-tier.selected polygon {
+  stroke: var(--accent-gold); stroke-width: 4;
+  filter: drop-shadow(0 0 12px rgba(201,169,97,0.6));
+}
+.pym-modes {
+  display: flex; justify-content: center; gap: 8px;
+  margin-top: 18px; flex-wrap: wrap;
+}
+.pym-modes button {
+  padding: 10px 18px;
+  background: var(--white);
+  border: 2px solid var(--navy-pale);
+  border-radius: 24px; cursor: pointer;
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 600; font-size: 14px;
+  color: var(--navy-darkest);
+  transition: all 0.25s;
+}
+.pym-modes button:hover { border-color: var(--navy); }
+.pym-modes button.active {
+  background: var(--navy-darkest);
+  color: white; border-color: var(--navy-darkest);
+}
+.pym-panel {
+  background: var(--navy-bg);
+  border-radius: 10px;
+  padding: 26px 30px;
+  min-height: 340px;
+  border-left: 4px solid var(--accent-red);
+}
+.pym-panel-tier {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 900; font-size: 34px;
+  color: var(--navy-darkest);
+  line-height: 1; margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.pym-panel-mode {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; letter-spacing: 0.2em;
+  color: var(--accent-red);
+  font-weight: 700; margin-bottom: 20px;
+}
+.pym-panel-headline {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 700; font-size: 22px;
+  color: var(--navy-dark); line-height: 1.45;
+  margin-bottom: 16px; padding-bottom: 16px;
+  border-bottom: 1px dashed var(--navy-pale);
+}
+.pym-panel-detail {
+  font-size: 16px; line-height: 1.85;
+  color: var(--text-main); font-weight: 500;
+}
+.pym-panel-detail strong {
+  color: var(--accent-red-dark); font-weight: 700;
+}
+.pym-panel-case {
+  margin-top: 16px; padding: 14px 16px;
+  background: rgba(200,16,46,0.06);
+  border-left: 3px solid var(--accent-red);
+  border-radius: 0 4px 4px 0;
+  font-size: 14.5px; line-height: 1.75;
+  color: var(--text-main); font-weight: 500;
+}
+.pym-panel-case-label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; letter-spacing: 0.18em;
+  color: var(--accent-red); font-weight: 700;
+  margin-bottom: 8px;
+}
+.pym-panel-case strong {
+  color: var(--accent-red-dark); font-weight: 700;
+}
+.pym-memo {
+  margin-top: 22px; padding: 22px 28px;
+  background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy) 100%);
+  color: white; border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(15,40,71,0.2);
+}
+.pym-memo h4 {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 19px; font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--accent-gold);
+}
+.pym-memo-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 12px; margin-bottom: 16px;
+}
+.pym-memo-item {
+  background: rgba(255,255,255,0.1);
+  border-radius: 6px;
+  padding: 16px 12px 14px; text-align: center;
+  border: 1px solid rgba(255,255,255,0.12);
+  position: relative;
+}
+.pym-memo-kanji {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 38px; font-weight: 900;
+  color: var(--accent-gold);
+  line-height: 1; margin-bottom: 4px;
+}
+.pym-memo-reading {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.55);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.pym-memo-law {
+  font-size: 14.5px; font-weight: 700;
+  color: white;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(255,255,255,0.2);
+}
+.pym-memo-item::after {
+  content: '→';
+  position: absolute;
+  right: -10px; top: 50%;
+  transform: translateY(-50%);
+  color: rgba(201,169,97,0.6);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px; font-weight: 700;
+  z-index: 2;
+}
+.pym-memo-item:last-child::after { display: none; }
+.pym-memo-rule {
+  font-size: 14.5px; line-height: 1.8;
+  color: rgba(255,255,255,0.92);
+  font-weight: 500;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.15);
+}
+.pym-memo-rule strong {
+  color: var(--accent-gold); font-weight: 700;
+}
+
+@media (max-width: 1100px) {
+  .pym-wrap { grid-template-columns: 1fr; }
+  .pym-memo-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ───── CASE EXPANDER ───── */
+.case-expander {
+  background: var(--white); border: 1px solid var(--navy-pale);
+  border-radius: 6px; margin-bottom: 10px; overflow: hidden;
+  transition: all 0.3s;
+}
+.case-expander.open {
+  border-color: var(--accent-red);
+  box-shadow: 0 4px 20px rgba(200,16,46,0.1);
+}
+.case-head {
+  padding: 14px 20px; cursor: pointer;
+  display: flex; align-items: center; gap: 14px;
+  background: var(--navy-bg); transition: background 0.2s;
+  flex-wrap: wrap;
+}
+.case-head:hover { background: var(--navy-pale); }
+.case-year {
+  font-family: 'JetBrains Mono', monospace; font-weight: 700;
+  font-size: 13px; color: var(--accent-red); min-width: 50px;
+}
+.case-title {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  font-size: 17px; color: var(--navy-darkest); flex: 1; min-width: 0;
+}
+.case-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.1em;
+  color: var(--navy); background: var(--navy-pale);
+  padding: 4px 10px; border-radius: 3px; font-weight: 700;
+}
+.case-toggle {
+  color: var(--navy); font-size: 14px;
+  transition: transform 0.3s;
+  font-family: 'JetBrains Mono', monospace; font-weight: 700;
+}
+.case-expander.open .case-toggle { transform: rotate(45deg); }
+.case-body { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
+.case-expander.open .case-body { max-height: 900px; }
+.case-content {
+  padding: 18px 22px 20px 22px;
+  font-size: 16px; line-height: 1.85;
+  color: var(--text-main);
+  border-top: 1px solid var(--navy-pale);
+  font-weight: 500;
+}
+.case-content p { margin-bottom: 10px; }
+.case-content strong { color: var(--accent-red-dark); font-weight: 700; }
+.case-meta {
+  display: flex; gap: 20px; margin-top: 12px; padding-top: 12px;
+  border-top: 1px dashed var(--navy-pale);
+  font-size: 13px; color: var(--text-sub);
+  font-family: 'JetBrains Mono', monospace; flex-wrap: wrap;
+  font-weight: 500;
+}
+.case-meta-item strong {
+  display: block; color: var(--navy);
+  font-size: 10px; letter-spacing: 0.1em;
+  text-transform: uppercase; margin-bottom: 3px; font-weight: 700;
+}
+.case-inline-quiz {
+  margin-top: 16px; padding: 16px 18px;
+  background: var(--navy-darkest); color: white;
+  border-radius: 6px;
+}
+.case-inline-quiz-q {
+  font-family: 'Noto Serif JP', serif; font-size: 16px;
+  font-weight: 600; margin-bottom: 12px; line-height: 1.65;
+}
+.case-inline-quiz-q::before {
+  content: 'MINI QUIZ ';
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--accent-gold);
+  letter-spacing: 0.2em; margin-right: 8px; font-weight: 700;
+}
+.case-inline-opts { display: flex; gap: 10px; flex-wrap: wrap; }
+.case-inline-opt {
+  padding: 9px 16px; background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 20px; font-size: 14px;
+  color: white; cursor: pointer;
+  transition: all 0.2s; font-weight: 500;
+}
+.case-inline-opt:hover { background: rgba(255,255,255,0.2); }
+.case-inline-opt.correct { background: var(--ok-green); border-color: var(--ok-green); }
+.case-inline-opt.wrong { background: var(--accent-red); border-color: var(--accent-red); opacity: 0.7; }
+.case-inline-fb {
+  display: none; margin-top: 12px;
+  padding: 12px 14px;
+  background: rgba(201,169,97,0.15);
+  border-left: 3px solid var(--accent-gold);
+  font-size: 14px; line-height: 1.75; color: rgba(255,255,255,0.95);
+  border-radius: 0 4px 4px 0;
+  font-weight: 500;
+}
+.case-inline-fb.show { display: block; animation: fadeIn 0.3s; }
+
+/* ═══════════════════════════════════════
+   CRIMES GRID (slide 10 ウイルス作成罪 強調)
+   ═══════════════════════════════════════ */
+.crimes-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.7fr 1fr;
+  gap: 14px;
+  align-items: stretch;
+}
+.crime-card {
+  background: var(--navy-bg);
+  padding: 18px 20px;
+  border-radius: 8px;
+  border-left: 3px solid var(--accent-red);
+}
+.crime-card.featured {
+  background: linear-gradient(160deg, var(--navy-darkest) 0%, var(--navy-dark) 100%);
+  color: white;
+  border-left: 4px solid var(--accent-gold);
+  box-shadow: 0 12px 32px rgba(15,40,71,0.3);
+  position: relative;
+  padding: 24px 26px 20px;
+}
+.crime-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--accent-red);
+  letter-spacing: 0.15em; font-weight: 700; margin-bottom: 8px;
+}
+.crime-card.featured .crime-tag { color: var(--accent-gold); }
+.crime-name {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 700; font-size: 17px;
+  color: var(--navy-darkest);
+  margin-bottom: 10px; line-height: 1.35;
+}
+.crime-card.featured .crime-name {
+  color: white;
+  font-size: 23px;
+  margin-bottom: 4px;
+}
+.crime-alias {
+  font-size: 13.5px; color: rgba(255,255,255,0.8);
+  margin-bottom: 12px; font-weight: 500;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed rgba(255,255,255,0.15);
+}
+.crime-alias strong {
+  color: var(--accent-gold); font-weight: 700;
+}
+.crime-desc {
+  font-size: 14px; line-height: 1.75;
+  color: var(--text-main); font-weight: 500;
+}
+.crime-card.featured .crime-desc {
+  color: rgba(255,255,255,0.92);
+  font-size: 14.5px;
+}
+.crime-card.featured .crime-desc strong {
+  color: var(--accent-gold); font-weight: 700;
+}
+.crime-badge {
+  position: absolute; top: -12px; right: 16px;
+  background: var(--accent-gold);
+  color: var(--navy-darkest);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 11px; font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(201,169,97,0.4);
+  letter-spacing: 0.05em;
+}
+.crime-callout {
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: rgba(201,169,97,0.12);
+  border-left: 3px solid var(--accent-gold);
+  border-radius: 0 4px 4px 0;
+  font-size: 13.5px; line-height: 1.75;
+  color: rgba(255,255,255,0.92);
+  font-weight: 500;
+}
+.crime-callout strong {
+  color: var(--accent-gold); font-weight: 700;
+}
+
+@media (max-width: 1100px) {
+  .crimes-grid { grid-template-columns: 1fr; }
+}
+
+/* ═══════════════════════════════════════
+   【A】フィッシングDM見破り(スマホUI)
+   ═══════════════════════════════════════ */
+.phish-wrap { display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px; margin-top: 16px; align-items: flex-start; }
+.phish-phone {
+  width: 100%; max-width: 340px; margin: 0 auto;
+  background: #1a1a1a; border-radius: 30px;
+  padding: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+  position: relative;
+}
+.phish-phone::before {
+  content: ''; position: absolute; top: 18px; left: 50%;
+  transform: translateX(-50%);
+  width: 50px; height: 5px; background: #000;
+  border-radius: 3px; z-index: 10;
+}
+.phish-screen {
+  background: white; border-radius: 22px;
+  padding: 32px 16px 16px;
+  min-height: 440px; position: relative;
+}
+.phish-tabs { display: flex; gap: 6px; margin-bottom: 12px; justify-content: center; flex-wrap: wrap; }
+.phish-tab {
+  padding: 5px 11px; background: var(--navy-bg);
+  border: 1px solid var(--navy-pale);
+  border-radius: 14px; font-size: 11px;
+  cursor: pointer; font-weight: 600;
+  color: var(--navy); transition: all 0.2s;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.08em;
+}
+.phish-tab.active { background: var(--navy-darkest); color: white; border-color: var(--navy-darkest); }
+.phish-msg { display: none; }
+.phish-msg.active { display: block; animation: fadeIn 0.35s; }
+.phish-from {
+  display: flex; gap: 10px; align-items: center;
+  padding: 10px; background: #f5f5f7;
+  border-radius: 10px; margin-bottom: 10px;
+}
+.phish-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, #ff6b6b, #c92a2a);
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 700; font-size: 14px;
+  font-family: 'Noto Serif JP', serif;
+}
+.phish-from-info { flex: 1; }
+.phish-from-name {
+  font-weight: 600; font-size: 13px; color: #000;
+}
+.phish-from-addr {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: #666;
+}
+.phish-subject {
+  font-weight: 700; font-size: 15px; margin: 6px 0 8px;
+  color: #000;
+}
+.phish-body {
+  font-size: 13.5px; line-height: 1.7; color: #222;
+  padding: 8px 4px; font-weight: 500;
+}
+.phish-hit {
+  display: inline;
+  background: transparent;
+  cursor: pointer;
+  padding: 1px 3px;
+  border-radius: 3px;
+  transition: all 0.2s;
+  position: relative;
+}
+.phish-hit:hover { background: rgba(255, 235, 59, 0.35); }
+.phish-hit.found {
+  background: rgba(200, 16, 46, 0.2);
+  outline: 2px solid var(--accent-red);
+  animation: pop 0.35s;
+}
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+.phish-hit.missed {
+  background: rgba(200,16,46,0.1);
+  outline: 1px dashed var(--accent-red);
+}
+.phish-btn-fake {
+  display: block; margin: 12px auto 6px;
+  padding: 10px 24px;
+  background: #0066c0; color: white;
+  border-radius: 6px; font-size: 13px; font-weight: 600;
+  text-align: center; text-decoration: none;
+  cursor: pointer; max-width: 240px;
+}
+.phish-panel {
+  background: var(--navy-bg); border-radius: 8px;
+  padding: 20px; border: 1px solid var(--navy-pale);
+}
+.phish-meter {
+  background: white; border-radius: 6px;
+  padding: 14px 16px; margin-bottom: 14px;
+  text-align: center; border: 1px solid var(--navy-pale);
+}
+.phish-meter-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 0.2em;
+  color: var(--text-sub); margin-bottom: 8px; font-weight: 700;
+}
+.phish-meter-bar {
+  height: 8px; background: var(--navy-pale);
+  border-radius: 4px; overflow: hidden; margin-bottom: 8px;
+}
+.phish-meter-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--accent-red) 0%, var(--accent-gold) 50%, var(--ok-green) 100%);
+  border-radius: 4px; transition: width 0.6s ease;
+}
+.phish-meter-val {
+  font-family: 'Noto Serif JP', serif; font-size: 26px;
+  font-weight: 700; color: var(--navy-darkest);
+}
+.phish-hints h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; letter-spacing: 0.15em;
+  color: var(--accent-red); margin-bottom: 12px; font-weight: 700;
+}
+.phish-hint-row {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 10px 12px; background: white;
+  border-radius: 4px; margin-bottom: 8px;
+  font-size: 14px; line-height: 1.65;
+  border-left: 3px solid var(--navy-pale);
+  transition: all 0.3s; font-weight: 500;
+}
+.phish-hint-row.lit {
+  border-left-color: var(--ok-green);
+  background: rgba(30,130,76,0.05);
+}
+.phish-hint-row strong { color: var(--navy-darkest); font-size: 14px; font-weight: 700; }
+.phish-hint-mark {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--navy-pale); color: var(--navy);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; flex-shrink: 0;
+  font-family: 'JetBrains Mono', monospace;
+}
+.phish-hint-row.lit .phish-hint-mark {
+  background: var(--ok-green); color: white;
+}
+.phish-reveal-btn {
+  display: block; width: 100%;
+  padding: 8px; margin-top: 10px;
+  background: transparent; color: var(--navy);
+  border: 1px solid var(--navy); border-radius: 20px;
+  font-size: 12px; cursor: pointer;
+  font-family: 'Noto Serif JP', serif; font-weight: 600;
+  transition: all 0.2s;
+}
+.phish-reveal-btn:hover { background: var(--navy-darkest); color: white; border-color: var(--navy-darkest); }
+
+/* ═══════════════════════════════════════
+   【B】法律分類カードゲーム
+   ═══════════════════════════════════════ */
+.sort-game { margin-top: 16px; }
+.sort-stack {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  padding: 14px; background: var(--navy-bg);
+  border-radius: 8px; margin-bottom: 14px;
+  min-height: 70px; border: 1px dashed var(--navy-pale);
+}
+.sort-card {
+  padding: 11px 16px;
+  background: white; border: 2px solid var(--navy-pale);
+  border-radius: 6px; font-size: 15px;
+  cursor: pointer; transition: all 0.25s;
+  font-weight: 500; max-width: 300px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+.sort-card:hover { border-color: var(--navy); transform: translateY(-2px); }
+.sort-card.selected {
+  border-color: var(--accent-gold);
+  background: rgba(201,169,97,0.12);
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 6px 16px rgba(201,169,97,0.25);
+}
+/* .sort-card.placed handled further below */
+.sort-zones {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.sort-zone {
+  background: white; border: 2px dashed var(--navy-pale);
+  border-radius: 8px; padding: 14px;
+  min-height: 120px; cursor: pointer;
+  transition: all 0.25s;
+}
+.sort-zone:hover { border-color: var(--navy); background: var(--navy-bg); }
+.sort-zone.highlight {
+  border-color: var(--accent-gold); border-style: solid;
+  background: rgba(201,169,97,0.08);
+}
+.sort-zone-head {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  font-size: 16px; color: var(--navy-darkest);
+  margin-bottom: 6px;
+}
+.sort-zone-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.1em;
+  color: var(--text-sub); margin-bottom: 12px; font-weight: 700;
+}
+.sort-placed-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.sort-placed-chip {
+  padding: 6px 12px; font-size: 13px;
+  border-radius: 12px; font-weight: 600;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.sort-placed-chip:hover {
+  transform: scale(0.97);
+  filter: brightness(0.92);
+}
+.sort-placed-chip::after {
+  content: ' ✕';
+  opacity: 0;
+  font-size: 11px;
+  margin-left: 2px;
+  transition: opacity 0.2s;
+}
+.sort-placed-chip:hover::after { opacity: 1; }
+.sort-card.placed {
+  display: none;
+}
+.sort-placed-chip.ok {
+  background: rgba(30,130,76,0.12); color: var(--ok-green);
+  border: 1px solid var(--ok-green);
+}
+.sort-placed-chip.ng {
+  background: rgba(200,16,46,0.1); color: var(--accent-red);
+  border: 1px solid var(--accent-red);
+}
+.sort-status {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-top: 16px;
+  padding: 12px 18px; background: var(--navy-darkest);
+  color: white; border-radius: 6px; font-size: 14px;
+  font-weight: 500;
+}
+.sort-status-score {
+  font-family: 'JetBrains Mono', monospace; font-weight: 700;
+  color: var(--accent-gold); font-size: 16px;
+}
+.sort-reset {
+  padding: 6px 16px; background: transparent;
+  color: white; border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 14px; cursor: pointer; font-size: 13px;
+  font-family: 'Noto Serif JP', serif; font-weight: 600;
+}
+.sort-reset:hover { background: rgba(255,255,255,0.15); }
+.sort-reveal-row {
+  display: none; margin-top: 14px;
+  padding: 14px 16px;
+  background: var(--navy-bg);
+  border-left: 3px solid var(--accent-gold);
+  font-size: 14px; line-height: 1.75;
+  border-radius: 0 4px 4px 0; font-weight: 500;
+}
+.sort-reveal-row.show { display: block; }
+.sort-reveal-row strong { color: var(--navy-darkest); }
+
+@media (max-width: 1100px) {
+  .sort-zones { grid-template-columns: 1fr; }
+}
+
+/* ═══════════════════════════════════════
+   【C】クーリング・オフ シミュレーター
+   ═══════════════════════════════════════ */
+.cool-sim {
+  background: linear-gradient(160deg, var(--navy-darkest) 0%, var(--navy-dark) 100%);
+  border-radius: 10px; padding: 28px 32px;
+  color: white; margin-top: 16px;
+  box-shadow: 0 12px 40px rgba(15,40,71,0.3);
+}
+.cool-sim-title {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 22px; margin-bottom: 20px;
+  color: var(--accent-gold); font-weight: 700;
+}
+.cool-controls { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; margin-bottom: 22px; }
+.cool-group label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.8); margin-bottom: 10px; font-weight: 700;
+}
+.cool-select {
+  width: 100%; padding: 12px 14px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 6px;
+  color: white; font-size: 16px;
+  font-family: 'Noto Sans JP', sans-serif;
+  cursor: pointer; font-weight: 500;
+}
+.cool-select option { background: var(--navy-darkest); color: white; }
+.cool-slider-val {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 36px; font-weight: 700;
+  color: var(--accent-gold);
+  margin-bottom: 10px; line-height: 1;
+}
+.cool-slider-val .unit { font-size: 16px; color: rgba(255,255,255,0.6); margin-left: 6px; font-weight: 500; }
+.cool-result {
+  padding: 22px 24px;
+  background: rgba(0,0,0,0.25);
+  border-radius: 8px;
+  border-left: 4px solid var(--accent-gold);
+  margin-top: 8px;
+}
+.cool-verdict {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 30px; font-weight: 700;
+  margin-bottom: 8px;
+}
+.cool-verdict.ok { color: #5ED47C; }
+.cool-verdict.warn { color: var(--accent-gold); }
+.cool-verdict.ng { color: var(--accent-red); }
+.cool-detail {
+  font-size: 15px; color: rgba(255,255,255,0.85);
+  line-height: 1.8; font-weight: 500;
+}
+.cool-detail strong { color: var(--accent-gold); font-weight: 700; }
+.cool-note {
+  margin-top: 16px; padding: 12px 16px;
+  background: rgba(201,169,97,0.1);
+  border-left: 3px solid var(--accent-gold);
+  font-size: 14px; color: rgba(255,255,255,0.85);
+  border-radius: 0 4px 4px 0;
+  line-height: 1.75; font-weight: 500;
+}
+input[type="range"].cool-range {
+  -webkit-appearance: none; width: 100%; height: 4px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 2px; outline: none;
+}
+input[type="range"].cool-range::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 18px; height: 18px;
+  background: var(--accent-gold); border-radius: 50%;
+  cursor: pointer; border: 3px solid var(--navy-darkest);
+  transition: transform 0.15s;
+}
+input[type="range"].cool-range::-webkit-slider-thumb:hover { transform: scale(1.2); }
+input[type="range"].cool-range::-moz-range-thumb {
+  width: 12px; height: 12px;
+  background: var(--accent-gold); border-radius: 50%;
+  cursor: pointer; border: 3px solid var(--navy-darkest);
+}
+
+@media (max-width: 1100px) { .cool-controls { grid-template-columns: 1fr; } }
+
+/* ═══════════════════════════════════════
+   【D】発信者特定タイムライン
+   ═══════════════════════════════════════ */
+.dm-timeline { margin-top: 18px; }
+.dm-compare-head {
+  display: grid; grid-template-columns: 80px 1fr 1fr;
+  gap: 10px; margin-bottom: 8px;
+}
+.dm-compare-head > div {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.15em;
+  font-weight: 700; text-align: center;
+  padding: 8px 12px; border-radius: 4px;
+}
+.dm-head-step { background: transparent; }
+.dm-head-old { background: rgba(200,16,46,0.12); color: var(--accent-red-dark); }
+.dm-head-new { background: rgba(30,130,76,0.12); color: var(--ok-green); }
+.dm-step {
+  display: grid; grid-template-columns: 80px 1fr 1fr;
+  gap: 10px; margin-bottom: 6px;
+  align-items: stretch;
+}
+.dm-step-num {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: var(--navy-darkest); color: var(--accent-gold);
+  border-radius: 6px; padding: 8px;
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 700; font-size: 20px;
+  position: relative;
+}
+.dm-step-num small {
+  display: block; font-size: 9px;
+  color: rgba(255,255,255,0.5);
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.15em; margin-bottom: 2px;
+}
+.dm-cell {
+  padding: 12px 16px;
+  border-radius: 6px; cursor: pointer;
+  transition: all 0.25s;
+  font-size: 14px; line-height: 1.65;
+  position: relative; font-weight: 500;
+}
+.dm-cell-old { background: rgba(200,16,46,0.06); border: 1px solid rgba(200,16,46,0.18); }
+.dm-cell-old:hover { background: rgba(200,16,46,0.12); }
+.dm-cell-new { background: rgba(30,130,76,0.05); border: 1px solid rgba(30,130,76,0.18); }
+.dm-cell-new:hover { background: rgba(30,130,76,0.1); }
+.dm-cell-head {
+  font-family: 'Noto Sans JP', sans-serif; font-weight: 700;
+  font-size: 15.5px; color: var(--navy-darkest);
+  margin-bottom: 6px; line-height: 1.45;
+}
+.dm-cell-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; color: var(--text-sub);
+  margin-top: 6px; letter-spacing: 0.05em; font-weight: 600;
+}
+.dm-cell-detail {
+  display: none; margin-top: 10px;
+  padding-top: 10px; border-top: 1px dashed var(--navy-pale);
+  font-size: 13.5px; color: var(--text-main); line-height: 1.75;
+  font-weight: 500;
+}
+.dm-cell.open .dm-cell-detail { display: block; animation: fadeIn 0.3s; }
+.dm-summary {
+  margin-top: 18px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.dm-summary-box {
+  padding: 14px 18px;
+  border-radius: 6px; text-align: center;
+}
+.dm-summary-box.old {
+  background: rgba(200,16,46,0.08);
+  border: 1px solid rgba(200,16,46,0.25);
+}
+.dm-summary-box.new {
+  background: rgba(30,130,76,0.08);
+  border: 1px solid rgba(30,130,76,0.25);
+}
+.dm-summary-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.2em; font-weight: 700;
+  margin-bottom: 8px;
+}
+.dm-summary-box.old .dm-summary-label { color: var(--accent-red-dark); }
+.dm-summary-box.new .dm-summary-label { color: var(--ok-green); }
+.dm-summary-val {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 24px; font-weight: 700;
+  color: var(--navy-darkest);
+}
+.dm-summary-sub {
+  font-size: 13px; color: var(--text-sub); margin-top: 6px; font-weight: 500;
+}
+
+@media (max-width: 1100px) {
+  .dm-step, .dm-compare-head { grid-template-columns: 60px 1fr; }
+  .dm-cell-new, .dm-head-new { display: none; }
+  .dm-summary { grid-template-columns: 1fr; }
+}
+
+/* ═══════════════════════════════════════
+   【F】情報モラル vs シティズンシップ 対比
+   ═══════════════════════════════════════ */
+.scope-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; margin-top: 18px; align-items: center; }
+.scope-diagram {
+  position: relative; width: 100%;
+  aspect-ratio: 1;
+  max-width: 400px; margin: 0 auto;
+}
+.scope-circle {
+  position: absolute;
+  border-radius: 50%;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Noto Sans JP', sans-serif;
+  text-align: center;
+}
+.scope-circle.citizen {
+  inset: 0;
+  background: rgba(201,169,97,0.18);
+  border: 3px solid var(--accent-gold);
+  z-index: 1;
+}
+.scope-circle.moral {
+  top: 32%; left: 32%;
+  width: 36%; height: 36%;
+  background: rgba(44,95,141,0.22);
+  border: 3px solid var(--navy);
+  z-index: 2;
+}
+.scope-circle-label {
+  position: absolute;
+  white-space: nowrap;
+  font-weight: 700;
+  pointer-events: none;
+}
+.scope-circle.citizen .scope-circle-label {
+  top: 14px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 15px;
+  color: #8a6d1f;
+  background: rgba(255,255,255,0.88);
+  padding: 4px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(201,169,97,0.5);
+}
+.scope-circle.moral .scope-circle-label {
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  color: var(--navy-darkest);
+  line-height: 1.3;
+}
+.scope-diagram.show-moral .scope-circle.moral {
+  box-shadow: 0 0 30px rgba(44,95,141,0.35);
+  background: rgba(44,95,141,0.32);
+}
+.scope-diagram.show-citizen .scope-circle.citizen {
+  box-shadow: 0 0 36px rgba(201,169,97,0.4);
+  background: rgba(201,169,97,0.28);
+}
+.scope-toggle {
+  display: inline-flex;
+  background: var(--navy-bg); border-radius: 40px;
+  padding: 5px; margin-bottom: 16px;
+  border: 1px solid var(--navy-pale);
+}
+.scope-toggle button {
+  padding: 10px 22px; background: transparent; border: none;
+  cursor: pointer;
+  font-family: 'Noto Serif JP', serif; font-weight: 600;
+  font-size: 15px; color: var(--text-sub);
+  border-radius: 30px; transition: all 0.25s;
+}
+.scope-toggle button.active { background: var(--navy-darkest); color: white; }
+.scope-info h4, #scopeMoral h4, #scopeCitizen h4 {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  font-size: 22px; color: var(--navy-darkest); margin-bottom: 10px;
+}
+.scope-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.15em;
+  color: var(--accent-red); margin-bottom: 10px; font-weight: 700;
+}
+.scope-desc { font-size: 15.5px; line-height: 1.8; color: var(--text-main); margin-bottom: 14px; font-weight: 500; }
+.scope-chiplist { display: flex; flex-wrap: wrap; gap: 8px; }
+.scope-chip {
+  padding: 7px 14px; background: var(--navy-bg);
+  border: 1px solid var(--navy-pale);
+  border-radius: 14px; font-size: 14px;
+  color: var(--navy-darkest); cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 600; line-height: 1.5;
+}
+.scope-chip:hover { border-color: var(--navy); }
+.scope-chip.picked-moral { background: var(--navy); color: white; border-color: var(--navy); }
+.scope-chip.picked-citizen { background: var(--accent-gold); color: var(--navy-darkest); border-color: var(--accent-gold); }
+.scope-verdict {
+  display: none; margin-top: 16px;
+  padding: 14px 18px;
+  background: var(--navy-bg);
+  border-left: 3px solid var(--accent-gold);
+  font-size: 14.5px; line-height: 1.8;
+  border-radius: 0 4px 4px 0; font-weight: 500;
+}
+.scope-verdict.show { display: block; animation: fadeIn 0.35s; }
+
+@media (max-width: 1100px) {
+  .scope-wrap { grid-template-columns: 1fr; }
+  .phish-wrap { grid-template-columns: 1fr; }
+  .pyramid-wrap { grid-template-columns: 1fr; }
+}
+
+/* ───── ANSWERS GRID ───── */
+.answers-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 8px; margin-top: 22px;
+}
+.answer-row {
+  display: flex; align-items: center;
+  padding: 10px 14px;
+  background: var(--navy-bg);
+  border-radius: 4px; gap: 12px;
+  border-left: 3px solid var(--navy);
+  cursor: pointer; transition: all 0.2s;
+}
+.answer-row:hover { background: var(--navy-pale); }
+.answer-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; color: var(--accent-red);
+  font-size: 15px; min-width: 32px;
+}
+.answer-text {
+  flex: 1; font-size: 15px;
+  font-weight: 600; color: var(--navy-darkest); line-height: 1.55;
+}
+.answer-reveal {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; padding: 5px 12px;
+  background: var(--navy-dark); color: white;
+  border-radius: 3px; letter-spacing: 0.08em;
+  transition: all 0.3s; font-weight: 700;
+}
+.answer-row.revealed .answer-reveal {
+  background: var(--accent-gold);
+  color: var(--navy-darkest); font-weight: 700;
+}
+
+/* ───── SUMMARY TREE ───── */
+.summary-tree { display: flex; justify-content: center; margin-top: 22px; padding: 10px; }
+.tree-center {
+  background: var(--navy-darkest); color: white;
+  padding: 20px 36px; border-radius: 8px;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 26px; font-weight: 700;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(15,40,71,0.25);
+}
+.tree-branches {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 14px; margin-top: 36px;
+}
+.tree-branch {
+  background: var(--white); border: 2px solid var(--navy-pale);
+  border-radius: 6px; padding: 16px;
+  position: relative; transition: all 0.25s;
+}
+.tree-branch:hover { border-color: var(--accent-red); transform: translateY(-3px); }
+.tree-branch::before {
+  content: ''; position: absolute;
+  top: -18px; left: 50%;
+  width: 2px; height: 18px;
+  background: var(--navy-pale);
+}
+.tree-branch h4 {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  font-size: 17px; color: var(--navy-darkest);
+  margin-bottom: 10px;
+}
+.tree-branch ul { list-style: none; font-size: 13.5px; line-height: 1.85; color: var(--text-main); font-weight: 500; }
+.tree-branch li::before { content: '▸ '; color: var(--accent-red); }
+
+@media (max-width: 1100px) {
+  .tree-branches { grid-template-columns: repeat(2, 1fr); }
+  .answers-grid { grid-template-columns: 1fr; }
+}
+
+/* ───── REVIEW ───── */
+.review-container { max-width: 800px; margin: 16px auto 0; text-align: center; }
+.review-intro {
+  font-size: 16px; color: var(--text-main);
+  margin-bottom: 24px; line-height: 1.85; font-weight: 500;
+}
+.review-start-btn {
+  background: var(--navy-darkest); color: white;
+  border: none; padding: 14px 42px;
+  font-size: 17px;
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  border-radius: 50px; cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 6px 20px rgba(15,40,71,0.25);
+}
+.review-start-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(15,40,71,0.35);
+  background: var(--navy);
+}
+.review-q-area { display: none; margin-top: 20px; }
+.review-q-area.active { display: block; }
+.review-progress {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--navy);
+  font-size: 13px; letter-spacing: 0.15em;
+  margin-bottom: 14px; font-weight: 700;
+}
+.review-result {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 48px; font-weight: 700;
+  color: var(--accent-red);
+  margin: 20px 0 10px;
+}
+.review-result-sub {
+  font-size: 15px; color: var(--text-main);
+  margin-bottom: 24px; font-weight: 500;
+}
+.review-retry-btn {
+  background: transparent;
+  border: 2px solid var(--navy);
+  color: var(--navy-darkest);
+  padding: 9px 22px;
+  font-family: 'Noto Serif JP', serif; font-weight: 600;
+  border-radius: 30px; cursor: pointer;
+  transition: all 0.2s;
+}
+.review-retry-btn:hover { background: var(--navy-darkest); color: white; }
+
+/* ───── utility ───── */
+.slide::-webkit-scrollbar { width: 6px; }
+.slide::-webkit-scrollbar-track { background: transparent; }
+.slide::-webkit-scrollbar-thumb { background: var(--navy-pale); border-radius: 3px; }
+
+@media (max-width: 1100px) {
+  .two-col { grid-template-columns: 1fr; gap: 18px; }
+  .agenda-grid { grid-template-columns: 1fr; }
+  .quiz-container { max-width: 100%; }
+}
+
+@media print {
+  .topbar, .bottombar, .progress { display: none; }
+}
+
+/* ═══════════════════════════════════════
+   MENU (スライド目次 + リセット)
+   ═══════════════════════════════════════ */
+.menu-toggle {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: white;
+  padding: 6px 14px 6px 12px;
+  border-radius: 18px;
+  cursor: pointer;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  margin-left: 14px;
+  transition: all 0.25s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+}
+.menu-toggle:hover {
+  background: rgba(201,169,97,0.25);
+  border-color: var(--accent-gold);
+}
+.menu-toggle-icon {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 14px;
+  justify-content: center;
+}
+.menu-toggle-icon span {
+  display: block;
+  height: 1.5px;
+  background: white;
+  border-radius: 1px;
+  transition: all 0.2s;
+}
+.menu-toggle:hover .menu-toggle-icon span { background: var(--accent-gold); }
+
+.menu-overlay {
+  position: fixed; inset: 0;
+  background: rgba(15,40,71,0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 200;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.35s;
+}
+.menu-overlay.open {
+  opacity: 1; pointer-events: all;
+}
+.menu-panel {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: 400px; max-width: 92vw;
+  background: white;
+  box-shadow: -16px 0 40px rgba(0,0,0,0.2);
+  z-index: 201;
+  transform: translateX(100%);
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+}
+.menu-panel.open { transform: translateX(0); }
+.menu-head {
+  padding: 24px 26px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(180deg, var(--navy-darkest) 0%, var(--navy-dark) 100%);
+  color: white;
+  flex-shrink: 0;
+}
+.menu-head-title {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 700;
+  font-size: 20px;
+}
+.menu-head-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--accent-gold);
+  letter-spacing: 0.2em;
+  margin-top: 4px;
+  font-weight: 700;
+}
+.menu-close {
+  background: rgba(255,255,255,0.08);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.15);
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.menu-close:hover { background: rgba(200,16,46,0.3); border-color: var(--accent-red); }
+.menu-reset-btn {
+  margin: 14px 22px 4px;
+  padding: 11px 16px;
+  background: transparent;
+  border: 1.5px dashed var(--accent-red);
+  color: var(--accent-red);
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 600;
+  font-size: 13.5px;
+  transition: all 0.25s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.menu-reset-btn:hover {
+  background: var(--accent-red);
+  color: white;
+  border-style: solid;
+}
+.menu-reset-icon {
+  display: inline-block;
+  font-size: 15px;
+  transition: transform 0.4s;
+}
+.menu-reset-btn:hover .menu-reset-icon { transform: rotate(-180deg); }
+.menu-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 14px 28px;
+}
+.menu-list::-webkit-scrollbar { width: 6px; }
+.menu-list::-webkit-scrollbar-thumb { background: var(--navy-pale); border-radius: 3px; }
+.menu-section {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.2em;
+  color: var(--accent-red);
+  font-weight: 700;
+  padding: 16px 14px 8px;
+  margin-top: 6px;
+  border-top: 1px solid var(--navy-pale);
+}
+.menu-section:first-of-type {
+  border-top: none;
+  margin-top: 6px;
+}
+.menu-item {
+  display: flex;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  align-items: center;
+  margin-bottom: 2px;
+}
+.menu-item:hover {
+  background: var(--navy-bg);
+  transform: translateX(-2px);
+}
+.menu-item-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: var(--text-sub);
+  font-size: 12px;
+  min-width: 26px;
+}
+.menu-item-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--navy-darkest);
+  flex: 1;
+  line-height: 1.45;
+}
+.menu-item.active {
+  background: var(--navy-darkest);
+  color: white;
+  box-shadow: 0 4px 14px rgba(15,40,71,0.25);
+}
+.menu-item.active .menu-item-num { color: var(--accent-gold); }
+.menu-item.active .menu-item-title { color: white; font-weight: 700; }
+.menu-item-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  padding: 3px 7px;
+  border-radius: 3px;
+  font-weight: 700;
+  background: rgba(200,16,46,0.1);
+  color: var(--accent-red);
+  white-space: nowrap;
+}
+.menu-item-tag.tag-interactive {
+  background: rgba(201,169,97,0.18);
+  color: #8a6d1f;
+}
+.menu-item-tag.tag-review {
+  background: rgba(44,95,141,0.12);
+  color: var(--navy);
+}
+.menu-item-tag.tag-section, .menu-item-tag.tag-title, .menu-item-tag.tag-end {
+  background: rgba(15,40,71,0.08);
+  color: var(--navy-dark);
+}
+.menu-item.active .menu-item-tag {
+  background: rgba(201,169,97,0.3);
+  color: var(--accent-gold);
+}
+
+/* ═══════════════════════════════════════
+   MOBILE / RESPONSIVE (≤ 720px)
+   ─ 復習モード:スマホでも同じURLで読める
+   ═══════════════════════════════════════ */
+@media (max-width: 720px) {
+  /* ─ topbar / bottombar ─ */
+  .topbar {
+    height: 40px; padding: 0 12px;
+    font-size: 11px; letter-spacing: 0;
+  }
+  .topbar-title { font-size: 13px; margin-right: 8px; }
+  .topbar-subtitle { display: none; }
+  .topbar-chapter { font-size: 10px; letter-spacing: 0.08em; }
+  .menu-toggle {
+    margin-left: 8px; padding: 4px 10px;
+    font-size: 10px; height: 24px; gap: 6px;
+  }
+  .menu-toggle-icon { width: 11px; gap: 2px; }
+  .menu-toggle-icon span { height: 1.3px; }
+
+  .progress { top: 40px; }
+
+  .bottombar {
+    height: calc(44px + env(safe-area-inset-bottom, 0px));
+    padding: 0 12px env(safe-area-inset-bottom, 0px);
+    font-size: 11px;
+  }
+  .bottombar-nav { gap: 8px; }
+  .nav-btn { width: 30px; height: 30px; font-size: 13px; }
+  .slide-title-small { display: none; }
+  .keyboard-hint { display: none; }
+  .page-indicator {
+    font-size: 11px; margin-right: 0; margin-left: auto;
+  }
+
+  .slide {
+    top: 43px;
+    bottom: calc(44px + env(safe-area-inset-bottom, 0px));
+    padding: 4vw 5vw 40px;
+    touch-action: pan-y;
+  }
+
+  /* ─ title / section divider ─ */
+  .title-slide { padding: 0 6vw; }
+  .title-slide::before, .title-slide::after { display: none; }
+  .title-label {
+    font-size: 10.5px; letter-spacing: 0.2em; margin-bottom: 18px;
+  }
+  .title-main {
+    font-size: clamp(36px, 10vw, 58px);
+    letter-spacing: -0.01em; margin-bottom: 14px;
+  }
+  .title-sub {
+    font-size: clamp(14px, 4vw, 20px); margin-bottom: 32px;
+  }
+  .title-meta {
+    gap: 14px 22px;
+    font-size: 10.5px; flex-direction: column;
+  }
+  .section-number {
+    font-size: 11px; letter-spacing: 0.25em; margin-bottom: 14px;
+  }
+  .section-title-big { font-size: clamp(34px, 9vw, 54px); }
+  .section-tagline { font-size: clamp(14px, 3.8vw, 18px); }
+
+  /* ─ typography ─ */
+  .eyebrow { font-size: 10px; letter-spacing: 0.15em; margin-bottom: 12px; }
+  .slide-title { font-size: clamp(24px, 6.2vw, 34px); margin-bottom: 8px; }
+  .slide-subtitle {
+    font-size: clamp(13.5px, 3.8vw, 17px);
+    margin-bottom: 20px; line-height: 1.65;
+  }
+  .section-heading {
+    font-size: 22px; margin-bottom: 14px;
+    padding-left: 12px; border-left-width: 3px;
+  }
+  .body-text { font-size: 15px; }
+
+  /* ─ agenda ─ */
+  .agenda-grid { gap: 12px; margin-top: 18px; }
+  .agenda-item { padding: 16px 18px; gap: 14px; }
+  .agenda-num { font-size: 28px; min-width: 38px; }
+  .agenda-content h3 { font-size: 17px; }
+  .agenda-content p { font-size: 13.5px; line-height: 1.6; }
+
+  /* ─ def-box / two-col ─ */
+  .def-box { padding: 18px 20px; margin-bottom: 12px; }
+  .def-box .def-term { font-size: 20px; margin-bottom: 8px; }
+  .def-box .def-desc { font-size: 14.5px; line-height: 1.75; }
+  .two-col { grid-template-columns: 1fr; gap: 14px; margin-top: 18px; }
+
+  /* ─ quiz ─ */
+  .quiz-container { margin-top: 18px; }
+  .quiz-question { padding: 16px 18px; font-size: 16px; line-height: 1.6; }
+  .quiz-question-num { font-size: 10.5px; margin-bottom: 6px; }
+  .quiz-options { padding: 12px; }
+  .quiz-option {
+    padding: 12px 14px; font-size: 14.5px;
+    gap: 10px; margin-bottom: 8px;
+  }
+  .quiz-option-letter { font-size: 13px; min-width: 22px; }
+  .quiz-feedback { padding: 14px 16px; font-size: 14px; margin-top: 12px; }
+
+  /* ─ practice-list ─ */
+  .practice-list { margin-top: 16px; }
+  .practice-item { padding: 14px 16px; gap: 14px; margin-bottom: 10px; }
+  .practice-letter { font-size: 17px; min-width: 32px; }
+  .practice-text { font-size: 14.5px; line-height: 1.7; }
+  .practice-verdict { font-size: 11px; padding: 4px 12px; min-width: 56px; }
+  .practice-item.revealed .practice-reason {
+    font-size: 13px; padding: 10px 12px; line-height: 1.7;
+  }
+
+  /* ─ pyramid 実習1 ─ */
+  .pyramid-wrap { grid-template-columns: 1fr; gap: 20px; margin-top: 14px; }
+  .pyramid-svg { max-width: 280px; }
+  .pyramid-choices { padding: 18px 20px; }
+  .pyramid-choices h4 { font-size: 11px; margin-bottom: 12px; }
+  .pyramid-choice-group { margin-bottom: 14px; }
+  .pyramid-choice-label { font-size: 14px; margin-bottom: 8px; }
+  .pyramid-opt { font-size: 13px; padding: 7px 14px; }
+
+  /* ─ pym meaning ─ */
+  .pym-wrap { grid-template-columns: 1fr; gap: 20px; margin-top: 14px; }
+  .pym-svg { max-width: 260px; }
+  .pym-modes { margin-top: 14px; gap: 6px; }
+  .pym-modes button { font-size: 12.5px; padding: 8px 14px; }
+  .pym-panel { padding: 20px; min-height: auto; }
+  .pym-panel-tier { font-size: 28px; }
+  .pym-panel-mode { font-size: 11px; margin-bottom: 14px; }
+  .pym-panel-headline { font-size: 18px; margin-bottom: 12px; padding-bottom: 12px; }
+  .pym-panel-detail { font-size: 14.5px; line-height: 1.8; }
+  .pym-panel-case { padding: 12px 14px; font-size: 13px; margin-top: 12px; }
+  .pym-memo { padding: 18px 20px; margin-top: 18px; }
+  .pym-memo h4 { font-size: 15px; margin-bottom: 12px; line-height: 1.5; }
+  .pym-memo-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px; margin-bottom: 12px;
+  }
+  .pym-memo-item { padding: 12px 10px; }
+  .pym-memo-item::after { display: none; }
+  .pym-memo-kanji { font-size: 28px; }
+  .pym-memo-reading { font-size: 9.5px; letter-spacing: 0.15em; }
+  .pym-memo-law { font-size: 13px; padding-top: 6px; }
+  .pym-memo-rule { font-size: 13px; padding-top: 12px; line-height: 1.75; }
+
+  /* ─ crimes grid ─ */
+  .crimes-grid { grid-template-columns: 1fr; gap: 12px; }
+  .crime-card { padding: 16px 18px; }
+  .crime-card.featured { padding: 22px 20px 18px; }
+  .crime-card.featured .crime-name { font-size: 20px; }
+  .crime-badge { right: 14px; font-size: 10px; padding: 4px 10px; top: -11px; }
+  .crime-alias { font-size: 13px; }
+  .crime-card.featured .crime-desc { font-size: 14px; }
+  .crime-callout { padding: 12px 14px; font-size: 13px; margin-top: 12px; line-height: 1.8; }
+
+  /* ─ case expander ─ */
+  .case-head { padding: 12px 14px; gap: 10px; }
+  .case-year { font-size: 12px; min-width: 44px; }
+  .case-title { font-size: 14px; }
+  .case-tag { font-size: 10px; padding: 3px 8px; }
+  .case-content { padding: 14px 16px; font-size: 14.5px; line-height: 1.8; }
+  .case-meta { gap: 14px; font-size: 11.5px; }
+  .case-meta-item strong { font-size: 9px; }
+  .case-inline-quiz { padding: 14px 16px; margin-top: 12px; }
+  .case-inline-quiz-q { font-size: 14.5px; margin-bottom: 10px; line-height: 1.65; }
+  .case-inline-opt { font-size: 12.5px; padding: 7px 14px; }
+  .case-inline-fb { font-size: 13px; padding: 10px 12px; line-height: 1.75; }
+
+  /* ─ phishing phone ─ */
+  .phish-wrap { grid-template-columns: 1fr; gap: 20px; }
+  .phish-phone { max-width: 300px; padding: 10px; }
+  .phish-phone::before { width: 44px; top: 16px; }
+  .phish-screen { padding: 30px 14px 14px; min-height: 380px; }
+  .phish-subject { font-size: 14px; }
+  .phish-body { font-size: 12.5px; }
+  .phish-panel { padding: 16px 18px; }
+  .phish-meter-val { font-size: 22px; }
+  .phish-hints h4 { font-size: 11px; }
+  .phish-hint-row { font-size: 13px; padding: 9px 11px; }
+
+  /* ─ sort game ─ */
+  .sort-stack { padding: 12px; gap: 8px; min-height: 60px; }
+  .sort-card { max-width: 100%; font-size: 13.5px; padding: 10px 14px; }
+  .sort-zones { grid-template-columns: 1fr; gap: 10px; }
+  .sort-zone { padding: 12px 14px; min-height: 80px; }
+  .sort-zone-head { font-size: 15px; }
+  .sort-zone-sub { font-size: 10px; margin-bottom: 8px; }
+  .sort-placed-chip { font-size: 12px; padding: 5px 10px; }
+  .sort-status {
+    flex-direction: column; align-items: stretch;
+    gap: 8px; padding: 12px 14px; font-size: 13px;
+  }
+  .sort-status > span { text-align: center; }
+  .sort-reset { align-self: center; }
+  .sort-reveal-row { font-size: 13px; padding: 12px 14px; }
+
+  /* ─ cool sim ─ */
+  .cool-sim { padding: 22px 20px; }
+  .cool-sim-title { font-size: 18px; margin-bottom: 16px; }
+  .cool-controls { grid-template-columns: 1fr; gap: 20px; margin-bottom: 18px; }
+  .cool-slider-val { font-size: 30px; }
+  .cool-result { padding: 18px 20px; }
+  .cool-verdict { font-size: 24px; }
+  .cool-detail { font-size: 14px; line-height: 1.7; }
+  .cool-note { font-size: 12.5px; padding: 11px 14px; line-height: 1.75; }
+
+  /* ─ DM timeline: stacked vertically ─ */
+  .dm-compare-head { display: none; }
+  .dm-step {
+    display: block;
+    margin-bottom: 18px;
+    padding-left: 0;
+  }
+  .dm-step-num {
+    display: inline-flex;
+    width: auto;
+    padding: 6px 14px 6px 10px;
+    flex-direction: row;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    border-radius: 6px;
+  }
+  .dm-step-num small {
+    font-size: 9px; letter-spacing: 0.15em;
+    margin-bottom: 0; margin-right: 2px;
+  }
+  .dm-cell { margin-bottom: 8px; }
+  .dm-cell-old::before {
+    content: '旧法 / プロバイダ責任制限法';
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px; color: var(--accent-red);
+    font-weight: 700; letter-spacing: 0.12em;
+    background: rgba(200,16,46,0.12);
+    padding: 3px 9px;
+    border-radius: 3px; margin-bottom: 8px;
+  }
+  .dm-cell-new::before {
+    content: '新法 / 情報流通プラットフォーム対処法';
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px; color: var(--ok-green);
+    font-weight: 700; letter-spacing: 0.12em;
+    background: rgba(30,130,76,0.12);
+    padding: 3px 9px;
+    border-radius: 3px; margin-bottom: 8px;
+  }
+  .dm-summary { grid-template-columns: 1fr; gap: 10px; }
+  .dm-summary-box { padding: 14px 16px; }
+  .dm-summary-val { font-size: 20px; }
+
+  /* ─ scope diagram ─ */
+  .scope-wrap { grid-template-columns: 1fr; gap: 24px; }
+  .scope-diagram { max-width: 300px; }
+  .scope-circle.citizen .scope-circle-label {
+    font-size: 12.5px; padding: 3px 11px; top: 10px;
+  }
+  .scope-circle.moral .scope-circle-label { font-size: 12px; }
+  .scope-toggle { margin-bottom: 12px; padding: 4px; }
+  .scope-toggle button { padding: 8px 16px; font-size: 13px; }
+  #scopeMoral h4, #scopeCitizen h4 { font-size: 19px; }
+  .scope-desc { font-size: 14px; }
+  .scope-chip { font-size: 12.5px; padding: 6px 12px; }
+  .scope-verdict { font-size: 13px; padding: 12px 14px; }
+
+  /* ─ answers grid ─ */
+  .answers-grid { grid-template-columns: 1fr; gap: 7px; margin-top: 18px; }
+  .answer-row { padding: 10px 12px; gap: 10px; }
+  .answer-num { font-size: 13px; min-width: 26px; }
+  .answer-text { font-size: 13.5px; }
+  .answer-reveal { font-size: 11.5px; padding: 4px 10px; }
+
+  /* ─ summary tree ─ */
+  .summary-tree { margin-top: 18px; padding: 4px; }
+  .tree-center { font-size: 20px; padding: 16px 26px; }
+  .tree-branches {
+    grid-template-columns: 1fr;
+    gap: 12px; margin-top: 24px;
+  }
+  .tree-branch { padding: 14px 16px; }
+  .tree-branch::before { display: none; }
+  .tree-branch h4 { font-size: 15.5px; }
+  .tree-branch ul { font-size: 12.5px; line-height: 1.75; }
+
+  /* ─ review ─ */
+  .review-container { margin-top: 12px; }
+  .review-intro { font-size: 14px; margin-bottom: 18px; line-height: 1.75; }
+  .review-start-btn { padding: 12px 30px; font-size: 15px; }
+  .review-result { font-size: 38px; }
+  .review-progress { font-size: 11px; }
+
+  /* ─ menu drawer ─ */
+  .menu-panel { width: 100%; max-width: 100%; box-shadow: none; }
+  .menu-head { padding: 20px 22px 16px; }
+  .menu-head-title { font-size: 18px; }
+  .menu-head-sub { font-size: 9.5px; }
+  .menu-reset-btn { margin: 14px 20px 6px; font-size: 13px; }
+  .menu-list { padding: 6px 12px 22px; }
+  .menu-item { padding: 10px 12px; }
+  .menu-item-title { font-size: 13.5px; }
+  .menu-item-tag { font-size: 8.5px; padding: 2px 6px; }
+  .menu-section { font-size: 10px; padding: 14px 12px 6px; }
+}
+
+/* Very narrow (iPhone SE 〜 375px) */
+@media (max-width: 380px) {
+  .slide { padding: 3vw 4.5vw; }
+  .title-main { font-size: 36px; }
+  .slide-title { font-size: 22px; }
+  .pym-svg, .pyramid-svg { max-width: 240px; }
+  .phish-phone { max-width: 260px; }
+  .pym-panel-tier { font-size: 26px; }
+  .pym-memo-kanji { font-size: 24px; }
+  .scope-diagram { max-width: 260px; }
+  .tree-center { font-size: 18px; padding: 14px 22px; }
+}
+
+/* Landscape phones (〜 568 × 320) */
+@media (max-height: 500px) and (orientation: landscape) {
+  .title-main { font-size: clamp(30px, 6vw, 50px); }
+  .title-sub {
+    font-size: clamp(13px, 2.5vw, 18px); margin-bottom: 20px;
+  }
+  .section-title-big { font-size: clamp(26px, 6vw, 46px); }
+  .slide-title { font-size: clamp(20px, 4vw, 30px); }
+  .slide-subtitle { margin-bottom: 14px; }
+  .slide { padding: 3vh 5vw; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="topbar-title">情報に関する法規</span>
+  <span class="topbar-subtitle">第1章 情報社会と問題解決 | 学習ノート p.30-33</span>
+  <span class="topbar-chapter">CHAPTER · 06</span>
+  <button class="menu-toggle" onclick="openMenu()" title="スライド目次(M)">
+    <span class="menu-toggle-icon"><span></span><span></span><span></span></span>
+    MENU
+  </button>
+</div>
+<div class="progress" id="progressBar"></div>
+
+<!-- MENU DRAWER -->
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+<div class="menu-panel" id="menuPanel">
+  <div class="menu-head">
+    <div>
+      <div class="menu-head-title">スライド目次</div>
+      <div class="menu-head-sub">CHAPTER · 06</div>
+    </div>
+    <button class="menu-close" onclick="closeMenu()" title="閉じる">✕</button>
+  </div>
+  <button class="menu-reset-btn" onclick="resetAllInteractions()">
+    <span class="menu-reset-icon">⟲</span>
+    インタラクションを全リセット
+  </button>
+  <div class="menu-list" id="menuList"><!-- JS --></div>
+</div>
+
+<div class="slide-container" id="slideContainer">
+
+<!-- ═════ 01. TITLE ═════ -->
+<div class="slide title-slide active" data-title="タイトル">
+  <div class="title-label">CHAPTER · 06 / LAWS ON INFORMATION</div>
+  <h1 class="title-main">情報に関する<br>法規</h1>
+  <p class="title-sub">― 情報社会を成り立たせるルールを、条文と実例で読む ―</p>
+  <div class="title-meta">
+    <div class="title-meta-item"><strong>UNIT</strong>第1章 06</div>
+    <div class="title-meta-item"><strong>PAGES</strong>p.30 - 33</div>
+    <div class="title-meta-item"><strong>ITEMS</strong>10 blanks · 6 practices</div>
+  </div>
+</div>
+
+<!-- ═════ 02. AGENDA ═════ -->
+<div class="slide" data-title="このサイトで扱う内容">
+  <div class="eyebrow">AGENDA / 全体構成</div>
+  <h2 class="slide-title">このサイトで扱う内容</h2>
+  <p class="slide-subtitle">学習ノート p.30-33 の全項目(①〜⑩)と実習1〜6を、身近な事例とインタラクティブな演習でたどる。</p>
+  <div class="agenda-grid">
+    <div class="agenda-item">
+      <div class="agenda-num">01</div>
+      <div class="agenda-content">
+        <h3>法の体系と情報権</h3>
+        <p>憲法を頂点とする法のピラミッド。プライバシー権・知る権利の位置づけ。</p>
+      </div>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num">02</div>
+      <div class="agenda-content">
+        <h3>情報犯罪に関する法律</h3>
+        <p>不正アクセス禁止法、サイバーセキュリティ基本法、刑法の電磁的記録対象犯罪。</p>
+      </div>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num">03</div>
+      <div class="agenda-content">
+        <h3>商取引と消費者保護</h3>
+        <p>特定商取引法のクーリング・オフ制度、特定電子メール法のオプトイン。</p>
+      </div>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num">04</div>
+      <div class="agenda-content">
+        <h3>ネット上の権利と青少年保護</h3>
+        <p>情報流通プラットフォーム対処法、青少年インターネット環境整備法、デジタル・シティズンシップ。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 03. SECTION 1 DIVIDER ═════ -->
+<div class="slide section-divider" data-title="第1節 法の体系と情報権">
+  <div class="section-number">SECTION · 01</div>
+  <h2 class="section-title-big">法の体系と<br>情報権</h2>
+  <p class="section-tagline">― 憲法を頂点に、権利はどこから湧き出るのか ―</p>
+</div>
+
+<!-- ═════ 04. 法のピラミッド + 実習1 ═════ -->
+<div class="slide" data-title="法のピラミッドと実習1">
+  <div class="eyebrow">POINT 2 / 実習 1</div>
+  <h2 class="slide-title">法のピラミッド</h2>
+  <p class="slide-subtitle">日本の法は階層構造になっている。上位の法が下位の法を支配する。</p>
+
+  <div class="pyramid-wrap">
+    <svg class="pyramid-svg" viewBox="0 0 460 340" xmlns="http://www.w3.org/2000/svg">
+      <!-- 頂点:憲法(確定) -->
+      <g class="pyramid-tier filled-ho" style="pointer-events:none">
+        <polygon class="pyramid-rect" fill="#0F2847" points="230,10 180,70 280,70"/>
+        <text class="pyramid-label" x="230" y="50" font-size="18">憲法</text>
+      </g>
+      <!-- (1) -->
+      <g class="pyramid-tier" id="pyrTier1" data-blank="1" onclick="focusPyr(1)">
+        <polygon class="pyramid-rect pyramid-blank" points="180,72 280,72 320,140 140,140"/>
+        <text class="pyramid-label" x="230" y="112" font-size="20" fill="#2C5F8D">(1)</text>
+      </g>
+      <!-- (2) + 省令 -->
+      <g class="pyramid-tier" id="pyrTier2" data-blank="2" onclick="focusPyr(2)">
+        <polygon class="pyramid-rect pyramid-blank" points="140,142 320,142 360,210 100,210"/>
+        <text class="pyramid-label" x="230" y="182" font-size="17" fill="#2C5F8D">(2) · 省令</text>
+      </g>
+      <!-- (3) -->
+      <g class="pyramid-tier" id="pyrTier3" data-blank="3" onclick="focusPyr(3)">
+        <polygon class="pyramid-rect pyramid-blank" points="100,212 360,212 410,300 50,300"/>
+        <text class="pyramid-label" x="230" y="262" font-size="20" fill="#2C5F8D">(3)</text>
+      </g>
+    </svg>
+
+    <div class="pyramid-choices">
+      <h4>◆ 実習1 / (1)〜(3)に入る語を選ぶ</h4>
+      <div class="pyramid-choice-group">
+        <div class="pyramid-choice-label">(1) 憲法の次に位置する、国会で制定されるもの</div>
+        <div class="pyramid-options" data-target="1">
+          <span class="pyramid-opt" data-ok="false" onclick="pickPyr(this, false, 'モラルは法ではなく個人の良心')">ウ. モラル</span>
+          <span class="pyramid-opt" data-ok="true" onclick="pickPyr(this, true, '国会が制定し、全国に適用される')">エ. 法律</span>
+          <span class="pyramid-opt" data-ok="false" onclick="pickPyr(this, false, '政令は法律の次の階層')">イ. 政令</span>
+          <span class="pyramid-opt" data-ok="false" onclick="pickPyr(this, false, '条例は地方公共団体が定めるもの')">ア. 条例</span>
+          <span class="pyramid-opt" data-ok="false" onclick="pickPyr(this, false, 'マナーは法ではない')">オ. マナー</span>
+        </div>
+      </div>
+      <div class="pyramid-choice-group">
+        <div class="pyramid-choice-label">(2) 内閣が制定する命令</div>
+        <div class="pyramid-options" data-target="2">
+          <span class="pyramid-opt" data-ok="false" onclick="pickPyr(this, false, '条例は地方の議会が制定')">ア. 条例</span>
+          <span class="pyramid-opt" data-ok="true" onclick="pickPyr(this, true, '内閣が制定する命令。法律を執行するための細則')">イ. 政令</span>
+          <span class="pyramid-opt" data-ok="false" onclick="pickPyr(this, false, '法律は国会で制定する最上位の成文法(憲法の下)')">エ. 法律</span>
+        </div>
+      </div>
+      <div class="pyramid-choice-group">
+        <div class="pyramid-choice-label">(3) 地方公共団体の議会が制定するもの</div>
+        <div class="pyramid-options" data-target="3">
+          <span class="pyramid-opt" data-ok="true" onclick="pickPyr(this, true, '都道府県・市町村が地域限定で定めるルール')">ア. 条例</span>
+          <span class="pyramid-opt" data-ok="false" onclick="pickPyr(this, false, '政令は内閣が制定する全国ルール')">イ. 政令</span>
+          <span class="pyramid-opt" data-ok="false" onclick="pickPyr(this, false, 'モラル・マナーは法規範ではなく社会的慣習')">ウ. モラル / オ. マナー</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 05. ピラミッドの意味(新規) ═════ -->
+<div class="slide" data-title="ピラミッドの意味">
+  <div class="eyebrow">WHY / この階層が持つ意味</div>
+  <h2 class="slide-title">なぜこの階層なのか</h2>
+  <p class="slide-subtitle">上にいくほど「広く・基本的」、下にいくほど「狭く・具体的」。各段をクリックし、右のモードを切り替えて理解を立体化する。</p>
+
+  <div class="pym-wrap">
+    <div>
+      <div class="pym-svg-box">
+        <svg class="pym-svg" viewBox="0 0 460 340" xmlns="http://www.w3.org/2000/svg">
+          <g class="pym-tier selected" data-key="kenpo" onclick="selectPymTier('kenpo')">
+            <polygon points="230,10 180,70 280,70" fill="#0F2847"/>
+            <text x="230" y="53" font-size="19" fill="white" text-anchor="middle" font-weight="900">憲法</text>
+          </g>
+          <g class="pym-tier" data-key="houritsu" onclick="selectPymTier('houritsu')">
+            <polygon points="180,72 280,72 320,140 140,140" fill="#2C5F8D"/>
+            <text x="230" y="114" font-size="22" fill="white" text-anchor="middle" font-weight="900">法律</text>
+          </g>
+          <g class="pym-tier" data-key="seirei" onclick="selectPymTier('seirei')">
+            <polygon points="140,142 320,142 360,210 100,210" fill="#4A7FA8"/>
+            <text x="230" y="183" font-size="19" fill="white" text-anchor="middle" font-weight="900">政令・省令</text>
+          </g>
+          <g class="pym-tier" data-key="jourei" onclick="selectPymTier('jourei')">
+            <polygon points="100,212 360,212 410,300 50,300" fill="#7BA0C4"/>
+            <text x="230" y="263" font-size="22" fill="white" text-anchor="middle" font-weight="900">条例</text>
+          </g>
+        </svg>
+      </div>
+      <div class="pym-modes">
+        <button class="active" data-mode="who" onclick="switchPymMode('who', this)">誰が作る?</button>
+        <button data-mode="where" onclick="switchPymMode('where', this)">どこに適用?</button>
+        <button data-mode="example" onclick="switchPymMode('example', this)">具体例</button>
+        <button data-mode="conflict" onclick="switchPymMode('conflict', this)">矛盾したら?</button>
+      </div>
+    </div>
+
+    <div class="pym-panel" id="pymPanel"><!-- JS が埋める --></div>
+  </div>
+
+  <div class="pym-memo">
+    <h4>◆ 覚え方「県立聖女学院(けんりつ せいじょ がくいん)」</h4>
+    <div class="pym-memo-grid">
+      <div class="pym-memo-item">
+        <div class="pym-memo-kanji">県</div>
+        <div class="pym-memo-reading">けん</div>
+        <div class="pym-memo-law">憲法</div>
+      </div>
+      <div class="pym-memo-item">
+        <div class="pym-memo-kanji">立</div>
+        <div class="pym-memo-reading">りつ</div>
+        <div class="pym-memo-law">法律</div>
+      </div>
+      <div class="pym-memo-item">
+        <div class="pym-memo-kanji">聖</div>
+        <div class="pym-memo-reading">せい</div>
+        <div class="pym-memo-law">政令・省令</div>
+      </div>
+      <div class="pym-memo-item">
+        <div class="pym-memo-kanji">女</div>
+        <div class="pym-memo-reading">じょ</div>
+        <div class="pym-memo-law">条例</div>
+      </div>
+    </div>
+    <p class="pym-memo-rule"><strong>上位法優先の原則</strong>:下の段が上の段に反すると<strong>無効</strong>になる。法律が憲法に違反していれば、裁判所は <strong>違憲立法審査権(憲法81条)</strong> でこれを判定できる。</p>
+  </div>
+</div>
+
+<!-- ═════ 06. 憲法における情報権 ═════ -->
+<div class="slide" data-title="憲法における情報権">
+  <div class="eyebrow">POINT 2 / 学習ノート ①②③</div>
+  <h2 class="slide-title">憲法における情報に関する権利</h2>
+  <p class="slide-subtitle">情報社会で問題となる権利は、憲法第十三条(個人の尊重・幸福追求権)などから導かれる。</p>
+
+  <div class="def-box" style="margin-top:10px;">
+    <div class="def-label">① 最上位の法</div>
+    <div class="def-term"><span class="note-blank" data-answer="日本国憲法">クリックで正解</span> <span style="font-size:14px; color:var(--text-sub); font-weight:normal;">… 国の最高法規</span></div>
+    <div class="def-desc">国の最高法規。法律や条例は憲法に反してはならない。第十三条は幸福追求権を定め、多くの新しい権利の根拠となる。</div>
+  </div>
+
+  <div class="two-col" style="margin-top:10px;">
+    <div class="def-box">
+      <div class="def-label">② 憲法十三条から導かれる権利</div>
+      <div class="def-term"><span class="note-blank" data-answer="プライバシー権">クリックで正解</span></div>
+      <div class="def-desc">私生活をみだりに公開されない権利。個人情報保護法の基礎。SNSでの顔写真無断掲載・住所特定なども侵害に当たる。</div>
+    </div>
+    <div class="def-box">
+      <div class="def-label">③ 憲法十三条から導かれる権利</div>
+      <div class="def-term"><span class="note-blank" data-answer="知る権利">クリックで正解</span></div>
+      <div class="def-desc">国や自治体の情報を国民が知る権利。情報公開法はこの考えに基づく。報道の自由と表裏の関係にある。</div>
+    </div>
+  </div>
+  <p style="margin-top:14px; font-size:13px; color:var(--text-sub);">※ ②と③は順不同。どちらも憲法13条を根拠とする「新しい人権」。</p>
+</div>
+
+<!-- ═════ 06. SECTION 2 DIVIDER ═════ -->
+<div class="slide section-divider" data-title="第2節 情報犯罪に関する法律">
+  <div class="section-number">SECTION · 02</div>
+  <h2 class="section-title-big">情報犯罪に<br>関する法律</h2>
+  <p class="section-tagline">― 不正アクセス、電磁的記録、サイバー空間の刑法 ―</p>
+</div>
+
+<!-- ═════ 07. 不正アクセス禁止法 + サイバーセキュリティ基本法 ═════ -->
+<div class="slide" data-title="不正アクセス禁止法・サイバーセキュリティ基本法">
+  <div class="eyebrow">POINT 3-4 / 学習ノート ④⑤</div>
+  <h2 class="slide-title">アクセスとセキュリティの二大法</h2>
+  <p class="slide-subtitle">行為を禁じる刑事法と、体制を整える基本法。役割が異なる。</p>
+
+  <div class="two-col">
+    <div class="def-box">
+      <div class="def-label">④ 禁止行為を定める</div>
+      <div class="def-term"><span class="note-blank" data-answer="不正アクセス禁止法">クリックで正解</span></div>
+      <div class="def-desc">アクセス権限のないコンピュータへのアクセスを禁止。他人のIDとパスワードでログインする行為、セキュリティホールを突いた侵入、IDパスワードをそそのかして入手する行為すべてが対象。<strong style="color:var(--accent-red-dark);">「本人の許可があっても」違法</strong>とされる点に注意。</div>
+    </div>
+    <div class="def-box">
+      <div class="def-label">⑤ 政策の理念を定める</div>
+      <div class="def-term"><span class="note-blank" data-answer="サイバーセキュリティ基本法">クリックで正解</span></div>
+      <div class="def-desc">サイバーセキュリティに関する政策の基本理念を定める法律。行為を罰するのではなく、国・地方自治体・事業者・国民の役割を規定し、サイバーセキュリティ戦略本部やNISC(内閣サイバーセキュリティセンター)の設置根拠になっている。</div>
+    </div>
+  </div>
+
+  <div style="margin-top:18px;">
+    <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.15em; color:var(--accent-red); font-weight:700; margin-bottom:10px;">実際の事例 / CLICK TO EXPAND</div>
+
+    <div class="case-expander">
+      <div class="case-head" onclick="toggleCase(this)">
+        <span class="case-year">2024</span>
+        <span class="case-title">KADOKAWA / ニコニコ動画へのランサムウェア攻撃</span>
+        <span class="case-tag">サイバーセキュリティ</span>
+        <span class="case-toggle">+</span>
+      </div>
+      <div class="case-body"><div class="case-content">
+        <p>2024年6月、KADOKAWAグループの複数システムがランサムウェアに感染。ニコニコ動画・角川ドワンゴ学園・出版業務が**1ヶ月以上**停止し、従業員や顧客の個人情報約25万人分が漏洩した。</p>
+        <p>侵入経路はフィッシング経由のVPN認証情報窃取と報じられた。サイバーセキュリティ基本法の理念のもと、NISCが関連機関への注意喚起を出した事例。</p>
+        <div class="case-meta">
+          <div class="case-meta-item"><strong>被害</strong>25万人超の情報漏洩</div>
+          <div class="case-meta-item"><strong>侵入</strong>VPN認証情報窃取</div>
+          <div class="case-meta-item"><strong>教訓</strong>多要素認証と監視体制</div>
+        </div>
+        <div class="case-inline-quiz">
+          <div class="case-inline-quiz-q">攻撃者の行為を日本の刑法で問うと、代表的にどの罪に問われる?</div>
+          <div class="case-inline-opts">
+            <span class="case-inline-opt" onclick="caseQ(this,false)">窃盗罪</span>
+            <span class="case-inline-opt" onclick="caseQ(this,true)">不正アクセス禁止法違反+電子計算機損壊等業務妨害罪</span>
+            <span class="case-inline-opt" onclick="caseQ(this,false)">名誉毀損罪</span>
+          </div>
+          <div class="case-inline-fb">物理的な物を盗んだのではなく、権限外でシステムに侵入しデータを破壊・業務を妨害しているため、不正アクセス禁止法+刑法234条の2の電子計算機損壊等業務妨害が適用される。</div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="case-expander">
+      <div class="case-head" onclick="toggleCase(this)">
+        <span class="case-year">2023</span>
+        <span class="case-title">名古屋港コンテナターミナル システム停止事件</span>
+        <span class="case-tag">重要インフラ</span>
+        <span class="case-toggle">+</span>
+      </div>
+      <div class="case-body"><div class="case-content">
+        <p>2023年7月、日本最大の港湾である名古屋港のコンテナ搬出入システムがランサムウェア感染により3日間停止。国内物流に数百億円規模の影響が出た。</p>
+        <p>サイバーセキュリティ基本法に基づく「重要インフラ事業者」として、国の緊急支援体制(NISC・警察庁サイバー特別捜査隊)が初動対応に動員された代表例。</p>
+        <div class="case-meta">
+          <div class="case-meta-item"><strong>被害</strong>3日間の物流停止</div>
+          <div class="case-meta-item"><strong>侵入</strong>リモート接続機器の脆弱性</div>
+          <div class="case-meta-item"><strong>教訓</strong>重要インフラ防護の国家連携</div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 08. 【A】フィッシング見破りチャレンジ ═════ -->
+<div class="slide" data-title="【A】フィッシングDM見破り">
+  <div class="eyebrow">INTERACTIVE · A / 若者実例</div>
+  <h2 class="slide-title">そのDM、本物?</h2>
+  <p class="slide-subtitle">不正アクセスの入り口は多くが「フィッシング」。下の模擬DMから怪しい箇所をタップで指摘する。全部見つければ防御率100%。</p>
+
+  <div class="phish-wrap">
+    <div>
+      <div class="phish-phone">
+        <div class="phish-screen">
+          <div class="phish-tabs">
+            <span class="phish-tab active" onclick="switchPhish(0, this)">DM 01</span>
+            <span class="phish-tab" onclick="switchPhish(1, this)">DM 02</span>
+            <span class="phish-tab" onclick="switchPhish(2, this)">DM 03</span>
+          </div>
+
+          <!-- DM 1: Amazon なりすまし -->
+          <div class="phish-msg active" data-dm="0">
+            <div class="phish-from">
+              <div class="phish-avatar">A</div>
+              <div class="phish-from-info">
+                <div class="phish-from-name">Amazon カスタマーサービス</div>
+                <div class="phish-from-addr"><span class="phish-hit" data-dm="0" data-hit="domain" onclick="hitPhish(this)">support@amaz0n-jp.info</span></div>
+              </div>
+            </div>
+            <div class="phish-subject">【<span class="phish-hit" data-dm="0" data-hit="urgent" onclick="hitPhish(this)">緊急</span>】アカウントが凍結されました</div>
+            <div class="phish-body">
+              お客様のアカウントに不審なアクセスを検出しました。<br>
+              <span class="phish-hit" data-dm="0" data-hit="deadline" onclick="hitPhish(this)">24時間以内にご確認いただかない場合、アカウントは永久に削除されます。</span><br>
+              下記ボタンから本人確認をお願いします。
+              <span class="phish-btn-fake">アカウントを確認する</span>
+              <div style="font-size:10px; color:#888; margin-top:8px;">リンク先: <span class="phish-hit" data-dm="0" data-hit="url" onclick="hitPhish(this)">http://bit.ly/a-verify-827</span></div>
+            </div>
+          </div>
+
+          <!-- DM 2: 国際ロマンス詐欺 -->
+          <div class="phish-msg" data-dm="1">
+            <div class="phish-from">
+              <div class="phish-avatar" style="background:linear-gradient(135deg,#f4a261,#e76f51);">M</div>
+              <div class="phish-from-info">
+                <div class="phish-from-name">Michelle(マッチング相手)</div>
+                <div class="phish-from-addr">DM · 8日目のやり取り</div>
+              </div>
+            </div>
+            <div class="phish-subject">一緒に投資しない?</div>
+            <div class="phish-body">
+              ねえ、いつも話を聞いてくれてありがとう💕<br>
+              実は私、すごくいい<span class="phish-hit" data-dm="1" data-hit="invest" onclick="hitPhish(this)">仮想通貨の投資サイト</span>を知ってるの。月利20%は確実。<br>
+              <span class="phish-hit" data-dm="1" data-hit="external" onclick="hitPhish(this)">このアプリの外(LINEまたは専用アプリ)</span>で続きを話しましょう?<br>
+              <span class="phish-hit" data-dm="1" data-hit="pay" onclick="hitPhish(this)">まず5万円だけでいいから入金してみて</span>。私も一緒にやってるから安心だよ。
+              <div style="font-size:10px; color:#888; margin-top:8px;">※ やり取り開始から <span class="phish-hit" data-dm="1" data-hit="speed" onclick="hitPhish(this)">わずか8日で金銭の話題</span></div>
+            </div>
+          </div>
+
+          <!-- DM 3: LINE 乗っ取り -->
+          <div class="phish-msg" data-dm="2">
+            <div class="phish-from">
+              <div class="phish-avatar" style="background:linear-gradient(135deg,#06c755,#04a249);">田</div>
+              <div class="phish-from-info">
+                <div class="phish-from-name">田中ゆうた(中学の友達)</div>
+                <div class="phish-from-addr">LINE · 2年ぶりのメッセージ</div>
+              </div>
+            </div>
+            <div class="phish-subject">久しぶり、ちょっと頼みがある</div>
+            <div class="phish-body">
+              久しぶり!元気にしてる?<br>
+              <span class="phish-hit" data-dm="2" data-hit="favor" onclick="hitPhish(this)">実は今スマホ壊れてて、電話番号認証ができないから、代わりにLINEの認証番号受け取ってほしい</span>。<br>
+              今から6桁のコードが君のスマホに届くから、<span class="phish-hit" data-dm="2" data-hit="code" onclick="hitPhish(this)">その数字をそのまま僕に送って</span>。<br>
+              急ぎなんだ、<span class="phish-hit" data-dm="2" data-hit="hurry" onclick="hitPhish(this)">5分以内にお願い!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phish-panel">
+      <div class="phish-meter">
+        <div class="phish-meter-label">DETECTION RATE</div>
+        <div class="phish-meter-bar"><div class="phish-meter-fill" id="phishFill"></div></div>
+        <div class="phish-meter-val" id="phishVal">0 / 11</div>
+      </div>
+
+      <div class="phish-hints" id="phishHints0">
+        <h4>◆ DM 01 / 怪しいポイント 4箇所</h4>
+        <div class="phish-hint-row" data-hit="domain"><span class="phish-hint-mark">1</span><div><strong>偽ドメイン</strong>:amaz0n(数字の0)、.info は公式ドメインではない</div></div>
+        <div class="phish-hint-row" data-hit="urgent"><span class="phish-hint-mark">2</span><div><strong>緊急性の煽り</strong>:冷静な判断をさせないための定番手口</div></div>
+        <div class="phish-hint-row" data-hit="deadline"><span class="phish-hint-mark">3</span><div><strong>期限脅迫</strong>:「24時間以内」「永久に削除」は典型</div></div>
+        <div class="phish-hint-row" data-hit="url"><span class="phish-hint-mark">4</span><div><strong>短縮URL</strong>:bit.ly / t.co は実リンク先が隠される</div></div>
+      </div>
+
+      <div class="phish-hints" id="phishHints1" style="display:none;">
+        <h4>◆ DM 02 / 怪しいポイント 4箇所</h4>
+        <div class="phish-hint-row" data-hit="invest"><span class="phish-hint-mark">1</span><div><strong>高利回り投資の話</strong>:月利20%は詐欺の代名詞</div></div>
+        <div class="phish-hint-row" data-hit="external"><span class="phish-hint-mark">2</span><div><strong>外部アプリ誘導</strong>:運営の監視が届かない場所へ移動を促す</div></div>
+        <div class="phish-hint-row" data-hit="pay"><span class="phish-hint-mark">3</span><div><strong>少額入金の要求</strong>:「少しだけ」は次の高額要求の入口</div></div>
+        <div class="phish-hint-row" data-hit="speed"><span class="phish-hint-mark">4</span><div><strong>不自然な距離の詰め方</strong>:実在の関係に比して早すぎる親密さ</div></div>
+      </div>
+
+      <div class="phish-hints" id="phishHints2" style="display:none;">
+        <h4>◆ DM 03 / 怪しいポイント 3箇所</h4>
+        <div class="phish-hint-row" data-hit="favor"><span class="phish-hint-mark">1</span><div><strong>2年ぶり+いきなり頼み事</strong>:アカウント乗っ取り後の典型的挨拶</div></div>
+        <div class="phish-hint-row" data-hit="code"><span class="phish-hint-mark">2</span><div><strong>認証コードの要求</strong>:他人に教えた瞬間に自分のアカウントが乗っ取られる(SMS認証突破)</div></div>
+        <div class="phish-hint-row" data-hit="hurry"><span class="phish-hint-mark">3</span><div><strong>「5分以内」の焦り演出</strong>:確認電話をさせないための仕掛け</div></div>
+      </div>
+
+      <button class="phish-reveal-btn" onclick="phishRevealAll()">全部の答えを表示</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 09. 実習2 不正アクセス禁止法違反 ═════ -->
+<div class="slide" data-title="実習2 不正アクセス禁止法違反">
+  <div class="eyebrow">PRACTICE 2 / 学習ノート 実習2</div>
+  <h2 class="slide-title">どれが不正アクセス禁止法違反?</h2>
+  <p class="slide-subtitle">他の法律の違反と混同しやすい。選択肢を冷静に読み分ける。</p>
+
+  <div class="quiz-container">
+    <div class="quiz-question">
+      <span class="quiz-question-num">QUESTION · 実習2</span>
+      次の行為のうち、<strong style="color:var(--accent-gold);">不正アクセス禁止法</strong>に違反しているものを一つ選びなさい。
+    </div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="answerQuiz(this, false)">
+        <span class="quiz-option-letter">ア</span>
+        <span>Webサイト中の画像をクリックしただけで、いきなり有料サイトへの入会申し込みとして処理され、支払い請求を受けた。</span>
+      </div>
+      <div class="quiz-option" onclick="answerQuiz(this, false)">
+        <span class="quiz-option-letter">イ</span>
+        <span>送信者情報を偽った広告・宣伝メールの送信をした。</span>
+      </div>
+      <div class="quiz-option" onclick="answerQuiz(this, true)">
+        <span class="quiz-option-letter">ウ</span>
+        <span>インターネットのゲームサイトで、パスワードをIDと同じにして入力したら、他人のアカウントでログインすることができた。</span>
+      </div>
+      <div class="quiz-option" onclick="answerQuiz(this, false)">
+        <span class="quiz-option-letter">エ</span>
+        <span>懸賞への応募者のデータを無断で使用して新商品のお知らせを送付した。</span>
+      </div>
+    </div>
+    <div class="quiz-feedback">
+      <strong>正解:ウ</strong><br>
+      他人のアカウントへのログインは、たとえ「パスワードがたまたま当たった」場合でも不正アクセス禁止法違反。<br>
+      ア = 電子消費者契約法違反(操作ミスを誘発する画面)。イ = 特定電子メール法違反(送信者偽装)。エ = 個人情報保護法違反(目的外利用)。いずれも別の法律の問題。
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 10. 実習2 応用(高校生リアル・高難度) ═════ -->
+<div class="slide" data-title="実習2 応用 / グレーゾーン判定">
+  <div class="eyebrow">PRACTICE 2+ / 応用問題(難度高め)</div>
+  <h2 class="slide-title">この行動、不正アクセス禁止法違反?</h2>
+  <p class="slide-subtitle">教科書の例より一段難しい。境界線上の高校生リアル行動を、自力で判定する。クリックで答えと理由が出る。</p>
+
+  <div class="practice-list">
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">(1)</span>
+      <div class="practice-text">
+        友達から「スマホ壊れたから、LINEの認証コード受け取って代わりにログインしておいて」と頼まれ、友達のLINEアカウントにログインした。
+        <div class="practice-reason"><strong>違反</strong>本人の承諾があっても「自分のアカウント」以外へのログインは、識別符号を入力してアクセス制御機能を通す<strong>不正アクセス行為</strong>に該当する(3条)。友達の頼みは違法性を消さない。</div>
+      </div>
+      <span class="practice-verdict" data-ok="true">?</span>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">(2)</span>
+      <div class="practice-text">
+        学校の成績照会サイトで、自分のマイページのURLが「/student/?id=自分の番号」。試しに番号を他人のものに書き換えたら他人の成績が表示された。中身は見ず URL を閉じた。
+        <div class="practice-reason"><strong>違反</strong>URLパラメータ改ざんによりアクセス制御機能を迂回する行為は<strong>セキュリティホール攻撃型の不正アクセス</strong>(2条4項3号)。「見ただけ」「すぐ閉じた」も成立要件を欠かない。閲覧自体が違反行為。</div>
+      </div>
+      <span class="practice-verdict" data-ok="true">?</span>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">(3)</span>
+      <div class="practice-text">
+        自分が普段使っているSNSと同じパスワードを、別人のアカウント画面で好奇心から試したところ、ログインできてしまった。何もせずすぐログアウトした。
+        <div class="practice-reason"><strong>違反</strong>偶然の一致でも、他人のアカウントに<strong>意図的にログインを試みる</strong>時点で成立する。「結果を使わなかった」は違反の成立を消さない。未遂も処罰対象の条文ではないが、ログイン成功=既遂。</div>
+      </div>
+      <span class="practice-verdict" data-ok="true">?</span>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">(4)</span>
+      <div class="practice-text">
+        部活で共用しているGoogleアカウントに、先輩から共有されたパスワードでログインし、動画編集を続けた。規約上は個人利用のアカウントだった。
+        <div class="practice-reason"><strong>違反にはあたりにくい</strong>共用アカウントは部員全員が「正当な利用権限者」と認識されている場合、刑事罰の対象にはなりにくい。ただし<strong>Googleの利用規約違反</strong>は成立し、アカウント停止等の民事リスクはある。刑事と規約違反は別の話。</div>
+      </div>
+      <span class="practice-verdict" data-ok="false">?</span>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">(5)</span>
+      <div class="practice-text">
+        塾の自習室で、先輩が離席中に置き忘れたノートパソコンの画面にログイン済みのマイページが表示されていたので、<strong>先輩の講座の予約履歴だけ</strong>確認して画面を閉じた。
+        <div class="practice-reason"><strong>違反にはあたらない(ただしグレー)</strong>すでにログイン済みの画面を見る行為は「識別符号の入力」がないため不正アクセス禁止法の構成要件を満たしにくい。しかし民事で<strong>プライバシー侵害</strong>を問われる可能性、学校・塾の規則違反は別途成立する。「法的にOK=倫理的にOK」ではない。</div>
+      </div>
+      <span class="practice-verdict" data-ok="false">?</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 11. 電磁的記録と刑法 ═════ -->
+<div class="slide" data-title="電磁的記録と刑法">
+  <div class="eyebrow">POINT 5 / 学習ノート ⑥</div>
+  <h2 class="slide-title">電磁的記録 ― 刑法が扱う「見えない記録」</h2>
+  <p class="slide-subtitle">刑法は従来、紙の文書を前提にしていた。電子データを刑法上の「記録」として扱うため導入された概念。</p>
+
+  <div class="def-box">
+    <div class="def-label">⑥ 刑法上の定義</div>
+    <div class="def-term"><span class="note-blank" data-answer="電磁的記録">クリックで正解</span></div>
+    <div class="def-desc">電子的方式、磁気的方式その他人の知覚によっては認識することができない方式で作られる記録(刑法7条の2)。ハードディスクのデータ、ICカードの残高、電子署名、メールログ、LINEのトーク履歴などすべて含まれる。</div>
+  </div>
+
+  <div style="margin-top:18px;">
+    <div style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.15em; color:var(--accent-red); font-weight:700; margin-bottom:12px;">RELATED · 電磁的記録を対象とする主な罪</div>
+    <div class="crimes-grid">
+      <div class="crime-card">
+        <div class="crime-tag">PENAL · 161-2</div>
+        <div class="crime-name">電磁的記録不正作出罪</div>
+        <div class="crime-desc">人の事務処理を誤らせる目的で偽の電磁的記録を作る罪。偽装電子チケット、偽造社員証データなど。</div>
+      </div>
+      <div class="crime-card featured">
+        <div class="crime-badge">KEY · 高校生が最も巻き込まれやすい</div>
+        <div class="crime-tag">PENAL · 168-2 / 168-3</div>
+        <div class="crime-name">不正指令電磁的記録作成罪</div>
+        <div class="crime-alias">通称:<strong>コンピュータウイルス作成罪</strong></div>
+        <div class="crime-desc">人の意図に反する動作をさせる不正プログラム(ウイルス)を<strong>作成・提供・供用・保管</strong>する行為を罰する。2011年刑法改正で新設。<br><br><strong>作成しただけ</strong>でアウト。実害が出ていなくても処罰対象になる点が他の刑法犯と大きく異なる。</div>
+        <div class="crime-callout">
+          <strong>コインハイブ事件(2018→2022 最高裁)</strong> — 自身のWebサイトに仮想通貨マイニングスクリプトを無断で埋め込んだウェブデザイナーが本罪で起訴。1審有罪 → 2審無罪 → 最高裁が <strong>逆転無罪</strong>(2022年1月)。「社会的に許容される行為かどうか」の線引きが焦点となり、IT業界で大きな議論に。<br>セキュリティ研究目的でもウイルスコードの<strong>公開</strong>は違法となりうる。GitHubにPoC(実証コード)を上げて検挙されたケースもある。
+        </div>
+      </div>
+      <div class="crime-card">
+        <div class="crime-tag">PENAL · 246-2</div>
+        <div class="crime-name">電子計算機使用詐欺罪</div>
+        <div class="crime-desc">偽の電磁的記録でコンピュータに誤った処理をさせ、経済的利益を得る罪。架空送金、ポイント不正チャージなど。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 11. 【B】法律分類カードゲーム ═════ -->
+<div class="slide" data-title="【B】法律分類ゲーム">
+  <div class="eyebrow">INTERACTIVE · B / 若者実例</div>
+  <h2 class="slide-title">この行為、どの法律違反?</h2>
+  <p class="slide-subtitle">カードを選び、下の4ゾーンにタップで振り分ける。境界が微妙なものは慎重に。</p>
+
+  <div class="sort-game">
+    <div class="sort-stack" id="sortStack">
+      <!-- cards populated by JS -->
+    </div>
+
+    <div class="sort-zones">
+      <div class="sort-zone" data-zone="fuseiA" onclick="dropCard('fuseiA')">
+        <div class="sort-zone-head">不正アクセス禁止法</div>
+        <div class="sort-zone-sub">ACCESS · 権限なきログイン</div>
+        <div class="sort-placed-list" data-list="fuseiA"></div>
+      </div>
+      <div class="sort-zone" data-zone="denji" onclick="dropCard('denji')">
+        <div class="sort-zone-head">電磁的記録関連罪(刑法)</div>
+        <div class="sort-zone-sub">PENAL · データの偽造・破壊</div>
+        <div class="sort-placed-list" data-list="denji"></div>
+      </div>
+      <div class="sort-zone" data-zone="syouhin" onclick="dropCard('syouhin')">
+        <div class="sort-zone-head">特定商取引法 / 特定電子メール法</div>
+        <div class="sort-zone-sub">COMMERCE · 商取引のルール</div>
+        <div class="sort-placed-list" data-list="syouhin"></div>
+      </div>
+      <div class="sort-zone" data-zone="privacy" onclick="dropCard('privacy')">
+        <div class="sort-zone-head">個人情報保護法</div>
+        <div class="sort-zone-sub">PRIVACY · 個人データの扱い</div>
+        <div class="sort-placed-list" data-list="privacy"></div>
+      </div>
+    </div>
+
+    <div class="sort-status">
+      <span>カードを選ぶ → ゾーンをタップで分類</span>
+      <span>正解:<span class="sort-status-score" id="sortScore">0 / 10</span></span>
+      <button class="sort-reset" onclick="resetSort()">リセット</button>
+    </div>
+
+    <div class="sort-reveal-row" id="sortReveal"></div>
+  </div>
+</div>
+
+<!-- ═════ 12. 実習3 電磁的記録〇× ═════ -->
+<div class="slide" data-title="実習3 電磁的記録犯罪の〇×">
+  <div class="eyebrow">PRACTICE 3 / 学習ノート 実習3</div>
+  <h2 class="slide-title">電磁的記録に関する犯罪 ― 〇×判定</h2>
+  <p class="slide-subtitle">各記述について、電磁的記録に関する犯罪行為に該当するかクリックで判定。</p>
+
+  <div class="practice-list">
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">(1)</span>
+      <div class="practice-text">
+        人の事務処理を誤らせる目的で、電磁的記録を不正に作成すると犯罪行為に該当する。
+        <div class="practice-reason"><strong>電磁的記録不正作出罪(刑法161条の2)</strong>偽の電子記録を事務処理の用に作ると犯罪。例:偽造電子チケット、偽造社員証データ。</div>
+      </div>
+      <span class="practice-verdict" data-ok="true">?</span>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">(2)</span>
+      <div class="practice-text">
+        自分のコンピュータにあるデータをバックアップ目的でコピーする行為は、電磁的記録に関する犯罪行為に該当する。
+        <div class="practice-reason"><strong>×</strong>自分が正当な権利をもつデータのバックアップは犯罪ではない。電磁的記録不正作出罪の成立には「人の事務処理を誤らせる目的」が必要。</div>
+      </div>
+      <span class="practice-verdict" data-ok="false">?</span>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">(3)</span>
+      <div class="practice-text">
+        正当な目的なく、コンピュータウイルスなどのマルウェアを作成し、データを破壊する行為は、電磁的記録に関する犯罪行為に該当する。
+        <div class="practice-reason"><strong>不正指令電磁的記録作成罪+電子計算機損壊等業務妨害罪</strong>ウイルス作成そのものが刑法168条の2で罰則対象。加えて実害が出れば234条の2で重ねて処罰。</div>
+      </div>
+      <span class="practice-verdict" data-ok="true">?</span>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">(4)</span>
+      <div class="practice-text">
+        偽造した電磁的記録を用いて他人を欺き、経済的利益を得る詐欺行為は、電磁的記録に関する犯罪行為に該当する。
+        <div class="practice-reason"><strong>電子計算機使用詐欺罪(刑法246条の2)</strong>偽の電子データでシステムに誤処理をさせて財産上の利益を得ると成立。例:銀行残高の改ざん、ポイント不正チャージ。</div>
+      </div>
+      <span class="practice-verdict" data-ok="true">?</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 13. SECTION 3 DIVIDER ═════ -->
+<div class="slide section-divider" data-title="第3節 商取引と消費者保護">
+  <div class="section-number">SECTION · 03</div>
+  <h2 class="section-title-big">商取引と<br>消費者保護</h2>
+  <p class="section-tagline">― 契約の自由と、そこから守られるべき消費者 ―</p>
+</div>
+
+<!-- ═════ 14. 特定商取引法 / 特定電子メール法 ═════ -->
+<div class="slide" data-title="商取引に関する法制度">
+  <div class="eyebrow">POINT 6 / 学習ノート ⑦⑧</div>
+  <h2 class="slide-title">商取引に関する法制度</h2>
+  <p class="slide-subtitle">契約は原則として自由。だが情報の非対称性が大きい場合、消費者側に特別のルールで保護を与える。</p>
+
+  <div class="two-col">
+    <div class="def-box">
+      <div class="def-label">⑦ 流通と消費者を守る</div>
+      <div class="def-term"><span class="note-blank" data-answer="特定商取引法">クリックで正解</span></div>
+      <div class="def-desc">消費者の利益を保護し、商品などの流通を適正かつ円滑化するための法律。訪問販売・電話勧誘・マルチ商法・通信販売など、トラブルが起きやすい取引形態ごとにルールを定め、<strong>クーリング・オフ</strong>制度も規定する。</div>
+    </div>
+    <div class="def-box">
+      <div class="def-label">⑧ 迷惑メールを止める</div>
+      <div class="def-term"><span class="note-blank" data-answer="特定電子メール法">クリックで正解</span></div>
+      <div class="def-desc">広告や宣伝のために大量の電子メールを送信することを禁止するための法律。正式名は「特定電子メールの送信の適正化等に関する法律」。<strong>オプトイン方式</strong>(事前同意を得た相手にしか送ってはいけない)が原則。</div>
+    </div>
+  </div>
+
+  <div style="margin-top:18px;">
+    <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.15em; color:var(--accent-red); font-weight:700; margin-bottom:10px;">実際の事例 / CLICK TO EXPAND</div>
+
+    <div class="case-expander">
+      <div class="case-head" onclick="toggleCase(this)">
+        <span class="case-year">2024</span>
+        <span class="case-title">マッチングアプリ経由の投資詐欺(ロマンス詐欺)</span>
+        <span class="case-tag">特商法・刑法</span>
+        <span class="case-toggle">+</span>
+      </div>
+      <div class="case-body"><div class="case-content">
+        <p>警察庁統計で2024年の「SNS型投資・ロマンス詐欺」被害は<strong>1,200億円超</strong>。マッチングアプリで信頼関係を作ってから、偽の投資プラットフォームへ誘導する手口が急増。</p>
+        <p>「絶対に儲かる」「限定」「今すぐ」などの勧誘文言は、特定商取引法上の不当勧誘に該当しうるが、多くは特商法の規制外(相対個人間通信)。結果的に刑法の詐欺罪・電子計算機使用詐欺罪で立件される。</p>
+        <div class="case-meta">
+          <div class="case-meta-item"><strong>被害</strong>年間1,200億円超</div>
+          <div class="case-meta-item"><strong>主流年齢</strong>20〜40代が約7割</div>
+          <div class="case-meta-item"><strong>教訓</strong>高利回り+外部送金は警戒</div>
+        </div>
+        <div class="case-inline-quiz">
+          <div class="case-inline-quiz-q">「これはマルチ商法の勧誘と同じだから特商法でクーリング・オフできる」― 正しい?</div>
+          <div class="case-inline-opts">
+            <span class="case-inline-opt" onclick="caseQ(this,false)">正しい。20日以内に解除可能</span>
+            <span class="case-inline-opt" onclick="caseQ(this,true)">誤り。個人間のやり取り+暗号資産送金はクーリング・オフ対象外</span>
+          </div>
+          <div class="case-inline-fb">特商法のクーリング・オフは、事業者と消費者の契約・かつ対象取引形態に限られる。匿名個人間+海外送金は民事的回収も極めて困難。事前防御が唯一の対策。</div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 15. 【C】クーリング・オフシミュレーター ═════ -->
+<div class="slide" data-title="【C】クーリング・オフ判定">
+  <div class="eyebrow">INTERACTIVE · C / シミュレーター</div>
+  <h2 class="slide-title">そのクーリング・オフ、間に合う?</h2>
+  <p class="slide-subtitle">契約種別とあなたの経過日数で、クーリング・オフが有効かリアルタイム判定する。</p>
+
+  <div class="cool-sim">
+    <div class="cool-sim-title">◆ クーリング・オフ判定シミュレーター</div>
+    <div class="cool-controls">
+      <div class="cool-group">
+        <label>契約種別</label>
+        <select class="cool-select" id="coolType">
+          <option value="visit" data-days="8">訪問販売(自宅に営業が来た)</option>
+          <option value="phone" data-days="8">電話勧誘販売</option>
+          <option value="special" data-days="8">特定継続的役務提供(エステ・美容医療・学習塾)</option>
+          <option value="multi" data-days="20">連鎖販売取引(マルチ商法)</option>
+          <option value="mailorder" data-days="0">通信販売(ネット購入・カタログ)</option>
+          <option value="store" data-days="0">店舗での直接購入</option>
+        </select>
+      </div>
+      <div class="cool-group">
+        <label>契約からの経過日数</label>
+        <div class="cool-slider-val"><span id="coolDaysVal">0</span><span class="unit">日</span></div>
+        <input type="range" class="cool-range" id="coolDays" min="0" max="30" value="0" step="1">
+      </div>
+    </div>
+
+    <div class="cool-result">
+      <div class="cool-verdict" id="coolVerdict">まだ可能</div>
+      <div class="cool-detail" id="coolDetail">訪問販売は契約書面を受領した日から <strong>8日以内</strong> なら書面で解約できる。残り <strong>8日</strong>。</div>
+    </div>
+
+    <div class="cool-note" id="coolNote">
+      ⚠ クーリング・オフは「契約種別」が対象形態に該当することが前提。ネット通販は原則対象外(事業者側で自主返品ルールを設けていれば利用可能)。
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 16. 実習4 商取引用語 ═════ -->
+<div class="slide" data-title="実習4 商取引の用語">
+  <div class="eyebrow">PRACTICE 4 / 学習ノート 実習4</div>
+  <h2 class="slide-title">商取引に関する用語</h2>
+  <p class="slide-subtitle">クリックで判定。語群から当てはまる用語を選ぶ。</p>
+
+  <div class="practice-list">
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">(1)</span>
+      <div class="practice-text">
+        一定の期間内に無条件で消費者が解約できる制度。
+        <div class="practice-reason"><strong>エ. クーリング・オフ</strong>訪問販売8日、マルチ商法20日など取引類型ごとに期間が決まっている。</div>
+      </div>
+      <span class="practice-verdict" data-ok="true" data-label="エ. クーリング・オフ">?</span>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">(2)</span>
+      <div class="practice-text">
+        事業者が受信者から事前に同意を得ていない電子メールの送信を禁止する方式。
+        <div class="practice-reason"><strong>ウ. オプトイン方式</strong>「事前同意が必要」=送りたいなら許可を取ってから。イのオプトアウト(後から拒否)とは真逆の方式。</div>
+      </div>
+      <span class="practice-verdict" data-ok="true" data-label="ウ. オプトイン方式">?</span>
+    </div>
+  </div>
+
+  <div style="margin-top:16px; padding:16px 20px; background:var(--navy-bg); border-radius:6px; font-size:15px; line-height:1.8; color:var(--text-main); font-weight:500;">
+    <strong style="color:var(--navy-darkest);">語群:</strong>
+    ア. 二段階認証 / イ. オプトアウト方式 / ウ. オプトイン方式 / エ. クーリング・オフ / オ. 自動更新
+  </div>
+</div>
+
+<!-- ═════ 17. SECTION 4 DIVIDER ═════ -->
+<div class="slide section-divider" data-title="第4節 ネット上の権利と青少年保護">
+  <div class="section-number">SECTION · 04</div>
+  <h2 class="section-title-big">ネット上の権利と<br>青少年保護</h2>
+  <p class="section-tagline">― 発信の自由と、侵害から守られるべき人たち ―</p>
+</div>
+
+<!-- ═════ 18. 情報流通プラットフォーム対処法 + 青少年ネット環境整備法 ═════ -->
+<div class="slide" data-title="プラットフォーム対処法・青少年ネット法">
+  <div class="eyebrow">POINT 7-8 / 学習ノート ⑨⑩</div>
+  <h2 class="slide-title">プラットフォームと青少年を守る法</h2>
+  <p class="slide-subtitle">SNS時代に新設・改正された2つの法律。対処の迅速化と、未成年への配慮を柱とする。</p>
+
+  <div class="two-col">
+    <div class="def-box">
+      <div class="def-label">⑨ プロバイダ責任の明確化</div>
+      <div class="def-term"><span class="note-blank" data-answer="情報流通プラットフォーム対処法">クリックで正解</span></div>
+      <div class="def-desc">SNS等で誹謗中傷などによる権利侵害があった際の<strong>プロバイダの責任を明確化</strong>。2024年、旧「プロバイダ責任制限法」を改正・改称して成立。大規模事業者には削除申告への迅速な対応・削除基準の公表などが義務化された。</div>
+    </div>
+    <div class="def-box">
+      <div class="def-label">⑩ 青少年を守る</div>
+      <div class="def-term"><span class="note-blank" data-answer="青少年インターネット環境整備法">クリックで正解</span></div>
+      <div class="def-desc">青少年が安全に安心してインターネットを利用できるようにして、青少年の権利を守るための法律。スマートフォンのフィルタリングサービス提供義務、保護者への情報提供、関係事業者の協力などを定める。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 19. 【D】発信者特定タイムライン ═════ -->
+<div class="slide" data-title="【D】発信者特定タイムライン">
+  <div class="eyebrow">INTERACTIVE · D / 比較タイムライン</div>
+  <h2 class="slide-title">誹謗中傷 → 発信者特定までの道のり</h2>
+  <p class="slide-subtitle">2024年改正で何が変わったか。旧法(左)と新法・非訟手続(右)の6ステップを比較。各ステップをクリックで詳細展開。</p>
+
+  <div class="dm-timeline">
+    <div class="dm-compare-head">
+      <div class="dm-head-step">STEP</div>
+      <div class="dm-head-old">旧法 / プロバイダ責任制限法(〜2022)</div>
+      <div class="dm-head-new">新法 / 情報流通プラットフォーム対処法(2024〜)</div>
+    </div>
+
+    <div class="dm-step">
+      <div class="dm-step-num"><small>STEP</small>1</div>
+      <div class="dm-cell dm-cell-old" onclick="this.classList.toggle('open')">
+        <div class="dm-cell-head">被害投稿の発見・証拠保全</div>
+        <div>スクショ、URL、投稿日時を手作業で保存
+        <div class="dm-cell-meta">所要:即日</div></div>
+        <div class="dm-cell-detail">保全不足で後の手続が止まる失敗が多発。URLと画面全体の両方が必要。</div>
+      </div>
+      <div class="dm-cell dm-cell-new" onclick="this.classList.toggle('open')">
+        <div class="dm-cell-head">被害投稿の発見・証拠保全</div>
+        <div>大規模事業者には削除申告フォームの整備義務
+        <div class="dm-cell-meta">所要:即日</div></div>
+        <div class="dm-cell-detail">削除基準が公表されるため、該当するかの判断が本人にもしやすくなった。</div>
+      </div>
+    </div>
+
+    <div class="dm-step">
+      <div class="dm-step-num"><small>STEP</small>2</div>
+      <div class="dm-cell dm-cell-old" onclick="this.classList.toggle('open')">
+        <div class="dm-cell-head">コンテンツプロバイダに開示請求(IP)</div>
+        <div>任意で応じない場合は仮処分申立
+        <div class="dm-cell-meta">所要:2〜3ヶ月 / 費用:数十万円</div></div>
+        <div class="dm-cell-detail">仮処分申立に弁護士費用がかかる。証拠不十分で却下されるケース多数。</div>
+      </div>
+      <div class="dm-cell dm-cell-new" onclick="this.classList.toggle('open')">
+        <div class="dm-cell-head">削除申告 → 大手SNSは迅速対応義務</div>
+        <div>対象プラットフォームは削除判断を透明化
+        <div class="dm-cell-meta">所要:数日〜2週間</div></div>
+        <div class="dm-cell-detail">削除基準の公表・申告対応窓口整備で、削除自体は大幅スピードアップ。</div>
+      </div>
+    </div>
+
+    <div class="dm-step">
+      <div class="dm-step-num"><small>STEP</small>3</div>
+      <div class="dm-cell dm-cell-old" onclick="this.classList.toggle('open')">
+        <div class="dm-cell-head">アクセスプロバイダ特定</div>
+        <div>IPからプロバイダを割り出し、ログ保存要請
+        <div class="dm-cell-meta">所要:ログ保存は3〜6ヶ月</div></div>
+        <div class="dm-cell-detail">ログ保存期間を過ぎると情報が消えるため、時間との戦い。</div>
+      </div>
+      <div class="dm-cell dm-cell-new" onclick="this.classList.toggle('open')">
+        <div class="dm-cell-head">発信者情報開示命令(非訟手続)</div>
+        <div>裁判所の新・非訟手続で1件の決定で進行
+        <div class="dm-cell-meta">所要:3〜6ヶ月合計</div></div>
+        <div class="dm-cell-detail">2022年改正プロ責法で新設された「開示命令事件」。旧法の2段階裁判を1手続に一本化。</div>
+      </div>
+    </div>
+
+    <div class="dm-step">
+      <div class="dm-step-num"><small>STEP</small>4</div>
+      <div class="dm-cell dm-cell-old" onclick="this.classList.toggle('open')">
+        <div class="dm-cell-head">契約者情報の開示訴訟</div>
+        <div>アクセスプロバイダを被告に別訴を提起
+        <div class="dm-cell-meta">所要:4〜6ヶ月 / 費用:数十万円</div></div>
+        <div class="dm-cell-detail">ここでも弁護士費用+印紙代が必要。勝っても相手の賠償能力次第。</div>
+      </div>
+      <div class="dm-cell dm-cell-new" onclick="this.classList.toggle('open')">
+        <div class="dm-cell-head">(STEP 3 に統合)</div>
+        <div>非訟手続の1プロセスで契約者情報まで取得
+        <div class="dm-cell-meta">所要:上記に含む</div></div>
+        <div class="dm-cell-detail">訴訟を2回やる手間が不要になり、被害者負担が大幅減。</div>
+      </div>
+    </div>
+
+    <div class="dm-step">
+      <div class="dm-step-num"><small>STEP</small>5</div>
+      <div class="dm-cell dm-cell-old" onclick="this.classList.toggle('open')">
+        <div class="dm-cell-head">発信者特定完了</div>
+        <div>氏名・住所を把握
+        <div class="dm-cell-meta">所要:累計10〜12ヶ月</div></div>
+        <div class="dm-cell-detail">ここまでで1年近く。木村花さん事件では社会の機運を変えるきっかけに。</div>
+      </div>
+      <div class="dm-cell dm-cell-new" onclick="this.classList.toggle('open')">
+        <div class="dm-cell-head">発信者特定完了</div>
+        <div>氏名・住所を把握
+        <div class="dm-cell-meta">所要:累計4〜7ヶ月</div></div>
+        <div class="dm-cell-detail">時間は半分以下に短縮。精神的負担も軽減。</div>
+      </div>
+    </div>
+
+    <div class="dm-step">
+      <div class="dm-step-num"><small>STEP</small>6</div>
+      <div class="dm-cell dm-cell-old" onclick="this.classList.toggle('open')">
+        <div class="dm-cell-head">民事損害賠償請求 / 刑事告訴</div>
+        <div>名誉毀損罪(刑法230条)・侮辱罪
+        <div class="dm-cell-meta">法定刑:侮辱罪 懲役1年・罰金30万円以下(2022年厳罰化)</div></div>
+        <div class="dm-cell-detail">2022年刑法改正で侮辱罪の法定刑が大幅引き上げ。時効も1年→3年へ。</div>
+      </div>
+      <div class="dm-cell dm-cell-new" onclick="this.classList.toggle('open')">
+        <div class="dm-cell-head">民事損害賠償請求 / 刑事告訴</div>
+        <div>厳罰化された侮辱罪+迅速特定で抑止効果
+        <div class="dm-cell-meta">損害額:50万〜200万円(相場)</div></div>
+        <div class="dm-cell-detail">発信者情報開示が早くなったことで、泣き寝入りが減少しつつある。</div>
+      </div>
+    </div>
+
+    <div class="dm-summary">
+      <div class="dm-summary-box old">
+        <div class="dm-summary-label">旧法ルート 総計</div>
+        <div class="dm-summary-val">約10〜12ヶ月</div>
+        <div class="dm-summary-sub">費用 60万〜150万円 / 2回の訴訟</div>
+      </div>
+      <div class="dm-summary-box new">
+        <div class="dm-summary-label">新法ルート 総計</div>
+        <div class="dm-summary-val">約4〜7ヶ月</div>
+        <div class="dm-summary-sub">費用 30万〜80万円 / 非訟1手続に一本化</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 20. 実習5 青少年ネット環境整備法 空欄 ═════ -->
+<div class="slide" data-title="実習5 青少年法の基本理念">
+  <div class="eyebrow">PRACTICE 5 / 学習ノート 実習5</div>
+  <h2 class="slide-title">青少年インターネット環境整備法の基本理念</h2>
+  <p class="slide-subtitle">空欄をクリックで正解を表示。条文の要旨を把握する。</p>
+
+  <div style="background:var(--navy-bg); padding:24px 28px; border-radius:8px; line-height:2.1; font-size:15px; color:var(--text-main); margin-top:10px;">
+    <p style="margin-bottom:14px;">青少年インターネット環境整備法の基本理念は、以下の三つである。</p>
+    <ul style="list-style:none; padding-left:0;">
+      <li style="margin-bottom:14px; padding-left:18px; border-left:3px solid var(--accent-red);">
+        青少年自らが、<span class="note-blank" data-answer="主体的">①</span>に情報通信機器を使い、インターネットにおいて流通する情報を適切に取捨選択して利用するとともに、適切にインターネットによる情報<span class="note-blank" data-answer="発信">②</span>を行う能力を習得すること。
+      </li>
+      <li style="margin-bottom:14px; padding-left:18px; border-left:3px solid var(--accent-red);">
+        青少年がインターネットを利用して<span class="note-blank" data-answer="有害">③</span>情報の閲覧をする機会をできるだけ少なくすること。
+      </li>
+      <li style="padding-left:18px; border-left:3px solid var(--accent-red);">
+        自由な<span class="note-blank" data-answer="表現">④</span>活動の重要性と多様な<span class="note-blank" data-answer="表現">④</span>活動を行うことができるインターネットの特性に配慮し、民間における自主的かつ<span class="note-blank" data-answer="主体的">①</span>な取組が大きな役割を担い、<span class="note-blank" data-answer="国">⑤</span>や地方公共団体はこれを尊重すること。
+      </li>
+    </ul>
+  </div>
+  <p style="margin-top:12px; font-size:12px; color:var(--text-sub);">※ ①は2箇所、④は2箇所に出てくる(同じ語が入る)。</p>
+</div>
+
+<!-- ═════ 21. 【F】情報モラル vs シティズンシップ ═════ -->
+<div class="slide" data-title="【F】モラル vs シティズンシップ">
+  <div class="eyebrow">INTERACTIVE · F / 包含関係</div>
+  <h2 class="slide-title">情報モラル と デジタル・シティズンシップ</h2>
+  <p class="slide-subtitle">似ているようで射程が違う。2つの概念の包含関係を動的に可視化する。</p>
+
+  <div class="scope-wrap">
+    <div>
+      <div class="scope-diagram show-moral" id="scopeDiagram">
+        <div class="scope-circle citizen">
+          <span class="scope-circle-label">デジタル・シティズンシップ</span>
+        </div>
+        <div class="scope-circle moral">
+          <span class="scope-circle-label">情報モラル</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="scope-toggle">
+        <button class="active" onclick="switchScope('moral', this)">情報モラル視点</button>
+        <button onclick="switchScope('citizen', this)">シティズンシップ視点</button>
+      </div>
+
+      <div id="scopeMoral">
+        <div class="scope-tag">NARROWER · 狭義</div>
+        <h4>情報モラル</h4>
+        <div class="scope-desc">情報社会で <strong>トラブルを起こさない・被害にあわない</strong> ための基礎的な素養。「守る」方向の行動規範。</div>
+        <div style="font-size:12.5px; color:var(--text-sub); margin-bottom:10px;">以下の行為は「モラル」の範疇か?クリックで判定。</div>
+        <div class="scope-chiplist">
+          <span class="scope-chip" data-kind="moral" onclick="pickScope(this, true)">パスワードを使い回さない</span>
+          <span class="scope-chip" data-kind="moral" onclick="pickScope(this, true)">無断転載をしない</span>
+          <span class="scope-chip" data-kind="moral" onclick="pickScope(this, true)">フィッシングを見破る</span>
+        </div>
+        <div class="scope-verdict">情報モラルは「やってはいけないこと」「騙されない方法」を中心に扱う。教材上は小中学校の情報教育の中心。</div>
+      </div>
+
+      <div id="scopeCitizen" style="display:none;">
+        <div class="scope-tag">BROADER · 広義</div>
+        <h4>デジタル・シティズンシップ</h4>
+        <div class="scope-desc">情報技術の利用を通じて <strong>社会に積極的に関与し、参加する能力</strong>。モラルを包含しつつ、参加・創造・発信まで射程を広げた概念。</div>
+        <div style="font-size:12.5px; color:var(--text-sub); margin-bottom:10px;">これらは「モラル」だけでは語れない。該当するものを選ぶ。</div>
+        <div class="scope-chiplist">
+          <span class="scope-chip" data-kind="citizen" onclick="pickScope(this, true)">オンライン署名・請願に参加する</span>
+          <span class="scope-chip" data-kind="citizen" onclick="pickScope(this, true)">選挙期間中のSNS情報発信</span>
+          <span class="scope-chip" data-kind="citizen" onclick="pickScope(this, true)">誤情報を訂正する発信をする</span>
+          <span class="scope-chip" data-kind="citizen" onclick="pickScope(this, true)">パブリックコメントに意見提出</span>
+        </div>
+        <div class="scope-verdict">デジタル・シティズンシップは「参加して社会を良くする」能動的要素を含む。情報モラルを包含しつつ、一段上の概念。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 22. 実習6 デジタル・シティズンシップ ═════ -->
+<div class="slide" data-title="実習6 デジタル・シティズンシップ">
+  <div class="eyebrow">PRACTICE 6 / 学習ノート 実習6</div>
+  <h2 class="slide-title">デジタル・シティズンシップの説明として最も適切なものは?</h2>
+
+  <div class="quiz-container">
+    <div class="quiz-question">
+      <span class="quiz-question-num">QUESTION · 実習6</span>
+      次の中からデジタル・シティズンシップの説明として最も適切なものを一つ選びなさい。
+    </div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="answerQuiz(this, false)">
+        <span class="quiz-option-letter">ア</span>
+        <span>個人情報を適切に使いこなすための基礎的な素養。</span>
+      </div>
+      <div class="quiz-option" onclick="answerQuiz(this, false)">
+        <span class="quiz-option-letter">イ</span>
+        <span>情報社会で適正な活動を行うための基になる考え方と態度。</span>
+      </div>
+      <div class="quiz-option" onclick="answerQuiz(this, true)">
+        <span class="quiz-option-letter">ウ</span>
+        <span>情報技術の利用を通じて、社会に積極的に関与し、参加する能力。</span>
+      </div>
+      <div class="quiz-option" onclick="answerQuiz(this, false)">
+        <span class="quiz-option-letter">エ</span>
+        <span>情報モラルよりも限定された狭義の概念。</span>
+      </div>
+    </div>
+    <div class="quiz-feedback">
+      <strong>正解:ウ</strong><br>
+      デジタル・シティズンシップは「使って参加する」能動的能力。アは個人情報リテラシー、イは情報モラルの定義に近い。エは逆で、デジタル・シティズンシップは情報モラルより <strong>広い</strong> 概念。
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 23. 【E】実例ギャラリー(総合) ═════ -->
+<div class="slide" data-title="【E】実例ギャラリー(総合)">
+  <div class="eyebrow">INTERACTIVE · E / 若者実例 × 法律クイズ</div>
+  <h2 class="slide-title">身近な事例で法律を当てる</h2>
+  <p class="slide-subtitle">各カードを展開し、適用される代表的な法律を即時クイズで当てる。境界事例もあるので丁寧に読む。</p>
+
+  <div class="case-expander">
+    <div class="case-head" onclick="toggleCase(this)">
+      <span class="case-year">2024</span>
+      <span class="case-title">友達に「LINEの認証番号送って」と言われ送信した</span>
+      <span class="case-tag">SNS乗っ取り</span>
+      <span class="case-toggle">+</span>
+    </div>
+    <div class="case-body"><div class="case-content">
+      <p>友人を装った第三者が2段階認証の突破コードを聞き出すパターン。<strong>送った自分側には刑事責任はない</strong>が、以降のアカウントを使った詐欺に加担する結果となる。被害額は年間数百万円規模で警察庁が注意喚起中。</p>
+      <p>送られたコードを使って他人のLINEにログインする行為は、言うまでもなく <strong>不正アクセス禁止法違反</strong>。</p>
+      <div class="case-inline-quiz">
+        <div class="case-inline-quiz-q">認証コードを入手してLINEにログインした側の行為は?</div>
+        <div class="case-inline-opts">
+          <span class="case-inline-opt" onclick="caseQ(this,false)">名誉毀損罪</span>
+          <span class="case-inline-opt" onclick="caseQ(this,true)">不正アクセス禁止法違反</span>
+          <span class="case-inline-opt" onclick="caseQ(this,false)">個人情報保護法違反のみ</span>
+        </div>
+        <div class="case-inline-fb">「IDとパスワードで入れるはずのサービスに、本人の許可なく入る」=不正アクセス禁止法2条・3条違反(1年以下懲役または50万円以下罰金)。</div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="case-expander">
+    <div class="case-head" onclick="toggleCase(this)">
+      <span class="case-year">2024</span>
+      <span class="case-title">SNSの著名人なりすまし投資広告</span>
+      <span class="case-tag">複合違反</span>
+      <span class="case-toggle">+</span>
+    </div>
+    <div class="case-body"><div class="case-content">
+      <p>前澤友作氏・堀江貴文氏らの顔写真を無断使用した投資勧誘広告がMeta(Facebook/Instagram)で大量配信された問題。被害額は<strong>2024年だけで約1,000億円</strong>。Metaは当初対応が鈍く、社会問題化した。</p>
+      <p>2024年の情報流通プラットフォーム対処法成立の直接的きっかけの一つ。広告配信プラットフォームに削除義務と透明化を迫る流れを作った。</p>
+      <div class="case-inline-quiz">
+        <div class="case-inline-quiz-q">この「なりすまし広告」自体で成立しうる罪は?(複数該当)</div>
+        <div class="case-inline-opts">
+          <span class="case-inline-opt" onclick="caseQ(this,true)">詐欺罪+著作権・肖像権侵害</span>
+          <span class="case-inline-opt" onclick="caseQ(this,false)">刑法上の罪はない(民事のみ)</span>
+          <span class="case-inline-opt" onclick="caseQ(this,false)">名誉毀損罪のみ</span>
+        </div>
+        <div class="case-inline-fb">詐欺罪(刑法246条)、肖像権・パブリシティ権侵害(民法)、著作権法違反が並行。プラットフォーム側の責任は情報流通プラットフォーム対処法で整理される。</div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="case-expander">
+    <div class="case-head" onclick="toggleCase(this)">
+      <span class="case-year">2023</span>
+      <span class="case-title">飲食店でのバイトテロ投稿が拡散</span>
+      <span class="case-tag">業務妨害</span>
+      <span class="case-toggle">+</span>
+    </div>
+    <div class="case-body"><div class="case-content">
+      <p>回転寿司チェーンや大手コンビニで、アルバイトによる不衛生行為の動画がSNSで拡散。企業の株価は数百億円規模で下落。投稿者には損害賠償請求(一部では1,000万円超の賠償請求)+刑事告訴が相次いだ。</p>
+      <p>単なる「軽い悪ふざけ」と考える若者がいまだ多いが、実際には <strong>偽計業務妨害罪(刑法233条)</strong> に該当し、既遂となれば3年以下の懲役または50万円以下の罰金。SNS投稿で前歴ありの状態になる。</p>
+      <div class="case-inline-quiz">
+        <div class="case-inline-quiz-q">この行為が問われる主な罪は?</div>
+        <div class="case-inline-opts">
+          <span class="case-inline-opt" onclick="caseQ(this,false)">不正アクセス禁止法違反</span>
+          <span class="case-inline-opt" onclick="caseQ(this,true)">偽計業務妨害罪+民事の損害賠償責任</span>
+          <span class="case-inline-opt" onclick="caseQ(this,false)">電磁的記録不正作出罪</span>
+        </div>
+        <div class="case-inline-fb">偽りの情報で業務を妨害すれば偽計業務妨害罪。動画を実際に投稿(拡散)したことが「偽計」に該当する。デジタル・シティズンシップ教育で想定される典型的負例。</div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="case-expander">
+    <div class="case-head" onclick="toggleCase(this)">
+      <span class="case-year">2024</span>
+      <span class="case-title">高校生による偽造電子チケットの転売</span>
+      <span class="case-tag">電磁的記録</span>
+      <span class="case-toggle">+</span>
+    </div>
+    <div class="case-body"><div class="case-content">
+      <p>人気アーティストのライブで、スマホに表示する電子チケット画像を加工ソフトで偽造・転売した高校生グループが摘発。金額は1件あたり5〜10万円、総額は100万円を超える事案。</p>
+      <p>問われたのは <strong>電磁的記録不正作出・供用罪(刑法161条の2)</strong> と <strong>チケット不正転売禁止法違反</strong>。加工ソフトの使用自体は違法ではないが、「他人の事務処理を誤らせる目的」が明確にあるため犯罪成立。</p>
+      <div class="case-inline-quiz">
+        <div class="case-inline-quiz-q">偽造電子チケット作成の罪は、次のうちどれ?</div>
+        <div class="case-inline-opts">
+          <span class="case-inline-opt" onclick="caseQ(this,true)">電磁的記録不正作出罪</span>
+          <span class="case-inline-opt" onclick="caseQ(this,false)">不正アクセス禁止法違反</span>
+          <span class="case-inline-opt" onclick="caseQ(this,false)">特定商取引法違反</span>
+        </div>
+        <div class="case-inline-fb">事務処理を誤らせる目的で電磁的記録を作ると電磁的記録不正作出罪(5年以下懲役または50万円以下罰金)。供用(使用・販売)も処罰対象。</div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="case-expander">
+    <div class="case-head" onclick="toggleCase(this)">
+      <span class="case-year">2024</span>
+      <span class="case-title">PayPay送金済みスクショの偽造送付</span>
+      <span class="case-tag">詐欺</span>
+      <span class="case-toggle">+</span>
+    </div>
+    <div class="case-body"><div class="case-content">
+      <p>フリマアプリやDMでの個人間取引で、画像編集アプリで「PayPay送金完了」のスクリーンショットを偽造し相手を信用させて商品を受け取る手口。被害相談が2024年に急増。</p>
+      <p>偽造スクショ作成=<strong>電磁的記録不正作出罪</strong>、それを送って商品を得た=<strong>詐欺罪(刑法246条)</strong>。SNSネイティブ世代が「ちょっとした編集」のつもりでやって摘発される典型例。</p>
+      <div class="case-inline-quiz">
+        <div class="case-inline-quiz-q">スクショ偽造+送付の行為全体で成立する罪は?</div>
+        <div class="case-inline-opts">
+          <span class="case-inline-opt" onclick="caseQ(this,true)">詐欺罪+電磁的記録不正作出罪</span>
+          <span class="case-inline-opt" onclick="caseQ(this,false)">特定電子メール法違反</span>
+          <span class="case-inline-opt" onclick="caseQ(this,false)">個人情報保護法違反のみ</span>
+        </div>
+        <div class="case-inline-fb">偽造の時点で電磁的記録不正作出、送って商品をだまし取れば詐欺罪が別途成立(併合罪)。手軽さに反して刑罰は重い。</div>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- ═════ 24. 学習ノート答え合わせ ═════ -->
+<div class="slide" data-title="学習ノート 答え合わせ">
+  <div class="eyebrow">ANSWERS / 学習ノート ①〜⑩</div>
+  <h2 class="slide-title">学習ノート 答え合わせ</h2>
+  <p class="slide-subtitle">行ごとにクリックで個別表示。下のボタンで一括表示・一括非表示。</p>
+
+  <div class="answers-grid">
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">①</span>
+      <span class="answer-text">国の最高法規</span>
+      <span class="answer-reveal" data-ans="日本国憲法">クリック</span>
+    </div>
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">②</span>
+      <span class="answer-text">憲法13条から / 新しい権利</span>
+      <span class="answer-reveal" data-ans="プライバシー権">クリック</span>
+    </div>
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">③</span>
+      <span class="answer-text">憲法13条から / 新しい権利</span>
+      <span class="answer-reveal" data-ans="知る権利">クリック</span>
+    </div>
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">④</span>
+      <span class="answer-text">権限なきログインを禁止</span>
+      <span class="answer-reveal" data-ans="不正アクセス禁止法">クリック</span>
+    </div>
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">⑤</span>
+      <span class="answer-text">政策の基本理念を定める</span>
+      <span class="answer-reveal" data-ans="サイバーセキュリティ基本法">クリック</span>
+    </div>
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">⑥</span>
+      <span class="answer-text">人の知覚で認識できない方式の記録</span>
+      <span class="answer-reveal" data-ans="電磁的記録">クリック</span>
+    </div>
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">⑦</span>
+      <span class="answer-text">流通を適正化 / クーリング・オフ</span>
+      <span class="answer-reveal" data-ans="特定商取引法">クリック</span>
+    </div>
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">⑧</span>
+      <span class="answer-text">大量送信の規制 / オプトイン</span>
+      <span class="answer-reveal" data-ans="特定電子メール法">クリック</span>
+    </div>
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">⑨</span>
+      <span class="answer-text">プロバイダの責任を明確化</span>
+      <span class="answer-reveal" data-ans="情報流通プラットフォーム対処法">クリック</span>
+    </div>
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">⑩</span>
+      <span class="answer-text">青少年の権利を守る</span>
+      <span class="answer-reveal" data-ans="青少年インターネット環境整備法">クリック</span>
+    </div>
+  </div>
+
+  <div style="margin-top:18px; display:flex; gap:10px; justify-content:center;">
+    <button onclick="revealAll()" style="background:var(--navy-darkest); color:white; border:none; padding:10px 26px; font-family:'Noto Serif JP',serif; font-weight:600; border-radius:30px; cursor:pointer; font-size:13px;">すべて一括表示</button>
+    <button onclick="hideAll()" style="background:transparent; color:var(--navy-darkest); border:2px solid var(--navy); padding:10px 26px; font-family:'Noto Serif JP',serif; font-weight:600; border-radius:30px; cursor:pointer; font-size:13px;">すべて隠す</button>
+  </div>
+</div>
+
+<!-- ═════ 25. まとめツリー ═════ -->
+<div class="slide" data-title="まとめ">
+  <div class="eyebrow">SUMMARY / 4分野の俯瞰</div>
+  <h2 class="slide-title">情報に関する法規 ― 全体像</h2>
+  <p class="slide-subtitle">4分野・10法律を1枚に俯瞰する。試験・共通テスト前の最終確認に。</p>
+
+  <div class="summary-tree">
+    <div class="tree-center">情報に関する法規</div>
+  </div>
+  <div class="tree-branches">
+    <div class="tree-branch">
+      <h4>01 法の体系・権利</h4>
+      <ul>
+        <li>日本国憲法(最高法規)</li>
+        <li>プライバシー権</li>
+        <li>知る権利</li>
+        <li>法律→政令→条例の階層</li>
+      </ul>
+    </div>
+    <div class="tree-branch">
+      <h4>02 情報犯罪</h4>
+      <ul>
+        <li>不正アクセス禁止法</li>
+        <li>サイバーセキュリティ基本法</li>
+        <li>刑法の電磁的記録対象犯罪</li>
+        <li>不正指令電磁的記録作成罪</li>
+      </ul>
+    </div>
+    <div class="tree-branch">
+      <h4>03 商取引・消費者</h4>
+      <ul>
+        <li>特定商取引法(クーリング・オフ)</li>
+        <li>特定電子メール法(オプトイン)</li>
+        <li>電子消費者契約法</li>
+        <li>個人情報保護法</li>
+      </ul>
+    </div>
+    <div class="tree-branch">
+      <h4>04 ネット権利・青少年</h4>
+      <ul>
+        <li>情報流通プラットフォーム対処法</li>
+        <li>青少年インターネット環境整備法</li>
+        <li>情報モラル</li>
+        <li>デジタル・シティズンシップ</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 26. 復習チャレンジ ═════ -->
+<div class="slide" data-title="復習チャレンジ">
+  <div class="eyebrow">REVIEW / ランダム10問</div>
+  <h2 class="slide-title">復習チャレンジ</h2>
+
+  <div class="review-container">
+    <div id="reviewStart">
+      <p class="review-intro">この単元の12問プールからランダムに10問出題する。<br>即時採点で、自分の理解度を可視化する。</p>
+      <button class="review-start-btn" onclick="startReview()">▶ 開始する</button>
+    </div>
+    <div id="reviewQuiz" class="review-q-area">
+      <div class="review-progress" id="reviewProgress">QUESTION 1 / 10</div>
+      <div class="quiz-container" style="margin:0;">
+        <div class="quiz-question" id="reviewQText"></div>
+        <div class="quiz-options" id="reviewQOpts"></div>
+      </div>
+    </div>
+    <div id="reviewDone" class="review-q-area" style="text-align:center;">
+      <div style="font-family:'JetBrains Mono',monospace; color:var(--navy); font-size:12px; letter-spacing:0.2em; margin-bottom:12px;">RESULT</div>
+      <div class="review-result" id="reviewScore">0 / 10</div>
+      <div class="review-result-sub" id="reviewComment"></div>
+      <button class="review-retry-btn" onclick="startReview()">もう一度</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 27. END CARD ═════ -->
+<div class="slide title-slide" data-title="完了">
+  <div class="title-label">END OF CHAPTER · 06</div>
+  <h1 class="title-main" style="font-size: clamp(40px, 6vw, 80px);">お疲れさま<br>でした</h1>
+  <p class="title-sub">情報社会を支える法の輪郭を、条文と実例でたどった。</p>
+  <div class="title-meta">
+    <div class="title-meta-item"><strong>COVERED</strong>学習ノート ①〜⑩ + 実習 1〜6</div>
+    <div class="title-meta-item"><strong>INTERACTIONS</strong>A・B・C・D・E・F(6種)</div>
+  </div>
+</div>
+
+</div>
+
+<div class="bottombar">
+  <div class="bottombar-nav">
+    <button class="nav-btn" id="prevBtn" onclick="goToSlide(currentSlide - 1)" title="前へ">◀</button>
+    <button class="nav-btn" id="nextBtn" onclick="goToSlide(currentSlide + 1)" title="次へ">▶</button>
+  </div>
+  <div class="slide-title-small" id="slideTitleSmall">タイトル</div>
+  <span class="keyboard-hint">← → / SPACE / F (全画面)</span>
+  <div class="page-indicator" id="pageIndicator">01 / XX</div>
+</div>
+
+<script>
+// ══════ NAVIGATION ══════
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+let currentSlide = 0;
+
+function goToSlide(n) {
+  if (n < 0 || n >= totalSlides) return;
+  slides[currentSlide].classList.remove('active');
+  currentSlide = n;
+  slides[currentSlide].classList.add('active');
+  slides[currentSlide].scrollTop = 0;
+  updateUI();
+}
+function updateUI() {
+  const pct = ((currentSlide + 1) / totalSlides) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('pageIndicator').textContent =
+    String(currentSlide + 1).padStart(2, '0') + ' / ' + String(totalSlides).padStart(2, '0');
+  document.getElementById('slideTitleSmall').textContent =
+    slides[currentSlide].dataset.title || '';
+  document.getElementById('prevBtn').disabled = currentSlide === 0;
+  document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+  updateMenuActive();
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('menuPanel').classList.contains('open')) {
+      closeMenu();
+      return;
+    }
+  }
+  if (document.getElementById('menuPanel').classList.contains('open')) return;
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+    e.preventDefault(); goToSlide(currentSlide + 1);
+  } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+    e.preventDefault(); goToSlide(currentSlide - 1);
+  } else if (e.key === 'Home') { goToSlide(0); }
+  else if (e.key === 'End') { goToSlide(totalSlides - 1); }
+  else if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); }
+  else if (e.key === 'm' || e.key === 'M') { openMenu(); }
+});
+let touchStartX = 0, touchStartY = 0, touchStartT = 0;
+document.addEventListener('touchstart', (e) => {
+  if (e.touches.length !== 1) return;
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+  touchStartT = Date.now();
+}, { passive: true });
+document.addEventListener('touchend', (e) => {
+  if (e.changedTouches.length !== 1) return;
+  // ignore swipe inside menu panel (so the menu can scroll)
+  const menuPanel = document.getElementById('menuPanel');
+  if (menuPanel && menuPanel.classList.contains('open')) return;
+  // ignore if tap ended on a button (let click handle it)
+  const target = e.target;
+  if (target && target.closest && target.closest('button, .nav-btn, input, select, a')) return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  const dt = Date.now() - touchStartT;
+  // count as swipe when:
+  //  - horizontal distance > 40px
+  //  - horizontal > vertical (not a scroll)
+  //  - swipe is reasonably quick (<800ms) — long drags are ignored
+  if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) && dt < 800) {
+    if (dx < 0) goToSlide(currentSlide + 1);
+    else goToSlide(currentSlide - 1);
+  }
+}, { passive: true });
+function toggleFullscreen() {
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+  else document.exitFullscreen().catch(() => {});
+}
+updateUI();
+
+// ══════ NOTE BLANK ══════
+document.querySelectorAll('.note-blank').forEach(b => {
+  const initial = b.textContent.trim();
+  const isPlaceholder = /^[①②③④⑤⑥⑦⑧⑨⑩]$/.test(initial);
+  if (isPlaceholder) b.dataset.placeholder = initial;
+  b.addEventListener('click', () => {
+    if (b.classList.contains('reveal')) {
+      b.classList.remove('reveal');
+      b.textContent = isPlaceholder ? b.dataset.placeholder : 'クリックで正解';
+    } else {
+      b.classList.add('reveal');
+      b.textContent = b.dataset.answer;
+    }
+  });
+});
+
+// ══════ CASE EXPANDER ══════
+function toggleCase(headEl) { headEl.parentElement.classList.toggle('open'); }
+
+// ══════ CASE INLINE QUIZ ══════
+function caseQ(el, isCorrect) {
+  const group = el.parentElement;
+  const opts = group.querySelectorAll('.case-inline-opt');
+  opts.forEach(o => { o.style.pointerEvents = 'none'; });
+  if (isCorrect) {
+    el.classList.add('correct');
+  } else {
+    el.classList.add('wrong');
+    opts.forEach(o => {
+      if (o.onclick && o.onclick.toString().includes('true')) o.classList.add('correct');
+    });
+  }
+  const fb = el.closest('.case-inline-quiz').querySelector('.case-inline-fb');
+  if (fb) fb.classList.add('show');
+}
+
+// ══════ QUIZ CONTAINER ══════
+function answerQuiz(el, isCorrect) {
+  const options = el.parentElement.querySelectorAll('.quiz-option');
+  options.forEach(o => { o.style.pointerEvents = 'none'; });
+  if (isCorrect) {
+    el.classList.add('correct');
+  } else {
+    el.classList.add('incorrect');
+    options.forEach(o => {
+      if (o.onclick && o.onclick.toString().includes('true')) o.classList.add('correct');
+    });
+  }
+  const fb = el.closest('.quiz-container').querySelector('.quiz-feedback');
+  if (fb) fb.classList.add('show');
+}
+
+// ══════ PRACTICE LIST ══════
+function revealPractice(item) {
+  const verdict = item.querySelector('.practice-verdict');
+  const ok = verdict.dataset.ok === 'true';
+  item.classList.add('revealed');
+  item.classList.add(ok ? 'ok' : 'ng');
+  if (verdict.dataset.label) {
+    verdict.textContent = verdict.dataset.label;
+  } else {
+    verdict.textContent = ok ? '○' : '×';
+  }
+}
+
+// ══════ ANSWERS GRID ══════
+function revealAnswer(row) {
+  const reveal = row.querySelector('.answer-reveal');
+  if (row.classList.contains('revealed')) {
+    row.classList.remove('revealed');
+    reveal.textContent = 'クリック';
+  } else {
+    row.classList.add('revealed');
+    reveal.textContent = reveal.dataset.ans;
+  }
+}
+function revealAll() {
+  document.querySelectorAll('.answer-row').forEach(r => {
+    r.classList.add('revealed');
+    const reveal = r.querySelector('.answer-reveal');
+    reveal.textContent = reveal.dataset.ans;
+  });
+}
+function hideAll() {
+  document.querySelectorAll('.answer-row').forEach(r => {
+    r.classList.remove('revealed');
+    r.querySelector('.answer-reveal').textContent = 'クリック';
+  });
+}
+
+// ══════ PYRAMID (実習1) ══════
+function focusPyr(n) {
+  // just a visual hover — choices below are the real interaction
+}
+function pickPyr(opt, isCorrect, reason) {
+  const group = opt.parentElement;
+  const target = group.dataset.target;
+  group.querySelectorAll('.pyramid-opt').forEach(o => { o.classList.add('disabled'); });
+  if (isCorrect) {
+    opt.classList.add('correct');
+    // fill the pyramid tier
+    const tier = document.getElementById('pyrTier' + target);
+    if (tier) {
+      tier.classList.add('filled-' + (target === '1' ? 'ho' : target === '2' ? 'sei' : 'jo'));
+      const label = tier.querySelector('text');
+      if (label) {
+        const answers = {'1':'法律', '2':'政令・省令', '3':'条例'};
+        label.textContent = answers[target];
+        label.setAttribute('fill', 'white');
+      }
+    }
+  } else {
+    opt.classList.add('wrong');
+    // reopen for retry
+    setTimeout(() => {
+      group.querySelectorAll('.pyramid-opt').forEach(o => {
+        if (!o.classList.contains('correct')) {
+          o.classList.remove('disabled', 'wrong');
+        }
+      });
+    }, 1600);
+  }
+}
+
+// ══════ 【A】PHISHING DETECTOR ══════
+const phishTotals = [4, 4, 3]; // hits per DM
+let phishFound = new Set();
+
+function switchPhish(idx, btn) {
+  document.querySelectorAll('.phish-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.phish-msg').forEach(m => m.classList.remove('active'));
+  document.querySelector('.phish-msg[data-dm="' + idx + '"]').classList.add('active');
+  document.querySelectorAll('.phish-hints').forEach(h => h.style.display = 'none');
+  document.getElementById('phishHints' + idx).style.display = 'block';
+}
+function hitPhish(el) {
+  const key = el.dataset.dm + ':' + el.dataset.hit;
+  if (phishFound.has(key)) return;
+  phishFound.add(key);
+  el.classList.add('found');
+  // light up the hint row
+  const hintsBlock = document.getElementById('phishHints' + el.dataset.dm);
+  const row = hintsBlock.querySelector('.phish-hint-row[data-hit="' + el.dataset.hit + '"]');
+  if (row) row.classList.add('lit');
+  updatePhishMeter();
+}
+function updatePhishMeter() {
+  const total = phishTotals.reduce((a,b) => a+b, 0);
+  const pct = (phishFound.size / total) * 100;
+  document.getElementById('phishFill').style.width = pct + '%';
+  document.getElementById('phishVal').textContent = phishFound.size + ' / ' + total;
+}
+function phishRevealAll() {
+  document.querySelectorAll('.phish-hit').forEach(el => {
+    if (!el.classList.contains('found')) {
+      el.classList.add('missed');
+      phishFound.add(el.dataset.dm + ':' + el.dataset.hit);
+    }
+  });
+  document.querySelectorAll('.phish-hint-row').forEach(r => r.classList.add('lit'));
+  updatePhishMeter();
+}
+
+// ══════ 【B】SORT GAME ══════
+const sortDeck = [
+  { text: '友達のLINEに許可を得て代わりにログインした', zone: 'fuseiA',
+    explain: '本人の許可があってもアクセス権限のない第三者のログインは不正アクセス禁止法違反。条文上「許可」の例外はない。' },
+  { text: 'バイト先のレジ売上スクショを画像加工で水増し', zone: 'denji',
+    explain: '事務処理を誤らせる目的で電磁的記録を改変=電磁的記録不正作出罪。' },
+  { text: '年齢偽装のため偽の学生証画像を作成', zone: 'denji',
+    explain: '身分を偽るための電磁的記録=電磁的記録不正作出罪。サイト運営者の事務処理を誤らせる。' },
+  { text: 'ウイルスコードをGitHubに公開', zone: 'denji',
+    explain: '不正指令電磁的記録作成罪・提供罪。研究目的でも公開には慎重さが必要。' },
+  { text: '懸賞応募者リストを無断で新商品DMに流用', zone: 'privacy',
+    explain: '目的外利用=個人情報保護法違反。本人同意なく利用目的を変更はできない。' },
+  { text: '事前承諾なしに広告メールを一斉送信', zone: 'syouhin',
+    explain: '特定電子メール法違反(オプトイン違反)。送信者情報の偽装が伴えばさらに悪質。' },
+  { text: '「PayPay送金済み」スクショを偽造して送る', zone: 'denji',
+    explain: '偽造時点で電磁的記録不正作出罪、送って商品を得れば詐欺罪も併合。' },
+  { text: '訪問販売業者がクーリング・オフ書面を交付しない', zone: 'syouhin',
+    explain: '特定商取引法違反。書面交付はクーリング・オフ期間の起算要件。' },
+  { text: 'パスワードが「password」の他人アカウントに推測で入る', zone: 'fuseiA',
+    explain: '弱いパスワードでも、他人のアカウントに入ればアクセス制御侵害=不正アクセス禁止法違反。' },
+  { text: '元カノから預かった写真を別れ後にSNSに投稿', zone: 'privacy',
+    explain: '私事を公開=プライバシー権侵害(民事)+ リベンジポルノ法違反の可能性。個人情報保護法とリベンジポルノ法の両方に抵触しうる。' }
+];
+
+const sortZoneLabels = {
+  fuseiA: '不正アクセス禁止法',
+  denji: '電磁的記録関連罪(刑法)',
+  syouhin: '特定商取引法 / 特定電子メール法',
+  privacy: '個人情報保護法'
+};
+
+let sortIndex = [];
+let sortSelected = null;
+let sortCorrect = 0;
+
+function buildSort() {
+  const stack = document.getElementById('sortStack');
+  stack.innerHTML = '';
+  sortIndex = [];
+  sortCorrect = 0;
+  // shuffle
+  const order = sortDeck.map((_, i) => i).sort(() => Math.random() - 0.5);
+  order.forEach(i => {
+    const card = document.createElement('div');
+    card.className = 'sort-card';
+    card.textContent = sortDeck[i].text;
+    card.dataset.idx = i;
+    card.onclick = () => pickSort(card);
+    stack.appendChild(card);
+    sortIndex.push(i);
+  });
+  // clear zones
+  ['fuseiA','denji','syouhin','privacy'].forEach(z => {
+    const list = document.querySelector('[data-list="' + z + '"]');
+    if (list) list.innerHTML = '';
+  });
+  document.getElementById('sortScore').textContent = '0 / 10';
+  document.getElementById('sortReveal').classList.remove('show');
+}
+function pickSort(card) {
+  if (card.classList.contains('placed')) return;
+  document.querySelectorAll('.sort-card.selected').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.sort-zone.highlight').forEach(z => z.classList.remove('highlight'));
+  card.classList.add('selected');
+  sortSelected = card;
+  document.querySelectorAll('.sort-zone').forEach(z => z.classList.add('highlight'));
+}
+function dropCard(zone) {
+  if (!sortSelected) return;
+  const idx = parseInt(sortSelected.dataset.idx);
+  const item = sortDeck[idx];
+  const correct = item.zone === zone;
+  const list = document.querySelector('[data-list="' + zone + '"]');
+  const chip = document.createElement('div');
+  chip.className = 'sort-placed-chip ' + (correct ? 'ok' : 'ng');
+  chip.textContent = item.text;
+  chip.dataset.cardIdx = idx;
+  chip.title = (correct ? '正解:' : '不正解。正解は「' + sortZoneLabels[item.zone] + '」 ') + item.explain + ' ─ クリックでスタックに戻す';
+  chip.onclick = () => undoChip(chip);
+  list.appendChild(chip);
+  sortSelected.classList.add('placed');
+  sortSelected.classList.remove('selected');
+  document.querySelectorAll('.sort-zone.highlight').forEach(z => z.classList.remove('highlight'));
+  sortSelected = null;
+  if (correct) sortCorrect++;
+  updateSortStatus();
+}
+function undoChip(chip) {
+  const idx = parseInt(chip.dataset.cardIdx);
+  const wasCorrect = chip.classList.contains('ok');
+  chip.remove();
+  const card = document.querySelector('.sort-card[data-idx="' + idx + '"]');
+  if (card) card.classList.remove('placed');
+  if (wasCorrect) sortCorrect = Math.max(0, sortCorrect - 1);
+  document.getElementById('sortReveal').classList.remove('show');
+  updateSortStatus();
+}
+function updateSortStatus() {
+  const placed = document.querySelectorAll('.sort-card.placed').length;
+  document.getElementById('sortScore').textContent = sortCorrect + ' / 10';
+  if (placed === 10) {
+    const rev = document.getElementById('sortReveal');
+    let html = '<strong>結果:' + sortCorrect + '/10 正解。</strong>チップをクリックでスタックに戻して再配置できる。';
+    if (sortCorrect < 10) {
+      html += '<br>間違えたカードの正解:';
+      document.querySelectorAll('.sort-placed-chip.ng').forEach(c => {
+        const text = c.textContent.replace(/ ✕$/, '');
+        const original = sortDeck.find(d => d.text === text);
+        if (original) html += '<br>・「' + text + '」→ <strong>' + sortZoneLabels[original.zone] + '</strong>';
+      });
+    }
+    rev.innerHTML = html;
+    rev.classList.add('show');
+  }
+}
+function resetSort() { buildSort(); }
+buildSort();
+
+// ══════ 【C】COOLING-OFF SIMULATOR ══════
+const coolMap = {
+  visit: { days: 8, name: '訪問販売', start: '契約書面受領日', note: '自宅に営業が来た取引。書面受領日から8日以内なら書面で解約可能。' },
+  phone: { days: 8, name: '電話勧誘販売', start: '契約書面受領日', note: '電話で勧誘を受けて契約した取引。8日以内。' },
+  special: { days: 8, name: '特定継続的役務提供', start: '契約書面受領日', note: 'エステ・美容医療・語学教室・学習塾・家庭教師・パソコン教室・結婚相手紹介サービスの7業種。8日以内。' },
+  multi: { days: 20, name: '連鎖販売取引(マルチ商法)', start: '契約書面受領日', note: '被害が大きいため期間が長い。20日以内。' },
+  mailorder: { days: 0, name: '通信販売', start: '─', note: 'ネット通販・カタログ通販はクーリング・オフ対象外。事業者が自主返品ルールを設けていればそれに従う。' },
+  store: { days: 0, name: '店舗での直接購入', start: '─', note: '自ら店舗に出向いた購入は対象外。消費者の自由意思による購入と見なされる。' }
+};
+function updateCool() {
+  const type = document.getElementById('coolType').value;
+  const days = parseInt(document.getElementById('coolDays').value);
+  document.getElementById('coolDaysVal').textContent = days;
+  const info = coolMap[type];
+  const verdict = document.getElementById('coolVerdict');
+  const detail = document.getElementById('coolDetail');
+  const note = document.getElementById('coolNote');
+  if (info.days === 0) {
+    verdict.textContent = '対象外';
+    verdict.className = 'cool-verdict ng';
+    detail.innerHTML = '<strong>' + info.name + '</strong>はクーリング・オフ制度の対象ではない。' + info.note;
+  } else if (days > info.days) {
+    verdict.textContent = '期限切れ';
+    verdict.className = 'cool-verdict ng';
+    detail.innerHTML = info.name + 'は<strong>' + info.days + '日以内</strong>が制度上の期限。経過<strong>' + days + '日</strong>で、' + (days - info.days) + '日超過。';
+  } else if (days >= info.days - 2) {
+    verdict.textContent = '残りわずか';
+    verdict.className = 'cool-verdict warn';
+    detail.innerHTML = info.name + 'は<strong>' + info.days + '日以内</strong>。残り<strong>' + (info.days - days) + '日</strong>。すぐに書面で解約通知を。';
+  } else {
+    verdict.textContent = 'まだ可能';
+    verdict.className = 'cool-verdict ok';
+    detail.innerHTML = info.name + 'は<strong>' + info.days + '日以内</strong>なら書面で解約できる。残り<strong>' + (info.days - days) + '日</strong>。';
+  }
+  note.innerHTML = '⚠ 起算日:' + info.start + ' / ' + info.note;
+}
+document.getElementById('coolType').addEventListener('change', updateCool);
+document.getElementById('coolDays').addEventListener('input', updateCool);
+updateCool();
+
+// ══════ 【F】SCOPE TOGGLE ══════
+function switchScope(type, btn) {
+  document.querySelectorAll('.scope-toggle button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const diag = document.getElementById('scopeDiagram');
+  diag.classList.remove('show-moral', 'show-citizen');
+  diag.classList.add('show-' + type);
+  document.getElementById('scopeMoral').style.display = type === 'moral' ? 'block' : 'none';
+  document.getElementById('scopeCitizen').style.display = type === 'citizen' ? 'block' : 'none';
+}
+function pickScope(chip, isCorrect) {
+  const kind = chip.dataset.kind;
+  chip.classList.add('picked-' + kind);
+  const panel = chip.closest('#scopeMoral, #scopeCitizen');
+  if (panel) panel.querySelector('.scope-verdict').classList.add('show');
+}
+
+// ══════ REVIEW ══════
+const reviewPool = [
+  { q: '国の最高法規は次のうちどれ?', opts: ['法律', '政令', '日本国憲法', '条例'], a: 2 },
+  { q: 'プライバシー権・知る権利の根拠となるのは憲法第何条?', opts: ['第9条', '第13条', '第21条', '第25条'], a: 1 },
+  { q: '他人のIDとパスワードでログインする行為を禁じる法律は?', opts: ['刑法', '不正アクセス禁止法', '特定電子メール法', '個人情報保護法'], a: 1 },
+  { q: 'サイバーセキュリティ基本法の主な役割は?', opts: ['個別行為の処罰', '消費者保護', '政策の基本理念を定める', '青少年保護'], a: 2 },
+  { q: '電磁的記録とは?', opts: ['紙の文書のみ', '音声録音のみ', '電子的・磁気的方式で作られた記録', '暗号化された通信のみ'], a: 2 },
+  { q: '訪問販売のクーリング・オフ期間は?', opts: ['3日', '8日', '20日', '30日'], a: 1 },
+  { q: 'マルチ商法(連鎖販売取引)のクーリング・オフ期間は?', opts: ['8日', '14日', '20日', '30日'], a: 2 },
+  { q: '広告メール送信前に同意を得る方式は?', opts: ['オプトアウト方式', 'オプトイン方式', '自動更新方式', '二段階認証'], a: 1 },
+  { q: 'SNS誹謗中傷でプロバイダの責任を明確化する法律は?', opts: ['個人情報保護法', '特定商取引法', '情報流通プラットフォーム対処法', 'サイバーセキュリティ基本法'], a: 2 },
+  { q: 'デジタル・シティズンシップの説明として最も適切なのは?', opts: ['個人情報の扱い方', '情報モラルより狭い概念', '社会に積極的に関与し参加する能力', '法律を守ること'], a: 2 },
+  { q: 'コンピュータウイルスの作成を罰する刑法上の罪は?', opts: ['電磁的記録不正作出罪', '不正指令電磁的記録作成罪', '電子計算機使用詐欺罪', '名誉毀損罪'], a: 1 },
+  { q: 'ネット通販(通信販売)のクーリング・オフは?', opts: ['8日以内可', '14日以内可', '対象外', '20日以内可'], a: 2 }
+];
+let reviewQuestions = [];
+let reviewIdx = 0;
+let reviewScore = 0;
+function startReview() {
+  reviewQuestions = [...reviewPool].sort(() => Math.random() - 0.5).slice(0, 10);
+  reviewIdx = 0; reviewScore = 0;
+  document.getElementById('reviewStart').style.display = 'none';
+  document.getElementById('reviewDone').classList.remove('active');
+  document.getElementById('reviewQuiz').classList.add('active');
+  showReviewQ();
+}
+function showReviewQ() {
+  const q = reviewQuestions[reviewIdx];
+  document.getElementById('reviewProgress').textContent = 'QUESTION ' + (reviewIdx + 1) + ' / 10';
+  document.getElementById('reviewQText').innerHTML =
+    '<span class="quiz-question-num">Q' + (reviewIdx + 1) + '</span>' + q.q;
+  const opts = document.getElementById('reviewQOpts');
+  opts.innerHTML = '';
+  const letters = ['ア', 'イ', 'ウ', 'エ'];
+  q.opts.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-option';
+    div.innerHTML = '<span class="quiz-option-letter">' + letters[i] + '</span><span>' + opt + '</span>';
+    div.onclick = () => answerReview(div, i === q.a);
+    opts.appendChild(div);
+  });
+}
+function answerReview(el, isCorrect) {
+  const options = el.parentElement.querySelectorAll('.quiz-option');
+  options.forEach(o => { o.style.pointerEvents = 'none'; });
+  const q = reviewQuestions[reviewIdx];
+  if (isCorrect) { el.classList.add('correct'); reviewScore++; }
+  else { el.classList.add('incorrect'); options[q.a].classList.add('correct'); }
+  setTimeout(() => {
+    reviewIdx++;
+    if (reviewIdx < 10) showReviewQ(); else showReviewResult();
+  }, 900);
+}
+function showReviewResult() {
+  document.getElementById('reviewQuiz').classList.remove('active');
+  document.getElementById('reviewDone').classList.add('active');
+  document.getElementById('reviewScore').textContent = reviewScore + ' / 10';
+  const comments = {
+    10: '完璧。共通テスト余裕レベル。',
+    9: '素晴らしい。あと一歩で満点。',
+    8: '合格ライン。理解はほぼ十分。',
+    7: 'もう一歩。苦手項目を復習しよう。',
+    6: '6割ライン。スライドを見返そう。'
+  };
+  let msg = comments[reviewScore] || '基礎から見直そう。学習ノートを手元に。';
+  document.getElementById('reviewComment').textContent = msg;
+}
+
+// ══════ PYRAMID MEANING (slide 05 新規) ══════
+const pymData = {
+  kenpo: {
+    who: { title: '国民(改正は国民投票)', detail: '制定主体は最終的に <strong>国民</strong>。改正には両議院の総議員の3分の2以上の発議+国民投票で過半数の賛成が必要(憲法96条)。最も重い改正手続で、簡単に変えられない=国の礎になる。' },
+    where: { title: '国全体の最高法規', detail: '日本国内のあらゆる法はこれに従う。<strong>違反する法律・政令・条例はすべて無効</strong>。情報法規では13条(幸福追求権)・21条(表現の自由)・25条(生存権)が直接の根拠条文となる。' },
+    example: { title: '日本国憲法(前文+全103条)', detail: 'プライバシー権・知る権利は明文化されていないが、<strong>13条を根拠とする「新しい人権」</strong>として判例で確立されている。<div class="pym-panel-case"><span class="pym-panel-case-label">目立つ違憲判決</span><strong>尊属殺重罰規定違憲判決(1973)</strong> — 刑法200条が憲法14条(法の下の平等)に違反するとして無効化された、<strong>日本で初めての違憲判決</strong>。親殺しを普通の殺人より重く罰する規定が削除された。<br><strong>非嫡出子相続分違憲決定(2013)</strong> — 婚外子の相続分を半分とする民法規定を最高裁が違憲と判断、民法改正の直接のきっかけに。</div>' },
+    conflict: { title: '(最上位なので矛盾先がない)', detail: '憲法の上はない。改正以外で変更不能。逆に言えば下位の法はすべて憲法の枠内でしか効力を持てない。これを担保するのが <strong>裁判所の違憲立法審査権</strong>(憲法81条)。戦後、最高裁が法令を違憲と判断した例は12件あまり。' }
+  },
+  houritsu: {
+    who: { title: '国会(国民の代表)', detail: '衆議院+参議院で可決して成立。国会は「<strong>国の唯一の立法機関</strong>」(憲法41条)。選挙で選ばれた国民の代表が定めるから、国民全体を拘束できる。' },
+    where: { title: '全国に適用される一般ルール', detail: '原則としてすべての国民・地域に等しく及ぶ。国民の権利を制限したり、新たな義務を課すには <strong>法律による根拠</strong> が必要(法律留保の原則)。' },
+    example: { title: '不正アクセス禁止法 / 特定商取引法 / 個人情報保護法', detail: '本単元で出る情報関連の主要な法はほとんどがここ。<strong>具体的な義務と罰則</strong>はこの段で定義される。<div class="pym-panel-case"><span class="pym-panel-case-label">社会を揺るがせた違反事件</span><strong>ライブドア事件(2006)</strong> — 証券取引法違反で実業家が逮捕、時価総額7,000億円が吹き飛ぶ「ライブドアショック」に発展。<br><strong>Coincheck事件(2018)</strong> — 約580億円相当の暗号資産NEMが流出、不正アクセス禁止法と資金決済法の整備が加速した。<br><strong>KADOKAWA事件(2024)</strong> — ランサム攻撃で25万人超の情報漏洩、出版業務が約1ヶ月停止。</div>' },
+    conflict: { title: '憲法に違反すると無効', detail: '裁判所が<strong>違憲立法審査</strong>で判定する。<div class="pym-panel-case"><span class="pym-panel-case-label">法律が違憲無効化された代表判例</span><strong>薬事法距離制限違憲判決(1975)</strong> — 薬局の開設に距離制限を設けた薬事法6条2項が、憲法22条(職業選択の自由)に違反するとして無効化。<br><strong>郵便法免責規定違憲判決(2002)</strong> — 郵便事故で国の賠償責任を免除する規定が憲法17条違反で無効化。</div>' }
+  },
+  seirei: {
+    who: { title: '政令=内閣 / 省令=各省大臣', detail: '政令は閣議決定、省令は担当大臣が単独で制定できる。<strong>法律が委任した範囲内</strong>でしか作れない(委任立法)。議会の関与なしに作れる代わりに、範囲が限定される。' },
+    where: { title: '法律の実施細則', detail: '「法律で大枠、政令で中身、省令で手続き」の三段構え。細かい数値基準・申請フォーマット・届出様式などはほぼここで決まる。' },
+    example: { title: '不正アクセス禁止法施行令 / 個人情報保護法施行規則', detail: '「〜施行令」が政令、「〜施行規則」が省令。実務ではこちらの方がよく参照される。<div class="pym-panel-case"><span class="pym-panel-case-label">注目の省令改正(近年)</span><strong>個人情報保護法施行規則 2022年改正</strong> — Cookie等の「個人関連情報」の第三者提供規制を導入、GDPR対応を国内法に取り込んだ実務的転換点。<br><strong>暴力団対策法施行令</strong> — 指定暴力団を随時指定・解除するため、法律本文より改正頻度が高い。法律本文が動かない代わりに施行令で社会の変化に追従する典型例。</div>' },
+    conflict: { title: '法律に違反すると無効', detail: '委任の範囲を超えた政令・省令は <strong>効力を持たない</strong>。「白紙委任」のような曖昧な委任自体も、立法府の権限侵害として違憲の可能性あり。<div class="pym-panel-case"><span class="pym-panel-case-label">委任立法の限界</span><strong>猿払事件(1974)</strong>では国家公務員法が人事院規則に政治的行為の具体化を委任することの合憲性が争われた(合憲判決)。委任がどこまで許されるかは、今も憲法論の主要テーマ。</div>' }
+  },
+  jourei: {
+    who: { title: '地方公共団体の議会', detail: '都道府県議会・市町村議会が制定。<strong>住民が選挙で選んだ議員</strong>の議決による、住民に最も近い立法。' },
+    where: { title: 'その地域にだけ適用', detail: '東京都の条例は東京都でしか効力がない。ただし <strong>法律の範囲内</strong> でしか作れない(憲法94条・地方自治法14条)。' },
+    example: { title: '青少年健全育成条例 / 受動喫煙防止条例 / ポイ捨て禁止条例', detail: '地域固有の問題に対応。東京都の青少年健全育成条例は <strong>SNSを使った援助交際規制</strong> で全国モデルとなった。<div class="pym-panel-case"><span class="pym-panel-case-label">条例をめぐる最高裁の代表判例</span><strong>徳島市公安条例事件(1975)</strong> — デモ規制について、道交法と条例の関係を整理。「<strong>同一の目的で法律が規制していない場合に条例が規制できるか</strong>」の判断基準を示した条例論の基礎判例。<br><strong>岐阜県青少年保護育成条例事件(1989)</strong> — 「有害図書」の自動販売機規制が表現の自由(21条)違反かが争われ、<strong>合憲</strong>と判断された。</div>' },
+    conflict: { title: '法律に違反すると無効', detail: '法律より厳しい基準を追加する「上乗せ条例」は一定の場合認められるが、法律と真っ向から矛盾すれば <strong>無効</strong>。<div class="pym-panel-case"><span class="pym-panel-case-label">条例の限界が議論になる実例</span>大阪府のヘイトスピーチ解消条例(2016)、香川県ネット・ゲーム依存症対策条例(2020)など、「<strong>国の法律がない領域</strong>」で条例が先行するケースが増え、合憲性・合法性が繰り返し論点になる。</div>' }
+  }
+};
+const pymTierNames = { kenpo:'憲法', houritsu:'法律', seirei:'政令・省令', jourei:'条例' };
+const pymModeNames = { who:'誰が作る?', where:'どこに適用?', example:'具体例', conflict:'上位法と矛盾したら?' };
+let currentPymTier = 'kenpo';
+let currentPymMode = 'who';
+
+function selectPymTier(key) {
+  currentPymTier = key;
+  document.querySelectorAll('.pym-tier').forEach(t => t.classList.remove('selected'));
+  const tier = document.querySelector('.pym-tier[data-key="' + key + '"]');
+  if (tier) tier.classList.add('selected');
+  renderPymPanel();
+}
+function switchPymMode(mode, btn) {
+  currentPymMode = mode;
+  document.querySelectorAll('.pym-modes button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPymPanel();
+}
+function renderPymPanel() {
+  const d = pymData[currentPymTier][currentPymMode];
+  const p = document.getElementById('pymPanel');
+  if (!p) return;
+  p.innerHTML =
+    '<div class="pym-panel-tier">' + pymTierNames[currentPymTier] + '</div>' +
+    '<div class="pym-panel-mode">' + pymModeNames[currentPymMode] + '</div>' +
+    '<div class="pym-panel-headline">' + d.title + '</div>' +
+    '<div class="pym-panel-detail">' + d.detail + '</div>';
+}
+renderPymPanel();
+
+// ══════ MENU (スライド目次) ══════
+function buildMenu() {
+  const menuList = document.getElementById('menuList');
+  if (!menuList) return;
+  menuList.innerHTML = '';
+  const sections = [];
+  let currentSection = { label: 'OVERVIEW', items: [] };
+  sections.push(currentSection);
+
+  slides.forEach((slide, idx) => {
+    const title = slide.dataset.title || '';
+    if (slide.classList.contains('section-divider')) {
+      const label = title.replace(/^第\d節\s*/, '');
+      currentSection = { label: label.toUpperCase(), items: [] };
+      sections.push(currentSection);
+    }
+    let tag = '';
+    let tagClass = '';
+    if (slide.classList.contains('title-slide') && idx === 0) { tag = 'TITLE'; tagClass = 'tag-title'; }
+    else if (slide.classList.contains('title-slide')) { tag = 'END'; tagClass = 'tag-end'; }
+    else if (slide.classList.contains('section-divider')) { tag = 'SECTION'; tagClass = 'tag-section'; }
+    else if (/実習/.test(title)) { tag = 'PRACTICE'; tagClass = ''; }
+    else if (/【[A-F]】/.test(title)) { tag = 'INTERACTIVE'; tagClass = 'tag-interactive'; }
+    else if (/答え合わせ|まとめ|復習/.test(title)) { tag = 'REVIEW'; tagClass = 'tag-review'; }
+    currentSection.items.push({ idx, title, tag, tagClass });
+  });
+
+  sections.forEach(sec => {
+    if (sec.items.length === 0) return;
+    const h = document.createElement('div');
+    h.className = 'menu-section';
+    h.textContent = sec.label;
+    menuList.appendChild(h);
+    sec.items.forEach(it => {
+      const el = document.createElement('div');
+      el.className = 'menu-item';
+      el.dataset.idx = it.idx;
+      el.onclick = () => { goToSlide(it.idx); closeMenu(); };
+      const num = String(it.idx + 1).padStart(2, '0');
+      const tagHtml = it.tag ? '<span class="menu-item-tag ' + it.tagClass + '">' + it.tag + '</span>' : '';
+      el.innerHTML =
+        '<span class="menu-item-num">' + num + '</span>' +
+        '<span class="menu-item-title">' + it.title + '</span>' +
+        tagHtml;
+      menuList.appendChild(el);
+    });
+  });
+  updateMenuActive();
+}
+function updateMenuActive() {
+  document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+  const curr = document.querySelector('.menu-item[data-idx="' + currentSlide + '"]');
+  if (curr) {
+    curr.classList.add('active');
+    if (document.getElementById('menuPanel').classList.contains('open')) {
+      curr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+}
+function openMenu() {
+  document.getElementById('menuOverlay').classList.add('open');
+  document.getElementById('menuPanel').classList.add('open');
+  updateMenuActive();
+}
+function closeMenu() {
+  document.getElementById('menuOverlay').classList.remove('open');
+  document.getElementById('menuPanel').classList.remove('open');
+}
+buildMenu();
+
+// ══════ RESET ALL INTERACTIONS ══════
+function resetAllInteractions() {
+  if (!confirm('このページのすべてのインタラクション(穴埋め、クイズ、○×、展開、ゲームの進捗など)を初期状態に戻します。よろしいですか?')) return;
+
+  // note-blank
+  document.querySelectorAll('.note-blank.reveal').forEach(b => {
+    b.classList.remove('reveal');
+    b.textContent = b.dataset.placeholder || 'クリックで正解';
+  });
+  // case-expander
+  document.querySelectorAll('.case-expander.open').forEach(c => c.classList.remove('open'));
+  // case inline quiz
+  document.querySelectorAll('.case-inline-opt').forEach(o => {
+    o.classList.remove('correct', 'wrong');
+    o.style.pointerEvents = 'auto';
+  });
+  document.querySelectorAll('.case-inline-fb.show').forEach(f => f.classList.remove('show'));
+  // quiz
+  document.querySelectorAll('.quiz-option').forEach(o => {
+    o.classList.remove('correct', 'incorrect');
+    o.style.pointerEvents = 'auto';
+  });
+  document.querySelectorAll('.quiz-feedback.show').forEach(f => f.classList.remove('show'));
+  // practice list
+  document.querySelectorAll('.practice-item.revealed').forEach(p => {
+    p.classList.remove('revealed', 'ok', 'ng');
+    const v = p.querySelector('.practice-verdict');
+    if (v) v.textContent = '?';
+  });
+  // answers grid
+  document.querySelectorAll('.answer-row.revealed').forEach(r => {
+    r.classList.remove('revealed');
+    const rv = r.querySelector('.answer-reveal');
+    if (rv) rv.textContent = 'クリック';
+  });
+  // pyramid (実習1)
+  document.querySelectorAll('.pyramid-opt').forEach(o => o.classList.remove('correct', 'wrong', 'disabled'));
+  ['1','2','3'].forEach(n => {
+    const tier = document.getElementById('pyrTier' + n);
+    if (tier) {
+      tier.classList.remove('filled-ho', 'filled-sei', 'filled-jo');
+      const rect = tier.querySelector('polygon');
+      if (rect) rect.setAttribute('class', 'pyramid-rect pyramid-blank');
+      const label = tier.querySelector('text');
+      if (label) {
+        label.textContent = '(' + n + ')' + (n === '2' ? ' · 省令' : '');
+        label.setAttribute('fill', '#2C5F8D');
+      }
+    }
+  });
+  // pyramid meaning
+  currentPymTier = 'kenpo'; currentPymMode = 'who';
+  document.querySelectorAll('.pym-tier').forEach(t => t.classList.remove('selected'));
+  const firstTier = document.querySelector('.pym-tier[data-key="kenpo"]');
+  if (firstTier) firstTier.classList.add('selected');
+  document.querySelectorAll('.pym-modes button').forEach(b => b.classList.remove('active'));
+  const firstMode = document.querySelector('.pym-modes button[data-mode="who"]');
+  if (firstMode) firstMode.classList.add('active');
+  renderPymPanel();
+  // phishing
+  document.querySelectorAll('.phish-hit').forEach(h => h.classList.remove('found', 'missed'));
+  document.querySelectorAll('.phish-hint-row').forEach(r => r.classList.remove('lit'));
+  phishFound = new Set();
+  updatePhishMeter();
+  document.querySelectorAll('.phish-tab').forEach(t => t.classList.remove('active'));
+  const firstTab = document.querySelector('.phish-tab');
+  if (firstTab) firstTab.classList.add('active');
+  document.querySelectorAll('.phish-msg').forEach(m => m.classList.remove('active'));
+  const firstMsg = document.querySelector('.phish-msg[data-dm="0"]');
+  if (firstMsg) firstMsg.classList.add('active');
+  document.querySelectorAll('.phish-hints').forEach(h => h.style.display = 'none');
+  const firstHints = document.getElementById('phishHints0');
+  if (firstHints) firstHints.style.display = 'block';
+  // sort
+  buildSort();
+  // cool sim
+  const coolType = document.getElementById('coolType');
+  const coolDays = document.getElementById('coolDays');
+  if (coolType && coolDays) {
+    coolType.value = 'visit';
+    coolDays.value = 0;
+    updateCool();
+  }
+  // dm timeline
+  document.querySelectorAll('.dm-cell.open').forEach(c => c.classList.remove('open'));
+  // scope
+  document.querySelectorAll('.scope-chip').forEach(c => c.classList.remove('picked-moral', 'picked-citizen'));
+  document.querySelectorAll('.scope-verdict.show').forEach(v => v.classList.remove('show'));
+  const scopeDiag = document.getElementById('scopeDiagram');
+  if (scopeDiag) {
+    scopeDiag.classList.remove('show-moral', 'show-citizen');
+    scopeDiag.classList.add('show-moral');
+  }
+  document.querySelectorAll('.scope-toggle button').forEach(b => b.classList.remove('active'));
+  const scopeFirst = document.querySelectorAll('.scope-toggle button')[0];
+  if (scopeFirst) scopeFirst.classList.add('active');
+  const scopeMoral = document.getElementById('scopeMoral');
+  const scopeCitizen = document.getElementById('scopeCitizen');
+  if (scopeMoral) scopeMoral.style.display = 'block';
+  if (scopeCitizen) scopeCitizen.style.display = 'none';
+  // review
+  const reviewStart = document.getElementById('reviewStart');
+  const reviewQuiz = document.getElementById('reviewQuiz');
+  const reviewDone = document.getElementById('reviewDone');
+  if (reviewStart) reviewStart.style.display = 'block';
+  if (reviewQuiz) reviewQuiz.classList.remove('active');
+  if (reviewDone) reviewDone.classList.remove('active');
+
+  closeMenu();
+  goToSlide(0);
+}
+</script>
+</body>
+</html>
