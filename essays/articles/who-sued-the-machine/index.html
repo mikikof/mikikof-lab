@@ -819,6 +819,160 @@ blockquote.cite footer {
 }
 .footer-back:hover { color: var(--ink); border-color: var(--accent-primary); }
 
+/* ============ SUE vs LICENSE CAMPS ============ */
+.camps-wrap {
+  margin: 2.5rem 0 2rem;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+.camp {
+  background: var(--bg-card); border: 1px solid var(--line);
+  border-radius: 4px; padding: 1.75rem 1.75rem 1.5rem;
+  position: relative;
+}
+.camp::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; height: 4px; width: 100%;
+}
+.camp.sue::before { background: var(--warn); }
+.camp.license::before { background: var(--accent-secondary); }
+.camp-head {
+  display: flex; align-items: baseline; gap: 0.85rem;
+  margin-bottom: 0.35rem;
+}
+.camp-num {
+  font-family: var(--f-la-display); font-style: italic;
+  font-weight: 700; font-size: 2rem; line-height: 1;
+  color: var(--mute);
+}
+.camp.sue .camp-num { color: var(--warn); }
+.camp.license .camp-num { color: var(--accent-secondary); }
+.camp-title {
+  font-family: var(--f-jp-display); font-weight: 900;
+  font-size: 1.35rem; color: var(--ink); letter-spacing: 0.08em;
+}
+.camp-sub {
+  font-family: var(--f-la-body); font-size: 0.72rem;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--mute); margin-bottom: 1.25rem;
+}
+.camp-list {
+  list-style: none; display: flex; flex-direction: column; gap: 0.6rem;
+}
+.camp-list li {
+  padding: 0.65rem 0.85rem; background: var(--bg);
+  border-left: 3px solid var(--line); border-radius: 0 2px 2px 0;
+  font-size: 0.88rem; line-height: 1.6; color: var(--text);
+}
+.camp-list li strong {
+  font-family: var(--f-jp-display); font-weight: 700;
+  color: var(--accent-primary-deep); letter-spacing: 0.04em;
+}
+.camp-list li small {
+  display: block; font-family: var(--f-la-body);
+  font-size: 0.7rem; color: var(--mute);
+  letter-spacing: 0.03em; margin-top: 0.2rem;
+}
+.camp.sue .camp-list li { border-left-color: var(--warn); }
+.camp.license .camp-list li { border-left-color: var(--accent-secondary); }
+
+/* ============ DIFFUSION VIZ ============ */
+.dviz-wrap {
+  margin: 3rem 0 3rem;
+  background: var(--bg-card); border: 1px solid var(--line);
+  border-radius: 4px; padding: 2.5rem 2rem;
+}
+.dviz-head {
+  margin-bottom: 1.75rem; padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.dviz-kicker {
+  font-family: var(--f-la-body); font-size: 0.72rem;
+  font-weight: 700; letter-spacing: 0.4em;
+  text-transform: uppercase; color: var(--accent-secondary);
+  margin-bottom: 0.5rem;
+}
+.dviz-title {
+  font-family: var(--f-jp-display); font-weight: 700;
+  font-size: 1.15rem; color: var(--ink); letter-spacing: 0.06em;
+}
+.dviz-arrow-row {
+  display: flex; justify-content: space-between;
+  padding: 0 0.5rem; margin-bottom: 0.8rem;
+  font-family: var(--f-la-body); font-size: 0.7rem;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--mute);
+  flex-wrap: wrap; gap: 0.5rem;
+}
+.dviz-arrow-row .train { color: var(--accent-primary); }
+.dviz-arrow-row .infer { color: var(--accent-secondary-deep); }
+.dviz-steps {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 0.75rem; margin-bottom: 1.25rem; align-items: stretch;
+}
+.dviz-step {
+  display: flex; flex-direction: column; gap: 0.5rem;
+  position: relative;
+}
+.dviz-canvas {
+  aspect-ratio: 1; background: #0a1228;
+  border-radius: 4px; overflow: hidden; position: relative;
+}
+.dviz-canvas svg { display: block; width: 100%; height: 100%; }
+.dviz-step-label {
+  font-family: var(--f-la-display); font-style: italic;
+  font-weight: 700; font-size: 0.85rem;
+  color: var(--accent-primary-deep);
+  text-align: center; letter-spacing: 0.04em;
+}
+.dviz-step-sub {
+  font-family: var(--f-jp-body); font-size: 0.72rem;
+  color: var(--mute); text-align: center;
+  line-height: 1.4; letter-spacing: 0.02em;
+}
+.dviz-note {
+  padding: 1.25rem 1.5rem;
+  background: var(--accent-primary-wash);
+  border-radius: 3px; font-size: 0.93rem;
+  color: var(--accent-primary-deep); line-height: 1.9;
+}
+.dviz-note strong { font-weight: 700; }
+
+/* ============ VOICE ACTOR GRID ============ */
+.va-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 0.65rem; margin: 2rem 0 2.5rem;
+}
+.va-pill {
+  background: var(--bg-card); border: 1px solid var(--line);
+  border-radius: 3px; padding: 0.85rem 0.85rem 0.75rem;
+  text-align: center; transition: all 0.25s var(--ease);
+}
+.va-pill:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-secondary);
+  box-shadow: 0 8px 20px -12px rgba(8,145,168,0.25);
+}
+.va-pill-name {
+  font-family: var(--f-jp-display); font-weight: 700;
+  font-size: 0.95rem; color: var(--ink); letter-spacing: 0.04em;
+}
+.va-pill-role {
+  font-family: var(--f-la-body); font-size: 0.7rem;
+  color: var(--mute); letter-spacing: 0.03em;
+  margin-top: 0.3rem; line-height: 1.4;
+}
+.va-pill.more {
+  background: transparent; border-style: dashed;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+}
+.va-pill.more .va-pill-name {
+  color: var(--mute); font-family: var(--f-la-display);
+  font-style: italic; font-size: 1.1rem;
+}
+.va-pill.more .va-pill-role { color: var(--mute-soft); }
+
 @media (max-width: 960px) {
   .topnav { padding: 0.9rem 1.25rem; }
   .topnav-quick { display: none; }
@@ -831,6 +985,10 @@ blockquote.cite footer {
   .rt-table { font-size: 0.78rem; }
   .rt-table th, .rt-table td { padding: 0.6rem 0.5rem; }
   .stat-row { grid-template-columns: 1fr; }
+  .camps-wrap { grid-template-columns: 1fr; }
+  .dviz-steps { grid-template-columns: repeat(3, 1fr); }
+  .dviz-steps .dviz-step:nth-child(4),
+  .dviz-steps .dviz-step:nth-child(5) { grid-column: auto; }
   .pull-quote { margin: 2.5rem 0; padding: 2rem 1.75rem; }
   .pull-quote p { font-size: 1.1rem; }
   .refs { padding: 2rem 1.5rem; }
@@ -920,6 +1078,24 @@ blockquote.cite footer {
     <p>2023年1月12日、最初の訴状が動きます。漫画家 <strong>Sarah Andersen</strong> ら3名が、Stability AI、Midjourney、DeviantArt を米カリフォルニア北部地裁に提訴しました。争点は、画家の作品が AI の訓練に無断で使われたこと。</p>
 
     <p>それから3年のあいだ、訴状の束が積み上がります。新聞、画家、俳優、声優、写真家、作家。本記事では原告を四つの層に分けて追います。記事を書いた人、絵を描いた人、声と顔を持つ人、そして規制を書く国家です。</p>
+
+    <div class="stat-row">
+      <div class="stat-card cyan">
+        <div class="stat-num">5日</div>
+        <div class="stat-label">100万ユーザー到達</div>
+        <div class="stat-sub">ChatGPT。Instagram は2.5か月、Facebook は10か月</div>
+      </div>
+      <div class="stat-card cyan">
+        <div class="stat-num">2か月</div>
+        <div class="stat-label">1億ユーザー到達</div>
+        <div class="stat-sub">消費者向けアプリ史上最速(UBS 証券試算)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">43日</div>
+        <div class="stat-label">最初の訴訟提起まで</div>
+        <div class="stat-sub">Andersen v. Stability AI, 2023.1.12</div>
+      </div>
+    </div>
 
     <div class="lm-wrap">
       <div class="lm-head">
@@ -1050,7 +1226,54 @@ blockquote.cite footer {
 
     <p>フェアユースには4つの要素があります。利用の目的と性質、著作物の性質、利用された部分の量と実質、そして元著作物の市場への影響。Ross 判決では第1と第4が決定打になりました。NYT 訴訟の核心は、ChatGPT が NYT 記事をほぼそのまま再生できるか、有料購読の市場代替となるかという点にあります。</p>
 
-    <p>一方で出版社側も戦略を多様化しています。Axel Springer、Financial Times、AP 通信はすでに OpenAI とライセンス契約を結びました。契約金は公開されていませんが、Axel Springer のケースで年間数千万ドル規模とみられています。訴えるか、売るか。大手メディアは二手に分かれつつあります。</p>
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-num">2,243</div>
+        <div class="stat-label">Ross 侵害認定 headnote 数</div>
+        <div class="stat-sub">Thomson Reuters 勝訴の核心(2025.2.11)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">37億</div>
+        <div class="stat-label">ページ相当の訓練データ</div>
+        <div class="stat-sub">NYT 訴状の OpenAI 訓練規模(Word 換算)</div>
+      </div>
+      <div class="stat-card cyan">
+        <div class="stat-num">≈$50M</div>
+        <div class="stat-label">Axel Springer 年間料</div>
+        <div class="stat-sub">OpenAI との契約推定額(Bild, Politico)</div>
+      </div>
+    </div>
+
+    <p>一方で出版社側は戦略を多様化しています。訴えるか、売るか。大手メディアは二手に分かれつつあります。</p>
+
+    <div class="camps-wrap">
+      <div class="camp sue">
+        <div class="camp-head">
+          <div class="camp-num">01</div>
+          <div class="camp-title">訴えた</div>
+        </div>
+        <div class="camp-sub">Sue · the lawsuit path</div>
+        <ul class="camp-list">
+          <li><strong>The New York Times</strong>: 数十億ドル請求、訓練データ破棄要求<small>2023.12.27 · SDNY 審理中</small></li>
+          <li><strong>Thomson Reuters</strong>: 2,243件の headnote 侵害で勝訴<small>2025.2.11 · Delaware</small></li>
+          <li><strong>The Intercept, Raw Story, AlterNet</strong>: 共同提訴<small>2024.2 · SDNY</small></li>
+          <li><strong>Daily News・Chicago Tribune ら8紙</strong>: MediaNews Group 系集団訴訟<small>2024.4 · SDNY</small></li>
+        </ul>
+      </div>
+      <div class="camp license">
+        <div class="camp-head">
+          <div class="camp-num">02</div>
+          <div class="camp-title">契約した</div>
+        </div>
+        <div class="camp-sub">License · the deal path</div>
+        <ul class="camp-list">
+          <li><strong>Axel Springer</strong>: OpenAI 初のメジャー契約<small>2023.12 · Bild, Politico, Business Insider</small></li>
+          <li><strong>Financial Times</strong>: 戦略的ライセンス合意<small>2024.4</small></li>
+          <li><strong>AP 通信</strong>: 2年間の契約<small>2023.7</small></li>
+          <li><strong>News Corp</strong>: 5年 $2.5億規模の報道<small>2024.5 · WSJ, The Times</small></li>
+        </ul>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1111,6 +1334,122 @@ blockquote.cite footer {
 
     <p>拡散モデルの仕組みを整理しておきます。訓練時、モデルは画像にノイズを段階的に加え、その逆プロセス(ノイズ除去)を学びます。モデルが持つのは、ノイズと画像の統計的な関係だけ。個別画像を丸ごと記憶しているわけではありません。</p>
 
+    <div class="dviz-wrap">
+      <div class="dviz-head">
+        <div class="dviz-kicker">Visual · Diffusion Model</div>
+        <div class="dviz-title">ノイズと画像の往復 — 拡散モデルが学ぶもの</div>
+      </div>
+      <div class="dviz-arrow-row">
+        <span class="train">← Training (forward):画像にノイズを加える</span>
+        <span class="infer">Inference (reverse):ノイズから画像を復元 →</span>
+      </div>
+      <div class="dviz-steps">
+        <div class="dviz-step">
+          <div class="dviz-canvas">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+              <defs>
+                <filter id="n1" x="0" y="0" width="100%" height="100%">
+                  <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="3" seed="3"/>
+                  <feColorMatrix values="0 0 0 0 0.8  0 0 0 0 0.85  0 0 0 0 0.95  0 0 0 1 0"/>
+                </filter>
+              </defs>
+              <rect width="100" height="100" fill="#0a1228"/>
+              <rect width="100" height="100" filter="url(#n1)" opacity="0.95"/>
+            </svg>
+          </div>
+          <div class="dviz-step-label">t = T</div>
+          <div class="dviz-step-sub">純粋なノイズ</div>
+        </div>
+        <div class="dviz-step">
+          <div class="dviz-canvas">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+              <defs>
+                <filter id="n2" x="0" y="0" width="100%" height="100%">
+                  <feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="3" seed="7"/>
+                  <feColorMatrix values="0 0 0 0 0.8  0 0 0 0 0.85  0 0 0 0 0.95  0 0 0 1 0"/>
+                </filter>
+                <radialGradient id="g2" cx="50%" cy="38%" r="50%">
+                  <stop offset="0%" stop-color="#22b8cf" stop-opacity="0.5"/>
+                  <stop offset="70%" stop-color="#0f1f4d" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+              <rect width="100" height="100" fill="#0a1228"/>
+              <rect width="100" height="100" fill="url(#g2)"/>
+              <rect width="100" height="100" filter="url(#n2)" opacity="0.75"/>
+            </svg>
+          </div>
+          <div class="dviz-step-label">t ≈ 0.75T</div>
+          <div class="dviz-step-sub">輪郭が滲み始める</div>
+        </div>
+        <div class="dviz-step">
+          <div class="dviz-canvas">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+              <defs>
+                <filter id="n3" x="0" y="0" width="100%" height="100%">
+                  <feTurbulence type="fractalNoise" baseFrequency="1.0" numOctaves="3" seed="13"/>
+                  <feColorMatrix values="0 0 0 0 0.8  0 0 0 0 0.85  0 0 0 0 0.95  0 0 0 1 0"/>
+                </filter>
+                <radialGradient id="g3" cx="50%" cy="38%" r="32%">
+                  <stop offset="0%" stop-color="#6ed2de" stop-opacity="0.85"/>
+                  <stop offset="100%" stop-color="#22b8cf" stop-opacity="0.2"/>
+                </radialGradient>
+              </defs>
+              <rect width="100" height="100" fill="#0a1228"/>
+              <circle cx="50" cy="36" r="18" fill="url(#g3)"/>
+              <path d="M 20 95 Q 50 56 80 95 L 80 100 L 20 100 Z" fill="#22b8cf" opacity="0.55"/>
+              <rect width="100" height="100" filter="url(#n3)" opacity="0.5"/>
+            </svg>
+          </div>
+          <div class="dviz-step-label">t ≈ 0.5T</div>
+          <div class="dviz-step-sub">人影が見えてくる</div>
+        </div>
+        <div class="dviz-step">
+          <div class="dviz-canvas">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+              <defs>
+                <filter id="n4" x="0" y="0" width="100%" height="100%">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" seed="21"/>
+                  <feColorMatrix values="0 0 0 0 0.8  0 0 0 0 0.85  0 0 0 0 0.95  0 0 0 1 0"/>
+                </filter>
+                <radialGradient id="g4" cx="50%" cy="36%" r="30%">
+                  <stop offset="0%" stop-color="#a7e6ef" stop-opacity="1"/>
+                  <stop offset="85%" stop-color="#22b8cf" stop-opacity="0.5"/>
+                </radialGradient>
+              </defs>
+              <rect width="100" height="100" fill="#0a1228"/>
+              <circle cx="50" cy="36" r="18" fill="url(#g4)"/>
+              <path d="M 18 96 Q 50 52 82 96 L 82 100 L 18 100 Z" fill="#22b8cf" opacity="0.85"/>
+              <rect width="100" height="100" filter="url(#n4)" opacity="0.22"/>
+            </svg>
+          </div>
+          <div class="dviz-step-label">t ≈ 0.25T</div>
+          <div class="dviz-step-sub">形がくっきりする</div>
+        </div>
+        <div class="dviz-step">
+          <div class="dviz-canvas">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+              <defs>
+                <radialGradient id="g5" cx="50%" cy="36%" r="28%">
+                  <stop offset="0%" stop-color="#ccf2f6" stop-opacity="1"/>
+                  <stop offset="85%" stop-color="#22b8cf" stop-opacity="0.75"/>
+                </radialGradient>
+              </defs>
+              <rect width="100" height="100" fill="#0a1228"/>
+              <circle cx="50" cy="36" r="18" fill="url(#g5)"/>
+              <path d="M 18 96 Q 50 52 82 96 L 82 100 L 18 100 Z" fill="#22b8cf"/>
+              <circle cx="44" cy="34" r="1.3" fill="#0a1228"/>
+              <circle cx="56" cy="34" r="1.3" fill="#0a1228"/>
+            </svg>
+          </div>
+          <div class="dviz-step-label">t = 0</div>
+          <div class="dviz-step-sub">生成された画像</div>
+        </div>
+      </div>
+      <div class="dviz-note">
+        モデルが持つのは<strong>ノイズと画像の統計的な関係</strong>だけ。個別の画像を丸ごと記憶しているわけではない、というのが英高裁 Getty 判決の技術的前提でした。ただし訓練データに同じ画像が何千枚も含まれると、ほぼそのまま再現する現象(<code>memorization</code>)が起きます。
+      </div>
+    </div>
+
     <p>ただし例外があります。訓練セットに同一画像が多数重複すると、モデルがそれをほぼそのまま再現する現象(<code>memorization</code>)が観測されています。大規模言語モデルでも同様の「逐語再現」が報告されており、NYT 訴訟の核心もここにあります。訓練データの品質と重複除去が、法廷の技術論争に直結するようになりました。</p>
 
     <p>AI が出力した画像そのものに、著作権は成立するか。2023年2月21日、米 Copyright Office が『Zarya of the Dawn』というグラフィックノベルについて答えを示しました。作者の Kristina Kashtanova は Midjourney で挿絵を作成し、全体を構成・編集しています。Office の判断は、テキストと編集部分は著作権保護、AI が生成した個々の画像は対象外、というものでした。根拠は「人間の創作貢献」の不足。同年8月、Thaler 対 Perlmutter 訴訟でも、AI が単独生成した画像の著作権登録拒絶が確定しています。</p>
@@ -1132,6 +1471,29 @@ blockquote.cite footer {
   <div class="ch-body">
     <p>2024年10月、NOMORE 無断生成AI という啓発プロジェクトが動き始めました。<strong>山寺宏一、梶裕貴、福山潤、花澤香菜</strong>ら声優26名が動画に登場し、声の無断学習と生成に「NO」を表明します。メッセージはシンプルです。「私たちの声を、本人に断りなく AI に学習させ、売り物にしないでほしい」。</p>
 
+    <div class="va-grid">
+      <div class="va-pill">
+        <div class="va-pill-name">山寺 宏一</div>
+        <div class="va-pill-role">Yamadera Kōichi</div>
+      </div>
+      <div class="va-pill">
+        <div class="va-pill-name">梶 裕貴</div>
+        <div class="va-pill-role">Kaji Yūki</div>
+      </div>
+      <div class="va-pill">
+        <div class="va-pill-name">福山 潤</div>
+        <div class="va-pill-role">Fukuyama Jun</div>
+      </div>
+      <div class="va-pill">
+        <div class="va-pill-name">花澤 香菜</div>
+        <div class="va-pill-role">Hanazawa Kana</div>
+      </div>
+      <div class="va-pill more">
+        <div class="va-pill-name">+22 名</div>
+        <div class="va-pill-role">賛同声優・3団体連名</div>
+      </div>
+    </div>
+
     <p>声優有志の要求は3点。第一に、アニメと外国映画の吹き替えに生成 AI 音声を使わないこと。第二に、学習・利用時に本人同意を必須とすること。第三に、AI 生成音声には「AI 生成」と明記すること。啓発運動であり、訴訟ではありません。日本俳優連合、日本声優連合、音声連盟の3団体連名の要望として重みを持ちます。</p>
 
     <p>同じ論点が、米国では労使交渉の現場で決着しました。<em>SAG-AFTRA ストライキ</em>、2023年7月14日から11月9日まで118日間。1960年以来、初めて俳優と脚本家が同時にストライキを打った歴史的な争議となりました。</p>
@@ -1139,6 +1501,24 @@ blockquote.cite footer {
     <p>争点の中心は AI でした。最終協定は2023年12月5日に組合員投票を通過、賛成票は78%。新しく定められた用語に「<strong>Digital Replica</strong>(デジタル複製)」と「<strong>Synthetic Performer</strong>(合成俳優)」があります。Digital Replica は特定俳優の声・姿の AI 複製、Synthetic Performer は実在しない AI 俳優を指します。</p>
 
     <p>協定の骨子は次の通りです。Digital Replica を作るには本人の「明確かつ明示的」な同意、48時間前の通知、対価の支払いが必要。Synthetic Performer の使用時は組合への通知義務が課されます。業界の新しい最低基準が、団体交渉で定まりました。2024年1月以降、Replica Studios との音声 AI ライセンス合意、Narrativ との広告音声 AI 取引などが続きます。</p>
+
+    <div class="stat-row">
+      <div class="stat-card cyan">
+        <div class="stat-num">118日</div>
+        <div class="stat-label">SAG-AFTRA ストライキ</div>
+        <div class="stat-sub">2023.7.14 — 11.9。1960年以来初の俳優・脚本家同時争議</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">78%</div>
+        <div class="stat-label">協定批准率</div>
+        <div class="stat-sub">2023.12.5 組合員投票で新協定を承認</div>
+      </div>
+      <div class="stat-card cyan">
+        <div class="stat-num">48h</div>
+        <div class="stat-label">Digital Replica 通知義務</div>
+        <div class="stat-sub">本人同意 + 事前通知 + 対価の3点セット</div>
+      </div>
+    </div>
 
     <div class="rt-wrap">
       <div class="rt-head">
