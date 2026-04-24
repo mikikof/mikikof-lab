@@ -1,0 +1,3486 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>知的財産権 | 第1章 情報社会と問題解決</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600;700;900&family=Noto+Sans+JP:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy-darkest: #0F2847;
+  --navy-dark: #1B3A5B;
+  --navy: #2C5F8D;
+  --navy-light: #4A7FA8;
+  --navy-pale: #D4E1EF;
+  --navy-bg: #F3F6FB;
+  --accent-red: #C8102E;
+  --accent-red-dark: #8B0A1F;
+  --accent-gold: #C9A961;
+  --text-main: #1A2332;
+  --text-sub: #5A6378;
+  --white: #FFFFFF;
+  --ok-green: #1E824C;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  font-family: 'Noto Sans JP', sans-serif;
+  color: var(--text-main);
+  background: var(--navy-darkest);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.slide-container { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+
+.slide {
+  position: absolute;
+  top: 47px; bottom: 52px; left: 0; right: 0;
+  padding: 4vh 5vw;
+  opacity: 0; pointer-events: none;
+  transform: translateX(30px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  background: var(--white);
+  overflow-y: auto;
+}
+.slide.active { opacity: 1; pointer-events: all; transform: translateX(0); }
+
+/* ───── TOPBAR / BOTTOMBAR ───── */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; height: 44px;
+  background: linear-gradient(180deg, var(--navy-darkest) 0%, var(--navy-dark) 100%);
+  color: rgba(255,255,255,0.9);
+  display: flex; align-items: center; padding: 0 24px;
+  z-index: 100; font-size: 13px; letter-spacing: 0.05em;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+.topbar-title { font-family: 'Noto Serif JP', serif; font-weight: 600; margin-right: 20px; }
+.topbar-subtitle { color: rgba(255,255,255,0.6); font-size: 12px; flex: 1; }
+.topbar-chapter { font-family: 'JetBrains Mono', monospace; color: var(--accent-gold); letter-spacing: 0.1em; font-size: 11px; }
+.progress {
+  position: fixed; top: 44px; left: 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent-red) 0%, var(--accent-gold) 100%);
+  z-index: 99;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 8px rgba(201, 169, 97, 0.5);
+}
+.bottombar {
+  position: fixed; bottom: 0; left: 0; right: 0; height: 52px;
+  background: var(--navy-darkest); color: rgba(255,255,255,0.85);
+  display: flex; align-items: center; padding: 0 24px;
+  z-index: 100; font-size: 13px;
+}
+.bottombar-nav { display: flex; gap: 12px; align-items: center; }
+.nav-btn {
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+  color: white; width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s; font-size: 16px;
+}
+.nav-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.page-indicator { font-family: 'JetBrains Mono', monospace; margin-left: auto; margin-right: 16px; color: rgba(255,255,255,0.7); font-size: 12px; letter-spacing: 0.08em; }
+.slide-title-small { flex: 1; margin-left: 16px; font-size: 12px; color: rgba(255,255,255,0.5); font-family: 'Noto Serif JP', serif; max-width: 40vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.keyboard-hint { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.4); margin-left: 10px; }
+
+/* ───── TYPOGRAPHY ───── */
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent-red);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.slide-title {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  color: var(--navy-darkest);
+  font-size: clamp(32px, 4.4vw, 56px);
+  line-height: 1.15; margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+.slide-subtitle {
+  font-size: clamp(17px, 1.7vw, 22px);
+  color: var(--text-sub); font-weight: 500;
+  margin-bottom: 30px;
+  line-height: 1.7;
+}
+.section-heading {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  color: var(--navy-dark); font-size: 30px;
+  margin-bottom: 20px; padding-left: 16px;
+  border-left: 4px solid var(--accent-red);
+  line-height: 1.3;
+}
+.body-text { font-size: 19px; line-height: 1.85; color: var(--text-main); font-weight: 500; }
+.highlight {
+  background: linear-gradient(180deg, transparent 60%, rgba(201,169,97,0.4) 60%);
+  font-weight: 700; padding: 0 2px;
+}
+
+/* ───── TITLE / SECTION DIVIDER ───── */
+.title-slide {
+  display: flex; flex-direction: column; justify-content: center;
+  background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy-dark) 60%, var(--navy) 100%);
+  color: white; padding: 0 10vw;
+  overflow: hidden;
+}
+.title-slide::before {
+  content: ''; position: absolute; top: 0; right: 0;
+  width: 45%; height: 100%;
+  background:
+    radial-gradient(circle at 70% 30%, rgba(201,169,97,0.15) 0%, transparent 50%),
+    radial-gradient(circle at 30% 70%, rgba(200,16,46,0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+.title-slide::after {
+  content: ''; position: absolute; top: 50%; right: 8vw;
+  width: 300px; height: 300px;
+  border: 1px solid rgba(201,169,97,0.3); border-radius: 50%;
+  transform: translateY(-50%);
+  animation: rotate 40s linear infinite;
+}
+@keyframes rotate { to { transform: translateY(-50%) rotate(360deg); } }
+.title-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 13px;
+  letter-spacing: 0.3em; color: var(--accent-gold); margin-bottom: 24px;
+}
+.title-main {
+  font-family: 'Noto Serif JP', serif; font-weight: 900;
+  font-size: clamp(56px, 7.5vw, 110px);
+  line-height: 1; margin-bottom: 20px; letter-spacing: -0.02em;
+  position: relative; z-index: 2;
+}
+.title-sub {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(20px, 2.3vw, 30px); font-weight: 300;
+  color: rgba(255,255,255,0.85); margin-bottom: 50px;
+  letter-spacing: 0.05em;
+}
+.title-meta {
+  display: flex; gap: 40px; flex-wrap: wrap;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  color: rgba(255,255,255,0.6); letter-spacing: 0.15em;
+  position: relative; z-index: 2;
+}
+.title-meta-item strong { color: var(--accent-gold); margin-right: 8px; }
+
+.section-divider {
+  display: flex !important; flex-direction: column;
+  justify-content: center !important; align-items: center !important;
+  background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy) 100%);
+  color: white; position: absolute;
+  padding: 0 5vw !important; overflow: hidden !important;
+  text-align: center;
+}
+.section-divider > * { position: relative; z-index: 2; }
+.section-divider::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(201,169,97,0.1) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(200,16,46,0.08) 0%, transparent 40%);
+  z-index: 1;
+}
+.section-number {
+  font-family: 'JetBrains Mono', monospace; font-size: 14px;
+  letter-spacing: 0.3em; color: var(--accent-gold); margin-bottom: 20px;
+}
+.section-title-big {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(44px, 6.5vw, 86px); font-weight: 900;
+  line-height: 1.05; margin-bottom: 18px; text-align: center;
+}
+.section-tagline {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(17px, 1.9vw, 24px); font-weight: 300;
+  color: rgba(255,255,255,0.75); letter-spacing: 0.05em;
+}
+
+/* ───── def-box ───── */
+.def-box {
+  background: var(--navy-bg);
+  border: 1px solid var(--navy-pale);
+  border-radius: 6px;
+  padding: 26px 30px;
+  margin-bottom: 14px;
+}
+.def-box .def-label {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent-red);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.15em; margin-bottom: 8px;
+}
+.def-box .def-term {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  font-size: 24px; color: var(--navy-darkest); margin-bottom: 10px;
+}
+.def-box .def-desc { font-size: 16px; line-height: 1.85; color: var(--text-main); font-weight: 500; }
+
+/* ───── note-blank ───── */
+.note-blank {
+  display: inline-block;
+  min-width: 100px;
+  padding: 2px 14px;
+  background: var(--navy-pale);
+  border-bottom: 2px solid var(--navy);
+  color: var(--navy-dark);
+  font-weight: 700;
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.note-blank:hover { background: #BDD0E6; }
+.note-blank.reveal {
+  background: var(--accent-gold);
+  color: var(--navy-darkest);
+  border-bottom-color: var(--accent-red);
+  animation: reveal 0.5s;
+}
+@keyframes reveal {
+  0% { transform: scale(0.9); opacity: 0.5; }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ───── two-col / agenda ───── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 24px;
+}
+.agenda-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 24px;
+}
+.agenda-item {
+  padding: 22px 26px;
+  background: var(--navy-bg);
+  border-left: 4px solid var(--navy);
+  border-radius: 4px;
+  transition: all 0.3s;
+  display: flex; gap: 18px; align-items: flex-start;
+}
+.agenda-item:hover { background: var(--navy-pale); transform: translateX(4px); }
+.agenda-num {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 34px; font-weight: 700;
+  color: var(--accent-red);
+  line-height: 1; min-width: 46px;
+}
+.agenda-content h3 {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 600; font-size: 19px;
+  color: var(--navy-darkest); margin-bottom: 6px;
+}
+.agenda-content p { font-size: 13.5px; color: var(--text-sub); line-height: 1.55; }
+
+/* ───── pillar-grid (2つの柱) ───── */
+.pillar-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 24px;
+}
+.pillar-card {
+  background: linear-gradient(160deg, var(--white) 0%, var(--navy-bg) 100%);
+  border: 2px solid var(--navy-pale);
+  border-radius: 8px;
+  padding: 26px;
+  transition: all 0.3s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.pillar-card:hover {
+  border-color: var(--accent-red);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(15,40,71,0.15);
+}
+.pillar-card::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 100%; height: 4px;
+  background: linear-gradient(90deg, var(--navy) 0%, var(--accent-red) 100%);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s;
+}
+.pillar-card:hover::before { transform: scaleX(1); }
+.pillar-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--accent-red);
+  letter-spacing: 0.15em; font-weight: 700;
+  margin-bottom: 8px;
+}
+.pillar-name {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  font-size: 28px; color: var(--navy-darkest);
+  margin-bottom: 12px; line-height: 1.3;
+}
+.pillar-desc {
+  font-size: 14.5px; line-height: 1.75;
+  color: var(--text-main); font-weight: 500;
+  padding-top: 12px; border-top: 1px solid var(--navy-pale);
+}
+.pillar-list {
+  margin-top: 12px; padding-left: 4px;
+  font-size: 13px; color: var(--text-sub); line-height: 1.75;
+}
+.pillar-list li { list-style: none; }
+.pillar-list li::before { content: '▸ '; color: var(--accent-red); }
+
+/* ───── ip-table (産業財産権4種の表) ───── */
+.ip-table-wrap {
+  margin-top: 18px;
+  border: 1px solid var(--navy-pale);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.ip-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 14.5px;
+}
+.ip-table thead {
+  background: var(--navy-darkest); color: white;
+}
+.ip-table thead th {
+  padding: 12px 14px; text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.15em;
+}
+.ip-table tbody tr { border-top: 1px solid var(--navy-pale); }
+.ip-table tbody tr:nth-child(even) { background: var(--navy-bg); }
+.ip-table tbody td { padding: 14px; vertical-align: middle; line-height: 1.6; }
+.ip-table .ip-name {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  color: var(--navy-darkest); font-size: 17px;
+  white-space: nowrap;
+}
+.ip-table .ip-period {
+  font-family: 'JetBrains Mono', monospace; font-weight: 700;
+  color: var(--accent-red-dark); font-size: 13px;
+  letter-spacing: 0.04em; white-space: nowrap;
+}
+
+/* ───── case-expander ───── */
+.case-expander {
+  background: var(--white);
+  border: 1px solid var(--navy-pale);
+  border-radius: 6px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+.case-expander.open {
+  border-color: var(--accent-red);
+  box-shadow: 0 4px 20px rgba(200,16,46,0.1);
+}
+.case-head {
+  padding: 14px 20px;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 14px;
+  background: var(--navy-bg);
+  transition: background 0.2s;
+}
+.case-head:hover { background: var(--navy-pale); }
+.case-year {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 13px;
+  color: var(--accent-red); min-width: 50px;
+}
+.case-title {
+  font-family: 'Noto Serif JP', serif; font-weight: 600;
+  font-size: 15.5px; color: var(--navy-darkest); flex: 1;
+  line-height: 1.4;
+}
+.case-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 0.1em;
+  color: var(--navy); background: var(--navy-pale);
+  padding: 3px 8px; border-radius: 3px; font-weight: 700;
+}
+.case-toggle {
+  color: var(--navy); font-size: 14px;
+  transition: transform 0.3s;
+  font-family: 'JetBrains Mono', monospace; font-weight: 700;
+}
+.case-expander.open .case-toggle { transform: rotate(45deg); }
+.case-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+.case-expander.open .case-body { max-height: 600px; }
+.case-content {
+  padding: 16px 20px 18px 20px;
+  font-size: 14.5px; line-height: 1.8;
+  color: var(--text-main); font-weight: 500;
+  border-top: 1px solid var(--navy-pale);
+}
+.case-content p { margin-bottom: 8px; }
+.case-content strong { color: var(--accent-red-dark); }
+
+/* ───── quiz-container ───── */
+.quiz-container { max-width: 900px; margin: 24px auto 0; }
+.quiz-question {
+  background: var(--navy-darkest); color: white;
+  padding: 18px 26px;
+  border-radius: 6px 6px 0 0;
+  font-size: 18px; line-height: 1.6;
+  font-family: 'Noto Serif JP', serif; font-weight: 500;
+}
+.quiz-question-num {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent-gold);
+  font-size: 11px; letter-spacing: 0.2em;
+  margin-bottom: 6px; display: block;
+}
+.quiz-options {
+  background: var(--white);
+  border: 1px solid var(--navy-pale); border-top: none;
+  border-radius: 0 0 6px 6px; padding: 16px;
+}
+.quiz-option {
+  padding: 13px 18px; margin-bottom: 8px;
+  background: var(--navy-bg);
+  border: 2px solid transparent;
+  border-radius: 4px; cursor: pointer;
+  transition: all 0.2s;
+  display: flex; gap: 14px; align-items: flex-start;
+  font-size: 15.5px; font-weight: 500;
+}
+.quiz-option:hover { border-color: var(--navy); background: var(--navy-pale); }
+.quiz-option:last-child { margin-bottom: 0; }
+.quiz-option-letter {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; color: var(--navy);
+  min-width: 24px;
+}
+.quiz-option.correct { background: rgba(30,130,76,0.1); border-color: var(--ok-green); }
+.quiz-option.correct .quiz-option-letter { color: var(--ok-green); }
+.quiz-option.incorrect {
+  background: rgba(200,16,46,0.08);
+  border-color: var(--accent-red);
+  opacity: 0.6;
+}
+.quiz-feedback {
+  display: none; margin-top: 14px;
+  padding: 16px 20px; background: var(--navy-bg);
+  border-left: 4px solid var(--accent-gold);
+  font-size: 14.5px; line-height: 1.75; font-weight: 500;
+  border-radius: 0 4px 4px 0;
+}
+.quiz-feedback.show { display: block; animation: fadeIn 0.4s; }
+.quiz-feedback strong { color: var(--navy-darkest); }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ───── practice-list ───── */
+.practice-list { margin-top: 20px; }
+.practice-item {
+  display: flex; gap: 18px;
+  padding: 14px 20px;
+  background: var(--white);
+  border: 1px solid var(--navy-pale);
+  border-radius: 6px;
+  margin-bottom: 10px;
+  transition: all 0.25s;
+  cursor: pointer;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.practice-item:hover { background: var(--navy-bg); }
+.practice-letter {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 700; color: var(--navy);
+  min-width: 28px; font-size: 18px;
+}
+.practice-text { flex: 1; font-size: 15.5px; line-height: 1.75; font-weight: 500; min-width: 200px; }
+.practice-verdict {
+  padding: 4px 12px;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.1em; white-space: nowrap;
+  min-width: 64px; text-align: center;
+  background: transparent; color: var(--navy);
+  border: 1px dashed var(--navy-light);
+  transition: all 0.3s;
+}
+.practice-item.revealed .practice-verdict {
+  border-style: solid; letter-spacing: 0.15em;
+}
+.practice-item.revealed.ok .practice-verdict {
+  background: var(--ok-green); color: white; border-color: var(--ok-green);
+}
+.practice-item.revealed.ng .practice-verdict {
+  background: var(--accent-red); color: white; border-color: var(--accent-red);
+}
+.practice-item.revealed .practice-reason {
+  display: block; margin-top: 8px;
+  padding: 10px 14px;
+  background: var(--navy-bg);
+  border-left: 3px solid var(--accent-gold);
+  font-size: 13px; color: var(--text-sub);
+  line-height: 1.7; width: 100%; font-weight: 500;
+}
+.practice-reason { display: none; }
+
+/* ───── filter-toggle ───── */
+.filter-toggle {
+  display: inline-flex;
+  background: var(--navy-bg);
+  border-radius: 40px;
+  padding: 5px;
+  margin: 18px 0;
+  border: 1px solid var(--navy-pale);
+}
+.filter-toggle button {
+  padding: 10px 28px;
+  background: transparent; border: none;
+  cursor: pointer;
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 600; font-size: 15px;
+  color: var(--text-sub);
+  border-radius: 30px;
+  transition: all 0.25s;
+}
+.filter-toggle button.active {
+  background: var(--navy-darkest); color: white;
+}
+.filter-display {
+  background: var(--white);
+  border: 1px solid var(--navy-pale);
+  border-radius: 8px;
+  padding: 22px 26px;
+  margin-top: 12px;
+}
+.filter-display h4 {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 22px; color: var(--navy-darkest);
+  margin-bottom: 8px;
+}
+.filter-tagline {
+  font-size: 14.5px; color: var(--text-sub);
+  margin-bottom: 14px; line-height: 1.7;
+  font-weight: 500;
+}
+.filter-detail {
+  font-size: 14.5px; line-height: 1.8; font-weight: 500;
+  color: var(--text-main);
+  padding: 12px 16px; background: var(--navy-bg);
+  border-left: 3px solid var(--accent-gold);
+  border-radius: 0 4px 4px 0;
+}
+
+/* ───── formation-compare (方式主義 vs 無方式主義) ───── */
+.formation-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 22px;
+}
+.formation-card {
+  background: var(--white);
+  border: 2px solid var(--navy-pale);
+  border-radius: 10px;
+  padding: 20px 22px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.formation-formal { border-top: 5px solid var(--accent-red); }
+.formation-informal { border-top: 5px solid var(--ok-green); }
+.formation-head {
+  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed var(--navy-pale);
+}
+.formation-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; letter-spacing: 0.15em;
+  color: var(--accent-red); font-weight: 700;
+}
+.formation-name {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 22px; font-weight: 700;
+  color: var(--navy-darkest);
+}
+.formation-target {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; letter-spacing: 0.1em;
+  padding: 3px 9px; border-radius: 3px;
+  background: var(--navy-bg); color: var(--navy);
+  font-weight: 700;
+}
+.formation-flow {
+  display: flex; align-items: center; gap: 6px;
+  flex-wrap: wrap;
+  background: var(--navy-bg);
+  border-radius: 8px;
+  padding: 14px 10px;
+  justify-content: center;
+}
+.flow-step {
+  background: var(--white);
+  border: 1.5px solid var(--navy-pale);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 600; font-size: 14px;
+  color: var(--navy-darkest);
+  white-space: nowrap;
+}
+.flow-step.big { padding: 12px 18px; font-size: 15.5px; }
+.flow-step.goal {
+  background: var(--navy-darkest);
+  color: white;
+  border-color: var(--navy-darkest);
+  position: relative;
+}
+.flow-step.goal::before {
+  content: '★';
+  color: var(--accent-gold);
+  margin-right: 4px; font-size: 12px;
+}
+.flow-arrow {
+  color: var(--navy-light);
+  font-weight: 700; font-size: 16px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.flow-arrow.strong { color: var(--accent-red); font-size: 18px; }
+.flow-arrow.equal { font-size: 20px; color: var(--ok-green); }
+.formation-hint {
+  font-size: 13.5px; line-height: 1.7;
+  color: var(--text-main); font-weight: 500;
+  padding: 10px 14px;
+  background: var(--navy-bg);
+  border-left: 3px solid var(--accent-gold);
+  border-radius: 0 4px 4px 0;
+}
+.formation-examples {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.formation-ex-head {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; letter-spacing: 0.2em;
+  color: var(--text-sub); font-weight: 700;
+  margin-bottom: 2px;
+}
+.formation-ex-item {
+  font-size: 13px; line-height: 1.65;
+  color: var(--text-main); font-weight: 500;
+  padding: 8px 12px;
+  background: var(--white);
+  border: 1px solid var(--navy-pale);
+  border-radius: 4px;
+}
+.formation-ex-item strong {
+  color: var(--navy-darkest);
+  display: block; margin-bottom: 2px;
+  font-family: 'Noto Serif JP', serif; font-size: 13.5px;
+}
+
+.formation-contrast {
+  margin-top: 18px;
+  border: 1px solid var(--navy-pale);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.contrast-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  font-size: 13.5px;
+  border-top: 1px solid var(--navy-pale);
+}
+.contrast-row:first-child { border-top: none; }
+.contrast-row > div {
+  padding: 10px 14px;
+  line-height: 1.55;
+  font-weight: 500;
+}
+.contrast-label {
+  background: var(--navy-darkest);
+  color: white;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 600;
+}
+.contrast-old {
+  background: rgba(200,16,46,0.06);
+  color: var(--text-main);
+  border-left: 3px solid var(--accent-red);
+}
+.contrast-new {
+  background: rgba(30,130,76,0.06);
+  color: var(--text-main);
+  border-left: 3px solid var(--ok-green);
+}
+
+/* ───── rights-tree (著作者の権利構造) ───── */
+.rights-tree {
+  margin-top: 24px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.rights-root {
+  background: var(--navy-darkest); color: white;
+  padding: 18px 24px; border-radius: 8px;
+  align-self: center;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 22px; font-weight: 700;
+  box-shadow: 0 8px 20px rgba(15,40,71,0.25);
+  position: relative;
+}
+.rights-root::after {
+  content: ''; position: absolute;
+  bottom: -14px; left: 50%; transform: translateX(-50%);
+  width: 2px; height: 14px; background: var(--navy-pale);
+}
+.rights-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.rights-box {
+  background: var(--white);
+  border: 2px solid var(--navy-pale);
+  border-radius: 8px; padding: 20px;
+  position: relative;
+  transition: all 0.25s;
+}
+.rights-box:hover {
+  border-color: var(--accent-red);
+  transform: translateY(-2px);
+}
+.rights-box.author { border-left: 5px solid var(--accent-red); }
+.rights-box.economic { border-left: 5px solid var(--accent-gold); }
+.rights-box.neighboring {
+  border-left: 5px solid var(--navy);
+  grid-column: span 2;
+}
+.rights-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; letter-spacing: 0.18em;
+  color: var(--accent-red); font-weight: 700;
+  margin-bottom: 8px;
+}
+.rights-box.economic .rights-label { color: #8a6d1f; }
+.rights-box.neighboring .rights-label { color: var(--navy); }
+.rights-name {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  font-size: 21px; color: var(--navy-darkest);
+  margin-bottom: 10px;
+}
+.rights-sub {
+  font-size: 13px; color: var(--text-sub);
+  margin-bottom: 12px; font-weight: 500;
+  padding-bottom: 10px; border-bottom: 1px dashed var(--navy-pale);
+  line-height: 1.65;
+}
+.rights-items {
+  font-size: 13.5px; line-height: 1.85;
+  color: var(--text-main); font-weight: 500;
+}
+.rights-items li { list-style: none; }
+.rights-items li::before {
+  content: '▸ '; color: var(--accent-red); font-weight: 700;
+}
+
+/* ───── rights-map (著作者・伝達者と権利の関係図) ───── */
+.rights-map { margin-top: 22px; }
+.rights-map-actors {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  gap: 8px; align-items: stretch;
+  margin-bottom: 4px;
+}
+.actor-box {
+  background: var(--white);
+  border: 2px solid var(--navy-pale);
+  border-radius: 8px;
+  padding: 14px 12px;
+  text-align: center;
+  display: flex; flex-direction: column; gap: 2px;
+  justify-content: center;
+}
+.actor-box.actor-author { border-top: 4px solid var(--accent-red); }
+.actor-box.actor-work {
+  background: var(--navy-bg);
+  border-color: var(--navy);
+}
+.actor-box.actor-broadcaster { border-top: 4px solid var(--navy); }
+.actor-icon { font-size: 26px; line-height: 1; margin-bottom: 4px; }
+.actor-role {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 700; font-size: 16px;
+  color: var(--navy-darkest);
+}
+.actor-example {
+  font-size: 11px; color: var(--text-sub);
+  line-height: 1.5; font-weight: 500;
+}
+.actor-arrow {
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--accent-red);
+  padding: 0 2px;
+  position: relative;
+}
+.actor-arrow::before {
+  content: '→';
+  font-size: 18px;
+  margin-right: 4px;
+  color: var(--navy-light);
+}
+
+.rights-map-links {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 8px;
+  margin-top: 6px;
+}
+.rights-map-link {
+  padding: 6px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; letter-spacing: 0.15em;
+  font-weight: 700;
+  text-align: center;
+  border-radius: 4px;
+}
+.rights-map-link.link-author {
+  background: rgba(200,16,46,0.1);
+  color: var(--accent-red-dark);
+  border-top: 2px dashed var(--accent-red);
+}
+.rights-map-link.link-neighboring {
+  background: rgba(44,95,141,0.1);
+  color: var(--navy-dark);
+  border-top: 2px dashed var(--navy);
+}
+
+.rights-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-top: 14px;
+}
+.rights-col {
+  background: var(--white);
+  border: 2px solid var(--navy-pale);
+  border-radius: 8px;
+  padding: 16px 18px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.rights-col.col-author { border-left: 5px solid var(--accent-red); }
+.rights-col.col-economic { border-left: 5px solid var(--accent-gold); }
+.rights-col.col-neighboring { border-left: 5px solid var(--navy); }
+.rights-col-head {
+  display: flex; align-items: baseline; gap: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--navy-pale);
+}
+.rights-col-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; letter-spacing: 0.15em;
+  color: var(--accent-red); font-weight: 700;
+}
+.col-economic .rights-col-tag { color: #8a6d1f; }
+.col-neighboring .rights-col-tag { color: var(--navy); }
+.rights-col-name {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 20px; font-weight: 700;
+  color: var(--navy-darkest);
+  line-height: 1.3;
+}
+.rights-col-meta {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.meta-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 0.08em;
+  padding: 3px 9px; border-radius: 12px;
+  font-weight: 700;
+  background: var(--navy-bg);
+  color: var(--navy-dark);
+}
+.meta-chip.meta-personal { background: rgba(200,16,46,0.1); color: var(--accent-red-dark); }
+.meta-chip.meta-notransfer { background: rgba(200,16,46,0.1); color: var(--accent-red-dark); }
+.meta-chip.meta-death { background: rgba(200,16,46,0.1); color: var(--accent-red-dark); }
+.meta-chip.meta-money { background: rgba(201,169,97,0.18); color: #8a6d1f; }
+.meta-chip.meta-transfer { background: rgba(201,169,97,0.18); color: #8a6d1f; }
+.meta-chip.meta-period { background: rgba(201,169,97,0.18); color: #8a6d1f; }
+.meta-chip.meta-relay { background: rgba(44,95,141,0.12); color: var(--navy); }
+.meta-chip.meta-auto { background: rgba(44,95,141,0.12); color: var(--navy); }
+
+.rights-scenarios {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.scenario {
+  background: var(--navy-bg);
+  border: 1px solid var(--navy-pale);
+  border-radius: 6px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.scenario:hover { background: var(--navy-pale); }
+.scenario.open { background: var(--white); border-color: var(--accent-red); }
+.scenario-head {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.scenario-right {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 700; font-size: 14px;
+  color: var(--navy-darkest);
+}
+.scenario-toggle {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--navy); font-weight: 700;
+  transition: transform 0.3s;
+}
+.scenario.open .scenario-toggle { transform: rotate(45deg); }
+.scenario-q {
+  font-size: 12.5px; line-height: 1.65;
+  color: var(--text-main);
+  margin-top: 6px; font-weight: 500;
+}
+.scenario-a {
+  display: none;
+  margin-top: 8px; padding-top: 8px;
+  border-top: 1px dashed var(--navy-pale);
+  font-size: 12px; line-height: 1.7;
+  color: var(--text-sub); font-weight: 500;
+}
+.scenario.open .scenario-a { display: block; }
+
+/* ───── exception-grid ───── */
+.exception-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 20px;
+}
+.exception-card {
+  background: var(--navy-bg);
+  border: 1px solid var(--navy-pale);
+  border-radius: 8px;
+  padding: 20px 22px;
+  border-top: 4px solid var(--accent-gold);
+}
+.exception-head {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 700; font-size: 20px;
+  color: var(--navy-darkest); margin-bottom: 8px;
+}
+.exception-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; letter-spacing: 0.12em;
+  color: var(--accent-red); font-weight: 700;
+  margin-bottom: 10px;
+}
+.exception-desc {
+  font-size: 14px; line-height: 1.8;
+  color: var(--text-main); font-weight: 500;
+}
+
+.exc-diagram {
+  margin-top: 14px; padding-top: 14px;
+  border-top: 1px dashed var(--navy-pale);
+}
+
+/* 私的使用: 内外の領域 */
+.exc-diagram-private {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.exc-zone {
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+.exc-zone-ok {
+  background: rgba(30,130,76,0.08);
+  border: 1.5px solid var(--ok-green);
+}
+.exc-zone-ng {
+  background: rgba(200,16,46,0.06);
+  border: 1.5px solid var(--accent-red);
+}
+.exc-zone-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; letter-spacing: 0.12em;
+  font-weight: 700; margin-bottom: 6px;
+}
+.exc-zone-ok .exc-zone-label { color: var(--ok-green); }
+.exc-zone-ng .exc-zone-label { color: var(--accent-red); }
+.exc-zone-items { display: flex; flex-wrap: wrap; gap: 5px; }
+.exc-item {
+  padding: 4px 9px;
+  background: var(--white);
+  border-radius: 11px;
+  font-size: 11.5px; font-weight: 500;
+  line-height: 1.4;
+}
+.exc-item.ok { border: 1px solid var(--ok-green); color: var(--ok-green); }
+.exc-item.ng { border: 1px solid var(--accent-red); color: var(--accent-red-dark); }
+.exc-zone-boundary {
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px; letter-spacing: 0.3em;
+  color: var(--text-sub); font-weight: 700;
+  padding: 2px 0;
+}
+
+/* 引用: 主従関係の図解 */
+.exc-diagram-quote {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.quote-outer {
+  background: var(--white);
+  border: 2px solid var(--navy);
+  border-radius: 6px;
+  padding: 12px 14px 14px;
+  position: relative;
+}
+.quote-outer-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; letter-spacing: 0.12em;
+  color: var(--navy); font-weight: 700;
+  margin-bottom: 6px;
+}
+.quote-outer-body {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 13px; font-weight: 500;
+  color: var(--text-main);
+  margin-bottom: 10px;
+  padding: 8px 10px;
+  background: var(--navy-bg);
+  border-radius: 4px;
+}
+.quote-inner {
+  background: rgba(200,16,46,0.05);
+  border: 1.5px dashed var(--accent-red);
+  border-radius: 5px;
+  padding: 8px 10px;
+  margin-left: 24px;
+  margin-bottom: 6px;
+  position: relative;
+}
+.quote-inner::before {
+  content: '「';
+  position: absolute; left: -22px; top: 4px;
+  font-size: 28px; color: var(--accent-red);
+  font-weight: 700; line-height: 1;
+}
+.quote-inner-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 0.1em;
+  color: var(--accent-red); font-weight: 700;
+  margin-bottom: 3px;
+}
+.quote-inner-body {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 12.5px; color: var(--text-main);
+  font-weight: 500;
+}
+.quote-citation {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; color: var(--text-sub);
+  letter-spacing: 0.05em; font-weight: 600;
+  text-align: right; margin-top: 4px;
+}
+.quote-rules {
+  display: flex; flex-wrap: wrap; gap: 5px;
+  justify-content: center;
+}
+.rule-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 0.08em;
+  font-weight: 700;
+  padding: 3px 9px;
+  background: var(--navy-darkest); color: white;
+  border-radius: 3px;
+}
+
+/* 試験問題: フロー */
+.exc-diagram-exam {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.exam-flow {
+  display: flex; align-items: center; gap: 4px;
+  flex-wrap: wrap;
+  padding: 8px 10px;
+  background: var(--navy-bg);
+  border-radius: 6px;
+  justify-content: center;
+}
+.exam-flow-alt { background: rgba(200,16,46,0.04); }
+.exam-node {
+  background: var(--white);
+  border: 1.5px solid var(--navy-pale);
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 11.5px; font-weight: 600;
+  color: var(--navy-darkest);
+  text-align: center;
+}
+.exam-node.exam-highlight {
+  background: var(--navy-darkest);
+  color: white;
+  border-color: var(--navy-darkest);
+}
+.exam-node.exam-danger {
+  background: var(--accent-red);
+  color: white;
+  border-color: var(--accent-red);
+}
+.exam-arrow {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--navy-light);
+  font-weight: 700; font-size: 14px;
+}
+.exam-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; letter-spacing: 0.1em;
+  font-weight: 700; padding: 5px 10px;
+  border-radius: 3px; text-align: center;
+  line-height: 1.5;
+}
+.exam-badge-ok { background: rgba(30,130,76,0.12); color: var(--ok-green); }
+.exam-badge-ng { background: rgba(200,16,46,0.12); color: var(--accent-red); }
+
+/* ───── cc-lab (CCライセンス合成) ───── */
+.cc-marks-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+.cc-mark {
+  background: var(--white);
+  border: 2px solid var(--navy-pale);
+  border-radius: 8px;
+  padding: 16px 14px;
+  text-align: center;
+  transition: all 0.25s;
+  position: relative;
+}
+.cc-mark-icon {
+  width: 56px; height: 56px;
+  margin: 0 auto 10px;
+  color: var(--navy-darkest);
+  display: flex; align-items: center; justify-content: center;
+}
+.cc-mark-icon svg {
+  width: 100%; height: 100%;
+  display: block;
+}
+.cc-mark-letter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 700;
+  color: var(--navy); letter-spacing: 0.15em;
+  margin-bottom: 4px;
+}
+.cc-mark-name {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 700; font-size: 15px;
+  color: var(--navy-darkest);
+  margin-bottom: 6px;
+}
+.cc-mark-desc {
+  font-size: 12px; line-height: 1.6;
+  color: var(--text-sub); font-weight: 500;
+}
+.cc-required-tag {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px; letter-spacing: 0.15em;
+  background: var(--navy-darkest); color: var(--accent-gold);
+  padding: 2px 8px; border-radius: 3px;
+  font-weight: 700; margin-top: 8px;
+}
+
+.cc-lab {
+  margin-top: 18px;
+}
+.cc-q {
+  background: var(--navy-darkest); color: white;
+  padding: 16px 22px;
+  border-radius: 8px 8px 0 0;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 16.5px; line-height: 1.65;
+  font-weight: 500;
+}
+.cc-q-num {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent-gold);
+  font-size: 11px; letter-spacing: 0.2em;
+  margin-bottom: 6px; display: block;
+}
+.cc-picker {
+  background: var(--white);
+  border: 1px solid var(--navy-pale);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  padding: 18px 22px;
+  margin-bottom: 18px;
+}
+.cc-picker-help {
+  font-size: 12.5px; color: var(--text-sub);
+  margin-bottom: 12px; font-weight: 500;
+  font-family: 'JetBrains Mono', monospace; letter-spacing: 0.08em;
+}
+.cc-chips {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin-bottom: 14px;
+}
+.cc-chip {
+  padding: 10px 16px;
+  background: var(--navy-bg);
+  border: 2px solid var(--navy-pale);
+  border-radius: 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px; font-weight: 600;
+  color: var(--navy-dark);
+  display: flex; align-items: center; gap: 8px;
+}
+.cc-chip:hover { border-color: var(--navy); background: var(--navy-pale); }
+.cc-chip.locked {
+  background: var(--navy-bg);
+  border-color: var(--navy-dark);
+  color: var(--navy-dark);
+  cursor: default;
+  position: relative;
+}
+.cc-chip.locked::after {
+  content: '必須';
+  position: absolute;
+  top: -7px; right: -4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5px; letter-spacing: 0.1em;
+  background: var(--navy-darkest); color: var(--accent-gold);
+  padding: 1px 5px; border-radius: 3px; font-weight: 700;
+}
+.cc-chip.picked {
+  background: var(--accent-gold);
+  color: var(--navy-darkest);
+  border-color: var(--accent-red);
+}
+.cc-chip-mini {
+  width: 22px; height: 22px;
+  color: var(--navy-darkest);
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.cc-chip-mini svg { width: 100%; height: 100%; }
+.cc-chip.picked .cc-chip-mini { color: var(--navy-darkest); }
+.cc-chip.locked .cc-chip-mini { color: var(--navy-darkest); }
+.cc-check {
+  padding: 10px 20px;
+  background: var(--navy-darkest); color: white;
+  border: none; border-radius: 20px;
+  cursor: pointer; font-size: 13.5px;
+  font-family: 'Noto Serif JP', serif; font-weight: 600;
+  transition: all 0.25s;
+}
+.cc-check:hover { background: var(--navy); }
+.cc-feedback {
+  display: none; margin-top: 12px;
+  padding: 12px 16px;
+  border-radius: 0 4px 4px 0;
+  font-size: 13.5px; line-height: 1.75;
+  font-weight: 500;
+}
+.cc-feedback.show { display: block; animation: fadeIn 0.4s; }
+.cc-feedback.ok { background: rgba(30,130,76,0.08); border-left: 3px solid var(--ok-green); }
+.cc-feedback.ng { background: rgba(200,16,46,0.06); border-left: 3px solid var(--accent-red); }
+.cc-feedback strong { display: block; margin-bottom: 4px; }
+
+/* ───── answers-grid ───── */
+.answers-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 22px;
+}
+.answer-row {
+  display: flex; align-items: center;
+  padding: 11px 16px;
+  background: var(--navy-bg);
+  border-radius: 4px; gap: 12px;
+  border-left: 3px solid var(--navy);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.answer-row:hover { background: var(--navy-pale); }
+.answer-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; color: var(--accent-red);
+  font-size: 13px; min-width: 28px;
+}
+.answer-text {
+  flex: 1; font-size: 13.5px;
+  font-weight: 500; color: var(--navy-darkest);
+  line-height: 1.5;
+}
+.answer-reveal {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; padding: 4px 10px;
+  background: var(--navy-dark); color: white;
+  border-radius: 3px;
+  letter-spacing: 0.08em;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+.answer-row.revealed .answer-reveal {
+  background: var(--accent-gold);
+  color: var(--navy-darkest);
+  font-weight: 700;
+}
+
+/* ───── summary-tree ───── */
+.summary-tree {
+  display: flex; justify-content: center;
+  margin-top: 24px; padding: 16px 0;
+}
+.tree-center {
+  background: var(--navy-darkest); color: white;
+  padding: 22px 36px; border-radius: 8px;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 26px; font-weight: 700;
+  box-shadow: 0 8px 24px rgba(15,40,71,0.25);
+}
+.tree-branches {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px; margin-top: 36px;
+}
+.tree-branch {
+  background: var(--white);
+  border: 2px solid var(--navy-pale);
+  border-radius: 6px; padding: 18px;
+  position: relative;
+  transition: all 0.25s;
+}
+.tree-branch:hover { border-color: var(--accent-red); transform: translateY(-3px); }
+.tree-branch::before {
+  content: ''; position: absolute;
+  top: -18px; left: 50%;
+  width: 2px; height: 18px;
+  background: var(--navy-pale);
+}
+.tree-branch h4 {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 16px; color: var(--navy-darkest);
+  margin-bottom: 8px; line-height: 1.3;
+}
+.tree-branch ul {
+  list-style: none;
+  font-size: 12.5px; line-height: 1.8;
+  color: var(--text-sub); font-weight: 500;
+}
+.tree-branch li::before { content: '▸ '; color: var(--accent-red); }
+
+/* ───── review-container ───── */
+.review-container {
+  max-width: 800px;
+  margin: 16px auto 0;
+  text-align: center;
+}
+.review-intro {
+  font-size: 15px; color: var(--text-sub);
+  margin-bottom: 22px; line-height: 1.8;
+  font-weight: 500;
+}
+.review-start-btn {
+  background: var(--navy-darkest); color: white;
+  border: none; padding: 14px 40px;
+  font-size: 16px;
+  font-family: 'Noto Serif JP', serif; font-weight: 600;
+  border-radius: 50px; cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 6px 20px rgba(15,40,71,0.25);
+}
+.review-start-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(15,40,71,0.35);
+  background: var(--navy);
+}
+.review-q-area { display: none; margin-top: 20px; }
+.review-q-area.active { display: block; }
+.review-progress {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--navy);
+  font-size: 12px; letter-spacing: 0.15em;
+  margin-bottom: 14px;
+}
+.review-result {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 48px; font-weight: 700;
+  color: var(--accent-red);
+  margin: 20px 0 10px;
+}
+.review-result-sub {
+  font-size: 14px; color: var(--text-sub);
+  margin-bottom: 22px; font-weight: 500;
+}
+.review-retry-btn {
+  background: transparent;
+  border: 2px solid var(--navy);
+  color: var(--navy-darkest);
+  padding: 10px 24px;
+  font-family: 'Noto Serif JP', serif; font-weight: 600;
+  border-radius: 30px; cursor: pointer;
+  transition: all 0.2s;
+}
+.review-retry-btn:hover { background: var(--navy-darkest); color: white; }
+
+/* ───── sort-game ───── */
+.sort-game { margin-top: 12px; }
+.sort-stack {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  padding: 14px; background: var(--navy-bg);
+  border-radius: 8px; margin-bottom: 14px;
+  min-height: 70px; border: 1px dashed var(--navy-pale);
+}
+.sort-card {
+  padding: 11px 16px;
+  background: white; border: 2px solid var(--navy-pale);
+  border-radius: 6px; font-size: 14.5px;
+  cursor: pointer; transition: all 0.25s;
+  font-weight: 500; max-width: 340px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+.sort-card:hover { border-color: var(--navy); transform: translateY(-2px); }
+.sort-card.selected {
+  border-color: var(--accent-gold);
+  background: rgba(201,169,97,0.12);
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 6px 16px rgba(201,169,97,0.25);
+}
+.sort-card.placed { display: none; }
+.sort-zones {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+}
+.sort-zone {
+  background: white; border: 2px dashed var(--navy-pale);
+  border-radius: 8px; padding: 12px;
+  min-height: 140px; cursor: pointer;
+  transition: all 0.25s;
+}
+.sort-zone:hover { border-color: var(--navy); background: var(--navy-bg); }
+.sort-zone.highlight {
+  border-color: var(--accent-gold); border-style: solid;
+  background: rgba(201,169,97,0.08);
+}
+.sort-zone-head {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  font-size: 15px; color: var(--navy-darkest); margin-bottom: 4px;
+}
+.sort-zone-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 0.1em;
+  color: var(--text-sub); margin-bottom: 10px; font-weight: 700;
+}
+.sort-placed-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.sort-placed-chip {
+  padding: 6px 10px; font-size: 12px;
+  border-radius: 12px; font-weight: 600;
+  line-height: 1.5; cursor: pointer;
+  transition: all 0.2s;
+}
+.sort-placed-chip:hover { transform: scale(0.97); filter: brightness(0.92); }
+.sort-placed-chip::after {
+  content: ' ✕'; opacity: 0;
+  font-size: 11px; margin-left: 2px;
+  transition: opacity 0.2s;
+}
+.sort-placed-chip:hover::after { opacity: 1; }
+.sort-placed-chip.ok {
+  background: rgba(30,130,76,0.12); color: var(--ok-green);
+  border: 1px solid var(--ok-green);
+}
+.sort-placed-chip.ng {
+  background: rgba(200,16,46,0.1); color: var(--accent-red);
+  border: 1px solid var(--accent-red);
+}
+.sort-status {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-top: 14px;
+  padding: 12px 18px; background: var(--navy-darkest);
+  color: white; border-radius: 6px; font-size: 13.5px;
+  font-weight: 500;
+}
+.sort-status-score {
+  font-family: 'JetBrains Mono', monospace; font-weight: 700;
+  color: var(--accent-gold); font-size: 16px;
+}
+.sort-reset {
+  padding: 6px 16px; background: transparent;
+  color: white; border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 14px; cursor: pointer; font-size: 12.5px;
+  font-family: 'Noto Serif JP', serif; font-weight: 600;
+}
+.sort-reveal-row {
+  display: none; margin-top: 12px;
+  padding: 12px 16px;
+  background: var(--navy-bg);
+  border-left: 3px solid var(--accent-gold);
+  font-size: 13.5px; line-height: 1.75;
+  border-radius: 0 4px 4px 0; font-weight: 500;
+}
+.sort-reveal-row.show { display: block; }
+
+/* ───── utility ───── */
+.slide::-webkit-scrollbar { width: 6px; }
+.slide::-webkit-scrollbar-track { background: transparent; }
+.slide::-webkit-scrollbar-thumb { background: var(--navy-pale); border-radius: 3px; }
+
+@media print { .topbar, .bottombar, .progress { display: none; } }
+
+/* ══════════════════════════════════════════════════════
+   MENU DRAWER
+   ══════════════════════════════════════════════════════ */
+.menu-toggle {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: white;
+  padding: 6px 14px 6px 12px;
+  border-radius: 18px;
+  cursor: pointer;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  margin-left: 14px;
+  transition: all 0.25s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+}
+.menu-toggle:hover { background: rgba(201,169,97,0.25); border-color: var(--accent-gold); }
+.menu-toggle-icon {
+  display: inline-flex; flex-direction: column;
+  gap: 3px; width: 14px; justify-content: center;
+}
+.menu-toggle-icon span {
+  display: block; height: 1.5px;
+  background: white; border-radius: 1px;
+  transition: all 0.2s;
+}
+.menu-toggle:hover .menu-toggle-icon span { background: var(--accent-gold); }
+
+.menu-overlay {
+  position: fixed; inset: 0;
+  background: rgba(15,40,71,0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 200;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.35s;
+}
+.menu-overlay.open { opacity: 1; pointer-events: all; }
+
+.menu-panel {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: 400px; max-width: 92vw;
+  background: white;
+  box-shadow: -16px 0 40px rgba(0,0,0,0.2);
+  z-index: 201;
+  transform: translateX(100%);
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex; flex-direction: column;
+}
+.menu-panel.open { transform: translateX(0); }
+.menu-head {
+  padding: 24px 26px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(180deg, var(--navy-darkest) 0%, var(--navy-dark) 100%);
+  color: white;
+  flex-shrink: 0;
+}
+.menu-head-title { font-family: 'Noto Serif JP', serif; font-weight: 700; font-size: 20px; }
+.menu-head-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; color: var(--accent-gold);
+  letter-spacing: 0.2em; margin-top: 4px; font-weight: 700;
+}
+.menu-close {
+  background: rgba(255,255,255,0.08);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.15);
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  cursor: pointer; font-size: 16px;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.menu-close:hover { background: rgba(200,16,46,0.3); border-color: var(--accent-red); }
+.menu-reset-btn {
+  margin: 14px 22px 4px;
+  padding: 11px 16px;
+  background: transparent;
+  border: 1.5px dashed var(--accent-red);
+  color: var(--accent-red);
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 600; font-size: 13.5px;
+  transition: all 0.25s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.menu-reset-btn:hover { background: var(--accent-red); color: white; border-style: solid; }
+.menu-reset-icon { display: inline-block; font-size: 15px; transition: transform 0.4s; }
+.menu-reset-btn:hover .menu-reset-icon { transform: rotate(-180deg); }
+.menu-list { flex: 1; overflow-y: auto; padding: 8px 14px 28px; }
+.menu-list::-webkit-scrollbar { width: 6px; }
+.menu-list::-webkit-scrollbar-thumb { background: var(--navy-pale); border-radius: 3px; }
+.menu-section {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; letter-spacing: 0.2em;
+  color: var(--accent-red); font-weight: 700;
+  padding: 16px 14px 8px;
+  margin-top: 6px;
+  border-top: 1px solid var(--navy-pale);
+}
+.menu-section:first-of-type { border-top: none; margin-top: 6px; }
+.menu-item {
+  display: flex; gap: 12px;
+  padding: 11px 14px;
+  border-radius: 6px; cursor: pointer;
+  transition: all 0.2s;
+  align-items: center;
+  margin-bottom: 2px;
+}
+.menu-item:hover { background: var(--navy-bg); transform: translateX(-2px); }
+.menu-item-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; color: var(--text-sub);
+  font-size: 12px; min-width: 26px;
+}
+.menu-item-title {
+  font-size: 14px; font-weight: 500;
+  color: var(--navy-darkest);
+  flex: 1; line-height: 1.45;
+}
+.menu-item.active {
+  background: var(--navy-darkest);
+  color: white;
+  box-shadow: 0 4px 14px rgba(15,40,71,0.25);
+}
+.menu-item.active .menu-item-num { color: var(--accent-gold); }
+.menu-item.active .menu-item-title { color: white; font-weight: 700; }
+.menu-item-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 0.1em;
+  padding: 3px 7px; border-radius: 3px; font-weight: 700;
+  background: rgba(200,16,46,0.1); color: var(--accent-red);
+  white-space: nowrap;
+}
+.menu-item-tag.tag-interactive { background: rgba(201,169,97,0.18); color: #8a6d1f; }
+.menu-item-tag.tag-review { background: rgba(44,95,141,0.12); color: var(--navy); }
+.menu-item-tag.tag-section,
+.menu-item-tag.tag-title,
+.menu-item-tag.tag-end { background: rgba(15,40,71,0.08); color: var(--navy-dark); }
+.menu-item.active .menu-item-tag { background: rgba(201,169,97,0.3); color: var(--accent-gold); }
+
+/* ══════════════════════════════════════════════════════
+   TABLET (≤ 1100px)
+   ══════════════════════════════════════════════════════ */
+@media (max-width: 1100px) {
+  .two-col, .agenda-grid, .pillar-grid { grid-template-columns: 1fr; }
+  .exception-grid { grid-template-columns: 1fr; }
+  .cc-marks-row { grid-template-columns: repeat(2, 1fr); }
+  .tree-branches { grid-template-columns: repeat(2, 1fr); }
+  .sort-zones { grid-template-columns: repeat(2, 1fr); }
+  .rights-row { grid-template-columns: 1fr; }
+  .rights-box.neighboring { grid-column: auto; }
+  .formation-compare { grid-template-columns: 1fr; }
+  .rights-columns { grid-template-columns: 1fr; }
+  .rights-map-actors {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .actor-arrow {
+    flex-direction: row;
+    padding: 4px 0;
+  }
+  .actor-arrow::before {
+    content: '↓';
+    font-size: 18px;
+    margin-right: 6px;
+  }
+  .rights-map-links {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   MOBILE (≤ 720px)
+   ══════════════════════════════════════════════════════ */
+@media (max-width: 720px) {
+  .topbar { height: 40px; padding: 0 12px; font-size: 11px; letter-spacing: 0; }
+  .topbar-title { font-size: 13px; margin-right: 8px; }
+  .topbar-subtitle { display: none; }
+  .topbar-chapter { font-size: 10px; letter-spacing: 0.08em; }
+  .menu-toggle { margin-left: 8px; padding: 4px 10px; font-size: 10px; height: 24px; gap: 6px; }
+  .menu-toggle-icon { width: 11px; gap: 2px; }
+  .menu-toggle-icon span { height: 1.3px; }
+
+  .progress { top: 40px; }
+
+  .bottombar {
+    height: calc(44px + env(safe-area-inset-bottom, 0px));
+    padding: 0 12px env(safe-area-inset-bottom, 0px);
+    font-size: 11px;
+  }
+  .bottombar-nav { gap: 8px; }
+  .nav-btn { width: 30px; height: 30px; font-size: 13px; }
+  .slide-title-small { display: none; }
+  .keyboard-hint { display: none; }
+  .page-indicator { font-size: 11px; margin-right: 0; margin-left: auto; }
+
+  .slide {
+    top: 43px;
+    bottom: calc(44px + env(safe-area-inset-bottom, 0px));
+    padding: 4vw 5vw 40px;
+    touch-action: pan-y;
+  }
+
+  .title-slide { padding: 0 6vw; }
+  .title-slide::before, .title-slide::after { display: none; }
+  .title-label { font-size: 10.5px; letter-spacing: 0.2em; margin-bottom: 18px; }
+  .title-main { font-size: clamp(36px, 10vw, 58px); letter-spacing: -0.01em; margin-bottom: 14px; }
+  .title-sub { font-size: clamp(14px, 4vw, 20px); margin-bottom: 32px; }
+  .title-meta { gap: 14px 22px; font-size: 10.5px; flex-direction: column; }
+  .section-number { font-size: 11px; letter-spacing: 0.25em; margin-bottom: 14px; }
+  .section-title-big { font-size: clamp(34px, 9vw, 54px); }
+  .section-tagline { font-size: clamp(14px, 3.8vw, 18px); }
+
+  .eyebrow { font-size: 10px; letter-spacing: 0.15em; margin-bottom: 12px; }
+  .slide-title { font-size: clamp(24px, 6.2vw, 34px); margin-bottom: 8px; }
+  .slide-subtitle { font-size: clamp(13.5px, 3.8vw, 17px); margin-bottom: 20px; line-height: 1.65; }
+  .section-heading { font-size: 22px; margin-bottom: 14px; padding-left: 12px; border-left-width: 3px; }
+  .body-text { font-size: 15px; }
+
+  .def-box { padding: 16px 18px; margin-bottom: 10px; }
+  .def-box .def-term { font-size: 18px; margin-bottom: 8px; }
+  .def-box .def-desc { font-size: 14.5px; line-height: 1.75; }
+
+  .agenda-item { padding: 16px 18px; gap: 12px; }
+  .agenda-num { font-size: 26px; min-width: 36px; }
+  .agenda-content h3 { font-size: 16.5px; }
+  .agenda-content p { font-size: 12.5px; }
+
+  .pillar-card { padding: 20px; }
+  .pillar-name { font-size: 22px; }
+  .pillar-desc { font-size: 13.5px; }
+
+  .ip-table thead th { padding: 8px 10px; font-size: 9.5px; }
+  .ip-table tbody td { padding: 10px; font-size: 13px; }
+  .ip-table .ip-name { font-size: 14px; white-space: normal; }
+  .ip-table .ip-period { font-size: 11px; white-space: normal; }
+
+  .case-head { padding: 12px 14px; gap: 10px; }
+  .case-title { font-size: 13.5px; }
+  .case-year { min-width: 44px; font-size: 11px; }
+  .case-tag { font-size: 9px; }
+  .case-content { padding: 12px 14px 14px; font-size: 13px; }
+
+  .quiz-question { padding: 14px 18px; font-size: 15.5px; }
+  .quiz-options { padding: 12px; }
+  .quiz-option { padding: 11px 14px; font-size: 13.5px; gap: 10px; }
+  .quiz-feedback { padding: 12px 14px; font-size: 12.5px; }
+
+  .practice-item { padding: 12px 14px; gap: 12px; }
+  .practice-letter { font-size: 15px; min-width: 22px; }
+  .practice-text { font-size: 13.5px; min-width: 140px; }
+  .practice-verdict { font-size: 10px; min-width: 52px; padding: 3px 8px; }
+  .practice-item.revealed .practice-reason { font-size: 12px; padding: 8px 12px; }
+
+  .filter-toggle button { padding: 8px 18px; font-size: 13.5px; }
+  .filter-display { padding: 18px 20px; }
+  .filter-display h4 { font-size: 18px; }
+  .filter-tagline { font-size: 13px; }
+  .filter-detail { font-size: 13px; padding: 10px 14px; }
+
+  .rights-root { font-size: 18px; padding: 14px 22px; }
+  .rights-box { padding: 16px; }
+  .rights-name { font-size: 17px; }
+  .rights-items { font-size: 12.5px; }
+
+  .actor-box { padding: 12px; }
+  .actor-icon { font-size: 22px; }
+  .actor-role { font-size: 14.5px; }
+  .actor-example { font-size: 10.5px; }
+  .rights-col { padding: 14px 16px; }
+  .rights-col-name { font-size: 18px; }
+  .scenario { padding: 9px 11px; }
+  .scenario-right { font-size: 13px; }
+  .scenario-q { font-size: 12px; }
+  .scenario-a { font-size: 11.5px; }
+  .meta-chip { font-size: 9.5px; padding: 2px 7px; }
+
+  .formation-card { padding: 16px 18px; }
+  .formation-name { font-size: 18px; }
+  .formation-target { font-size: 9.5px; }
+  .formation-flow { padding: 10px 8px; gap: 5px; }
+  .flow-step { padding: 6px 10px; font-size: 12.5px; }
+  .flow-step.big { padding: 10px 14px; font-size: 14px; }
+  .flow-arrow { font-size: 14px; }
+  .flow-arrow.strong { font-size: 16px; }
+  .flow-arrow.equal { font-size: 18px; }
+  .formation-hint { font-size: 12.5px; padding: 8px 12px; }
+  .formation-ex-item { font-size: 12px; padding: 7px 10px; }
+  .formation-ex-item strong { font-size: 12.5px; }
+  .contrast-row { grid-template-columns: 1fr; }
+  .contrast-row > div { padding: 8px 12px; font-size: 12.5px; }
+  .contrast-label { font-size: 11px; padding: 6px 12px; }
+  .contrast-old { border-left-width: 3px; position: relative; padding-left: 58px; }
+  .contrast-old::before {
+    content: '方式';
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    color: var(--accent-red); font-weight: 700; letter-spacing: 0.1em;
+    padding: 2px 6px; border-radius: 2px; background: rgba(200,16,46,0.1);
+  }
+  .contrast-new { border-left-width: 3px; position: relative; padding-left: 58px; }
+  .contrast-new::before {
+    content: '無方式';
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    color: var(--ok-green); font-weight: 700; letter-spacing: 0.1em;
+    padding: 2px 6px; border-radius: 2px; background: rgba(30,130,76,0.1);
+  }
+
+  .exception-head { font-size: 17px; }
+  .exception-desc { font-size: 13px; }
+  .exc-item { font-size: 11px; padding: 3px 8px; }
+  .exc-zone-label { font-size: 9.5px; }
+  .quote-outer-body { font-size: 12px; padding: 7px 9px; }
+  .quote-inner { padding: 7px 9px; margin-left: 20px; }
+  .quote-inner-body { font-size: 11.5px; }
+  .quote-citation { font-size: 10px; }
+  .rule-chip { font-size: 9px; padding: 2px 7px; }
+  .exam-node { font-size: 10.5px; padding: 5px 8px; }
+  .exam-arrow { font-size: 12px; }
+  .exam-badge { font-size: 9.5px; padding: 4px 8px; }
+
+  .cc-marks-row { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .cc-mark { padding: 14px 10px; }
+  .cc-mark-name { font-size: 13.5px; }
+  .cc-mark-desc { font-size: 11px; }
+
+  .cc-q { padding: 14px 18px; font-size: 14.5px; }
+  .cc-picker { padding: 14px 18px; }
+  .cc-chip { padding: 8px 12px; font-size: 12.5px; }
+  .cc-feedback { font-size: 12.5px; padding: 10px 12px; }
+
+  .answers-grid { grid-template-columns: 1fr; gap: 8px; }
+  .answer-text { font-size: 12.5px; }
+  .answer-reveal { font-size: 10px; padding: 3px 8px; }
+
+  .tree-center { font-size: 20px; padding: 16px 24px; }
+  .tree-branches { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .tree-branch { padding: 14px; }
+  .tree-branch h4 { font-size: 14px; }
+  .tree-branch ul { font-size: 11.5px; }
+
+  .sort-zones { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .sort-zone { min-height: 100px; padding: 10px; }
+  .sort-zone-head { font-size: 13.5px; }
+  .sort-zone-sub { font-size: 9.5px; }
+  .sort-card { font-size: 13px; padding: 9px 13px; max-width: 100%; }
+  .sort-status { font-size: 12px; padding: 10px 14px; flex-wrap: wrap; gap: 6px; }
+
+  .menu-panel { width: 100%; max-width: 100%; box-shadow: none; }
+  .menu-head { padding: 20px 22px 16px; }
+  .menu-head-title { font-size: 18px; }
+  .menu-head-sub { font-size: 9.5px; }
+  .menu-reset-btn { margin: 14px 20px 6px; font-size: 13px; }
+  .menu-list { padding: 6px 12px 22px; }
+  .menu-item { padding: 10px 12px; }
+  .menu-item-title { font-size: 13.5px; }
+  .menu-item-tag { font-size: 8.5px; padding: 2px 6px; }
+  .menu-section { font-size: 10px; padding: 14px 12px 6px; }
+}
+
+@media (max-width: 380px) {
+  .slide { padding: 3vw 4.5vw 40px; }
+  .title-main { font-size: 36px; }
+  .slide-title { font-size: 22px; }
+  .cc-marks-row { grid-template-columns: 1fr; }
+  .tree-branches { grid-template-columns: 1fr; }
+  .sort-zones { grid-template-columns: 1fr; }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .title-main { font-size: clamp(30px, 6vw, 50px); }
+  .title-sub { font-size: clamp(13px, 2.5vw, 18px); margin-bottom: 20px; }
+  .section-title-big { font-size: clamp(26px, 6vw, 46px); }
+  .slide-title { font-size: clamp(20px, 4vw, 30px); }
+  .slide-subtitle { margin-bottom: 14px; }
+  .slide { padding: 3vh 5vw; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="topbar-title">知的財産権</span>
+  <span class="topbar-subtitle">第1章 情報社会と問題解決 | 学習ノート p.20-25</span>
+  <span class="topbar-chapter">CHAPTER · 04</span>
+  <button class="menu-toggle" onclick="openMenu()" title="スライド目次(M)">
+    <span class="menu-toggle-icon"><span></span><span></span><span></span></span>
+    MENU
+  </button>
+</div>
+<div class="progress" id="progressBar"></div>
+
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+<div class="menu-panel" id="menuPanel">
+  <div class="menu-head">
+    <div>
+      <div class="menu-head-title">スライド目次</div>
+      <div class="menu-head-sub">CHAPTER · 04</div>
+    </div>
+    <button class="menu-close" onclick="closeMenu()" title="閉じる">✕</button>
+  </div>
+  <button class="menu-reset-btn" onclick="resetAllInteractions()">
+    <span class="menu-reset-icon">⟲</span>
+    インタラクションを全リセット
+  </button>
+  <div class="menu-list" id="menuList"></div>
+</div>
+
+<div class="slide-container" id="slideContainer">
+
+<!-- ═════ SLIDE 1: TITLE ═════ -->
+<div class="slide title-slide active" data-title="タイトル">
+  <div class="title-label">CHAPTER · 04 / INTELLECTUAL PROPERTY</div>
+  <h1 class="title-main">知的<br>財産権</h1>
+  <p class="title-sub">― 創作から生まれた価値を、誰がどう守るか ―</p>
+  <div class="title-meta">
+    <div class="title-meta-item"><strong>UNIT</strong>第1章 第4節</div>
+    <div class="title-meta-item"><strong>PAGES</strong>p.20 - 25</div>
+    <div class="title-meta-item"><strong>ITEMS</strong>19 points / 5 practices</div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 2: AGENDA ═════ -->
+<div class="slide" data-title="このサイトで扱う内容">
+  <div class="eyebrow">AGENDA / 全体構成</div>
+  <h2 class="slide-title">このサイトで扱う内容</h2>
+  <p class="slide-subtitle">知的財産権を4つの節に分けて整理する。学習ノート①〜⑲と実習1〜5に対応する。</p>
+  <div class="agenda-grid">
+    <div class="agenda-item">
+      <div class="agenda-num">01</div>
+      <div class="agenda-content">
+        <h3>知的財産権の全体像</h3>
+        <p>知的財産・知的財産権の定義と、2つの柱(産業財産権・著作権)の位置関係を整理する。</p>
+      </div>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num">02</div>
+      <div class="agenda-content">
+        <h3>産業財産権</h3>
+        <p>特許・実用新案・意匠・商標の4権と保護期間。事例を4権のいずれに当てるか判断する。</p>
+      </div>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num">03</div>
+      <div class="agenda-content">
+        <h3>著作権法と著作物</h3>
+        <p>著作権法の目的、無方式主義、著作者人格権・著作権(財産権)・著作隣接権の構造。</p>
+      </div>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num">04</div>
+      <div class="agenda-content">
+        <h3>例外規定とCCライセンス</h3>
+        <p>私的使用・引用・試験問題の例外、およびCCライセンス4マークの組み合わせ。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 3: SECTION 1 DIVIDER ═════ -->
+<div class="slide section-divider" data-title="第1節 知的財産権の全体像">
+  <div class="section-number">SECTION · 01</div>
+  <h2 class="section-title-big">知的財産権の<br>全体像</h2>
+  <p class="section-tagline">― 何が守られ、どの法体系に分かれるのか ―</p>
+</div>
+
+<!-- ═════ SLIDE 4: 基本定義 ①② ═════ -->
+<div class="slide" data-title="知的財産と知的財産権 (①②)">
+  <div class="eyebrow">学習ノート ① ②</div>
+  <h2 class="slide-title">知的財産と知的財産権</h2>
+  <p class="slide-subtitle">まず「守られる対象」と「守るための権利」を分けて押さえる。</p>
+
+  <div class="def-box">
+    <div class="def-label">DEFINITION · ①</div>
+    <div class="def-term">
+      <span class="note-blank" data-answer="知的財産">①</span>
+    </div>
+    <p class="def-desc">知的な創作活動から生産されたもの。具体的には、発明・デザイン・文章・音楽・プログラムなど、形のあるモノではなく<strong>アイデアや表現そのもの</strong>を指す。</p>
+  </div>
+
+  <div class="def-box">
+    <div class="def-label">DEFINITION · ②</div>
+    <div class="def-term">
+      <span class="note-blank" data-answer="知的財産権">②</span>
+    </div>
+    <p class="def-desc">①を他人が無断で使用して利益を得たりすることができないように、<strong>創作した人に一定期間与えられる権利</strong>。独占するためではなく、創作者に見返りを保障して次の創作を促すための仕組み。</p>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 5: 2つの柱 ③④ ═════ -->
+<div class="slide" data-title="知的財産権の二本柱 (③④)">
+  <div class="eyebrow">学習ノート ③ ④</div>
+  <h2 class="slide-title">知的財産権の二本柱</h2>
+  <p class="slide-subtitle">知的財産権は大きく2つに分かれる。</p>
+
+  <div class="pillar-grid">
+    <div class="pillar-card">
+      <div class="pillar-eyebrow">③</div>
+      <div class="pillar-name">
+        <span class="note-blank" data-answer="産業財産権">③</span>
+      </div>
+      <div class="pillar-desc">産業に関する新しい技術やデザインなどについて開発した人に与えられる独占的権利。</div>
+      <ul class="pillar-list">
+        <li>特許権</li>
+        <li>実用新案権</li>
+        <li>意匠権</li>
+        <li>商標権</li>
+      </ul>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-eyebrow">④</div>
+      <div class="pillar-name">
+        <span class="note-blank" data-answer="著作権">④</span>
+      </div>
+      <div class="pillar-desc">思想または感情を創作的に表現したもの(著作物)を守る権利。著作者が持つ人格権と、財産として譲渡できる権利に分かれる。</div>
+      <ul class="pillar-list">
+        <li>著作者人格権</li>
+        <li>著作権(財産権)</li>
+        <li>著作隣接権</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 6: SECTION 2 DIVIDER ═════ -->
+<div class="slide section-divider" data-title="第2節 産業財産権">
+  <div class="section-number">SECTION · 02</div>
+  <h2 class="section-title-big">産業財産権</h2>
+  <p class="section-tagline">― 特許・実用新案・意匠・商標の4権 ―</p>
+</div>
+
+<!-- ═════ SLIDE 7: 4種と保護期間 ⑤〜⑧⑨ ═════ -->
+<div class="slide" data-title="産業財産権の4種と方式主義 (⑤〜⑨)">
+  <div class="eyebrow">学習ノート ⑤ ⑥ ⑦ ⑧ ⑨</div>
+  <h2 class="slide-title">4つの権利と保護期間</h2>
+  <p class="slide-subtitle">保護対象と期間が異なる。下の穴埋めと併せて、どれが何年かを覚える。</p>
+
+  <div class="ip-table-wrap">
+    <table class="ip-table">
+      <thead>
+        <tr>
+          <th style="width: 22%;">名称</th>
+          <th>保護対象</th>
+          <th style="width: 22%;">保護期間</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="ip-name"><span class="note-blank" data-answer="特許">⑤</span>権</td>
+          <td>自然法則を利用した技術的思想の創作のうち高度なもの(発明)</td>
+          <td class="ip-period">出願から原則20年</td>
+        </tr>
+        <tr>
+          <td class="ip-name"><span class="note-blank" data-answer="実用新案">⑥</span>権</td>
+          <td>自然法則を利用した技術的思想の創作のうち物品の形状・構造などの考案</td>
+          <td class="ip-period">出願から10年</td>
+        </tr>
+        <tr>
+          <td class="ip-name"><span class="note-blank" data-answer="意匠">⑦</span>権</td>
+          <td>視覚を通じて美感を起こさせる斬新なデザイン</td>
+          <td class="ip-period">出願から25年</td>
+        </tr>
+        <tr>
+          <td class="ip-name"><span class="note-blank" data-answer="商標">⑧</span>権</td>
+          <td>自他の商品やサービスを区別するためのマーク</td>
+          <td class="ip-period">登録から10年(更新可)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="def-box" style="margin-top: 20px;">
+    <div class="def-label">⑨ 発生の仕方</div>
+    <div class="def-term">
+      <span class="note-blank" data-answer="方式主義">⑨</span>
+    </div>
+    <p class="def-desc">産業財産権のように、<strong>権利の取得には何らかの手続き(出願・登録)が必要</strong>とする考え方。このあと出てくる著作権の「無方式主義」と対になる。</p>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 8: 実習1 表の穴埋め ═════ -->
+<div class="slide" data-title="実習 1 | 4権の表を埋める">
+  <div class="eyebrow">PRACTICE · 01 / 産業財産権Ⅰ</div>
+  <h2 class="slide-title">4権の表を完成させる</h2>
+  <p class="slide-subtitle">保護対象の文中にある空所を埋める。</p>
+
+  <div class="ip-table-wrap">
+    <table class="ip-table">
+      <thead>
+        <tr>
+          <th style="width: 22%;">名称</th>
+          <th>保護対象の文</th>
+          <th style="width: 22%;">保護期間</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="ip-name"><span class="note-blank" data-answer="特許">(1)</span>権</td>
+          <td>自然法則を利用した技術的思想の創作のうち高度なものといえる<span class="note-blank" data-answer="発明">(2)</span></td>
+          <td class="ip-period">出願から原則20年</td>
+        </tr>
+        <tr>
+          <td class="ip-name"><span class="note-blank" data-answer="実用新案">(3)</span>権</td>
+          <td>自然法則を利用した技術的思想の創作のうち物品の形状、<span class="note-blank" data-answer="構造">(4)</span>などの考案</td>
+          <td class="ip-period">出願から10年</td>
+        </tr>
+        <tr>
+          <td class="ip-name"><span class="note-blank" data-answer="意匠">(5)</span>権</td>
+          <td>視覚を通じて美感を起こさせる斬新な<span class="note-blank" data-answer="デザイン">(6)</span></td>
+          <td class="ip-period">出願から25年</td>
+        </tr>
+        <tr>
+          <td class="ip-name"><span class="note-blank" data-answer="商標">(7)</span>権</td>
+          <td>自他の商品やサービスを区別するための<span class="note-blank" data-answer="マーク">(8)</span></td>
+          <td class="ip-period">登録から10年(更新可)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="margin-top: 18px; padding: 12px 16px; background: var(--navy-bg); border-left: 3px solid var(--accent-gold); border-radius: 0 4px 4px 0; font-size: 13.5px; line-height: 1.75; font-weight: 500; color: var(--text-main);">
+    <strong style="color: var(--navy-darkest);">ヒント</strong>  「発明=高度」「考案=形状・構造」「意匠=見た目のデザイン」「商標=識別マーク」。保護対象の名詞から逆算すると覚えやすい。
+  </div>
+</div>
+
+<!-- ═════ SLIDE 9: 実習2 分類ゲーム ═════ -->
+<div class="slide" data-title="実習 2 | 事例を4権に振り分け">
+  <div class="eyebrow">PRACTICE · 02 / 産業財産権Ⅱ</div>
+  <h2 class="slide-title">事例を4権に振り分ける</h2>
+  <p class="slide-subtitle">上のカードを1枚選び、下のゾーンをタップで配置する。配置したチップをクリックで戻せるので、何度でも再配置できる。</p>
+
+  <div class="sort-game">
+    <div class="sort-stack" id="sortStack"></div>
+    <div class="sort-zones">
+      <div class="sort-zone" onclick="dropCard('zoneA')">
+        <div class="sort-zone-head">ア. 意匠権</div>
+        <div class="sort-zone-sub">DESIGN</div>
+        <div class="sort-placed-list" data-list="zoneA"></div>
+      </div>
+      <div class="sort-zone" onclick="dropCard('zoneB')">
+        <div class="sort-zone-head">イ. 商標権</div>
+        <div class="sort-zone-sub">TRADEMARK</div>
+        <div class="sort-placed-list" data-list="zoneB"></div>
+      </div>
+      <div class="sort-zone" onclick="dropCard('zoneC')">
+        <div class="sort-zone-head">ウ. 実用新案権</div>
+        <div class="sort-zone-sub">UTILITY MODEL</div>
+        <div class="sort-placed-list" data-list="zoneC"></div>
+      </div>
+      <div class="sort-zone" onclick="dropCard('zoneD')">
+        <div class="sort-zone-head">エ. 特許権</div>
+        <div class="sort-zone-sub">PATENT</div>
+        <div class="sort-placed-list" data-list="zoneD"></div>
+      </div>
+    </div>
+    <div class="sort-status">
+      <span>カードを選ぶ → ゾーンをタップで分類</span>
+      <span>正解:<span class="sort-status-score" id="sortScore">0 / 4</span></span>
+      <button class="sort-reset" onclick="resetSort()">リセット</button>
+    </div>
+    <div class="sort-reveal-row" id="sortReveal"></div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 10: SECTION 3 DIVIDER ═════ -->
+<div class="slide section-divider" data-title="第3節 著作権法と著作物">
+  <div class="section-number">SECTION · 03</div>
+  <h2 class="section-title-big">著作権法と<br>著作物</h2>
+  <p class="section-tagline">― 目的・発生方式・3種の権利 ―</p>
+</div>
+
+<!-- ═════ SLIDE 11: 著作権法の目的と著作物 ⑩⑪ ═════ -->
+<div class="slide" data-title="著作権法の目的と著作物 (⑩⑪)">
+  <div class="eyebrow">学習ノート ⑩ ⑪</div>
+  <h2 class="slide-title">著作権法の目的と著作物</h2>
+  <p class="slide-subtitle">著作権法は「保護」だけを目的にしているわけではない。<strong>利用と保護の両立</strong>が第一条で明示されている。</p>
+
+  <div class="def-box">
+    <div class="def-label">LAW PURPOSE · ⑩</div>
+    <div class="def-term">
+      <span class="note-blank" data-answer="著作権法">⑩</span>の目的
+    </div>
+    <p class="def-desc"><span class="note-blank" data-answer="著作物">⑪</span>の公正な利用に留意しつつ、著作者などの権利の保護をはかることによって、<strong>文化の発展に寄与する</strong>。</p>
+  </div>
+
+  <div class="def-box">
+    <div class="def-label">DEFINITION · ⑪</div>
+    <div class="def-term">
+      <span class="note-blank" data-answer="著作物">⑪</span>
+    </div>
+    <p class="def-desc">思想又は感情を<strong>創作的に表現したもの</strong>であって、文芸、学術、美術又は音楽の範囲に属するもの。単なる事実やデータそのものは著作物には当たらない。</p>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 12: 方式主義 vs 無方式主義 ⑨⑫ ═════ -->
+<div class="slide" data-title="【A】発生方式の対比 (⑨⑫)">
+  <div class="eyebrow">学習ノート ⑨ ⑫ / 対比</div>
+  <h2 class="slide-title">権利はどう発生するか</h2>
+  <p class="slide-subtitle">産業財産権と著作権は、<strong>権利がいつ発生するか</strong>が決定的に違う。</p>
+
+  <div class="formation-compare">
+    <!-- 方式主義 -->
+    <div class="formation-card formation-formal">
+      <div class="formation-head">
+        <span class="formation-tag">⑨</span>
+        <span class="formation-name">方式主義</span>
+        <span class="formation-target">産業財産権</span>
+      </div>
+      <div class="formation-flow">
+        <div class="flow-step">創作</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">出願</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">審査</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">登録</div>
+        <div class="flow-arrow strong">⇒</div>
+        <div class="flow-step goal">権利発生</div>
+      </div>
+      <div class="formation-hint">登録ではじめて権利が発生。書類作成・審査期間・手数料が必要。</div>
+      <div class="formation-examples">
+        <div class="formation-ex-head">具体例</div>
+        <div class="formation-ex-item"><strong>ダイソンのサイクロン掃除機</strong>  特許出願 → 審査合格 → 特許権</div>
+        <div class="formation-ex-item"><strong>iPhone の筐体デザイン</strong>  意匠出願 → 登録 → 意匠権</div>
+        <div class="formation-ex-item"><strong>「Uniqlo」のロゴ</strong>  商標登録 → 識別マークとして独占</div>
+      </div>
+    </div>
+
+    <!-- 無方式主義 -->
+    <div class="formation-card formation-informal">
+      <div class="formation-head">
+        <span class="formation-tag">⑫</span>
+        <span class="formation-name">無方式主義</span>
+        <span class="formation-target">著作権</span>
+      </div>
+      <div class="formation-flow">
+        <div class="flow-step big">創作</div>
+        <div class="flow-arrow strong equal">＝</div>
+        <div class="flow-step goal">権利発生</div>
+      </div>
+      <div class="formation-hint">創作した瞬間に自動発生。登録も申請も不要。</div>
+      <div class="formation-examples">
+        <div class="formation-ex-head">具体例</div>
+        <div class="formation-ex-item"><strong>スマホで撮った写真</strong>  シャッターを切った瞬間に著作権</div>
+        <div class="formation-ex-item"><strong>SNSの投稿文・絵文字構成</strong>  創作性があれば投稿と同時に発生</div>
+        <div class="formation-ex-item"><strong>授業レポート・落書きノートの漫画</strong>  未公表でも権利は存在</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="formation-contrast">
+    <div class="contrast-row">
+      <div class="contrast-label">権利の発生タイミング</div>
+      <div class="contrast-old">登録された日</div>
+      <div class="contrast-new">創作された瞬間</div>
+    </div>
+    <div class="contrast-row">
+      <div class="contrast-label">必要な手続き</div>
+      <div class="contrast-old">出願・審査・登録</div>
+      <div class="contrast-new">なし</div>
+    </div>
+    <div class="contrast-row">
+      <div class="contrast-label">費用</div>
+      <div class="contrast-old">出願料・審査料・維持年金</div>
+      <div class="contrast-new">無料</div>
+    </div>
+    <div class="contrast-row">
+      <div class="contrast-label">争いの争点</div>
+      <div class="contrast-old">権利範囲の解釈</div>
+      <div class="contrast-new">誰が最初に作ったか</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 13: 著作者の権利構造 ⑬⑭⑮ ═════ -->
+<div class="slide" data-title="著作者と伝達者の権利 (⑬⑭⑮)">
+  <div class="eyebrow">学習ノート ⑬ ⑭ ⑮</div>
+  <h2 class="slide-title">著作者と伝達者の権利</h2>
+  <p class="slide-subtitle">著作権は一枚岩ではない。<strong>誰に</strong>、<strong>どの権利が</strong>、<strong>いつまで</strong>与えられるかで3つに分かれる。</p>
+
+  <div class="rights-map">
+    <div class="rights-map-actors">
+      <div class="actor-box actor-author">
+        <div class="actor-icon">✍</div>
+        <div class="actor-role">著作者</div>
+        <div class="actor-example">小説家・作曲家・画家・写真家</div>
+      </div>
+      <div class="actor-arrow">創作</div>
+      <div class="actor-box actor-work">
+        <div class="actor-icon">📖</div>
+        <div class="actor-role">著作物</div>
+        <div class="actor-example">小説・楽曲・イラスト・写真</div>
+      </div>
+      <div class="actor-arrow">演奏・録音・放送</div>
+      <div class="actor-box actor-broadcaster">
+        <div class="actor-icon">🎤</div>
+        <div class="actor-role">伝達者</div>
+        <div class="actor-example">実演家・レコード会社・放送事業者</div>
+      </div>
+    </div>
+
+    <div class="rights-map-links">
+      <div class="rights-map-link link-author">⑬⑭ 著作者の権利</div>
+      <div class="rights-map-link link-neighboring">⑮ 伝達者の権利</div>
+    </div>
+
+    <div class="rights-columns">
+      <!-- ⑬ 著作者人格権 -->
+      <div class="rights-col col-author">
+        <div class="rights-col-head">
+          <span class="rights-col-tag">⑬</span>
+          <span class="rights-col-name"><span class="note-blank" data-answer="著作者人格権">⑬</span></span>
+        </div>
+        <div class="rights-col-meta">
+          <span class="meta-chip meta-personal">人格に結びつく</span>
+          <span class="meta-chip meta-notransfer">譲渡不可</span>
+          <span class="meta-chip meta-death">死後消滅</span>
+        </div>
+        <div class="rights-scenarios">
+          <div class="scenario" onclick="this.classList.toggle('open')">
+            <div class="scenario-head">
+              <span class="scenario-right">公表権</span>
+              <span class="scenario-toggle">+</span>
+            </div>
+            <div class="scenario-q">未公表の日記を、本人の許可なく出版社が世に出した。</div>
+            <div class="scenario-a">公表するか否か・いつ公表するかは著作者が決める。遺稿の無断公開は公表権の侵害。</div>
+          </div>
+          <div class="scenario" onclick="this.classList.toggle('open')">
+            <div class="scenario-head">
+              <span class="scenario-right">氏名表示権</span>
+              <span class="scenario-toggle">+</span>
+            </div>
+            <div class="scenario-q">匿名で公開したイラストを、他人が勝手に作者の本名を付けて紹介した。</div>
+            <div class="scenario-a">実名・匿名・ペンネームの表示方法を決めるのは著作者本人。勝手な表示変更は氏名表示権の侵害。</div>
+          </div>
+          <div class="scenario" onclick="this.classList.toggle('open')">
+            <div class="scenario-head">
+              <span class="scenario-right">同一性保持権</span>
+              <span class="scenario-toggle">+</span>
+            </div>
+            <div class="scenario-q">映画化にあたり、原作小説の結末を本人に無断でハッピーエンドに変えた。</div>
+            <div class="scenario-a">意に反する改変は同一性保持権の侵害。タイトルの変更や、SNS投稿の勝手な一部抜粋も該当しうる。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⑭ 著作権(財産権) -->
+      <div class="rights-col col-economic">
+        <div class="rights-col-head">
+          <span class="rights-col-tag">⑭</span>
+          <span class="rights-col-name"><span class="note-blank" data-answer="著作権(財産権)">⑭</span></span>
+        </div>
+        <div class="rights-col-meta">
+          <span class="meta-chip meta-money">経済的利益</span>
+          <span class="meta-chip meta-transfer">譲渡・相続可</span>
+          <span class="meta-chip meta-period">死後70年</span>
+        </div>
+        <div class="rights-scenarios">
+          <div class="scenario" onclick="this.classList.toggle('open')">
+            <div class="scenario-head">
+              <span class="scenario-right">複製権</span>
+              <span class="scenario-toggle">+</span>
+            </div>
+            <div class="scenario-q">CDの楽曲を録音し、コピーしたディスクを配った。</div>
+            <div class="scenario-a">コピー・録音・録画・データ保存・スクリーンショットなども含む。財産権の最も基本。</div>
+          </div>
+          <div class="scenario" onclick="this.classList.toggle('open')">
+            <div class="scenario-head">
+              <span class="scenario-right">公衆送信権</span>
+              <span class="scenario-toggle">+</span>
+            </div>
+            <div class="scenario-q">TikTok にアニメのワンシーンを切り出してBGMごと投稿した。</div>
+            <div class="scenario-a">インターネット上での配信・アップロードは公衆送信。無断で行えば財産権の侵害。</div>
+          </div>
+          <div class="scenario" onclick="this.classList.toggle('open')">
+            <div class="scenario-head">
+              <span class="scenario-right">頒布権・翻訳権</span>
+              <span class="scenario-toggle">+</span>
+            </div>
+            <div class="scenario-q">海外の話題作を無断で日本語訳し、ネット上で公開した。</div>
+            <div class="scenario-a">映画の DVD レンタルは頒布権、日本語訳は翻訳権。流通や言語変換も著作者の独占領域。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⑮ 著作隣接権 -->
+      <div class="rights-col col-neighboring">
+        <div class="rights-col-head">
+          <span class="rights-col-tag">⑮</span>
+          <span class="rights-col-name"><span class="note-blank" data-answer="著作隣接権">⑮</span></span>
+        </div>
+        <div class="rights-col-meta">
+          <span class="meta-chip meta-relay">伝達者の権利</span>
+          <span class="meta-chip meta-auto">演奏・放送で発生</span>
+        </div>
+        <div class="rights-scenarios">
+          <div class="scenario" onclick="this.classList.toggle('open')">
+            <div class="scenario-head">
+              <span class="scenario-right">実演家の権利</span>
+              <span class="scenario-toggle">+</span>
+            </div>
+            <div class="scenario-q">アーティストのライブを許可なく録音し、配布した。</div>
+            <div class="scenario-a">実演家には録音権・録画権・放送権などがある。作曲者の許可があっても、演奏者の許可は別途必要。</div>
+          </div>
+          <div class="scenario" onclick="this.classList.toggle('open')">
+            <div class="scenario-head">
+              <span class="scenario-right">レコード製作者</span>
+              <span class="scenario-toggle">+</span>
+            </div>
+            <div class="scenario-q">配信サービスが、レコード会社のマスター音源を無断で配信した。</div>
+            <div class="scenario-a">レコード製作者の複製権・送信可能化権などが保護される。同じ曲でも音源ごとに権利が立つ。</div>
+          </div>
+          <div class="scenario" onclick="this.classList.toggle('open')">
+            <div class="scenario-head">
+              <span class="scenario-right">放送事業者</span>
+              <span class="scenario-toggle">+</span>
+            </div>
+            <div class="scenario-q">テレビ局の報道映像を許可なく別局が再配信した。</div>
+            <div class="scenario-a">放送事業者は、自局の放送を再送信されない権利をもつ。二次的な拡散から放送の投資を守る。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 14: 実習3 権利の分類 ═════ -->
+<div class="slide" data-title="実習 3 | 著作者の権利を分類">
+  <div class="eyebrow">PRACTICE · 03 / 著作者の権利</div>
+  <h2 class="slide-title">説明から権利名を選ぶ</h2>
+  <p class="slide-subtitle">説明文に該当する権利を選ぶ。</p>
+
+  <div class="quiz-container">
+    <div class="quiz-question">
+      <span class="quiz-question-num">QUESTION · 1 / 4</span>
+      著作物を公表するかどうかを決定する権利。
+    </div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="answerQuiz(this, false)"><span class="quiz-option-letter">ア</span><span>頒布権</span></div>
+      <div class="quiz-option" onclick="answerQuiz(this, false)"><span class="quiz-option-letter">イ</span><span>複製権</span></div>
+      <div class="quiz-option" onclick="answerQuiz(this, true)"><span class="quiz-option-letter">ウ</span><span>公表権</span></div>
+      <div class="quiz-option" onclick="answerQuiz(this, false)"><span class="quiz-option-letter">エ</span><span>同一性保持権</span></div>
+    </div>
+    <div class="quiz-feedback">
+      <strong>正解:ウ 公表権</strong>
+      著作者人格権のひとつ。<strong>未公表の著作物を公表するか否か、いつどんな方法で公表するかを決める</strong>権利。
+    </div>
+  </div>
+
+  <div class="quiz-container">
+    <div class="quiz-question">
+      <span class="quiz-question-num">QUESTION · 2 / 4</span>
+      著作物の内容などを著作者の意に反して改変されない権利。
+    </div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="answerQuiz(this, false)"><span class="quiz-option-letter">ア</span><span>頒布権</span></div>
+      <div class="quiz-option" onclick="answerQuiz(this, false)"><span class="quiz-option-letter">イ</span><span>複製権</span></div>
+      <div class="quiz-option" onclick="answerQuiz(this, false)"><span class="quiz-option-letter">ウ</span><span>公表権</span></div>
+      <div class="quiz-option" onclick="answerQuiz(this, true)"><span class="quiz-option-letter">エ</span><span>同一性保持権</span></div>
+    </div>
+    <div class="quiz-feedback">
+      <strong>正解:エ 同一性保持権</strong>
+      著作者人格権のひとつ。<strong>無断で要約・書き換え・トリミングなどをされない</strong>権利。意に反する改変を禁じる。
+    </div>
+  </div>
+
+  <div class="quiz-container">
+    <div class="quiz-question">
+      <span class="quiz-question-num">QUESTION · 3 / 4</span>
+      著作物を複製する権利。
+    </div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="answerQuiz(this, false)"><span class="quiz-option-letter">ア</span><span>頒布権</span></div>
+      <div class="quiz-option" onclick="answerQuiz(this, true)"><span class="quiz-option-letter">イ</span><span>複製権</span></div>
+      <div class="quiz-option" onclick="answerQuiz(this, false)"><span class="quiz-option-letter">ウ</span><span>公表権</span></div>
+      <div class="quiz-option" onclick="answerQuiz(this, false)"><span class="quiz-option-letter">エ</span><span>同一性保持権</span></div>
+    </div>
+    <div class="quiz-feedback">
+      <strong>正解:イ 複製権</strong>
+      著作権(財産権)の中核。印刷・コピー・録音・録画・スクリーンショット・データの保存なども含まれる。
+    </div>
+  </div>
+
+  <div class="quiz-container">
+    <div class="quiz-question">
+      <span class="quiz-question-num">QUESTION · 4 / 4</span>
+      映画の著作物を譲渡または貸与により公衆に提供する権利。
+    </div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="answerQuiz(this, true)"><span class="quiz-option-letter">ア</span><span>頒布権</span></div>
+      <div class="quiz-option" onclick="answerQuiz(this, false)"><span class="quiz-option-letter">イ</span><span>複製権</span></div>
+      <div class="quiz-option" onclick="answerQuiz(this, false)"><span class="quiz-option-letter">ウ</span><span>公表権</span></div>
+      <div class="quiz-option" onclick="answerQuiz(this, false)"><span class="quiz-option-letter">エ</span><span>同一性保持権</span></div>
+    </div>
+    <div class="quiz-feedback">
+      <strong>正解:ア 頒布権</strong>
+      映画の著作物に特有の権利。DVDレンタルや映画フィルムの配給のように、譲渡・貸与で流通させる行為に及ぶ。
+    </div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 15: SECTION 4 DIVIDER ═════ -->
+<div class="slide section-divider" data-title="第4節 例外規定とCCライセンス">
+  <div class="section-number">SECTION · 04</div>
+  <h2 class="section-title-big">例外規定と<br>CCライセンス</h2>
+  <p class="section-tagline">― 許可なしで使える場合/自由利用の意思表示 ―</p>
+</div>
+
+<!-- ═════ SLIDE 16: 例外規定 ⑯⑰⑱ ═════ -->
+<div class="slide" data-title="著作権の例外規定 (⑯⑰⑱)">
+  <div class="eyebrow">学習ノート ⑯ ⑰ ⑱</div>
+  <h2 class="slide-title">著作権の例外規定</h2>
+  <p class="slide-subtitle">権利者の許可なく著作物を使える場合が、法律で限定列挙されている。代表的な3つを押さえる。</p>
+
+  <div class="exception-grid">
+    <!-- ⑯ 私的使用 -->
+    <div class="exception-card">
+      <div class="exception-sub">⑯</div>
+      <div class="exception-head">
+        <span class="note-blank" data-answer="私的使用">⑯</span>
+      </div>
+      <div class="exception-desc">のための複製。<strong>家庭内で仕事以外の目的で使用する</strong>ために、著作物を複製できる。</div>
+
+      <div class="exc-diagram exc-diagram-private">
+        <div class="exc-zone exc-zone-ok">
+          <div class="exc-zone-label">家庭内 · OK</div>
+          <div class="exc-zone-items">
+            <span class="exc-item ok">自分のCDを自分のスマホへ</span>
+            <span class="exc-item ok">家族でDVDを視聴</span>
+          </div>
+        </div>
+        <div class="exc-zone-boundary">─── 境界線 ───</div>
+        <div class="exc-zone exc-zone-ng">
+          <div class="exc-zone-label">家庭外 · NG</div>
+          <div class="exc-zone-items">
+            <span class="exc-item ng">友人に配る</span>
+            <span class="exc-item ng">SNSに投稿</span>
+            <span class="exc-item ng">部活で全員分</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑰ 引用 -->
+    <div class="exception-card">
+      <div class="exception-sub">⑰</div>
+      <div class="exception-head">
+        <span class="note-blank" data-answer="引用">⑰</span>
+      </div>
+      <div class="exception-desc">公正な慣行に合致し、正当な範囲内であることを条件として、自分の著作物に他人の著作物を掲載できる。</div>
+
+      <div class="exc-diagram exc-diagram-quote">
+        <div class="quote-outer">
+          <div class="quote-outer-label">自分の著作物(主)</div>
+          <div class="quote-outer-body">レポート・論文・記事本体</div>
+          <div class="quote-inner">
+            <div class="quote-inner-label">引用(従)</div>
+            <div class="quote-inner-body">「他人の文の一部」</div>
+          </div>
+          <div class="quote-citation">出所:○○ 著『△△』p.12</div>
+        </div>
+        <div class="quote-rules">
+          <span class="rule-chip">公表済み</span>
+          <span class="rule-chip">主従関係</span>
+          <span class="rule-chip">明瞭区別</span>
+          <span class="rule-chip">出所明示</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑱ 試験問題 -->
+    <div class="exception-card">
+      <div class="exception-sub">⑱</div>
+      <div class="exception-head">
+        <span class="note-blank" data-answer="試験問題">⑱</span>
+      </div>
+      <div class="exception-desc">としての複製。入学試験などの問題として、著作物を複製できる。事前に許可を取ると出題内容が漏れるため置かれた例外。</div>
+
+      <div class="exc-diagram exc-diagram-exam">
+        <div class="exam-flow">
+          <div class="exam-node">試験作成者</div>
+          <div class="exam-arrow">→</div>
+          <div class="exam-node exam-highlight">小説を複製し出題</div>
+          <div class="exam-arrow">→</div>
+          <div class="exam-node">試験実施</div>
+        </div>
+        <div class="exam-badge exam-badge-ok">事前許諾なしでOK(漏洩防止)</div>
+        <div class="exam-flow exam-flow-alt">
+          <div class="exam-node">出題後</div>
+          <div class="exam-arrow">→</div>
+          <div class="exam-node exam-danger">過去問集として販売</div>
+        </div>
+        <div class="exam-badge exam-badge-ng">営利目的で公開 → 別途許諾が必要</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 22px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.15em; color: var(--accent-red); font-weight: 700; margin-bottom: 10px;">要件を少し詳しく</div>
+
+  <div class="case-expander">
+    <div class="case-head" onclick="toggleCase(this)">
+      <span class="case-year">私的使用</span>
+      <span class="case-title">どこからが「私的」でなくなるか</span>
+      <span class="case-tag">⑯</span>
+      <span class="case-toggle">+</span>
+    </div>
+    <div class="case-body"><div class="case-content">
+      <p><strong>家庭内その他これに準ずる限られた範囲内</strong>で使うための複製に限られる。</p>
+      <p>友人に渡す・SNSに投稿する・サークル内で共有する・アルバイト先で使うなどは、家庭内の範囲を超えるため私的使用には当たらない。コピープロテクトを外しての複製や、違法配信と知って行うダウンロードも例外の対象外。</p>
+    </div></div>
+  </div>
+
+  <div class="case-expander">
+    <div class="case-head" onclick="toggleCase(this)">
+      <span class="case-year">引用</span>
+      <span class="case-title">引用として認められる4つの条件</span>
+      <span class="case-tag">⑰</span>
+      <span class="case-toggle">+</span>
+    </div>
+    <div class="case-body"><div class="case-content">
+      <p>① <strong>すでに公表されている著作物</strong>であること。②<strong>主従関係</strong>(引用部分が従、自分の文章が主)が明確であること。③<strong>引用部分と自分の文章が明瞭に区別</strong>されていること(カッコ・引用符など)。④<strong>出所を明示</strong>していること。</p>
+      <p>条件を一つでも欠けば、単なる無断利用になる。レポートで統計を引くときは典型的な引用の場面。</p>
+    </div></div>
+  </div>
+
+  <div class="case-expander">
+    <div class="case-head" onclick="toggleCase(this)">
+      <span class="case-year">試験問題</span>
+      <span class="case-title">なぜ試験問題は例外なのか</span>
+      <span class="case-tag">⑱</span>
+      <span class="case-toggle">+</span>
+    </div>
+    <div class="case-body"><div class="case-content">
+      <p>入学試験や資格試験の問題で小説や論説文を使うとき、事前に著作者へ許可を求めれば<strong>出題内容が漏れてしまう</strong>。試験の公正を保つために、許諾なしの複製が認められている。</p>
+      <p>ただし事後の補償金の支払いが必要な場合があり、また過去問題集など<strong>営利目的で公開するとき</strong>は、別途著作者の許可が必要になる。</p>
+    </div></div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 17: 実習4 例外に当たる行為 ═════ -->
+<div class="slide" data-title="実習 4 | 例外に当たる行為を選ぶ">
+  <div class="eyebrow">PRACTICE · 04 / 例外規定</div>
+  <h2 class="slide-title">どれが例外規定に当たるか</h2>
+  <p class="slide-subtitle">ア〜オのうち、許可なく著作物を利用できる例外に当たるものを<strong>すべて</strong>選ぶ。</p>
+
+  <div class="practice-list">
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">ア</span>
+      <div class="practice-text">
+        友人のためにテレビ番組を録画して、友人にあげた。
+        <div class="practice-reason"><strong>不適切 ─ </strong>私的使用は家庭内の範囲に限られる。友人に<strong>譲渡</strong>した時点で「限られた範囲内」を超える。</div>
+      </div>
+      <span class="practice-verdict" data-ok="false">?</span>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">イ</span>
+      <div class="practice-text">
+        学校の課題レポートを作成するため、Webページ上の統計データの一部を、出所を明示して引用した。
+        <div class="practice-reason"><strong>適切 ─ </strong>引用の要件を満たす典型例。公表済みの著作物を、主従関係を保ち、出所を明示して使っている。</div>
+      </div>
+      <span class="practice-verdict" data-ok="true">?</span>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">ウ</span>
+      <div class="practice-text">
+        高校の文化祭で、有名な脚本家の演劇を上演したが、予算をオーバーしそうなので入場料を100円取った。
+        <div class="practice-reason"><strong>不適切 ─ </strong>学校行事での上演は、非営利・無料・無報酬の3条件を満たすときだけ認められる。<strong>入場料を取った時点で営利に該当</strong>し、許諾が必要になる。</div>
+      </div>
+      <span class="practice-verdict" data-ok="false">?</span>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">エ</span>
+      <div class="practice-text">
+        放課後に友人らと校外のバンドコンテストの練習をするときに、市販の楽譜を全員分コピーして使った。
+        <div class="practice-reason"><strong>不適切 ─ </strong>外部のコンテスト練習は家庭内の範囲を超える。また全員分の複製は、本来個別に購入されるべき需要を奪うため、私的使用の例外では救えない。</div>
+      </div>
+      <span class="practice-verdict" data-ok="false">?</span>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">オ</span>
+      <div class="practice-text">
+        高校の体育祭の応援旗に、有名な映画のワンカットをかいて使用した。
+        <div class="practice-reason"><strong>不適切 ─ </strong>引用の要件(主従関係・出所明示など)を満たしておらず、単なる無断の複製・翻案。応援旗として<strong>公衆に掲示する</strong>ため私的使用でもない。</div>
+      </div>
+      <span class="practice-verdict" data-ok="false">?</span>
+    </div>
+  </div>
+
+  <div style="margin-top: 18px; padding: 12px 16px; background: var(--navy-bg); border-left: 3px solid var(--accent-gold); border-radius: 0 4px 4px 0; font-size: 13.5px; line-height: 1.75; font-weight: 500; color: var(--text-main);">
+    <strong style="color: var(--navy-darkest);">まとめ</strong>  正解は<strong>イのみ</strong>。「非営利・家庭内・出所明示・主従関係」のいずれかを欠けば、原則として権利者の許諾が必要になる。
+  </div>
+</div>
+
+<!-- ═════ SLIDE 18: CCライセンスの4マーク解説 ═════ -->
+<div class="slide" data-title="CCライセンス (⑲)">
+  <div class="eyebrow">学習ノート ⑲</div>
+  <h2 class="slide-title">CCライセンス</h2>
+  <p class="slide-subtitle">
+    <span class="note-blank" data-answer="CCライセンス">⑲</span>
+    は、著作権者が自分の著作物を自由に利用するために守るべき条件を意思表示する仕組み。4つのマークを組み合わせて示す。
+  </p>
+
+  <div class="cc-marks-row">
+    <div class="cc-mark">
+      <div class="cc-mark-icon">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20.5" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="24" cy="18" r="3.8" fill="currentColor"/><path d="M14.5 36.5 C14.5 28 18 24.5 24 24.5 C30 24.5 33.5 28 33.5 36.5 Z" fill="currentColor"/></svg>
+      </div>
+      <div class="cc-mark-letter">ア · BY</div>
+      <div class="cc-mark-name">表示</div>
+      <div class="cc-mark-desc">著作物やその著作物に関する情報を表記すること。</div>
+      <div class="cc-required-tag">ライセンス表示では必須</div>
+    </div>
+    <div class="cc-mark">
+      <div class="cc-mark-icon">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20.5" fill="none" stroke="currentColor" stroke-width="3"/><text x="24" y="30.5" text-anchor="middle" font-family="serif" font-size="22" font-weight="900" fill="currentColor">¥</text><line x1="10" y1="38" x2="38" y2="10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+      </div>
+      <div class="cc-mark-letter">イ · NC</div>
+      <div class="cc-mark-name">非営利</div>
+      <div class="cc-mark-desc">非営利目的で利用すること。営利利用を禁じる。</div>
+    </div>
+    <div class="cc-mark">
+      <div class="cc-mark-icon">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20.5" fill="none" stroke="currentColor" stroke-width="3"/><line x1="13" y1="20" x2="35" y2="20" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><line x1="13" y1="28" x2="35" y2="28" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+      </div>
+      <div class="cc-mark-letter">ウ · ND</div>
+      <div class="cc-mark-name">改変禁止</div>
+      <div class="cc-mark-desc">著作物を改変しないこと。翻訳・加工・トリミングも禁じる。</div>
+    </div>
+    <div class="cc-mark">
+      <div class="cc-mark-icon">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20.5" fill="none" stroke="currentColor" stroke-width="3"/><path d="M 33 24 A 9 9 0 1 0 24 33" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><polygon points="30,31 36,30 33,36" fill="currentColor"/></svg>
+      </div>
+      <div class="cc-mark-letter">エ · SA</div>
+      <div class="cc-mark-name">継承</div>
+      <div class="cc-mark-desc">改変は自由だが、<strong>元と同じライセンスを付ける</strong>こと。</div>
+    </div>
+  </div>
+
+  <div style="margin-top: 22px; padding: 14px 18px; background: var(--navy-bg); border-left: 3px solid var(--accent-gold); border-radius: 0 4px 4px 0; font-size: 13.5px; line-height: 1.8; font-weight: 500; color: var(--text-main);">
+    <strong style="color: var(--navy-darkest);">読み方</strong>  たとえば「BY」だけなら表示さえすれば自由利用可。「BY + NC + ND」なら表示+非営利+改変禁止。<strong>ND と SA は同時につかない</strong>(改変禁止なら継承の概念が不要)。
+  </div>
+</div>
+
+<!-- ═════ SLIDE 19: 実習5 CC合成 ═════ -->
+<div class="slide" data-title="実習 5 | CCマークを合成">
+  <div class="eyebrow">PRACTICE · 05 / CCライセンス</div>
+  <h2 class="slide-title">条件からマークを組み立てる</h2>
+  <p class="slide-subtitle">「表示」は常に必須で固定表示されている。条件文に合うマークを選んで <strong>確認</strong> を押す。</p>
+
+  <div class="cc-lab">
+    <div class="cc-q">
+      <span class="cc-q-num">QUESTION · 1 / 3</span>
+      営利目的での利用は許可しない。ただし、改変は許可する。
+    </div>
+    <div class="cc-picker" data-correct="nc">
+      <div class="cc-picker-help">必要なマークを選んで確認</div>
+      <div class="cc-chips">
+        <div class="cc-chip locked"><span class="cc-chip-mini"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20.5" fill="none" stroke="currentColor" stroke-width="3.5"/><circle cx="24" cy="18" r="3.8" fill="currentColor"/><path d="M14.5 36.5 C14.5 28 18 24.5 24 24.5 C30 24.5 33.5 28 33.5 36.5 Z" fill="currentColor"/></svg></span>ア 表示</div>
+        <div class="cc-chip" data-mark="nc" onclick="toggleCc(this)"><span class="cc-chip-mini"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20.5" fill="none" stroke="currentColor" stroke-width="3.5"/><text x="24" y="30.5" text-anchor="middle" font-family="serif" font-size="22" font-weight="900" fill="currentColor">¥</text><line x1="10" y1="38" x2="38" y2="10" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></svg></span>イ 非営利</div>
+        <div class="cc-chip" data-mark="nd" onclick="toggleCc(this)"><span class="cc-chip-mini"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20.5" fill="none" stroke="currentColor" stroke-width="3.5"/><line x1="13" y1="20" x2="35" y2="20" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><line x1="13" y1="28" x2="35" y2="28" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></svg></span>ウ 改変禁止</div>
+        <div class="cc-chip" data-mark="sa" onclick="toggleCc(this)"><span class="cc-chip-mini"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20.5" fill="none" stroke="currentColor" stroke-width="3.5"/><path d="M 33 24 A 9 9 0 1 0 24 33" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><polygon points="30,31 36,30 33,36" fill="currentColor"/></svg></span>エ 継承</div>
+      </div>
+      <button class="cc-check" onclick="checkCc(this)">確認</button>
+      <div class="cc-feedback">
+        <strong>正解:ア + イ(表示 + 非営利)</strong>
+        営利利用は禁じる → 非営利(イ)が必要。改変は許可する → 改変禁止(ウ)は不要。継承(エ)も付けない。
+      </div>
+    </div>
+
+    <div class="cc-q">
+      <span class="cc-q-num">QUESTION · 2 / 3</span>
+      営利目的での利用は許可するが、改変は許可しない。
+    </div>
+    <div class="cc-picker" data-correct="nd">
+      <div class="cc-picker-help">必要なマークを選んで確認</div>
+      <div class="cc-chips">
+        <div class="cc-chip locked"><span class="cc-chip-mini"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20.5" fill="none" stroke="currentColor" stroke-width="3.5"/><circle cx="24" cy="18" r="3.8" fill="currentColor"/><path d="M14.5 36.5 C14.5 28 18 24.5 24 24.5 C30 24.5 33.5 28 33.5 36.5 Z" fill="currentColor"/></svg></span>ア 表示</div>
+        <div class="cc-chip" data-mark="nc" onclick="toggleCc(this)"><span class="cc-chip-mini"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20.5" fill="none" stroke="currentColor" stroke-width="3.5"/><text x="24" y="30.5" text-anchor="middle" font-family="serif" font-size="22" font-weight="900" fill="currentColor">¥</text><line x1="10" y1="38" x2="38" y2="10" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></svg></span>イ 非営利</div>
+        <div class="cc-chip" data-mark="nd" onclick="toggleCc(this)"><span class="cc-chip-mini"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20.5" fill="none" stroke="currentColor" stroke-width="3.5"/><line x1="13" y1="20" x2="35" y2="20" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><line x1="13" y1="28" x2="35" y2="28" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></svg></span>ウ 改変禁止</div>
+        <div class="cc-chip" data-mark="sa" onclick="toggleCc(this)"><span class="cc-chip-mini"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20.5" fill="none" stroke="currentColor" stroke-width="3.5"/><path d="M 33 24 A 9 9 0 1 0 24 33" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><polygon points="30,31 36,30 33,36" fill="currentColor"/></svg></span>エ 継承</div>
+      </div>
+      <button class="cc-check" onclick="checkCc(this)">確認</button>
+      <div class="cc-feedback">
+        <strong>正解:ア + ウ(表示 + 改変禁止)</strong>
+        営利利用は認める → 非営利(イ)は不要。改変を禁じる → 改変禁止(ウ)を付ける。改変禁止の下では継承(エ)は無意味。
+      </div>
+    </div>
+
+    <div class="cc-q">
+      <span class="cc-q-num">QUESTION · 3 / 3</span>
+      非営利目的の利用とする。改変は許可するが、同じライセンスを付ける。
+    </div>
+    <div class="cc-picker" data-correct="nc,sa">
+      <div class="cc-picker-help">必要なマークを選んで確認</div>
+      <div class="cc-chips">
+        <div class="cc-chip locked"><span class="cc-chip-mini"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20.5" fill="none" stroke="currentColor" stroke-width="3.5"/><circle cx="24" cy="18" r="3.8" fill="currentColor"/><path d="M14.5 36.5 C14.5 28 18 24.5 24 24.5 C30 24.5 33.5 28 33.5 36.5 Z" fill="currentColor"/></svg></span>ア 表示</div>
+        <div class="cc-chip" data-mark="nc" onclick="toggleCc(this)"><span class="cc-chip-mini"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20.5" fill="none" stroke="currentColor" stroke-width="3.5"/><text x="24" y="30.5" text-anchor="middle" font-family="serif" font-size="22" font-weight="900" fill="currentColor">¥</text><line x1="10" y1="38" x2="38" y2="10" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></svg></span>イ 非営利</div>
+        <div class="cc-chip" data-mark="nd" onclick="toggleCc(this)"><span class="cc-chip-mini"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20.5" fill="none" stroke="currentColor" stroke-width="3.5"/><line x1="13" y1="20" x2="35" y2="20" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><line x1="13" y1="28" x2="35" y2="28" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></svg></span>ウ 改変禁止</div>
+        <div class="cc-chip" data-mark="sa" onclick="toggleCc(this)"><span class="cc-chip-mini"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20.5" fill="none" stroke="currentColor" stroke-width="3.5"/><path d="M 33 24 A 9 9 0 1 0 24 33" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><polygon points="30,31 36,30 33,36" fill="currentColor"/></svg></span>エ 継承</div>
+      </div>
+      <button class="cc-check" onclick="checkCc(this)">確認</button>
+      <div class="cc-feedback">
+        <strong>正解:ア + イ + エ(表示 + 非営利 + 継承)</strong>
+        非営利限定 → 非営利(イ)。改変OKで同じライセンスを付与 → 継承(エ)。改変禁止(ウ)を付けると継承と両立しない。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 20: 答え合わせ ①〜⑲ ═════ -->
+<div class="slide" data-title="学習ノート 答え合わせ ①〜⑲">
+  <div class="eyebrow">REVIEW / 答え合わせ一覧</div>
+  <h2 class="slide-title">学習ノート ①〜⑲</h2>
+  <p class="slide-subtitle">学習ノート①〜⑲の答えを一覧で確認する。</p>
+
+  <div class="answers-grid">
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">①</span><span class="answer-text">知的な創作活動から生産されたもの</span><span class="answer-reveal" data-ans="知的財産">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">②</span><span class="answer-text">創作者に一定期間与えられる権利</span><span class="answer-reveal" data-ans="知的財産権">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">③</span><span class="answer-text">新技術・デザインに対する独占権</span><span class="answer-reveal" data-ans="産業財産権">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">④</span><span class="answer-text">著作物に対する権利</span><span class="answer-reveal" data-ans="著作権">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑤</span><span class="answer-text">高度な発明を守る権利</span><span class="answer-reveal" data-ans="特許">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑥</span><span class="answer-text">物品の形状・構造の考案</span><span class="answer-reveal" data-ans="実用新案">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑦</span><span class="answer-text">視覚的な美感のデザイン</span><span class="answer-reveal" data-ans="意匠">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑧</span><span class="answer-text">自他商品を区別するマーク</span><span class="answer-reveal" data-ans="商標">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑨</span><span class="answer-text">取得に手続きが必要とする考え</span><span class="answer-reveal" data-ans="方式主義">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑩</span><span class="answer-text">著作物の利用と保護を定める法律</span><span class="answer-reveal" data-ans="著作権法">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑪</span><span class="answer-text">思想・感情を創作的に表現したもの</span><span class="answer-reveal" data-ans="著作物">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑫</span><span class="answer-text">創作時点で自動的に権利が発生する方式</span><span class="answer-reveal" data-ans="無方式主義">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑬</span><span class="answer-text">公表権・氏名表示権・同一性保持権</span><span class="answer-reveal" data-ans="著作者人格権">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑭</span><span class="answer-text">経済的利益のための権利(死後70年)</span><span class="answer-reveal" data-ans="著作権(財産権)">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑮</span><span class="answer-text">実演家・放送事業者の権利</span><span class="answer-reveal" data-ans="著作隣接権">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑯</span><span class="answer-text">家庭内で使うための複製</span><span class="answer-reveal" data-ans="私的使用">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑰</span><span class="answer-text">公正な慣行と正当な範囲での掲載</span><span class="answer-reveal" data-ans="引用">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑱</span><span class="answer-text">入試問題としての複製</span><span class="answer-reveal" data-ans="試験問題">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑲</span><span class="answer-text">利用条件を意思表示する仕組み</span><span class="answer-reveal" data-ans="CCライセンス">クリック</span></div>
+  </div>
+
+  <div style="margin-top: 22px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+    <button onclick="revealAll()" style="background: var(--navy-darkest); color: white; border: none; padding: 10px 26px; font-family: 'Noto Serif JP', serif; font-weight: 600; border-radius: 30px; cursor: pointer; font-size: 14px;">すべて一括表示</button>
+    <button onclick="hideAll()" style="background: transparent; color: var(--navy-darkest); border: 2px solid var(--navy); padding: 10px 26px; font-family: 'Noto Serif JP', serif; font-weight: 600; border-radius: 30px; cursor: pointer; font-size: 14px;">すべて隠す</button>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 21: まとめツリー ═════ -->
+<div class="slide" data-title="まとめ | 知的財産権の全体図">
+  <div class="eyebrow">SUMMARY / 全体俯瞰</div>
+  <h2 class="slide-title">知的財産権の全体図</h2>
+  <p class="slide-subtitle">中心は知的財産権。その下に産業財産権と著作権。さらにそれぞれ複数の権利に分かれる。</p>
+
+  <div class="summary-tree">
+    <div class="tree-center">知的財産権</div>
+  </div>
+  <div class="tree-branches">
+    <div class="tree-branch">
+      <h4>特許・実用新案(技術)</h4>
+      <ul>
+        <li>特許権 — 高度な発明 / 20年</li>
+        <li>実用新案権 — 形状・構造の考案 / 10年</li>
+        <li>方式主義(出願・登録が必要)</li>
+      </ul>
+    </div>
+    <div class="tree-branch">
+      <h4>意匠・商標(識別)</h4>
+      <ul>
+        <li>意匠権 — デザイン / 25年</li>
+        <li>商標権 — マーク / 10年(更新可)</li>
+        <li>方式主義</li>
+      </ul>
+    </div>
+    <div class="tree-branch">
+      <h4>著作者の権利</h4>
+      <ul>
+        <li>著作者人格権(譲渡不可)</li>
+        <li>著作権(財産権)/ 死後70年</li>
+        <li>無方式主義(創作で自動発生)</li>
+      </ul>
+    </div>
+    <div class="tree-branch">
+      <h4>伝達者の権利・例外</h4>
+      <ul>
+        <li>著作隣接権(実演・放送など)</li>
+        <li>私的使用・引用・試験問題</li>
+        <li>CCライセンスによる意思表示</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 22: 復習チャレンジ ═════ -->
+<div class="slide" data-title="復習チャレンジ | 10問ランダム">
+  <div class="eyebrow">CHALLENGE / 10 QUESTIONS</div>
+  <h2 class="slide-title">復習チャレンジ</h2>
+  <p class="slide-subtitle">学習ノートと本サイトの内容から10問を出題する。即時採点。</p>
+
+  <div class="review-container">
+    <div id="reviewStart">
+      <p class="review-intro">ランダムに10問を出題する。<br>答えを選ぶと自動で次の問題に進み、最後に結果が出る。</p>
+      <button class="review-start-btn" onclick="startReview()">▶ 開始する</button>
+    </div>
+    <div id="reviewQuiz" class="review-q-area">
+      <div class="review-progress" id="reviewProgress">QUESTION 1 / 10</div>
+      <div class="quiz-container" style="margin: 0;">
+        <div class="quiz-question" id="reviewQText"></div>
+        <div class="quiz-options" id="reviewQOpts"></div>
+      </div>
+    </div>
+    <div id="reviewDone" class="review-q-area" style="text-align: center;">
+      <div style="font-family: 'JetBrains Mono', monospace; color: var(--navy); font-size: 12px; letter-spacing: 0.2em; margin-bottom: 14px;">RESULT</div>
+      <div class="review-result" id="reviewScore">0 / 10</div>
+      <div class="review-result-sub" id="reviewComment"></div>
+      <button class="review-retry-btn" onclick="startReview()">もう一度</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 23: END ═════ -->
+<div class="slide title-slide" data-title="完了">
+  <div class="title-label">END OF CHAPTER · 04</div>
+  <h1 class="title-main" style="font-size: clamp(40px, 6vw, 80px);">お疲れさま<br>でした</h1>
+  <p class="title-sub">知的財産権の2つの柱と、著作権の発生方式・例外規定・CCライセンスまでを一周した。</p>
+  <div class="title-meta">
+    <div class="title-meta-item"><strong>COVERED</strong>学習ノート ①〜⑲ + 実習1〜5</div>
+  </div>
+</div>
+
+</div>
+
+<div class="bottombar">
+  <div class="bottombar-nav">
+    <button class="nav-btn" id="prevBtn" onclick="goToSlide(currentSlide - 1)" title="前へ">◀</button>
+    <button class="nav-btn" id="nextBtn" onclick="goToSlide(currentSlide + 1)" title="次へ">▶</button>
+  </div>
+  <div class="slide-title-small" id="slideTitleSmall">タイトル</div>
+  <span class="keyboard-hint">← → / SPACE / F / M</span>
+  <div class="page-indicator" id="pageIndicator">01 / XX</div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════════
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+let currentSlide = 0;
+
+function goToSlide(n) {
+  if (n < 0 || n >= totalSlides) return;
+  slides[currentSlide].classList.remove('active');
+  currentSlide = n;
+  slides[currentSlide].classList.add('active');
+  slides[currentSlide].scrollTop = 0;
+  updateUI();
+}
+
+function updateUI() {
+  const pct = ((currentSlide + 1) / totalSlides) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('pageIndicator').textContent =
+    String(currentSlide + 1).padStart(2, '0') + ' / ' + String(totalSlides).padStart(2, '0');
+  document.getElementById('slideTitleSmall').textContent =
+    slides[currentSlide].dataset.title || '';
+  document.getElementById('prevBtn').disabled = currentSlide === 0;
+  document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+  updateMenuActive();
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('menuPanel').classList.contains('open')) { closeMenu(); return; }
+  }
+  if (document.getElementById('menuPanel').classList.contains('open')) return;
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+    e.preventDefault(); goToSlide(currentSlide + 1);
+  } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+    e.preventDefault(); goToSlide(currentSlide - 1);
+  } else if (e.key === 'Home') { goToSlide(0); }
+  else if (e.key === 'End') { goToSlide(totalSlides - 1); }
+  else if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); }
+  else if (e.key === 'm' || e.key === 'M') { openMenu(); }
+});
+
+let touchStartX = 0, touchStartY = 0, touchStartT = 0;
+document.addEventListener('touchstart', (e) => {
+  if (e.touches.length !== 1) return;
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+  touchStartT = Date.now();
+}, { passive: true });
+document.addEventListener('touchend', (e) => {
+  if (e.changedTouches.length !== 1) return;
+  const menuPanel = document.getElementById('menuPanel');
+  if (menuPanel && menuPanel.classList.contains('open')) return;
+  const target = e.target;
+  if (target && target.closest && target.closest('button, .nav-btn, input, select, a')) return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  const dt = Date.now() - touchStartT;
+  if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) && dt < 800) {
+    if (dx < 0) goToSlide(currentSlide + 1);
+    else goToSlide(currentSlide - 1);
+  }
+}, { passive: true });
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
+}
+
+updateUI();
+
+// ══════════════════════════════════════════════════════════
+// NOTE BLANK
+// ══════════════════════════════════════════════════════════
+document.querySelectorAll('.note-blank').forEach(b => {
+  const initial = b.textContent.trim();
+  b.dataset.placeholder = initial;
+  b.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (b.classList.contains('reveal')) {
+      b.classList.remove('reveal');
+      b.textContent = b.dataset.placeholder;
+    } else {
+      b.classList.add('reveal');
+      b.textContent = b.dataset.answer;
+    }
+  });
+});
+
+// ══════════════════════════════════════════════════════════
+// CASE EXPANDER
+// ══════════════════════════════════════════════════════════
+function toggleCase(headEl) {
+  headEl.parentElement.classList.toggle('open');
+}
+
+// ══════════════════════════════════════════════════════════
+// QUIZ
+// ══════════════════════════════════════════════════════════
+function answerQuiz(el, isCorrect) {
+  const options = el.parentElement.querySelectorAll('.quiz-option');
+  options.forEach(o => { o.style.pointerEvents = 'none'; });
+  if (isCorrect) {
+    el.classList.add('correct');
+  } else {
+    el.classList.add('incorrect');
+    options.forEach(o => {
+      if (o.onclick && o.onclick.toString().includes('true')) o.classList.add('correct');
+    });
+  }
+  const fb = el.closest('.quiz-container').querySelector('.quiz-feedback');
+  if (fb) fb.classList.add('show');
+}
+
+// ══════════════════════════════════════════════════════════
+// PRACTICE LIST
+// ══════════════════════════════════════════════════════════
+function revealPractice(item) {
+  const verdict = item.querySelector('.practice-verdict');
+  const ok = verdict.dataset.ok === 'true';
+  item.classList.add('revealed');
+  item.classList.add(ok ? 'ok' : 'ng');
+  verdict.textContent = ok ? '適切' : '不適切';
+}
+
+// ══════════════════════════════════════════════════════════
+// FILTER TOGGLE
+// ══════════════════════════════════════════════════════════
+function switchFilter(type, btn) {
+  document.querySelectorAll('.filter-toggle button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('filterA').style.display = type === 'a' ? 'block' : 'none';
+  document.getElementById('filterB').style.display = type === 'b' ? 'block' : 'none';
+}
+
+// ══════════════════════════════════════════════════════════
+// ANSWERS GRID
+// ══════════════════════════════════════════════════════════
+function revealAnswer(row) {
+  const reveal = row.querySelector('.answer-reveal');
+  if (row.classList.contains('revealed')) {
+    row.classList.remove('revealed');
+    reveal.textContent = 'クリック';
+  } else {
+    row.classList.add('revealed');
+    reveal.textContent = reveal.dataset.ans;
+  }
+}
+function revealAll() {
+  document.querySelectorAll('.answer-row').forEach(r => {
+    r.classList.add('revealed');
+    const reveal = r.querySelector('.answer-reveal');
+    reveal.textContent = reveal.dataset.ans;
+  });
+}
+function hideAll() {
+  document.querySelectorAll('.answer-row').forEach(r => {
+    r.classList.remove('revealed');
+    r.querySelector('.answer-reveal').textContent = 'クリック';
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+// SORT GAME (実習2)
+// ══════════════════════════════════════════════════════════
+const sortDeck = [
+  { text: '小型軽量化した携帯電話用電池に関する発明', zone: 'zoneD', explain: '自然法則を利用した技術的思想のうち高度なもの → 特許権。' },
+  { text: '自社の車に付けるエンブレムのデザイン', zone: 'zoneB', explain: '自他商品・サービスを区別するためのマーク → 商標権。エンブレムは視覚デザインだが、識別機能が主目的。' },
+  { text: '形を工夫して水切りをよくした新型の容器の考案', zone: 'zoneC', explain: '物品の形状・構造の考案 → 実用新案権。高度とまでは言えない小さな工夫が対象。' },
+  { text: 'スマートな姿に見えるジャケットの模様や色彩に関するデザイン', zone: 'zoneA', explain: '視覚を通じて美感を起こさせる斬新なデザイン → 意匠権。衣服の模様・色彩が対象。' },
+];
+const sortZoneLabels = { zoneA: 'ア. 意匠権', zoneB: 'イ. 商標権', zoneC: 'ウ. 実用新案権', zoneD: 'エ. 特許権' };
+const sortTotal = sortDeck.length;
+let sortSelected = null;
+let sortCorrect = 0;
+
+function buildSort() {
+  const stack = document.getElementById('sortStack');
+  if (!stack) return;
+  stack.innerHTML = '';
+  sortCorrect = 0;
+  const order = sortDeck.map((_, i) => i).sort(() => Math.random() - 0.5);
+  order.forEach(i => {
+    const card = document.createElement('div');
+    card.className = 'sort-card';
+    card.textContent = sortDeck[i].text;
+    card.dataset.idx = i;
+    card.onclick = () => pickSort(card);
+    stack.appendChild(card);
+  });
+  Object.keys(sortZoneLabels).forEach(z => {
+    const list = document.querySelector('[data-list="' + z + '"]');
+    if (list) list.innerHTML = '';
+  });
+  document.getElementById('sortScore').textContent = '0 / ' + sortTotal;
+  document.getElementById('sortReveal').classList.remove('show');
+}
+function pickSort(card) {
+  if (card.classList.contains('placed')) return;
+  document.querySelectorAll('.sort-card.selected').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.sort-zone.highlight').forEach(z => z.classList.remove('highlight'));
+  card.classList.add('selected');
+  sortSelected = card;
+  document.querySelectorAll('.sort-zone').forEach(z => z.classList.add('highlight'));
+}
+function dropCard(zone) {
+  if (!sortSelected) return;
+  const idx = parseInt(sortSelected.dataset.idx);
+  const item = sortDeck[idx];
+  const correct = item.zone === zone;
+  const list = document.querySelector('[data-list="' + zone + '"]');
+  const chip = document.createElement('div');
+  chip.className = 'sort-placed-chip ' + (correct ? 'ok' : 'ng');
+  chip.textContent = item.text;
+  chip.dataset.cardIdx = idx;
+  chip.title = (correct ? '正解:' : '不正解。正解は「' + sortZoneLabels[item.zone] + '」 ') + item.explain + ' ─ クリックで戻す';
+  chip.onclick = () => undoChip(chip);
+  list.appendChild(chip);
+  sortSelected.classList.add('placed');
+  sortSelected.classList.remove('selected');
+  document.querySelectorAll('.sort-zone.highlight').forEach(z => z.classList.remove('highlight'));
+  sortSelected = null;
+  if (correct) sortCorrect++;
+  updateSortStatus();
+}
+function undoChip(chip) {
+  const idx = parseInt(chip.dataset.cardIdx);
+  if (chip.classList.contains('ok')) sortCorrect = Math.max(0, sortCorrect - 1);
+  chip.remove();
+  const card = document.querySelector('.sort-card[data-idx="' + idx + '"]');
+  if (card) card.classList.remove('placed');
+  document.getElementById('sortReveal').classList.remove('show');
+  updateSortStatus();
+}
+function updateSortStatus() {
+  const placed = document.querySelectorAll('.sort-card.placed').length;
+  document.getElementById('sortScore').textContent = sortCorrect + ' / ' + sortTotal;
+  if (placed === sortTotal) {
+    const rev = document.getElementById('sortReveal');
+    rev.innerHTML = '<strong>結果:' + sortCorrect + '/' + sortTotal + ' 正解。</strong>チップをクリックで戻して再配置できる。';
+    rev.classList.add('show');
+  }
+}
+function resetSort() { buildSort(); }
+buildSort();
+
+// ══════════════════════════════════════════════════════════
+// CC LAB (実習5)
+// ══════════════════════════════════════════════════════════
+function toggleCc(chip) {
+  if (chip.classList.contains('locked')) return;
+  chip.classList.toggle('picked');
+}
+function checkCc(btn) {
+  const picker = btn.closest('.cc-picker');
+  const correctStr = picker.dataset.correct;
+  const correctSet = correctStr === '' ? new Set() : new Set(correctStr.split(','));
+  const pickedSet = new Set();
+  picker.querySelectorAll('.cc-chip.picked').forEach(c => {
+    if (c.dataset.mark) pickedSet.add(c.dataset.mark);
+  });
+  let match = pickedSet.size === correctSet.size;
+  if (match) {
+    correctSet.forEach(m => { if (!pickedSet.has(m)) match = false; });
+  }
+  const fb = picker.querySelector('.cc-feedback');
+  fb.classList.remove('ok', 'ng');
+  fb.classList.add(match ? 'ok' : 'ng', 'show');
+}
+function resetCc() {
+  document.querySelectorAll('.cc-chip.picked').forEach(c => c.classList.remove('picked'));
+  document.querySelectorAll('.cc-feedback.show').forEach(f => f.classList.remove('show', 'ok', 'ng'));
+}
+
+// ══════════════════════════════════════════════════════════
+// MENU
+// ══════════════════════════════════════════════════════════
+function buildMenu() {
+  const menuList = document.getElementById('menuList');
+  if (!menuList) return;
+  menuList.innerHTML = '';
+  const sections = [];
+  let currentSection = { label: 'OVERVIEW', items: [] };
+  sections.push(currentSection);
+
+  slides.forEach((slide, idx) => {
+    const title = slide.dataset.title || '';
+    if (slide.classList.contains('section-divider')) {
+      const label = title.replace(/^第\d節\s*/, '');
+      currentSection = { label: label.toUpperCase(), items: [] };
+      sections.push(currentSection);
+    }
+    let tag = '', tagClass = '';
+    if (slide.classList.contains('title-slide') && idx === 0) { tag = 'TITLE'; tagClass = 'tag-title'; }
+    else if (slide.classList.contains('title-slide')) { tag = 'END'; tagClass = 'tag-end'; }
+    else if (slide.classList.contains('section-divider')) { tag = 'SECTION'; tagClass = 'tag-section'; }
+    else if (/実習/.test(title)) { tag = 'PRACTICE'; tagClass = ''; }
+    else if (/【[A-Z]】/.test(title)) { tag = 'INTERACTIVE'; tagClass = 'tag-interactive'; }
+    else if (/答え合わせ|まとめ|復習/.test(title)) { tag = 'REVIEW'; tagClass = 'tag-review'; }
+    currentSection.items.push({ idx, title, tag, tagClass });
+  });
+
+  sections.forEach(sec => {
+    if (sec.items.length === 0) return;
+    const h = document.createElement('div');
+    h.className = 'menu-section';
+    h.textContent = sec.label;
+    menuList.appendChild(h);
+    sec.items.forEach(it => {
+      const el = document.createElement('div');
+      el.className = 'menu-item';
+      el.dataset.idx = it.idx;
+      el.onclick = () => { goToSlide(it.idx); closeMenu(); };
+      const num = String(it.idx + 1).padStart(2, '0');
+      const tagHtml = it.tag ? '<span class="menu-item-tag ' + it.tagClass + '">' + it.tag + '</span>' : '';
+      el.innerHTML =
+        '<span class="menu-item-num">' + num + '</span>' +
+        '<span class="menu-item-title">' + it.title + '</span>' +
+        tagHtml;
+      menuList.appendChild(el);
+    });
+  });
+  updateMenuActive();
+}
+function updateMenuActive() {
+  document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+  const curr = document.querySelector('.menu-item[data-idx="' + currentSlide + '"]');
+  if (curr) {
+    curr.classList.add('active');
+    if (document.getElementById('menuPanel').classList.contains('open')) {
+      curr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+}
+function openMenu() {
+  document.getElementById('menuOverlay').classList.add('open');
+  document.getElementById('menuPanel').classList.add('open');
+  updateMenuActive();
+}
+function closeMenu() {
+  document.getElementById('menuOverlay').classList.remove('open');
+  document.getElementById('menuPanel').classList.remove('open');
+}
+buildMenu();
+
+// ══════════════════════════════════════════════════════════
+// REVIEW CHALLENGE
+// ══════════════════════════════════════════════════════════
+const reviewPool = [
+  { q: '知的な創作活動から生産されたものを何というか。', opts: ['知的財産', '知的財産権', '産業財産権', '著作権'], a: 0 },
+  { q: '創作した人に一定期間与えられる権利を何というか。', opts: ['知的財産', '知的財産権', '著作隣接権', '方式主義'], a: 1 },
+  { q: '特許権の保護期間として正しいのはどれか。', opts: ['出願から10年', '出願から20年', '出願から25年', '登録から10年(更新可)'], a: 1 },
+  { q: '意匠権の保護期間として正しいのはどれか。', opts: ['出願から10年', '出願から20年', '出願から25年', '死後70年'], a: 2 },
+  { q: '商標権の保護期間として正しいのはどれか。', opts: ['出願から10年', '出願から25年', '登録から10年(更新可)', '創作から50年'], a: 2 },
+  { q: '「自他の商品やサービスを区別するためのマーク」を保護する権利は。', opts: ['特許権', '意匠権', '商標権', '実用新案権'], a: 2 },
+  { q: '物品の形状・構造の考案を保護する権利は。', opts: ['実用新案権', '意匠権', '商標権', '特許権'], a: 0 },
+  { q: '産業財産権のように、取得に手続きを要するという考え方を何というか。', opts: ['無方式主義', '方式主義', '独占主義', '先使用主義'], a: 1 },
+  { q: '著作権法の目的として正しいのはどれか。', opts: ['著作者の独占的利益の最大化', '文化の発展への寄与', '産業の発展への寄与', '表現の自由の保障'], a: 1 },
+  { q: '著作物の定義として正しいのはどれか。', opts: ['単なる事実やデータを含む一切の情報', '思想又は感情を創作的に表現したもので、文芸・学術・美術・音楽の範囲に属するもの', '商業的に流通する全ての表現物', '方式主義に基づいて登録されたもの'], a: 1 },
+  { q: '著作権は原則として、いつ発生するか。', opts: ['文化庁に登録した時点', '公表した時点', '著作物が創作された時点', '出願して審査に合格した時点'], a: 2 },
+  { q: '著作者だけがもち、著作者の死後は消滅する権利は。', opts: ['著作権(財産権)', '著作者人格権', '著作隣接権', '頒布権'], a: 1 },
+  { q: '著作権(財産権)の保護期間は、著作者の死後何年か。', opts: ['50年', '60年', '70年', '80年'], a: 2 },
+  { q: '実演家や放送事業者に与えられる権利を何というか。', opts: ['著作者人格権', '著作権(財産権)', '著作隣接権', '頒布権'], a: 2 },
+  { q: '「公表権」「氏名表示権」「同一性保持権」を含む権利は。', opts: ['著作者人格権', '著作権(財産権)', '著作隣接権', '商標権'], a: 0 },
+  { q: '家庭内で仕事以外の目的で使用するための複製が認められる例外は。', opts: ['私的使用', '引用', '試験問題', '報道'], a: 0 },
+  { q: '正当な範囲内で他人の著作物を自分の著作物に掲載できる例外は。', opts: ['私的使用', '引用', '試験問題', '頒布'], a: 1 },
+  { q: '入学試験の問題として著作物を複製できる根拠の例外は。', opts: ['私的使用', '引用', '試験問題', '教育目的'], a: 2 },
+  { q: 'CCライセンスで必須とされるマークはどれか。', opts: ['表示(BY)', '非営利(NC)', '改変禁止(ND)', '継承(SA)'], a: 0 },
+  { q: 'CCライセンスで「改変は自由だが元と同じライセンスを付ける」条件を表すのは。', opts: ['表示', '非営利', '改変禁止', '継承'], a: 3 },
+  { q: '友人のためにテレビ番組を録画して友人に渡す行為の扱いは。', opts: ['私的使用の例外として認められる', '引用の例外として認められる', '家庭内の範囲を超えるため例外にならない', '著作権法の対象外'], a: 2 },
+  { q: '文化祭で入場料を取って他人の脚本を上演する場合、著作権の扱いはどうなるか。', opts: ['学校行事だから常に自由', '非営利・無料・無報酬を満たさないため許諾が必要', '私的使用として認められる', '引用として認められる'], a: 1 },
+];
+let reviewQuestions = [];
+let reviewIdx = 0;
+let reviewScore = 0;
+
+function startReview() {
+  reviewQuestions = [...reviewPool].sort(() => Math.random() - 0.5).slice(0, 10);
+  reviewIdx = 0;
+  reviewScore = 0;
+  document.getElementById('reviewStart').style.display = 'none';
+  document.getElementById('reviewDone').classList.remove('active');
+  document.getElementById('reviewQuiz').classList.add('active');
+  showReviewQ();
+}
+function showReviewQ() {
+  const q = reviewQuestions[reviewIdx];
+  document.getElementById('reviewProgress').textContent = 'QUESTION ' + (reviewIdx + 1) + ' / 10';
+  document.getElementById('reviewQText').innerHTML =
+    '<span class="quiz-question-num">Q' + (reviewIdx + 1) + '</span>' + q.q;
+  const opts = document.getElementById('reviewQOpts');
+  opts.innerHTML = '';
+  const letters = ['ア', 'イ', 'ウ', 'エ'];
+  q.opts.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-option';
+    div.innerHTML = '<span class="quiz-option-letter">' + letters[i] + '</span><span>' + opt + '</span>';
+    div.onclick = () => answerReview(div, i === q.a);
+    opts.appendChild(div);
+  });
+}
+function answerReview(el, isCorrect) {
+  const options = el.parentElement.querySelectorAll('.quiz-option');
+  options.forEach(o => { o.style.pointerEvents = 'none'; });
+  const q = reviewQuestions[reviewIdx];
+  if (isCorrect) {
+    el.classList.add('correct');
+    reviewScore++;
+  } else {
+    el.classList.add('incorrect');
+    options[q.a].classList.add('correct');
+  }
+  setTimeout(() => {
+    reviewIdx++;
+    if (reviewIdx < 10) showReviewQ();
+    else showReviewResult();
+  }, 900);
+}
+function showReviewResult() {
+  document.getElementById('reviewQuiz').classList.remove('active');
+  document.getElementById('reviewDone').classList.add('active');
+  document.getElementById('reviewScore').textContent = reviewScore + ' / 10';
+  const comments = {
+    10: '完璧。共通テスト余裕レベル。',
+    9: '素晴らしい。あと一歩で満点。',
+    8: '合格ライン。理解はほぼ十分。',
+    7: 'もう一歩。苦手項目を復習しよう。',
+    6: '6割ライン。スライドを見返そう。'
+  };
+  let msg = comments[reviewScore] || '基礎から見直そう。学習ノートを手元に。';
+  document.getElementById('reviewComment').textContent = msg;
+}
+
+// ══════════════════════════════════════════════════════════
+// RESET HOOK
+// ══════════════════════════════════════════════════════════
+function onResetHook() {
+  buildSort();
+  resetCc();
+  // filter-toggle reset
+  const fbtns = document.querySelectorAll('.filter-toggle button');
+  fbtns.forEach((b, i) => { if (i === 0) b.classList.add('active'); else b.classList.remove('active'); });
+  const fa = document.getElementById('filterA');
+  const fb = document.getElementById('filterB');
+  if (fa) fa.style.display = 'block';
+  if (fb) fb.style.display = 'none';
+}
+
+function resetAllInteractions() {
+  if (!confirm('このページのすべてのインタラクションを初期状態に戻します。よろしいですか?')) return;
+
+  document.querySelectorAll('.note-blank.reveal').forEach(b => {
+    b.classList.remove('reveal');
+    b.textContent = b.dataset.placeholder || 'クリックで正解';
+  });
+  document.querySelectorAll('.case-expander.open').forEach(c => c.classList.remove('open'));
+  document.querySelectorAll('.quiz-option').forEach(o => {
+    o.classList.remove('correct', 'incorrect');
+    o.style.pointerEvents = 'auto';
+  });
+  document.querySelectorAll('.quiz-feedback.show').forEach(f => f.classList.remove('show'));
+  document.querySelectorAll('.practice-item.revealed').forEach(p => {
+    p.classList.remove('revealed', 'ok', 'ng');
+    const v = p.querySelector('.practice-verdict');
+    if (v) v.textContent = '?';
+  });
+  document.querySelectorAll('.answer-row.revealed').forEach(r => {
+    r.classList.remove('revealed');
+    const rv = r.querySelector('.answer-reveal');
+    if (rv) rv.textContent = 'クリック';
+  });
+  const reviewStart = document.getElementById('reviewStart');
+  const reviewQuiz = document.getElementById('reviewQuiz');
+  const reviewDone = document.getElementById('reviewDone');
+  if (reviewStart) reviewStart.style.display = 'block';
+  if (reviewQuiz) reviewQuiz.classList.remove('active');
+  if (reviewDone) reviewDone.classList.remove('active');
+
+  if (typeof onResetHook === 'function') onResetHook();
+
+  closeMenu();
+  goToSlide(0);
+}
+
+</script>
+</body>
+</html>
