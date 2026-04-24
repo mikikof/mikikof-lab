@@ -1,0 +1,3404 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>個人情報 | 情報Ⅰ / 情報数理入門</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600;700;900&family=Noto+Sans+JP:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy-darkest: #0F2847;
+  --navy-dark: #1B3A5B;
+  --navy: #2C5F8D;
+  --navy-light: #4A7FA8;
+  --navy-pale: #D4E1EF;
+  --navy-bg: #F3F6FB;
+  --accent-red: #C8102E;
+  --accent-red-dark: #8B0A1F;
+  --accent-gold: #C9A961;
+  --text-main: #1A2332;
+  --text-sub: #5A6378;
+  --white: #FFFFFF;
+  --ok-green: #1E824C;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  font-family: 'Noto Sans JP', sans-serif;
+  color: var(--text-main);
+  background: var(--navy-darkest);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.slide-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  top: 47px;
+  bottom: 52px;
+  left: 0;
+  right: 0;
+  padding: 4vh 5vw;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(30px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  background: var(--white);
+  overflow-y: auto;
+}
+.slide.active {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(0);
+}
+
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 44px;
+  background: linear-gradient(180deg, var(--navy-darkest) 0%, var(--navy-dark) 100%);
+  color: rgba(255,255,255,0.9);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  z-index: 100;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+.topbar-title { font-family: 'Noto Serif JP', serif; font-weight: 600; margin-right: 20px; }
+.topbar-subtitle { color: rgba(255,255,255,0.6); font-size: 12px; flex: 1; }
+.topbar-chapter { font-family: 'JetBrains Mono', monospace; color: var(--accent-gold); letter-spacing: 0.1em; font-size: 11px; }
+
+.progress {
+  position: fixed;
+  top: 44px; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-red) 0%, var(--accent-gold) 100%);
+  z-index: 99;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 8px rgba(201, 169, 97, 0.5);
+}
+
+.bottombar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 52px;
+  background: var(--navy-darkest);
+  color: rgba(255,255,255,0.85);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  z-index: 100;
+  font-size: 13px;
+}
+.bottombar-nav { display: flex; gap: 12px; align-items: center; }
+.nav-btn {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: white;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 16px;
+}
+.nav-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.page-indicator { font-family: 'JetBrains Mono', monospace; margin-left: auto; margin-right: 16px; color: rgba(255,255,255,0.7); font-size: 12px; letter-spacing: 0.08em; }
+.slide-title-small { flex: 1; margin-left: 16px; font-size: 12px; color: rgba(255,255,255,0.5); font-family: 'Noto Serif JP', serif; max-width: 40vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.keyboard-hint { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.4); margin-left: 10px; }
+
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent-red);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.slide-title {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  color: var(--navy-darkest);
+  font-size: clamp(32px, 4.4vw, 56px);
+  line-height: 1.15; margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+.slide-subtitle {
+  font-size: clamp(17px, 1.7vw, 22px);
+  color: var(--text-sub); font-weight: 500;
+  margin-bottom: 30px;
+  line-height: 1.7;
+}
+.section-heading {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  color: var(--navy-dark); font-size: 30px;
+  margin-bottom: 20px; padding-left: 16px;
+  border-left: 4px solid var(--accent-red);
+  line-height: 1.3;
+}
+.body-text { font-size: 19px; line-height: 1.85; color: var(--text-main); font-weight: 500; }
+.highlight {
+  background: linear-gradient(180deg, transparent 60%, rgba(201,169,97,0.4) 60%);
+  font-weight: 700; padding: 0 2px;
+}
+
+.title-slide {
+  display: flex; flex-direction: column; justify-content: center;
+  background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy-dark) 60%, var(--navy) 100%);
+  color: white; padding: 0 10vw;
+  overflow: hidden;
+}
+.title-slide::before {
+  content: ''; position: absolute; top: 0; right: 0;
+  width: 45%; height: 100%;
+  background:
+    radial-gradient(circle at 70% 30%, rgba(201,169,97,0.15) 0%, transparent 50%),
+    radial-gradient(circle at 30% 70%, rgba(200,16,46,0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+.title-slide::after {
+  content: ''; position: absolute; top: 50%; right: 8vw;
+  width: 300px; height: 300px;
+  border: 1px solid rgba(201,169,97,0.3); border-radius: 50%;
+  transform: translateY(-50%);
+  animation: rotate 40s linear infinite;
+}
+@keyframes rotate { to { transform: translateY(-50%) rotate(360deg); } }
+.title-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 13px;
+  letter-spacing: 0.3em; color: var(--accent-gold); margin-bottom: 24px;
+}
+.title-main {
+  font-family: 'Noto Serif JP', serif; font-weight: 900;
+  font-size: clamp(60px, 8vw, 120px);
+  line-height: 1; margin-bottom: 20px; letter-spacing: -0.02em;
+  position: relative; z-index: 2;
+}
+.title-sub {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(22px, 2.5vw, 34px); font-weight: 300;
+  color: rgba(255,255,255,0.85); margin-bottom: 60px;
+  letter-spacing: 0.05em;
+}
+.title-meta {
+  display: flex; gap: 40px;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  color: rgba(255,255,255,0.6); letter-spacing: 0.15em;
+  position: relative; z-index: 2;
+  flex-wrap: wrap;
+}
+.title-meta-item strong { color: var(--accent-gold); margin-right: 8px; }
+
+.section-divider {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center !important;
+  align-items: center !important;
+  background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy) 100%);
+  color: white;
+  position: absolute;
+  padding: 0 5vw !important;
+  overflow: hidden !important;
+  text-align: center;
+}
+.section-divider > * { position: relative; z-index: 2; }
+.section-divider::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(201,169,97,0.1) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(200,16,46,0.08) 0%, transparent 40%);
+  z-index: 1;
+}
+.section-number {
+  font-family: 'JetBrains Mono', monospace; font-size: 14px;
+  letter-spacing: 0.3em; color: var(--accent-gold); margin-bottom: 20px;
+}
+.section-title-big {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(48px, 7vw, 90px); font-weight: 900;
+  line-height: 1; margin-bottom: 18px; text-align: center;
+}
+.section-tagline {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(18px, 2vw, 26px); font-weight: 300;
+  color: rgba(255,255,255,0.75); letter-spacing: 0.05em;
+}
+
+/* def-box */
+.def-box {
+  background: var(--navy-bg);
+  border: 1px solid var(--navy-pale);
+  border-radius: 6px;
+  padding: 26px 30px;
+  margin-bottom: 14px;
+}
+.def-box .def-label {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent-red);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.15em; margin-bottom: 8px;
+}
+.def-box .def-term {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  font-size: 24px; color: var(--navy-darkest); margin-bottom: 10px;
+}
+.def-box .def-desc { font-size: 16px; line-height: 1.85; color: var(--text-main); font-weight: 500; }
+
+/* note-blank */
+.note-blank {
+  display: inline-block;
+  min-width: 120px;
+  padding: 2px 14px;
+  background: var(--navy-pale);
+  border-bottom: 2px solid var(--navy);
+  color: var(--navy-dark);
+  font-weight: 700;
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.note-blank:hover { background: #BDD0E6; }
+.note-blank.reveal {
+  background: var(--accent-gold);
+  color: var(--navy-darkest);
+  border-bottom-color: var(--accent-red);
+  animation: reveal 0.5s;
+}
+@keyframes reveal {
+  0% { transform: scale(0.9); opacity: 0.5; }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 30px;
+}
+
+/* agenda-grid */
+.agenda-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 30px;
+}
+.agenda-item {
+  padding: 24px 28px;
+  background: var(--navy-bg);
+  border-left: 4px solid var(--navy);
+  border-radius: 4px;
+  transition: all 0.3s;
+  display: flex; gap: 20px; align-items: flex-start;
+}
+.agenda-item:hover { background: var(--navy-pale); transform: translateX(4px); }
+.agenda-num {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 36px; font-weight: 700;
+  color: var(--accent-red);
+  line-height: 1; min-width: 50px;
+}
+.agenda-content h3 {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 600; font-size: 20px;
+  color: var(--navy-darkest); margin-bottom: 6px;
+}
+.agenda-content p { font-size: 14px; color: var(--text-sub); line-height: 1.5; }
+
+/* quiz-container */
+.quiz-container { max-width: 900px; margin: 24px auto 0; }
+.quiz-question {
+  background: var(--navy-darkest); color: white;
+  padding: 20px 28px;
+  border-radius: 6px 6px 0 0;
+  font-size: 19px; line-height: 1.6;
+  font-family: 'Noto Serif JP', serif; font-weight: 600;
+}
+.quiz-question-num {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent-gold);
+  font-size: 11px; letter-spacing: 0.2em;
+  margin-bottom: 8px; display: block;
+  font-weight: 700;
+}
+.quiz-options {
+  background: var(--white);
+  border: 1px solid var(--navy-pale); border-top: none;
+  border-radius: 0 0 6px 6px; padding: 18px;
+}
+.quiz-option {
+  padding: 14px 18px; margin-bottom: 8px;
+  background: var(--navy-bg);
+  border: 2px solid transparent;
+  border-radius: 4px; cursor: pointer;
+  transition: all 0.2s;
+  display: flex; gap: 14px; align-items: flex-start;
+  font-size: 16.5px; font-weight: 500;
+}
+.quiz-option:hover { border-color: var(--navy); background: var(--navy-pale); }
+.quiz-option:last-child { margin-bottom: 0; }
+.quiz-option-letter {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; color: var(--navy);
+  min-width: 24px;
+}
+.quiz-option.correct {
+  background: rgba(30,130,76,0.1);
+  border-color: var(--ok-green);
+}
+.quiz-option.correct .quiz-option-letter { color: var(--ok-green); }
+.quiz-option.incorrect {
+  background: rgba(200,16,46,0.08);
+  border-color: var(--accent-red);
+  opacity: 0.6;
+}
+.quiz-feedback {
+  display: none; margin-top: 14px;
+  padding: 16px 20px; background: var(--navy-bg);
+  border-left: 4px solid var(--accent-gold);
+  font-size: 16px; line-height: 1.8;
+  border-radius: 0 4px 4px 0; font-weight: 500;
+}
+.quiz-feedback.show { display: block; animation: fadeIn 0.4s; }
+.quiz-feedback strong { color: var(--navy-darkest); }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* multi-check (複数選択判定) */
+.multi-check { max-width: 900px; margin: 22px auto 0; }
+.multi-question {
+  background: var(--navy-darkest); color: white;
+  padding: 18px 26px;
+  border-radius: 6px 6px 0 0;
+  font-size: 19px; line-height: 1.55;
+  font-family: 'Noto Serif JP', serif; font-weight: 600;
+}
+.multi-options {
+  background: var(--white);
+  border: 1px solid var(--navy-pale); border-top: none;
+  border-radius: 0 0 6px 6px; padding: 16px;
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.multi-opt {
+  padding: 12px 16px; cursor: pointer;
+  background: var(--navy-bg);
+  border: 2px solid transparent;
+  border-radius: 4px;
+  font-size: 16px; font-weight: 500;
+  transition: all 0.2s;
+  display: flex; gap: 12px; align-items: center;
+}
+.multi-opt:hover { border-color: var(--navy); }
+.multi-opt .mo-letter {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; color: var(--navy);
+  min-width: 22px;
+}
+.multi-opt .mo-mark {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid var(--navy-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: transparent;
+  transition: all 0.2s;
+  margin-left: auto;
+}
+.multi-opt.picked { background: var(--navy-pale); border-color: var(--navy); }
+.multi-opt.picked .mo-mark {
+  background: var(--navy-darkest); color: white;
+  border-color: var(--navy-darkest);
+}
+.multi-opt.picked .mo-mark::before { content: '✓'; }
+.multi-opt.result-ok {
+  background: rgba(30,130,76,0.1);
+  border-color: var(--ok-green);
+}
+.multi-opt.result-ok .mo-mark {
+  background: var(--ok-green); border-color: var(--ok-green);
+  color: white;
+}
+.multi-opt.result-ok .mo-mark::before { content: '✓'; }
+.multi-opt.result-missed {
+  background: rgba(201,169,97,0.12);
+  border-color: var(--accent-gold);
+  border-style: dashed;
+}
+.multi-opt.result-missed .mo-mark {
+  background: var(--accent-gold); border-color: var(--accent-gold);
+  color: var(--navy-darkest);
+}
+.multi-opt.result-missed .mo-mark::before { content: '!'; }
+.multi-opt.result-wrong {
+  background: rgba(200,16,46,0.08);
+  border-color: var(--accent-red);
+  opacity: 0.85;
+}
+.multi-opt.result-wrong .mo-mark {
+  background: var(--accent-red); border-color: var(--accent-red);
+  color: white;
+}
+.multi-opt.result-wrong .mo-mark::before { content: '✕'; }
+.multi-control {
+  display: flex; gap: 10px; align-items: center;
+  margin-top: 14px;
+  padding: 12px 18px;
+  background: var(--navy-darkest);
+  color: white; border-radius: 6px;
+  font-size: 14px;
+}
+.multi-status { flex: 1; font-size: 13.5px; font-weight: 500; }
+.multi-submit {
+  background: var(--accent-gold);
+  color: var(--navy-darkest);
+  border: none; padding: 8px 22px;
+  border-radius: 20px; cursor: pointer;
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  font-size: 14px; letter-spacing: 0.05em;
+}
+.multi-submit:hover { filter: brightness(1.1); }
+.multi-reset {
+  background: transparent; color: white;
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 6px 14px; border-radius: 14px;
+  font-size: 13px; font-family: 'Noto Serif JP', serif;
+  font-weight: 600; cursor: pointer;
+}
+.multi-feedback {
+  display: none; margin-top: 12px;
+  padding: 16px 20px; background: var(--navy-bg);
+  border-left: 4px solid var(--accent-gold);
+  font-size: 15.5px; line-height: 1.8;
+  border-radius: 0 4px 4px 0; font-weight: 500;
+}
+.multi-feedback.show { display: block; animation: fadeIn 0.4s; }
+.multi-feedback strong { color: var(--accent-red-dark); }
+
+/* filter-toggle */
+.filter-toggle {
+  display: inline-flex;
+  background: var(--navy-bg);
+  border-radius: 40px;
+  padding: 5px;
+  margin: 20px 0;
+  border: 1px solid var(--navy-pale);
+}
+.filter-toggle button {
+  padding: 10px 28px;
+  background: transparent; border: none;
+  cursor: pointer;
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 600; font-size: 15px;
+  color: var(--text-sub);
+  border-radius: 30px;
+  transition: all 0.25s;
+}
+.filter-toggle button.active {
+  background: var(--navy-darkest); color: white;
+}
+.filter-display {
+  background: var(--white);
+  border: 1px solid var(--navy-pale);
+  border-radius: 8px;
+  padding: 24px 28px;
+  margin-top: 14px;
+}
+.filter-display h4 {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 22px; color: var(--navy-darkest);
+  margin-bottom: 10px;
+}
+.filter-tagline {
+  font-size: 15px; color: var(--text-sub);
+  margin-bottom: 18px; line-height: 1.7; font-weight: 500;
+}
+.filter-pros-cons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px; margin-top: 14px;
+}
+.filter-box {
+  padding: 14px 18px;
+  border-radius: 6px;
+  font-size: 14px; line-height: 1.75;
+  font-weight: 500;
+}
+.filter-box.pros {
+  background: rgba(30,130,76,0.08);
+  border-left: 3px solid var(--ok-green);
+}
+.filter-box.cons {
+  background: rgba(200,16,46,0.06);
+  border-left: 3px solid var(--accent-red);
+}
+.filter-box h5 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; letter-spacing: 0.2em;
+  margin-bottom: 8px;
+}
+.filter-box.pros h5 { color: var(--ok-green); }
+.filter-box.cons h5 { color: var(--accent-red); }
+.filter-guess {
+  cursor: pointer; position: relative;
+  transition: all 0.25s;
+}
+.filter-guess:hover { transform: translateY(-2px); }
+.filter-guess .filter-answer { display: none; }
+.filter-guess.revealed .filter-answer { display: block; animation: fadeIn 0.4s; }
+.filter-guess.revealed .filter-hidden { display: none; }
+.filter-hidden {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.15em;
+  color: var(--text-sub);
+  text-align: center; padding: 6px 0;
+  font-weight: 700; opacity: 0.7;
+}
+.filter-example {
+  margin-top: 14px; padding: 12px 16px;
+  background: var(--navy-bg);
+  border-left: 3px solid var(--accent-gold);
+  font-size: 13.5px; line-height: 1.75;
+  border-radius: 0 4px 4px 0;
+  color: var(--text-main); font-weight: 500;
+}
+.filter-example strong { color: var(--navy-darkest); }
+
+/* feat-grid 2カード */
+.feat-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 24px;
+  align-items: stretch;
+}
+.feat-card {
+  background: var(--navy-bg);
+  padding: 22px 24px;
+  border-radius: 8px;
+  border-left: 4px solid var(--accent-red);
+  position: relative;
+}
+.feat-card.accent-gold { border-left-color: var(--accent-gold); }
+.feat-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--accent-red);
+  letter-spacing: 0.15em; font-weight: 700; margin-bottom: 8px;
+}
+.feat-card.accent-gold .feat-tag { color: #8a6d1f; }
+.feat-name {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  font-size: 22px; color: var(--navy-darkest);
+  margin-bottom: 10px; line-height: 1.35;
+}
+.feat-desc {
+  font-size: 14.5px; line-height: 1.8;
+  color: var(--text-main); font-weight: 500;
+  margin-bottom: 12px;
+}
+.feat-point {
+  padding: 10px 14px;
+  background: white;
+  border-radius: 4px;
+  border-left: 3px solid var(--navy);
+  font-size: 13.5px; line-height: 1.7;
+  color: var(--navy-darkest); font-weight: 500;
+}
+.feat-point strong { color: var(--accent-red-dark); font-weight: 700; }
+
+/* case-expander */
+.case-expander {
+  background: var(--white);
+  border: 1px solid var(--navy-pale);
+  border-radius: 6px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+.case-expander.open {
+  border-color: var(--accent-red);
+  box-shadow: 0 4px 20px rgba(200,16,46,0.1);
+}
+.case-head {
+  padding: 14px 20px;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 14px;
+  background: var(--navy-bg);
+  transition: background 0.2s;
+}
+.case-head:hover { background: var(--navy-pale); }
+.case-year {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 13px;
+  color: var(--accent-red); min-width: 56px;
+}
+.case-title {
+  font-family: 'Noto Serif JP', serif; font-weight: 600;
+  font-size: 16px; color: var(--navy-darkest); flex: 1;
+}
+.case-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 0.1em;
+  color: var(--navy); background: var(--navy-pale);
+  padding: 3px 8px; border-radius: 3px; font-weight: 700;
+}
+.case-toggle {
+  color: var(--navy); font-size: 14px;
+  transition: transform 0.3s;
+  font-family: 'JetBrains Mono', monospace; font-weight: 700;
+}
+.case-expander.open .case-toggle { transform: rotate(45deg); }
+.case-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+.case-expander.open .case-body { max-height: 800px; }
+.case-content {
+  padding: 16px 20px 18px 20px;
+  font-size: 16px; line-height: 1.8;
+  color: var(--text-main); font-weight: 500;
+  border-top: 1px solid var(--navy-pale);
+}
+.case-content p { margin-bottom: 8px; }
+.case-content strong { color: var(--accent-red-dark); }
+.case-meta {
+  display: flex; gap: 18px; margin-top: 10px; padding-top: 10px;
+  border-top: 1px dashed var(--navy-pale);
+  font-size: 12px; color: var(--text-sub);
+  font-family: 'JetBrains Mono', monospace;
+  flex-wrap: wrap;
+}
+.case-meta-item strong {
+  display: block; color: var(--navy);
+  font-size: 9.5px; letter-spacing: 0.1em;
+  text-transform: uppercase; margin-bottom: 2px;
+}
+
+/* practice-list */
+.practice-list { margin-top: 18px; }
+.practice-item {
+  display: flex; gap: 16px;
+  padding: 16px 20px;
+  background: var(--white);
+  border: 1px solid var(--navy-pale);
+  border-radius: 6px;
+  margin-bottom: 10px;
+  transition: all 0.25s;
+  cursor: pointer;
+  align-items: flex-start;
+}
+.practice-item:hover { background: var(--navy-bg); }
+.practice-letter {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 700; color: var(--navy);
+  min-width: 30px; font-size: 17px;
+}
+.practice-text { flex: 1; font-size: 16px; line-height: 1.75; font-weight: 500; }
+.practice-verdict {
+  padding: 4px 12px;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.1em; white-space: nowrap;
+  min-width: 62px; text-align: center;
+  background: transparent; color: var(--navy);
+  border: 1px dashed var(--navy-light);
+  transition: all 0.3s;
+  align-self: center;
+}
+.practice-item.revealed .practice-verdict {
+  border-style: solid; letter-spacing: 0.15em;
+}
+.practice-item.revealed.ok .practice-verdict {
+  background: var(--ok-green); color: white; border-color: var(--ok-green);
+}
+.practice-item.revealed.ng .practice-verdict {
+  background: var(--accent-red); color: white; border-color: var(--accent-red);
+}
+.practice-item.revealed .practice-reason {
+  display: block; margin-top: 10px;
+  padding: 10px 14px;
+  background: var(--navy-bg);
+  border-left: 3px solid var(--accent-gold);
+  font-size: 14px; color: var(--text-sub);
+  line-height: 1.7; width: 100%; font-weight: 500;
+}
+.practice-reason { display: none; }
+.practice-reason strong { color: var(--accent-red-dark); font-weight: 700; }
+
+/* term-pick (実習5) */
+.term-pick-list { margin-top: 20px; }
+.term-pick-item {
+  background: var(--white);
+  border: 1px solid var(--navy-pale);
+  border-radius: 6px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.term-pick-q {
+  display: flex; gap: 14px;
+  padding: 14px 20px;
+  background: var(--navy-bg);
+  border-bottom: 1px solid var(--navy-pale);
+}
+.term-pick-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; color: var(--accent-red);
+  min-width: 34px; font-size: 14px;
+  padding-top: 3px;
+}
+.term-pick-text { flex: 1; font-size: 15.5px; line-height: 1.75; font-weight: 500; }
+.term-pick-opts {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  padding: 14px 20px;
+}
+.term-pick-opt {
+  padding: 8px 14px;
+  background: var(--navy-bg);
+  border: 1.5px solid var(--navy-pale);
+  border-radius: 18px;
+  font-size: 13.5px; cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+  color: var(--navy-darkest);
+}
+.term-pick-opt:hover { border-color: var(--navy); background: var(--navy-pale); }
+.term-pick-opt.correct {
+  background: var(--ok-green); color: white; border-color: var(--ok-green);
+}
+.term-pick-opt.wrong {
+  background: rgba(200,16,46,0.1); color: var(--accent-red);
+  border-color: var(--accent-red);
+  text-decoration: line-through;
+}
+.term-pick-feedback {
+  display: none;
+  padding: 12px 20px 16px;
+  font-size: 14px; line-height: 1.75;
+  color: var(--text-sub); font-weight: 500;
+  background: var(--navy-bg);
+  border-top: 1px dashed var(--navy-pale);
+}
+.term-pick-feedback.show { display: block; animation: fadeIn 0.4s; }
+.term-pick-feedback strong { color: var(--navy-darkest); }
+
+/* fill-blank (実習6) */
+.fill-sentence {
+  background: var(--navy-bg);
+  border: 1px solid var(--navy-pale);
+  border-radius: 8px;
+  padding: 22px 26px;
+  margin-top: 18px;
+  font-size: 17px; line-height: 2.1;
+  font-weight: 500;
+  color: var(--text-main);
+}
+.fill-slot {
+  display: inline-block;
+  min-width: 90px;
+  padding: 3px 12px;
+  background: var(--white);
+  border: 1.5px dashed var(--navy);
+  border-radius: 4px;
+  color: var(--navy); font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+}
+.fill-slot:hover { background: var(--navy-pale); }
+.fill-slot.filled {
+  background: var(--navy-darkest); color: white;
+  border-style: solid;
+}
+.fill-slot.filled.correct {
+  background: var(--ok-green); border-color: var(--ok-green);
+}
+.fill-slot.filled.wrong {
+  background: var(--accent-red); border-color: var(--accent-red);
+}
+.fill-slot.active {
+  background: var(--accent-gold); color: var(--navy-darkest);
+  border-style: solid; border-color: var(--accent-gold);
+}
+.fill-bank {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-top: 18px;
+  padding: 14px 18px;
+  background: white;
+  border: 1px dashed var(--navy-pale);
+  border-radius: 8px;
+}
+.fill-bank-label {
+  width: 100%;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.15em;
+  color: var(--navy); font-weight: 700;
+  margin-bottom: 4px;
+}
+.fill-chip {
+  padding: 8px 16px;
+  background: var(--navy-bg);
+  border: 1.5px solid var(--navy-pale);
+  border-radius: 18px;
+  font-size: 14px; cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+  color: var(--navy-darkest);
+}
+.fill-chip:hover { border-color: var(--navy); background: var(--navy-pale); }
+.fill-chip.used { opacity: 0.3; pointer-events: none; }
+.fill-controls {
+  display: flex; gap: 10px; margin-top: 14px;
+  padding: 12px 18px;
+  background: var(--navy-darkest);
+  color: white; border-radius: 6px;
+  align-items: center;
+}
+.fill-status { flex: 1; font-size: 13.5px; font-weight: 500; }
+.fill-submit {
+  background: var(--accent-gold);
+  color: var(--navy-darkest);
+  border: none; padding: 8px 22px;
+  border-radius: 20px; cursor: pointer;
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  font-size: 14px;
+}
+.fill-reset {
+  background: transparent; color: white;
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 6px 14px; border-radius: 14px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  font-family: 'Noto Serif JP', serif;
+}
+
+/* sort-game */
+.sort-game { margin-top: 16px; }
+.sort-stack {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  padding: 14px; background: var(--navy-bg);
+  border-radius: 8px; margin-bottom: 14px;
+  min-height: 70px; border: 1px dashed var(--navy-pale);
+}
+.sort-card {
+  padding: 10px 16px;
+  background: white; border: 2px solid var(--navy-pale);
+  border-radius: 6px; font-size: 14.5px;
+  cursor: pointer; transition: all 0.25s;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+.sort-card:hover { border-color: var(--navy); transform: translateY(-2px); }
+.sort-card.selected {
+  border-color: var(--accent-gold);
+  background: rgba(201,169,97,0.12);
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 6px 16px rgba(201,169,97,0.25);
+}
+.sort-card.placed { display: none; }
+.sort-zones {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+}
+.sort-zone {
+  background: white; border: 2px dashed var(--navy-pale);
+  border-radius: 8px; padding: 14px;
+  min-height: 130px; cursor: pointer;
+  transition: all 0.25s;
+}
+.sort-zone:hover { border-color: var(--navy); background: var(--navy-bg); }
+.sort-zone.highlight {
+  border-color: var(--accent-gold); border-style: solid;
+  background: rgba(201,169,97,0.08);
+}
+.sort-zone-head {
+  font-family: 'Noto Serif JP', serif; font-weight: 700;
+  font-size: 17px; color: var(--navy-darkest); margin-bottom: 4px;
+}
+.sort-zone-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.1em;
+  color: var(--text-sub); margin-bottom: 12px; font-weight: 700;
+}
+.sort-placed-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.sort-placed-chip {
+  padding: 5px 12px; font-size: 13px;
+  border-radius: 12px; font-weight: 600;
+  line-height: 1.5; cursor: pointer;
+  transition: all 0.2s;
+}
+.sort-placed-chip:hover { transform: scale(0.97); filter: brightness(0.92); }
+.sort-placed-chip::after {
+  content: ' ✕'; opacity: 0;
+  font-size: 11px; margin-left: 2px;
+  transition: opacity 0.2s;
+}
+.sort-placed-chip:hover::after { opacity: 1; }
+.sort-placed-chip.ok {
+  background: rgba(30,130,76,0.12); color: var(--ok-green);
+  border: 1px solid var(--ok-green);
+}
+.sort-placed-chip.ng {
+  background: rgba(200,16,46,0.1); color: var(--accent-red);
+  border: 1px solid var(--accent-red);
+}
+.sort-status {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-top: 16px;
+  padding: 12px 18px; background: var(--navy-darkest);
+  color: white; border-radius: 6px; font-size: 14px;
+  font-weight: 500; gap: 10px; flex-wrap: wrap;
+}
+.sort-status-score {
+  font-family: 'JetBrains Mono', monospace; font-weight: 700;
+  color: var(--accent-gold); font-size: 16px;
+}
+.sort-reset {
+  padding: 6px 16px; background: transparent;
+  color: white; border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 14px; cursor: pointer; font-size: 13px;
+  font-family: 'Noto Serif JP', serif; font-weight: 600;
+}
+.sort-reveal-row {
+  display: none; margin-top: 14px;
+  padding: 14px 16px;
+  background: var(--navy-bg);
+  border-left: 3px solid var(--accent-gold);
+  font-size: 14px; line-height: 1.75;
+  border-radius: 0 4px 4px 0; font-weight: 500;
+}
+.sort-reveal-row.show { display: block; }
+.sort-reveal-row strong { color: var(--accent-red-dark); }
+
+/* answers-grid */
+.answers-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 24px;
+}
+.answer-row {
+  display: flex; align-items: center;
+  padding: 12px 16px;
+  background: var(--navy-bg);
+  border-radius: 4px; gap: 12px;
+  border-left: 3px solid var(--navy);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.answer-row:hover { background: var(--navy-pale); }
+.answer-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; color: var(--accent-red);
+  font-size: 13px; min-width: 28px;
+}
+.answer-text {
+  flex: 1; font-size: 14.5px;
+  font-weight: 600; color: var(--navy-darkest);
+}
+.answer-reveal {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; padding: 4px 10px;
+  background: var(--navy-dark); color: white;
+  border-radius: 3px;
+  letter-spacing: 0.08em;
+  transition: all 0.3s;
+}
+.answer-row.revealed .answer-reveal {
+  background: var(--accent-gold);
+  color: var(--navy-darkest);
+  font-weight: 700;
+}
+
+/* summary-tree */
+.summary-tree {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  padding: 10px;
+}
+.tree-center {
+  background: var(--navy-darkest); color: white;
+  padding: 22px 36px; border-radius: 8px;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 26px; font-weight: 700;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(15,40,71,0.25);
+}
+.tree-branches {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px; margin-top: 40px;
+}
+.tree-branch {
+  background: var(--white);
+  border: 2px solid var(--navy-pale);
+  border-radius: 6px; padding: 16px;
+  position: relative;
+  transition: all 0.25s;
+}
+.tree-branch:hover { border-color: var(--accent-red); transform: translateY(-3px); }
+.tree-branch::before {
+  content: ''; position: absolute;
+  top: -20px; left: 50%;
+  width: 2px; height: 20px;
+  background: var(--navy-pale);
+}
+.tree-branch h4 {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 16px; color: var(--navy-darkest);
+  margin-bottom: 8px;
+}
+.tree-branch ul {
+  list-style: none;
+  font-size: 12.5px; line-height: 1.8;
+  color: var(--text-sub);
+}
+.tree-branch li::before { content: '▸ '; color: var(--accent-red); }
+
+/* review */
+.review-container {
+  max-width: 800px;
+  margin: 20px auto 0;
+  text-align: center;
+}
+.review-intro {
+  font-size: 16px; color: var(--text-sub);
+  margin-bottom: 24px; line-height: 1.85; font-weight: 500;
+}
+.review-start-btn {
+  background: var(--navy-darkest); color: white;
+  border: none; padding: 14px 40px;
+  font-size: 16px;
+  font-family: 'Noto Serif JP', serif; font-weight: 600;
+  border-radius: 50px; cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 6px 20px rgba(15,40,71,0.25);
+}
+.review-start-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(15,40,71,0.35);
+  background: var(--navy);
+}
+.review-q-area { display: none; margin-top: 24px; }
+.review-q-area.active { display: block; }
+.review-progress {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--navy);
+  font-size: 12px; letter-spacing: 0.15em;
+  margin-bottom: 14px;
+}
+.review-result {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 48px; font-weight: 700;
+  color: var(--accent-red);
+  margin: 20px 0 10px;
+}
+.review-result-sub {
+  font-size: 15px; color: var(--text-sub);
+  margin-bottom: 24px; font-weight: 500;
+}
+.review-retry-btn {
+  background: transparent;
+  border: 2px solid var(--navy);
+  color: var(--navy-darkest);
+  padding: 10px 24px;
+  font-family: 'Noto Serif JP', serif; font-weight: 600;
+  border-radius: 30px; cursor: pointer;
+  transition: all 0.2s;
+}
+.review-retry-btn:hover {
+  background: var(--navy-darkest); color: white;
+}
+
+/* === 個人識別符号 イラスト図 === */
+.pid-diagram {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 16px;
+  margin-top: 22px;
+  padding: 22px;
+  background: linear-gradient(180deg, var(--navy-bg) 0%, #E8EEF7 100%);
+  border-radius: 12px;
+  border: 1px solid var(--navy-pale);
+  align-items: stretch;
+}
+.pid-side {
+  display: flex; flex-direction: column;
+  background: white;
+  border-radius: 10px;
+  padding: 16px 18px;
+  box-shadow: 0 4px 14px rgba(15,40,71,0.06);
+  position: relative;
+}
+.pid-side-head {
+  text-align: center;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--navy-pale);
+}
+.pid-side-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--accent-red);
+  margin-bottom: 4px;
+}
+.pid-side-title {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 700; font-size: 20px;
+  color: var(--navy-darkest);
+}
+.pid-side-sub {
+  font-size: 11.5px; color: var(--text-sub);
+  margin-top: 4px; font-weight: 500;
+}
+.pid-icon-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.pid-icon {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 6px;
+  padding: 10px 4px;
+  background: var(--navy-bg);
+  border-radius: 6px;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+.pid-icon:hover {
+  background: var(--navy-pale);
+  transform: translateY(-2px);
+}
+.pid-icon.highlight {
+  background: rgba(201,169,97,0.14);
+  border: 1px solid var(--accent-gold);
+  box-shadow: 0 4px 10px rgba(201,169,97,0.2);
+}
+.pid-icon-svg {
+  width: 34px; height: 34px;
+  color: var(--navy-darkest);
+  display: flex; align-items: center; justify-content: center;
+}
+.pid-icon-svg svg { width: 100%; height: 100%; }
+.pid-icon.highlight .pid-icon-svg { color: var(--accent-red-dark); }
+.pid-icon-label {
+  font-size: 11.5px; font-weight: 600;
+  color: var(--navy-darkest);
+  text-align: center; line-height: 1.3;
+}
+
+.pid-center {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 12px 4px;
+  min-width: 120px;
+}
+.pid-center-person {
+  width: 78px; height: 96px;
+  color: var(--navy);
+  filter: drop-shadow(0 4px 10px rgba(15,40,71,0.2));
+}
+.pid-center-person svg { width: 100%; height: 100%; }
+.pid-center-label {
+  margin-top: 10px;
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--navy-darkest);
+  text-align: center;
+  line-height: 1.4;
+}
+.pid-center-sub {
+  margin-top: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--accent-red);
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+
+.pid-ng-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+.pid-ng-item {
+  display: flex; gap: 12px;
+  padding: 12px 14px;
+  border-radius: 6px;
+  align-items: center;
+  font-size: 13px; line-height: 1.5;
+  font-weight: 500;
+}
+.pid-ng-item.ng {
+  background: rgba(200,16,46,0.05);
+  border: 1px solid rgba(200,16,46,0.2);
+  color: var(--text-main);
+}
+.pid-ng-item.ok {
+  background: rgba(201,169,97,0.14);
+  border: 1px solid var(--accent-gold);
+  color: var(--navy-darkest);
+}
+.pid-ng-mark {
+  flex-shrink: 0;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 15px;
+}
+.pid-ng-item.ng .pid-ng-mark { background: var(--accent-red); color: white; }
+.pid-ng-item.ok .pid-ng-mark { background: var(--ok-green); color: white; }
+.pid-ng-item strong { font-weight: 700; color: var(--navy-darkest); display: block; margin-bottom: 2px; }
+.pid-ng-item small { font-size: 11.5px; color: var(--text-sub); font-weight: 400; }
+
+/* === 匿名加工 vs 仮名加工 フロー図 === */
+.flow-origin { display: flex; justify-content: center; margin-top: 20px; }
+.flow-card {
+  background: white;
+  border: 1.5px solid var(--navy-pale);
+  border-radius: 8px;
+  padding: 10px 14px;
+  min-width: 240px;
+  max-width: 320px;
+  box-shadow: 0 4px 12px rgba(15,40,71,0.08);
+}
+.flow-card-orig {
+  border-color: var(--navy);
+  background: linear-gradient(180deg, #FFFFFF 0%, var(--navy-bg) 100%);
+}
+.flow-card-head {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--navy-darkest);
+  padding-bottom: 6px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--navy-pale);
+  text-align: center;
+  display: flex; justify-content: center; gap: 6px; align-items: center;
+}
+.flow-card-head .flow-head-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  padding: 2px 7px;
+  background: var(--navy-darkest); color: white;
+  border-radius: 10px;
+  letter-spacing: 0.1em;
+}
+.flow-card-row {
+  display: flex; justify-content: space-between;
+  padding: 3px 0;
+  font-size: 12.5px;
+  border-bottom: 1px dotted rgba(0,0,0,0.08);
+  gap: 10px;
+}
+.flow-card-row:last-child { border: none; }
+.flow-card-row > span:first-child {
+  color: var(--text-sub);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; font-weight: 700;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+  min-width: 58px;
+}
+.flow-card-row > span:last-child {
+  color: var(--navy-darkest);
+  font-weight: 600;
+  text-align: right;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.flow-card-row.masked > span:last-child {
+  color: var(--accent-red);
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.15em;
+}
+.flow-card-row.generalized > span:last-child {
+  color: var(--ok-green);
+}
+.flow-card-row.kept > span:last-child {
+  color: var(--navy);
+}
+.flow-card-row.pseudonym > span:last-child {
+  color: #8a6d1f;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.flow-fork {
+  display: flex; justify-content: center;
+  margin: 8px 0 2px;
+}
+.flow-fork-svg { width: 280px; max-width: 100%; height: 54px; }
+
+.flow-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 4px;
+}
+.flow-side {
+  display: flex; flex-direction: column;
+  align-items: center;
+  padding: 14px;
+  border-radius: 10px;
+  position: relative;
+}
+.flow-anon {
+  background: rgba(30,130,76,0.06);
+  border: 1.5px solid rgba(30,130,76,0.3);
+}
+.flow-pseudo {
+  background: rgba(201,169,97,0.08);
+  border: 1.5px solid rgba(201,169,97,0.5);
+}
+.flow-tag {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 700;
+  font-size: 14.5px;
+  margin-bottom: 10px;
+  padding: 5px 16px;
+  border-radius: 14px;
+  background: var(--ok-green); color: white;
+}
+.flow-tag.gold { background: var(--accent-gold); color: var(--navy-darkest); }
+.flow-process {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--text-sub);
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.flow-extra {
+  margin-top: 10px;
+  width: 100%;
+  display: flex; justify-content: center;
+}
+.flow-extra-box {
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 12.5px; line-height: 1.6;
+  font-weight: 500;
+  display: flex; gap: 10px; align-items: flex-start;
+  width: 100%;
+}
+.flow-extra-box.destroyed {
+  background: white;
+  color: var(--accent-red-dark);
+  border: 1.5px dashed var(--accent-red);
+}
+.flow-extra-box.keyheld {
+  background: white;
+  color: var(--navy-darkest);
+  border: 1.5px solid var(--navy);
+}
+.flow-extra-icon {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.flow-extra-box.destroyed .flow-extra-icon { color: var(--accent-red); }
+.flow-extra-box.keyheld .flow-extra-icon { color: var(--navy); }
+.flow-extra-text strong { color: inherit; font-weight: 700; display: block; margin-bottom: 2px; font-size: 12.5px; }
+.flow-extra-text small { font-size: 11px; color: var(--text-sub); line-height: 1.5; }
+
+.flow-verdict {
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 12.5px; line-height: 1.55;
+  text-align: center;
+  width: 100%;
+  font-weight: 500;
+}
+.flow-verdict strong {
+  display: block;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 15.5px; margin-bottom: 2px;
+  font-weight: 700;
+}
+.flow-verdict.verdict-ok { background: var(--ok-green); color: white; }
+.flow-verdict.verdict-warn { background: var(--accent-red); color: white; }
+
+.slide::-webkit-scrollbar { width: 6px; }
+.slide::-webkit-scrollbar-track { background: transparent; }
+.slide::-webkit-scrollbar-thumb { background: var(--navy-pale); border-radius: 3px; }
+
+@media (max-width: 1100px) {
+  .two-col { grid-template-columns: 1fr; gap: 18px; }
+  .agenda-grid { grid-template-columns: 1fr; }
+  .filter-pros-cons { grid-template-columns: 1fr; }
+  .feat-grid-2 { grid-template-columns: 1fr; }
+  .sort-zones { grid-template-columns: 1fr; }
+  .multi-options { grid-template-columns: 1fr; }
+  .tree-branches { grid-template-columns: repeat(2, 1fr); }
+  .pid-diagram { grid-template-columns: 1fr; gap: 14px; padding: 16px; }
+  .pid-center { order: -1; padding: 8px; min-width: 0; }
+  .pid-center-person { width: 64px; height: 80px; }
+  .pid-ng-row { grid-template-columns: 1fr; }
+  .flow-split { grid-template-columns: 1fr; }
+}
+
+@media print { .topbar, .bottombar, .progress { display: none; } }
+
+/* MENU */
+.menu-toggle {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: white;
+  padding: 6px 14px 6px 12px;
+  border-radius: 18px;
+  cursor: pointer;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  margin-left: 14px;
+  transition: all 0.25s;
+  display: flex; align-items: center;
+  gap: 8px; height: 28px;
+}
+.menu-toggle:hover {
+  background: rgba(201,169,97,0.25);
+  border-color: var(--accent-gold);
+}
+.menu-toggle-icon {
+  display: inline-flex; flex-direction: column;
+  gap: 3px; width: 14px; justify-content: center;
+}
+.menu-toggle-icon span {
+  display: block; height: 1.5px;
+  background: white; border-radius: 1px;
+  transition: all 0.2s;
+}
+.menu-toggle:hover .menu-toggle-icon span { background: var(--accent-gold); }
+
+.menu-overlay {
+  position: fixed; inset: 0;
+  background: rgba(15,40,71,0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 200;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.35s;
+}
+.menu-overlay.open { opacity: 1; pointer-events: all; }
+
+.menu-panel {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: 400px; max-width: 92vw;
+  background: white;
+  box-shadow: -16px 0 40px rgba(0,0,0,0.2);
+  z-index: 201;
+  transform: translateX(100%);
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex; flex-direction: column;
+}
+.menu-panel.open { transform: translateX(0); }
+.menu-head {
+  padding: 24px 26px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(180deg, var(--navy-darkest) 0%, var(--navy-dark) 100%);
+  color: white; flex-shrink: 0;
+}
+.menu-head-title { font-family: 'Noto Serif JP', serif; font-weight: 700; font-size: 20px; }
+.menu-head-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; color: var(--accent-gold);
+  letter-spacing: 0.2em; margin-top: 4px; font-weight: 700;
+}
+.menu-close {
+  background: rgba(255,255,255,0.08);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.15);
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  cursor: pointer; font-size: 16px;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.menu-close:hover { background: rgba(200,16,46,0.3); border-color: var(--accent-red); }
+.menu-reset-btn {
+  margin: 14px 22px 4px;
+  padding: 11px 16px;
+  background: transparent;
+  border: 1.5px dashed var(--accent-red);
+  color: var(--accent-red);
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 600; font-size: 13.5px;
+  transition: all 0.25s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.menu-reset-btn:hover {
+  background: var(--accent-red);
+  color: white; border-style: solid;
+}
+.menu-reset-icon { display: inline-block; font-size: 15px; transition: transform 0.4s; }
+.menu-reset-btn:hover .menu-reset-icon { transform: rotate(-180deg); }
+.menu-list { flex: 1; overflow-y: auto; padding: 8px 14px 28px; }
+.menu-list::-webkit-scrollbar { width: 6px; }
+.menu-list::-webkit-scrollbar-thumb { background: var(--navy-pale); border-radius: 3px; }
+.menu-section {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; letter-spacing: 0.2em;
+  color: var(--accent-red); font-weight: 700;
+  padding: 16px 14px 8px;
+  margin-top: 6px;
+  border-top: 1px solid var(--navy-pale);
+}
+.menu-section:first-of-type { border-top: none; margin-top: 6px; }
+.menu-item {
+  display: flex; gap: 12px;
+  padding: 11px 14px;
+  border-radius: 6px; cursor: pointer;
+  transition: all 0.2s;
+  align-items: center; margin-bottom: 2px;
+}
+.menu-item:hover { background: var(--navy-bg); transform: translateX(-2px); }
+.menu-item-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; color: var(--text-sub);
+  font-size: 12px; min-width: 26px;
+}
+.menu-item-title {
+  font-size: 14px; font-weight: 500;
+  color: var(--navy-darkest);
+  flex: 1; line-height: 1.45;
+}
+.menu-item.active {
+  background: var(--navy-darkest);
+  color: white;
+  box-shadow: 0 4px 14px rgba(15,40,71,0.25);
+}
+.menu-item.active .menu-item-num { color: var(--accent-gold); }
+.menu-item.active .menu-item-title { color: white; font-weight: 700; }
+.menu-item-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 0.1em;
+  padding: 3px 7px; border-radius: 3px; font-weight: 700;
+  background: rgba(200,16,46,0.1); color: var(--accent-red);
+  white-space: nowrap;
+}
+.menu-item-tag.tag-interactive { background: rgba(201,169,97,0.18); color: #8a6d1f; }
+.menu-item-tag.tag-review { background: rgba(44,95,141,0.12); color: var(--navy); }
+.menu-item-tag.tag-section,
+.menu-item-tag.tag-title,
+.menu-item-tag.tag-end { background: rgba(15,40,71,0.08); color: var(--navy-dark); }
+.menu-item.active .menu-item-tag { background: rgba(201,169,97,0.3); color: var(--accent-gold); }
+
+/* MOBILE */
+@media (max-width: 720px) {
+  .topbar { height: 40px; padding: 0 12px; font-size: 11px; letter-spacing: 0; }
+  .topbar-title { font-size: 13px; margin-right: 8px; }
+  .topbar-subtitle { display: none; }
+  .topbar-chapter { font-size: 10px; letter-spacing: 0.08em; }
+  .menu-toggle { margin-left: 8px; padding: 4px 10px; font-size: 10px; height: 24px; gap: 6px; }
+  .menu-toggle-icon { width: 11px; gap: 2px; }
+  .menu-toggle-icon span { height: 1.3px; }
+
+  .progress { top: 40px; }
+
+  .bottombar {
+    height: calc(44px + env(safe-area-inset-bottom, 0px));
+    padding: 0 12px env(safe-area-inset-bottom, 0px);
+    font-size: 11px;
+  }
+  .bottombar-nav { gap: 8px; }
+  .nav-btn { width: 30px; height: 30px; font-size: 13px; }
+  .slide-title-small { display: none; }
+  .keyboard-hint { display: none; }
+  .page-indicator { font-size: 11px; margin-right: 0; margin-left: auto; }
+
+  .slide {
+    top: 43px;
+    bottom: calc(44px + env(safe-area-inset-bottom, 0px));
+    padding: 4vw 5vw 40px;
+    touch-action: pan-y;
+  }
+
+  .title-slide { padding: 0 6vw; }
+  .title-slide::before, .title-slide::after { display: none; }
+  .title-label { font-size: 10.5px; letter-spacing: 0.2em; margin-bottom: 18px; }
+  .title-main { font-size: clamp(36px, 10vw, 58px); letter-spacing: -0.01em; margin-bottom: 14px; }
+  .title-sub { font-size: clamp(14px, 4vw, 20px); margin-bottom: 32px; }
+  .title-meta { gap: 14px 22px; font-size: 10.5px; flex-direction: column; }
+  .section-number { font-size: 11px; letter-spacing: 0.25em; margin-bottom: 14px; }
+  .section-title-big { font-size: clamp(34px, 9vw, 54px); }
+  .section-tagline { font-size: clamp(14px, 3.8vw, 18px); }
+
+  .eyebrow { font-size: 10px; letter-spacing: 0.15em; margin-bottom: 12px; }
+  .slide-title { font-size: clamp(24px, 6.2vw, 34px); margin-bottom: 8px; }
+  .slide-subtitle { font-size: clamp(13.5px, 3.8vw, 17px); margin-bottom: 20px; line-height: 1.65; }
+  .section-heading { font-size: 22px; margin-bottom: 14px; padding-left: 12px; border-left-width: 3px; }
+  .body-text { font-size: 15px; }
+
+  .def-box { padding: 18px 20px; margin-bottom: 12px; }
+  .def-box .def-term { font-size: 20px; margin-bottom: 8px; }
+  .def-box .def-desc { font-size: 14.5px; line-height: 1.75; }
+  .two-col { grid-template-columns: 1fr; gap: 14px; margin-top: 18px; }
+
+  .agenda-item { padding: 16px 18px; gap: 14px; }
+  .agenda-num { font-size: 28px; min-width: 38px; }
+  .agenda-content h3 { font-size: 17px; }
+  .agenda-content p { font-size: 13px; }
+
+  .quiz-question { font-size: 16px; padding: 16px 20px; }
+  .quiz-option { font-size: 14.5px; padding: 12px 14px; }
+  .quiz-feedback { font-size: 14px; padding: 14px 16px; }
+
+  .multi-question { font-size: 16px; padding: 14px 18px; }
+  .multi-opt { font-size: 14.5px; padding: 10px 14px; }
+  .multi-control { flex-wrap: wrap; padding: 10px 14px; font-size: 12.5px; }
+  .multi-feedback { font-size: 14px; padding: 14px 16px; }
+
+  .filter-toggle button { padding: 8px 20px; font-size: 13.5px; }
+  .filter-display { padding: 18px 20px; }
+  .filter-display h4 { font-size: 19px; }
+  .filter-tagline { font-size: 13.5px; }
+  .filter-box { font-size: 13px; padding: 12px 14px; }
+
+  .feat-card { padding: 18px 20px; }
+  .feat-name { font-size: 19px; }
+  .feat-desc { font-size: 13.5px; }
+  .feat-point { font-size: 12.5px; padding: 8px 12px; }
+
+  .case-head { padding: 12px 16px; gap: 10px; flex-wrap: wrap; }
+  .case-year { min-width: 48px; font-size: 12px; }
+  .case-title { font-size: 14.5px; line-height: 1.4; flex-basis: 100%; order: 3; margin-top: 4px; }
+  .case-tag { font-size: 9.5px; }
+  .case-content { padding: 14px 16px 16px; font-size: 14.5px; }
+  .case-meta { flex-direction: column; gap: 8px; }
+
+  .practice-item { padding: 14px 16px; gap: 12px; }
+  .practice-letter { min-width: 26px; font-size: 15.5px; }
+  .practice-text { font-size: 14.5px; line-height: 1.65; }
+  .practice-verdict { font-size: 10.5px; padding: 3px 10px; min-width: 52px; }
+  .practice-item.revealed .practice-reason { font-size: 13px; padding: 9px 12px; }
+
+  .term-pick-num { min-width: 28px; font-size: 13px; }
+  .term-pick-text { font-size: 14px; line-height: 1.65; }
+  .term-pick-opt { font-size: 12.5px; padding: 6px 11px; }
+  .term-pick-feedback { font-size: 13px; padding: 10px 16px 14px; }
+
+  .fill-sentence { font-size: 15px; line-height: 2; padding: 18px 20px; }
+  .fill-slot { min-width: 74px; padding: 2px 10px; }
+  .fill-chip { font-size: 13px; padding: 6px 13px; }
+  .fill-controls { padding: 10px 14px; font-size: 13px; flex-wrap: wrap; }
+
+  .sort-stack { padding: 10px; }
+  .sort-card { font-size: 13.5px; padding: 8px 12px; }
+  .sort-zone { min-height: 100px; padding: 12px; }
+  .sort-zone-head { font-size: 15.5px; }
+
+  .answers-grid { grid-template-columns: 1fr; gap: 8px; }
+  .answer-row { padding: 10px 14px; }
+  .answer-text { font-size: 13.5px; }
+
+  .pid-diagram { padding: 14px; }
+  .pid-side { padding: 14px 14px; }
+  .pid-side-title { font-size: 17px; }
+  .pid-icon-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .pid-icon { padding: 8px 4px; gap: 4px; }
+  .pid-icon-svg { width: 28px; height: 28px; }
+  .pid-icon-label { font-size: 10.5px; }
+  .pid-ng-item { font-size: 12.5px; padding: 10px 12px; }
+  .pid-ng-mark { width: 24px; height: 24px; font-size: 13px; }
+  .pid-ng-item small { font-size: 10.5px; }
+
+  .flow-card { min-width: 0; max-width: 100%; padding: 10px 12px; }
+  .flow-card-head { font-size: 13px; }
+  .flow-card-row { font-size: 12px; padding: 2px 0; }
+  .flow-card-row > span:first-child { font-size: 10px; min-width: 54px; }
+  .flow-fork-svg { width: 180px; height: 42px; }
+  .flow-side { padding: 12px; }
+  .flow-tag { font-size: 13.5px; padding: 4px 13px; }
+  .flow-extra-box { font-size: 11.5px; padding: 8px 10px; }
+  .flow-extra-icon { font-size: 17px; }
+  .flow-extra-text strong { font-size: 11.5px; }
+  .flow-extra-text small { font-size: 10.5px; }
+  .flow-verdict { font-size: 12px; padding: 8px 12px; }
+  .flow-verdict strong { font-size: 14px; }
+
+  .tree-center { font-size: 20px; padding: 16px 26px; }
+  .tree-branches { grid-template-columns: 1fr; gap: 10px; margin-top: 26px; }
+  .tree-branch { padding: 14px; }
+  .tree-branch::before { display: none; }
+  .tree-branch h4 { font-size: 15.5px; }
+  .tree-branch ul { font-size: 13px; }
+
+  .menu-panel { width: 100%; max-width: 100%; box-shadow: none; }
+  .menu-head { padding: 20px 22px 16px; }
+  .menu-head-title { font-size: 18px; }
+  .menu-head-sub { font-size: 9.5px; }
+  .menu-reset-btn { margin: 14px 20px 6px; font-size: 13px; }
+  .menu-list { padding: 6px 12px 22px; }
+  .menu-item { padding: 10px 12px; }
+  .menu-item-title { font-size: 13.5px; }
+  .menu-item-tag { font-size: 8.5px; padding: 2px 6px; }
+  .menu-section { font-size: 10px; padding: 14px 12px 6px; }
+}
+
+@media (max-width: 380px) {
+  .slide { padding: 3vw 4.5vw 40px; }
+  .title-main { font-size: 36px; }
+  .slide-title { font-size: 22px; }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .title-main { font-size: clamp(30px, 6vw, 50px); }
+  .title-sub { font-size: clamp(13px, 2.5vw, 18px); margin-bottom: 20px; }
+  .section-title-big { font-size: clamp(26px, 6vw, 46px); }
+  .slide-title { font-size: clamp(20px, 4vw, 30px); }
+  .slide-subtitle { margin-bottom: 14px; }
+  .slide { padding: 3vh 5vw; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="topbar-title">個人情報</span>
+  <span class="topbar-subtitle">情報Ⅰ / 情報数理入門 | 学習ノート p.26-29</span>
+  <span class="topbar-chapter">CHAPTER · 05</span>
+  <button class="menu-toggle" onclick="openMenu()" title="スライド目次(M)">
+    <span class="menu-toggle-icon"><span></span><span></span><span></span></span>
+    MENU
+  </button>
+</div>
+<div class="progress" id="progressBar"></div>
+
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+<div class="menu-panel" id="menuPanel">
+  <div class="menu-head">
+    <div>
+      <div class="menu-head-title">スライド目次</div>
+      <div class="menu-head-sub">CHAPTER · 05</div>
+    </div>
+    <button class="menu-close" onclick="closeMenu()" title="閉じる">✕</button>
+  </div>
+  <button class="menu-reset-btn" onclick="resetAllInteractions()">
+    <span class="menu-reset-icon">⟲</span>
+    インタラクションを全リセット
+  </button>
+  <div class="menu-list" id="menuList"></div>
+</div>
+
+<div class="slide-container" id="slideContainer">
+
+<!-- SLIDE 1: TITLE -->
+<div class="slide title-slide active" data-title="タイトル">
+  <div class="title-label">CHAPTER · 05 / PERSONAL INFORMATION</div>
+  <h1 class="title-main">個人情報</h1>
+  <p class="title-sub">― 定義・活用・加工・流出をめぐる制度と判断 ―</p>
+  <div class="title-meta">
+    <div class="title-meta-item"><strong>UNIT</strong>第5回</div>
+    <div class="title-meta-item"><strong>PAGES</strong>p.26 - 29</div>
+    <div class="title-meta-item"><strong>ITEMS</strong>10 points / 6 practices</div>
+  </div>
+</div>
+
+<!-- SLIDE 2: AGENDA -->
+<div class="slide" data-title="このサイトで扱う内容">
+  <div class="eyebrow">AGENDA / 全体構成</div>
+  <h2 class="slide-title">このサイトで扱う内容</h2>
+  <p class="slide-subtitle">学習ノート §5「個人情報」の全項目(POINT ①〜⑩、実習 1〜6)を5つの観点で再構成する。</p>
+  <div class="agenda-grid">
+    <div class="agenda-item">
+      <div class="agenda-num">01</div>
+      <div class="agenda-content">
+        <h3>個人情報とは</h3>
+        <p>個人情報 / 基本四情報 / 要配慮個人情報 / 個人識別符号の区別。</p>
+      </div>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num">02</div>
+      <div class="agenda-content">
+        <h3>個人情報の活用</h3>
+        <p>オプトイン・オプトアウトと、匿名加工情報・仮名加工情報の違い。</p>
+      </div>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num">03</div>
+      <div class="agenda-content">
+        <h3>プライバシーと肖像権</h3>
+        <p>個人情報と重なるが同一ではない権利。写真の公開で問われやすい論点。</p>
+      </div>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num">04</div>
+      <div class="agenda-content">
+        <h3>事業者の責任</h3>
+        <p>個人情報保護法が課す義務と、扱う側の具体的な行動ルール。</p>
+      </div>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num">05</div>
+      <div class="agenda-content">
+        <h3>個人情報の流出</h3>
+        <p>フィッシング・ソーシャルエンジニアリング・内部不正の最新事例。</p>
+      </div>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num">06</div>
+      <div class="agenda-content">
+        <h3>まとめと復習</h3>
+        <p>学習ノートの穴埋め答え合わせと、ランダム10問の復習チャレンジ。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: SECTION 1 -->
+<div class="slide section-divider" data-title="第1節 個人情報とは">
+  <div class="section-number">SECTION · 01</div>
+  <h2 class="section-title-big">個人情報<br>とは</h2>
+  <p class="section-tagline">― 何が「個人情報」で、何が「要配慮」か ―</p>
+</div>
+
+<!-- SLIDE 4: 定義(①②) -->
+<div class="slide" data-title="個人情報の定義と基本四情報">
+  <div class="eyebrow">POINT 1 · 学習ノート ①②</div>
+  <h2 class="slide-title">個人情報と基本四情報</h2>
+  <p class="slide-subtitle">個人情報保護法では、ある情報が「個人情報」にあたるかどうかは、<strong>特定の個人を識別できるか</strong>で判定する。</p>
+
+  <div class="def-box">
+    <div class="def-label">POINT ①</div>
+    <div class="def-term"><span class="note-blank" data-answer="個人情報">①</span></div>
+    <div class="def-desc">生存する個人に関する情報であって、氏名・生年月日その他の記述などにより<strong>特定の個人を識別することができる</strong>もの。または、個人識別符号を含むもの。</div>
+  </div>
+  <div class="def-box">
+    <div class="def-label">POINT ②</div>
+    <div class="def-term"><span class="note-blank" data-answer="基本四情報">②</span></div>
+    <div class="def-desc">氏名・住所・生年月日・性別の4つ。行政手続きで本人を特定するときの基本単位となる。</div>
+  </div>
+
+  <div style="margin-top: 18px; padding: 14px 20px; background: var(--navy-bg); border-left: 3px solid var(--accent-gold); border-radius: 0 4px 4px 0; font-size: 15.5px; line-height: 1.8; font-weight: 500; color: var(--text-main);">
+    <strong style="color: var(--navy-darkest);">見落としやすい点 —</strong> 「個人情報」は単独では個人を識別できない断片でも、他の情報と<strong>照合すれば特定できるもの</strong>(例:学籍番号+氏名)を含む。死者の情報は原則として対象外。
+  </div>
+</div>
+
+<!-- SLIDE 5: 実習1 -->
+<div class="slide" data-title="実習1 基本四情報でないもの">
+  <div class="eyebrow">実習 1 · 学習ノート対応</div>
+  <h2 class="slide-title">基本四情報でないものは?</h2>
+  <p class="slide-subtitle">行政が個人を特定するために用いる「基本四情報」に<strong>含まれない</strong>ものを<strong>すべて</strong>選べ。</p>
+
+  <div class="multi-check" id="mc1">
+    <div class="multi-question">
+      <span class="quiz-question-num">PRACTICE 1 · 複数選択</span>
+      次のア〜カのうち、基本四情報ではないものをすべて選べ。
+    </div>
+    <div class="multi-options">
+      <div class="multi-opt" data-correct="false" onclick="pickMulti(this)"><span class="mo-letter">ア</span><span>氏名</span><span class="mo-mark"></span></div>
+      <div class="multi-opt" data-correct="true" onclick="pickMulti(this)"><span class="mo-letter">イ</span><span>年齢</span><span class="mo-mark"></span></div>
+      <div class="multi-opt" data-correct="false" onclick="pickMulti(this)"><span class="mo-letter">ウ</span><span>住所</span><span class="mo-mark"></span></div>
+      <div class="multi-opt" data-correct="true" onclick="pickMulti(this)"><span class="mo-letter">エ</span><span>国籍</span><span class="mo-mark"></span></div>
+      <div class="multi-opt" data-correct="false" onclick="pickMulti(this)"><span class="mo-letter">オ</span><span>生年月日</span><span class="mo-mark"></span></div>
+      <div class="multi-opt" data-correct="false" onclick="pickMulti(this)"><span class="mo-letter">カ</span><span>性別</span><span class="mo-mark"></span></div>
+    </div>
+    <div class="multi-control">
+      <span class="multi-status" id="mc1Status">候補を選んでから判定する</span>
+      <button class="multi-submit" onclick="submitMulti('mc1')">判定する</button>
+      <button class="multi-reset" onclick="resetMulti('mc1')">やり直す</button>
+    </div>
+    <div class="multi-feedback" id="mc1Feedback">
+      <strong>正解:イ(年齢)・エ(国籍)</strong><br>
+      基本四情報は<strong>氏名・住所・生年月日・性別</strong>の4つ。年齢は生年月日から計算できるため単独では含まれず、国籍も基本四情報には含まれない。行政が本人を一意に特定するときの「最小セット」として覚える。
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6: 要配慮個人情報 + 実習4 -->
+<div class="slide" data-title="要配慮個人情報の分類">
+  <div class="eyebrow">POINT 2 · 実習 4 · 学習ノート ③</div>
+  <h2 class="slide-title">要配慮個人情報を見抜く</h2>
+  <p class="slide-subtitle">取り扱いに<strong>特別な配慮が必要</strong>とされる個人情報。本人同意なしの取得・第三者提供が原則禁止される。</p>
+
+  <div class="def-box">
+    <div class="def-label">POINT ③</div>
+    <div class="def-term"><span class="note-blank" data-answer="要配慮個人情報">③</span></div>
+    <div class="def-desc"><strong>人種・信条・社会的身分・病歴・犯罪歴</strong>・犯罪被害の事実など、差別や偏見を生じさせうる情報。</div>
+  </div>
+
+  <div style="margin-top: 24px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.15em; color: var(--accent-red); font-weight: 700; margin-bottom: 10px;">実習 4 / 10項目を2つのゾーンに振り分けよう</div>
+  <p style="font-size: 14.5px; color: var(--text-sub); margin-bottom: 10px; font-weight: 500;">カードをタップ → 振り分け先のゾーンをタップ。間違えても配置済みチップをクリックで戻せる。</p>
+
+  <div class="sort-game">
+    <div class="sort-stack" id="sortStack"></div>
+    <div class="sort-zones">
+      <div class="sort-zone" onclick="dropCard('zoneA')">
+        <div class="sort-zone-head">要配慮個人情報</div>
+        <div class="sort-zone-sub">SPECIAL CARE</div>
+        <div class="sort-placed-list" data-list="zoneA"></div>
+      </div>
+      <div class="sort-zone" onclick="dropCard('zoneB')">
+        <div class="sort-zone-head">通常の個人情報 / それ以外</div>
+        <div class="sort-zone-sub">ORDINARY</div>
+        <div class="sort-placed-list" data-list="zoneB"></div>
+      </div>
+    </div>
+    <div class="sort-status">
+      <span>カードを選ぶ → ゾーンをタップで分類</span>
+      <span>正解:<span class="sort-status-score" id="sortScore">0 / 10</span></span>
+      <button class="sort-reset" onclick="resetSort()">リセット</button>
+    </div>
+    <div class="sort-reveal-row" id="sortReveal"></div>
+  </div>
+</div>
+
+<!-- SLIDE 7: 個人識別符号 -->
+<div class="slide" data-title="個人識別符号">
+  <div class="eyebrow">補足 · 実習5(3) の前提知識</div>
+  <h2 class="slide-title">個人識別符号</h2>
+  <p class="slide-subtitle">それ単独で<strong>特定の個人を一意に指し示せる</strong>符号・番号。「身体に刻まれた固有情報」と「行政が1人に紐づけた番号」の2系統がある。</p>
+
+  <div class="pid-diagram">
+    <!-- 左:身体的特徴 -->
+    <div class="pid-side">
+      <div class="pid-side-head">
+        <div class="pid-side-label">BODY</div>
+        <div class="pid-side-title">身体的特徴</div>
+        <div class="pid-side-sub">生体情報 / コピー不可・漏えいすると一生消せない</div>
+      </div>
+      <div class="pid-icon-grid">
+        <div class="pid-icon">
+          <div class="pid-icon-svg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M14 6 C 30 14, 18 22, 34 30 C 46 38, 22 42, 14 42"/><path d="M34 6 C 18 14, 30 22, 14 30 C 2 38, 26 42, 34 42"/><line x1="17" y1="12" x2="31" y2="12"/><line x1="18" y1="20" x2="30" y2="20"/><line x1="18" y1="28" x2="30" y2="28"/><line x1="17" y1="36" x2="31" y2="36"/></svg></div>
+          <div class="pid-icon-label">DNA</div>
+        </div>
+        <div class="pid-icon">
+          <div class="pid-icon-svg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 24 C 10 12, 38 12, 38 24 C 38 34, 34 40, 28 43"/><path d="M14 26 C 14 16, 34 16, 34 26 C 34 34, 30 38, 25 39"/><path d="M18 27 C 18 20, 30 20, 30 27 C 30 32, 28 35, 23 35"/><path d="M22 28 Q 22 24, 26 25 Q 26 29, 22 30"/></svg></div>
+          <div class="pid-icon-label">指紋</div>
+        </div>
+        <div class="pid-icon">
+          <div class="pid-icon-svg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 24 Q 24 10, 44 24 Q 24 38, 4 24 Z"/><circle cx="24" cy="24" r="8"/><circle cx="24" cy="24" r="3" fill="currentColor"/></svg></div>
+          <div class="pid-icon-label">虹彩</div>
+        </div>
+        <div class="pid-icon">
+          <div class="pid-icon-svg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="6" y1="24" x2="6" y2="24"/><line x1="13" y1="18" x2="13" y2="30"/><line x1="20" y1="11" x2="20" y2="37"/><line x1="27" y1="6" x2="27" y2="42"/><line x1="34" y1="14" x2="34" y2="34"/><line x1="41" y1="20" x2="41" y2="28"/></svg></div>
+          <div class="pid-icon-label">声紋</div>
+        </div>
+        <div class="pid-icon">
+          <div class="pid-icon-svg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="24" cy="24" r="15"/><circle cx="18" cy="21" r="1.5" fill="currentColor" stroke="none"/><circle cx="30" cy="21" r="1.5" fill="currentColor" stroke="none"/><path d="M18 30 Q 24 33, 30 30"/><path d="M8 10 L 8 16 M 8 10 L 14 10"/><path d="M40 10 L 40 16 M 40 10 L 34 10"/><path d="M8 38 L 8 32 M 8 38 L 14 38"/><path d="M40 38 L 40 32 M 40 38 L 34 38"/></svg></div>
+          <div class="pid-icon-label">顔認証</div>
+        </div>
+        <div class="pid-icon">
+          <div class="pid-icon-svg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 10 Q 24 18, 38 10"/><path d="M10 18 Q 24 26, 38 18"/><path d="M10 26 Q 24 34, 38 26"/><path d="M10 34 Q 24 42, 38 34"/></svg></div>
+          <div class="pid-icon-label">掌紋</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 中央:人物 -->
+    <div class="pid-center">
+      <div class="pid-center-person">
+        <svg viewBox="0 0 60 82" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="30" cy="17" r="12" fill="currentColor"/>
+          <path d="M8 82 C 8 52, 52 52, 52 82 L 52 82 L 8 82 Z" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="pid-center-label">ある特定の<br>たった1人</div>
+      <div class="pid-center-sub">UNIQUELY IDENTIFIED</div>
+    </div>
+
+    <!-- 右:割当番号 -->
+    <div class="pid-side">
+      <div class="pid-side-head">
+        <div class="pid-side-label">CODE</div>
+        <div class="pid-side-title">公的な割当番号</div>
+        <div class="pid-side-sub">国・行政が1人につき1つだけ付与</div>
+      </div>
+      <div class="pid-icon-grid">
+        <div class="pid-icon">
+          <div class="pid-icon-svg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="10" y="5" width="28" height="38" rx="2"/><circle cx="24" cy="17" r="5"/><line x1="15" y1="28" x2="33" y2="28"/><line x1="15" y1="33" x2="33" y2="33"/><line x1="15" y1="38" x2="28" y2="38"/></svg></div>
+          <div class="pid-icon-label">旅券番号</div>
+        </div>
+        <div class="pid-icon">
+          <div class="pid-icon-svg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="12" width="40" height="26" rx="2"/><rect x="8" y="16" width="11" height="15" fill="currentColor" stroke="none" opacity="0.25"/><line x1="23" y1="18" x2="40" y2="18"/><line x1="23" y1="24" x2="40" y2="24"/><line x1="23" y1="30" x2="36" y2="30"/></svg></div>
+          <div class="pid-icon-label">運転免許証</div>
+        </div>
+        <div class="pid-icon">
+          <div class="pid-icon-svg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="8" y="10" width="32" height="32" rx="2"/><line x1="8" y1="18" x2="40" y2="18"/><line x1="16" y1="6" x2="16" y2="14"/><line x1="32" y1="6" x2="32" y2="14"/><circle cx="16" cy="26" r="1.5" fill="currentColor" stroke="none"/><circle cx="24" cy="26" r="1.5" fill="currentColor" stroke="none"/><circle cx="32" cy="26" r="1.5" fill="currentColor" stroke="none"/><circle cx="16" cy="34" r="1.5" fill="currentColor" stroke="none"/><circle cx="24" cy="34" r="1.5" fill="currentColor" stroke="none"/></svg></div>
+          <div class="pid-icon-label">基礎年金</div>
+        </div>
+        <div class="pid-icon">
+          <div class="pid-icon-svg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="10" width="40" height="28" rx="2"/><circle cx="13" cy="24" r="5"/><line x1="22" y1="17" x2="40" y2="17"/><line x1="22" y1="22" x2="40" y2="22"/><rect x="22" y="26" width="18" height="8" rx="1" fill="currentColor" opacity="0.15" stroke="none"/><line x1="22" y1="31" x2="40" y2="31"/></svg></div>
+          <div class="pid-icon-label">健康保険証</div>
+        </div>
+        <div class="pid-icon highlight">
+          <div class="pid-icon-svg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="10" width="40" height="28" rx="2" fill="currentColor" fill-opacity="0.1"/><rect x="4" y="10" width="40" height="28" rx="2"/><circle cx="13" cy="23" r="4"/><path d="M7 33 Q 13 28, 19 33"/><line x1="24" y1="17" x2="40" y2="17"/><circle cx="25.5" cy="24" r="0.8" fill="currentColor" stroke="none"/><circle cx="28" cy="24" r="0.8" fill="currentColor" stroke="none"/><circle cx="30.5" cy="24" r="0.8" fill="currentColor" stroke="none"/><circle cx="34" cy="24" r="0.8" fill="currentColor" stroke="none"/><circle cx="36.5" cy="24" r="0.8" fill="currentColor" stroke="none"/><circle cx="39" cy="24" r="0.8" fill="currentColor" stroke="none"/><line x1="24" y1="31" x2="40" y2="31"/></svg></div>
+          <div class="pid-icon-label">マイナンバー</div>
+        </div>
+        <div class="pid-icon">
+          <div class="pid-icon-svg"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="8" y="6" width="32" height="36" rx="2"/><circle cx="24" cy="18" r="4"/><line x1="14" y1="28" x2="34" y2="28"/><line x1="14" y1="33" x2="34" y2="33"/><line x1="14" y1="38" x2="28" y2="38"/><path d="M12 4 L 36 4" stroke-dasharray="3 3"/></svg></div>
+          <div class="pid-icon-label">在留カード</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NG/OK 対比 -->
+  <div class="pid-ng-row">
+    <div class="pid-ng-item ng">
+      <div class="pid-ng-mark">✗</div>
+      <div>
+        <strong>「山田太郎」だけ</strong>
+        <small>全国に同姓同名が多数 → 識別符号ではない</small>
+      </div>
+    </div>
+    <div class="pid-ng-item ng">
+      <div class="pid-ng-mark">✗</div>
+      <div>
+        <strong>住所だけ</strong>
+        <small>家族や同居人と重なる → 識別符号ではない</small>
+      </div>
+    </div>
+    <div class="pid-ng-item ok">
+      <div class="pid-ng-mark">✓</div>
+      <div>
+        <strong>マイナンバー・指紋</strong>
+        <small>1人につき1つだけ → 識別符号</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 8: SECTION 2 -->
+<div class="slide section-divider" data-title="第2節 個人情報の活用">
+  <div class="section-number">SECTION · 02</div>
+  <h2 class="section-title-big">個人情報<br>の活用</h2>
+  <p class="section-tagline">― 同意のかたちと、加工のかたち ―</p>
+</div>
+
+<!-- SLIDE 9: オプトイン/オプトアウト -->
+<div class="slide" data-title="オプトイン と オプトアウト">
+  <div class="eyebrow">POINT 3 · 学習ノート ④⑤</div>
+  <h2 class="slide-title">オプトイン / オプトアウト</h2>
+  <p class="slide-subtitle">ユーザーの意思表示と、事業者が提供してよい範囲の関係。<strong>デフォルトが「受け取る」か「受け取らない」か</strong>で真逆になる。</p>
+
+  <div style="display: flex; justify-content: center;">
+    <div class="filter-toggle">
+      <button class="active" onclick="switchFilter('a', this)">オプトイン</button>
+      <button onclick="switchFilter('b', this)">オプトアウト</button>
+    </div>
+  </div>
+
+  <div id="filterA" class="filter-display">
+    <h4><span class="note-blank" data-answer="オプトイン方式">④</span> 方式</h4>
+    <p class="filter-tagline">あらかじめ<strong>「受け取りたい」と承諾した人にのみ</strong>、関連する商品やサービスの広告を提供する方式。<strong>原則NO、同意でYES</strong>。</p>
+    <div style="font-size: 13.5px; color: var(--text-sub); margin: 14px 0 10px; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.1em; font-weight: 700;">◆ メリット・デメリットを考えてみよう</div>
+    <div class="filter-pros-cons">
+      <div class="filter-box pros filter-guess" onclick="this.classList.toggle('revealed')">
+        <h5>● メリット</h5>
+        <div class="filter-hidden">クリックして確認</div>
+        <div class="filter-answer">受信者の明示的同意があるため、プライバシー侵害になりにくい。配信先の反応率が高く、事業者にとっても無駄打ちが少ない。</div>
+      </div>
+      <div class="filter-box cons filter-guess" onclick="this.classList.toggle('revealed')">
+        <h5>● デメリット</h5>
+        <div class="filter-hidden">クリックして確認</div>
+        <div class="filter-answer">同意を得るまで送付できないため、新規顧客にリーチしづらい。チェックボックスの文面次第で同意の有効性が争われる。</div>
+      </div>
+    </div>
+    <div class="filter-example"><strong>例 —</strong> 会員登録時に「商品情報のメールを受け取る」にチェックを入れた人だけにメルマガを送る。日本の電子メール広告(<strong>特定電子メール法</strong>)は原則この方式。</div>
+  </div>
+
+  <div id="filterB" class="filter-display" style="display: none;">
+    <h4><span class="note-blank" data-answer="オプトアウト方式">⑤</span> 方式</h4>
+    <p class="filter-tagline">あらかじめ<strong>「受け取りたくない」と意思表示した人にのみ提供せず</strong>、それ以外の人には提供する方式。<strong>原則YES、拒否でNO</strong>。</p>
+    <div style="font-size: 13.5px; color: var(--text-sub); margin: 14px 0 10px; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.1em; font-weight: 700;">◆ メリット・デメリットを考えてみよう</div>
+    <div class="filter-pros-cons">
+      <div class="filter-box pros filter-guess" onclick="this.classList.toggle('revealed')">
+        <h5>● メリット</h5>
+        <div class="filter-hidden">クリックして確認</div>
+        <div class="filter-answer">事業者は広く情報提供を開始でき、有用な情報を届ける初速が早い。個別同意取得のコストがかからない。</div>
+      </div>
+      <div class="filter-box cons filter-guess" onclick="this.classList.toggle('revealed')">
+        <h5>● デメリット</h5>
+        <div class="filter-hidden">クリックして確認</div>
+        <div class="filter-answer">受信者が拒否手続きを取らない限り送り続けられるため、<strong>同意していないのに届く状態</strong>が生じる。受信者のプライバシー感覚と衝突しやすい。</div>
+      </div>
+    </div>
+    <div class="filter-example"><strong>例 —</strong> 名簿業者への第三者提供は、本人が停止を求めれば止めることを条件に事前に個人情報保護委員会へ届け出れば可能(要配慮個人情報は不可)。通販サイトの「退会しない限り届くメルマガ」もこの発想に近い。</div>
+  </div>
+</div>
+
+<!-- SLIDE 10: 実習5 -->
+<div class="slide" data-title="実習5 用語を当てる">
+  <div class="eyebrow">実習 5 · 語群から選択</div>
+  <h2 class="slide-title">用語を当てる</h2>
+  <p class="slide-subtitle">説明文が指しているのはどの用語か。語群(ア オプトアウト / イ オプトイン / ウ アクセスログ / エ 個人識別符号 / オ 基本四情報)から選ぶ。</p>
+
+  <div class="term-pick-list">
+
+    <div class="term-pick-item" id="tp1">
+      <div class="term-pick-q">
+        <div class="term-pick-num">(1)</div>
+        <div class="term-pick-text">インターネット上のサービスに会員登録などをする際、関連する商品やサービスの広告などを、あらかじめ「受け取りたい」と承諾した人にのみ提供する方式のこと。</div>
+      </div>
+      <div class="term-pick-opts">
+        <div class="term-pick-opt" data-correct="false" onclick="pickTerm(this, 'tp1')">ア オプトアウト方式</div>
+        <div class="term-pick-opt" data-correct="true" onclick="pickTerm(this, 'tp1')">イ オプトイン方式</div>
+        <div class="term-pick-opt" data-correct="false" onclick="pickTerm(this, 'tp1')">ウ アクセスログ</div>
+        <div class="term-pick-opt" data-correct="false" onclick="pickTerm(this, 'tp1')">エ 個人識別符号</div>
+        <div class="term-pick-opt" data-correct="false" onclick="pickTerm(this, 'tp1')">オ 基本四情報</div>
+      </div>
+      <div class="term-pick-feedback" id="tp1Fb">
+        <strong>正解:イ オプトイン方式</strong> — 「受け取りたい」と積極的に表明した人だけに提供するのがオプトイン。受け取り拒否の意思表示をしない限り送る方式はオプトアウト。
+      </div>
+    </div>
+
+    <div class="term-pick-item" id="tp2">
+      <div class="term-pick-q">
+        <div class="term-pick-num">(2)</div>
+        <div class="term-pick-text">行政などで個人を特定する場合に必要な、氏名・住所・生年月日・性別の四つの情報のこと。</div>
+      </div>
+      <div class="term-pick-opts">
+        <div class="term-pick-opt" data-correct="false" onclick="pickTerm(this, 'tp2')">ア オプトアウト方式</div>
+        <div class="term-pick-opt" data-correct="false" onclick="pickTerm(this, 'tp2')">イ オプトイン方式</div>
+        <div class="term-pick-opt" data-correct="false" onclick="pickTerm(this, 'tp2')">ウ アクセスログ</div>
+        <div class="term-pick-opt" data-correct="false" onclick="pickTerm(this, 'tp2')">エ 個人識別符号</div>
+        <div class="term-pick-opt" data-correct="true" onclick="pickTerm(this, 'tp2')">オ 基本四情報</div>
+      </div>
+      <div class="term-pick-feedback" id="tp2Fb">
+        <strong>正解:オ 基本四情報</strong> — 氏名・住所・生年月日・性別の4項目。年齢や国籍が混ざっていたら別物。
+      </div>
+    </div>
+
+    <div class="term-pick-item" id="tp3">
+      <div class="term-pick-q">
+        <div class="term-pick-num">(3)</div>
+        <div class="term-pick-text">個人情報の一種で、DNA塩基配列や指紋などの身体的特徴や、旅券番号・運転免許証番号・個人番号(マイナンバー)などの個人に割り当てられる番号などがある。</div>
+      </div>
+      <div class="term-pick-opts">
+        <div class="term-pick-opt" data-correct="false" onclick="pickTerm(this, 'tp3')">ア オプトアウト方式</div>
+        <div class="term-pick-opt" data-correct="false" onclick="pickTerm(this, 'tp3')">イ オプトイン方式</div>
+        <div class="term-pick-opt" data-correct="false" onclick="pickTerm(this, 'tp3')">ウ アクセスログ</div>
+        <div class="term-pick-opt" data-correct="true" onclick="pickTerm(this, 'tp3')">エ 個人識別符号</div>
+        <div class="term-pick-opt" data-correct="false" onclick="pickTerm(this, 'tp3')">オ 基本四情報</div>
+      </div>
+      <div class="term-pick-feedback" id="tp3Fb">
+        <strong>正解:エ 個人識別符号</strong> — 単独で個人を特定できる身体的特徴や公的な番号。アクセスログはサーバへの接続履歴であり、単独で個人を特定する符号ではない。
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SLIDE 11: 匿名加工 vs 仮名加工 -->
+<div class="slide" data-title="匿名加工情報 と 仮名加工情報">
+  <div class="eyebrow">POINT 4 · 学習ノート ⑥⑦</div>
+  <h2 class="slide-title">匿名加工情報 と 仮名加工情報</h2>
+  <p class="slide-subtitle">同じ「加工」でも、<strong>元データを破棄</strong>するか<strong>対照表を手元に残す</strong>かで別物になる。下の図で加工前後の中身を見比べよう。</p>
+
+  <!-- 元データ -->
+  <div class="flow-origin">
+    <div class="flow-card flow-card-orig">
+      <div class="flow-card-head"><span class="flow-head-badge">BEFORE</span>元の個人情報</div>
+      <div class="flow-card-row"><span>氏名</span><span>山田 太郎</span></div>
+      <div class="flow-card-row"><span>年齢</span><span>28</span></div>
+      <div class="flow-card-row"><span>住所</span><span>東京都◯区◯町1-2-3</span></div>
+      <div class="flow-card-row"><span>購入履歴</span><span>スイーツ,書籍,…</span></div>
+    </div>
+  </div>
+
+  <!-- 分岐矢印 -->
+  <div class="flow-fork">
+    <svg class="flow-fork-svg" viewBox="0 0 280 54" xmlns="http://www.w3.org/2000/svg">
+      <line x1="140" y1="0" x2="140" y2="14" stroke="#2C5F8D" stroke-width="2"/>
+      <circle cx="140" cy="16" r="3" fill="#2C5F8D"/>
+      <path d="M140 18 Q 140 26, 70 34 L 40 46" stroke="#2C5F8D" stroke-width="2" fill="none"/>
+      <path d="M140 18 Q 140 26, 210 34 L 240 46" stroke="#C9A961" stroke-width="2" fill="none"/>
+      <polygon points="34,42 40,46 40,50" fill="#2C5F8D"/>
+      <polygon points="246,42 240,46 240,50" fill="#C9A961"/>
+      <text x="80" y="24" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" fill="#1E824C" letter-spacing="1">匿名加工</text>
+      <text x="200" y="24" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" fill="#8a6d1f" letter-spacing="1">仮名加工</text>
+    </svg>
+  </div>
+
+  <!-- 分岐先 -->
+  <div class="flow-split">
+
+    <!-- 匿名加工情報 -->
+    <div class="flow-side flow-anon">
+      <div class="flow-tag"><span class="note-blank" data-answer="匿名加工情報">⑥</span></div>
+      <div class="flow-process">STEP 1 · 個人を識別できないよう加工</div>
+      <div class="flow-card">
+        <div class="flow-card-head"><span class="flow-head-badge">AFTER</span>加工後データ</div>
+        <div class="flow-card-row masked"><span>氏名</span><span>***</span></div>
+        <div class="flow-card-row generalized"><span>年代</span><span>20代</span></div>
+        <div class="flow-card-row generalized"><span>エリア</span><span>東京都</span></div>
+        <div class="flow-card-row generalized"><span>購入傾向</span><span>スイーツ系</span></div>
+      </div>
+      <div class="flow-extra">
+        <div class="flow-extra-box destroyed">
+          <div class="flow-extra-icon">✕</div>
+          <div class="flow-extra-text">
+            <strong>元データ + 対照表を破棄</strong>
+            <small>復元経路なし</small>
+          </div>
+        </div>
+      </div>
+      <div class="flow-verdict verdict-ok">
+        <strong>復元不可</strong>
+        本人同意なしで第三者提供◎
+      </div>
+    </div>
+
+    <!-- 仮名加工情報 -->
+    <div class="flow-side flow-pseudo">
+      <div class="flow-tag gold"><span class="note-blank" data-answer="仮名加工情報">⑦</span></div>
+      <div class="flow-process">STEP 1 · 氏名など一部を削除</div>
+      <div class="flow-card">
+        <div class="flow-card-head"><span class="flow-head-badge">AFTER</span>加工後データ</div>
+        <div class="flow-card-row pseudonym"><span>ID</span><span>A-1234</span></div>
+        <div class="flow-card-row kept"><span>年齢</span><span>28</span></div>
+        <div class="flow-card-row kept"><span>住所</span><span>東京都◯区</span></div>
+        <div class="flow-card-row kept"><span>購入履歴</span><span>スイーツ,書籍,…</span></div>
+      </div>
+      <div class="flow-extra">
+        <div class="flow-extra-box keyheld">
+          <div class="flow-extra-icon">🔑</div>
+          <div class="flow-extra-text">
+            <strong>対照表を社内で保管</strong>
+            <small>A-1234 = 山田太郎</small>
+          </div>
+        </div>
+      </div>
+      <div class="flow-verdict verdict-warn">
+        <strong>照合で復元可</strong>
+        第三者提供は原則NG
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 16px; padding: 14px 20px; background: var(--navy-darkest); color: white; border-radius: 8px; font-size: 14.5px; line-height: 1.75; font-weight: 500;">
+    <strong style="color: var(--accent-gold);">見分け方 —</strong> 加工後のデータだけ見ても区別できない。<strong>「対照表を手元に残しているか」</strong>が分かれ目。名前を伏せ字にしただけでは仮名加工止まり。
+  </div>
+</div>
+
+<!-- SLIDE 12: 実習6 -->
+<div class="slide" data-title="実習6 匿名加工情報の穴埋め">
+  <div class="eyebrow">実習 6 · 語群から選択</div>
+  <h2 class="slide-title">匿名加工情報の条文穴埋め</h2>
+  <p class="slide-subtitle">語群(ア 同意 / イ 家族 / ウ アクセス / エ 識別 / オ 加工 / カ 提供 / キ 保護 / ク 削除 / ケ 拒否 / コ パスワード)から、下の4つの空所に当てはまる語を1つずつ選ぶ。</p>
+
+  <div class="fill-sentence">
+    匿名加工情報は、特定の個人を
+    <span class="fill-slot active" data-slot="1" onclick="selectSlot(1)">①</span>
+    できないように個人情報を
+    <span class="fill-slot" data-slot="2" onclick="selectSlot(2)">②</span>
+    し、当該個人情報を復元できないようにしたものである。個人情報取扱事業者は、定められたルールの下で、本人の
+    <span class="fill-slot" data-slot="3" onclick="selectSlot(3)">③</span>
+    を得ることなく、匿名加工情報を第三者に
+    <span class="fill-slot" data-slot="4" onclick="selectSlot(4)">④</span>
+    することができる。
+  </div>
+
+  <div class="fill-bank">
+    <div class="fill-bank-label">語群 / タップ → 選択中のスロットに入る</div>
+    <div class="fill-chip" data-letter="ア" onclick="pickChip(this)">ア 同意</div>
+    <div class="fill-chip" data-letter="イ" onclick="pickChip(this)">イ 家族</div>
+    <div class="fill-chip" data-letter="ウ" onclick="pickChip(this)">ウ アクセス</div>
+    <div class="fill-chip" data-letter="エ" onclick="pickChip(this)">エ 識別</div>
+    <div class="fill-chip" data-letter="オ" onclick="pickChip(this)">オ 加工</div>
+    <div class="fill-chip" data-letter="カ" onclick="pickChip(this)">カ 提供</div>
+    <div class="fill-chip" data-letter="キ" onclick="pickChip(this)">キ 保護</div>
+    <div class="fill-chip" data-letter="ク" onclick="pickChip(this)">ク 削除</div>
+    <div class="fill-chip" data-letter="ケ" onclick="pickChip(this)">ケ 拒否</div>
+    <div class="fill-chip" data-letter="コ" onclick="pickChip(this)">コ パスワード</div>
+  </div>
+
+  <div class="fill-controls">
+    <span class="fill-status" id="fillStatus">① のスロットを語群から選ぶ</span>
+    <button class="fill-submit" onclick="submitFill()">判定する</button>
+    <button class="fill-reset" onclick="resetFill()">やり直す</button>
+  </div>
+
+  <div class="multi-feedback" id="fillFeedback">
+    <strong>正解:① エ 識別 / ② オ 加工 / ③ ア 同意 / ④ カ 提供</strong><br>
+    「識別できないように → 加工 → 本人同意なしで → 第三者提供」の4段で流れる。引っかけの「ク 削除」は仮名加工情報の定義(<em>一部を削除して</em>)側で使う語。
+  </div>
+</div>
+
+<!-- SLIDE 13: SECTION 3 -->
+<div class="slide section-divider" data-title="第3節 プライバシーと肖像権">
+  <div class="section-number">SECTION · 03</div>
+  <h2 class="section-title-big">プライバシー<br>と肖像権</h2>
+  <p class="section-tagline">― 個人情報と重なるが同一ではない権利 ―</p>
+</div>
+
+<!-- SLIDE 14: 肖像権 + 実習3 -->
+<div class="slide" data-title="実習3 肖像権の侵害はどれか">
+  <div class="eyebrow">実習 3 · 学習ノート対応</div>
+  <h2 class="slide-title">肖像権の侵害はどれか</h2>
+  <p class="slide-subtitle">肖像権は「自分の顔や姿をみだりに撮影・公表されない権利」。プライバシー権の一部として判例で認められてきた。<strong>撮影そのもの</strong>より、<strong>無断での公開</strong>が争点になる場面が多い。</p>
+
+  <div class="quiz-container">
+    <div class="quiz-question">
+      <span class="quiz-question-num">PRACTICE 3 · 一つ選ぶ</span>
+      次のア〜ウのうち、肖像権を侵害していると思われる行為を一つ選べ。
+    </div>
+    <div class="quiz-options">
+      <div class="quiz-option" onclick="answerQuiz(this, false)"><span class="quiz-option-letter">ア</span><span>自分が撮影した海の風景をWebページに掲載した。</span></div>
+      <div class="quiz-option" onclick="answerQuiz(this, true)"><span class="quiz-option-letter">イ</span><span>自分が撮影した集合写真を無断でWebページに掲載した。</span></div>
+      <div class="quiz-option" onclick="answerQuiz(this, false)"><span class="quiz-option-letter">ウ</span><span>自ら写した自分の個人写真をWebページに掲載した。</span></div>
+    </div>
+    <div class="quiz-feedback">
+      <strong>正解:イ</strong><br>
+      集合写真には<strong>自分以外の人物が写っている</strong>。それを<strong>本人の同意なく</strong>公開することが肖像権の侵害にあたる。アは風景のみで人物なし。ウは被写体が自分自身なので侵害は生じない。「撮影者が自分だから公開して良い」は誤解で、<strong>被写体の同意</strong>が必要と覚える。
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 15: SECTION 4 -->
+<div class="slide section-divider" data-title="第4節 事業者の責任">
+  <div class="section-number">SECTION · 04</div>
+  <h2 class="section-title-big">事業者<br>の責任</h2>
+  <p class="section-tagline">― 個人情報保護法が課す義務 ―</p>
+</div>
+
+<!-- SLIDE 16: 個人情報保護法 + 5つの義務 -->
+<div class="slide" data-title="個人情報保護法と5つの義務">
+  <div class="eyebrow">POINT 5 · 学習ノート ⑧</div>
+  <h2 class="slide-title">個人情報保護法と事業者の義務</h2>
+  <p class="slide-subtitle">個人情報を取り扱うすべての事業者に適用される。利用目的の特定から安全管理まで、<strong>5つの主要な義務</strong>が課される。</p>
+
+  <div class="def-box">
+    <div class="def-label">POINT ⑧</div>
+    <div class="def-term"><span class="note-blank" data-answer="個人情報保護法">⑧</span></div>
+    <div class="def-desc">個人情報を取り扱う上での基本的なルールが定められており、すべての事業者はこれらを守らなければならない。2005年全面施行、2017年・2020年・2022年と累次の改正で規制強化。</div>
+  </div>
+
+  <div class="two-col" style="margin-top: 22px; gap: 12px;">
+    <div style="padding: 14px 18px; background: white; border: 1px solid var(--navy-pale); border-radius: 6px; border-left: 3px solid var(--navy);">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--accent-red); letter-spacing: 0.15em; font-weight: 700; margin-bottom: 4px;">義務 01</div>
+      <div style="font-family: 'Noto Serif JP', serif; font-weight: 700; font-size: 15.5px; color: var(--navy-darkest); margin-bottom: 4px;">利用目的の特定・通知</div>
+      <div style="font-size: 13.5px; line-height: 1.7; color: var(--text-main);">取得時に目的を明示し、目的外利用には本人同意が必要。</div>
+    </div>
+    <div style="padding: 14px 18px; background: white; border: 1px solid var(--navy-pale); border-radius: 6px; border-left: 3px solid var(--navy);">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--accent-red); letter-spacing: 0.15em; font-weight: 700; margin-bottom: 4px;">義務 02</div>
+      <div style="font-family: 'Noto Serif JP', serif; font-weight: 700; font-size: 15.5px; color: var(--navy-darkest); margin-bottom: 4px;">適正な取得</div>
+      <div style="font-size: 13.5px; line-height: 1.7; color: var(--text-main);">偽りや不正な手段での取得を禁止。要配慮個人情報は原則同意必須。</div>
+    </div>
+    <div style="padding: 14px 18px; background: white; border: 1px solid var(--navy-pale); border-radius: 6px; border-left: 3px solid var(--navy);">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--accent-red); letter-spacing: 0.15em; font-weight: 700; margin-bottom: 4px;">義務 03</div>
+      <div style="font-family: 'Noto Serif JP', serif; font-weight: 700; font-size: 15.5px; color: var(--navy-darkest); margin-bottom: 4px;">安全管理措置</div>
+      <div style="font-size: 13.5px; line-height: 1.7; color: var(--text-main);">漏えい防止のための技術的・組織的対策。従業員・委託先の監督義務を含む。</div>
+    </div>
+    <div style="padding: 14px 18px; background: white; border: 1px solid var(--navy-pale); border-radius: 6px; border-left: 3px solid var(--navy);">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--accent-red); letter-spacing: 0.15em; font-weight: 700; margin-bottom: 4px;">義務 04</div>
+      <div style="font-family: 'Noto Serif JP', serif; font-weight: 700; font-size: 15.5px; color: var(--navy-darkest); margin-bottom: 4px;">第三者提供の制限</div>
+      <div style="font-size: 13.5px; line-height: 1.7; color: var(--text-main);">本人同意が原則。オプトアウト手続きや匿名加工情報の制度で例外化できる。</div>
+    </div>
+    <div style="padding: 14px 18px; background: white; border: 1px solid var(--navy-pale); border-radius: 6px; border-left: 3px solid var(--navy);">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--accent-red); letter-spacing: 0.15em; font-weight: 700; margin-bottom: 4px;">義務 05</div>
+      <div style="font-family: 'Noto Serif JP', serif; font-weight: 700; font-size: 15.5px; color: var(--navy-darkest); margin-bottom: 4px;">開示・訂正・利用停止への対応</div>
+      <div style="font-size: 13.5px; line-height: 1.7; color: var(--text-main);">本人から請求があれば保有情報を開示し、誤りの訂正・利用停止に応じる。</div>
+    </div>
+    <div style="padding: 14px 18px; background: rgba(200,16,46,0.06); border: 1px solid rgba(200,16,46,0.2); border-radius: 6px; border-left: 3px solid var(--accent-red);">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--accent-red); letter-spacing: 0.15em; font-weight: 700; margin-bottom: 4px;">2022年改正</div>
+      <div style="font-family: 'Noto Serif JP', serif; font-weight: 700; font-size: 15.5px; color: var(--navy-darkest); margin-bottom: 4px;">漏えい時の報告義務</div>
+      <div style="font-size: 13.5px; line-height: 1.7; color: var(--text-main);">一定規模以上の漏えいは<strong>個人情報保護委員会への報告と本人通知</strong>が義務化された。</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 17: 実習2 -->
+<div class="slide" data-title="実習2 適切 / 不適切を判定">
+  <div class="eyebrow">実習 2 · 7問すべて判定</div>
+  <h2 class="slide-title">適切か、不適切か</h2>
+  <p class="slide-subtitle">個人情報を保護する上で<strong>適切なら ○、不適切なら ×</strong>。まず自分で判断してから、各行をクリックして答えと理由を確認する。</p>
+
+  <div class="practice-list">
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">(1)</span>
+      <div class="practice-text">
+        Webサイトで氏名や住所を入力する場合は、そのサイトのプライバシーポリシーをよく理解して対応した。
+        <div class="practice-reason"><strong>適切 —</strong> 利用目的と第三者提供の有無を確認するのは基本動作。プライバシーポリシーは個人情報保護法の「利用目的の通知」義務を果たすために事業者が掲げるもの。</div>
+      </div>
+      <span class="practice-verdict" data-ok="true">?</span>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">(2)</span>
+      <div class="practice-text">
+        個人情報を扱ったパソコンを、データを完全に消去せずに廃棄した。
+        <div class="practice-reason"><strong>不適切 —</strong> ファイルを「ゴミ箱へ」「フォーマット」しただけではデータ復元ソフトで読み出せる。物理破壊または複数回の上書き消去で<strong>復元不能</strong>にする必要がある。<em>安全管理措置</em>違反。</div>
+      </div>
+      <span class="practice-verdict" data-ok="false">?</span>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">(3)</span>
+      <div class="practice-text">
+        個人情報を保存したUSBメモリを無断で外出先にもち出した。
+        <div class="practice-reason"><strong>不適切 —</strong> 紛失・盗難のリスクが跳ね上がる。2023年のNTT西日本子会社では、派遣社員によるUSB持ち出しで約900万件が流出し、名簿業者に約2,500万円で売却された。「無断で」が最大のNG。</div>
+      </div>
+      <span class="practice-verdict" data-ok="false">?</span>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">(4)</span>
+      <div class="practice-text">
+        サーバに保存された個人情報のデータにアクセスするためのパスワードを設定した。
+        <div class="practice-reason"><strong>適切 —</strong> アクセス制御は安全管理措置の基本。ただしこれだけでは不十分で、強固なパスワード・多要素認証・アクセスログ監視などと組み合わせる必要がある。</div>
+      </div>
+      <span class="practice-verdict" data-ok="true">?</span>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">(5)</span>
+      <div class="practice-text">
+        他人から送られてきた宛名が書かれた手紙の封筒を、そのまま燃えるゴミとしてゴミ集積場に出した。
+        <div class="practice-reason"><strong>不適切 —</strong> 宛名には氏名・住所が記載されている。そのまま廃棄すると<strong>トラッシング</strong>(ゴミ漁り)で回収されうる。シュレッダー・黒塗り・溶解処理のいずれかを行う。</div>
+      </div>
+      <span class="practice-verdict" data-ok="false">?</span>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">(6)</span>
+      <div class="practice-text">
+        連絡先不明の卒業生の住所を、本人の許可なく同窓会の幹事に教えた。
+        <div class="practice-reason"><strong>不適切 —</strong> 第三者提供には本人同意が必要。「同窓会のため」「善意で」は同意の代わりにはならない。仮に学校が管理していた情報なら、個人情報保護法違反の可能性がある。</div>
+      </div>
+      <span class="practice-verdict" data-ok="false">?</span>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">(7)</span>
+      <div class="practice-text">
+        入場者を把握するために、文化祭の受付の備え付けの名簿に入場者の住所・氏名を、他の来場者が読める状態で記入してもらった。
+        <div class="practice-reason"><strong>不適切 —</strong> 来場者同士に個人情報が丸見えになる。一人一枚の用紙に分ける、スリット付きの名簿を使う、担当者が代筆するなどの運用で<strong>他者から見えない</strong>ようにするのが原則。</div>
+      </div>
+      <span class="practice-verdict" data-ok="false">?</span>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 18: SECTION 5 -->
+<div class="slide section-divider" data-title="第5節 個人情報の流出">
+  <div class="section-number">SECTION · 05</div>
+  <h2 class="section-title-big">個人情報<br>の流出</h2>
+  <p class="section-tagline">― フィッシング・ソーシャルエンジニアリング・内部不正 ―</p>
+</div>
+
+<!-- SLIDE 19: フィッシング + 事例 -->
+<div class="slide" data-title="フィッシング詐欺">
+  <div class="eyebrow">POINT 6 · 学習ノート ⑨</div>
+  <h2 class="slide-title">フィッシング詐欺</h2>
+  <p class="slide-subtitle">本物を装ったメールやWebページで、暗証番号・クレジットカード番号などを<strong>自発的に入力させる</strong>ことで情報を盗む。被害規模は年々拡大している。</p>
+
+  <div class="def-box">
+    <div class="def-label">POINT ⑨</div>
+    <div class="def-term"><span class="note-blank" data-answer="フィッシング">⑨</span> 詐欺</div>
+    <div class="def-desc">正規のメールやWebページを装い、暗証番号やクレジットカード番号などを入力させて、それらを盗み取る詐欺のこと。近年はSMS(スミッシング)や電話(ビッシング)との組み合わせが急増。</div>
+  </div>
+
+  <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.15em; color: var(--accent-red); font-weight: 700; margin: 22px 0 12px;">実際の事例 / クリックで展開</div>
+
+  <div class="case-expander">
+    <div class="case-head" onclick="toggleCase(this)">
+      <span class="case-year">2024</span>
+      <span class="case-title">フィッシング報告 過去最多171万件(フィッシング対策協議会)</span>
+      <span class="case-tag">統計</span>
+      <span class="case-toggle">+</span>
+    </div>
+    <div class="case-body"><div class="case-content">
+      <p>2024年1〜12月のフィッシング報告件数は<strong>1,718,036件</strong>で、2023年比 約1.44倍の過去最多を更新した。ブランド別ではAmazon・ETC利用照会サービス・三井住友カード・えきねっとなどを装うものが多い。</p>
+      <p>2025年も勢いは衰えず、10月単月で過去最高の約19万件を記録した。件数そのものが「ごく少数の運の悪い人の話」ではなくなっている。</p>
+      <div class="case-meta">
+        <div class="case-meta-item"><strong>規模</strong>年間171万件超</div>
+        <div class="case-meta-item"><strong>主な手口</strong>Amazon/金融機関を装うメール・SMS</div>
+        <div class="case-meta-item"><strong>教訓</strong>差出人名ではなく実URL・ドメインで判断</div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="case-expander">
+    <div class="case-head" onclick="toggleCase(this)">
+      <span class="case-year">2025</span>
+      <span class="case-title">ネットバンキング不正送金 半年で42億円(警察庁)</span>
+      <span class="case-tag">被害額</span>
+      <span class="case-toggle">+</span>
+    </div>
+    <div class="case-body"><div class="case-content">
+      <p>2025年上半期のインターネットバンキング不正送金は<strong>2,593件・被害総額 約42億2,400万円</strong>。手口の<strong>約9割がフィッシング</strong>によるID・パスワードの窃取だった。</p>
+      <p>法人口座の被害額は半年で22億7,500万円に達し、2024年通年の11億2,600万円をすでに超えた。ビジネスメール詐欺(BEC)との組み合わせも目立つ。</p>
+      <div class="case-meta">
+        <div class="case-meta-item"><strong>件数</strong>2,593件(半年)</div>
+        <div class="case-meta-item"><strong>被害額</strong>約42億円</div>
+        <div class="case-meta-item"><strong>手口</strong>約9割がフィッシング</div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="case-expander">
+    <div class="case-head" onclick="toggleCase(this)">
+      <span class="case-year">2024</span>
+      <span class="case-title">KADOKAWA / ニコニコ動画 約25万人分の個人情報流出</span>
+      <span class="case-tag">ランサム</span>
+      <span class="case-toggle">+</span>
+    </div>
+    <div class="case-body"><div class="case-content">
+      <p>2024年6月、ランサムウェアグループ BlackSuit による大規模サイバー攻撃でニコニコ動画などが約1か月停止。ドワンゴ全従業員・<strong>N高等学校の在校生や卒業生・保護者</strong>を含む<strong>約25万人</strong>の個人情報が流出した。</p>
+      <p>侵入の根本原因は、<strong>従業員のアカウント情報がフィッシングなどで窃取されたこと</strong>とみられている。1通のフィッシング成功から組織全体の壊滅につながる典型例。</p>
+      <div class="case-meta">
+        <div class="case-meta-item"><strong>規模</strong>約25万人分</div>
+        <div class="case-meta-item"><strong>侵入経路</strong>従業員アカウント窃取(フィッシング)</div>
+        <div class="case-meta-item"><strong>教訓</strong>1人のクリックで全社が落ちる</div>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- SLIDE 20: ソーシャルエンジニアリング + 事例 -->
+<div class="slide" data-title="ソーシャルエンジニアリング">
+  <div class="eyebrow">POINT 6 · 学習ノート ⑩</div>
+  <h2 class="slide-title">ソーシャルエンジニアリング</h2>
+  <p class="slide-subtitle">技術ではなく<strong>人の心理や行動</strong>の隙をつき、日常生活の中から機密情報を入手する手口の総称。フィッシングもこの一部と位置づけられる。</p>
+
+  <div class="def-box">
+    <div class="def-label">POINT ⑩</div>
+    <div class="def-term"><span class="note-blank" data-answer="ソーシャルエンジニアリング">⑩</span></div>
+    <div class="def-desc">日常生活の中から人為的に機密情報を入手すること。肩越しの覗き見(ショルダーハッキング)、ゴミ漁り(トラッシング)、なりすまし電話、偽のサポート警告など<strong>非技術的な手口</strong>が主。</div>
+  </div>
+
+  <div style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.15em; color: var(--accent-red); font-weight: 700; margin: 22px 0 12px;">実際の事例 / クリックで展開</div>
+
+  <div class="case-expander">
+    <div class="case-head" onclick="toggleCase(this)">
+      <span class="case-year">2024</span>
+      <span class="case-title">サポート詐欺(偽警告) IPA相談4,000件超</span>
+      <span class="case-tag">偽警告</span>
+      <span class="case-toggle">+</span>
+    </div>
+    <div class="case-body"><div class="case-content">
+      <p>Webサイト閲覧中に「ウイルスに感染しました」と<strong>けたたましい警告音と偽の電話番号</strong>が画面いっぱいに表示される手口。慌ててかけると「サポート料金」としてコンビニ決済や電子マネーで数万〜数百万円を要求される。</p>
+      <p>2023〜2024年にかけてIPA(情報処理推進機構)へ四半期1,000件超の相談が寄せられ、<strong>1件で1,000万円超の被害</strong>も報告されている。2025年5月、警察庁は関係被疑者6人の検挙を発表した。</p>
+      <div class="case-meta">
+        <div class="case-meta-item"><strong>相談件数</strong>四半期1,000件超</div>
+        <div class="case-meta-item"><strong>最大被害</strong>1件1,000万円超</div>
+        <div class="case-meta-item"><strong>教訓</strong>警告音は偽物。画面を閉じて電話しない</div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="case-expander">
+    <div class="case-head" onclick="toggleCase(this)">
+      <span class="case-year">2023</span>
+      <span class="case-title">NTT西日本子会社 約900万件流出(内部不正)</span>
+      <span class="case-tag">内部不正</span>
+      <span class="case-toggle">+</span>
+    </div>
+    <div class="case-body"><div class="case-content">
+      <p>NTTビジネスソリューションズの元派遣社員が、顧客情報保管サーバから<strong>管理者アカウントを悪用</strong>し、約10年にわたって<strong>約900万件</strong>の顧客情報をUSBメモリで持ち出し、複数の名簿業者に<strong>約250回にわたり約2,500万円</strong>で売却していた。</p>
+      <p>技術的な侵入ではなく、運用・管理の盲点(内部者の権限+監視の甘さ+USB接続許可)を突いた事例。組織内部の信頼が攻撃面になった点で、広義のソーシャルエンジニアリングに位置づけられる。2024年7月、被告に懲役3年・執行猶予4年・罰金100万円の判決。</p>
+      <div class="case-meta">
+        <div class="case-meta-item"><strong>規模</strong>約900万件</div>
+        <div class="case-meta-item"><strong>期間</strong>約10年間</div>
+        <div class="case-meta-item"><strong>売却額</strong>約2,500万円</div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="case-expander">
+    <div class="case-head" onclick="toggleCase(this)">
+      <span class="case-year">日常</span>
+      <span class="case-title">身近な3つの手口:覗き見・ゴミ漁り・なりすまし電話</span>
+      <span class="case-tag">基礎</span>
+      <span class="case-toggle">+</span>
+    </div>
+    <div class="case-body"><div class="case-content">
+      <p><strong>ショルダーハッキング —</strong> カフェ・電車で画面やPINコード入力を肩越しに盗み見る。覗き見防止フィルター+入力時に手で隠す。</p>
+      <p><strong>トラッシング —</strong> オフィス・家庭のゴミから宛名・レシート・メモを回収して組み立てる。宛名は黒塗り、書類はシュレッダー。</p>
+      <p><strong>なりすまし電話 —</strong> 「システム部ですがパスワード教えてください」で聞き出す。<strong>電話でパスワードを尋ねる正規運用は存在しない</strong>。折り返し可能な内線番号でかけ直す。</p>
+      <div class="case-meta">
+        <div class="case-meta-item"><strong>共通点</strong>技術ではなく人の油断を突く</div>
+        <div class="case-meta-item"><strong>対策</strong>運用ルールの徹底と教育訓練</div>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- SLIDE 21: 答え合わせ -->
+<div class="slide" data-title="学習ノート 答え合わせ">
+  <div class="eyebrow">REVIEW · 学習ノート ①〜⑩</div>
+  <h2 class="slide-title">学習ノート 答え合わせ</h2>
+  <p class="slide-subtitle">POINT 欄の穴埋め①〜⑩。各行をクリックで1つずつ、または下のボタンで一括表示する。</p>
+
+  <div class="answers-grid">
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">①</span>
+      <span class="answer-text">生存する個人に関する情報…特定の個人を識別できるもの</span>
+      <span class="answer-reveal" data-ans="個人情報">クリック</span>
+    </div>
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">②</span>
+      <span class="answer-text">氏名・住所・生年月日・性別</span>
+      <span class="answer-reveal" data-ans="基本四情報">クリック</span>
+    </div>
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">③</span>
+      <span class="answer-text">人種・信条・病歴・犯罪歴など、配慮を要する個人情報</span>
+      <span class="answer-reveal" data-ans="要配慮個人情報">クリック</span>
+    </div>
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">④</span>
+      <span class="answer-text">「受け取りたい」と承諾した人にのみ提供する方式</span>
+      <span class="answer-reveal" data-ans="オプトイン方式">クリック</span>
+    </div>
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">⑤</span>
+      <span class="answer-text">「受け取りたくない」と表明した人以外に提供する方式</span>
+      <span class="answer-reveal" data-ans="オプトアウト方式">クリック</span>
+    </div>
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">⑥</span>
+      <span class="answer-text">特定の個人を識別できず、復元もできないように加工</span>
+      <span class="answer-reveal" data-ans="匿名加工情報">クリック</span>
+    </div>
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">⑦</span>
+      <span class="answer-text">一部を削除し、照合しなければ特定できないように加工</span>
+      <span class="answer-reveal" data-ans="仮名加工情報">クリック</span>
+    </div>
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">⑧</span>
+      <span class="answer-text">個人情報を取り扱う基本ルールを定めた法律</span>
+      <span class="answer-reveal" data-ans="個人情報保護法">クリック</span>
+    </div>
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">⑨</span>
+      <span class="answer-text">正規のメールやWebページを装って情報を盗む詐欺</span>
+      <span class="answer-reveal" data-ans="フィッシング">クリック</span>
+    </div>
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">⑩</span>
+      <span class="answer-text">日常生活の中から人為的に機密情報を入手すること</span>
+      <span class="answer-reveal" data-ans="ソーシャルエンジニアリング">クリック</span>
+    </div>
+  </div>
+
+  <div style="margin-top: 24px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+    <button onclick="revealAll()" style="background: var(--navy-darkest); color: white; border: none; padding: 10px 28px; font-family: 'Noto Serif JP', serif; font-weight: 600; border-radius: 30px; cursor: pointer; font-size: 14px;">すべて一括表示</button>
+    <button onclick="hideAll()" style="background: transparent; color: var(--navy-darkest); border: 2px solid var(--navy); padding: 10px 28px; font-family: 'Noto Serif JP', serif; font-weight: 600; border-radius: 30px; cursor: pointer; font-size: 14px;">すべて隠す</button>
+  </div>
+</div>
+
+<!-- SLIDE 22: まとめ -->
+<div class="slide" data-title="まとめ(ツリー図)">
+  <div class="eyebrow">SUMMARY · 全体の構造</div>
+  <h2 class="slide-title">個人情報の全体像</h2>
+  <p class="slide-subtitle">定義から流出対策まで、5つの観点で整理する。</p>
+
+  <div class="summary-tree">
+    <div class="tree-center">個人情報</div>
+  </div>
+  <div class="tree-branches">
+    <div class="tree-branch">
+      <h4>定義・分類</h4>
+      <ul>
+        <li>個人情報</li>
+        <li>基本四情報</li>
+        <li>要配慮個人情報</li>
+        <li>個人識別符号</li>
+      </ul>
+    </div>
+    <div class="tree-branch">
+      <h4>活用の仕方</h4>
+      <ul>
+        <li>オプトイン方式</li>
+        <li>オプトアウト方式</li>
+        <li>匿名加工情報</li>
+        <li>仮名加工情報</li>
+      </ul>
+    </div>
+    <div class="tree-branch">
+      <h4>権利の側面</h4>
+      <ul>
+        <li>プライバシー権</li>
+        <li>肖像権</li>
+        <li>本人の開示請求権</li>
+      </ul>
+    </div>
+    <div class="tree-branch">
+      <h4>事業者の義務</h4>
+      <ul>
+        <li>個人情報保護法</li>
+        <li>利用目的の特定</li>
+        <li>安全管理措置</li>
+        <li>漏えい時の報告</li>
+      </ul>
+    </div>
+    <div class="tree-branch">
+      <h4>流出の手口</h4>
+      <ul>
+        <li>フィッシング</li>
+        <li>ソーシャルエンジニアリング</li>
+        <li>内部不正・USB持出</li>
+        <li>ランサムウェア</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 23: 復習チャレンジ -->
+<div class="slide" data-title="復習チャレンジ(10問)">
+  <div class="eyebrow">REVIEW CHALLENGE · 10 questions</div>
+  <h2 class="slide-title">復習チャレンジ</h2>
+  <p class="slide-subtitle">学習ノートと本サイトの内容から、毎回ランダムに10問出題。即時採点で理解度を可視化する。</p>
+
+  <div class="review-container">
+    <div id="reviewStart">
+      <p class="review-intro">全12問のプールから10問をランダム出題します。<br>各問題は4択・即時採点で、最後に正答率と簡潔なコメントが出ます。</p>
+      <button class="review-start-btn" onclick="startReview()">▶ 開始する</button>
+    </div>
+    <div id="reviewQuiz" class="review-q-area">
+      <div class="review-progress" id="reviewProgress">QUESTION 1 / 10</div>
+      <div class="quiz-container" style="margin: 0;">
+        <div class="quiz-question" id="reviewQText"></div>
+        <div class="quiz-options" id="reviewQOpts"></div>
+      </div>
+    </div>
+    <div id="reviewDone" class="review-q-area" style="text-align: center;">
+      <div style="font-family: 'JetBrains Mono', monospace; color: var(--navy); font-size: 12px; letter-spacing: 0.2em; margin-bottom: 14px;">RESULT</div>
+      <div class="review-result" id="reviewScore">0 / 10</div>
+      <div class="review-result-sub" id="reviewComment"></div>
+      <button class="review-retry-btn" onclick="startReview()">もう一度</button>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 24: END CARD -->
+<div class="slide title-slide" data-title="完了">
+  <div class="title-label">END OF CHAPTER · 05</div>
+  <h1 class="title-main" style="font-size: clamp(40px, 6vw, 80px);">お疲れさま<br>でした</h1>
+  <p class="title-sub">個人情報の定義・活用・加工・権利・義務・流出までを一通り確認した。</p>
+  <div class="title-meta">
+    <div class="title-meta-item"><strong>COVERED</strong>学習ノート p.26-29 + 実習 1〜6</div>
+  </div>
+</div>
+
+</div>
+
+<div class="bottombar">
+  <div class="bottombar-nav">
+    <button class="nav-btn" id="prevBtn" onclick="goToSlide(currentSlide - 1)" title="前へ">◀</button>
+    <button class="nav-btn" id="nextBtn" onclick="goToSlide(currentSlide + 1)" title="次へ">▶</button>
+  </div>
+  <div class="slide-title-small" id="slideTitleSmall">タイトル</div>
+  <span class="keyboard-hint">← → / SPACE / F / M</span>
+  <div class="page-indicator" id="pageIndicator">01 / XX</div>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+let currentSlide = 0;
+
+function goToSlide(n) {
+  if (n < 0 || n >= totalSlides) return;
+  slides[currentSlide].classList.remove('active');
+  currentSlide = n;
+  slides[currentSlide].classList.add('active');
+  slides[currentSlide].scrollTop = 0;
+  updateUI();
+}
+
+function updateUI() {
+  const pct = ((currentSlide + 1) / totalSlides) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('pageIndicator').textContent =
+    String(currentSlide + 1).padStart(2, '0') + ' / ' + String(totalSlides).padStart(2, '0');
+  document.getElementById('slideTitleSmall').textContent =
+    slides[currentSlide].dataset.title || '';
+  document.getElementById('prevBtn').disabled = currentSlide === 0;
+  document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+  updateMenuActive();
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('menuPanel').classList.contains('open')) { closeMenu(); return; }
+  }
+  if (document.getElementById('menuPanel').classList.contains('open')) return;
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+    e.preventDefault(); goToSlide(currentSlide + 1);
+  } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+    e.preventDefault(); goToSlide(currentSlide - 1);
+  } else if (e.key === 'Home') { goToSlide(0); }
+  else if (e.key === 'End') { goToSlide(totalSlides - 1); }
+  else if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); }
+  else if (e.key === 'm' || e.key === 'M') { openMenu(); }
+});
+
+let touchStartX = 0, touchStartY = 0, touchStartT = 0;
+document.addEventListener('touchstart', (e) => {
+  if (e.touches.length !== 1) return;
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+  touchStartT = Date.now();
+}, { passive: true });
+document.addEventListener('touchend', (e) => {
+  if (e.changedTouches.length !== 1) return;
+  const menuPanel = document.getElementById('menuPanel');
+  if (menuPanel && menuPanel.classList.contains('open')) return;
+  const target = e.target;
+  if (target && target.closest && target.closest('button, .nav-btn, input, select, a')) return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  const dt = Date.now() - touchStartT;
+  if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) && dt < 800) {
+    if (dx < 0) goToSlide(currentSlide + 1);
+    else goToSlide(currentSlide - 1);
+  }
+}, { passive: true });
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
+}
+
+updateUI();
+
+// note-blank
+document.querySelectorAll('.note-blank').forEach(b => {
+  const initial = b.textContent.trim();
+  const isPlaceholder = /^[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮]$/.test(initial);
+  if (isPlaceholder) b.dataset.placeholder = initial;
+  b.addEventListener('click', () => {
+    if (b.classList.contains('reveal')) {
+      b.classList.remove('reveal');
+      b.textContent = isPlaceholder ? b.dataset.placeholder : 'クリックで正解';
+    } else {
+      b.classList.add('reveal');
+      b.textContent = b.dataset.answer;
+    }
+  });
+});
+
+// MENU
+function buildMenu() {
+  const menuList = document.getElementById('menuList');
+  if (!menuList) return;
+  menuList.innerHTML = '';
+  const sections = [];
+  let currentSection = { label: 'OVERVIEW', items: [] };
+  sections.push(currentSection);
+
+  slides.forEach((slide, idx) => {
+    const title = slide.dataset.title || '';
+    if (slide.classList.contains('section-divider')) {
+      const label = title.replace(/^第\d節\s*/, '');
+      currentSection = { label: label.toUpperCase(), items: [] };
+      sections.push(currentSection);
+    }
+    let tag = '', tagClass = '';
+    if (slide.classList.contains('title-slide') && idx === 0) { tag = 'TITLE'; tagClass = 'tag-title'; }
+    else if (slide.classList.contains('title-slide')) { tag = 'END'; tagClass = 'tag-end'; }
+    else if (slide.classList.contains('section-divider')) { tag = 'SECTION'; tagClass = 'tag-section'; }
+    else if (/実習/.test(title)) { tag = 'PRACTICE'; tagClass = ''; }
+    else if (/答え合わせ|まとめ|復習/.test(title)) { tag = 'REVIEW'; tagClass = 'tag-review'; }
+    else if (/オプトイン|匿名加工|要配慮/.test(title)) { tag = 'INTERACTIVE'; tagClass = 'tag-interactive'; }
+    currentSection.items.push({ idx, title, tag, tagClass });
+  });
+
+  sections.forEach(sec => {
+    if (sec.items.length === 0) return;
+    const h = document.createElement('div');
+    h.className = 'menu-section';
+    h.textContent = sec.label;
+    menuList.appendChild(h);
+    sec.items.forEach(it => {
+      const el = document.createElement('div');
+      el.className = 'menu-item';
+      el.dataset.idx = it.idx;
+      el.onclick = () => { goToSlide(it.idx); closeMenu(); };
+      const num = String(it.idx + 1).padStart(2, '0');
+      const tagHtml = it.tag ? '<span class="menu-item-tag ' + it.tagClass + '">' + it.tag + '</span>' : '';
+      el.innerHTML =
+        '<span class="menu-item-num">' + num + '</span>' +
+        '<span class="menu-item-title">' + it.title + '</span>' +
+        tagHtml;
+      menuList.appendChild(el);
+    });
+  });
+  updateMenuActive();
+}
+function updateMenuActive() {
+  document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+  const curr = document.querySelector('.menu-item[data-idx="' + currentSlide + '"]');
+  if (curr) {
+    curr.classList.add('active');
+    if (document.getElementById('menuPanel').classList.contains('open')) {
+      curr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+}
+function openMenu() {
+  document.getElementById('menuOverlay').classList.add('open');
+  document.getElementById('menuPanel').classList.add('open');
+  updateMenuActive();
+}
+function closeMenu() {
+  document.getElementById('menuOverlay').classList.remove('open');
+  document.getElementById('menuPanel').classList.remove('open');
+}
+buildMenu();
+
+// QUIZ
+function answerQuiz(el, isCorrect) {
+  const options = el.parentElement.querySelectorAll('.quiz-option');
+  options.forEach(o => { o.style.pointerEvents = 'none'; });
+  if (isCorrect) {
+    el.classList.add('correct');
+  } else {
+    el.classList.add('incorrect');
+    options.forEach(o => {
+      if (o.onclick && o.onclick.toString().includes('true')) o.classList.add('correct');
+    });
+  }
+  const fb = el.closest('.quiz-container').querySelector('.quiz-feedback');
+  if (fb) fb.classList.add('show');
+}
+
+// MULTI CHECK
+function pickMulti(el) {
+  const block = el.closest('.multi-check');
+  if (block.classList.contains('submitted')) return;
+  el.classList.toggle('picked');
+  const picked = block.querySelectorAll('.multi-opt.picked').length;
+  const status = block.querySelector('.multi-status');
+  if (status) status.textContent = picked + ' つ選択中';
+}
+function submitMulti(id) {
+  const block = document.getElementById(id);
+  if (!block) return;
+  block.classList.add('submitted');
+  const opts = block.querySelectorAll('.multi-opt');
+  let picked = 0, correctPicked = 0, correctTotal = 0;
+  opts.forEach(o => {
+    const isCorrect = o.dataset.correct === 'true';
+    const isPicked = o.classList.contains('picked');
+    if (isCorrect) correctTotal++;
+    if (isPicked) picked++;
+    o.classList.remove('picked');
+    o.style.pointerEvents = 'none';
+    if (isCorrect && isPicked) { o.classList.add('result-ok'); correctPicked++; }
+    else if (isCorrect && !isPicked) { o.classList.add('result-missed'); }
+    else if (!isCorrect && isPicked) { o.classList.add('result-wrong'); }
+  });
+  const status = block.querySelector('.multi-status');
+  if (status) status.textContent = correctPicked + '/' + correctTotal + ' 正解 · 誤選択 ' + (picked - correctPicked);
+  const fb = block.querySelector('.multi-feedback');
+  if (fb) fb.classList.add('show');
+}
+function resetMulti(id) {
+  const block = document.getElementById(id);
+  if (!block) return;
+  block.classList.remove('submitted');
+  block.querySelectorAll('.multi-opt').forEach(o => {
+    o.classList.remove('picked', 'result-ok', 'result-missed', 'result-wrong');
+    o.style.pointerEvents = 'auto';
+  });
+  const fb = block.querySelector('.multi-feedback');
+  if (fb) fb.classList.remove('show');
+  const status = block.querySelector('.multi-status');
+  if (status) status.textContent = '候補を選んでから判定する';
+}
+
+// FILTER TOGGLE
+function switchFilter(type, btn) {
+  document.querySelectorAll('.filter-toggle button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('filterA').style.display = type === 'a' ? 'block' : 'none';
+  document.getElementById('filterB').style.display = type === 'b' ? 'block' : 'none';
+}
+
+// TERM PICK
+function pickTerm(el, wrapId) {
+  const wrap = document.getElementById(wrapId);
+  if (wrap.classList.contains('answered')) return;
+  wrap.classList.add('answered');
+  const isCorrect = el.dataset.correct === 'true';
+  wrap.querySelectorAll('.term-pick-opt').forEach(o => {
+    o.style.pointerEvents = 'none';
+    if (o.dataset.correct === 'true') o.classList.add('correct');
+  });
+  if (!isCorrect) el.classList.add('wrong');
+  const fb = document.getElementById(wrapId + 'Fb');
+  if (fb) fb.classList.add('show');
+}
+
+// CASE EXPANDER
+function toggleCase(headEl) {
+  headEl.parentElement.classList.toggle('open');
+}
+
+// PRACTICE LIST
+function revealPractice(item) {
+  const verdict = item.querySelector('.practice-verdict');
+  const ok = verdict.dataset.ok === 'true';
+  item.classList.add('revealed');
+  item.classList.add(ok ? 'ok' : 'ng');
+  verdict.textContent = ok ? '適切' : '不適切';
+}
+
+// ANSWERS GRID
+function revealAnswer(row) {
+  const reveal = row.querySelector('.answer-reveal');
+  if (row.classList.contains('revealed')) {
+    row.classList.remove('revealed');
+    reveal.textContent = 'クリック';
+  } else {
+    row.classList.add('revealed');
+    reveal.textContent = reveal.dataset.ans;
+  }
+}
+function revealAll() {
+  document.querySelectorAll('.answer-row').forEach(r => {
+    r.classList.add('revealed');
+    const reveal = r.querySelector('.answer-reveal');
+    reveal.textContent = reveal.dataset.ans;
+  });
+}
+function hideAll() {
+  document.querySelectorAll('.answer-row').forEach(r => {
+    r.classList.remove('revealed');
+    r.querySelector('.answer-reveal').textContent = 'クリック';
+  });
+}
+
+// SORT GAME
+const sortDeck = [
+  { text: '氏名', zone: 'zoneB', explain: '基本四情報のひとつだが、要配慮ではない。' },
+  { text: '生年月日', zone: 'zoneB', explain: '基本四情報のひとつ。要配慮ではない。' },
+  { text: '信条', zone: 'zoneA', explain: '思想・信仰は差別を生みうるため要配慮。' },
+  { text: '学業成績', zone: 'zoneB', explain: '個人情報だが要配慮ではない。' },
+  { text: '病歴', zone: 'zoneA', explain: '医療差別を防ぐため要配慮。' },
+  { text: '預金額', zone: 'zoneB', explain: 'センシティブだが要配慮個人情報の定義には含まれない。' },
+  { text: '家族構成', zone: 'zoneB', explain: '個人情報だが要配慮ではない。' },
+  { text: '国籍', zone: 'zoneB', explain: '人種そのものではないため要配慮ではない。' },
+  { text: '犯罪歴', zone: 'zoneA', explain: '前科情報は要配慮。名誉・信用に直結する。' },
+  { text: 'パスワード', zone: 'zoneB', explain: '機密情報だが、要配慮個人情報の定義には含まれない。' }
+];
+const sortZoneLabels = { zoneA: '要配慮個人情報', zoneB: '通常の個人情報 / それ以外' };
+const sortTotal = sortDeck.length;
+let sortSelected = null;
+let sortCorrect = 0;
+
+function buildSort() {
+  const stack = document.getElementById('sortStack');
+  if (!stack) return;
+  stack.innerHTML = '';
+  sortCorrect = 0;
+  const order = sortDeck.map((_, i) => i).sort(() => Math.random() - 0.5);
+  order.forEach(i => {
+    const card = document.createElement('div');
+    card.className = 'sort-card';
+    card.textContent = sortDeck[i].text;
+    card.dataset.idx = i;
+    card.onclick = () => pickSort(card);
+    stack.appendChild(card);
+  });
+  Object.keys(sortZoneLabels).forEach(z => {
+    const list = document.querySelector('[data-list="' + z + '"]');
+    if (list) list.innerHTML = '';
+  });
+  const score = document.getElementById('sortScore');
+  if (score) score.textContent = '0 / ' + sortTotal;
+  const rev = document.getElementById('sortReveal');
+  if (rev) rev.classList.remove('show');
+}
+function pickSort(card) {
+  if (card.classList.contains('placed')) return;
+  document.querySelectorAll('.sort-card.selected').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.sort-zone.highlight').forEach(z => z.classList.remove('highlight'));
+  card.classList.add('selected');
+  sortSelected = card;
+  document.querySelectorAll('.sort-zone').forEach(z => z.classList.add('highlight'));
+}
+function dropCard(zone) {
+  if (!sortSelected) return;
+  const idx = parseInt(sortSelected.dataset.idx);
+  const item = sortDeck[idx];
+  const correct = item.zone === zone;
+  const list = document.querySelector('[data-list="' + zone + '"]');
+  const chip = document.createElement('div');
+  chip.className = 'sort-placed-chip ' + (correct ? 'ok' : 'ng');
+  chip.textContent = item.text;
+  chip.dataset.cardIdx = idx;
+  chip.title = (correct ? '正解:' : '不正解。正解は「' + sortZoneLabels[item.zone] + '」 ') + item.explain + ' ─ クリックで戻す';
+  chip.onclick = () => undoChip(chip);
+  list.appendChild(chip);
+  sortSelected.classList.add('placed');
+  sortSelected.classList.remove('selected');
+  document.querySelectorAll('.sort-zone.highlight').forEach(z => z.classList.remove('highlight'));
+  sortSelected = null;
+  if (correct) sortCorrect++;
+  updateSortStatus();
+}
+function undoChip(chip) {
+  const idx = parseInt(chip.dataset.cardIdx);
+  if (chip.classList.contains('ok')) sortCorrect = Math.max(0, sortCorrect - 1);
+  chip.remove();
+  const card = document.querySelector('.sort-card[data-idx="' + idx + '"]');
+  if (card) card.classList.remove('placed');
+  const rev = document.getElementById('sortReveal');
+  if (rev) rev.classList.remove('show');
+  updateSortStatus();
+}
+function updateSortStatus() {
+  const placed = document.querySelectorAll('.sort-card.placed').length;
+  const score = document.getElementById('sortScore');
+  if (score) score.textContent = sortCorrect + ' / ' + sortTotal;
+  if (placed === sortTotal) {
+    const rev = document.getElementById('sortReveal');
+    if (rev) {
+      rev.innerHTML = '<strong>結果:' + sortCorrect + '/' + sortTotal + ' 正解。</strong> 要配慮は「人種・信条・社会的身分・病歴・犯罪歴・犯罪被害の事実」など。預金額や家族構成のような「センシティブだが要配慮の定義外」が引っかけ。チップをクリックで戻して再配置できる。';
+      rev.classList.add('show');
+    }
+  }
+}
+function resetSort() { buildSort(); }
+buildSort();
+
+// FILL BLANK
+const fillAnswers = { 1: 'エ', 2: 'オ', 3: 'ア', 4: 'カ' };
+const fillLabels = { 'ア': '同意', 'イ': '家族', 'ウ': 'アクセス', 'エ': '識別', 'オ': '加工', 'カ': '提供', 'キ': '保護', 'ク': '削除', 'ケ': '拒否', 'コ': 'パスワード' };
+let fillActiveSlot = 1;
+const fillSlots = {};
+
+function updateFillActiveDisplay() {
+  document.querySelectorAll('.fill-slot').forEach(s => s.classList.remove('active'));
+  const active = document.querySelector('.fill-slot[data-slot="' + fillActiveSlot + '"]');
+  if (active && !active.classList.contains('correct') && !active.classList.contains('wrong')) {
+    active.classList.add('active');
+  }
+}
+function selectSlot(n) {
+  fillActiveSlot = n;
+  updateFillActiveDisplay();
+  const status = document.getElementById('fillStatus');
+  if (status) status.textContent = '①〜④ のうち「' + n + '」に入る語群をタップ';
+}
+function pickChip(chip) {
+  const letter = chip.dataset.letter;
+  const n = fillActiveSlot;
+  if (fillSlots[n]) {
+    const prev = fillSlots[n].letter;
+    const prevChip = document.querySelector('.fill-chip[data-letter="' + prev + '"]');
+    if (prevChip) prevChip.classList.remove('used');
+  }
+  fillSlots[n] = { letter: letter, label: fillLabels[letter] };
+  const slot = document.querySelector('.fill-slot[data-slot="' + n + '"]');
+  if (slot) {
+    slot.textContent = letter + ' ' + fillLabels[letter];
+    slot.classList.add('filled');
+    slot.classList.remove('correct', 'wrong', 'active');
+  }
+  chip.classList.add('used');
+  const status = document.getElementById('fillStatus');
+  const remain = [1,2,3,4].filter(i => !fillSlots[i]);
+  if (remain.length === 0) {
+    if (status) status.textContent = '4つとも埋まった。判定ボタンで確認する';
+  } else {
+    const next = remain[0];
+    fillActiveSlot = next;
+    updateFillActiveDisplay();
+    if (status) status.textContent = '次は「' + next + '」のスロット(各スロットをタップで切替可)';
+  }
+}
+function submitFill() {
+  let ok = 0;
+  [1,2,3,4].forEach(n => {
+    const slot = document.querySelector('.fill-slot[data-slot="' + n + '"]');
+    if (!slot) return;
+    const chosen = fillSlots[n];
+    if (!chosen) return;
+    slot.classList.remove('active');
+    if (chosen.letter === fillAnswers[n]) { slot.classList.add('correct'); ok++; }
+    else { slot.classList.add('wrong'); }
+  });
+  const fb = document.getElementById('fillFeedback');
+  if (fb) fb.classList.add('show');
+  const status = document.getElementById('fillStatus');
+  if (status) status.textContent = ok + ' / 4 正解';
+}
+function resetFill() {
+  [1,2,3,4].forEach(n => {
+    delete fillSlots[n];
+    const slot = document.querySelector('.fill-slot[data-slot="' + n + '"]');
+    if (slot) {
+      slot.textContent = ['①','②','③','④'][n-1];
+      slot.classList.remove('filled', 'correct', 'wrong', 'active');
+    }
+  });
+  document.querySelectorAll('.fill-chip').forEach(c => c.classList.remove('used'));
+  const fb = document.getElementById('fillFeedback');
+  if (fb) fb.classList.remove('show');
+  fillActiveSlot = 1;
+  updateFillActiveDisplay();
+  const status = document.getElementById('fillStatus');
+  if (status) status.textContent = '① のスロットを語群から選ぶ';
+}
+
+// REVIEW
+const reviewPool = [
+  { q: '行政で個人を特定するときの「基本四情報」に含まれないのはどれか。', opts: ['氏名', '住所', '年齢', '生年月日'], a: 2 },
+  { q: '次のうち、個人情報保護法で「要配慮個人情報」にあたるものはどれか。', opts: ['学業成績', '預金額', '犯罪歴', '家族構成'], a: 2 },
+  { q: 'DNA塩基配列や旅券番号のように、単独で個人を特定できる符号の名称は?', opts: ['基本四情報', '個人識別符号', '仮名加工情報', 'アクセスログ'], a: 1 },
+  { q: 'あらかじめ「受け取りたい」と承諾した人にのみ広告を提供する方式は?', opts: ['オプトアウト方式', 'オプトイン方式', '匿名加工方式', '仮名加工方式'], a: 1 },
+  { q: '「特定の個人を識別できず、復元もできないように加工」した情報は?', opts: ['個人識別符号', '仮名加工情報', '匿名加工情報', '要配慮個人情報'], a: 2 },
+  { q: '「他の情報と照合しない限り個人を識別できないように一部削除して加工」した情報は?', opts: ['匿名加工情報', '仮名加工情報', '基本四情報', 'オプトアウト情報'], a: 1 },
+  { q: '他人が写っている集合写真を本人の同意なくWebに掲載する行為が主に侵害するのは?', opts: ['著作権', '肖像権', '商標権', '意匠権'], a: 1 },
+  { q: '正規のメールやWebページを装って暗証番号などを入力させる詐欺は?', opts: ['ビッシング', 'トラッシング', 'フィッシング', 'ショルダーハッキング'], a: 2 },
+  { q: '肩越しに画面の入力を覗き見る手口の名称は?', opts: ['トラッシング', 'フィッシング', 'ランサムウェア', 'ショルダーハッキング'], a: 3 },
+  { q: '個人情報を扱ったPCを、データを完全に消去せずに廃棄した。適切か不適切か?', opts: ['適切(フォーマットだけで充分)', '不適切(復元される恐れ)', '適切(業者が処分するので)', '適切(PCなら問題ない)'], a: 1 },
+  { q: '2024年にフィッシングを発端とした大規模なランサム攻撃で約25万人の個人情報が流出した国内企業は?', opts: ['NTT西日本', 'KADOKAWA/ドワンゴ', 'Amazon Japan', 'JAL'], a: 1 },
+  { q: '2023年に元派遣社員のUSB持ち出しで約900万件の顧客情報が流出した企業は?', opts: ['ソフトバンク', 'KADOKAWA', 'NTT西日本子会社', 'LINEヤフー'], a: 2 }
+];
+
+let reviewQuestions = [];
+let reviewIdx = 0;
+let reviewScore = 0;
+
+function startReview() {
+  reviewQuestions = [...reviewPool].sort(() => Math.random() - 0.5).slice(0, 10);
+  reviewIdx = 0;
+  reviewScore = 0;
+  document.getElementById('reviewStart').style.display = 'none';
+  document.getElementById('reviewDone').classList.remove('active');
+  document.getElementById('reviewQuiz').classList.add('active');
+  showReviewQ();
+}
+function showReviewQ() {
+  const q = reviewQuestions[reviewIdx];
+  document.getElementById('reviewProgress').textContent = 'QUESTION ' + (reviewIdx + 1) + ' / 10';
+  document.getElementById('reviewQText').innerHTML =
+    '<span class="quiz-question-num">Q' + (reviewIdx + 1) + '</span>' + q.q;
+  const opts = document.getElementById('reviewQOpts');
+  opts.innerHTML = '';
+  const letters = ['ア', 'イ', 'ウ', 'エ'];
+  q.opts.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-option';
+    div.innerHTML = '<span class="quiz-option-letter">' + letters[i] + '</span><span>' + opt + '</span>';
+    div.onclick = () => answerReview(div, i === q.a);
+    opts.appendChild(div);
+  });
+}
+function answerReview(el, isCorrect) {
+  const options = el.parentElement.querySelectorAll('.quiz-option');
+  options.forEach(o => { o.style.pointerEvents = 'none'; });
+  const q = reviewQuestions[reviewIdx];
+  if (isCorrect) {
+    el.classList.add('correct');
+    reviewScore++;
+  } else {
+    el.classList.add('incorrect');
+    options[q.a].classList.add('correct');
+  }
+  setTimeout(() => {
+    reviewIdx++;
+    if (reviewIdx < 10) showReviewQ();
+    else showReviewResult();
+  }, 900);
+}
+function showReviewResult() {
+  document.getElementById('reviewQuiz').classList.remove('active');
+  document.getElementById('reviewDone').classList.add('active');
+  document.getElementById('reviewScore').textContent = reviewScore + ' / 10';
+  const comments = {
+    10: '満点。定義・加工・流出手口まで一貫している。',
+    9: 'ほぼ完璧。あと一歩で満点。',
+    8: '合格ライン。要配慮と加工情報の区別を再確認。',
+    7: 'もう一歩。オプトイン/アウトと匿名/仮名の混同に注意。',
+    6: '6割。スライド9と11を見返すと効きやすい。'
+  };
+  let msg = comments[reviewScore] || '基礎から見直そう。学習ノート ①〜⑩ を手元に。';
+  document.getElementById('reviewComment').textContent = msg;
+}
+
+// RESET
+function resetAllInteractions() {
+  if (!confirm('このページのすべてのインタラクションを初期状態に戻します。よろしいですか?')) return;
+
+  document.querySelectorAll('.note-blank.reveal').forEach(b => {
+    b.classList.remove('reveal');
+    b.textContent = b.dataset.placeholder || 'クリックで正解';
+  });
+  document.querySelectorAll('.case-expander.open').forEach(c => c.classList.remove('open'));
+  document.querySelectorAll('.quiz-option').forEach(o => {
+    o.classList.remove('correct', 'incorrect');
+    o.style.pointerEvents = 'auto';
+  });
+  document.querySelectorAll('.quiz-feedback.show').forEach(f => f.classList.remove('show'));
+  document.querySelectorAll('.practice-item.revealed').forEach(p => {
+    p.classList.remove('revealed', 'ok', 'ng');
+    const v = p.querySelector('.practice-verdict');
+    if (v) v.textContent = '?';
+  });
+  document.querySelectorAll('.answer-row.revealed').forEach(r => {
+    r.classList.remove('revealed');
+    const rv = r.querySelector('.answer-reveal');
+    if (rv) rv.textContent = 'クリック';
+  });
+  const reviewStart = document.getElementById('reviewStart');
+  const reviewQuiz = document.getElementById('reviewQuiz');
+  const reviewDone = document.getElementById('reviewDone');
+  if (reviewStart) reviewStart.style.display = 'block';
+  if (reviewQuiz) reviewQuiz.classList.remove('active');
+  if (reviewDone) reviewDone.classList.remove('active');
+
+  if (typeof onResetHook === 'function') onResetHook();
+
+  closeMenu();
+  goToSlide(0);
+}
+
+function onResetHook() {
+  const filterBtns = document.querySelectorAll('.filter-toggle button');
+  if (filterBtns.length >= 2) {
+    filterBtns.forEach(b => b.classList.remove('active'));
+    filterBtns[0].classList.add('active');
+    const fA = document.getElementById('filterA');
+    const fB = document.getElementById('filterB');
+    if (fA) fA.style.display = 'block';
+    if (fB) fB.style.display = 'none';
+  }
+  document.querySelectorAll('.filter-guess.revealed').forEach(g => g.classList.remove('revealed'));
+  ['mc1'].forEach(id => resetMulti(id));
+  document.querySelectorAll('.term-pick-item').forEach(wrap => {
+    wrap.classList.remove('answered');
+    wrap.querySelectorAll('.term-pick-opt').forEach(o => {
+      o.classList.remove('correct', 'wrong');
+      o.style.pointerEvents = 'auto';
+    });
+    const fb = wrap.querySelector('.term-pick-feedback');
+    if (fb) fb.classList.remove('show');
+  });
+  resetFill();
+  buildSort();
+}
+</script>
+</body>
+</html>
