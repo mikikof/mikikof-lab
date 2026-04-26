@@ -2,7 +2,17 @@
 
 > 本ファイルは **mikikof-lab モノレポ配下の essays/ ツール専用の指示書**です。ルートの `mikikof-lab/CLAUDE.md` からここへ誘導される構造になっています。コラム系の依頼が来たら、本ドキュメントの手順にしたがって作業してください。
 
-Claude Code は、ユーザーから渡された素材(PDF・URL・スライド・画像・テキスト)を読み解き、「法の二大系統」サイトと同水準のビジュアル・エッセイを量産してください。
+Claude Code は、ユーザーから渡された素材(PDF・URL・スライド・画像・テキスト)を読み解き、最新の凍結リファレンス [`skills/visual-essay/examples/meme-coin-and-value.html`](skills/visual-essay/examples/meme-coin-and-value.html) と同水準のビジュアル・エッセイを量産してください。
+
+---
+
+## 必読ファイル(コードに触る前に必ず目を通す)
+
+新しい記事を起こす・既存を改稿するときは、本ファイル(CLAUDE.md)に加え、以下の二つを**必ず**読んでください。レイアウト・ナビゲーション・部品の最新標準は、すべてそちらで定義しています。本ファイルだけ読んで書き始めると、毎回デザイン規約が揺れて量産の意味がなくなります。
+
+1. [`skills/visual-essay/SKILL.md`](skills/visual-essay/SKILL.md) — 技術仕様(寸法・ナビゲーション・0章・落とし穴)
+2. [`skills/visual-essay/components.md`](skills/visual-essay/components.md) — 部品カタログ(コピー&ペースト可能な HTML/CSS)
+3. [`skills/visual-essay/examples/meme-coin-and-value.html`](skills/visual-essay/examples/meme-coin-and-value.html) — 凍結リファレンス。迷ったらここへ戻る
 
 ---
 
@@ -99,13 +109,18 @@ whisper /mnt/user-data/uploads/MEMO.m4a --language ja --model small
 | 単一概念の深掘り(例: 「対数とは何か」) | **3章** + 導入 + 結び |
 | 歴史の流れや比較を伴う題材(例: 「大陸法vs英米法」) | **5章** が標準 |
 | 多層的・学際的題材(例: 「量子コンピュータと社会」) | **7章**まで拡張可 |
+| 専門題材で前提知識の解説が必要(例: 「暗号資産とミームコイン」) | **0章プレリュード + 5章 = 6章** |
 
 章数に関係なく、記事には次のブロックを必ず含めること:
 
 1. **ヒーロー**(タイトル + リード文 + スクロール誘導)
-2. **本編の各章**(章番号・タイトル・英訳・リード・本文 + ビジュアル要素)
-3. **参考文献**(記事末尾。後述)
-4. **フッター**(記事タイトルと「← 記事一覧へ戻る」リンク)
+2. **目次セクション(`.toc-section`)**(ヒーロー直後・必須)
+3. **デスクトップ固定サイドレール(`.rail`)** + **モバイルドロワー(`.m-drawer`)**(必須)
+4. **本編の各章**(章番号・タイトル・英訳・リード・本文 + ビジュアル要素)
+5. **参考文献**(記事末尾。後述)
+6. **フッター**(記事タイトルと「← 記事一覧へ戻る」リンク)
+
+ヒーロー直下の目次・サイドレール・モバイルドロワーの三点は[`skills/visual-essay/SKILL.md`](skills/visual-essay/SKILL.md) §3 で詳細を定義しています。0章プレリュードの設計原則は同 §4-2 を参照。
 
 ### 章立ての良い例
 
@@ -161,7 +176,19 @@ bash scripts/new-article.sh "civil-vs-common-law" "法の二大系統"
 
 ## 6. デザイン・レイアウトの固定ルール
 
-**指示がない限り、`templates/base.html` のデザインを一切崩さないこと**。崩していいのは以下の1点のみです。
+**指示がない限り、`templates/base.html` のデザインと[`skills/visual-essay/SKILL.md`](skills/visual-essay/SKILL.md) §2 の固定値を一切崩さないこと**。崩していいのは以下の1点のみです。
+
+### 6-0. レイアウトの基本骨格(2026年4月以降の標準)
+
+- チャプターは `max-width: 920px` の単一カラムを画面中央に配置
+- ヘッダ系(キッカー・タイトル・サブタイトル・リード)は中央揃え
+- 本文段落は読みやすさのため左揃え、ただしカラム自体は中央寄せ
+- ヒーロー直下に `.toc-section`(必須)
+- ビューポート ≥1180px で `.rail`(サイドレール)を表示
+- ビューポート <1180px で `.m-menu-btn` + `.m-drawer`(モバイルドロワー)
+- IntersectionObserver で現在章を `.active` 化(JS は components.md §10 から)
+
+詳細寸法と部品の HTML/CSS は [`skills/visual-essay/components.md`](skills/visual-essay/components.md) を参照。
 
 ### 6-1. 変えていいもの: 配色テーマ
 
@@ -336,6 +363,8 @@ bash scripts/check.sh articles/{slug}/index.html
 - [ ] CSS変数(配色)がパレットから正しく選ばれている
 - [ ] モバイル表示(幅600px)でも破綻しない(メディアクエリ確認)
 - [ ] 記事タイトルが `<title>` タグと `<h1>` で一致している
+
+ナビゲーション系の追加チェックリストは [`skills/visual-essay/SKILL.md`](skills/visual-essay/SKILL.md) §7 にあります。デスクトップではサイドレールがスクロールに追従するか、モバイルではドロワーが下から開いて自動で閉じるかを、必ず実機で確認してください。
 
 ---
 

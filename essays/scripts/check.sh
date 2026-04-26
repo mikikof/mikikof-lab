@@ -123,9 +123,9 @@ else
   REF_ITEMS=$(python3 -c "
 import re
 with open('$FILE') as f: c = f.read()
-m = re.search(r'<ol class=\"refs-list\">(.*?)</ol>', c, re.DOTALL)
+m = re.search(r'<ol[^>]*class=\"[^\"]*refs-list[^\"]*\"[^>]*>(.*?)</ol>', c, re.DOTALL)
 if m:
-    print(len(re.findall(r'<li>', m.group(1))))
+    print(len(re.findall(r'<li\b', m.group(1))))
 else:
     print(0)
 ")
