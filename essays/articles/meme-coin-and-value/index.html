@@ -1,0 +1,2027 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>価値はどこから来るのか — 暗号資産とミームコインの解剖 — Visual Essay</title>
+<meta name="description" content="ブロックチェーンの仕組みから、Dogecoin・SHIB・TRUMP・SANAEまで。暗号資産は本当に通貨なのか、合法性と詐欺の境界はどこにあるのかを六章でたどる。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400;1,9..144,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* ============ BACKGROUND PALETTE (common) ============ */
+  --bg: #f7fafd;
+  --bg-card: #ffffff;
+  --bg-soft: #eff4fb;
+  --bg-tint: #e0ecf9;
+  --bg-deep: #0a2540;
+  --bg-wash: #dce8f6;
+
+  /* ============ ACCENT PRIMARY: Charcoal ============ */
+  --accent-primary-deep: #1a1d22;
+  --accent-primary: #2e343e;
+  --accent-primary-bright: #545b68;
+  --accent-primary-light: #8a92a0;
+  --accent-primary-pale: #d5d8de;
+  --accent-primary-wash: #ededef;
+
+  /* ============ ACCENT SECONDARY: Gold ============ */
+  --accent-secondary-deep: #6b4f00;
+  --accent-secondary: #b28a1c;
+  --accent-secondary-bright: #dbab2b;
+  --accent-secondary-light: #e6c25e;
+  --accent-secondary-pale: #f3e3b4;
+  --accent-secondary-wash: #f8efd3;
+
+  /* ============ NEUTRALS ============ */
+  --ink: #0b1424;
+  --text: #1a2541;
+  --mute: #5b6a82;
+  --mute-soft: #8594ae;
+  --line: #d6e0ee;
+  --line-soft: #e8edf5;
+  --warn: #b54316;
+
+  /* ============ UTILITY ============ */
+  --gold: #f4b93a;
+  --white: #ffffff;
+
+  --f-jp-display: 'Zen Old Mincho', 'Noto Serif JP', serif;
+  --f-jp-body: 'Zen Kaku Gothic New', 'Hiragino Sans', sans-serif;
+  --f-la-display: 'Fraunces', 'Playfair Display', Georgia, serif;
+  --f-la-body: 'DM Sans', system-ui, sans-serif;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--f-jp-body);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 2.0;
+  letter-spacing: 0.025em;
+  font-feature-settings: 'palt' 1;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  position: relative;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(circle at 1px 1px, rgba(46,52,62,0.06) 1px, transparent 0);
+  background-size: 28px 28px;
+}
+::selection { background: var(--accent-secondary); color: var(--ink); }
+a { color: inherit; text-decoration: none; }
+
+/* ============ TOP NAV ============ */
+.topnav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 1.1rem 2.5rem;
+  background: rgba(247, 250, 253, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.4s var(--ease);
+}
+.topnav.hidden { transform: translateY(-100%); }
+.topnav-brand { display: flex; align-items: baseline; gap: 0.75rem; }
+.topnav-mark {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1.25rem;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+}
+.topnav-sub {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--mute);
+  letter-spacing: 0.05em;
+}
+.topnav-back {
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mute);
+  transition: color 0.25s var(--ease);
+}
+.topnav-back:hover { color: var(--accent-secondary); }
+
+/* ============ HERO ============ */
+.hero {
+  min-height: 100vh;
+  padding: 8rem 2rem 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.hero-kicker {
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--accent-secondary-deep);
+  margin-bottom: 3rem;
+  display: flex; align-items: center; gap: 1rem;
+  animation: fadeUp 1.1s var(--ease-out) 0.1s both;
+}
+.hero-kicker::before, .hero-kicker::after {
+  content: '';
+  width: 36px; height: 1px;
+  background: var(--accent-secondary);
+}
+.hero-title {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: clamp(2.75rem, 8vw, 6.4rem);
+  letter-spacing: 0.04em;
+  line-height: 1.05;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 2.25rem;
+  animation: fadeUp 1.3s var(--ease-out) 0.3s both;
+}
+.hero-title .pop {
+  color: var(--accent-secondary-deep);
+  font-style: normal;
+  position: relative;
+  display: inline-block;
+}
+.hero-title .pop::after {
+  content: '';
+  position: absolute;
+  left: -4%;
+  bottom: 0.08em;
+  width: 108%;
+  height: 0.14em;
+  background: var(--gold);
+  z-index: -1;
+  opacity: 0.55;
+}
+.hero-sub {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.05rem, 2vw, 1.5rem);
+  color: var(--accent-primary);
+  letter-spacing: 0.02em;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  animation: fadeUp 1.3s var(--ease-out) 0.5s both;
+}
+.hero-sub .x {
+  margin: 0 0.5em;
+  color: var(--accent-secondary-deep);
+  font-style: normal;
+  font-weight: 800;
+}
+.hero-lede {
+  max-width: 660px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 2.15;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 4rem;
+  animation: fadeUp 1.3s var(--ease-out) 0.7s both;
+}
+.hero-lede strong {
+  font-weight: 500;
+  color: var(--accent-primary-deep);
+  border-bottom: 2px solid var(--accent-secondary-pale);
+  padding: 0 0.1em;
+}
+.scroll-cue {
+  position: absolute;
+  bottom: 2.5rem; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.85rem;
+  font-family: var(--f-la-body);
+  font-size: 0.7rem; font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--mute);
+  animation: fadeUp 1.3s var(--ease-out) 1.1s both;
+}
+.scroll-cue::after {
+  content: '';
+  width: 1px; height: 48px;
+  background: linear-gradient(to bottom, var(--mute), transparent);
+  animation: scrollBar 2.2s var(--ease) infinite;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scrollBar {
+  0% { transform: scaleY(0); transform-origin: top; opacity: 0.3; }
+  40% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+  60% { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
+  100% { transform: scaleY(0); transform-origin: bottom; opacity: 0.3; }
+}
+
+/* ============ CHAPTER BASE ============ */
+.chapter {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 7rem 2rem 5rem;
+  position: relative;
+}
+.ch-kicker {
+  display: flex; align-items: baseline; gap: 1.25rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+.ch-num {
+  font-family: var(--f-la-display);
+  font-style: italic; font-weight: 400;
+  font-size: 1.3rem;
+  color: var(--accent-secondary-deep);
+  letter-spacing: 0.02em;
+}
+.ch-cat {
+  font-family: var(--f-la-body);
+  font-size: 0.75rem; font-weight: 500;
+  letter-spacing: 0.4em; text-transform: uppercase;
+  color: var(--mute);
+  padding-left: 1.25rem;
+  border-left: 1px solid var(--line);
+}
+.ch-title {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: clamp(2.1rem, 4.8vw, 3.4rem);
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  color: var(--ink);
+  margin-bottom: 0.85rem;
+  display: flex; align-items: baseline; gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  text-align: center;
+}
+.ch-title .en {
+  font-family: var(--f-la-display);
+  font-style: italic; font-weight: 400;
+  font-size: 0.38em;
+  color: var(--mute-soft);
+  letter-spacing: 0.03em;
+}
+.ch-subtitle {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.08rem;
+  letter-spacing: 0.1em;
+  color: var(--accent-secondary-deep);
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--line);
+  text-align: center;
+}
+.ch-lede {
+  max-width: 780px;
+  font-size: 1.18rem; font-weight: 500;
+  line-height: 2.2;
+  color: var(--ink);
+  margin: 0 auto 4rem;
+  text-align: center;
+}
+.ch-lede strong {
+  font-weight: 500;
+  color: var(--ink);
+  background: linear-gradient(transparent 62%, var(--gold) 62%, var(--gold) 88%, transparent 88%);
+  background-size: 100% 100%;
+  padding: 0 0.1em;
+}
+.ch-lede em {
+  font-style: normal;
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  color: var(--accent-primary-deep);
+  letter-spacing: 0.03em;
+}
+.ch-body { max-width: 780px; margin: 0 auto; }
+.ch-body p {
+  font-size: 1.05rem; font-weight: 500;
+  line-height: 2.1;
+  margin-bottom: 1.75rem;
+  color: var(--ink);
+}
+.ch-body p strong {
+  font-weight: 700;
+  color: var(--ink);
+}
+.ch-body p em {
+  font-style: normal;
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  color: var(--accent-primary-deep);
+  background: linear-gradient(transparent 65%, var(--accent-secondary-pale) 65%);
+  padding: 0 0.15em;
+}
+.ch-body .interlude {
+  margin: 2.5rem 0 1.5rem;
+  padding: 1rem 0 0;
+  border-top: 1px dashed var(--line);
+  font-family: var(--f-la-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent-secondary-deep);
+}
+
+blockquote.cite {
+  margin: 2.5rem 0;
+  padding: 1.5rem 2rem;
+  background: var(--bg-card);
+  border-left: 4px solid var(--accent-primary);
+  border-radius: 0 4px 4px 0;
+  font-family: var(--f-jp-display);
+  font-weight: 500;
+  font-size: 1.08rem;
+  line-height: 1.95;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+blockquote.cite footer {
+  margin-top: 0.75rem;
+  font-family: var(--f-la-body);
+  font-size: 0.85rem;
+  color: var(--mute);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+/* ============ DIAGRAMS ============ */
+.dgm {
+  margin: 3rem auto;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 2rem 2rem 1.6rem;
+  max-width: 920px;
+}
+.dgm-head {
+  margin-bottom: 1.4rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.dgm-kicker {
+  font-family: var(--f-la-body);
+  font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--accent-secondary);
+  margin-bottom: 0.4rem;
+}
+.dgm-title {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--ink);
+  letter-spacing: 0.06em;
+}
+.dgm-svg-wrap {
+  width: 100%;
+  background: var(--bg);
+  border-radius: 3px;
+  padding: 1.2rem 0.5rem;
+}
+.dgm-svg-wrap svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.dgm-caption {
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  line-height: 1.85;
+  color: var(--mute);
+}
+.dgm-caption strong {
+  color: var(--accent-primary-deep);
+  font-weight: 700;
+}
+
+.svg-label { font-family: 'Zen Kaku Gothic New', sans-serif; font-weight: 700; font-size: 13px; fill: #0b1424; }
+.svg-sub { font-family: 'Zen Kaku Gothic New', sans-serif; font-weight: 500; font-size: 11px; fill: #5b6a82; }
+.svg-en { font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 11px; fill: #5b6a82; }
+.svg-stroke-dim { fill: none; stroke: #d6e0ee; stroke-width: 1.2; }
+.svg-fill-pale { fill: #ededef; }
+.svg-fill-card { fill: #ffffff; stroke: #d6e0ee; stroke-width: 1; }
+.svg-fill-prim { fill: #2e343e; }
+
+/* Lineage timeline (Ch.II) */
+.timeline {
+  margin: 3rem 0;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 2.25rem 2rem;
+}
+.tl-head { margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--line-soft); }
+.tl-kicker { font-family: var(--f-la-body); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.4em; text-transform: uppercase; color: var(--accent-secondary); margin-bottom: 0.4rem; }
+.tl-title { font-family: var(--f-jp-display); font-weight: 700; font-size: 1.1rem; color: var(--ink); letter-spacing: 0.06em; }
+.tl-list { list-style: none; }
+.tl-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 1.5rem;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--line-soft);
+  align-items: start;
+}
+.tl-row:last-child { border-bottom: none; }
+.tl-year {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.6rem;
+  color: var(--accent-secondary-deep);
+  line-height: 1;
+}
+.tl-year-sub {
+  display: block;
+  font-family: var(--f-la-body);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 0.7rem;
+  color: var(--mute);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-top: 0.4rem;
+}
+.tl-name {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--ink);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.35rem;
+}
+.tl-name .romaji {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.8em;
+  color: var(--mute);
+  margin-left: 0.5em;
+}
+.tl-detail {
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: var(--text);
+}
+.tl-stat {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.2rem 0.65rem;
+  background: var(--accent-secondary-wash);
+  border: 1px solid var(--accent-secondary-pale);
+  border-radius: 999px;
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  color: var(--accent-secondary-deep);
+  letter-spacing: 0.04em;
+}
+
+/* Three-tier legality (Ch.V) */
+.tier {
+  margin: 3rem 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+}
+.tier-row {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--mute);
+  border-radius: 0 3px 3px 0;
+  padding: 1.4rem 1.6rem;
+}
+.tier-row.legal { border-left-color: #1f6148; }
+.tier-row.gray { border-left-color: var(--accent-secondary); }
+.tier-row.illegal { border-left-color: var(--warn); }
+.tier-head {
+  display: flex; align-items: baseline; gap: 1rem; margin-bottom: 0.5rem;
+}
+.tier-label {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1.1rem;
+  color: var(--ink);
+  letter-spacing: 0.1em;
+}
+.tier-en {
+  font-family: var(--f-la-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+.tier-body {
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: var(--text);
+}
+.tier-body strong { color: var(--accent-primary-deep); font-weight: 700; }
+
+/* Pull-quote */
+.pull-quote {
+  margin: 3.5rem 0;
+  padding: 2rem 2.25rem;
+  background: var(--bg-card);
+  border-left: 4px solid var(--accent-secondary);
+  border-radius: 0 4px 4px 0;
+  position: relative;
+}
+.pull-quote::before {
+  content: '\201C';
+  position: absolute;
+  top: -0.3rem; left: 1rem;
+  font-family: var(--f-la-display);
+  font-size: 3.5rem; line-height: 1;
+  color: var(--accent-secondary);
+  opacity: 0.35;
+  font-weight: 800;
+}
+.pull-quote p {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1.95;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  margin-bottom: 0;
+}
+.pull-quote .attribution {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--mute);
+  margin-top: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+/* ============ REFERENCES ============ */
+.refs {
+  max-width: 820px;
+  margin: 6rem auto 2rem;
+  padding: 3rem 2.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.refs-head {
+  font-family: var(--f-la-body);
+  font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--mute);
+  margin-bottom: 1.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.refs-list { list-style: none; counter-reset: ref; }
+.refs-list li {
+  counter-increment: ref;
+  padding-left: 2.5rem;
+  position: relative;
+  margin-bottom: 1.25rem;
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: var(--ink);
+}
+.refs-list li::before {
+  content: '[' counter(ref) ']';
+  position: absolute; left: 0; top: 0.1rem;
+  font-family: var(--f-la-display);
+  font-style: italic; font-weight: 600;
+  color: var(--accent-secondary);
+}
+.ref-author { font-weight: 700; }
+.ref-title { margin-left: 0.3em; }
+.ref-meta {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--mute);
+  font-family: var(--f-la-body);
+  margin-top: 0.2rem;
+  letter-spacing: 0.01em;
+}
+.ref-meta a { color: var(--accent-secondary-deep); text-decoration: underline; word-break: break-all; }
+.refs-note {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line-soft);
+  font-size: 0.85rem;
+  color: var(--mute);
+  line-height: 1.8;
+  font-weight: 400;
+}
+
+/* ============ FOOTER ============ */
+.footer {
+  border-top: 1px solid var(--line);
+  background: var(--bg-soft);
+  margin-top: 4rem;
+  padding: 5rem 2rem 3rem;
+  text-align: center;
+}
+.footer-mark {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 2.5rem;
+  letter-spacing: 0.15em;
+  color: var(--ink);
+  margin-bottom: 0.75rem;
+}
+.footer-tag {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--mute);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.02em;
+}
+.footer-back {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.6rem 1.5rem;
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--mute);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  transition: all 0.25s var(--ease);
+}
+.footer-back:hover {
+  color: var(--ink);
+  border-color: var(--accent-secondary);
+}
+
+/* ============ TOC SECTION ============ */
+.toc-section {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 6rem 2rem 7rem;
+}
+.toc-kicker {
+  font-family: var(--f-la-body);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--accent-secondary-deep);
+  text-align: center;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+.toc-kicker::before, .toc-kicker::after {
+  content: '';
+  width: 36px; height: 1px;
+  background: var(--accent-secondary);
+}
+.toc-title {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  letter-spacing: 0.1em;
+  text-align: center;
+  color: var(--ink);
+  margin-bottom: 0.6rem;
+}
+.toc-title .en {
+  display: block;
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.55em;
+  letter-spacing: 0.04em;
+  color: var(--mute-soft);
+  margin-top: 0.4rem;
+}
+.toc-note {
+  font-family: var(--f-jp-body);
+  font-size: 0.92rem;
+  text-align: center;
+  color: var(--mute);
+  margin-bottom: 3.25rem;
+}
+.toc-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.1rem;
+}
+.toc-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1.4rem;
+  align-items: center;
+  padding: 1.4rem 1.6rem;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.32s var(--ease), box-shadow 0.32s var(--ease), border-color 0.32s var(--ease);
+}
+.toc-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--accent-secondary);
+  transform: scaleY(0);
+  transform-origin: top center;
+  transition: transform 0.32s var(--ease);
+}
+.toc-card:hover {
+  border-color: var(--accent-secondary-pale);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 32px -18px rgba(178,138,28,0.45);
+}
+.toc-card:hover::before { transform: scaleY(1); }
+.toc-num {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 2.4rem;
+  line-height: 1;
+  color: var(--accent-secondary-deep);
+  letter-spacing: 0.02em;
+}
+.toc-text-title {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  margin-bottom: 0.25rem;
+}
+.toc-text-sub {
+  font-family: var(--f-jp-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--mute);
+  letter-spacing: 0.04em;
+  line-height: 1.55;
+}
+.toc-arrow {
+  font-family: var(--f-la-display);
+  font-size: 1.3rem;
+  color: var(--mute-soft);
+  transition: transform 0.32s var(--ease), color 0.32s var(--ease);
+}
+.toc-card:hover .toc-arrow {
+  color: var(--accent-secondary-deep);
+  transform: translateX(4px);
+}
+
+/* ============ SIDE RAIL (desktop) ============ */
+.rail {
+  position: fixed;
+  left: 1.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 90;
+  display: none;
+}
+.rail-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  position: relative;
+}
+.rail-list::before {
+  content: '';
+  position: absolute;
+  left: 13px;
+  top: 14px;
+  bottom: 14px;
+  width: 1px;
+  background: var(--line);
+  z-index: 0;
+}
+.rail-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.25rem 0;
+  position: relative;
+  z-index: 1;
+}
+.rail-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 0.74rem;
+  color: var(--mute);
+  letter-spacing: 0.02em;
+  transition: all 0.32s var(--ease);
+}
+.rail-title {
+  font-family: var(--f-jp-body);
+  font-weight: 500;
+  font-size: 0.78rem;
+  color: var(--ink);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.28s var(--ease), transform 0.28s var(--ease);
+  pointer-events: none;
+  background: rgba(247, 250, 253, 0.9);
+  backdrop-filter: blur(6px);
+  padding: 0.1rem 0.5rem;
+  border-radius: 2px;
+}
+.rail:hover .rail-title { opacity: 1; transform: translateX(0); }
+.rail-item.active .rail-num {
+  background: var(--accent-secondary);
+  color: #fff;
+  border-color: var(--accent-secondary);
+  transform: scale(1.08);
+}
+.rail-item.active .rail-title {
+  opacity: 1;
+  transform: translateX(0);
+  color: var(--accent-secondary-deep);
+  font-weight: 700;
+}
+@media (min-width: 1180px) {
+  .rail { display: block; }
+}
+
+/* ============ MOBILE MENU BUTTON + DRAWER ============ */
+.m-menu-btn {
+  position: fixed;
+  bottom: 1.4rem;
+  right: 1.4rem;
+  z-index: 95;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent-primary);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 10px 28px -10px rgba(46,52,62,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+  transition: background 0.25s var(--ease), transform 0.25s var(--ease);
+}
+.m-menu-btn:hover { background: var(--accent-secondary); transform: scale(1.05); }
+.m-menu-btn span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+}
+@media (min-width: 1180px) { .m-menu-btn { display: none; } }
+
+.m-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(11, 20, 36, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s var(--ease);
+}
+.m-drawer.open { opacity: 1; pointer-events: auto; }
+.m-drawer-panel {
+  width: 100%;
+  max-height: 82vh;
+  background: var(--bg);
+  border-radius: 14px 14px 0 0;
+  padding: 1.5rem 1.25rem 2.5rem;
+  overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform 0.34s var(--ease);
+  box-shadow: 0 -10px 40px -10px rgba(11,20,36,0.3);
+}
+.m-drawer.open .m-drawer-panel { transform: translateY(0); }
+.m-drawer-handle {
+  width: 40px; height: 4px;
+  background: var(--line);
+  border-radius: 2px;
+  margin: 0 auto 1.25rem;
+}
+.m-drawer-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0 0.5rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.m-drawer-title {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+}
+.m-drawer-title .en {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.7rem;
+  color: var(--mute);
+  margin-left: 0.6rem;
+  letter-spacing: 0.06em;
+}
+.m-drawer-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--mute);
+  cursor: pointer;
+  line-height: 1;
+  padding: 0.25rem 0.5rem;
+}
+.m-drawer-list {
+  list-style: none;
+}
+.m-drawer-list a {
+  display: grid;
+  grid-template-columns: 52px 1fr auto;
+  gap: 0.85rem;
+  padding: 1rem 0.5rem;
+  border-bottom: 1px solid var(--line-soft);
+  align-items: center;
+}
+.m-drawer-list a:last-child { border-bottom: none; }
+.md-num {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.6rem;
+  color: var(--accent-secondary-deep);
+  line-height: 1;
+}
+.md-title {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--ink);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.15rem;
+}
+.md-sub {
+  font-family: var(--f-jp-body);
+  font-size: 0.78rem;
+  color: var(--mute);
+  letter-spacing: 0.03em;
+  line-height: 1.55;
+}
+.md-arrow {
+  font-family: var(--f-la-display);
+  font-size: 1.1rem;
+  color: var(--mute-soft);
+}
+.m-drawer-list a.active .md-num,
+.m-drawer-list a.active .md-title { color: var(--accent-secondary-deep); }
+.m-drawer-list a.active .md-arrow { color: var(--accent-secondary-deep); }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 960px) {
+  .topnav { padding: 0.9rem 1.25rem; }
+  .chapter { padding: 5rem 1.25rem 3.5rem; }
+  .dgm { padding: 1.5rem 1rem 1.2rem; }
+  .timeline { padding: 1.75rem 1.25rem; }
+  .tl-row { grid-template-columns: 80px 1fr; gap: 1rem; }
+  .pull-quote { margin: 2.5rem 0; padding: 1.6rem 1.4rem; }
+  .pull-quote p { font-size: 1.05rem; }
+  .refs { padding: 2rem 1.5rem; }
+}
+@media (max-width: 760px) {
+  .toc-section { padding: 4rem 1.25rem 5rem; }
+  .toc-list { grid-template-columns: 1fr; gap: 0.75rem; }
+  .toc-card { padding: 1.1rem 1.25rem; gap: 1rem; }
+  .toc-num { font-size: 1.9rem; }
+  .toc-text-title { font-size: 1rem; }
+  .toc-text-sub { font-size: 0.78rem; }
+}
+@media (max-width: 600px) {
+  body { font-size: 15px; }
+  .hero-title { font-size: 2.4rem; }
+  .ch-title { font-size: 1.85rem; }
+  .ch-lede { font-size: 1.05rem; }
+  .ch-body p { font-size: 0.98rem; }
+  .tl-row { grid-template-columns: 1fr; gap: 0.4rem; }
+  .tl-year { font-size: 1.3rem; }
+  .m-menu-btn { width: 50px; height: 50px; bottom: 1rem; right: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav" id="topnav">
+  <div class="topnav-brand">
+    <span class="topnav-mark">価</span>
+    <span class="topnav-sub">a visual essay</span>
+  </div>
+  <a href="../../" class="topnav-back">← all articles</a>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="hero-kicker">経済 · 法 · 情報 / 2026</div>
+
+  <h1 class="hero-title">
+    価値は、<br>
+    どこから<span class="pop">来る</span>のか
+  </h1>
+
+  <div class="hero-sub">Distributed Ledger<span class="x">×</span>Speculative Memes</div>
+
+  <p class="hero-lede">
+    日本の首相の名前を冠した暗号資産が、本人の知らないうちに発行され、数時間で<strong>暴落</strong>しました。<br>
+    同じ仕組みの上で、こうしたトークンが日々量産されています。<br>
+    暗号資産の仕組みから、合法性と詐欺の境界まで、<strong>六章</strong>で順に整理します。
+  </p>
+
+  <div class="scroll-cue">scroll</div>
+</section>
+
+<!-- ==================== TABLE OF CONTENTS ==================== -->
+<section class="toc-section" id="contents">
+  <div class="toc-kicker">Contents · 目次</div>
+  <h2 class="toc-title">六章で読む<span class="en">in six chapters</span></h2>
+  <p class="toc-note">気になる章から読み始めても、最初から順に追ってもかまいません。</p>
+  <ol class="toc-list">
+    <li>
+      <a href="#ch0" class="toc-card">
+        <span class="toc-num">00</span>
+        <span>
+          <span class="toc-text-title">暗号資産とは何か</span>
+          <span class="toc-text-sub">帳簿、鍵、ブロックという三つの基本</span>
+        </span>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+    <li>
+      <a href="#ch1" class="toc-card">
+        <span class="toc-num">01</span>
+        <span>
+          <span class="toc-text-title">ブロックチェーンの三世代</span>
+          <span class="toc-text-sub">ビットコイン、イーサリアム、Solana</span>
+        </span>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+    <li>
+      <a href="#ch2" class="toc-card">
+        <span class="toc-num">02</span>
+        <span>
+          <span class="toc-text-title">ミームコインの系譜</span>
+          <span class="toc-text-sub">犬の写真から首相の名前まで</span>
+        </span>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+    <li>
+      <a href="#ch3" class="toc-card">
+        <span class="toc-num">03</span>
+        <span>
+          <span class="toc-text-title">なぜ値段がつくのか</span>
+          <span class="toc-text-sub">内在価値という考え方</span>
+        </span>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+    <li>
+      <a href="#ch4" class="toc-card">
+        <span class="toc-num">04</span>
+        <span>
+          <span class="toc-text-title">通貨として使えるのか</span>
+          <span class="toc-text-sub">お金が満たすべき三つの役割</span>
+        </span>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+    <li>
+      <a href="#ch5" class="toc-card">
+        <span class="toc-num">05</span>
+        <span>
+          <span class="toc-text-title">合法と違法の境界</span>
+          <span class="toc-text-sub">早苗トークンを材料に</span>
+        </span>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+  </ol>
+</section>
+
+<!-- ==================== SIDE RAIL (desktop) ==================== -->
+<aside class="rail" id="rail" aria-label="目次ナビゲーション">
+  <ol class="rail-list">
+    <li><a href="#ch0" class="rail-item" data-ch="0"><span class="rail-num">00</span><span class="rail-title">暗号資産とは何か</span></a></li>
+    <li><a href="#ch1" class="rail-item" data-ch="1"><span class="rail-num">01</span><span class="rail-title">ブロックチェーンの三世代</span></a></li>
+    <li><a href="#ch2" class="rail-item" data-ch="2"><span class="rail-num">02</span><span class="rail-title">ミームコインの系譜</span></a></li>
+    <li><a href="#ch3" class="rail-item" data-ch="3"><span class="rail-num">03</span><span class="rail-title">なぜ値段がつくのか</span></a></li>
+    <li><a href="#ch4" class="rail-item" data-ch="4"><span class="rail-num">04</span><span class="rail-title">通貨として使えるのか</span></a></li>
+    <li><a href="#ch5" class="rail-item" data-ch="5"><span class="rail-num">05</span><span class="rail-title">合法と違法の境界</span></a></li>
+  </ol>
+</aside>
+
+<!-- ==================== CHAPTER 0 ==================== -->
+<section class="chapter" id="ch0">
+  <div class="ch-kicker">
+    <span class="ch-num">00</span>
+    <span class="ch-cat">Prelude · Basics</span>
+  </div>
+  <h2 class="ch-title">暗号資産とは何か <span class="en">What is a crypto asset?</span></h2>
+  <div class="ch-subtitle">帳簿、鍵、ブロックという三つの基本</div>
+
+  <p class="ch-lede">
+    暗号資産の話を始める前に、まず<em>お金そのもの</em>を少しだけ疑ってみます。私たちが千円札を信じているのは、紙そのものに価値があるからではありません。銀行や国家が「あなたは千円分を持っている」と<strong>記録してくれている</strong>からです。暗号資産という発明は、その記録の方法を組み替えたものに過ぎません。
+  </p>
+
+  <div class="ch-body">
+    <p>
+      銀行口座の残高は、紙幣として金庫に積まれているわけではありません。実態は、銀行のサーバーに記録された「あなた:1,234,567円」という一行のデータです。私たちはそのデータが正しく管理され、改ざんされていないことを信じてお金として使っています。お金とは、誰かが管理する<em>帳簿のなかの数字</em>なのです。
+    </p>
+
+    <p>
+      ここで重要なのは、その帳簿を<strong>誰が</strong>管理しているかという点です。日本円なら最終的には日本銀行と民間銀行が記録し、国家がその信用を裏打ちします。中央集権型と呼ばれるこの仕組みでは、管理者が間違えたり、預金封鎖や口座凍結を行ったりすれば、私たちのお金は事実上消えます。アルゼンチンで何度も起きた預金封鎖や、ロシアが SWIFT から切り離された2022年の出来事は、その極端な事例です。
+    </p>
+
+    <p>
+      暗号資産が登場する直前の2008年、リーマン・ショックで世界中の人々がこの問題に直面しました。銀行という管理者がそもそも信用できないのなら、誰の帳簿を信じればよいのか。この問いに対するひとつの答えとして、サトシ・ナカモトを名乗る誰かが論文を発表します。「中央の管理者を置かず、参加者全員が同じ帳簿のコピーを持ち合う」という提案でした。
+    </p>
+
+    <!-- DIAGRAM 1: Centralized vs Distributed -->
+    <div class="dgm">
+      <div class="dgm-head">
+        <div class="dgm-kicker">Diagram 01 / 帳簿の二つのモデル</div>
+        <div class="dgm-title">中央集権モデルと、分散モデル</div>
+      </div>
+      <div class="dgm-svg-wrap">
+        <svg viewBox="0 0 880 360" preserveAspectRatio="xMidYMid meet" role="img" aria-label="銀行モデルと分散台帳モデルの比較図">
+          <g transform="translate(40,20)">
+            <text x="180" y="18" text-anchor="middle" class="svg-label">中央集権モデル(銀行)</text>
+            <text x="180" y="34" text-anchor="middle" class="svg-en">centralized</text>
+            <g class="svg-fill-pale" stroke="#8a92a0" stroke-width="1">
+              <circle cx="180" cy="80"  r="16"/>
+              <circle cx="290" cy="130" r="16"/>
+              <circle cx="290" cy="240" r="16"/>
+              <circle cx="180" cy="290" r="16"/>
+              <circle cx="70"  cy="240" r="16"/>
+              <circle cx="70"  cy="130" r="16"/>
+            </g>
+            <g class="svg-stroke-dim">
+              <line x1="180" y1="96"  x2="180" y2="170"/>
+              <line x1="276" y1="140" x2="200" y2="180"/>
+              <line x1="276" y1="230" x2="200" y2="200"/>
+              <line x1="180" y1="274" x2="180" y2="210"/>
+              <line x1="84"  y1="230" x2="160" y2="200"/>
+              <line x1="84"  y1="140" x2="160" y2="180"/>
+            </g>
+            <rect x="150" y="170" width="60" height="40" rx="3" class="svg-fill-prim"/>
+            <text x="180" y="195" text-anchor="middle" fill="#fff" font-family="'Zen Old Mincho', serif" font-weight="700" font-size="13">銀行</text>
+            <text x="180" y="335" text-anchor="middle" class="svg-sub">すべての取引は中央を経由</text>
+          </g>
+
+          <g transform="translate(480,20)">
+            <text x="180" y="18" text-anchor="middle" class="svg-label">分散モデル(ブロックチェーン)</text>
+            <text x="180" y="34" text-anchor="middle" class="svg-en">decentralized</text>
+            <g class="svg-stroke-dim">
+              <line x1="180" y1="80"  x2="290" y2="130"/>
+              <line x1="180" y1="80"  x2="290" y2="240"/>
+              <line x1="180" y1="80"  x2="180" y2="290"/>
+              <line x1="180" y1="80"  x2="70"  y2="240"/>
+              <line x1="180" y1="80"  x2="70"  y2="130"/>
+              <line x1="290" y1="130" x2="290" y2="240"/>
+              <line x1="290" y1="130" x2="180" y2="290"/>
+              <line x1="290" y1="130" x2="70"  y2="240"/>
+              <line x1="290" y1="130" x2="70"  y2="130"/>
+              <line x1="290" y1="240" x2="180" y2="290"/>
+              <line x1="290" y1="240" x2="70"  y2="240"/>
+              <line x1="290" y1="240" x2="70"  y2="130"/>
+              <line x1="180" y1="290" x2="70"  y2="240"/>
+              <line x1="180" y1="290" x2="70"  y2="130"/>
+              <line x1="70"  y1="240" x2="70"  y2="130"/>
+            </g>
+            <g>
+              <g transform="translate(180,80)">
+                <circle r="18" fill="#fff" stroke="#b28a1c" stroke-width="2"/>
+                <rect x="-8" y="-7" width="16" height="14" fill="#f8efd3" stroke="#b28a1c" stroke-width="0.6"/>
+                <line x1="-5" y1="-3" x2="5" y2="-3" stroke="#6b4f00" stroke-width="0.8"/>
+                <line x1="-5" y1="0"  x2="5" y2="0"  stroke="#6b4f00" stroke-width="0.8"/>
+                <line x1="-5" y1="3"  x2="5" y2="3"  stroke="#6b4f00" stroke-width="0.8"/>
+              </g>
+              <g transform="translate(290,130)">
+                <circle r="18" fill="#fff" stroke="#b28a1c" stroke-width="2"/>
+                <rect x="-8" y="-7" width="16" height="14" fill="#f8efd3" stroke="#b28a1c" stroke-width="0.6"/>
+                <line x1="-5" y1="-3" x2="5" y2="-3" stroke="#6b4f00" stroke-width="0.8"/>
+                <line x1="-5" y1="0"  x2="5" y2="0"  stroke="#6b4f00" stroke-width="0.8"/>
+                <line x1="-5" y1="3"  x2="5" y2="3"  stroke="#6b4f00" stroke-width="0.8"/>
+              </g>
+              <g transform="translate(290,240)">
+                <circle r="18" fill="#fff" stroke="#b28a1c" stroke-width="2"/>
+                <rect x="-8" y="-7" width="16" height="14" fill="#f8efd3" stroke="#b28a1c" stroke-width="0.6"/>
+                <line x1="-5" y1="-3" x2="5" y2="-3" stroke="#6b4f00" stroke-width="0.8"/>
+                <line x1="-5" y1="0"  x2="5" y2="0"  stroke="#6b4f00" stroke-width="0.8"/>
+                <line x1="-5" y1="3"  x2="5" y2="3"  stroke="#6b4f00" stroke-width="0.8"/>
+              </g>
+              <g transform="translate(180,290)">
+                <circle r="18" fill="#fff" stroke="#b28a1c" stroke-width="2"/>
+                <rect x="-8" y="-7" width="16" height="14" fill="#f8efd3" stroke="#b28a1c" stroke-width="0.6"/>
+                <line x1="-5" y1="-3" x2="5" y2="-3" stroke="#6b4f00" stroke-width="0.8"/>
+                <line x1="-5" y1="0"  x2="5" y2="0"  stroke="#6b4f00" stroke-width="0.8"/>
+                <line x1="-5" y1="3"  x2="5" y2="3"  stroke="#6b4f00" stroke-width="0.8"/>
+              </g>
+              <g transform="translate(70,240)">
+                <circle r="18" fill="#fff" stroke="#b28a1c" stroke-width="2"/>
+                <rect x="-8" y="-7" width="16" height="14" fill="#f8efd3" stroke="#b28a1c" stroke-width="0.6"/>
+                <line x1="-5" y1="-3" x2="5" y2="-3" stroke="#6b4f00" stroke-width="0.8"/>
+                <line x1="-5" y1="0"  x2="5" y2="0"  stroke="#6b4f00" stroke-width="0.8"/>
+                <line x1="-5" y1="3"  x2="5" y2="3"  stroke="#6b4f00" stroke-width="0.8"/>
+              </g>
+              <g transform="translate(70,130)">
+                <circle r="18" fill="#fff" stroke="#b28a1c" stroke-width="2"/>
+                <rect x="-8" y="-7" width="16" height="14" fill="#f8efd3" stroke="#b28a1c" stroke-width="0.6"/>
+                <line x1="-5" y1="-3" x2="5" y2="-3" stroke="#6b4f00" stroke-width="0.8"/>
+                <line x1="-5" y1="0"  x2="5" y2="0"  stroke="#6b4f00" stroke-width="0.8"/>
+                <line x1="-5" y1="3"  x2="5" y2="3"  stroke="#6b4f00" stroke-width="0.8"/>
+              </g>
+            </g>
+            <text x="180" y="335" text-anchor="middle" class="svg-sub">参加者全員が同じ帳簿のコピーを持ち合う</text>
+          </g>
+        </svg>
+      </div>
+      <div class="dgm-caption">
+        左の銀行モデルでは、すべての取引が中央のサーバーを経由します。情報は集約され、効率的ですが、その一点が壊れたり、不正に書き換えられたりすれば全員が困ります。右の分散モデルでは、参加者全員が<strong>同じ帳簿のコピー</strong>を持ち、新しい取引が起きるたびに全員のコピーが同期します。一台が改ざんされても、残り全員のコピーが正しいので、不正は弾かれます。
+      </div>
+    </div>
+
+    <p>
+      ここで素朴な疑問が湧きます。誰でも書き込める帳簿なら、Aさんが「BさんからAさんへ100万円送金された」という嘘の行を勝手に書き加えてしまうのではないか。これを防ぐ仕組みが、ブロックチェーンの本体です。
+    </p>
+
+    <!-- DIAGRAM 2: Block chain -->
+    <div class="dgm">
+      <div class="dgm-head">
+        <div class="dgm-kicker">Diagram 02 / ブロックチェーン</div>
+        <div class="dgm-title">指紋でつながる、改ざん不可能な鎖</div>
+      </div>
+      <div class="dgm-svg-wrap">
+        <svg viewBox="0 0 900 280" preserveAspectRatio="xMidYMid meet" role="img" aria-label="ブロックチェーンの鎖の概念図">
+          <defs>
+            <marker id="arrow1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#2e343e"/>
+            </marker>
+            <marker id="arrowwarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#b54316"/>
+            </marker>
+          </defs>
+
+          <g transform="translate(20,60)">
+            <rect width="160" height="160" rx="3" class="svg-fill-card"/>
+            <rect width="160" height="22" rx="3" fill="#2e343e"/>
+            <text x="80" y="15" text-anchor="middle" fill="#fff" font-family="Fraunces, serif" font-style="italic" font-weight="700" font-size="11">BLOCK #001</text>
+            <text x="12" y="44" class="svg-sub">取引リスト</text>
+            <text x="12" y="62" font-family="DM Sans, sans-serif" font-size="10" fill="#1a2541">A → B  ¥10,000</text>
+            <text x="12" y="78" font-family="DM Sans, sans-serif" font-size="10" fill="#1a2541">C → D  ¥3,500</text>
+            <text x="12" y="94" font-family="DM Sans, sans-serif" font-size="10" fill="#1a2541">E → F  ¥21,200</text>
+            <line x1="12" y1="108" x2="148" y2="108" stroke="#d6e0ee"/>
+            <text x="12" y="126" class="svg-sub">指紋(ハッシュ)</text>
+            <text x="12" y="146" font-family="DM Sans, sans-serif" font-size="10" fill="#6b4f00">a3f9...c12d</text>
+          </g>
+          <line x1="180" y1="140" x2="220" y2="140" stroke="#2e343e" stroke-width="1.5" marker-end="url(#arrow1)"/>
+
+          <g transform="translate(220,60)">
+            <rect width="160" height="160" rx="3" class="svg-fill-card"/>
+            <rect width="160" height="22" rx="3" fill="#2e343e"/>
+            <text x="80" y="15" text-anchor="middle" fill="#fff" font-family="Fraunces, serif" font-style="italic" font-weight="700" font-size="11">BLOCK #002</text>
+            <text x="12" y="44" class="svg-sub">前ブロックの指紋</text>
+            <text x="12" y="62" font-family="DM Sans, sans-serif" font-size="10" fill="#6b4f00">a3f9...c12d ✓</text>
+            <text x="12" y="80" class="svg-sub">取引リスト</text>
+            <text x="12" y="98" font-family="DM Sans, sans-serif" font-size="10" fill="#1a2541">G → H  ¥7,800</text>
+            <text x="12" y="114" font-family="DM Sans, sans-serif" font-size="10" fill="#1a2541">I → J  ¥45,000</text>
+            <line x1="12" y1="124" x2="148" y2="124" stroke="#d6e0ee"/>
+            <text x="12" y="146" font-family="DM Sans, sans-serif" font-size="10" fill="#6b4f00">b21e...4f80</text>
+          </g>
+          <line x1="380" y1="140" x2="420" y2="140" stroke="#2e343e" stroke-width="1.5" marker-end="url(#arrow1)"/>
+
+          <g transform="translate(420,60)">
+            <rect width="160" height="160" rx="3" fill="#fff" stroke="#b54316" stroke-width="2" stroke-dasharray="5 3"/>
+            <rect width="160" height="22" rx="3" fill="#b54316"/>
+            <text x="80" y="15" text-anchor="middle" fill="#fff" font-family="Fraunces, serif" font-style="italic" font-weight="700" font-size="11">BLOCK #003</text>
+            <text x="12" y="44" class="svg-sub" fill="#b54316">前指紋(改ざん検知)</text>
+            <text x="12" y="62" font-family="DM Sans, sans-serif" font-size="10" fill="#b54316">b21e...4f80 ✗</text>
+            <text x="12" y="80" class="svg-sub">取引リスト(書換)</text>
+            <text x="12" y="98" font-family="DM Sans, sans-serif" font-size="10" fill="#b54316">K → A  ¥1,000,000</text>
+            <text x="12" y="114" font-family="DM Sans, sans-serif" font-size="10" fill="#1a2541">L → M  ¥800</text>
+            <line x1="12" y1="124" x2="148" y2="124" stroke="#fde0d0"/>
+            <text x="12" y="146" font-family="DM Sans, sans-serif" font-size="10" fill="#b54316">指紋ずれ</text>
+          </g>
+          <line x1="580" y1="140" x2="620" y2="140" stroke="#b54316" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrowwarn)"/>
+
+          <g transform="translate(620,60)" opacity="0.55">
+            <rect width="160" height="160" rx="3" class="svg-fill-card"/>
+            <rect width="160" height="22" rx="3" fill="#8a92a0"/>
+            <text x="80" y="15" text-anchor="middle" fill="#fff" font-family="Fraunces, serif" font-style="italic" font-weight="700" font-size="11">BLOCK #004</text>
+            <text x="12" y="44" class="svg-sub">前指紋が一致しない</text>
+            <text x="12" y="64" font-family="DM Sans, sans-serif" font-size="10" fill="#b54316">不整合</text>
+            <text x="12" y="84" class="svg-sub">以降、すべて連鎖崩壊</text>
+            <text x="12" y="124" font-family="Fraunces, serif" font-style="italic" font-weight="700" font-size="22" fill="#b54316">✗</text>
+          </g>
+
+          <text x="450" y="260" text-anchor="middle" class="svg-sub">
+            一箇所を書き換えると、それ以降のすべての指紋が連鎖的にずれ、ネットワークに弾かれる
+          </text>
+        </svg>
+      </div>
+      <div class="dgm-caption">
+        取引のリストはまず<strong>ブロック</strong>と呼ばれる箱にまとめられ、それぞれに直前のブロックの内容を要約した<strong>ハッシュ値という指紋</strong>が刻まれます。誰かが過去のあるブロックの中身を1文字でも書き換えると、その指紋が変わり、それ以降のすべてのブロックの指紋もずれて、ネットワーク全体に「あなたの台帳は壊れている」と検知されます。改ざんしたいなら、それ以降の全ブロックを世界中の誰よりも速く書き直す必要があり、現実的に不可能だ、というのが基本的なアイデアです。
+      </div>
+    </div>
+
+    <p>
+      この「次のブロックを書く権利」を獲得するために、世界中のコンピュータが競い合っているのが<em>マイニング</em>です。難しい計算問題を最初に解いた人が次のブロックを書き、報酬として新しいビットコインを受け取ります。電力消費の大きさが批判されるのはこの仕組みのためで、近年は計算競争を伴わない別方式(プルーフ・オブ・ステーク)に移行する暗号資産も増えています。
+    </p>
+
+    <!-- DIAGRAM 3: Wallet & private key -->
+    <div class="dgm">
+      <div class="dgm-head">
+        <div class="dgm-kicker">Diagram 03 / ウォレットの中身</div>
+        <div class="dgm-title">公開鍵 = 口座番号、秘密鍵 = 実印</div>
+      </div>
+      <div class="dgm-svg-wrap">
+        <svg viewBox="0 0 880 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="ウォレットと公開鍵・秘密鍵の概念図">
+          <g transform="translate(40,30)">
+            <rect width="800" height="160" rx="6" fill="#fff" stroke="#2e343e" stroke-width="1.5"/>
+            <rect width="800" height="28" rx="6" fill="#2e343e"/>
+            <text x="400" y="19" text-anchor="middle" fill="#fff" font-family="'Zen Old Mincho', serif" font-weight="700" font-size="14" letter-spacing="0.1em">ウォレット(Wallet)</text>
+
+            <g transform="translate(40,52)">
+              <rect width="340" height="92" rx="3" fill="#f8efd3" stroke="#b28a1c" stroke-width="1"/>
+              <text x="170" y="22" text-anchor="middle" class="svg-label">公開鍵 / Public Key</text>
+              <text x="170" y="42" text-anchor="middle" class="svg-sub">= 口座番号(他人に見せていい)</text>
+              <g transform="translate(28,58)">
+                <ellipse cx="14" cy="14" rx="14" ry="9" fill="none" stroke="#6b4f00" stroke-width="1.4"/>
+                <circle cx="14" cy="14" r="5" fill="#6b4f00"/>
+              </g>
+              <text x="80" y="78" font-family="DM Sans, sans-serif" font-size="10" fill="#6b4f00">9xPv...A2bz</text>
+            </g>
+
+            <g transform="translate(420,52)">
+              <rect width="340" height="92" rx="3" fill="#fdf0e8" stroke="#b54316" stroke-width="1.4"/>
+              <text x="170" y="22" text-anchor="middle" class="svg-label">秘密鍵 / Private Key</text>
+              <text x="170" y="42" text-anchor="middle" class="svg-sub" fill="#b54316">= 実印(絶対に見せない)</text>
+              <g transform="translate(28,58)">
+                <rect x="2" y="10" width="20" height="14" rx="2" fill="#b54316"/>
+                <path d="M6,10 V6 a6,6 0 0,1 12,0 V10" fill="none" stroke="#b54316" stroke-width="2"/>
+              </g>
+              <text x="80" y="78" font-family="DM Sans, sans-serif" font-size="10" fill="#b54316">★★★★★★★★</text>
+            </g>
+          </g>
+
+          <g transform="translate(40,210)">
+            <text x="400" y="0" text-anchor="middle" class="svg-en">if you lose it...</text>
+
+            <g transform="translate(0,16)">
+              <rect width="380" height="74" rx="3" fill="#fff" stroke="#d6e0ee"/>
+              <text x="20" y="26" class="svg-label">銀行のパスワードを忘れた場合</text>
+              <text x="20" y="50" class="svg-sub">本人確認をすれば再発行できる</text>
+              <text x="350" y="50" text-anchor="end" font-family="'Zen Old Mincho', serif" font-weight="900" font-size="22" fill="#1f6148">✓</text>
+            </g>
+
+            <g transform="translate(420,16)">
+              <rect width="380" height="74" rx="3" fill="#fff" stroke="#fde0d0" stroke-width="1.5"/>
+              <text x="20" y="26" class="svg-label">秘密鍵を失った場合</text>
+              <text x="20" y="50" class="svg-sub" fill="#b54316">再発行の窓口は存在しない。残高は永遠に取り出せない</text>
+              <text x="350" y="50" text-anchor="end" font-family="'Zen Old Mincho', serif" font-weight="900" font-size="22" fill="#b54316">✗</text>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <div class="dgm-caption">
+        利用者が持ち歩くウォレットの正体は、二つの鍵のペアです。公開鍵は<strong>銀行口座番号</strong>にあたり、他人に教えても問題ありません。秘密鍵は<strong>実印</strong>にあたり、これで取引に署名することで「この送金は本当に本人が承認した」と証明されます。銀行口座のパスワードは再発行できますが、ブロックチェーンには再発行の窓口がありません。秘密鍵を失った者は、自分の残高に永遠に触れられなくなります。2013年にハードディスクごと8000ビットコインを誤って捨てたとされる英国の男性が、いまだに自治体のゴミ処分場の調査許可を求めて訴訟を起こしているのは、それほど秘密鍵が決定的な意味を持つからです。
+      </div>
+    </div>
+
+    <!-- DIAGRAM 4: Transaction flow -->
+    <div class="dgm">
+      <div class="dgm-head">
+        <div class="dgm-kicker">Diagram 04 / 送金の流れ</div>
+        <div class="dgm-title">銀行送金とブロックチェーン送金</div>
+      </div>
+      <div class="dgm-svg-wrap">
+        <svg viewBox="0 0 900 280" preserveAspectRatio="xMidYMid meet" role="img" aria-label="銀行送金とブロックチェーン送金の比較図">
+          <defs>
+            <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#5b6a82"/>
+            </marker>
+          </defs>
+
+          <g transform="translate(40,30)">
+            <text x="0" y="0" class="svg-label">① 銀行送金</text>
+            <text x="0" y="18" class="svg-en">three-step transfer</text>
+            <g transform="translate(0,40)">
+              <rect x="0"   y="0" width="100" height="50" rx="3" fill="#fff" stroke="#d6e0ee"/>
+              <text x="50" y="32" text-anchor="middle" class="svg-label">A さん</text>
+              <line x1="100" y1="25" x2="370" y2="25" stroke="#5b6a82" stroke-width="1.4" marker-end="url(#arrow2)"/>
+              <rect x="380" y="0" width="100" height="50" rx="3" fill="#2e343e"/>
+              <text x="430" y="32" text-anchor="middle" fill="#fff" font-family="'Zen Old Mincho', serif" font-weight="700" font-size="13">銀行</text>
+              <line x1="480" y1="25" x2="750" y2="25" stroke="#5b6a82" stroke-width="1.4" marker-end="url(#arrow2)"/>
+              <rect x="760" y="0" width="100" height="50" rx="3" fill="#fff" stroke="#d6e0ee"/>
+              <text x="810" y="32" text-anchor="middle" class="svg-label">B さん</text>
+            </g>
+            <text x="430" y="115" text-anchor="middle" class="svg-sub">中央の銀行が確認 / 数秒〜営業日内</text>
+          </g>
+
+          <g transform="translate(40,160)">
+            <text x="0" y="0" class="svg-label">② ブロックチェーン送金</text>
+            <text x="0" y="18" class="svg-en">five-step transfer</text>
+            <g transform="translate(0,40)">
+              <rect x="0"   y="0" width="140" height="50" rx="3" fill="#f8efd3" stroke="#b28a1c"/>
+              <text x="70" y="22" text-anchor="middle" class="svg-label">A さん</text>
+              <text x="70" y="40" text-anchor="middle" class="svg-sub">秘密鍵で署名</text>
+              <line x1="140" y1="25" x2="170" y2="25" stroke="#5b6a82" stroke-width="1.4" marker-end="url(#arrow2)"/>
+              <rect x="175" y="0" width="140" height="50" rx="3" fill="#fff" stroke="#d6e0ee"/>
+              <text x="245" y="22" text-anchor="middle" class="svg-label">ネットワーク</text>
+              <text x="245" y="40" text-anchor="middle" class="svg-sub">放送(broadcast)</text>
+              <line x1="315" y1="25" x2="345" y2="25" stroke="#5b6a82" stroke-width="1.4" marker-end="url(#arrow2)"/>
+              <rect x="350" y="0" width="140" height="50" rx="3" fill="#fff" stroke="#d6e0ee"/>
+              <text x="420" y="22" text-anchor="middle" class="svg-label">バリデータ</text>
+              <text x="420" y="40" text-anchor="middle" class="svg-sub">署名と残高を検証</text>
+              <line x1="490" y1="25" x2="520" y2="25" stroke="#5b6a82" stroke-width="1.4" marker-end="url(#arrow2)"/>
+              <rect x="525" y="0" width="140" height="50" rx="3" fill="#2e343e"/>
+              <text x="595" y="22" text-anchor="middle" fill="#fff" font-family="'Zen Old Mincho', serif" font-weight="700" font-size="12">ブロック記録</text>
+              <text x="595" y="40" text-anchor="middle" fill="#d5d8de" font-size="10">帳簿に追記</text>
+              <line x1="665" y1="25" x2="695" y2="25" stroke="#5b6a82" stroke-width="1.4" marker-end="url(#arrow2)"/>
+              <rect x="700" y="0" width="140" height="50" rx="3" fill="#f8efd3" stroke="#b28a1c"/>
+              <text x="770" y="22" text-anchor="middle" class="svg-label">B さん</text>
+              <text x="770" y="40" text-anchor="middle" class="svg-sub">着金</text>
+            </g>
+            <text x="430" y="115" text-anchor="middle" class="svg-sub">世界規模の確認 / 数十秒〜数十分(混雑時は手数料が高騰)</text>
+          </g>
+        </svg>
+      </div>
+      <div class="dgm-caption">
+        送金の流れを並べると、銀行送金が「A → 銀行 → B」の<strong>三段階</strong>で済むのに対し、暗号資産の送金は<strong>署名 → 放送 → 検証 → 記録 → 着金</strong>と世界規模の確認作業を経るため、構造的に時間がかかります。手数料も低いとは限らず、ネットワークが混雑すれば一回の送金が数千円になることも珍しくありません。
+      </div>
+    </div>
+
+    <p class="interlude">— 技術から、その上の現象へ</p>
+
+    <p>
+      ここまでが、技術としての暗号資産です。中央集権の代わりに、暗号と分散の力で帳簿を守るという発想そのものは、二十一世紀の数学的な美しさを持っています。しかし本記事の主題は、この土台の上に積み上がったもののほうにあります。次章以降では、ビットコインを含む真っ当な暗号資産から、首相の名を冠した投機トークンまで、同じ仕組みの上に咲いた多様な現象を順に追います。
+    </p>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER I ==================== -->
+<section class="chapter" id="ch1">
+  <div class="ch-kicker">
+    <span class="ch-num">01</span>
+    <span class="ch-cat">Chapter One · Mechanism</span>
+  </div>
+  <h2 class="ch-title">ブロックチェーンの三世代 <span class="en">Three generations</span></h2>
+  <div class="ch-subtitle">ビットコイン、イーサリアム、Solana</div>
+
+  <p class="ch-lede">
+    暗号資産と一口に言っても、世代を分ければ役割が違います。ビットコインは<em>決済</em>を、イーサリアムは<em>契約</em>を、Solana のような新世代は<em>速度と量</em>を狙いました。ミームコインの大半が今 Solana の上で生まれているのは、この最終世代の設計思想と無縁ではありません。
+  </p>
+
+  <div class="ch-body">
+    <p>
+      ビットコインは2009年、サトシ・ナカモトが論文を公開した翌年に運用が始まりました。設計の中心にあるのは「価値の保存と送金」という単一の目的で、機能が制限されている代わりに、十数年にわたって致命的な障害を起こしていません。発行上限が2100万枚と決まっており、希少性によって価値を保つという思想は、しばしば<strong>デジタル・ゴールド</strong>と表現されます。
+    </p>
+    <p>
+      2015年に運用が始まったイーサリアムは、ブロックチェーンに「契約」を載せました。スマートコントラクトと呼ばれる仕組みで、たとえば「Aがこの条件を満たしたら、自動的にBに送金する」というルールを、銀行や弁護士を介さずプログラムとして実行できます。NFT、分散型金融(DeFi)、そしてあらゆる派生トークンは、このスマートコントラクトの上に建てられました。誰でも自由にトークンを発行できる<em>ERC-20</em> という規格は、後のミームコイン量産の起点でもあります。
+    </p>
+    <p>
+      Solana は2020年に登場した、いわば第三世代の代表格です。秒間数千件の取引を処理できる速度を売りにしており、低い手数料と速い確定が特徴です。ビットコインが一日で処理できる取引が30万件程度なのに対し、Solana は理論上、それを数分でこなせます。この速度と安さが、後述するミームコインの「秒で発行・秒で取引」を可能にしています。
+    </p>
+    <p>
+      もうひとつ重要なのが、トークンの発行コストです。ERC-20 や Solana のトークン規格を使えば、プログラミングの知識があれば数百円から数千円程度で新しいトークンを発行できます。これは銀行を新設する手続きの何百万分の一の摩擦で、新しい「お金もどき」を世に送り出せることを意味します。技術的にハードルが下がったぶん、<strong>誰がそれを発行しているか</strong>という信頼の問題が、より重くのしかかるようになりました。
+    </p>
+    <p>
+      ここで強調しておきたいのは、すべての暗号資産が同じ性質を持つわけではないという点です。ビットコインのように長く検証されてきた基盤通貨と、昨日 Solana 上で発行された名前のないトークンは、同じ「暗号資産」というラベルの下にあっても、性質も信頼度もまったく違います。ニュースで「暗号資産が暴落した」と報じられるとき、どの層の話なのかは、いつも丁寧に分解して聞く必要があります。
+    </p>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER II ==================== -->
+<section class="chapter" id="ch2">
+  <div class="ch-kicker">
+    <span class="ch-num">02</span>
+    <span class="ch-cat">Chapter Two · Lineage</span>
+  </div>
+  <h2 class="ch-title">ミームコインの系譜 <span class="en">From doge to sanae</span></h2>
+  <div class="ch-subtitle">犬の写真から首相の名前まで</div>
+
+  <p class="ch-lede">
+    ミームコインは「ミーム」、つまりインターネット上で広まる冗談や流行を素材にした暗号資産の総称です。<em>投機の道具</em>としての顔と、<em>コミュニティの内輪ネタ</em>としての顔が同居しています。十二年で、その意味合いは大きく変わりました。
+  </p>
+
+  <div class="ch-body">
+    <p>
+      最初のミームコインとされるのが、2013年に登場した <strong>Dogecoin</strong> です。柴犬のミーム画像「Doge」をマスコットにし、ビットコインのコードを書き換えて作られました。発案者の二人は明確に「冗談として作った」と表明しており、当初は SNS 上のチップ(投げ銭)に使われる程度の存在でした。それが2021年、イーロン・マスクの相次ぐ投稿をきっかけに、時価総額が一時800億ドル(当時のレートで約9兆円)を超え、ミームコインという言葉が市民権を得ました。
+    </p>
+    <p>
+      2020年に登場した <strong>SHIB(柴犬コイン)</strong>は、その流れをさらに先鋭化させました。Dogecoin への対抗として作られ、発行枚数1000兆枚という極端な希薄化と、コミュニティの熱量を組み合わせて短期間に価格を吊り上げました。同時期に流行したアニマル系ミームコインは数百種類にのぼり、ほとんどが数か月で価格を9割以上落としています。
+    </p>
+    <p>
+      2025年に入り、ミームコインは政治を素材にしはじめます。1月17日、ドナルド・トランプ大統領就任の三日前に、本人公認の <strong>TRUMP トークン</strong>が Solana 上に発行されました。発行から数十時間で時価総額が一時150億ドル近くに達し、本人の家族が運営するメラニア夫人の <strong>MELANIA トークン</strong>も続いて発行されました。両者ともに発行から24時間以内に価格を大きく落とし、批判的な報道が相次ぎました。
+    </p>
+    <p>
+      そして2026年2月、日本でも同じ構図が現れます。2月18日、Solana 上に <strong>SANAE TOKEN(早苗トークン)</strong>が発行されました。仕掛けたのは起業家の溝口勇児氏が率いる「No Border DAO」と呼ばれるコミュニティで、「Japan is Back」という標語を掲げ、高市早苗首相のイメージを使いました。問題は、首相本人にも事務所にも一切相談がなかったことです。
+    </p>
+    <p>
+      発行後数十分で価格は4.5ドルを超え、時価総額は約27〜30億円に達しました。同じ日のうちに価格は0.20ドル付近まで下落し、約75%の暴落となりました。3月2日、高市首相は X 上で長文の声明を発表します。
+    </p>
+
+    <blockquote class="cite" data-ref="2">
+      このトークンについては、私は全く存じ上げませんし、私の事務所側も、当該トークンがどのようなものなのかについて知らされておりません。
+      <footer>— 高市早苗首相 X 投稿(2026年3月2日)</footer>
+    </blockquote>
+
+    <p>
+      本人による全面否定の直後、価格はさらに下落しました。Doge に始まり、SHIB を経て、トランプ夫妻、そして日本の首相へ。十二年でミームコインの素材は<em>犬の写真</em>から<em>主権国家の最高権力者の名前</em>に到達しました。ただし、この系譜のすべての段階で、共通しているものがあります。発行者と早期保有者がほぼ確実に儲かり、後から買った大多数が損をするという、<strong>構造</strong>のほうです。
+    </p>
+
+    <div class="timeline">
+      <div class="tl-head">
+        <div class="tl-kicker">Diagram 05 / ミームコインの系譜</div>
+        <div class="tl-title">十二年で、犬から首相へ</div>
+      </div>
+      <ul class="tl-list">
+        <li class="tl-row">
+          <div class="tl-year">2013<span class="tl-year-sub">December</span></div>
+          <div>
+            <div class="tl-name">Dogecoin <span class="romaji">Doge</span></div>
+            <div class="tl-detail">柴犬ミームをマスコットにした最初のミームコイン。発案者は「冗談として作った」と公言。SNS のチップ用途から始まり、2021年にマスクの相次ぐ投稿で時価総額が一時約9兆円に到達。</div>
+            <span class="tl-stat">2021年高値 → 約 $0.74</span>
+          </div>
+        </li>
+        <li class="tl-row">
+          <div class="tl-year">2020<span class="tl-year-sub">August</span></div>
+          <div>
+            <div class="tl-name">SHIB(柴犬コイン) <span class="romaji">Shiba Inu</span></div>
+            <div class="tl-detail">Dogecoin への対抗として登場。発行枚数1000兆枚という極端な希薄化と、コミュニティの熱量で短期に価格を押し上げた。同時期のアニマル系ミームコイン数百種類は、ほぼ全てが数か月で9割以上下落。</div>
+            <span class="tl-stat">2021年高値 → 約 $0.000086</span>
+          </div>
+        </li>
+        <li class="tl-row">
+          <div class="tl-year">2025<span class="tl-year-sub">Jan 17</span></div>
+          <div>
+            <div class="tl-name">TRUMP / MELANIA <span class="romaji">Solana</span></div>
+            <div class="tl-detail">大統領就任の三日前、本人公認の TRUMP トークンが Solana 上に発行。続いて配偶者の MELANIA。TRUMP は時価総額が一時約150億ドルに到達するも、24時間以内に大幅下落。在任中の現職大統領が自身の名前で発行する初の事例として、米国内外で批判が相次いだ。</div>
+            <span class="tl-stat">高値 約 $73 → 24h 後に約 $40</span>
+          </div>
+        </li>
+        <li class="tl-row">
+          <div class="tl-year">2026<span class="tl-year-sub">Feb 18</span></div>
+          <div>
+            <div class="tl-name">SANAE TOKEN(早苗トークン) <span class="romaji">Solana</span></div>
+            <div class="tl-detail">起業家・溝口勇児氏率いる No Border DAO が、高市早苗首相のイメージを<strong>本人に無断で</strong>用いて発行。発行直後に時価総額が約27〜30億円に達し、同日のうちに約75%下落。3月2日に首相が全面否定の声明を発表、金融庁が関連業者の調査を検討。</div>
+            <span class="tl-stat">高値 $4.50 → 同日 $0.20 付近(−75%)</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER III ==================== -->
+<section class="chapter" id="ch3">
+  <div class="ch-kicker">
+    <span class="ch-num">03</span>
+    <span class="ch-cat">Chapter Three · Valuation</span>
+  </div>
+  <h2 class="ch-title">なぜ値段がつくのか <span class="en">Why does it have a price?</span></h2>
+  <div class="ch-subtitle">内在価値という考え方</div>
+
+  <p class="ch-lede">
+    株式には会社の利益があり、債券には利払いがあり、不動産には家賃があります。<em>ミームコインには、何もありません。</em>それでも値段がつき、ときに桁違いの利益を生むのはなぜでしょうか。
+  </p>
+
+  <div class="ch-body">
+    <p>
+      経済学では、ある資産の価値の根拠を<strong>内在価値</strong>と呼びます。株式の場合、その会社が将来どれだけ利益を出すかの見通しが内在価値の中心です。利益が伸びれば配当が増え、株価が上がる。逆に利益が減れば、株価は下がる。価格は最終的に企業の業績という<em>重力</em>に引き寄せられます。
+    </p>
+    <p>
+      ビットコインでさえ、内在価値の議論には決着がついていません。発行上限の存在、ネットワークの規模、決済手数料収入などを根拠にする論者もいれば、最終的にはチューリップバブルと同じだと言い切る論者もいます。それでもビットコインには、十数年の運用実績、世界中の取引所での流動性、そして決済通貨として実際に使われている事例という、多少の重力が存在します。
+    </p>
+    <p>
+      ミームコインには、その重力すらありません。SANAE TOKEN にせよ、TRUMP にせよ、その存在が何かを生産するわけではなく、何かの手数料収入があるわけでもなく、首相も大統領もそのトークンを公務に使うわけではありません。価格を支えているのは、ただ一点、<strong>「次に誰かがもっと高い値段で買ってくれるはずだ」</strong>という期待だけです。
+    </p>
+
+    <div class="pull-quote">
+      <p>今これを買うのが愚かだとしても、自分よりさらに愚かな誰かが、もっと高く買ってくれるなら勝てる。</p>
+      <div class="attribution">— Greater Fool Theory(より大きな愚か者の理論)</div>
+    </div>
+
+    <p>
+      経済学にはこれを正確に言い表す古典的な概念があります。<em>グレーター・フール理論</em>。最後まで愚か者を見つけられた者が勝ち、見つけられなかった者が損失を抱えます。チューリップバブルから17世紀のミシシッピ会社事件まで、繰り返し再演されてきた構造が、二十一世紀の分散台帳の上で再び姿を現しています。
+    </p>
+
+    <!-- DIAGRAM 6: SANAE price + concentration -->
+    <div class="dgm">
+      <div class="dgm-head">
+        <div class="dgm-kicker">Diagram 06 / SANAE TOKEN(2026年2月)</div>
+        <div class="dgm-title">価格曲線と保有集中度</div>
+      </div>
+      <div class="dgm-svg-wrap">
+        <svg viewBox="0 0 900 360" preserveAspectRatio="xMidYMid meet" role="img" aria-label="SANAE TOKEN の価格曲線と保有集中度">
+          <g transform="translate(40,30)">
+            <text x="0" y="0" class="svg-label">価格曲線(2026年2月18日)</text>
+            <text x="0" y="18" class="svg-en">price chart, intraday</text>
+            <g transform="translate(40,30)">
+              <rect width="500" height="240" fill="#fff" stroke="#d6e0ee"/>
+              <text x="-8" y="14" text-anchor="end" class="svg-sub">$5.00</text>
+              <text x="-8" y="68" text-anchor="end" class="svg-sub">$4.00</text>
+              <text x="-8" y="122" text-anchor="end" class="svg-sub">$3.00</text>
+              <text x="-8" y="176" text-anchor="end" class="svg-sub">$2.00</text>
+              <text x="-8" y="230" text-anchor="end" class="svg-sub">$1.00</text>
+              <g stroke="#e8edf5" stroke-width="0.6">
+                <line x1="0" y1="60"  x2="500" y2="60"/>
+                <line x1="0" y1="120" x2="500" y2="120"/>
+                <line x1="0" y1="180" x2="500" y2="180"/>
+              </g>
+              <path d="
+                M0,228
+                L 30,224
+                L 60,210
+                L 90,180
+                L 120,130
+                L 150,70
+                L 180,38
+                L 200,28
+                L 220,46
+                L 240,80
+                L 270,140
+                L 300,180
+                L 340,210
+                L 380,224
+                L 420,232
+                L 460,234
+                L 500,236
+              " fill="none" stroke="#b28a1c" stroke-width="2.2"/>
+              <circle cx="200" cy="28" r="4" fill="#b54316"/>
+              <text x="208" y="22" font-family="Fraunces, serif" font-style="italic" font-weight="700" font-size="11" fill="#b54316">$4.50 peak</text>
+              <circle cx="460" cy="234" r="4" fill="#5b6a82"/>
+              <text x="458" y="220" text-anchor="end" font-family="Fraunces, serif" font-style="italic" font-weight="700" font-size="11" fill="#5b6a82">$0.20 (−75%)</text>
+              <text x="0"   y="258" class="svg-sub">launch</text>
+              <text x="200" y="258" class="svg-sub" text-anchor="middle">+30 min</text>
+              <text x="500" y="258" text-anchor="end" class="svg-sub">+24h</text>
+            </g>
+          </g>
+
+          <g transform="translate(620,30)">
+            <text x="0" y="0" class="svg-label">保有集中度(発行直後)</text>
+            <text x="0" y="18" class="svg-en">top-3 wallets</text>
+            <g transform="translate(120,170)">
+              <circle r="70" fill="none" stroke="#ededef" stroke-width="22"/>
+              <circle r="70" fill="none" stroke="#b28a1c" stroke-width="22"
+                stroke-dasharray="263.9 175.9"
+                transform="rotate(-90)"/>
+              <text x="0" y="-2" text-anchor="middle" font-family="Fraunces, serif" font-style="italic" font-weight="700" font-size="32" fill="#6b4f00">60%</text>
+              <text x="0" y="20" text-anchor="middle" class="svg-sub">top 3 wallets</text>
+            </g>
+            <g transform="translate(0,290)">
+              <rect width="14" height="14" fill="#b28a1c"/>
+              <text x="22" y="11" class="svg-sub">上位3アドレス計 約60%</text>
+              <rect y="22" width="14" height="14" fill="#ededef"/>
+              <text x="22" y="33" class="svg-sub">残り全保有者 約40%</text>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <div class="dgm-caption">
+        この構造を最も劇的に可視化するのが、SANAE TOKEN の<strong>価格曲線</strong>と<strong>保有者の集中度</strong>です。発行後30分で4.5ドルを超え、その日のうちに0.2ドル付近まで急落。株式市場であれば即座に取引停止になる動きです。さらにブロックチェーン分析から、上位3アドレスがトークン全体の<strong>約60%</strong>を保有していたことが判明しました。
+      </div>
+    </div>
+
+    <p>
+      上位3アドレスが6割を握るとは、たとえばある会社の株式の6割を、創業者と関係者の三人だけで持っているのと同じ状態です。彼らがほんの一部を市場で売るだけで、価格は崩れます。逆に、彼らが意図的に値段を吊り上げ、適切なタイミングで一気に売り抜ければ、後から買った何千人何万人を犠牲にして、自分たちだけが利益を確定できます。これが <em>pump and dump</em>、すなわち「吊り上げて、ドカンと売る」と呼ばれる手口の標準的な構造です。
+    </p>
+    <p>
+      問題なのは、この構造がミームコイン全般に対して<strong>例外ではなく原則</strong>だ、という点です。誰でも数千円で発行でき、誰でも全供給の何割でも初期に握れて、誰でもインフルエンサーや SNS で短期間に注目を集められる。価格が上がっている最中に煽り、限界点を見極めて売り抜ける。技術はそのまま使えば中立ですが、人間が運用したとき、この構造は驚くほど人を欺きやすく作られています。
+    </p>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER IV ==================== -->
+<section class="chapter" id="ch4">
+  <div class="ch-kicker">
+    <span class="ch-num">04</span>
+    <span class="ch-cat">Chapter Four · Usability</span>
+  </div>
+  <h2 class="ch-title">通貨として使えるのか <span class="en">Can it be money?</span></h2>
+  <div class="ch-subtitle">お金が満たすべき三つの役割</div>
+
+  <p class="ch-lede">
+    暗号資産の英語名は <em>cryptocurrency</em>、直訳すれば「暗号通貨」です。しかし日本の法律はこれを「通貨」とは呼びません。日常の買い物にも、ほぼ使えません。なぜでしょうか。
+  </p>
+
+  <div class="ch-body">
+    <p>
+      お金が通貨として機能するには、三つの役割が必要だと教科書は教えます。<strong>価値の尺度、交換の媒介、価値の保存</strong>です。値札に書ける、買い物に使える、貯めておける。この三つを満たして初めて、私たちはそれを「お金」と呼びます。
+    </p>
+    <p>
+      暗号資産は、このうちどれもうまく満たしません。ビットコインの価格は2024年からの二年間で2倍になり、半年で3割落ち、また反発しました。値札に「1.5 mBTC」と書かれた商品は、翌週には実質3割引にも3割増にもなり得ます。価値の尺度として、致命的にぐらつきます。
+    </p>
+    <p>
+      交換の媒介としても、現状は限定的です。日本国内でビットコインを直接受け取る店舗は、ビックカメラなど一部の家電量販店、メガネスーパー、HIS など合わせても数千店舗にとどまります。コンビニで使えませんし、税金や公共料金の支払いにも使えません。エルサルバドルが2021年にビットコインを法定通貨に採用しましたが、利用は伸びず、2025年1月には IMF の融資条件として法定通貨の地位を実質撤回しました。
+    </p>
+    <p>
+      価値の保存としても、短期で大きく動く以上、安心して貯めておく対象とは言いにくい性質を持ちます。長期で見れば上昇している期間が多いものの、それは「価格が安定している」とは別の話です。給与の二か月分が、一週間のうちに一か月分の価値に縮むかもしれない通貨で、家賃や食費を支払う人は多くありません。
+    </p>
+    <p>
+      日本の法律は、この実態を正確に反映しています。2017年に施行された改正<em>資金決済法</em>は、暗号資産を「通貨建ての資産ではないもの」「電子的に記録され、不特定の者との支払いに使えるもの」と定義しました。重要なのは、これが日本円や米ドルのような「通貨」とは別カテゴリだ、と明記している点です。法律上、暗号資産は<strong>決済の手段</strong>にはなり得ても、<strong>通貨そのものではありません</strong>。
+    </p>
+    <p>
+      ミームコインに至っては、暗号資産の中でもさらに性質がぐらつきます。日本円と SANAE TOKEN を交換する公式な口座も、安定した値付けの仕組みも存在しません。決済に使える店舗もゼロに近い。ここで生まれた値段は、商品を買う以外の目的にしか使えない、純粋な投機の数字です。
+    </p>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER V ==================== -->
+<section class="chapter" id="ch5">
+  <div class="ch-kicker">
+    <span class="ch-num">05</span>
+    <span class="ch-cat">Chapter Five · Legality</span>
+  </div>
+  <h2 class="ch-title">合法と違法の境界 <span class="en">Legal or illegal?</span></h2>
+  <div class="ch-subtitle">早苗トークンを材料に</div>
+
+  <p class="ch-lede">
+    詐欺とは、本来きれいに線が引けるはずのものです。しかしミームコインは、<em>合法とグレーと違法</em>のあいだを歩き回ります。早苗トークンの一件は、その境界線を点検する格好の機会となりました。
+  </p>
+
+  <div class="ch-body">
+    <p>
+      まず確認しておくと、暗号資産そのものを発行することは、日本では違法ではありません。資金決済法は暗号資産交換業者に対して内閣総理大臣への登録を義務づけていますが、これは取引所や交換サービスを営む業者に対する規制であり、トークンの発行自体を禁止する条項はありません。日本国内の認可取引所(コインチェック、bitFlyer など)で扱われている暗号資産も、こうした登録制度の上で取引されています。
+    </p>
+    <p>
+      しかし、その「合法」の枠にきちんと収まるトークンは、ごく一部にとどまります。今回の SANAE TOKEN は、規制の外側を歩き回りました。問題点を整理すると、少なくとも三つの法的な争点があります。
+    </p>
+
+    <!-- DIAGRAM 7: Three-tier legality -->
+    <div class="tier">
+      <div class="tier-row legal">
+        <div class="tier-head">
+          <span class="tier-label">合法の領域</span>
+          <span class="tier-en">Legal</span>
+        </div>
+        <div class="tier-body">
+          認可取引所(コインチェック、bitFlyer 等)で扱われ、資金決済法上の登録を受けた暗号資産交換業者を通じて売買されるもの。<strong>ビットコイン、イーサリアム</strong>などの主要通貨が中心。価格変動はあるが、本人確認・取引記録・税務申告のルールが整っており、契約上の不正は法で救済しやすい。
+        </div>
+      </div>
+      <div class="tier-row gray">
+        <div class="tier-head">
+          <span class="tier-label">グレーの領域</span>
+          <span class="tier-en">Gray</span>
+        </div>
+        <div class="tier-body">
+          海外の取引所で扱われるが、認可取引所の上場基準は満たさないトークン。本人公認のミームコインや、コミュニティ型の DAO トークンの多くが該当する。発行・取引そのものは違法ではないが、<strong>パブリシティ権・景品表示法・特定商取引法</strong>などとの摩擦が起きやすい。日本の現行法では、価格の操作や情報の偏りを完全には取り締まれない。
+        </div>
+      </div>
+      <div class="tier-row illegal">
+        <div class="tier-head">
+          <span class="tier-label">違法の領域</span>
+          <span class="tier-en">Illegal</span>
+        </div>
+        <div class="tier-body">
+          発行者が当初から売り抜けを計画していた <strong>pump and dump</strong>、開発者が資金を集めて消える <strong>rug pull</strong>、本人の許諾なく公人の名前を使う<strong>パブリシティ権侵害</strong>、登録なしの暗号資産交換業の営業など。立証されれば、刑法246条の詐欺罪や、資金決済法・金融商品取引法の違反として刑事責任が問われ得る。
+        </div>
+      </div>
+    </div>
+
+    <p>
+      第一に、<em>パブリシティ権の侵害</em>です。日本の最高裁は2012年、ピンク・レディー事件の判決で、有名人が自身の氏名や肖像を商業的に利用する権利(パブリシティ権)を認めました。第三者がその名前や肖像を、本人の許諾なく商業利用すれば、損害賠償の対象になり得ます。一国の総理大臣の氏名を冠したトークンを、本人や事務所への一切の事前連絡なしに発行・売買した SANAE TOKEN の運営は、この権利の侵害として強く問題視されています。
+    </p>
+    <p>
+      第二に、<em>資金決済法上の規制</em>です。トークンの設計によっては、暗号資産交換業者の登録なしに「不特定の者向けに販売する」行為が、法律違反となる場合があります。金融庁は3月、SANAE TOKEN の関連業者を調査する方向で検討に入ったと報じられました。発行者である溝口勇児氏も「全面協力する」と表明しています。
+    </p>
+    <p>
+      第三に、<em>詐欺罪との接点</em>です。日本の刑法246条が定める詐欺罪は、人を欺いて財産的利益を得る行為に成立します。ミームコイン全般は、価格が暴騰すると煽って買わせ、内部関係者が高値で売り抜ける、いわゆる pump and dump の構造を持ちやすい。発行者が当初から売り抜けを計画していたと立証されれば、詐欺罪の射程に入ります。海外では同種の事案で実刑判決が出た例もあり、米司法省は2022年、SQUID トークンのラグプル関連で関係者を訴追しています。
+    </p>
+    <p>
+      ここで、似た構造を持つ別の手口の名前を挙げておきます。<em>ラグプル(rug pull)</em>は、開発者が初期に資金を集め、売り抜けたのちに突然プロジェクトを放棄する手口です。文字通り、足元の絨毯(rug)を引き抜くように資金が消えます。pump and dump が「価格を吊り上げて売り抜ける」のに対し、rug pull は「プロジェクト自体を消して逃げる」点が違います。多くのミームコインは、最初から両方を念頭に設計されているとさえ指摘されてきました。
+    </p>
+    <p>
+      早苗トークンの一件は、こうした構造の縮図でした。本人の知らない間に名前が借りられ、コミュニティの熱が動員され、上位アドレスに集中した供給が、急騰のあとで一気に売られた。発行者は事後に「補償を検討する」と表明していますが、被害者全員に手厚く配分される保証はありません。重要なのは、この一件が個別事例として珍しいのではなく、<strong>ミームコインという仕組みのほぼ標準的な振る舞い</strong>だという点です。
+    </p>
+
+    <p class="interlude">— 結びに代えて</p>
+
+    <p>
+      暗号資産という発明は、二十一世紀の数学的な達成として、これからも残るはずです。ブロックチェーンの分散性は、特定の用途では実際に有用で、企業や行政の文書管理にも応用が広がっています。問題は、その同じ仕組みの上で、誰でもトークンを発行でき、誰でも他人の名前を借りられ、誰でも数百万人を相手にした投機を仕掛けられる、という現実のほうです。
+    </p>
+    <p>
+      私たちが受け取るべき教訓は、おそらく単純です。値段がついているからといって、それが価値を持つとは限りません。技術的に分散しているからといって、運用が公正だとは限りません。首相の名前が冠されているからといって、本人が関わっているとは限りません。「お金」を装った投機の対象が、これからも次々と現れるなかで、私たちはどの帳簿を信じてよいのか、自分で判断するしかありません。それが、中央集権を疑うところから始まったこの技術が、最後に私たちに突きつけている問いでもあります。
+    </p>
+  </div>
+</section>
+
+<!-- ==================== REFERENCES ==================== -->
+<section class="refs">
+  <div class="refs-head">参考文献 · References</div>
+  <ol class="refs-list">
+    <li>
+      <span class="ref-author">Satoshi Nakamoto.</span>
+      <span class="ref-title">"Bitcoin: A Peer-to-Peer Electronic Cash System."</span>
+      <span class="ref-meta">2008. <a href="https://bitcoin.org/bitcoin.pdf" target="_blank" rel="noopener">https://bitcoin.org/bitcoin.pdf</a></span>
+    </li>
+    <li>
+      <span class="ref-author">CoinPost 編集部.</span>
+      <span class="ref-title">「高市早苗首相、『SANAE TOKEN』発行に一切の関与を否定 ミームコイン巡り公式Xで声明」</span>
+      <span class="ref-meta">CoinPost, 2026年3月3日. <a href="https://coinpost.jp/?p=692092" target="_blank" rel="noopener">https://coinpost.jp/?p=692092</a></span>
+    </li>
+    <li>
+      <span class="ref-author">日本経済新聞.</span>
+      <span class="ref-title">「無法地帯のミームコイン サナエトークン騒動、仮想通貨への不信増幅」</span>
+      <span class="ref-meta">日本経済新聞, 2026年3月. <a href="https://www.nikkei.com/article/DGXZQOUB141BJ0U6A310C2000000/" target="_blank" rel="noopener">nikkei.com</a></span>
+    </li>
+    <li>
+      <span class="ref-author">CoinDesk.</span>
+      <span class="ref-title">"Japan PM Sanae Takaichi disavows Solana memecoin after it crashes by 75%."</span>
+      <span class="ref-meta">CoinDesk, 2026年3月3日. <a href="https://www.coindesk.com/business/2026/03/03/japan-prime-minister-sanae-takaichi-disavows-solana-meme-coin-after-it-crashes-by-75" target="_blank" rel="noopener">coindesk.com</a></span>
+    </li>
+    <li>
+      <span class="ref-author">BeInCrypto.</span>
+      <span class="ref-title">"Japan's Sanae Token Scandal Tests Legal Limits of Political Memecoins."</span>
+      <span class="ref-meta">BeInCrypto, 2026年3月. <a href="https://beincrypto.com/japans-sanae-token-scandal-tests-legal-limits-of-political-memecoins/" target="_blank" rel="noopener">beincrypto.com</a></span>
+    </li>
+    <li>
+      <span class="ref-author">東京スポーツ.</span>
+      <span class="ref-title">「高市早苗トークンで金融庁が関連業者を調査へ 溝口勇児氏『全面協力します』聴取の可能性も」</span>
+      <span class="ref-meta">東スポWEB, 2026年3月. <a href="https://www.tokyo-sports.co.jp/articles/-/379470" target="_blank" rel="noopener">tokyo-sports.co.jp</a></span>
+    </li>
+    <li>
+      <span class="ref-author">金融庁.</span>
+      <span class="ref-title">「資金決済に関する法律」(平成21年法律第59号、2017年改正)</span>
+      <span class="ref-meta">e-Gov 法令検索. 暗号資産の定義・交換業者登録制度に関する条文を参照.</span>
+    </li>
+    <li>
+      <span class="ref-author">最高裁判所第一小法廷.</span>
+      <span class="ref-title">「ピンク・レディー事件 平成21年(受)第2056号」</span>
+      <span class="ref-meta">最高裁判決 2012年(平成24年)2月2日. パブリシティ権を初めて明示的に認めた判例.</span>
+    </li>
+    <li>
+      <span class="ref-author">U.S. Department of Justice.</span>
+      <span class="ref-title">"Texas Man Charged in Crypto 'Squid Game' Token Fraud."</span>
+      <span class="ref-meta">DOJ press release, 2022. SQUID トークンのラグプル関連訴追.</span>
+    </li>
+    <li>
+      <span class="ref-author">国際通貨基金(IMF).</span>
+      <span class="ref-title">"El Salvador: 2024 Article IV Consultation and Request for Extended Arrangement."</span>
+      <span class="ref-meta">IMF Country Report, 2025年1月. ビットコインの法定通貨化政策の見直し.</span>
+    </li>
+  </ol>
+  <div class="refs-note">
+    本記事は上記ソースをもとに、受験生向けに編集・再構成したものです。価格や時価総額の数字は記事執筆時点のものを採用しており、暗号資産の性質上、現在の値とは異なります。正確な記述については原典をご参照ください。
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="footer">
+  <div class="footer-mark">価</div>
+  <div class="footer-tag">A Visual Essay · 経済 · 法 · 情報</div>
+  <div class="footer-tag">Distributed Ledger × Speculative Memes</div>
+  <a href="../../" class="footer-back">← all articles</a>
+</footer>
+
+<!-- ==================== MOBILE MENU + DRAWER ==================== -->
+<button class="m-menu-btn" id="mMenuBtn" aria-label="目次を開く">
+  <span></span><span></span><span></span>
+</button>
+
+<div class="m-drawer" id="mDrawer" role="dialog" aria-modal="true" aria-label="目次">
+  <div class="m-drawer-panel">
+    <div class="m-drawer-handle" aria-hidden="true"></div>
+    <div class="m-drawer-head">
+      <span class="m-drawer-title">目次<span class="en">contents</span></span>
+      <button class="m-drawer-close" id="mDrawerClose" aria-label="閉じる">×</button>
+    </div>
+    <ol class="m-drawer-list">
+      <li><a href="#ch0" data-ch="0"><span class="md-num">00</span><span><span class="md-title">暗号資産とは何か</span><span class="md-sub">帳簿、鍵、ブロックという三つの基本</span></span><span class="md-arrow">→</span></a></li>
+      <li><a href="#ch1" data-ch="1"><span class="md-num">01</span><span><span class="md-title">ブロックチェーンの三世代</span><span class="md-sub">ビットコイン、イーサリアム、Solana</span></span><span class="md-arrow">→</span></a></li>
+      <li><a href="#ch2" data-ch="2"><span class="md-num">02</span><span><span class="md-title">ミームコインの系譜</span><span class="md-sub">犬の写真から首相の名前まで</span></span><span class="md-arrow">→</span></a></li>
+      <li><a href="#ch3" data-ch="3"><span class="md-num">03</span><span><span class="md-title">なぜ値段がつくのか</span><span class="md-sub">内在価値という考え方</span></span><span class="md-arrow">→</span></a></li>
+      <li><a href="#ch4" data-ch="4"><span class="md-num">04</span><span><span class="md-title">通貨として使えるのか</span><span class="md-sub">お金が満たすべき三つの役割</span></span><span class="md-arrow">→</span></a></li>
+      <li><a href="#ch5" data-ch="5"><span class="md-num">05</span><span><span class="md-title">合法と違法の境界</span><span class="md-sub">早苗トークンを材料に</span></span><span class="md-arrow">→</span></a></li>
+    </ol>
+  </div>
+</div>
+
+<script>
+(function () {
+  // ---- Hide top nav on scroll down ----
+  const nav = document.getElementById('topnav');
+  let lastY = window.scrollY;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y > 120 && y > lastY) {
+      nav.classList.add('hidden');
+    } else {
+      nav.classList.remove('hidden');
+    }
+    lastY = y;
+  }, { passive: true });
+
+  // ---- Active chapter tracking ----
+  const sections = document.querySelectorAll('section.chapter');
+  const railItems = document.querySelectorAll('.rail-item');
+  const drawerItems = document.querySelectorAll('.m-drawer-list a');
+
+  const setActive = (id) => {
+    railItems.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+    drawerItems.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+  };
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      // Pick the entry closest to top among intersecting
+      const visible = entries.filter(e => e.isIntersecting);
+      if (visible.length === 0) return;
+      visible.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      const top = visible[0];
+      if (top.boundingClientRect.top < window.innerHeight * 0.55) {
+        setActive(top.target.id);
+      }
+    }, { rootMargin: '-20% 0px -45% 0px', threshold: 0 });
+    sections.forEach(s => observer.observe(s));
+  }
+
+  // ---- Mobile drawer ----
+  const btn = document.getElementById('mMenuBtn');
+  const drawer = document.getElementById('mDrawer');
+  const closeBtn = document.getElementById('mDrawerClose');
+
+  const openDrawer = () => {
+    drawer.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+  const closeDrawer = () => {
+    drawer.classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
+  btn.addEventListener('click', openDrawer);
+  closeBtn.addEventListener('click', closeDrawer);
+  drawer.addEventListener('click', (e) => {
+    if (e.target === drawer) closeDrawer();
+  });
+  drawerItems.forEach(a => a.addEventListener('click', () => setTimeout(closeDrawer, 100)));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+  });
+})();
+</script>
+
+</body>
+</html>
