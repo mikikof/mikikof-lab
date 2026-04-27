@@ -450,6 +450,51 @@ if (fbBody && !fbBody.querySelector('.fb-retry')) {
   if (target.closest('button, label, input, .opt, .ox-row, .match-pill, .fill-chip, .fill-blank')) return;
   ```
 
+### 9.4b 水平スクロール SVG とスワイプの干渉 ★スマホ実機で発覚
+- **症状**: family-tree-svg や `.viz-svg-wrap` の中で SVG を横スクロールしようとすると、ページが次/前のステージへ遷移してしまう
+- **原因**: 水平スクロールのジェスチャと page-swipe のジェスチャの形状が同じ。touchend の closest 除外リストにスクロール領域が含まれていない
+- **対策**: touchstart の時点で「タッチ開始位置がスクロール可能領域の中か」を判定し、フラグを立てて touchend でスワイプ処理をスキップする
+  ```javascript
+  function isInsideHorizontalScroll(el) {
+    if (!el) return false;
+    if (el.closest && el.closest('.viz-svg-wrap, .family-tree-wrap')) return true;
+    let node = el;
+    while (node && node !== document.body) {
+      const cs = window.getComputedStyle(node);
+      if ((cs.overflowX === 'auto' || cs.overflowX === 'scroll') && node.scrollWidth > node.clientWidth + 1) return true;
+      node = node.parentElement;
+    }
+    return false;
+  }
+  // touchstart で touchInScrollable = isInsideHorizontalScroll(e.target) を保持
+  // touchend で touchInScrollable が真ならスワイプ無視
+  ```
+- **教訓**: 横スクロールできる領域を新しく追加するときは、必ずクラス名を `isInsideHorizontalScroll` の closest 引数に追記する(generic な computed style 検査も走るが、明示的に書く方が安全)
+
+### 9.4c 採点後のフィードバックが画面外上に飛ぶ ★スマホ実機で発覚
+- **症状**: 採点ボタンを押すと、本来見たい「正答」バナーがビューポート外(上)に行ってしまい、ユーザーが上に戻る必要がある
+- **原因**: `scrollIntoView({ block: 'center' })` を使うと、フィードバック全体が縦長のため中央寄せ時に先頭が画面外上に出る
+- **対策**: 「banner を sticky topbar の直下に置く」ように手動でスクロール
+  ```javascript
+  setTimeout(() => {
+    const banner = fb.querySelector('.fb-banner') || fb;
+    const topbar = document.querySelector('.topbar');
+    const topbarH = topbar ? topbar.getBoundingClientRect().height : 0;
+    const rect = banner.getBoundingClientRect();
+    const targetY = window.scrollY + rect.top - topbarH - 12;
+    window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+  }, 100);
+  ```
+- **同じ修正**: `retryStage` の「もう一度解く」スクロールも sticky topbar を考慮した同じ計算に揃える
+
+### 9.4d iOS の二重タップズーム遅延
+- **症状**: 採点ボタンや選択肢タップに 300ms ほどの遅延があり、もたつく
+- **対策**: 主要なタップ要素に `touch-action: manipulation` を当てる(double-tap zoom を無効化、Safari 旧来の click delay も解消)
+  ```css
+  button, .opt, .ox-btn, .ox-row, .match-pill, .fill-chip, .fill-blank,
+  .digest-prompt, .tl-item, [data-action], a.unit-card, .unit-card { touch-action: manipulation; }
+  ```
+
 ### 9.5 クール基調にしたつもりが SVG 内のハードコード色が温色のまま
 - **原因**: SVG の fill/stroke は CSS 変数を読まない(SVG 属性として直接指定すると、`currentColor` 以外は解釈されない)
 - **対策**: SVG 内のハードコード hex 値は、Design Tokens 変更時に **個別に追従**(または class + CSS で持たせる)

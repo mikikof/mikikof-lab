@@ -494,6 +494,10 @@ input { font: inherit; }
 .topbar-btn:hover { background: var(--action-pale); color: var(--action-deep); border-color: var(--action-pale2); }
 .topbar-btn svg { width: 16px; height: 16px; }
 
+
+/* ---- Mobile UX: prevent iOS double-tap zoom delay on interactive elements ---- */
+button, .opt, .ox-btn, .ox-row, .match-pill, .fill-chip, .fill-blank,
+.digest-prompt, .tl-item, [data-action], a.unit-card, .unit-card { touch-action: manipulation; }
 /* ============================================================
    MAIN STAGE
 ============================================================ */
@@ -4583,15 +4587,40 @@ main {
   // ============================================================
   let touchStart = null;
   let touchTime = 0;
+  let touchInScrollable = false;
+
+  // True if the touch began inside (or under) any horizontally-scrollable container —
+  // family-tree-wrap, viz-svg-wrap, or any element with overflow-x:auto/scroll
+  // that has overflowing content. Used to suppress the page-swipe handler so the
+  // user's horizontal pan scrolls the SVG instead of changing pages.
+  function isInsideHorizontalScroll(el) {
+    if (!el) return false;
+    if (el.closest && el.closest('.viz-svg-wrap, .family-tree-wrap')) return true;
+    let node = el;
+    while (node && node !== document.body) {
+      const cs = window.getComputedStyle(node);
+      if ((cs.overflowX === 'auto' || cs.overflowX === 'scroll') && node.scrollWidth > node.clientWidth + 1) {
+        return true;
+      }
+      node = node.parentElement;
+    }
+    return false;
+  }
+
   document.addEventListener('touchstart', (e) => {
     touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
     touchTime = Date.now();
+    touchInScrollable = isInsideHorizontalScroll(e.target);
   }, { passive: true });
   document.addEventListener('touchend', (e) => {
-    if (!touchStart) return;
+    if (!touchStart) { touchInScrollable = false; return; }
     const dx = e.changedTouches[0].clientX - touchStart.x;
     const dy = e.changedTouches[0].clientY - touchStart.y;
     const dt = Date.now() - touchTime;
+    const wasInScrollable = touchInScrollable;
+    touchStart = null;
+    touchInScrollable = false;
+    if (wasInScrollable) return;
     if (dt < 800 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
       // Don't trigger if user is interacting with input controls
       const target = e.target;
@@ -4599,7 +4628,6 @@ main {
       if (dx < 0) goToStage(currentStage + 1);
       else goToStage(currentStage - 1);
     }
-    touchStart = null;
   }, { passive: true });
 
   // ============================================================
@@ -4827,7 +4855,16 @@ main {
     }
 
     fb.classList.add('show');
-    setTimeout(() => fb.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+    // Mobile-friendly scroll: align the .fb-banner (which holds the 正答 line)
+    // just below the sticky topbar, so the answer is the first thing the user sees.
+    setTimeout(() => {
+      const banner = fb.querySelector('.fb-banner') || fb;
+      const topbar = document.querySelector('.topbar');
+      const topbarH = topbar ? topbar.getBoundingClientRect().height : 0;
+      const rect = banner.getBoundingClientRect();
+      const targetY = window.scrollY + rect.top - topbarH - 12;
+      window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+    }, 100);
   }
 
   function retryStage(stage) {
@@ -4877,10 +4914,16 @@ main {
     // Update timeline
     if (typeof updateTimeline === 'function') updateTimeline();
 
-    // Scroll to top of card so user can start fresh
+    // Scroll to top of card so user can start fresh — align below the sticky topbar
     const card = stage.querySelector('.problem-card');
     if (card) {
-      setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+      setTimeout(() => {
+        const topbar = document.querySelector('.topbar');
+        const topbarH = topbar ? topbar.getBoundingClientRect().height : 0;
+        const rect = card.getBoundingClientRect();
+        const targetY = window.scrollY + rect.top - topbarH - 12;
+        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+      }, 100);
     }
   }
 
