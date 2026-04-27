@@ -531,34 +531,120 @@ button, .opt, .ox-btn, .ox-row, .match-pill, .fill-chip, .fill-blank,
 }
 .carousel-hint { display: none; }
 
-/* ---- Spotlight: tap a card to focus, others dim. Tap outside to clear. ---- */
+/* ---- Spotlight v2: dramatic scale + dark backdrop + ring highlight ---- */
+.spotlight-backdrop {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(10, 25, 47, 0.55), rgba(8, 18, 36, 0.78));
+  backdrop-filter: blur(3px) saturate(85%);
+  -webkit-backdrop-filter: blur(3px) saturate(85%);
+  z-index: 80;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.34s var(--ease), visibility 0s linear 0.34s;
+  pointer-events: none;
+}
+body.has-spotlight-active .spotlight-backdrop {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 0.34s var(--ease), visibility 0s linear 0s;
+}
 .has-spotlight > .ip-rich,
 .has-spotlight > .bd-card,
 .has-spotlight > .lk-card,
 .has-spotlight > .cc-cat-item {
-  transition: opacity 0.28s ease, filter 0.28s ease, transform 0.28s ease, box-shadow 0.28s ease;
+  transition: opacity 0.32s ease, filter 0.32s ease, transform 0.32s var(--ease), box-shadow 0.32s var(--ease);
 }
 .has-spotlight > .ip-rich:not(.spotlight),
 .has-spotlight > .bd-card:not(.spotlight),
 .has-spotlight > .lk-card:not(.spotlight),
 .has-spotlight > .cc-cat-item:not(.spotlight) {
-  opacity: 0.34;
-  filter: saturate(0.65);
+  opacity: 0.18;
+  filter: saturate(0.4) blur(1px);
+  transform: scale(0.97);
 }
 .ip-rich.spotlight,
 .bd-card.spotlight,
 .lk-card.spotlight,
 .cc-cat-item.spotlight {
-  transform: scale(1.04);
-  z-index: 3;
+  transform: scale(1.18) translateY(-4px);
+  z-index: 90;
   position: relative;
-  box-shadow: 0 24px 50px -16px rgba(74, 120, 200, 0.28), 0 6px 14px -2px rgba(26, 43, 71, 0.14);
+  box-shadow:
+    0 0 0 3px rgba(212, 168, 82, 0.55),
+    0 32px 70px -18px rgba(0, 0, 0, 0.45),
+    0 14px 32px -6px rgba(74, 120, 200, 0.32);
+  animation: spotPulse 0.42s var(--ease);
+}
+@keyframes spotPulse {
+  0%   { transform: scale(1) translateY(0); box-shadow: 0 0 0 0 rgba(212, 168, 82, 0); }
+  60%  { transform: scale(1.22) translateY(-6px); box-shadow: 0 0 0 6px rgba(212, 168, 82, 0.45), 0 32px 70px -18px rgba(0, 0, 0, 0.45); }
+  100% { transform: scale(1.18) translateY(-4px); box-shadow: 0 0 0 3px rgba(212, 168, 82, 0.55), 0 32px 70px -18px rgba(0, 0, 0, 0.45), 0 14px 32px -6px rgba(74, 120, 200, 0.32); }
+}
+@media (max-width: 720px) {
+  .ip-rich.spotlight,
+  .bd-card.spotlight,
+  .lk-card.spotlight,
+  .cc-cat-item.spotlight {
+    transform: scale(1.12) translateY(-2px);
+  }
+  @keyframes spotPulse {
+    0%   { transform: scale(1); }
+    60%  { transform: scale(1.16) translateY(-4px); }
+    100% { transform: scale(1.12) translateY(-2px); }
+  }
+}
+.spotlight-hint {
+  position: fixed;
+  bottom: calc(env(safe-area-inset-bottom) + 80px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 95;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--ink);
+  font-family: var(--f-mono);
+  font-size: 0.72rem;
+  padding: 0.5rem 0.95rem;
+  border-radius: 999px;
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.06em;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+body.has-spotlight-active .spotlight-hint {
+  opacity: 1;
 }
 @media (hover: hover) and (pointer: fine) {
   .ip-rich, .bd-card, .lk-card, .cc-cat-item { transition: transform 0.18s ease, box-shadow 0.18s ease; }
   .ip-rich:hover, .bd-card:hover, .lk-card:hover, .cc-cat-item:hover {
     transform: translateY(-2px);
     box-shadow: 0 18px 36px -14px rgba(74, 120, 200, 0.18), 0 4px 10px -2px rgba(26, 43, 71, 0.08);
+  }
+}
+
+/* ---- Carousel dot indicator (Module 3 mobile) ---- */
+.carousel-dots { display: none; }
+@media (max-width: 720px) {
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.42rem;
+    margin: 0.35rem 0 0.2rem;
+  }
+  .carousel-dots .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--line-strong);
+    transition: background 0.24s ease, transform 0.24s ease, width 0.24s ease;
+  }
+  .carousel-dots .dot.active {
+    background: var(--action);
+    transform: scale(1.15);
+    width: 22px;
+    border-radius: 4px;
   }
 }
 
@@ -4345,6 +4431,7 @@ main {
     stages[currentStage].classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
     updateUI();
+    if (typeof haptic === 'function') haptic(6);
     if (currentStage === totalStages - 1) renderSummary();
   }
 
@@ -4427,14 +4514,29 @@ main {
     try { if (navigator.vibrate) navigator.vibrate(ms || 8); } catch (_) { /* iOS no-op */ }
   }
 
-  // Spotlight: tap an info card to focus it; siblings dim. Tap outside to clear.
+  // Spotlight v2: dramatic scale + dark backdrop + auto-scroll into center
   const SPOT_SELECTOR = '.ip-rich, .bd-card, .lk-card, .cc-cat-item';
+
+  // Inject backdrop + hint label once
+  const _spotBackdrop = document.createElement('div');
+  _spotBackdrop.className = 'spotlight-backdrop';
+  document.body.appendChild(_spotBackdrop);
+  const _spotHint = document.createElement('div');
+  _spotHint.className = 'spotlight-hint';
+  _spotHint.textContent = 'タップで解除 ✕';
+  document.body.appendChild(_spotHint);
+
+  function clearSpotlight() {
+    document.querySelectorAll('.spotlight').forEach(el => el.classList.remove('spotlight'));
+    document.querySelectorAll('.has-spotlight').forEach(el => el.classList.remove('has-spotlight'));
+    document.body.classList.remove('has-spotlight-active');
+  }
+
   document.addEventListener('click', (e) => {
     if (e.target.closest('button, label, input, .digest-prompt')) return;
     const card = e.target.closest(SPOT_SELECTOR);
     if (!card) {
-      document.querySelectorAll('.spotlight').forEach(el => el.classList.remove('spotlight'));
-      document.querySelectorAll('.has-spotlight').forEach(el => el.classList.remove('has-spotlight'));
+      clearSpotlight();
       return;
     }
     const grid = card.parentElement;
@@ -4442,19 +4544,27 @@ main {
     grid.querySelectorAll('.spotlight').forEach(el => el.classList.remove('spotlight'));
     if (wasActive) {
       grid.classList.remove('has-spotlight');
+      document.body.classList.remove('has-spotlight-active');
     } else {
       card.classList.add('spotlight');
       grid.classList.add('has-spotlight');
-      haptic(8);
+      document.body.classList.add('has-spotlight-active');
+      haptic(12);
+      // Scroll the spotlighted card to vertical center for visibility
+      requestAnimationFrame(() => {
+        const rect = card.getBoundingClientRect();
+        const targetY = window.scrollY + rect.top - (window.innerHeight / 2) + (rect.height / 2);
+        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+      });
     }
   }, { passive: true });
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      document.querySelectorAll('.spotlight').forEach(el => el.classList.remove('spotlight'));
-      document.querySelectorAll('.has-spotlight').forEach(el => el.classList.remove('has-spotlight'));
-    }
+    if (e.key === 'Escape') clearSpotlight();
   });
+
+  // Backdrop click also dismisses (catches outside-card taps anywhere on screen)
+  _spotBackdrop.addEventListener('click', () => clearSpotlight());
 
   // Haptic on key action buttons
   document.addEventListener('click', (e) => {
@@ -4462,13 +4572,40 @@ main {
     if (t) haptic(10);
   });
 
-  // Inject "← 横にスワイプ →" hint above Module 3 carousel (CSS shows on mobile only)
+  // Module 3 carousel: hint + dot indicator (mobile only via CSS)
   document.querySelectorAll('.origin-compare.three-col').forEach((cmp) => {
-    if (cmp.previousElementSibling && cmp.previousElementSibling.classList.contains('carousel-hint')) return;
-    const hint = document.createElement('div');
-    hint.className = 'carousel-hint';
-    hint.textContent = '← 横にスワイプ →';
-    cmp.parentElement.insertBefore(hint, cmp);
+    if (!cmp.previousElementSibling || !cmp.previousElementSibling.classList.contains('carousel-hint')) {
+      const hint = document.createElement('div');
+      hint.className = 'carousel-hint';
+      hint.textContent = '← 横にスワイプ →';
+      cmp.parentElement.insertBefore(hint, cmp);
+    }
+    // Dot indicator: one dot per .origin-side child
+    if (!cmp.nextElementSibling || !cmp.nextElementSibling.classList.contains('carousel-dots')) {
+      const sides = Array.from(cmp.children).filter(c => c.classList.contains('origin-side'));
+      const dots = document.createElement('div');
+      dots.className = 'carousel-dots';
+      sides.forEach((s, i) => {
+        const d = document.createElement('span');
+        d.className = 'dot' + (i === 0 ? ' active' : '');
+        dots.appendChild(d);
+      });
+      cmp.parentElement.insertBefore(dots, cmp.nextSibling);
+      // Update active dot via IntersectionObserver on the carousel children
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.55) {
+              const idx = sides.indexOf(entry.target);
+              if (idx >= 0) {
+                dots.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+              }
+            }
+          });
+        }, { root: cmp, threshold: [0.55, 0.9] });
+        sides.forEach(s => io.observe(s));
+      }
+    }
   });
 
 
@@ -4952,6 +5089,18 @@ main {
     { id: 'p6', label: 'Q6', name: '〈フィルターバブル〉', stageIdx: 11 }
   ];
 
+  function animateCounter(el, from, to, duration, suffix) {
+    const start = performance.now();
+    function step(now) {
+      const t = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - t, 3);
+      const value = Math.round(from + (to - from) * eased);
+      el.innerHTML = value + (suffix || '');
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
   function renderSummary() {
     let fullCount = 0, partialCount = 0, skippedCount = 0;
     let totalSubScore = 0, totalSubMax = 0;
@@ -4966,15 +5115,16 @@ main {
         else partialCount++;
       }
     });
-    document.getElementById('stat-full').innerHTML = fullCount + '<span class="unit">問</span>';
-    document.getElementById('stat-partial').innerHTML = partialCount + '<span class="unit">問</span>';
-    document.getElementById('stat-skipped').innerHTML = skippedCount + '<span class="unit">問</span>';
+    animateCounter(document.getElementById('stat-full'), 0, fullCount, 700, '<span class="unit">問</span>');
+    animateCounter(document.getElementById('stat-partial'), 0, partialCount, 700, '<span class="unit">問</span>');
+    animateCounter(document.getElementById('stat-skipped'), 0, skippedCount, 700, '<span class="unit">問</span>');
     const rate = totalSubMax > 0 ? Math.round((totalSubScore / totalSubMax) * 100) : 0;
-    document.getElementById('stat-rate').innerHTML = (totalSubMax > 0 ? rate : '—') + '<span class="unit">%</span>';
+    if (totalSubMax > 0) animateCounter(document.getElementById('stat-rate'), 0, rate, 900, '<span class="unit">%</span>');
+    else document.getElementById('stat-rate').innerHTML = '—<span class="unit">%</span>';
 
     const grade = document.getElementById('summary-grade');
-    grade.innerHTML = fullCount + '<span class="denom">/6</span>';
     grade.classList.remove('s-high', 's-mid', 's-low');
+    animateCounter(grade, 0, fullCount, 1100, '<span class="denom">/6</span>');
     if (fullCount >= 5) grade.classList.add('s-high');
     else if (fullCount >= 3) grade.classList.add('s-mid');
     else grade.classList.add('s-low');
