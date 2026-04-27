@@ -58,9 +58,10 @@ practices/
 新しい単元を作る・既存を修正するときは、**以下の順で必ず読んでから**コードに触る:
 
 1. 本ファイル(このCLAUDE.md)— 制作哲学・チェックリスト
-2. `skills/interactive-practice/SKILL.md` — 技術仕様・Design Tokens・落とし穴
+2. `skills/interactive-practice/SKILL.md` — 技術仕様・Design Tokens・モバイル UI 機構・落とし穴
 3. `skills/interactive-practice/components.md` — 部品カタログ(コピペ元)
-4. `skills/interactive-practice/examples/01-03-intellectual-property.html` — 動いている完成品
+4. `skills/interactive-practice/examples/01-01-information-and-media.html` — **最新完成品リファレンス**(モバイル UI 完備)
+   - 旧版の `01-03-intellectual-property.html` も同等機構を持つが、新規開発はまず 01-01 をコピーする
 5. `_source/ベストフィット問題/` の対応 docx + `_source/ベストフィット解答/` の対応問題範囲 — **問題と答えの正本**
 
 「制作哲学」「技術仕様」「正本」の3つを読まずに書くと、過去のバグや方針ズレを再生産することになります。
@@ -127,6 +128,20 @@ practices/
 
 詳細な色・フォント仕様は `skills/interactive-practice/SKILL.md` の Design Tokens を見ること。
 
+### 4.10 スマホ実機の体験を必ず作り込む
+スマホで触ったときに「リッチで気持ちいい」と感じる仕掛けを、**標準装備として必ず搭載**する。例題追加・新規単元・既存修正どれでも、これらを削ってはいけない。
+
+| 機構 | 期待される挙動 | SKILL.md 参照 |
+|------|----------------|---------------|
+| **スポットライト v2** | 短冊型カード(`.ip-rich` `.bd-card` `.lk-card` `.cc-cat-item`)タップで `scale(1.18)` PC / `1.12` mobile に拡大 + ゴールド縁取りリング + 画面全体を radial-gradient + backdrop-filter blur で暗転 + 自動で画面中央へスクロール。バックドロップ・Esc・再タップで解除。 | §8.5.1 |
+| **haptic フィードバック** | 採点・解答表示・もう一度・次の問題・スポットライト切替・ステージ送りで `navigator.vibrate(6-12ms)`。iOS は grace degrade で無音。 | §8.5.2 / §8.5.5 |
+| **3-col → モバイル横スワイプ snap カルーセル** | `.origin-compare.three-col`(inline style 禁止、必ずクラスで指定)。モバイルは 84vw 幅で snap、上に「← 横にスワイプ →」hint、下に IntersectionObserver 連動のドットインジケーター。 | §8.5.3 |
+| **サマリスコアのカウントアップ** | サマリ到達時に `summary-grade` `stat-full/partial/skipped/rate` が 0 → 実値へ easeOutCubic でカウントアップ。 | §8.5.4 |
+| **水平スクロール領域とスワイプの分離** | `.viz-svg-wrap` `.family-tree-wrap` 内タッチは page-swipe ハンドラを抑制(`isInsideHorizontalScroll`)。新しい横スクロール領域を追加するときは必ずクラスを SPOT_SELECTOR と isInsideHorizontalScroll の closest 引数に追記する。 | §9.4b |
+| **採点後スクロールは sticky topbar 直下** | `scrollIntoView({ block: 'center' })` は使わない。`.fb-banner` の rect.top - topbarH - 12 へ手動スクロールし、「正答」が必ず先頭に来るようにする。 | §9.4c |
+| **iOS 二重タップズーム遅延の解消** | 主要タップ要素全部に `touch-action: manipulation`。 | §9.4d |
+| **タップターゲット 44px 以上** | モバイル時の最小タップ領域。 | §10 |
+
 ---
 
 ## 5. 技術的な制約
@@ -147,8 +162,17 @@ practices/
 - 左サイドバーのタイムライン(全環境で開閉可能なドロワー)
 - ステップ送り(前 / 採点 / 次 ボタン)
 - キーボード(← → / Enter / Space / Esc / M キー)
-- スワイプ対応(横40px以上、800ms以内)
+- スワイプ対応(横60px以上、800ms以内、横スクロール領域内では抑制)
 - 進捗インジケータ(現在 / 全問数、完答数)
+
+### モバイルリッチ UI(必須・§4.10 と SKILL.md §8.5)
+- スポットライト v2(短冊カードタップで暗転 + 拡大)
+- haptic フィードバック(Android のみ実振動、iOS は無音)
+- 3-col の origin-compare は `.three-col` クラス → モバイル横スワイプ snap カルーセル + ドットインジケーター
+- サマリスコアのカウントアップ
+- 水平スクロール SVG とスワイプの分離(`isInsideHorizontalScroll`)
+- 採点後スクロールは sticky topbar 直下に固定
+- `touch-action: manipulation` で iOS 二重タップ遅延を解消
 
 ### ユニバーサル対応
 - 同一URLで PC(1100px+) / タブレット(720–1100px) / スマホ(〜720px)
@@ -174,11 +198,13 @@ practices/
 - ユーザーに合意を取る前にコードを書き始めない
 
 ### [3] 実装
-- `skills/interactive-practice/examples/01-03-intellectual-property.html` をベースにコピー
+- `skills/interactive-practice/examples/01-01-information-and-media.html` をベースにコピー(最新完成品。モバイル UI v2 完備)
 - `articles/{番号}-{slug}/index.html` に配置
 - カラートークン・タイポグラフィ・SVGテンプレは絶対に変えない
 - 問題タイプごとの入力UIは `components.md` から該当パーツをコピーする
 - ビジュアル(viz)は `components.md` のインフォグラフィクスカタログから選ぶ
+- 3列対比は `<div class="origin-compare three-col">` を使う(inline style 禁止)
+- 単元タイトル・slug・問題数を一括置換し、既存の JS フック(spotlight / haptic / animateCounter / isInsideHorizontalScroll / 採点後スクロール / カルーセルドット注入)は**絶対に消さない**
 
 ### [4] 答えの照合(原本との突き合わせ) ★ 飛ばすと事故る
 - 全問について、**正答・選択肢・解説の根拠フレーム**を原本 docx と1問ずつ照合
@@ -195,9 +221,17 @@ practices/
 
 ### [7] 構文・動作チェック
 - HTML 入れ子の検証(`<div class="digest-mod">` などの兄弟関係を保つ)
-- JS 構文(中括弧・括弧・タグ対応)
+- JS 構文(`node --check` で extracted script を確認、または HTML パーサで balance チェック)
 - 4ブレイクポイント(1100px / 720px / 380px / landscape phone)で崩れないか
 - `SKILL.md` の「既知の落とし穴」と照らし合わせる
+
+### [7.5] モバイル UX 動作確認 ★ §4.10 が崩れていないか
+- 短冊カードタップで scale 拡大 + 画面暗転 + ゴールドリング が出る
+- 3列 compare が `.three-col` クラス指定で、モバイル時は横スワイプ + 下にドット
+- 採点ボタン押下 → 「正答」バナーが画面先頭に見える(下に飛んでいない)
+- 水平スクロール SVG をスワイプしてもページ遷移しない
+- サマリ画面で「X/Y」がカウントアップアニメで増える
+- haptic は Android 実機で振動、iOS でエラー出ない
 
 ### [8] リリース
 - `practices/index.html`(単元一覧)にエントリ追加
@@ -246,7 +280,18 @@ practices/
 - [ ] `showFeedback` の null safety(score-tag が無くても OK)
 - [ ] `digest-mod` の入れ子バグなし(独立した兄弟構造)
 - [ ] Enter/Space の二重発火対策(`<button>` には keydown ハンドラを足さない)
-- [ ] スワイプとタップの干渉なし(ボタン要素は swipe で除外)
+- [ ] スワイプとタップの干渉なし(ボタン要素は swipe で除外、水平スクロール領域も `isInsideHorizontalScroll` で除外)
+- [ ] 採点後スクロールは sticky topbar 直下(`block: 'center'` を使っていない)
+- [ ] 主要タップ要素に `touch-action: manipulation` が当たっている
+
+### モバイルリッチ UI(§4.10 標準装備)
+- [ ] 短冊型カード(`.ip-rich` `.bd-card` `.lk-card` `.cc-cat-item`)タップで scale 拡大 + ゴールドリング + 画面暗転 が動く
+- [ ] スポットライト解除(再タップ・バックドロップ・Esc)が動く
+- [ ] 「タップで解除 ✕」hint がモバイル底部に出る
+- [ ] 3列対比は `<div class="origin-compare three-col">` で記述(inline style なし)
+- [ ] モバイルで 3列 compare が横スワイプ snap + 下にドットインジケーター
+- [ ] サマリ到達時に `summary-grade` `stat-full/partial/skipped/rate` がカウントアップアニメ
+- [ ] 採点・解答・もう一度・次・スポットライト・ステージ送り で haptic が呼ばれる
 
 ---
 

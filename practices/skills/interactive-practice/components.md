@@ -1,7 +1,7 @@
 # components.md — 部品カタログ(コピペ用)
 
 このファイルは新しい単元を作るときに、目的別の HTML をコピペするための辞書です。
-各部品は `examples/01-03-intellectual-property.html` から抽出したもので、CSS は SKILL.md 記載のクラスに依存しています。
+各部品は `examples/01-01-information-and-media.html`(最新)および `examples/01-03-intellectual-property.html` から抽出したもので、CSS は SKILL.md 記載のクラスに依存しています。新規単元のコピー元は **01-01** を使う。
 
 ---
 
@@ -440,6 +440,8 @@ JS の `PROBLEMS` 配列と `TIMELINE_ENTRIES` 配列も新しい問題群に合
 
 ### 3.8 Origin compare flow(発生方式対比)
 
+**2列対比**(デフォルト):
+
 ```html
 <div class="origin-compare">
   <div class="origin-side industrial">
@@ -469,6 +471,38 @@ JS の `PROBLEMS` 配列と `TIMELINE_ENTRIES` 配列も新しい問題群に合
 </div>
 ```
 
+**3列対比**(`.three-col` 必須・inline style 禁止):
+
+```html
+<div class="origin-compare three-col">
+  <div class="origin-side industrial">
+    <h5>{{第1カテゴリ}}</h5>
+    <div class="tag-en">{{英タグ}}</div>
+    <div class="origin-flow">
+      <span class="origin-step">{{ステップ1}}</span>
+      <span class="origin-step">{{ステップ2}}</span>
+    </div>
+    <span class="origin-key">{{核心キーワード}}</span>
+    <p class="note">{{解説}}</p>
+  </div>
+  <div class="origin-side industrial">
+    <h5>{{第2カテゴリ}}</h5>
+    ...
+  </div>
+  <div class="origin-side copyright">
+    <h5>{{第3カテゴリ}}</h5>
+    ...
+  </div>
+</div>
+```
+
+`.three-col` の挙動:
+- **デスクトップ**: 3 列グリッド
+- **モバイル(≤720px)**: 横スワイプ snap カルーセル(各カード 84vw)
+- JS が自動で挿入: 上に「← 横にスワイプ →」hint、下に IntersectionObserver 連動のドットインジケーター
+- `isInsideHorizontalScroll` ガード対象なので、page-swipe との干渉なし
+- 詳細は `SKILL.md` §8.5.3
+
 ### 3.9 SVG protection timeline(ガントチャート)
 
 `examples/01-03-intellectual-property.html` の例題9 セクションを参照。横スクロール対応:
@@ -487,7 +521,20 @@ JS の `PROBLEMS` 配列と `TIMELINE_ENTRIES` 配列も新しい問題群に合
 
 ### 3.11 SVG family tree(おさらいの大地図)
 
-`examples/01-03-intellectual-property.html` の REVIEW(Module 01)を参照。Linear gradient + 階層的な分岐構造。
+`examples/01-01-information-and-media.html` または `examples/01-03-intellectual-property.html` の REVIEW(Module 01)を参照。Linear gradient + 階層的な分岐構造。横スクロール対応(`.family-tree-wrap` で wrap、`min-width: 720-760px`)。
+
+### 3.12 スポットライト対応カード(SKILL.md §8.5.1)
+
+以下のカードクラスは「タップで暗転 + 拡大 + ゴールドリング」のスポットライト対象。
+
+| クラス | 用途 | 親グリッド |
+|---|---|---|
+| `.ip-rich` | 4 種マッチング・3 種特性などの主役カード | `.ip-rich-grid` |
+| `.bd-card` | 境界線・ルール早見カード | `.bd-grid` |
+| `.lk-card` | 譲渡可否などの 2 項対比カード | `.lk-grid` |
+| `.cc-cat-item` | CC マークなどのカテゴリカード | `.cc-cat` |
+
+新しいカードクラスを viz パターンとして追加する場合は、`SKILL.md` §8.5.1 の `SPOT_SELECTOR` と CSS の `.has-spotlight > .X:not(.spotlight)` / `.X.spotlight` / モバイル `@media` 群すべてに新クラス名を追加すること。
 
 ---
 
@@ -669,21 +716,58 @@ const PROBLEMS = [
 ];
 ```
 
-### 6.3 サマリの分母
-
-```javascript
-grade.innerHTML = fullCount + '<span class="denom">/{{練習問題数}}</span>';
-```
+### 6.3 サマリの分母とカウントアップ閾値
 
 ```html
 <div class="summary-grade" id="summary-grade">—<span class="denom">/{{練習問題数}}</span></div>
+<div class="summary-subline">{{練習問題数}}問の練習問題のうち、何問完答できたか。</div>
+```
+
+```javascript
+// renderSummary 内
+animateCounter(grade, 0, fullCount, 1100, '<span class="denom">/{{練習問題数}}</span>');
+
+// updateTimeline 内のサイドバースコア
+if (sbScore) sbScore.textContent = full + '/{{練習問題数}}';
+
+// 評価帯の閾値(問題数に応じて手で調整)
+if (fullCount >= {{Hi 閾値}}) grade.classList.add('s-high');
+else if (fullCount >= {{Mid 閾値}}) grade.classList.add('s-mid');
+else grade.classList.add('s-low');
+```
+
+| 練習問題数 | s-high | s-mid |
+|-----------|--------|-------|
+| 6 | ≥ 5 | ≥ 3 |
+| 8 | ≥ 7 | ≥ 4 |
+| 10 | ≥ 8 | ≥ 5 |
+
+### 6.4 触ってはいけない JS フック群(コピー元から絶対消さない)
+
+新規単元のコピー元(`examples/01-01-information-and-media.html`)に内蔵されている下記の JS は、ユニット内容と独立。差し替えで触らない:
+
+- `isInsideHorizontalScroll(el)` — 水平スクロール領域内タッチを page-swipe から除外(`.viz-svg-wrap` `.family-tree-wrap` および overflow-x:auto を持つ任意の要素を検知)
+- `haptic(ms)` — `navigator.vibrate` ラッパー、try-catch で iOS で安全に no-op
+- `function animateCounter(el, from, to, duration, suffix)` — easeOutCubic でカウントアップ
+- スポットライトハンドラ(`SPOT_SELECTOR` + click delegation + backdrop 注入)
+- カルーセル hint + dot インジケーター注入(`.origin-compare.three-col` 検知 + IntersectionObserver)
+- 採点後スクロールの sticky topbar 補正(`showFeedback` / `retryStage` 内)
+- ステージ遷移時の `haptic(6)`
+- ボタン data-action へのデリゲート haptic
+- `touch-action: manipulation` を当てる CSS
+
+これらが残っているか確認するシンプルな grep:
+
+```bash
+grep -c 'isInsideHorizontalScroll\|function haptic\|function animateCounter\|SPOT_SELECTOR\|spotlight-backdrop\|carousel-dots\|three-col\|touch-action: manipulation' articles/{{番号}}-{{slug}}/index.html
+# 期待: 8 つすべて hit すれば OK
 ```
 
 ---
 
 ## 7. 編集の最小手順(チートシート)
 
-1. `examples/01-03-intellectual-property.html` を `articles/{{番号}}-{{slug}}/index.html` にコピー
+1. `examples/01-01-information-and-media.html` を `articles/{{番号}}-{{slug}}/index.html` にコピー
 2. `<title>` と Welcome stage のメタ情報を更新
 3. **おさらいセクションの6モジュール**: 新単元のテーマに合わせて Q&A を書き直し、ビジュアルもテーマに沿ったものに差し替える
 4. **例題ステージ**: 問題数に合わせて追加/削除、内容差し替え。各例題に「補足」+ viz を追加
