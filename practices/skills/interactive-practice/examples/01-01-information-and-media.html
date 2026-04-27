@@ -1,0 +1,4849 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>情報とメディア | Practice Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400;1,9..144,600;1,9..144,800&family=Klee+One:wght@400;600&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Background — cool blue-white */
+  --bg-cream: #F4F8FC;
+  --bg-card: #FFFFFF;
+  --bg-soft: #E8F0F9;
+  --bg-paper: #FAFCFF;
+
+  /* Ink — deep navy */
+  --ink: #1A2B47;
+  --ink-soft: #475673;
+  --ink-mute: #75839B;
+  --ink-faint: #B0BAC9;
+
+  /* Action: refined medium blue */
+  --action: #4A78C8;
+  --action-deep: #2E5894;
+  --action-pale: #DAE6F5;
+  --action-pale2: #B8CDE6;
+
+  /* Anchor: deep navy */
+  --anchor: #122E55;
+  --anchor-mid: #2A4A78;
+  --anchor-pale: #DDE7F2;
+
+  /* Success: muted teal-green */
+  --ok: #41A38C;
+  --ok-pale: #C5E2D9;
+  --ok-deep: #2E826F;
+
+  /* Error: muted rose */
+  --ng: #C84A60;
+  --ng-pale: #F0D5DB;
+  --ng-deep: #8E3344;
+
+  /* Highlight: sophisticated amber (warm pop) */
+  --gold: #D4A852;
+  --gold-pale: #F5E5BB;
+  --gold-deep: #A37A1F;
+
+  /* Lines — cool light blue-grey */
+  --line: #D8E2EE;
+  --line-soft: #E8EFF7;
+  --line-strong: #B8C5D7;
+
+  --f-display: 'Fraunces', 'Playfair Display', Georgia, serif;
+  --f-jp-display: 'YuKyokasho Yoko', 'YuKyokasho', '游教科書体 横用', '游教科書体', 'Klee One', 'UD Digi Kyokasho N-R', 'Hiragino Mincho ProN', 'Yu Mincho', '游明朝', serif;
+  --f-jp-body: 'Zen Kaku Gothic New', 'Hiragino Sans', sans-serif;
+  --f-mono: 'JetBrains Mono', monospace;
+  --f-la: 'DM Sans', system-ui, sans-serif;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --shadow-card: 0 14px 30px -12px rgba(26, 43, 71, 0.12), 0 2px 8px -2px rgba(26, 43, 71, 0.06);
+  --shadow-card-hover: 0 22px 44px -14px rgba(74, 120, 200, 0.18), 0 4px 12px -2px rgba(26, 43, 71, 0.08);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: var(--f-jp-body);
+  font-weight: 500;
+  background: var(--bg-cream);
+  color: var(--ink);
+  line-height: 1.85;
+  letter-spacing: 0.02em;
+  font-feature-settings: 'palt' 1;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(26, 43, 71, 0.05) 1px, transparent 0);
+  background-size: 26px 26px;
+  pointer-events: none;
+}
+
+button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input { font: inherit; }
+::selection { background: var(--action-pale2); color: var(--ink); }
+
+/* ============================================================
+   SIDEBAR (TIMELINE)
+============================================================ */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 280px;
+  background: var(--bg-card);
+  border-right: 1px solid var(--line);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.35s var(--ease);
+}
+.sidebar-head {
+  padding: 1.1rem 1.5rem 1rem;
+  border-bottom: 1px solid var(--line-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.sidebar-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+}
+.sidebar-brand .mk {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.sidebar-brand .mk .dot { color: var(--action); font-style: normal; }
+.sidebar-brand .tg {
+  font-family: var(--f-la);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.sidebar-close {
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-paper);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-family: var(--f-mono);
+  font-weight: 700;
+  font-size: 1rem;
+  flex-shrink: 0;
+  transition: all 0.2s var(--ease);
+}
+.sidebar-close:hover { background: var(--action-pale); color: var(--action-deep); border-color: var(--action-pale2); }
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.25rem 0 1.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+.sidebar-content::-webkit-scrollbar { width: 6px; }
+.sidebar-content::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 3px; }
+.sidebar-content::-webkit-scrollbar-track { background: transparent; }
+
+.sb-section { margin-bottom: 1.4rem; }
+.sb-section-title {
+  font-family: var(--f-la);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding: 0 1.5rem;
+  margin-bottom: 0.65rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.sb-section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line-soft);
+}
+
+.timeline {
+  list-style: none;
+  position: relative;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  bottom: 14px;
+  left: calc(1.5rem + 9px);
+  width: 1.5px;
+  background: linear-gradient(to bottom, var(--line-soft) 0%, var(--line-strong) 50%, var(--line-soft) 100%);
+}
+
+.tl-item {
+  position: relative;
+  padding: 0.5rem 1.5rem 0.5rem 2.85rem;
+  cursor: pointer;
+  transition: background 0.2s var(--ease);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 38px;
+  outline: none;
+}
+.tl-item:hover { background: var(--bg-paper); }
+.tl-item:focus-visible {
+  background: var(--bg-paper);
+  box-shadow: inset 3px 0 0 var(--action);
+}
+.tl-item:active { background: var(--action-pale); }
+
+.tl-dot {
+  position: absolute;
+  left: calc(1.5rem + 3px);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 2px solid var(--line-strong);
+  z-index: 2;
+  transition: all 0.25s var(--ease);
+}
+.tl-item.completed .tl-dot {
+  border-color: var(--ok);
+  background: var(--ok);
+}
+.tl-item.completed .tl-dot::after {
+  content: '';
+  position: absolute;
+  top: 1px; left: 3px;
+  width: 4px; height: 7px;
+  border: 2px solid var(--bg-card);
+  border-top: 0; border-left: 0;
+  transform: rotate(45deg);
+}
+.tl-item.partial .tl-dot {
+  border-color: var(--gold);
+  background: var(--gold);
+}
+.tl-item.partial .tl-dot::after {
+  content: '';
+  position: absolute;
+  top: 4px; left: 2px;
+  width: 5px; height: 1.5px;
+  background: var(--ink);
+}
+.tl-item.wrong .tl-dot {
+  border-color: var(--ng);
+  background: var(--ng);
+}
+.tl-item.wrong .tl-dot::after {
+  content: '×';
+  position: absolute;
+  top: -3px; left: 1.5px;
+  font-family: var(--f-mono);
+  font-weight: 700;
+  font-size: 11px;
+  color: var(--bg-card);
+  line-height: 1;
+}
+.tl-item.active .tl-dot {
+  border-color: var(--action);
+  background: var(--action);
+  width: 16px;
+  height: 16px;
+  left: calc(1.5rem + 1px);
+  box-shadow: 0 0 0 4px var(--action-pale);
+}
+.tl-item.active.completed .tl-dot { background: var(--action); border-color: var(--action); }
+.tl-item.active .tl-dot::after { display: none; }
+
+.tl-label {
+  flex: 1;
+  font-size: 0.83rem;
+  color: var(--ink-soft);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: color 0.2s var(--ease);
+}
+.tl-item.active .tl-label {
+  color: var(--ink);
+  font-weight: 700;
+}
+.tl-num {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--anchor);
+  margin-right: 0.3em;
+}
+.tl-item.active .tl-num { color: var(--action); }
+.tl-stat {
+  font-family: var(--f-mono);
+  font-size: 0.68rem;
+  color: var(--ink-mute);
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+.tl-item.completed .tl-stat { color: var(--ok-deep); }
+.tl-item.partial .tl-stat { color: var(--gold-deep); }
+.tl-item.wrong .tl-stat { color: var(--ng-deep); }
+
+.sidebar-foot {
+  padding: 0.85rem 1.5rem;
+  border-top: 1px solid var(--line-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  font-family: var(--f-mono);
+  font-size: 0.7rem;
+  color: var(--ink-mute);
+  letter-spacing: 0.08em;
+}
+.sb-score {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--action);
+  font-size: 1rem;
+}
+.sb-reset {
+  font-family: var(--f-la);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding: 0.3rem 0.55rem;
+  border-radius: 4px;
+  border: 1px solid var(--line);
+  transition: all 0.2s var(--ease);
+}
+.sb-reset:hover { color: var(--action-deep); border-color: var(--action-pale2); }
+
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 30, 40, 0.45);
+  backdrop-filter: blur(2px);
+  z-index: 55;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+}
+.sidebar-backdrop.show { display: block; opacity: 1; }
+
+/* Default: sidebar closed on all screen sizes */
+.sidebar { transform: translateX(-100%); }
+.sidebar.open { transform: translateX(0); }
+
+/* ============================================================
+   TOP BAR
+============================================================ */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 248, 252, 0.92);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+.topbar-inner {
+  max-width: 920px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+}
+.menu-btn {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s var(--ease);
+}
+.menu-btn:hover { background: var(--action-pale); color: var(--action-deep); border-color: var(--action-pale2); }
+.menu-btn svg { width: 18px; height: 18px; }
+.menu-btn.is-open {
+  background: var(--anchor);
+  color: var(--bg-card);
+  border-color: var(--anchor);
+}
+.menu-btn.is-open:hover { background: var(--anchor-mid); color: var(--bg-card); border-color: var(--anchor-mid); }
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  text-decoration: none;
+  color: inherit;
+  flex-shrink: 0;
+}
+.brand-mark {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.brand-mark .dot { color: var(--action); font-style: normal; }
+.brand-tag {
+  font-family: var(--f-la);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.topbar-progress {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.progress-label {
+  font-family: var(--f-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-mute);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.progress-label .stage-name {
+  color: var(--ink-soft);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.65rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.progress-track {
+  height: 4px;
+  background: var(--line-soft);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+.progress-fill {
+  position: absolute;
+  inset: 0 100% 0 0;
+  background: linear-gradient(90deg, var(--anchor) 0%, var(--action) 100%);
+  border-radius: 999px;
+  transition: right 0.55s var(--ease);
+}
+.topbar-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.topbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  transition: all 0.25s var(--ease);
+}
+.topbar-btn:hover { background: var(--action-pale); color: var(--action-deep); border-color: var(--action-pale2); }
+.topbar-btn svg { width: 16px; height: 16px; }
+
+/* ============================================================
+   MAIN STAGE
+============================================================ */
+main {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 2.25rem 1.5rem 8rem;
+  position: relative;
+}
+
+.stage {
+  display: none;
+  animation: stageEnter 0.4s var(--ease);
+}
+.stage.active { display: block; }
+
+@keyframes stageEnter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   STAGE: WELCOME
+============================================================ */
+.welcome-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0.85rem;
+  background: var(--anchor-pale);
+  color: var(--anchor);
+  border-radius: 999px;
+  font-family: var(--f-la);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+.welcome-kicker .num {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.welcome-title-en {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: clamp(2.2rem, 6vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin-bottom: 0.4rem;
+}
+.welcome-title-en .accent { color: var(--action); font-style: normal; font-weight: 800; }
+.welcome-title-jp {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: clamp(1.4rem, 3.5vw, 2rem);
+  letter-spacing: 0.05em;
+  color: var(--anchor);
+  margin-bottom: 1.5rem;
+}
+.welcome-lede {
+  max-width: 620px;
+  font-size: 1rem;
+  line-height: 2;
+  color: var(--ink-soft);
+  margin-bottom: 2rem;
+}
+.welcome-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+}
+.welcome-meta-item {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.welcome-meta-label {
+  font-family: var(--f-la);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.welcome-meta-value {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.welcome-meta-value .unit {
+  font-family: var(--f-jp-body);
+  font-style: normal;
+  font-size: 0.85rem;
+  color: var(--ink-mute);
+  font-weight: 500;
+  margin-left: 0.3rem;
+}
+
+.flow-strip {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1.5rem 1.5rem 1.4rem;
+  margin-bottom: 2rem;
+}
+.flow-strip-title {
+  font-family: var(--f-la);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--anchor);
+  margin-bottom: 1rem;
+}
+.flow-list {
+  display: grid;
+  gap: 0.65rem;
+}
+.flow-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+}
+.flow-num {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--anchor-pale);
+  color: var(--anchor);
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+/* ============================================================
+   STAGE: REVIEW (おさらい)
+============================================================ */
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin: 0 0 2.5rem;
+  padding-top: 0.5rem;
+}
+.section-divider .num {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 2.4rem;
+  color: var(--action);
+  letter-spacing: -0.01em;
+  flex-shrink: 0;
+}
+.section-divider .text {
+  flex: 1;
+  border-left: 2px solid var(--line);
+  padding-left: 1.25rem;
+}
+.section-divider .label {
+  font-family: var(--f-la);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 0.2rem;
+}
+.section-divider .name {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1.4rem;
+  color: var(--ink);
+  letter-spacing: 0.05em;
+}
+
+.review-stack { display: grid; gap: 1rem; }
+
+/* ============================================================
+   DIGEST — visual one-page summary for review
+============================================================ */
+.digest {
+  display: grid;
+  gap: 1.5rem;
+}
+.digest-mod {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.25s var(--ease), box-shadow 0.3s var(--ease);
+}
+.digest-mod:hover { border-color: var(--action-pale2); }
+.digest-mod.open { border-color: var(--action-pale2); box-shadow: var(--shadow-card); }
+.digest-mod.hero {
+  background: linear-gradient(155deg, #FFFFFF 0%, var(--bg-paper) 100%);
+}
+
+.digest-prompt {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  padding: 1.2rem 1.4rem 1.3rem;
+  text-align: left;
+  cursor: pointer;
+  display: block;
+  outline: none;
+  position: relative;
+  transition: background 0.2s var(--ease);
+}
+.digest-prompt:hover { background: var(--bg-paper); }
+.digest-prompt:focus-visible {
+  background: var(--bg-paper);
+  box-shadow: inset 4px 0 0 var(--action);
+}
+.digest-prompt-head {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.6rem;
+}
+.digest-num {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: var(--action);
+  letter-spacing: -0.01em;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.digest-en {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 0.72rem;
+  color: var(--ink-mute);
+  letter-spacing: 0.05em;
+  flex: 1;
+  border-left: 1px solid var(--line);
+  padding-left: 0.7rem;
+}
+.digest-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--f-la);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--action);
+  flex-shrink: 0;
+}
+.digest-toggle::before {
+  content: 'TAP';
+}
+.digest-mod.open .digest-toggle::before {
+  content: 'CLOSE';
+}
+.digest-toggle .plus {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--action-pale);
+  color: var(--action-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--f-mono);
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: all 0.3s var(--ease);
+}
+.digest-mod.open .digest-toggle .plus {
+  background: var(--action);
+  color: var(--bg-card);
+  transform: rotate(45deg);
+}
+.digest-q {
+  font-family: var(--f-jp-display);
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--ink);
+  letter-spacing: 0.05em;
+  line-height: 1.65;
+  position: relative;
+  padding-left: 1.5rem;
+}
+.digest-q::before {
+  content: 'Q';
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 800;
+  color: var(--action);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.digest-answer {
+  display: none;
+  padding: 1.2rem 1.4rem 1.5rem;
+  border-top: 1px dashed var(--line);
+  position: relative;
+  animation: digestReveal 0.45s var(--ease);
+}
+.digest-mod.open .digest-answer { display: block; }
+.digest-answer::before {
+  content: 'A';
+  position: absolute;
+  top: 1.15rem;
+  left: 1.4rem;
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 800;
+  color: var(--ok);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+.digest-title {
+  font-family: var(--f-jp-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--ink);
+  letter-spacing: 0.05em;
+  margin: 0 0 0.7rem 1.5rem;
+  line-height: 1.55;
+}
+.digest-lede {
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  margin-bottom: 1.1rem;
+  line-height: 1.85;
+}
+
+@keyframes digestReveal {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Family tree (Module 1) */
+.family-tree-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -0.4rem;
+  padding: 0.5rem 0.4rem;
+  scrollbar-width: thin;
+}
+.family-tree-wrap::-webkit-scrollbar { height: 5px; }
+.family-tree-wrap::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 3px; }
+.family-tree-svg {
+  width: 100%;
+  height: auto;
+  min-width: 720px;
+  display: block;
+}
+
+/* ip-grid-rich (Module 2 — 4種 with example) */
+.ip-rich-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.7rem;
+}
+.ip-rich {
+  background: var(--bg-paper);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1rem 0.95rem;
+  position: relative;
+  border-top: 5px solid var(--ip-color, var(--anchor));
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+.ip-rich:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px -12px rgba(26, 43, 71, 0.18);
+}
+.ip-rich.patent { --ip-color: #4A78C8; }
+.ip-rich.utility { --ip-color: #5BA0A8; }
+.ip-rich.design { --ip-color: #C9A66B; }
+.ip-rich.trademark { --ip-color: #B85975; }
+.ip-rich-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  background: var(--ip-color);
+  color: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.65rem;
+}
+.ip-rich-icon svg { width: 22px; height: 22px; }
+.ip-rich-name {
+  font-family: var(--f-jp-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--ink);
+  margin-bottom: 0.15rem;
+  letter-spacing: 0.04em;
+}
+.ip-rich-en {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-size: 0.7rem;
+  color: var(--ip-color);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+}
+.ip-rich-period {
+  display: inline-block;
+  background: var(--ip-color);
+  color: var(--bg-card);
+  font-family: var(--f-mono);
+  font-weight: 700;
+  font-size: 0.72rem;
+  padding: 0.18rem 0.55rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+}
+.ip-rich-desc {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin-bottom: 0.55rem;
+}
+.ip-rich-ex {
+  font-family: var(--f-jp-body);
+  font-size: 0.72rem;
+  color: var(--ink-mute);
+  border-top: 1px dashed var(--line);
+  padding-top: 0.5rem;
+  line-height: 1.55;
+}
+.ip-rich-ex .label {
+  font-family: var(--f-la);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ip-color);
+  font-size: 0.6rem;
+  margin-right: 0.35em;
+}
+
+/* Origin compare (Module 3) */
+.origin-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+.origin-side {
+  background: var(--bg-paper);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.1rem 1.1rem;
+  border-top: 5px solid var(--side-color);
+  position: relative;
+}
+.origin-side.industrial { --side-color: #4A78C8; }
+.origin-side.copyright { --side-color: var(--gold-deep); }
+.origin-side h5 {
+  font-family: var(--f-jp-display);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--ink);
+  margin-bottom: 0.1rem;
+  letter-spacing: 0.05em;
+}
+.origin-side .tag-en {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-size: 0.72rem;
+  color: var(--side-color);
+  font-weight: 600;
+  margin-bottom: 0.85rem;
+  letter-spacing: 0.04em;
+}
+.origin-flow {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.7rem;
+}
+.origin-step {
+  background: var(--bg-card);
+  border: 1.5px solid var(--side-color);
+  color: var(--side-color);
+  font-weight: 700;
+  font-size: 0.78rem;
+  padding: 0.4rem 0.65rem;
+  border-radius: 8px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.origin-step.fill {
+  background: var(--side-color);
+  color: var(--bg-card);
+}
+.origin-arrow {
+  color: var(--ink-mute);
+  font-family: var(--f-mono);
+  font-weight: 700;
+}
+.origin-key {
+  font-family: var(--f-jp-display);
+  font-weight: 600;
+  color: var(--side-color);
+  font-size: 0.92rem;
+  margin-top: 0.4rem;
+  display: inline-block;
+  border-bottom: 2px solid var(--side-color);
+  padding-bottom: 0.1rem;
+}
+.origin-side .note {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  margin-top: 0.55rem;
+  line-height: 1.7;
+}
+
+/* Lock vs Key (Module 4 — 著作者人格権 vs 財産権) */
+.lk-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+.lk-card {
+  background: var(--bg-paper);
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  padding: 1.1rem 1.15rem 1.15rem;
+  position: relative;
+  border-left: 5px solid var(--lk-color);
+}
+.lk-card.locked { --lk-color: #6E5A8D; }
+.lk-card.transferable { --lk-color: #41A38C; }
+.lk-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--lk-color);
+  color: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.7rem;
+}
+.lk-icon svg { width: 22px; height: 22px; }
+.lk-card h5 {
+  font-family: var(--f-jp-display);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--ink);
+  margin-bottom: 0.15rem;
+  letter-spacing: 0.04em;
+}
+.lk-card .stamp {
+  font-family: var(--f-la);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  display: inline-block;
+  background: var(--lk-color);
+  color: var(--bg-card);
+  margin-bottom: 0.6rem;
+}
+.lk-list {
+  list-style: none;
+  display: grid;
+  gap: 0.3rem;
+  margin-bottom: 0.6rem;
+}
+.lk-list li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.lk-list li::before {
+  content: '○';
+  color: var(--lk-color);
+  font-weight: 700;
+}
+.lk-rules {
+  font-size: 0.78rem;
+  color: var(--ink-mute);
+  border-top: 1px dashed var(--line);
+  padding-top: 0.5rem;
+  line-height: 1.7;
+}
+.lk-rules strong { color: var(--ink); }
+
+/* Boundary cards (Module 5 — 例外規定) */
+.bd-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.7rem;
+}
+.bd-card {
+  background: linear-gradient(155deg, var(--bg-paper) 0%, var(--bg-card) 100%);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1rem 1rem;
+  border-top: 4px solid var(--ok);
+  position: relative;
+}
+.bd-card .key {
+  font-family: var(--f-jp-display);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--ok-deep);
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.04em;
+}
+.bd-card .bound {
+  display: inline-block;
+  background: var(--ok-pale);
+  color: var(--ok-deep);
+  border: 1px solid var(--ok);
+  border-radius: 999px;
+  font-family: var(--f-mono);
+  font-weight: 700;
+  font-size: 0.7rem;
+  padding: 0.15rem 0.55rem;
+  margin-bottom: 0.55rem;
+  letter-spacing: 0.04em;
+}
+.bd-card .desc {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  line-height: 1.65;
+}
+.bd-warn {
+  margin-top: 0.85rem;
+  background: var(--ng-pale);
+  border-left: 3px solid var(--ng);
+  border-radius: 0 8px 8px 0;
+  padding: 0.7rem 0.95rem;
+  font-size: 0.85rem;
+  color: var(--ng-deep);
+  line-height: 1.65;
+}
+
+/* CC mark catalog (Module 6) */
+.cc-cat {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.6rem;
+  margin-bottom: 0.95rem;
+}
+.cc-cat-item {
+  background: var(--bg-card);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 0.8rem 0.85rem 0.85rem;
+  text-align: center;
+  border-top: 4px solid var(--cc-color);
+}
+.cc-cat-item.by { --cc-color: #4A78C8; }
+.cc-cat-item.nc { --cc-color: #B85975; }
+.cc-cat-item.nd { --cc-color: #6E5A8D; }
+.cc-cat-item.sa { --cc-color: #41A38C; }
+.cc-cat-mark {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--cc-color);
+  color: var(--bg-card);
+  font-family: var(--f-la);
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 0.55rem;
+  letter-spacing: 0.04em;
+}
+.cc-cat-name {
+  font-family: var(--f-jp-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--ink);
+  margin-bottom: 0.15rem;
+}
+.cc-cat-rule {
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+
+.cc-presets-title {
+  font-family: var(--f-la);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0.2rem 0 0.5rem;
+}
+.cc-presets {
+  display: grid;
+  gap: 0.45rem;
+}
+.cc-preset {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.7rem;
+  align-items: center;
+  background: var(--bg-paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.55rem 0.85rem;
+}
+.cc-preset .nm {
+  font-family: var(--f-mono);
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: var(--anchor);
+  letter-spacing: 0.04em;
+}
+.cc-preset .desc {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+.cc-preset .marks {
+  display: flex;
+  gap: 0.25rem;
+}
+.cc-preset .mini {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-family: var(--f-la);
+  font-weight: 700;
+  font-size: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--mc, var(--anchor));
+  background: var(--mc, var(--anchor));
+  color: var(--bg-card);
+}
+.cc-preset .mini.by { --mc: #4A78C8; }
+.cc-preset .mini.nc { --mc: #B85975; }
+.cc-preset .mini.nd { --mc: #6E5A8D; }
+.cc-preset .mini.sa { --mc: #41A38C; }
+
+.review-card {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.review-card.open {
+  border-color: var(--action-pale2);
+  box-shadow: var(--shadow-card);
+}
+.review-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  text-align: left;
+}
+.review-head:hover { background: var(--bg-paper); }
+.review-icon {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--anchor-pale);
+  color: var(--anchor);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+.review-card.open .review-icon { background: var(--action-pale); color: var(--action-deep); }
+.review-title {
+  flex: 1;
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+}
+.review-toggle {
+  flex-shrink: 0;
+  font-family: var(--f-mono);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--ink-mute);
+  transition: transform 0.3s var(--ease);
+}
+.review-card.open .review-toggle { transform: rotate(45deg); color: var(--action); }
+.review-body {
+  display: none;
+  padding: 0 1.25rem 1.4rem;
+  border-top: 1px dashed var(--line);
+  padding-top: 1.2rem;
+  margin-top: -1px;
+}
+.review-card.open .review-body { display: block; }
+.review-body p { font-size: 0.92rem; line-height: 1.95; color: var(--ink-soft); margin-bottom: 0.7rem; }
+.review-body p:last-child { margin-bottom: 0; }
+.review-body strong { color: var(--ink); font-weight: 700; }
+.review-body em { font-style: normal; background: var(--gold-pale); padding: 0 0.2em; border-radius: 3px; }
+
+.tree {
+  background: var(--bg-paper);
+  border: 1px dashed var(--line-strong);
+  border-radius: 8px;
+  padding: 1rem 1.1rem;
+  margin: 0.75rem 0;
+  font-size: 0.88rem;
+  line-height: 1.85;
+  color: var(--ink-soft);
+}
+.tree-line {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+.tree-key {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  color: var(--anchor);
+  white-space: nowrap;
+}
+.tree-line.indent { padding-left: 1.2rem; }
+.tree-line.indent2 { padding-left: 2.4rem; }
+.tree-note {
+  font-family: var(--f-mono);
+  font-size: 0.75rem;
+  color: var(--ink-mute);
+  margin-top: 0.35rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--line);
+}
+
+/* ============================================================
+   PROBLEM CARD (例題 + 練習)
+============================================================ */
+.problem-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-bottom: 0.85rem;
+}
+.problem-tag {
+  font-family: var(--f-la);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.65rem;
+  border-radius: 4px;
+  background: var(--anchor-pale);
+  color: var(--anchor);
+}
+.problem-tag.practice { background: var(--action-pale); color: var(--action-deep); }
+.problem-tag.fill { background: var(--gold-pale); color: var(--gold-deep); }
+.problem-tag.match { background: var(--anchor-pale); color: var(--anchor); }
+.problem-tag.ox { background: var(--ok-pale); color: var(--ok-deep); }
+.problem-tag.multi { background: #DEE2F2; color: #4A56A8; }
+.problem-source {
+  font-family: var(--f-mono);
+  font-size: 0.72rem;
+  color: var(--ink-mute);
+  letter-spacing: 0.05em;
+}
+
+.problem-q-num {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 3.6rem;
+  letter-spacing: -0.02em;
+  color: var(--action);
+  line-height: 0.9;
+  margin-bottom: 0.4rem;
+}
+.problem-q-num .q {
+  font-size: 1.6rem;
+  vertical-align: 0.7em;
+  font-weight: 600;
+  color: var(--ink-faint);
+  margin-right: 0.1em;
+}
+
+.problem-title {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: clamp(1.3rem, 3vw, 1.7rem);
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  margin-bottom: 1.2rem;
+  line-height: 1.5;
+}
+
+.problem-card {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1.75rem 1.5rem 1.5rem;
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+}
+.problem-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--anchor) 0%, var(--action) 100%);
+}
+
+.problem-q {
+  font-size: 1rem;
+  line-height: 2;
+  color: var(--ink);
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+.problem-q.lead {
+  border-left: 3px solid var(--action);
+  padding-left: 1rem;
+  background: var(--bg-paper);
+  padding: 0.85rem 1rem 0.85rem 1.1rem;
+  border-radius: 0 8px 8px 0;
+}
+
+/* ============================================================
+   INPUT — single choice (radio)
+============================================================ */
+.opts {
+  display: grid;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+}
+.opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.95rem 1.1rem;
+  background: var(--bg-paper);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+  position: relative;
+}
+.opt:hover { border-color: var(--action-pale2); background: var(--action-pale); }
+.opt.picked { border-color: var(--action); background: var(--action-pale); }
+.opt input { position: absolute; opacity: 0; pointer-events: none; }
+.opt-mark {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--ink-faint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 4px;
+  background: var(--bg-card);
+  transition: all 0.2s var(--ease);
+}
+.opt.picked .opt-mark { border-color: var(--action); }
+.opt.picked .opt-mark::after {
+  content: '';
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--action);
+}
+.opt-mark.checkbox { border-radius: 5px; }
+.opt.picked .opt-mark.checkbox::after {
+  content: '';
+  width: 12px; height: 7px;
+  border: 2.5px solid var(--action);
+  border-top: 0; border-right: 0;
+  background: transparent;
+  transform: rotate(-45deg) translate(1px, -2px);
+  border-radius: 0;
+}
+.opt-text {
+  flex: 1;
+  font-size: 0.96rem;
+  line-height: 1.85;
+  color: var(--ink);
+}
+.opt-letter {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--anchor);
+  margin-right: 0.4rem;
+}
+
+/* graded states */
+.opt.graded.correct {
+  border-color: var(--ok);
+  background: var(--ok-pale);
+}
+.opt.graded.correct .opt-mark { border-color: var(--ok); background: var(--ok); }
+.opt.graded.correct .opt-mark::after { background: var(--bg-card) !important; width: 11px !important; height: 6px !important; border: 2.5px solid var(--bg-card) !important; border-top: 0 !important; border-right: 0 !important; transform: rotate(-45deg) translate(1px, -1px) !important; border-radius: 0 !important; }
+.opt.graded.correct .opt-mark.checkbox::after { background: transparent !important; }
+.opt.graded.wrong {
+  border-color: var(--ng);
+  background: var(--ng-pale);
+}
+.opt.graded.wrong .opt-mark { border-color: var(--ng); background: var(--ng); }
+.opt.graded.wrong .opt-mark::after,
+.opt.graded.wrong .opt-mark.checkbox::after {
+  content: '×';
+  background: transparent !important;
+  width: auto !important; height: auto !important;
+  border: 0 !important;
+  color: var(--bg-card);
+  font-family: var(--f-mono);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
+  transform: none !important;
+  border-radius: 0 !important;
+}
+.opt.graded.missed {
+  border-color: var(--ok);
+  background: var(--bg-card);
+  border-style: dashed;
+}
+.opt.graded.missed::after {
+  content: '正解';
+  position: absolute;
+  top: 0.5rem; right: 0.6rem;
+  font-family: var(--f-la);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--ok);
+  background: var(--ok-pale);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   INPUT — match (sub→opt)
+============================================================ */
+.match-list { display: grid; gap: 0.6rem; margin-bottom: 1.5rem; }
+.match-row {
+  background: var(--bg-paper);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem;
+  align-items: start;
+}
+.match-row.graded.correct { border-color: var(--ok); background: var(--ok-pale); }
+.match-row.graded.wrong { border-color: var(--ng); background: var(--ng-pale); }
+.match-sub-label {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--anchor);
+  flex-shrink: 0;
+  min-width: 1.6em;
+}
+.match-row .sub-content { display: flex; flex-direction: column; gap: 0.6rem; }
+.match-text { font-size: 0.94rem; line-height: 1.8; color: var(--ink); }
+.match-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.2rem;
+}
+.match-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg-card);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  transition: all 0.2s var(--ease);
+  cursor: pointer;
+  user-select: none;
+}
+.match-pill:hover { border-color: var(--action-pale2); background: var(--action-pale); color: var(--action-deep); }
+.match-pill.picked { background: var(--action); border-color: var(--action); color: var(--bg-card); }
+.match-pill.graded-correct { background: var(--ok); border-color: var(--ok); color: var(--bg-card); }
+.match-pill.graded-wrong { background: var(--ng-pale); border-color: var(--ng); color: var(--ng-deep); text-decoration: line-through; }
+.match-pill.graded-shouldbe {
+  background: var(--bg-card); border-color: var(--ok); color: var(--ok-deep);
+  border-style: dashed;
+}
+.match-pill .let {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 700;
+  margin-right: 0.2em;
+}
+
+.option-legend {
+  background: var(--bg-paper);
+  border: 1px dashed var(--line-strong);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+.option-legend-title {
+  font-family: var(--f-la);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 0.4rem;
+}
+.option-legend-list { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; }
+.option-legend-item { color: var(--ink-soft); }
+.option-legend-item .let {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--anchor);
+  margin-right: 0.3em;
+}
+
+/* ============================================================
+   INPUT — OX (各小問に ○ or ×)
+============================================================ */
+.ox-list { display: grid; gap: 0.55rem; margin-bottom: 1.5rem; }
+.ox-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.85rem;
+  align-items: center;
+  background: var(--bg-paper);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  transition: border-color 0.2s var(--ease);
+}
+.ox-row.graded.correct { border-color: var(--ok); background: var(--ok-pale); }
+.ox-row.graded.wrong { border-color: var(--ng); background: var(--ng-pale); }
+.ox-sub-label {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--anchor);
+  min-width: 1.6em;
+}
+.ox-text {
+  font-size: 0.92rem;
+  line-height: 1.8;
+  color: var(--ink);
+}
+.ox-buttons {
+  display: flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+.ox-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  border: 1.5px solid var(--line);
+  background: var(--bg-card);
+  font-family: var(--f-mono);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--ink-mute);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s var(--ease);
+}
+.ox-btn:hover { border-color: var(--action); color: var(--action-deep); }
+.ox-btn.picked.maru { background: var(--ok); border-color: var(--ok); color: var(--bg-card); }
+.ox-btn.picked.batsu { background: var(--ng); border-color: var(--ng); color: var(--bg-card); }
+.ox-row.graded .ox-btn { pointer-events: none; opacity: 0.65; }
+.ox-row.graded .ox-btn.picked { opacity: 1; }
+.ox-row.graded .ox-btn.shouldbe {
+  border-color: var(--ok);
+  border-style: dashed;
+  color: var(--ok-deep);
+  opacity: 1;
+}
+
+/* ============================================================
+   INPUT — multi-select (1問でN個選ぶ)
+============================================================ */
+.multi-hint {
+  display: inline-block;
+  font-family: var(--f-la);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--anchor);
+  background: var(--anchor-pale);
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  margin-bottom: 0.85rem;
+}
+
+/* ============================================================
+   INPUT — fill (語群穴埋め)
+============================================================ */
+.fill-bullets {
+  background: var(--bg-paper);
+  border: 1px dashed var(--line-strong);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  margin-bottom: 1.2rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.fill-line {
+  font-size: 0.96rem;
+  line-height: 2.15;
+  color: var(--ink);
+}
+.fill-line::before {
+  content: '・';
+  color: var(--action);
+  font-weight: 700;
+  margin-right: 0.2em;
+}
+.fill-blank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.5em;
+  height: 1.85em;
+  margin: 0 0.25em;
+  padding: 0 0.6em;
+  border: 1.5px dashed var(--ink-faint);
+  border-radius: 6px;
+  background: var(--bg-card);
+  color: var(--ink-faint);
+  font-size: 0.92em;
+  font-weight: 600;
+  vertical-align: middle;
+  transition: all 0.2s var(--ease);
+}
+.fill-blank.filled {
+  border-style: solid;
+  border-color: var(--action);
+  background: var(--action-pale);
+  color: var(--action-deep);
+}
+.fill-blank.active {
+  border-color: var(--action);
+  background: var(--action-pale);
+  box-shadow: 0 0 0 3px rgba(74, 120, 200, 0.18);
+}
+.fill-blank.graded-correct {
+  border-color: var(--ok);
+  border-style: solid;
+  background: var(--ok-pale);
+  color: var(--ok-deep);
+}
+.fill-blank.graded-wrong {
+  border-color: var(--ng);
+  border-style: solid;
+  background: var(--ng-pale);
+  color: var(--ng-deep);
+  text-decoration: line-through;
+}
+.fill-blank-label {
+  font-family: var(--f-mono);
+  font-size: 0.7em;
+  color: var(--ink-mute);
+  margin-right: 0.2em;
+  font-weight: 700;
+}
+.fill-blank.filled .fill-blank-label,
+.fill-blank.active .fill-blank-label { color: var(--action-deep); }
+.fill-bank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+}
+.fill-bank-title {
+  font-family: var(--f-la);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+.fill-chip {
+  padding: 0.4rem 0.85rem;
+  background: var(--bg-card);
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--ink);
+  transition: all 0.2s var(--ease);
+}
+.fill-chip:hover { border-color: var(--action); background: var(--action-pale); }
+.fill-chip.used { background: var(--anchor-pale); color: var(--anchor); border-style: dashed; }
+.fill-correct-row {
+  display: none;
+  grid-template-columns: auto 1fr;
+  gap: 0.75rem;
+  background: var(--ok-pale);
+  border: 1px solid var(--ok);
+  border-radius: 8px;
+  padding: 0.75rem 0.9rem;
+  margin-bottom: 1.1rem;
+  font-size: 0.85rem;
+}
+.fill-correct-row.show { display: grid; }
+.fill-correct-row .label {
+  font-family: var(--f-la);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--ok-deep);
+}
+.fill-correct-row .val {
+  font-family: var(--f-jp-body);
+  font-weight: 700;
+  color: var(--ok-deep);
+  line-height: 1.8;
+}
+
+/* ============================================================
+   INPUT — multi_per_sub (各小問に複数選択 — CCマーク等)
+============================================================ */
+.mps-list { display: grid; gap: 0.7rem; margin-bottom: 1.5rem; }
+.mps-row {
+  background: var(--bg-paper);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem;
+  align-items: start;
+}
+.mps-row.graded.correct { border-color: var(--ok); background: var(--ok-pale); }
+.mps-row.graded.wrong { border-color: var(--ng); background: var(--ng-pale); }
+.mps-row .sub-content { display: flex; flex-direction: column; gap: 0.55rem; }
+.mps-text { font-size: 0.92rem; line-height: 1.85; color: var(--ink); }
+
+/* ============================================================
+   GRADE BUTTON + FEEDBACK
+============================================================ */
+.actions-inline {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+.btn-grade {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.5rem;
+  background: var(--action);
+  color: var(--bg-card);
+  border-radius: 999px;
+  font-family: var(--f-jp-body);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  box-shadow: 0 6px 18px -6px rgba(74, 120, 200, 0.5);
+  transition: all 0.25s var(--ease);
+}
+.btn-grade:hover:not(:disabled) {
+  background: var(--action-deep);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px -6px rgba(74, 120, 200, 0.6);
+}
+.btn-grade:disabled { background: var(--line-strong); box-shadow: none; cursor: not-allowed; opacity: 0.7; }
+.btn-grade .arrow { font-family: var(--f-mono); font-weight: 700; }
+
+.btn-reveal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.7rem 1.2rem;
+  background: var(--anchor);
+  color: var(--bg-card);
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all 0.2s var(--ease);
+}
+.btn-reveal:hover { background: var(--anchor-mid); transform: translateY(-1px); }
+
+.btn-secondary {
+  padding: 0.7rem 1.1rem;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  background: var(--bg-card);
+  transition: all 0.2s var(--ease);
+}
+.btn-secondary:hover { border-color: var(--action-pale2); color: var(--action-deep); }
+
+.feedback {
+  display: none;
+  margin-top: 1.5rem;
+  border-radius: 12px;
+  overflow: hidden;
+  animation: feedbackEnter 0.4s var(--ease);
+}
+.feedback.show { display: block; }
+
+@keyframes feedbackEnter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fb-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1rem 1.25rem;
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+}
+.fb-banner.ok { background: var(--ok); color: var(--bg-card); }
+.fb-banner.partial { background: var(--gold); color: var(--ink); }
+.fb-banner.ng { background: var(--ng); color: var(--bg-card); }
+.fb-banner .icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--f-mono);
+  font-weight: 700;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.fb-banner.partial .icon { background: rgba(0,0,0,0.15); }
+.fb-banner .score-tag {
+  margin-left: auto;
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0;
+}
+
+.fb-body {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-top: 0;
+  border-radius: 0 0 12px 12px;
+  padding: 1.25rem 1.4rem 1.4rem;
+}
+.fb-section { margin-bottom: 1rem; }
+.fb-section:last-child { margin-bottom: 0; }
+.fb-section-title {
+  font-family: var(--f-la);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--anchor);
+  margin-bottom: 0.5rem;
+}
+.fb-bestfit, .fb-explain {
+  font-size: 0.92rem;
+  line-height: 1.95;
+  color: var(--ink-soft);
+}
+.fb-bestfit {
+  background: var(--bg-paper);
+  border-left: 3px solid var(--action);
+  padding: 0.75rem 1rem;
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 0.85rem;
+  font-style: normal;
+  color: var(--ink);
+}
+.fb-explain ul { padding-left: 1.2rem; margin: 0.4rem 0; }
+.fb-explain ul li { margin-bottom: 0.4rem; line-height: 1.85; }
+.fb-explain strong { color: var(--anchor); font-weight: 700; }
+.fb-correct-line {
+  font-family: var(--f-jp-body);
+  font-weight: 700;
+  color: var(--ok-deep);
+  margin-bottom: 0.3rem;
+}
+
+.fb-retry {
+  margin-top: 1.25rem;
+  padding-top: 1.1rem;
+  border-top: 1px dashed var(--line);
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.btn-retry {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  background: var(--bg-card);
+  border: 1.5px solid var(--action-pale2);
+  color: var(--action-deep);
+  border-radius: 999px;
+  font-family: var(--f-jp-body);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  transition: all 0.2s var(--ease);
+  cursor: pointer;
+}
+.btn-retry:hover {
+  background: var(--action);
+  border-color: var(--action);
+  color: var(--bg-card);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px -8px rgba(74, 120, 200, 0.45);
+}
+.btn-retry .ico {
+  font-family: var(--f-mono);
+  font-size: 1rem;
+  font-weight: 700;
+  display: inline-block;
+  transition: transform 0.4s var(--ease);
+}
+.btn-retry:hover .ico { transform: rotate(-180deg); }
+.btn-retry.next {
+  background: var(--anchor);
+  border-color: var(--anchor);
+  color: var(--bg-card);
+}
+.btn-retry.next:hover { background: var(--anchor-mid); border-color: var(--anchor-mid); }
+.fb-correct-line .let {
+  font-family: var(--f-display);
+  font-style: italic;
+  margin: 0 0.15em;
+  color: var(--ink);
+}
+
+/* ============================================================
+   INFOGRAPHIC / VIZ — feedback内の解説図
+============================================================ */
+.viz {
+  margin-top: 1rem;
+  padding: 1rem 1.1rem 1.1rem;
+  background: linear-gradient(155deg, var(--bg-paper) 0%, var(--bg-card) 100%);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  position: relative;
+}
+.viz-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.25rem 0.65rem;
+  background: var(--anchor);
+  color: var(--bg-card);
+  border-radius: 4px;
+  font-family: var(--f-la);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  margin-bottom: 0.85rem;
+}
+.viz-label svg { width: 12px; height: 12px; }
+.viz-caption {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ink);
+  margin-bottom: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+/* IP four-card grid (Q15, Q18) */
+.ip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.55rem;
+}
+.ip-card {
+  background: var(--bg-card);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 0.85rem 0.85rem 0.75rem;
+  position: relative;
+  overflow: hidden;
+  border-top: 4px solid var(--ip-color, var(--anchor));
+}
+.ip-card.patent { --ip-color: #4A78C8; }
+.ip-card.utility { --ip-color: #5BA0A8; }
+.ip-card.design { --ip-color: #C9A66B; }
+.ip-card.trademark { --ip-color: #B85975; }
+.ip-card.copyright { --ip-color: var(--gold-deep); }
+.ip-card .badge {
+  display: inline-block;
+  padding: 0.15rem 0.45rem;
+  background: var(--ip-color);
+  color: var(--bg-card);
+  font-family: var(--f-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border-radius: 3px;
+  margin-bottom: 0.4rem;
+}
+.ip-card .nm {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1rem;
+  color: var(--ink);
+  margin-bottom: 0.2rem;
+}
+.ip-card .term {
+  font-family: var(--f-mono);
+  font-size: 0.72rem;
+  color: var(--ip-color);
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.05em;
+}
+.ip-card .desc {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+.ip-card .marker {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--ip-color);
+  color: var(--bg-card);
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Right-tree (Q16, Q17 etc.) */
+.right-tree {
+  display: grid;
+  gap: 0.45rem;
+}
+.rt-row {
+  display: grid;
+  grid-template-columns: 18px auto 1fr;
+  gap: 0.55rem;
+  align-items: baseline;
+}
+.rt-bracket {
+  font-family: var(--f-mono);
+  color: var(--anchor);
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+.rt-row.indent { padding-left: 1.4rem; }
+.rt-row.indent2 { padding-left: 2.8rem; }
+.rt-row.indent3 { padding-left: 4.2rem; }
+.rt-name {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.rt-name.small { font-weight: 500; font-size: 0.85rem; color: var(--ink-soft); }
+.rt-name .pill {
+  display: inline-block;
+  padding: 0.1rem 0.45rem;
+  background: var(--action);
+  color: var(--bg-card);
+  border-radius: 3px;
+  font-family: var(--f-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  margin-left: 0.4em;
+  letter-spacing: 0.04em;
+}
+.rt-name .pill.dim { background: var(--anchor); }
+.rt-row.heading .rt-name {
+  font-weight: 900;
+  color: var(--anchor);
+}
+.rt-note {
+  font-size: 0.78rem;
+  color: var(--ink-mute);
+  font-family: var(--f-jp-body);
+  font-weight: 500;
+}
+
+/* compare 2-col (Q18, Q20) */
+.compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem;
+}
+.compare-col {
+  background: var(--bg-card);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 0.85rem 0.95rem;
+  border-top: 4px solid var(--col-color, var(--anchor));
+}
+.compare-col.left { --col-color: var(--anchor); }
+.compare-col.right { --col-color: var(--action); }
+.compare-col h5 {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 0.95rem;
+  color: var(--col-color);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+}
+.compare-col .row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+  border-top: 1px dashed var(--line-soft);
+  font-size: 0.85rem;
+}
+.compare-col .row:first-of-type { border-top: 0; }
+.compare-col .row .k {
+  font-family: var(--f-la);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  white-space: nowrap;
+}
+.compare-col .row .v { color: var(--ink); }
+
+/* checklist (Q21) */
+.checklist {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.4rem;
+}
+.cl-item {
+  background: var(--bg-card);
+  border: 1.5px solid var(--line);
+  border-left: 4px solid var(--ok);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+.cl-num {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--ok-deep);
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.cl-key {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  color: var(--ok-deep);
+  margin-right: 0.3em;
+}
+
+/* CC marks (Q22) */
+.cc-grid {
+  display: grid;
+  gap: 0.7rem;
+}
+.cc-row {
+  background: var(--bg-card);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 0.85rem 0.95rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.85rem;
+  align-items: center;
+}
+.cc-row .lbl {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--anchor);
+}
+.cc-row .desc {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+.cc-marks {
+  display: flex;
+  gap: 0.3rem;
+  flex-shrink: 0;
+}
+.cc-mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--f-la);
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  border: 2px solid var(--cc-color, var(--anchor));
+  color: var(--cc-color, var(--anchor));
+  background: var(--bg-card);
+}
+.cc-mark.active {
+  background: var(--cc-color);
+  color: var(--bg-card);
+}
+.cc-mark.by { --cc-color: #4A78C8; }
+.cc-mark.nc { --cc-color: #B85975; }
+.cc-mark.nd { --cc-color: #6E5A8D; }
+.cc-mark.sa { --cc-color: #41A38C; }
+
+/* SVG visualizer */
+.viz-svg-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -0.4rem;
+  padding: 0 0.4rem;
+  scrollbar-width: thin;
+}
+.viz-svg-wrap::-webkit-scrollbar { height: 5px; }
+.viz-svg-wrap::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 3px; }
+.viz-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.viz-svg.wide { min-width: 580px; }
+
+/* ============================================================
+   STAGE: SUMMARY
+============================================================ */
+.summary-hero {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem 1.25rem;
+  background: linear-gradient(155deg, var(--bg-card) 0%, var(--bg-paper) 100%);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+}
+.summary-grade {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 5rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  margin-bottom: 0.4rem;
+}
+.summary-grade .denom {
+  font-size: 2.5rem;
+  color: var(--ink-faint);
+}
+.summary-grade.s-high { color: var(--ok); }
+.summary-grade.s-mid { color: var(--gold-deep); }
+.summary-grade.s-low { color: var(--action); }
+.summary-headline {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1.3rem;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  margin-bottom: 0.4rem;
+}
+.summary-subline { font-size: 0.95rem; color: var(--ink-soft); }
+.summary-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+.summary-stat {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.85rem 0.5rem;
+}
+.summary-stat-label {
+  font-family: var(--f-la);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 0.2rem;
+}
+.summary-stat-value {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--ink);
+}
+.summary-stat-value .unit {
+  font-family: var(--f-jp-body);
+  font-style: normal;
+  font-size: 0.8rem;
+  color: var(--ink-mute);
+}
+
+.summary-list-title {
+  font-family: var(--f-la);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--anchor);
+  margin: 1.5rem 0 0.85rem;
+}
+.summary-list {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.summary-item {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--ink-faint);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.summary-item:hover { transform: translateX(2px); border-left-color: var(--action); }
+.summary-item.correct { border-left-color: var(--ok); }
+.summary-item.partial { border-left-color: var(--gold); }
+.summary-item.wrong { border-left-color: var(--ng); }
+.summary-item .num {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--anchor);
+  min-width: 2.4em;
+}
+.summary-item .nm { font-weight: 700; color: var(--ink); flex: 1; font-size: 0.95rem; }
+.summary-item .stat {
+  font-family: var(--f-mono);
+  font-size: 0.78rem;
+  color: var(--ink-mute);
+  letter-spacing: 0.05em;
+}
+.summary-item .stat.s-ok { color: var(--ok-deep); }
+.summary-item .stat.s-ng { color: var(--ng-deep); }
+.summary-item .stat.s-mid { color: var(--gold-deep); }
+
+.btn-restart {
+  display: block;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: var(--anchor);
+  color: var(--bg-card);
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  margin-top: 1rem;
+  transition: all 0.2s var(--ease);
+  text-align: center;
+}
+.btn-restart:hover { background: var(--anchor-mid); transform: translateY(-2px); box-shadow: 0 10px 22px -8px rgba(18, 46, 85, 0.35); }
+
+/* ============================================================
+   FOOTER NAV
+============================================================ */
+.footnav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(244, 248, 252, 0.94);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-top: 1px solid var(--line);
+  z-index: 40;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.footnav-inner {
+  max-width: 920px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 1.5rem;
+}
+.footnav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.7rem 1rem;
+  border: 1.5px solid var(--line);
+  background: var(--bg-card);
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  transition: all 0.2s var(--ease);
+}
+.footnav-btn:hover { border-color: var(--action-pale2); color: var(--action-deep); }
+.footnav-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.footnav-btn.next { background: var(--anchor); color: var(--bg-card); border-color: var(--anchor); margin-left: auto; }
+.footnav-btn.next:hover:not(:disabled) { background: var(--anchor-mid); border-color: var(--anchor-mid); color: var(--bg-card); }
+.footnav-btn .arr { font-family: var(--f-mono); font-weight: 700; }
+.footnav-status {
+  flex: 1;
+  text-align: center;
+  font-family: var(--f-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-mute);
+}
+
+/* ============================================================
+   DESKTOP — when sidebar open, content shifts; when closed, full width
+============================================================ */
+@media (min-width: 1100px) {
+  body { transition: padding-left 0.35s var(--ease); }
+  body.sb-open { padding-left: 280px; }
+  .footnav { left: 0; transition: left 0.35s var(--ease); }
+  body.sb-open .footnav { left: 280px; }
+  /* No backdrop on PC */
+  .sidebar-backdrop { display: none !important; }
+}
+
+/* ============================================================
+   TABLET / MOBILE — sidebar becomes drawer overlay
+============================================================ */
+@media (max-width: 1099px) {
+  .sidebar {
+    box-shadow: 0 0 40px rgba(0,0,0,0.15);
+  }
+  .sidebar-close { display: inline-flex; }
+}
+
+/* ============================================================
+   MOBILE
+============================================================ */
+@media (max-width: 720px) {
+  .sidebar { width: min(280px, 88vw); }
+  body { line-height: 1.8; }
+  main { padding: 1.5rem 1rem 7rem; }
+  .topbar-inner { padding: 0.6rem 1rem; gap: 0.6rem; }
+  .brand-tag { display: none; }
+  .progress-label { font-size: 0.65rem; }
+  .topbar-btn { width: 32px; height: 32px; }
+  .topbar-btn svg { width: 14px; height: 14px; }
+
+  .welcome-title-en { font-size: 2.2rem; }
+  .welcome-title-jp { font-size: 1.3rem; }
+  .welcome-meta { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  .welcome-meta-item { padding: 0.7rem 0.85rem; }
+  .welcome-meta-value { font-size: 1.25rem; }
+
+  .section-divider .num { font-size: 1.9rem; }
+  .section-divider .name { font-size: 1.15rem; }
+
+  .problem-q-num { font-size: 2.6rem; }
+  .problem-q-num .q { font-size: 1.2rem; }
+  .problem-title { font-size: 1.2rem; }
+  .problem-card { padding: 1.4rem 1.1rem 1.25rem; border-radius: 12px; }
+  .problem-q { font-size: 0.95rem; line-height: 1.85; }
+  .opt { padding: 0.85rem 0.95rem; }
+  .opt-text { font-size: 0.92rem; }
+  .match-row { padding: 0.85rem 0.9rem; gap: 0.6rem; }
+  .match-pill { font-size: 0.8rem; padding: 0.32rem 0.65rem; }
+  .ox-row { padding: 0.75rem 0.85rem; gap: 0.6rem; }
+  .ox-text { font-size: 0.88rem; }
+  .ox-btn { width: 34px; height: 34px; font-size: 0.95rem; }
+  .fill-line { font-size: 0.9rem; line-height: 2.2; }
+  .fill-blank { min-width: 4em; height: 1.7em; padding: 0 0.5em; font-size: 0.86em; }
+  .mps-row { padding: 0.8rem 0.9rem; gap: 0.6rem; }
+  .mps-text { font-size: 0.9rem; }
+
+  .btn-grade { padding: 0.75rem 1.25rem; font-size: 0.9rem; }
+  .btn-reveal { padding: 0.65rem 1rem; font-size: 0.85rem; }
+
+  .fb-banner { padding: 0.85rem 1rem; font-size: 1rem; gap: 0.6rem; }
+  .fb-banner .icon { width: 28px; height: 28px; font-size: 1rem; }
+  .fb-banner .score-tag { font-size: 0.8rem; }
+  .fb-body { padding: 1rem 1.1rem 1.15rem; }
+  .fb-bestfit, .fb-explain { font-size: 0.88rem; }
+
+  .summary-hero { padding: 1.5rem 1rem; }
+  .summary-grade { font-size: 4rem; }
+  .summary-grade .denom { font-size: 2rem; }
+  .summary-headline { font-size: 1.15rem; }
+  .summary-stats { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+
+  .footnav-inner { padding: 0.55rem 1rem; gap: 0.4rem; }
+  .footnav-btn { padding: 0.6rem 0.85rem; font-size: 0.8rem; }
+  .footnav-status { font-size: 0.7rem; }
+
+  /* sidebar on mobile — bigger tap targets */
+  .tl-item { padding: 0.7rem 1.5rem 0.7rem 2.85rem; min-height: 48px; }
+  .tl-label { font-size: 0.9rem; }
+  .tl-stat { font-size: 0.72rem; }
+  .sidebar-head { padding: 0.95rem 1.25rem 0.85rem; }
+  .sidebar-foot { padding: 0.95rem 1.25rem; }
+  .sidebar-close { width: 38px; height: 38px; font-size: 1.2rem; }
+  .sb-section-title { padding: 0 1.25rem; }
+
+  /* digest modules on mobile */
+  .digest-mod { padding: 1.1rem 1rem 1.15rem; border-radius: 12px; }
+  .digest-num { font-size: 1.3rem; }
+  .digest-title { font-size: 1rem; }
+  .digest-en { font-size: 0.7rem; }
+  .digest-lede { font-size: 0.85rem; }
+  .ip-rich-grid { grid-template-columns: 1fr 1fr; gap: 0.55rem; }
+  .ip-rich { padding: 0.85rem 0.85rem 0.85rem; }
+  .ip-rich-icon { width: 32px; height: 32px; }
+  .ip-rich-icon svg { width: 18px; height: 18px; }
+  .ip-rich-name { font-size: 0.95rem; }
+  .ip-rich-period { font-size: 0.68rem; padding: 0.15rem 0.45rem; }
+  .ip-rich-desc { font-size: 0.74rem; }
+  .ip-rich-ex { font-size: 0.68rem; }
+  .origin-compare { grid-template-columns: 1fr; }
+  .origin-flow { gap: 0.25rem; }
+  .origin-step { font-size: 0.72rem; padding: 0.32rem 0.5rem; }
+  .lk-grid { grid-template-columns: 1fr; }
+  .bd-grid { grid-template-columns: 1fr; }
+  .cc-cat { grid-template-columns: 1fr 1fr; }
+  .cc-preset { grid-template-columns: auto 1fr; }
+  .cc-preset .marks { grid-column: 1 / -1; justify-content: flex-end; margin-top: 0.3rem; }
+  .family-tree-svg { min-width: 720px; }
+
+  /* viz on mobile */
+  .viz { padding: 0.85rem 0.85rem 0.95rem; }
+  .ip-grid { grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+  .ip-card { padding: 0.65rem 0.7rem 0.6rem; }
+  .ip-card .nm { font-size: 0.9rem; }
+  .ip-card .desc { font-size: 0.72rem; }
+  .compare { grid-template-columns: 1fr; }
+  .cc-row { grid-template-columns: auto 1fr; padding: 0.65rem 0.75rem; gap: 0.55rem; }
+  .cc-row .cc-marks { grid-column: 1 / -1; justify-content: flex-start; }
+  .cc-mark { width: 32px; height: 32px; font-size: 0.62rem; }
+  .checklist { grid-template-columns: 1fr; }
+  .rt-row { grid-template-columns: 18px auto 1fr; }
+  .rt-name { font-size: 0.85rem; white-space: normal; }
+  .rt-name.small { font-size: 0.78rem; }
+  .rt-note { font-size: 0.72rem; }
+}
+
+@media (max-width: 380px) {
+  main { padding: 1.25rem 0.85rem 7rem; }
+  .problem-card { padding: 1.2rem 0.95rem 1.1rem; }
+  .footnav-btn { padding: 0.55rem 0.7rem; font-size: 0.75rem; }
+  .footnav-status { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== SIDEBAR (TIMELINE) ==================== -->
+<aside class="sidebar" id="sidebar" aria-label="単元タイムライン">
+  <div class="sidebar-head">
+    <a href="../../" class="sidebar-brand">
+      <span class="mk">practice<span class="dot">.</span>lab</span>
+      <span class="tg">CHAPTER 1.03</span>
+    </a>
+    <button class="sidebar-close" id="sidebar-close" aria-label="閉じる">×</button>
+  </div>
+  <div class="sidebar-content">
+    <div class="sb-section">
+      <div class="sb-section-title">Overview</div>
+      <ol class="timeline" id="tl-overview"></ol>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">Examples</div>
+      <ol class="timeline" id="tl-examples"></ol>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">Practice</div>
+      <ol class="timeline" id="tl-practice"></ol>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">Result</div>
+      <ol class="timeline" id="tl-result"></ol>
+    </div>
+  </div>
+  <div class="sidebar-foot">
+    <span>SCORE</span>
+    <span class="sb-score" id="sb-score">—/8</span>
+    <button class="sb-reset" id="sb-reset">RESET</button>
+  </div>
+</aside>
+<div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+<!-- ==================== TOP BAR ==================== -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <button class="menu-btn" id="menu-btn" aria-label="目次を開く">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="../../" class="brand">
+      <span class="brand-mark">practice<span class="dot">.</span>lab</span>
+      <span class="brand-tag">PRACTICE</span>
+    </a>
+    <div class="topbar-progress">
+      <div class="progress-label">
+        <span class="stage-name" id="stage-name">START</span>
+        <span><span id="stage-current">1</span> <span style="color: var(--ink-faint);">/</span> <span id="stage-total">14</span></span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+    <div class="topbar-actions">
+      <button class="topbar-btn" id="btn-restart-top" title="最初からやり直す" aria-label="最初からやり直す">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ==================== MAIN ==================== -->
+<main id="stages">
+
+  <!-- ============================== STAGE 0: WELCOME ============================== -->
+  <section class="stage active" data-stage-name="START">
+    <div class="welcome-kicker">
+      <span class="num">1.01</span>
+      <span>1章 第1節</span>
+    </div>
+    <h1 class="welcome-title-en">Information<br>&amp; Media<span class="accent">.</span></h1>
+    <h2 class="welcome-title-jp">情報とメディア</h2>
+    <p class="welcome-lede">
+      情報の3つの特性(残存性・複製性・伝播性)、メディアの3分類、メディアリテラシー、SNSが及ぼす影響まで。ベストフィット問題集 1章01 を完全準拠で扱います。
+    </p>
+    <div class="welcome-meta">
+      <div class="welcome-meta-item">
+        <div class="welcome-meta-label">examples</div>
+        <div class="welcome-meta-value">4<span class="unit">問</span></div>
+      </div>
+      <div class="welcome-meta-item">
+        <div class="welcome-meta-label">practice</div>
+        <div class="welcome-meta-value">6<span class="unit">問</span></div>
+      </div>
+      <div class="welcome-meta-item">
+        <div class="welcome-meta-label">est. time</div>
+        <div class="welcome-meta-value">15<span class="unit">分</span></div>
+      </div>
+      <div class="welcome-meta-item">
+        <div class="welcome-meta-label">source</div>
+        <div class="welcome-meta-value" style="font-size: 0.95rem;">ベストフィット<br><span class="unit" style="margin-left:0;">1章01</span></div>
+      </div>
+    </div>
+    <div class="flow-strip">
+      <div class="flow-strip-title">本セットの流れ</div>
+      <div class="flow-list">
+        <div class="flow-item"><span class="flow-num">1</span><div><strong>おさらい</strong>ー 情報とメディアの全体像を確認(タップで展開)</div></div>
+        <div class="flow-item"><span class="flow-num">2</span><div><strong>例題ツアー</strong>ー 模範解法を4問追跡(採点なし)</div></div>
+        <div class="flow-item"><span class="flow-num">3</span><div><strong>演習</strong>ー 6問に挑戦。回答 → 採点 → 解説</div></div>
+        <div class="flow-item"><span class="flow-num">4</span><div><strong>結果</strong>ー 正答率と間違えた問題の再確認</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== STAGE 1: REVIEW (DIGEST) ============================== -->
+  <section class="stage" data-stage-name="REVIEW">
+    <div class="section-divider">
+      <span class="num">01</span>
+      <div class="text">
+        <div class="label">Section 1 — Visual Digest</div>
+        <div class="name">ひと目でわかる おさらい</div>
+      </div>
+    </div>
+
+    <div class="digest">
+
+      <!-- Module 1: 全体地図 HERO -->
+      <div class="digest-mod hero">
+        <button class="digest-prompt" type="button"><div class="digest-prompt-head">
+            <span class="digest-num">01</span>
+            <span class="digest-en">The Big Map</span>
+            <span class="digest-toggle"><span class="plus">+</span></span>
+          </div>
+          <div class="digest-q">情報とメディアの全体像は?</div></button>
+        <div class="digest-answer">
+          <div class="digest-title">情報とメディアの体系</div>
+          <p class="digest-lede">この単元では、まず<strong>情報そのもの</strong>(データ→情報→知識)の性質を押さえ、次にそれを運ぶ<strong>メディア</strong>の3分類を理解する。最後にインターネット時代特有の<strong>リテラシーと現象</strong>(炎上・エコーチェンバー・フィルターバブル)へと広がる。</p>
+        <div class="family-tree-wrap">
+          <svg class="family-tree-svg" viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="情報とメディアの体系図">
+            <defs>
+              <linearGradient id="g-root" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#1A2B47"/>
+                <stop offset="100%" stop-color="#122E55"/>
+              </linearGradient>
+              <linearGradient id="g-info" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#5688D5"/>
+                <stop offset="100%" stop-color="#2E5894"/>
+              </linearGradient>
+              <linearGradient id="g-media" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#5BA0A8"/>
+                <stop offset="100%" stop-color="#3E7D85"/>
+              </linearGradient>
+              <linearGradient id="g-lit" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#D9B36C"/>
+                <stop offset="100%" stop-color="#A37A1F"/>
+              </linearGradient>
+            </defs>
+            <!-- Root -->
+            <rect x="280" y="14" width="200" height="56" rx="10" fill="url(#g-root)"/>
+            <text x="380" y="40" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="17" font-weight="600" fill="#FFFFFF" text-anchor="middle">情報とメディア</text>
+            <text x="380" y="58" font-family="'Fraunces', serif" font-style="italic" font-size="11" fill="#DAE6F5" text-anchor="middle">Information &amp; Media</text>
+            <!-- Stem -->
+            <line x1="380" y1="70" x2="380" y2="100" stroke="#75839B" stroke-width="2"/>
+            <line x1="130" y1="100" x2="630" y2="100" stroke="#75839B" stroke-width="2"/>
+            <line x1="130" y1="100" x2="130" y2="120" stroke="#75839B" stroke-width="2"/>
+            <line x1="380" y1="100" x2="380" y2="120" stroke="#75839B" stroke-width="2"/>
+            <line x1="630" y1="100" x2="630" y2="120" stroke="#75839B" stroke-width="2"/>
+
+            <!-- Branch 1: データ→情報→知識 (left) -->
+            <rect x="30" y="120" width="200" height="58" rx="10" fill="url(#g-info)"/>
+            <text x="130" y="143" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="14" font-weight="600" fill="#FFFFFF" text-anchor="middle">情報そのものの性質</text>
+            <text x="130" y="162" font-family="'Zen Kaku Gothic New', sans-serif" font-size="10" fill="#DAE6F5" text-anchor="middle">データ → 情報 → 知識 / 3特性</text>
+            <line x1="130" y1="178" x2="130" y2="200" stroke="#4A78C8" stroke-width="1.5"/>
+            <line x1="50" y1="200" x2="210" y2="200" stroke="#4A78C8" stroke-width="1.5"/>
+            <line x1="65" y1="200" x2="65" y2="218" stroke="#4A78C8" stroke-width="1.5"/>
+            <line x1="130" y1="200" x2="130" y2="218" stroke="#4A78C8" stroke-width="1.5"/>
+            <line x1="195" y1="200" x2="195" y2="218" stroke="#4A78C8" stroke-width="1.5"/>
+            <g>
+              <rect x="32" y="218" width="66" height="46" rx="7" fill="#FFFFFF" stroke="#4A78C8" stroke-width="2"/>
+              <text x="65" y="237" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="12" font-weight="600" fill="#1A2B47" text-anchor="middle">残存性</text>
+              <text x="65" y="254" font-family="'Zen Kaku Gothic New', sans-serif" font-size="9" fill="#75839B" text-anchor="middle">消えない</text>
+            </g>
+            <g>
+              <rect x="98" y="218" width="64" height="46" rx="7" fill="#FFFFFF" stroke="#4A78C8" stroke-width="2"/>
+              <text x="130" y="237" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="12" font-weight="600" fill="#1A2B47" text-anchor="middle">複製性</text>
+              <text x="130" y="254" font-family="'Zen Kaku Gothic New', sans-serif" font-size="9" fill="#75839B" text-anchor="middle">コピー容易</text>
+            </g>
+            <g>
+              <rect x="162" y="218" width="64" height="46" rx="7" fill="#FFFFFF" stroke="#4A78C8" stroke-width="2"/>
+              <text x="195" y="237" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="12" font-weight="600" fill="#1A2B47" text-anchor="middle">伝播性</text>
+              <text x="195" y="254" font-family="'Zen Kaku Gothic New', sans-serif" font-size="9" fill="#75839B" text-anchor="middle">広く速く</text>
+            </g>
+
+            <!-- Branch 2: メディア3分類 (center) -->
+            <rect x="280" y="120" width="200" height="58" rx="10" fill="url(#g-media)"/>
+            <text x="380" y="143" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="14" font-weight="600" fill="#FFFFFF" text-anchor="middle">メディアの3分類</text>
+            <text x="380" y="162" font-family="'Zen Kaku Gothic New', sans-serif" font-size="10" fill="#DAEEEC" text-anchor="middle">表現 / 伝達 / 記録</text>
+            <line x1="380" y1="178" x2="380" y2="200" stroke="#5BA0A8" stroke-width="1.5"/>
+            <line x1="300" y1="200" x2="460" y2="200" stroke="#5BA0A8" stroke-width="1.5"/>
+            <line x1="315" y1="200" x2="315" y2="218" stroke="#5BA0A8" stroke-width="1.5"/>
+            <line x1="380" y1="200" x2="380" y2="218" stroke="#5BA0A8" stroke-width="1.5"/>
+            <line x1="445" y1="200" x2="445" y2="218" stroke="#5BA0A8" stroke-width="1.5"/>
+            <g>
+              <rect x="282" y="218" width="66" height="46" rx="7" fill="#FFFFFF" stroke="#5BA0A8" stroke-width="2"/>
+              <text x="315" y="237" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="12" font-weight="600" fill="#1A2B47" text-anchor="middle">表現</text>
+              <text x="315" y="254" font-family="'Zen Kaku Gothic New', sans-serif" font-size="9" fill="#75839B" text-anchor="middle">文字・音声 など</text>
+            </g>
+            <g>
+              <rect x="348" y="218" width="64" height="46" rx="7" fill="#FFFFFF" stroke="#5BA0A8" stroke-width="2"/>
+              <text x="380" y="237" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="12" font-weight="600" fill="#1A2B47" text-anchor="middle">伝達</text>
+              <text x="380" y="254" font-family="'Zen Kaku Gothic New', sans-serif" font-size="9" fill="#75839B" text-anchor="middle">空気・電波 など</text>
+            </g>
+            <g>
+              <rect x="412" y="218" width="64" height="46" rx="7" fill="#FFFFFF" stroke="#5BA0A8" stroke-width="2"/>
+              <text x="445" y="237" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="12" font-weight="600" fill="#1A2B47" text-anchor="middle">記録</text>
+              <text x="445" y="254" font-family="'Zen Kaku Gothic New', sans-serif" font-size="9" fill="#75839B" text-anchor="middle">紙・光ディスク</text>
+            </g>
+
+            <!-- Branch 3: メディアリテラシーと影響 (right) -->
+            <rect x="530" y="120" width="200" height="58" rx="10" fill="url(#g-lit)"/>
+            <text x="630" y="143" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="14" font-weight="600" fill="#FFFFFF" text-anchor="middle">リテラシーと影響</text>
+            <text x="630" y="162" font-family="'Zen Kaku Gothic New', sans-serif" font-size="10" fill="#F5E5BB" text-anchor="middle">受信 + 発信 / 3つの現象</text>
+            <line x1="630" y1="178" x2="630" y2="200" stroke="#A37A1F" stroke-width="1.5"/>
+            <line x1="550" y1="200" x2="710" y2="200" stroke="#A37A1F" stroke-width="1.5"/>
+            <line x1="565" y1="200" x2="565" y2="218" stroke="#A37A1F" stroke-width="1.5"/>
+            <line x1="630" y1="200" x2="630" y2="218" stroke="#A37A1F" stroke-width="1.5"/>
+            <line x1="695" y1="200" x2="695" y2="218" stroke="#A37A1F" stroke-width="1.5"/>
+            <g>
+              <rect x="532" y="218" width="66" height="46" rx="7" fill="#FFFFFF" stroke="#A37A1F" stroke-width="2"/>
+              <text x="565" y="237" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="11" font-weight="600" fill="#1A2B47" text-anchor="middle">炎上</text>
+              <text x="565" y="254" font-family="'Zen Kaku Gothic New', sans-serif" font-size="9" fill="#75839B" text-anchor="middle">批判の殺到</text>
+            </g>
+            <g>
+              <rect x="598" y="218" width="64" height="46" rx="7" fill="#FFFFFF" stroke="#A37A1F" stroke-width="2"/>
+              <text x="630" y="234" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="10" font-weight="600" fill="#1A2B47" text-anchor="middle">エコー</text>
+              <text x="630" y="247" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="10" font-weight="600" fill="#1A2B47" text-anchor="middle">チェンバー</text>
+              <text x="630" y="259" font-family="'Zen Kaku Gothic New', sans-serif" font-size="8" fill="#75839B" text-anchor="middle">賛同のみ</text>
+            </g>
+            <g>
+              <rect x="662" y="218" width="64" height="46" rx="7" fill="#FFFFFF" stroke="#A37A1F" stroke-width="2"/>
+              <text x="695" y="234" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="10" font-weight="600" fill="#1A2B47" text-anchor="middle">フィルター</text>
+              <text x="695" y="247" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="10" font-weight="600" fill="#1A2B47" text-anchor="middle">バブル</text>
+              <text x="695" y="259" font-family="'Zen Kaku Gothic New', sans-serif" font-size="8" fill="#75839B" text-anchor="middle">偏った表示</text>
+            </g>
+
+            <!-- 補足ラベル -->
+            <text x="380" y="350" font-family="'JetBrains Mono', monospace" font-size="10" fill="#75839B" text-anchor="middle">※ メディアリテラシー = 受信(分析・評価)+ 発信(適切に伝える)の両方の能力</text>
+          </svg>
+        </div>
+        </div>
+      </div>
+
+      <!-- Module 2: 情報の3つの特性 -->
+      <div class="digest-mod">
+        <button class="digest-prompt" type="button"><div class="digest-prompt-head">
+            <span class="digest-num">02</span>
+            <span class="digest-en">Three Properties</span>
+            <span class="digest-toggle"><span class="plus">+</span></span>
+          </div>
+          <div class="digest-q">情報がもつ3つの特性は?</div></button>
+        <div class="digest-answer">
+          <div class="digest-title">残存性 / 複製性 / 伝播性</div>
+          <p class="digest-lede">情報は形のない「こと」の世界に属し、もの(物質)とは違う3つの性質をもつ。これらが組み合わさることで、よい情報も悪い情報も拡散しやすくなる。</p>
+        <div class="ip-rich-grid">
+          <div class="ip-rich patent">
+            <div class="ip-rich-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            </div>
+            <div class="ip-rich-name">残存性</div>
+            <div class="ip-rich-en">Persistence</div>
+            <div class="ip-rich-period">消えずに残る</div>
+            <div class="ip-rich-desc">情報は与えてもなくならず、人の記憶や記録媒体に残り続ける</div>
+            <div class="ip-rich-ex"><span class="label">例</span>過去の SNS 投稿、噂、誤情報がいつまでも残る</div>
+          </div>
+          <div class="ip-rich utility">
+            <div class="ip-rich-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </div>
+            <div class="ip-rich-name">複製性</div>
+            <div class="ip-rich-en">Replicability</div>
+            <div class="ip-rich-period">簡単に複製できる</div>
+            <div class="ip-rich-desc">デジタルデータは劣化なく無限にコピーが作れる</div>
+            <div class="ip-rich-ex"><span class="label">例</span>映画・音楽の違法コピー、文書の流出</div>
+          </div>
+          <div class="ip-rich design">
+            <div class="ip-rich-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M3 12a9 9 0 0 1 9-9"/><path d="M12 21a9 9 0 0 0 9-9"/><path d="M19 5l-3 3"/><path d="M5 19l3-3"/></svg>
+            </div>
+            <div class="ip-rich-name">伝播性</div>
+            <div class="ip-rich-en">Diffusivity</div>
+            <div class="ip-rich-period">短時間に広く伝わる</div>
+            <div class="ip-rich-desc">情報通信技術の発達で、伝達の速さと範囲が飛躍的に増大</div>
+            <div class="ip-rich-ex"><span class="label">例</span>コンピュータウイルスの世界規模の被害</div>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- Module 3: メディアの3分類 -->
+      <div class="digest-mod">
+        <button class="digest-prompt" type="button"><div class="digest-prompt-head">
+            <span class="digest-num">03</span>
+            <span class="digest-en">Three Kinds of Media</span>
+            <span class="digest-toggle"><span class="plus">+</span></span>
+          </div>
+          <div class="digest-q">メディアは「役割」でどう3分類される?</div></button>
+        <div class="digest-answer">
+          <div class="digest-title">表現 / 伝達 / 記録</div>
+          <p class="digest-lede">「メディア」は単一の概念ではない。情報を <strong>どのように表現するか</strong>(表現メディア)、<strong>どのように運ぶか</strong>(伝達メディア)、<strong>どこに保存するか</strong>(記録メディア)の3つの役割で分けて捉える。</p>
+        <div class="origin-compare" style="grid-template-columns: 1fr 1fr 1fr;">
+          <div class="origin-side industrial">
+            <h5>表現のためのメディア</h5>
+            <div class="tag-en">Expression</div>
+            <div class="origin-flow">
+              <span class="origin-step">文字</span>
+              <span class="origin-step">音声</span>
+              <span class="origin-step">図・表</span>
+            </div>
+            <div class="origin-flow">
+              <span class="origin-step">静止画</span>
+              <span class="origin-step">動画</span>
+            </div>
+            <span class="origin-key">何で表すか</span>
+            <p class="note">情報を人間が知覚できる形に変換する。文字は作成・修正が容易、動画は変化を時間軸で伝えられる。</p>
+          </div>
+          <div class="origin-side industrial">
+            <h5>伝達のためのメディア</h5>
+            <div class="tag-en">Transmission</div>
+            <div class="origin-flow">
+              <span class="origin-step">空気</span>
+              <span class="origin-step">光</span>
+            </div>
+            <div class="origin-flow">
+              <span class="origin-step">電線</span>
+              <span class="origin-step">電波</span>
+            </div>
+            <span class="origin-key">何で運ぶか</span>
+            <p class="note">情報を発信者から受信者へ届ける物理的な経路。電波・電線によって流通範囲が一気に広がった。</p>
+          </div>
+          <div class="origin-side copyright">
+            <h5>記録のためのメディア</h5>
+            <div class="tag-en">Recording</div>
+            <div class="origin-flow">
+              <span class="origin-step">紙</span>
+              <span class="origin-step">光ディスク</span>
+            </div>
+            <div class="origin-flow">
+              <span class="origin-step">フラッシュメモリ</span>
+            </div>
+            <span class="origin-key">何に保存するか</span>
+            <p class="note">情報を蓄えておく媒体。紙はアナログ、光ディスクやフラッシュメモリはデジタルでの長期保存に向く。</p>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- Module 4: メディアリテラシー — 受信と発信 -->
+      <div class="digest-mod">
+        <button class="digest-prompt" type="button"><div class="digest-prompt-head">
+            <span class="digest-num">04</span>
+            <span class="digest-en">Two Sides of Literacy</span>
+            <span class="digest-toggle"><span class="plus">+</span></span>
+          </div>
+          <div class="digest-q">メディアリテラシーは何を扱う能力か?</div></button>
+        <div class="digest-answer">
+          <div class="digest-title">受信の能力 と 発信の能力</div>
+          <p class="digest-lede">メディアリテラシーは「受け取った情報を見抜く力」だけではない。<strong>受信側</strong>(分析・評価・判断)と <strong>発信側</strong>(適切に表現)の両面を含む。インターネット時代は誰もが発信者になり得るため、両方が必要になる。</p>
+        <div class="lk-grid">
+          <div class="lk-card transferable">
+            <div class="lk-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            </div>
+            <h5>受信側の能力</h5>
+            <span class="stamp">分析・評価・判断</span>
+            <ul class="lk-list">
+              <li><span>多様な視点で情報を分析する</span></li>
+              <li><span>情報の信憑性を評価する</span></li>
+              <li><span>クロスチェックで真偽を確かめる</span></li>
+            </ul>
+            <p class="lk-rules">マスメディアからの情報も含め、<strong>すべての情報の受け手</strong>に必要。SNSを使わない人にも欠かせない。</p>
+          </div>
+          <div class="lk-card transferable">
+            <div class="lk-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7Z"/></svg>
+            </div>
+            <h5>発信側の能力</h5>
+            <span class="stamp">表現・伝達</span>
+            <ul class="lk-list">
+              <li><span>メディアの特性を踏まえて表現する</span></li>
+              <li><span>受信者・場面・目的を考慮する</span></li>
+              <li><span>意図を正しく伝える表現を選ぶ</span></li>
+            </ul>
+            <p class="lk-rules">スマホ普及で<strong>誰もが発信者</strong>になった現代、適切に発信する能力もメディアリテラシーに含まれる。</p>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- Module 5: SNSが及ぼす3つの現象 -->
+      <div class="digest-mod">
+        <button class="digest-prompt" type="button"><div class="digest-prompt-head">
+            <span class="digest-num">05</span>
+            <span class="digest-en">Three Side Effects on SNS</span>
+            <span class="digest-toggle"><span class="plus">+</span></span>
+          </div>
+          <div class="digest-q">SNSが及ぼす代表的な3つの現象は?</div></button>
+        <div class="digest-answer">
+          <div class="digest-title">炎上 / エコーチェンバー / フィルターバブル</div>
+          <p class="digest-lede">SNSの仕組みやアルゴリズムは便利な反面、特有の<strong>偏り</strong>を生み出す。3つの現象は混同されがちだが、起こる仕組みは別。</p>
+        <div class="bd-grid">
+          <div class="bd-card">
+            <div class="key">炎上</div>
+            <span class="bound">批判の殺到</span>
+            <div class="desc">SNSの投稿などに対して、批判や誹謗中傷の投稿が短時間に集中する現象。発信内容の不適切さが引き金になることが多い。</div>
+          </div>
+          <div class="bd-card">
+            <div class="key">エコーチェンバー</div>
+            <span class="bound">賛同のみが返ってくる</span>
+            <div class="desc">自分と似た考えの人たちとフォローし合うため、投稿に対して<strong>賛同の意見ばかり</strong>が返ってくる状況。閉じた小部屋で音が反響する様子に喩えられる。</div>
+          </div>
+          <div class="bd-card">
+            <div class="key">フィルターバブル</div>
+            <span class="bound">偏った情報に包まれる</span>
+            <div class="desc">検索エンジンや SNS の<strong>アルゴリズム</strong>が、過去の閲覧履歴に基づき興味に合いそうな情報を優先表示するため、自分の価値観に沿った情報ばかりに包まれる状況。</div>
+          </div>
+        </div>
+        <div class="bd-warn">
+          <strong>違いの要点:</strong> エコーチェンバーは「人とのつながり」が原因、フィルターバブルは「アルゴリズム」が原因。両方が同時に働くと、自分の意見を疑う機会が極端に減る。
+        </div>
+        </div>
+      </div>
+
+      <!-- Module 6: フェイクニュースとクロスチェック -->
+      <div class="digest-mod">
+        <button class="digest-prompt" type="button"><div class="digest-prompt-head">
+            <span class="digest-num">06</span>
+            <span class="digest-en">Verifying What You Read</span>
+            <span class="digest-toggle"><span class="plus">+</span></span>
+          </div>
+          <div class="digest-q">フェイクニュースを見抜くには?</div></button>
+        <div class="digest-answer">
+          <div class="digest-title">クロスチェックという手立て</div>
+          <p class="digest-lede">悪意をもって虚偽の情報を事実のように見せかけたものを<strong>フェイクニュース</strong>という。情報の<strong>残存性・複製性・伝播性</strong>と相性が悪く、長期間・広範囲に影響を残しがち。見抜く基本動作は「複数の情報源で突き合わせる」こと。</p>
+        <div class="checklist">
+          <div class="cl-item"><span class="cl-num">①</span><span><span class="cl-key">情報源を確認する</span>誰が・いつ・どこで発信したかを必ず見る。匿名・出所不明は信頼度が下がる。</span></div>
+          <div class="cl-item"><span class="cl-num">②</span><span><span class="cl-key">複数の情報源で突き合わせる(クロスチェック)</span>1つの情報源だけで判断しない。報道機関・公的機関の発表・専門家の見解を比較する。</span></div>
+          <div class="cl-item"><span class="cl-num">③</span><span><span class="cl-key">感情的に反応する前に立ち止まる</span>怒り・驚き・正義感を強く煽る情報ほど、検証なしの拡散は危険。</span></div>
+          <div class="cl-item"><span class="cl-num">④</span><span><span class="cl-key">広めるかどうかを判断する</span>確証がない情報を広めることは、自分が拡散の一翼を担うことになる。</span></div>
+        </div>
+        <div style="margin-top: 0.85rem; padding: 0.7rem 0.95rem; background: var(--ng-pale); border-left: 3px solid var(--ng); border-radius: 0 6px 6px 0; font-size: 0.85rem; color: var(--ng-deep);">
+          <strong>×&nbsp;インターネットに上げた情報は、一度拡散すると完全には削除できない</strong>。残存性ゆえに、誤情報の影響は長期に残り得る。
+        </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================== STAGE 2: 例題1 ============================== -->
+  <section class="stage" data-stage-name="例題 1" data-prob-id="ex1">
+    <div class="problem-meta">
+      <span class="problem-tag">EXAMPLE 1 / 4</span>
+      <span class="problem-source">ベストフィット 例題1</span>
+    </div>
+    <div class="problem-q-num"><span class="q">Q</span>1</div>
+    <h3 class="problem-title">情報の特性</h3>
+    <div class="problem-card">
+      <p class="problem-q lead">次の(ア)〜(ウ)は、情報の⑴残存性、⑵複製性、⑶伝播性のいずれかに関係した記述である。⑴〜⑶に関係するものを一つずつ選べ。</p>
+      <div class="option-legend">
+        <div class="option-legend-title">選択肢</div>
+        <div class="option-legend-list">
+          <span class="option-legend-item"><span class="let">(ア)</span>短期間でコンピュータウイルスの被害が世界に広がる。</span>
+          <span class="option-legend-item"><span class="let">(イ)</span>映画や音楽など、市販のコンテンツの違法コピーが後を絶たない。</span>
+          <span class="option-legend-item"><span class="let">(ウ)</span>人の噂や誤った情報がいつまでも消えずに残っている。</span>
+        </div>
+      </div>
+      <div class="match-list" data-input="match" data-options="ア,イ,ウ" data-correct="2,1,0">
+        <div class="match-row" data-sub="0">
+          <span class="match-sub-label">⑴</span>
+          <div class="sub-content">
+            <span class="match-text">残存性</span>
+            <div class="match-pills"></div>
+          </div>
+        </div>
+        <div class="match-row" data-sub="1">
+          <span class="match-sub-label">⑵</span>
+          <div class="sub-content">
+            <span class="match-text">複製性</span>
+            <div class="match-pills"></div>
+          </div>
+        </div>
+        <div class="match-row" data-sub="2">
+          <span class="match-sub-label">⑶</span>
+          <div class="sub-content">
+            <span class="match-text">伝播性</span>
+            <div class="match-pills"></div>
+          </div>
+        </div>
+      </div>
+      <div class="actions-inline">
+        <button class="btn-reveal" data-action="reveal">解答を見る</button>
+      </div>
+      <div class="feedback" data-feedback>
+        <div class="fb-banner ok">
+          <span class="icon">✓</span>
+          <span>正答: ⑴ (ウ) / ⑵ (イ) / ⑶ (ア)</span>
+        </div>
+        <div class="fb-body">
+          <div class="fb-section">
+            <div class="fb-section-title">ベストフィット</div>
+            <div class="fb-bestfit">形がない抽象的な「こと」の世界を表現する情報は、「もの」とは異なり、形がない、消えない、容易に複製・伝播する性質をもつ。</div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">解説</div>
+            <div class="fb-explain">
+              <p>情報が消えずに残る性質を情報の<strong>「残存性」</strong>という。容易に複製(コピー)できる性質を情報の<strong>「複製性」</strong>という。伝わりやすく、広まりやすい性質を情報の<strong>「伝播性」</strong>という。</p>
+            </div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">3特性の見分け方(補足)</div>
+            <div class="fb-explain">
+              <p>各記述のキーワードに注目すると判別しやすい。<strong>(ア)「短期間で…世界に広がる」</strong>は速さと範囲の話なので<strong>伝播性</strong>。<strong>(イ)「違法コピーが後を絶たない」</strong>はコピーしやすさの話なので<strong>複製性</strong>。<strong>(ウ)「いつまでも消えずに残っている」</strong>は時間軸で消えない話なので<strong>残存性</strong>。</p>
+              <p>3特性は独立ではなく、組み合わさって作用する。たとえばフェイクニュースは「複製性」で大量に生産され、「伝播性」で広範囲に届き、「残存性」で長期に残る。情報リテラシーで扱う問題の根源には、ほぼ必ずこの3つが顔を出す。</p>
+            </div>
+          </div>
+          <div class="viz">
+            <span class="viz-label">PROPERTIES MAP — 3特性のマッピング</span>
+            <div class="viz-caption">記述のキーワードから3特性を逆引き</div>
+            <div class="ip-rich-grid">
+              <div class="ip-rich patent">
+                <div class="ip-rich-name">残存性</div>
+                <div class="ip-rich-en">Persistence</div>
+                <div class="ip-rich-period">⑴ ↔ (ウ)</div>
+                <div class="ip-rich-desc">消えない、いつまでも残る</div>
+                <div class="ip-rich-ex"><span class="label">例</span>人の噂や誤った情報がいつまでも消えずに残る</div>
+              </div>
+              <div class="ip-rich utility">
+                <div class="ip-rich-name">複製性</div>
+                <div class="ip-rich-en">Replicability</div>
+                <div class="ip-rich-period">⑵ ↔ (イ)</div>
+                <div class="ip-rich-desc">容易にコピーできる</div>
+                <div class="ip-rich-ex"><span class="label">例</span>市販コンテンツの違法コピーが後を絶たない</div>
+              </div>
+              <div class="ip-rich design">
+                <div class="ip-rich-name">伝播性</div>
+                <div class="ip-rich-en">Diffusivity</div>
+                <div class="ip-rich-period">⑶ ↔ (ア)</div>
+                <div class="ip-rich-desc">短時間で広く伝わる</div>
+                <div class="ip-rich-ex"><span class="label">例</span>コンピュータウイルスの被害が世界に広がる</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== STAGE 3: 例題2 ============================== -->
+  <section class="stage" data-stage-name="例題 2" data-prob-id="ex2">
+    <div class="problem-meta">
+      <span class="problem-tag">EXAMPLE 2 / 4</span>
+      <span class="problem-source">ベストフィット 例題2</span>
+    </div>
+    <div class="problem-q-num"><span class="q">Q</span>2</div>
+    <h3 class="problem-title">メディア</h3>
+    <div class="problem-card">
+      <p class="problem-q lead">次の⑴〜⑷のメディアが利用する、表現のためのメディアを下の(ア)〜(エ)からそれぞれすべて選べ。ただし、同じ記号を複数回使用してもよい。</p>
+      <div class="option-legend">
+        <div class="option-legend-title">選択肢(表現のためのメディア)</div>
+        <div class="option-legend-list">
+          <span class="option-legend-item"><span class="let">(ア)</span>文字</span>
+          <span class="option-legend-item"><span class="let">(イ)</span>音声</span>
+          <span class="option-legend-item"><span class="let">(ウ)</span>静止画</span>
+          <span class="option-legend-item"><span class="let">(エ)</span>動画</span>
+        </div>
+      </div>
+      <div class="mps-list" data-input="multi_per_sub" data-options="ア,イ,ウ,エ" data-correct="0,2|1|0,1,2,3|0,2">
+        <div class="mps-row" data-sub="0">
+          <span class="match-sub-label">⑴</span>
+          <div class="sub-content">
+            <span class="mps-text">新聞</span>
+            <div class="match-pills"></div>
+          </div>
+        </div>
+        <div class="mps-row" data-sub="1">
+          <span class="match-sub-label">⑵</span>
+          <div class="sub-content">
+            <span class="mps-text">ラジオ</span>
+            <div class="match-pills"></div>
+          </div>
+        </div>
+        <div class="mps-row" data-sub="2">
+          <span class="match-sub-label">⑶</span>
+          <div class="sub-content">
+            <span class="mps-text">テレビ</span>
+            <div class="match-pills"></div>
+          </div>
+        </div>
+        <div class="mps-row" data-sub="3">
+          <span class="match-sub-label">⑷</span>
+          <div class="sub-content">
+            <span class="mps-text">雑誌</span>
+            <div class="match-pills"></div>
+          </div>
+        </div>
+      </div>
+      <div class="actions-inline">
+        <button class="btn-reveal" data-action="reveal">解答を見る</button>
+      </div>
+      <div class="feedback" data-feedback>
+        <div class="fb-banner ok">
+          <span class="icon">✓</span>
+          <span>正答: ⑴ (ア)(ウ) / ⑵ (イ) / ⑶ (ア)(イ)(ウ)(エ) / ⑷ (ア)(ウ)</span>
+        </div>
+        <div class="fb-body">
+          <div class="fb-section">
+            <div class="fb-section-title">ベストフィット</div>
+            <div class="fb-bestfit">メディアは、情報の流通範囲を拡大する役割をもつ。</div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">解説</div>
+            <div class="fb-explain">
+              <p>⑴⑷は<strong>紙面上で伝達できるメディア</strong>、⑵は<strong>音で伝達できるメディア</strong>、⑶は<strong>音と視覚で伝達できるメディア</strong>が用いられている。なお、これらのメディアは「情報メディア」や「伝播メディア」などと呼ばれることがある。</p>
+            </div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">媒体ごとの整理(補足)</div>
+            <div class="fb-explain">
+              <p><strong>新聞・雑誌</strong>は紙の上に文字と写真(静止画)を載せる。動画も音声も紙には載せられないので、表現メディアは <strong>文字 + 静止画</strong> の2種に限られる。</p>
+              <p><strong>ラジオ</strong>は電波で音だけを伝える。文字も画像も電波には乗らないので、<strong>音声</strong> のみ。</p>
+              <p><strong>テレビ</strong>は映像と音を同時に伝えるため、文字テロップ・音声・静止画(写真)・動画 の <strong>4種すべて</strong> を表現メディアとして使う。</p>
+              <p>このように、伝達のためのメディア(紙・電波)が違うと、そこに載せられる表現のためのメディアも変わる。</p>
+            </div>
+          </div>
+          <div class="viz">
+            <span class="viz-label">MEDIA MATRIX — 4媒体 × 4表現メディア</span>
+            <div class="viz-caption">○ がその媒体で使われている表現メディア</div>
+            <div class="cc-grid">
+              <div class="cc-row">
+                <span class="lbl">⑴ 新聞</span>
+                <span class="desc">紙に印刷 — 文字と静止画</span>
+                <div class="cc-marks">
+                  <span class="cc-mark by active">文字</span>
+                  <span class="cc-mark nc">音声</span>
+                  <span class="cc-mark nd active">静止画</span>
+                  <span class="cc-mark sa">動画</span>
+                </div>
+              </div>
+              <div class="cc-row">
+                <span class="lbl">⑵ ラジオ</span>
+                <span class="desc">電波で音のみ伝達</span>
+                <div class="cc-marks">
+                  <span class="cc-mark by">文字</span>
+                  <span class="cc-mark nc active">音声</span>
+                  <span class="cc-mark nd">静止画</span>
+                  <span class="cc-mark sa">動画</span>
+                </div>
+              </div>
+              <div class="cc-row">
+                <span class="lbl">⑶ テレビ</span>
+                <span class="desc">電波で音と映像を伝達</span>
+                <div class="cc-marks">
+                  <span class="cc-mark by active">文字</span>
+                  <span class="cc-mark nc active">音声</span>
+                  <span class="cc-mark nd active">静止画</span>
+                  <span class="cc-mark sa active">動画</span>
+                </div>
+              </div>
+              <div class="cc-row">
+                <span class="lbl">⑷ 雑誌</span>
+                <span class="desc">紙に印刷 — 文字と静止画</span>
+                <div class="cc-marks">
+                  <span class="cc-mark by active">文字</span>
+                  <span class="cc-mark nc">音声</span>
+                  <span class="cc-mark nd active">静止画</span>
+                  <span class="cc-mark sa">動画</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== STAGE 4: 例題3 ============================== -->
+  <section class="stage" data-stage-name="例題 3" data-prob-id="ex3">
+    <div class="problem-meta">
+      <span class="problem-tag">EXAMPLE 3 / 4</span>
+      <span class="problem-source">ベストフィット 例題3</span>
+    </div>
+    <div class="problem-q-num"><span class="q">Q</span>3</div>
+    <h3 class="problem-title">メディアリテラシー</h3>
+    <div class="problem-card">
+      <p class="problem-q lead">次の(ア)〜(カ)の記述のうち、メディアリテラシーの説明として適当なものをすべて選べ。</p>
+      <div class="multi-hint">複数選択 — 該当するものすべて</div>
+      <div class="opts" data-input="multi" data-correct="1,2,4,5">
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(ア)</span>情報の受信側に必要な能力であり、発信側には関係がない。</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(イ)</span>情報をさまざまな視点で分析・評価し、情報の真偽を正しく判断できる能力である。</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(ウ)</span>現代では誰もが情報の発信者となり得るため、すべての人に必要な能力である。</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(エ)</span>インターネット上のサービスを利用しない人には必要のない能力である。</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(オ)</span>情報の発信には、発信者の意図があるということが前提になっている。</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(カ)</span>情報の信憑性を確認するには、複数の情報源から提供された情報を比較する必要がある。</span></label>
+      </div>
+      <div class="actions-inline">
+        <button class="btn-reveal" data-action="reveal">解答を見る</button>
+      </div>
+      <div class="feedback" data-feedback>
+        <div class="fb-banner ok">
+          <span class="icon">✓</span>
+          <span>正答: (イ)、(ウ)、(オ)、(カ)</span>
+        </div>
+        <div class="fb-body">
+          <div class="fb-section">
+            <div class="fb-section-title">ベストフィット</div>
+            <div class="fb-bestfit">メディアリテラシーには受け取った情報の分析・評価のほかに、メディアを使って適切に情報を発信する能力も含まれる。</div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">解説</div>
+            <div class="fb-explain">
+              <p>メディアリテラシーには、メディアを使って適切に情報を発信する能力も含まれるため、<strong>情報の発信側にも必要</strong>な能力である。また、インターネット上のサービスを使わなくても、マスメディアなどを通じて情報を受け取るため、メディアリテラシーが必要になってくる。複数の情報源からの情報を比較して、情報の信憑性を確認することを<strong>クロスチェック</strong>という。</p>
+            </div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">適当でない記述の根拠(補足)</div>
+            <div class="fb-explain">
+              <p><strong>(ア) 適当でない</strong>:メディアリテラシーは「受信」だけでなく「発信」の能力も含む。SNS の普及で誰もが発信者になり得る現代では、発信側のリテラシーが特に重要になっている。</p>
+              <p><strong>(エ) 適当でない</strong>:インターネットを使わなくてもテレビ・新聞・ラジオなどのマスメディアからは情報が入ってくる。よって「ネットを使わない人には不要」は成り立たない。</p>
+              <p>残りの (イ)(ウ)(オ)(カ) はメディアリテラシーの基本構成要素 — 分析・判断・前提理解・信憑性確認 — をそのまま述べている。</p>
+            </div>
+          </div>
+          <div class="viz">
+            <span class="viz-label">LITERACY MAP — メディアリテラシーの2側面</span>
+            <div class="viz-caption">受信 + 発信の両方を含む能力</div>
+            <div class="compare">
+              <div class="compare-col left">
+                <h5>受信側の能力</h5>
+                <div class="row"><span class="k">(イ)</span><span class="v">分析・評価して真偽を判断する</span></div>
+                <div class="row"><span class="k">(カ)</span><span class="v">クロスチェックで信憑性を確認</span></div>
+                <div class="row"><span class="k">(オ)</span><span class="v">発信者の意図があるという前提</span></div>
+              </div>
+              <div class="compare-col right">
+                <h5>発信側の能力</h5>
+                <div class="row"><span class="k">(ウ)</span><span class="v">誰もが発信者となり得る現代</span></div>
+                <div class="row"><span class="k">(オ)</span><span class="v">自分の意図を適切に伝える</span></div>
+                <div class="row"><span class="k">補足</span><span class="v">メディアの特性を踏まえて表現する</span></div>
+              </div>
+            </div>
+            <div style="margin-top: 0.85rem; padding: 0.7rem 0.95rem; background: var(--ng-pale); border-left: 3px solid var(--ng); border-radius: 0 6px 6px 0; font-size: 0.85rem; color: var(--ng-deep);">
+              <strong>×&nbsp;不正解の選択肢</strong>(ア) 受信側だけ → 発信側にも必要 / (エ) ネットを使わない人には不要 → マスメディアからも情報は来る
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== STAGE 5: 例題4 ============================== -->
+  <section class="stage" data-stage-name="例題 4" data-prob-id="ex4">
+    <div class="problem-meta">
+      <span class="problem-tag">EXAMPLE 4 / 4</span>
+      <span class="problem-source">ベストフィット 例題4</span>
+    </div>
+    <div class="problem-q-num"><span class="q">Q</span>4</div>
+    <h3 class="problem-title">メディアが及ぼす影響</h3>
+    <div class="problem-card">
+      <p class="problem-q lead">次の文章中の空欄に適当な語句を入れよ。</p>
+      <div class="fill-bullets" data-input="fill">
+        <div class="fill-line">インターネット上では、真実に見せかけた虚偽の情報である<span class="fill-blank" data-blank="0"><span class="fill-blank-label">①</span></span>が流布しており、その真偽を見分けるために、複数の情報源から提供された情報を比較する<span class="fill-blank" data-blank="1"><span class="fill-blank-label">②</span></span>を行うことが重要となる。</div>
+        <div class="fill-line">また、SNS では自分の考えと近いユーザどうしがフォローし合う傾向があるため、自分が投稿した意見に対して、賛同の意見のみが返ってくる<span class="fill-blank" data-blank="2"><span class="fill-blank-label">③</span></span>が起きやすく、さらに検索結果なども自分の価値観に沿った情報ばかりが表示されることで、<span class="fill-blank" data-blank="3"><span class="fill-blank-label">④</span></span>と呼ばれる現象が起きやすい。</div>
+      </div>
+      <div class="fill-bank">
+        <div class="fill-bank-title">語群(4語) — タップで空欄に入れる</div>
+        <button class="fill-chip" data-word="フェイクニュース">フェイクニュース</button>
+        <button class="fill-chip" data-word="クロスチェック">クロスチェック</button>
+        <button class="fill-chip" data-word="エコーチェンバー">エコーチェンバー</button>
+        <button class="fill-chip" data-word="フィルターバブル">フィルターバブル</button>
+      </div>
+      <div class="actions-inline">
+        <button class="btn-reveal" data-action="reveal" data-fill-correct="フェイクニュース,クロスチェック,エコーチェンバー,フィルターバブル">解答を見る</button>
+      </div>
+      <div class="feedback" data-feedback>
+        <div class="fb-banner ok">
+          <span class="icon">✓</span>
+          <span>正答: ① フェイクニュース / ② クロスチェック / ③ エコーチェンバー / ④ フィルターバブル</span>
+        </div>
+        <div class="fb-body">
+          <div class="fb-section">
+            <div class="fb-section-title">ベストフィット</div>
+            <div class="fb-bestfit">インターネットや SNS は、メディアが及ぼす影響について理解して利用する必要がある。</div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">解説</div>
+            <div class="fb-explain">
+              <p>インターネット上には、<strong>フェイクニュース</strong>と呼ばれる虚偽の情報が流通しており、その真偽を見極めるためには、情報源の確認や<strong>クロスチェック</strong>が欠かせない。また、SNS ではユーザが自分の考えと近いアカウントをフォローする傾向があるため、自分の意見に対して賛同の意見のみが返ってくる<strong>エコーチェンバー</strong>が起きやすく、また検索エンジンのアルゴリズムなどによって、自分の価値観に沿った情報ばかりが表示され、<strong>フィルターバブル</strong>と呼ばれる状況にも陥りやすい。</p>
+            </div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">エコーチェンバーとフィルターバブルの違い(補足)</div>
+            <div class="fb-explain">
+              <p>類似した現象だが、起きる仕組みが違う。混同しないように整理しておく。</p>
+              <p><strong>エコーチェンバー</strong>:SNS 上で<strong>自分と似た考えの人</strong>と相互フォローすることで、賛同の意見だけが返ってくる状況。原因は<strong>「人間関係の偏り」</strong>。閉じた小部屋で音が反響する現象に喩えられる。</p>
+              <p><strong>フィルターバブル</strong>:検索エンジンや SNS の<strong>アルゴリズム</strong>が、利用者の閲覧履歴・検索履歴に基づいて興味に合いそうな情報を優先表示するため、結果的に偏った情報に包まれる状況。原因は<strong>「アルゴリズムによる選別」</strong>。</p>
+              <p>両者は同時に働きやすく、自分の意見を疑う機会を奪う。クロスチェックは、この閉じた状態を破る基本動作。</p>
+            </div>
+          </div>
+          <div class="viz">
+            <span class="viz-label">SNS EFFECTS — 4語の関係マップ</span>
+            <div class="viz-caption">問題と対策、現象と原因の対応</div>
+            <div class="compare">
+              <div class="compare-col left">
+                <h5>問題と対策</h5>
+                <div class="row"><span class="k">問題</span><span class="v">① フェイクニュース(虚偽の情報)</span></div>
+                <div class="row"><span class="k">対策</span><span class="v">② クロスチェック(複数源で検証)</span></div>
+              </div>
+              <div class="compare-col right">
+                <h5>SNS 特有の現象</h5>
+                <div class="row"><span class="k">人間関係由来</span><span class="v">③ エコーチェンバー</span></div>
+                <div class="row"><span class="k">アルゴリズム由来</span><span class="v">④ フィルターバブル</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== STAGE 6: 練習1 — 情報の特性 ============================== -->
+  <section class="stage" data-stage-name="練習 1" data-prob-id="p1">
+    <div class="problem-meta">
+      <span class="problem-tag practice">PRACTICE 1 / 6</span>
+      <span class="problem-tag multi">MULTI</span>
+      <span class="problem-source">ベストフィット 類題1</span>
+    </div>
+    <div class="problem-q-num"><span class="q">Q</span>1</div>
+    <h3 class="problem-title">〈情報の特性〉</h3>
+    <div class="problem-card">
+      <p class="problem-q lead">次の(ア)〜(オ)のうち、情報の特性として適当なものをすべて選べ。</p>
+      <div class="multi-hint">複数選択 — 該当するものすべて</div>
+      <div class="opts" data-input="multi" data-correct="1,3">
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(ア)</span>発信された情報は簡単に削除できる。</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(イ)</span>すぐに広がる。</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(ウ)</span>ものとは違い、お金を払って購入する価値はない。</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(エ)</span>容易に複製できる。</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(オ)</span>人に渡すと、自分の手元からはなくなる。</span></label>
+      </div>
+      <div class="actions-inline">
+        <button class="btn-grade" data-action="grade">採点する <span class="arrow">→</span></button>
+      </div>
+      <div class="feedback" data-feedback>
+        <div class="fb-banner ok"><span class="icon">✓</span><span>解説</span><span class="score-tag"></span></div>
+        <div class="fb-body">
+          <div class="fb-section">
+            <div class="fb-section-title">正答</div>
+            <div class="fb-correct-line">(イ)、(エ)</div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">解説</div>
+            <div class="fb-explain">
+              <ul>
+                <li><strong>(ア) 適当でない</strong>:Web サイトなどに掲載された情報は、自分で削除してもほかのコンピュータなどにダウンロードされて残っている可能性があるため、完全に削除できるとは限らない。</li>
+                <li><strong>(イ) 適当である</strong>:「<strong>伝播性</strong>」という情報の特徴を示している。</li>
+                <li><strong>(ウ) 適当でない</strong>:現在の情報社会では、情報がほかの資源や資産と同様に価値をもつことがある。そのため、それらの情報を購入することもある。</li>
+                <li><strong>(エ) 適当である</strong>:「<strong>複製性</strong>」という情報の特徴を示している。</li>
+                <li><strong>(オ) 適当でない</strong>:知識のように形がない情報は、人に伝えても自分の記憶から消え去ることはない。また、情報を紙に記録したりコンピュータに保存したりすると、人の記憶から失われても情報は残る(<strong>残存性</strong>)。</li>
+              </ul>
+            </div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">「もの」と「情報」の違い(補足)</div>
+            <div class="fb-explain">
+              <p>(ア)(ウ)(オ) はいずれも、<strong>情報を「もの」と同じように捉えている</strong>誤りを含む。「もの」は形があるので削除すれば消え、価値が大きく、人に渡せば自分の手元からなくなる。しかし情報は形がないので、その逆の性質をもつ。</p>
+              <p>(イ)(エ) は、形がないからこそ生じる「広がりやすさ」「コピーされやすさ」を述べている。これが情報の<strong>3特性</strong>(残存性・複製性・伝播性)の本質。</p>
+            </div>
+          </div>
+          <div class="viz">
+            <span class="viz-label">3 PROPERTIES — 情報の3特性</span>
+            <div class="viz-caption">適当な選択肢が示す特性</div>
+            <div class="ip-rich-grid">
+              <div class="ip-rich patent">
+                <div class="ip-rich-name">残存性</div>
+                <div class="ip-rich-en">Persistence</div>
+                <div class="ip-rich-period">(ア) の対偶</div>
+                <div class="ip-rich-desc">削除しても残る/手元からなくならない</div>
+                <div class="ip-rich-ex"><span class="label">対応</span>(ア) は誤り、(オ) も誤り</div>
+              </div>
+              <div class="ip-rich utility">
+                <div class="ip-rich-name">複製性</div>
+                <div class="ip-rich-en">Replicability</div>
+                <div class="ip-rich-period">(エ) ✓</div>
+                <div class="ip-rich-desc">容易に複製できる</div>
+                <div class="ip-rich-ex"><span class="label">対応</span>(エ) が該当</div>
+              </div>
+              <div class="ip-rich design">
+                <div class="ip-rich-name">伝播性</div>
+                <div class="ip-rich-en">Diffusivity</div>
+                <div class="ip-rich-period">(イ) ✓</div>
+                <div class="ip-rich-desc">すぐに広がる</div>
+                <div class="ip-rich-ex"><span class="label">対応</span>(イ) が該当</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== STAGE 7: 練習2 — 表現のためのメディア ============================== -->
+  <section class="stage" data-stage-name="練習 2" data-prob-id="p2">
+    <div class="problem-meta">
+      <span class="problem-tag practice">PRACTICE 2 / 6</span>
+      <span class="problem-tag ox">○ × 判定</span>
+      <span class="problem-source">ベストフィット 類題2</span>
+    </div>
+    <div class="problem-q-num"><span class="q">Q</span>2</div>
+    <h3 class="problem-title">〈表現のためのメディア〉</h3>
+    <div class="problem-card">
+      <p class="problem-q lead">次の⑴〜⑸の「表現のためのメディア」の説明のうち、適当なものには<strong>○</strong>を、適当でないものには<strong>×</strong>を記せ。</p>
+      <div class="ox-list" data-input="ox" data-correct="x,x,o,o,x">
+        <div class="ox-row" data-sub="0">
+          <span class="ox-sub-label">⑴</span>
+          <span class="ox-text">音声で伝えられる聴覚情報は、どちらを向いていても受信できる特性があるため、どのような情報も音声で伝えたほうがよい。</span>
+          <div class="ox-buttons"><button class="ox-btn maru" data-val="o">○</button><button class="ox-btn batsu" data-val="x">×</button></div>
+        </div>
+        <div class="ox-row" data-sub="1">
+          <span class="ox-sub-label">⑵</span>
+          <span class="ox-text">色や形などの情報は、画像や図形より文字のほうが適切かつ簡潔に伝えられる。</span>
+          <div class="ox-buttons"><button class="ox-btn maru" data-val="o">○</button><button class="ox-btn batsu" data-val="x">×</button></div>
+        </div>
+        <div class="ox-row" data-sub="2">
+          <span class="ox-sub-label">⑶</span>
+          <span class="ox-text">静止画は、文字で表現しにくいものでも短時間で多くの情報を伝達できる。</span>
+          <div class="ox-buttons"><button class="ox-btn maru" data-val="o">○</button><button class="ox-btn batsu" data-val="x">×</button></div>
+        </div>
+        <div class="ox-row" data-sub="3">
+          <span class="ox-sub-label">⑷</span>
+          <span class="ox-text">動画は、再生時間の制約を受けるメディアである。</span>
+          <div class="ox-buttons"><button class="ox-btn maru" data-val="o">○</button><button class="ox-btn batsu" data-val="x">×</button></div>
+        </div>
+        <div class="ox-row" data-sub="4">
+          <span class="ox-sub-label">⑸</span>
+          <span class="ox-text">走行中の自転車への注意や危険を知らせる看板などには、文章を用いたほうがよい。</span>
+          <div class="ox-buttons"><button class="ox-btn maru" data-val="o">○</button><button class="ox-btn batsu" data-val="x">×</button></div>
+        </div>
+      </div>
+      <div class="actions-inline">
+        <button class="btn-grade" data-action="grade">採点する <span class="arrow">→</span></button>
+      </div>
+      <div class="feedback" data-feedback>
+        <div class="fb-banner ok"><span class="icon">✓</span><span>解説</span><span class="score-tag"></span></div>
+        <div class="fb-body">
+          <div class="fb-section">
+            <div class="fb-section-title">正答</div>
+            <div class="fb-correct-line">⑴ × / ⑵ × / ⑶ ○ / ⑷ ○ / ⑸ ×</div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">解説</div>
+            <div class="fb-explain">
+              <ul>
+                <li><strong>⑴ ×</strong> 適当でない。聴覚に障がいがある人には音声による情報が伝わりにくいため、それぞれの表現メディアの特性だけでなく、さまざまな受信者、条件などを考慮して情報を伝達しなければならない。</li>
+                <li><strong>⑵ ×</strong> 適当でない。色や形などの情報は、文字よりも画像や図形のほうが適切かつ簡潔に伝えられる。</li>
+                <li><strong>⑸ ×</strong> 適当でない。緊急時の情報伝達では、文章よりも図形や文字を組み合わせ、色なども工夫すると、瞬時に注意を促すことができる。</li>
+              </ul>
+            </div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">⑶⑷ が ○ である理由(補足)</div>
+            <div class="fb-explain">
+              <p><strong>⑶ ○</strong> 静止画は、文字では長く説明が必要になる視覚情報(色・形・配置・表情など)を一目で伝えられる。「百聞は一見にしかず」が示すとおり、文字で表現しにくいものを短時間で多くの情報量として伝達できる。</p>
+              <p><strong>⑷ ○</strong> 動画は時間軸に沿って情報を流すメディアなので、受信者は<strong>再生時間に拘束される</strong>。文字や静止画は読む速さや見る順序を受信者が選べるが、動画は基本的に発信者が決めた時間で再生される。これは動画というメディアの<strong>制約</strong>でもあり<strong>特徴</strong>でもある。</p>
+            </div>
+          </div>
+          <div class="viz">
+            <span class="viz-label">MEDIA SUITABILITY — 表現メディアの向き不向き</span>
+            <div class="viz-caption">受信者と内容に応じて使い分ける</div>
+            <div class="compare">
+              <div class="compare-col left">
+                <h5>誤った前提(× の根拠)</h5>
+                <div class="row"><span class="k">⑴</span><span class="v">音声に偏ると聴覚障がい者に届かない</span></div>
+                <div class="row"><span class="k">⑵</span><span class="v">色・形は<strong>画像・図形</strong>のほうが簡潔</span></div>
+                <div class="row"><span class="k">⑸</span><span class="v">緊急時は<strong>図形+色</strong>が瞬時に伝わる</span></div>
+              </div>
+              <div class="compare-col right">
+                <h5>正しい記述(○ の根拠)</h5>
+                <div class="row"><span class="k">⑶</span><span class="v">静止画は短時間で多くの情報量</span></div>
+                <div class="row"><span class="k">⑷</span><span class="v">動画は時間軸に沿って情報を流す制約あり</span></div>
+                <div class="row"><span class="k">原則</span><span class="v">メディアの特性 + 受信者・条件で使い分ける</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== STAGE 8: 練習3 — メディアリテラシーの背景 ============================== -->
+  <section class="stage" data-stage-name="練習 3" data-prob-id="p3">
+    <div class="problem-meta">
+      <span class="problem-tag practice">PRACTICE 3 / 6</span>
+      <span class="problem-tag multi">MULTI</span>
+      <span class="problem-source">ベストフィット 類題3</span>
+    </div>
+    <div class="problem-q-num"><span class="q">Q</span>3</div>
+    <h3 class="problem-title">〈メディアリテラシー〉</h3>
+    <div class="problem-card">
+      <p class="problem-q lead">次の(ア)〜(オ)の記述のうち、現代においてメディアリテラシーが必要とされる背景の説明として適当なものをすべて選べ。</p>
+      <div class="multi-hint">複数選択 — 該当するものすべて</div>
+      <div class="opts" data-input="multi" data-correct="0,1,3">
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(ア)</span>SNS などにおいて、真偽不明の情報の投稿が多くされるようになった。</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(イ)</span>スマートフォンの普及により、写真や映像を使った情報発信が誰でも手軽にできるようになった。</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(ウ)</span>インターネット上の動画サービスの普及により、テレビを視聴する人が減った。</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(エ)</span>インターネットの普及により、多様なメディアとの接点が増えた。</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(オ)</span>電子書籍の普及により、時間や場所を選ばずに好きな本が読めるようになった。</span></label>
+      </div>
+      <div class="actions-inline">
+        <button class="btn-grade" data-action="grade">採点する <span class="arrow">→</span></button>
+      </div>
+      <div class="feedback" data-feedback>
+        <div class="fb-banner ok"><span class="icon">✓</span><span>解説</span><span class="score-tag"></span></div>
+        <div class="fb-body">
+          <div class="fb-section">
+            <div class="fb-section-title">正答</div>
+            <div class="fb-correct-line">(ア)、(イ)、(エ)</div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">解説</div>
+            <div class="fb-explain">
+              <ul>
+                <li><strong>(ア) 適当である</strong>:SNS などの投稿内容は、客観的な事実以外にも個人の意見や好みなどが強く反映されることがあるので、これらを区別して読み取る能力が必要となる。</li>
+                <li><strong>(イ) 適当である</strong>:メディアを使った情報発信は、適切に行わないと自分の意図と違った方向に拡散されることがあるため、それぞれのメディアの特性を理解して発信する能力が必要となる。</li>
+                <li><strong>(ウ) 適当でない</strong>:メディアリテラシーが必要になったのは、情報を受け取る手段が増えたことと、個人が情報を発信できるようになったためで、テレビを視聴する人が減少したことは関係ない。</li>
+                <li><strong>(エ) 適当である</strong>:メディアによって伝達される情報は、それぞれのメディアごとの特性があるため、その特性を踏まえて情報を解釈する能力が必要となる。</li>
+                <li><strong>(オ) 適当でない</strong>:(ウ) と同様で、時間や場所を選ばずに本が読めるようになったことは関係ない。</li>
+              </ul>
+            </div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">「背景」と「便利な変化」を分ける(補足)</div>
+            <div class="fb-explain">
+              <p>本問のポイントは、設問が問うているのが <strong>「メディアリテラシーが必要とされる背景」</strong> であること。「インターネット時代の便利な変化」全般ではない。</p>
+              <p>(ウ)(オ) は、たしかにインターネット時代に起きた変化だが、視聴行動の移動や読書環境の便利化は、<strong>受信者の情報判断力</strong>や<strong>発信者の表現力</strong>とは直接結びつかない。だから「メディアリテラシーが必要になった理由」としては成り立たない。</p>
+              <p>(ア)(イ)(エ) はいずれも、<strong>受信側の判断や発信側の責任</strong>が増した変化を指している。設問が問う「背景」に直結する。</p>
+            </div>
+          </div>
+          <div class="viz">
+            <span class="viz-label">BACKGROUND CHECK — 背景に該当するか</span>
+            <div class="viz-caption">受信・発信の能力に直結する変化だけが「背景」</div>
+            <div class="bd-grid">
+              <div class="bd-card">
+                <div class="key">(ア) 真偽不明の投稿</div>
+                <span class="bound">受信側の判断力が必須に</span>
+                <div class="desc">SNS には事実と意見が混在。区別する読み取り能力が要る → 背景に該当 ○</div>
+              </div>
+              <div class="bd-card">
+                <div class="key">(イ) スマホで誰もが発信</div>
+                <span class="bound">発信側の表現力が必須に</span>
+                <div class="desc">写真・映像をワンタップで世界に発信できる時代。発信責任が問われる → 背景に該当 ○</div>
+              </div>
+              <div class="bd-card">
+                <div class="key">(エ) 多様なメディアとの接点</div>
+                <span class="bound">特性を踏まえた解釈力が必須に</span>
+                <div class="desc">テキスト・画像・動画・音声、多様な特性を読み解く必要 → 背景に該当 ○</div>
+              </div>
+              <div class="bd-card">
+                <div class="key">(ウ)(オ) 視聴・読書の便利化</div>
+                <span class="bound">判断力との関連は薄い</span>
+                <div class="desc">テレビ視聴の減少・電子書籍の普及は「便利な変化」だが、受信判断や発信責任とは別軸 → 背景に該当しない ×</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== STAGE 9: 練習4 — エコーチェンバー ============================== -->
+  <section class="stage" data-stage-name="練習 4" data-prob-id="p4">
+    <div class="problem-meta">
+      <span class="problem-tag practice">PRACTICE 4 / 6</span>
+      <span class="problem-tag single">SINGLE</span>
+      <span class="problem-source">ベストフィット 類題4</span>
+    </div>
+    <div class="problem-q-num"><span class="q">Q</span>4</div>
+    <h3 class="problem-title">〈エコーチェンバー〉</h3>
+    <div class="problem-card">
+      <p class="problem-q lead">エコーチェンバーとは、インターネット上のある状況を、閉じた小部屋の中で音が反響する現象にたとえた言葉である。次の(ア)〜(エ)の記述のうち、エコーチェンバーの説明として最も適当なものを一つ選べ。</p>
+      <div class="opts" data-input="single" data-correct="0">
+        <label class="opt"><input type="radio" name="p4"><span class="opt-mark"></span><span class="opt-text"><span class="opt-letter">(ア)</span>SNS などで、自分と似た意見をもつ人たちとばかり交流することで、自分の意見が正しいと確信してしまう状況。</span></label>
+        <label class="opt"><input type="radio" name="p4"><span class="opt-mark"></span><span class="opt-text"><span class="opt-letter">(イ)</span>インターネット上の情報について、複数の情報源から提供される情報を比較することで情報の正確さを確認しようとする行動。</span></label>
+        <label class="opt"><input type="radio" name="p4"><span class="opt-mark"></span><span class="opt-text"><span class="opt-letter">(ウ)</span>インターネット上に流布する真実に見せかけた虚偽の情報が、あたかも真実であるかのように拡散されていく状況。</span></label>
+        <label class="opt"><input type="radio" name="p4"><span class="opt-mark"></span><span class="opt-text"><span class="opt-letter">(エ)</span>さまざまな意見をもつ人たちが議論や対話を通じて、相互理解を深め、よりよい結論を導き出す状況。</span></label>
+      </div>
+      <div class="actions-inline">
+        <button class="btn-grade" data-action="grade">採点する <span class="arrow">→</span></button>
+      </div>
+      <div class="feedback" data-feedback>
+        <div class="fb-banner ok"><span class="icon">✓</span><span>解説</span><span class="score-tag"></span></div>
+        <div class="fb-body">
+          <div class="fb-section">
+            <div class="fb-section-title">正答</div>
+            <div class="fb-correct-line">(ア)</div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">解説</div>
+            <div class="fb-explain">
+              <p>おもに SNS において、自分と同じような考えをもっているユーザどうしがフォローし合うことが多いため、自分が発信した意見に賛同のコメントが多く寄せられることになり、自分の意見が正しいという確信をもってしまう現象を<strong>エコーチェンバー</strong>という。</p>
+              <ul>
+                <li><strong>(イ) 適当でない</strong>:<strong>クロスチェック</strong>のことである。</li>
+                <li><strong>(ウ) 適当でない</strong>:<strong>フェイクニュース</strong>のことである。</li>
+              </ul>
+            </div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">(エ) はなぜ違うか(補足)</div>
+            <div class="fb-explain">
+              <p><strong>(エ) 適当でない</strong>:エコーチェンバーは「<strong>同じ意見ばかりが反響して聞こえる</strong>」現象。一方 (エ) は<strong>多様な意見の対話による相互理解</strong>を述べていて、エコーチェンバーとは<strong>正反対の状況</strong>(熟議・公共圏)を指している。本問は紛らわしい近接概念を並べて区別を問うている。</p>
+              <p>整理すると:エコーチェンバー = 似た意見の閉鎖的な反響、クロスチェック = 複数の情報源で検証する行動、フェイクニュース = 虚偽の情報そのもの、(エ) = 多様な意見による熟議。それぞれ別の概念。</p>
+            </div>
+          </div>
+          <div class="viz">
+            <span class="viz-label">DISTINGUISH — 4つの近接概念を区別する</span>
+            <div class="viz-caption">エコーチェンバーと混同しやすい3つを並べて整理</div>
+            <div class="bd-grid">
+              <div class="bd-card">
+                <div class="key">(ア) エコーチェンバー</div>
+                <span class="bound">○ 正答</span>
+                <div class="desc">似た意見の人とばかり交流 → 自分の意見が正しいと確信 → <strong>閉じた反響</strong></div>
+              </div>
+              <div class="bd-card">
+                <div class="key">(イ) クロスチェック</div>
+                <span class="bound">× 別概念</span>
+                <div class="desc">複数の情報源を比較して情報の正確さを検証する<strong>行動</strong>。エコーチェンバーを破る手立て</div>
+              </div>
+              <div class="bd-card">
+                <div class="key">(ウ) フェイクニュース</div>
+                <span class="bound">× 別概念</span>
+                <div class="desc">虚偽の情報そのもの・拡散の<strong>結果</strong>。発信内容の問題</div>
+              </div>
+              <div class="bd-card">
+                <div class="key">(エ) 熟議・対話</div>
+                <span class="bound">× 正反対</span>
+                <div class="desc">多様な意見の交流による相互理解。エコーチェンバーの<strong>逆</strong>の状況</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== STAGE 10: 練習5 — 情報の特性とフェイクニュース ============================== -->
+  <section class="stage" data-stage-name="練習 5" data-prob-id="p5">
+    <div class="problem-meta">
+      <span class="problem-tag practice">PRACTICE 5 / 6</span>
+      <span class="problem-tag multi">MULTI</span>
+      <span class="problem-source">ベストフィット 練習問題5</span>
+    </div>
+    <div class="problem-q-num"><span class="q">Q</span>5</div>
+    <h3 class="problem-title">〈情報の特性とフェイクニュース〉</h3>
+    <div class="problem-card">
+      <p class="problem-q lead">情報の特性である残存性、複製性、伝播性と、フェイクニュースが作成され、拡散する仕組みについて述べた次の(ア)〜(オ)の記述のうち、適当なものをすべて選べ。</p>
+      <div class="multi-hint">複数選択 — 該当するものすべて</div>
+      <div class="opts" data-input="multi" data-correct="0,4">
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(ア)</span>デジタルデータは容易に複製が可能な複製性があるため、悪意のある者がフェイクニュースを大量に作成し、拡散することができる。</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(イ)</span>フェイクニュースは、真実の情報よりも緻密で正確な内容であることが多いため、専門家の間でも信頼性が高く評価され、残存性が高く、公式な記録として保存されることが多い。</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(ウ)</span>情報通信技術が発達しても、情報の伝達速度や範囲といった伝播性は増大しないため、フェイクニュースはおもに口コミや手紙といった従来の方法でゆっくりと拡散される。</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(エ)</span>フェイクニュースは、真実の情報と比べて情報量が少なく、内容も単純であることが一般的であるため、複製性や伝播性が低く、拡散されることはほぼない。</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(オ)</span>インターネット上の情報は、一度拡散されると完全に削除することが難しい残存性があるため、フェイクニュースの影響が長期にわたって残る可能性がある。</span></label>
+      </div>
+      <div class="actions-inline">
+        <button class="btn-grade" data-action="grade">採点する <span class="arrow">→</span></button>
+      </div>
+      <div class="feedback" data-feedback>
+        <div class="fb-banner ok"><span class="icon">✓</span><span>解説</span><span class="score-tag"></span></div>
+        <div class="fb-body">
+          <div class="fb-section">
+            <div class="fb-section-title">正答</div>
+            <div class="fb-correct-line">(ア)、(オ)</div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">解説 — 適当でない選択肢</div>
+            <div class="fb-explain">
+              <ul>
+                <li><strong>(イ) 適当でない</strong>:フェイクニュースの内容は正確ではないため、専門家からは否定されることが多く、公式な記録にはならない。</li>
+                <li><strong>(ウ) 適当でない</strong>:情報通信技術の発達で、伝達の速さも範囲も飛躍的に増大した。</li>
+                <li><strong>(エ) 適当でない</strong>:フェイクニュースは真実のニュースと同様の量や複雑さをもっており、複製性や伝播性は真実のニュースと同等にあると考えられる。</li>
+              </ul>
+            </div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">適当な選択肢の確認(補足)</div>
+            <div class="fb-explain">
+              <p><strong>(ア) 適当</strong>:情報の<strong>複製性</strong>を悪用すると、コピー&amp;改変で大量のフェイクニュースが瞬時に作れる。生成 AI の登場でこの障壁はさらに下がっている。</p>
+              <p><strong>(オ) 適当</strong>:インターネット上の情報の<strong>残存性</strong>は、訂正記事が出てもオリジナルのフェイクが残り続ける、削除しても他者の保存・引用・スクリーンショットで残るという形で現れる。フェイクは拡散後の影響が消えにくい。</p>
+              <p>誤りの選択肢 (イ)(ウ)(エ) は、いずれも<strong>「フェイクは拡散しにくい・残らない」</strong>という結論に持ち込もうとする記述である。実態と逆向きで、本問の正答からは外れる。</p>
+            </div>
+          </div>
+          <div class="viz">
+            <span class="viz-label">FAKE NEWS × 3 PROPERTIES — 3特性との関係</span>
+            <div class="viz-caption">フェイクニュースは情報の3特性と相性が悪い</div>
+            <div class="compare">
+              <div class="compare-col left">
+                <h5>正しい関係(○ の根拠)</h5>
+                <div class="row"><span class="k">(ア) 複製性</span><span class="v">大量作成・拡散の温床</span></div>
+                <div class="row"><span class="k">(オ) 残存性</span><span class="v">削除困難 → 影響が長期化</span></div>
+                <div class="row"><span class="k">含意</span><span class="v">技術発達で伝播性も<strong>増大</strong></span></div>
+              </div>
+              <div class="compare-col right">
+                <h5>誤った前提(× の根拠)</h5>
+                <div class="row"><span class="k">(イ)</span><span class="v">フェイクが「正確」「信頼」される前提が誤り</span></div>
+                <div class="row"><span class="k">(ウ)</span><span class="v">「伝播性は増大しない」が事実と逆</span></div>
+                <div class="row"><span class="k">(エ)</span><span class="v">「複製性・伝播性が低い」が事実と逆</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== STAGE 11: 練習6 — フィルターバブル ============================== -->
+  <section class="stage" data-stage-name="練習 6" data-prob-id="p6">
+    <div class="problem-meta">
+      <span class="problem-tag practice">PRACTICE 6 / 6</span>
+      <span class="problem-tag multi">MULTI</span>
+      <span class="problem-source">ベストフィット 練習問題6</span>
+    </div>
+    <div class="problem-q-num"><span class="q">Q</span>6</div>
+    <h3 class="problem-title">〈フィルターバブル〉</h3>
+    <div class="problem-card">
+      <p class="problem-q lead">インターネット上の情報に依存すると、フィルターバブルと呼ばれる偏った情報に包まれたような状況になることがある。次の(ア)〜(オ)の記述のうち、フィルターバブルが起こる理由の説明として適当なものをすべて選べ。</p>
+      <div class="multi-hint">複数選択 — 該当するものすべて</div>
+      <div class="opts" data-input="multi" data-correct="0,2">
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(ア)</span>検索エンジンや SNS のアルゴリズムが、利用者の過去の検索履歴や閲覧履歴に基づいて、興味や関心に合いそうな情報を優先的に表示するため。</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(イ)</span>インターネット上の情報は、誰でも自由に発信できることで、情報の信頼性や正確性が必ずしも保証されないため。</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(ウ)</span>エコーチェンバーにより、SNS での投稿に対して意見の正当性とは無関係に賛同の意見が寄せられることが多くなり、自分の意見に確信を得やすくなるため。</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(エ)</span>多くの人が同じ情報源から情報を得ようとし、人気のある情報にアクセスが集中して多様な情報に触れる機会が減るため。</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">(オ)</span>情報の発信者が、特定の思想や立場に基づいて情報を選択的に提示したり、意図的に情報を操作したりすることがあるため。</span></label>
+      </div>
+      <div class="actions-inline">
+        <button class="btn-grade" data-action="grade">採点する <span class="arrow">→</span></button>
+      </div>
+      <div class="feedback" data-feedback>
+        <div class="fb-banner ok"><span class="icon">✓</span><span>解説</span><span class="score-tag"></span></div>
+        <div class="fb-body">
+          <div class="fb-section">
+            <div class="fb-section-title">正答</div>
+            <div class="fb-correct-line">(ア)、(ウ)</div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">解説 — 適当でない選択肢</div>
+            <div class="fb-explain">
+              <ul>
+                <li><strong>(イ) 適当でない</strong>:インターネット上に発信される情報の信頼性と、フィルターバブルが起こる理由とは直接の関係はない。</li>
+                <li><strong>(エ) 適当でない</strong>:情報源が集中することと、フィルターバブルが起こる理由とは直接の関係はない。</li>
+                <li><strong>(オ) 適当でない</strong>:情報の発信者が、受信者側で提示される情報を選択的に提示させる操作は難しく、実際にはあまり起こっていない。</li>
+              </ul>
+            </div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">フィルターバブルとエコーチェンバーの関係(補足)</div>
+            <div class="fb-explain">
+              <p><strong>(ア) 適当</strong>:フィルターバブルの<strong>直接の原因</strong>。検索エンジンや SNS のアルゴリズムが、過去の閲覧・検索履歴を学習して「好みそうな情報」を優先表示する仕組みそのものが、利用者を偏った情報に包む。</p>
+              <p><strong>(ウ) 適当</strong>:エコーチェンバーによって自分の意見に確信を得ると、<strong>反対意見を能動的に避ける行動</strong>(クリックしない・フォローしない・低評価する)が増え、それがアルゴリズムにフィードバックされて、ますますフィルターバブルが強化される。両者は<strong>連鎖的に作用</strong>する。</p>
+              <p>誤答の (イ)(エ)(オ) はいずれも、インターネット時代に起きる別の問題(情報の信頼性・情報源の偏在・発信者の意図的操作)を述べているが、<strong>フィルターバブルが起こる「仕組み」</strong>とは直接結びつかない。フィルターバブルの本質は<strong>「アルゴリズムによる受信側の表示の選別」</strong>である。</p>
+            </div>
+          </div>
+          <div class="viz">
+            <span class="viz-label">CAUSAL CHAIN — フィルターバブルが生まれる仕組み</span>
+            <div class="viz-caption">アルゴリズムとエコーチェンバーが連鎖的に作用する</div>
+            <div class="origin-compare">
+              <div class="origin-side industrial">
+                <h5>(ア) アルゴリズムによる選別</h5>
+                <div class="tag-en">Algorithm</div>
+                <div class="origin-flow">
+                  <span class="origin-step">過去の履歴</span>
+                  <span class="origin-arrow">→</span>
+                  <span class="origin-step">好みを学習</span>
+                  <span class="origin-arrow">→</span>
+                  <span class="origin-step fill">偏った表示</span>
+                </div>
+                <span class="origin-key">直接の原因</span>
+                <p class="note">検索エンジン・SNS のレコメンドシステムが利用者の興味に合わせて情報を絞り込む。利用者は自分が偏った情報を見ていることに気づきにくい。</p>
+              </div>
+              <div class="origin-side copyright">
+                <h5>(ウ) エコーチェンバーとの連鎖</h5>
+                <div class="tag-en">Reinforcement</div>
+                <div class="origin-flow">
+                  <span class="origin-step">似た意見と交流</span>
+                  <span class="origin-arrow">→</span>
+                  <span class="origin-step">確信が強まる</span>
+                  <span class="origin-arrow">→</span>
+                  <span class="origin-step fill">反対意見を回避</span>
+                </div>
+                <span class="origin-key">強化要因</span>
+                <p class="note">エコーチェンバーで意見が固まると、反対意見を避ける行動がアルゴリズムにフィードバックされ、フィルターバブルが強化される。</p>
+              </div>
+            </div>
+            <div style="margin-top: 0.85rem; padding: 0.7rem 0.95rem; background: var(--ng-pale); border-left: 3px solid var(--ng); border-radius: 0 6px 6px 0; font-size: 0.85rem; color: var(--ng-deep);">
+              <strong>×&nbsp;誤答の根拠</strong>(イ) 信頼性問題、(エ) 情報源の集中、(オ) 発信者の意図的操作 — いずれも別の問題で、フィルターバブルの仕組みとは直接結びつかない。
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== STAGE 12: SUMMARY ============================== -->
+  <section class="stage" data-stage-name="RESULT">
+    <div class="section-divider">
+      <span class="num">02</span>
+      <div class="text">
+        <div class="label">Section 2 — Result</div>
+        <div class="name">演習結果</div>
+      </div>
+    </div>
+    <div class="summary-hero">
+      <div class="summary-grade" id="summary-grade">—<span class="denom">/6</span></div>
+      <div class="summary-headline" id="summary-headline">演習結果</div>
+      <div class="summary-subline" id="summary-subline">6問の練習問題のうち、何問完答できたか。</div>
+      <div class="summary-stats">
+        <div class="summary-stat">
+          <div class="summary-stat-label">完答</div>
+          <div class="summary-stat-value" id="stat-full">0<span class="unit">問</span></div>
+        </div>
+        <div class="summary-stat">
+          <div class="summary-stat-label">部分正解</div>
+          <div class="summary-stat-value" id="stat-partial">0<span class="unit">問</span></div>
+        </div>
+        <div class="summary-stat">
+          <div class="summary-stat-label">未着手</div>
+          <div class="summary-stat-value" id="stat-skipped">0<span class="unit">問</span></div>
+        </div>
+        <div class="summary-stat">
+          <div class="summary-stat-label">小問正答率</div>
+          <div class="summary-stat-value" id="stat-rate">—<span class="unit">%</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="summary-list-title">問題別 — タップで該当ページへ</div>
+    <div class="summary-list" id="summary-list"></div>
+    <button class="btn-restart" id="btn-restart-bottom">最初からやり直す</button>
+  </section>
+
+</main>
+
+<!-- ==================== FOOT NAV ==================== -->
+<nav class="footnav">
+  <div class="footnav-inner">
+    <button class="footnav-btn" id="btn-prev"><span class="arr">←</span><span>前へ</span></button>
+    <div class="footnav-status" id="footnav-status"></div>
+    <button class="footnav-btn next" id="btn-next"><span>次へ</span><span class="arr">→</span></button>
+  </div>
+</nav>
+
+<script>
+(function () {
+  'use strict';
+
+  // ============================================================
+  // STATE
+  // ============================================================
+  const stages = Array.from(document.querySelectorAll('.stage'));
+  const totalStages = stages.length;
+  let currentStage = 0;
+  // Per-problem state. id -> { type, correct, user, graded, score }
+  const probState = {};
+
+  // ============================================================
+  // PROGRESS / NAV UI
+  // ============================================================
+  const elProgressFill = document.getElementById('progress-fill');
+  const elStageCurrent = document.getElementById('stage-current');
+  const elStageTotal = document.getElementById('stage-total');
+  const elStageName = document.getElementById('stage-name');
+  const elPrev = document.getElementById('btn-prev');
+  const elNext = document.getElementById('btn-next');
+  const elFootStatus = document.getElementById('footnav-status');
+
+  elStageTotal.textContent = totalStages;
+
+  function updateUI() {
+    const pct = (currentStage / (totalStages - 1)) * 100;
+    elProgressFill.style.right = (100 - pct) + '%';
+    elStageCurrent.textContent = currentStage + 1;
+    const stage = stages[currentStage];
+    elStageName.textContent = stage.dataset.stageName || '';
+    elPrev.disabled = currentStage === 0;
+    elNext.disabled = currentStage === totalStages - 1;
+    if (currentStage === totalStages - 1) {
+      elNext.querySelector('span:first-child').textContent = '完了';
+    } else {
+      elNext.querySelector('span:first-child').textContent = '次へ';
+    }
+    elFootStatus.textContent = (currentStage + 1) + ' of ' + totalStages;
+    updateTimeline();
+  }
+
+  // ============================================================
+  // TIMELINE (sidebar)
+  // ============================================================
+  const TIMELINE_ENTRIES = [
+    { idx: 0,  group: 'overview', num: '00', label: 'スタート' },
+    { idx: 1,  group: 'overview', num: '01', label: 'おさらい' },
+    { idx: 2,  group: 'examples', num: '例1', label: '情報の特性', probId: 'ex1' },
+    { idx: 3,  group: 'examples', num: '例2', label: 'メディア', probId: 'ex2' },
+    { idx: 4,  group: 'examples', num: '例3', label: 'メディアリテラシー', probId: 'ex3' },
+    { idx: 5,  group: 'examples', num: '例4', label: 'メディアが及ぼす影響', probId: 'ex4' },
+    { idx: 6,  group: 'practice', num: 'Q1', label: '情報の特性', probId: 'p1' },
+    { idx: 7,  group: 'practice', num: 'Q2', label: '表現のためのメディア', probId: 'p2' },
+    { idx: 8,  group: 'practice', num: 'Q3', label: 'メディアリテラシー', probId: 'p3' },
+    { idx: 9,  group: 'practice', num: 'Q4', label: 'エコーチェンバー', probId: 'p4' },
+    { idx: 10, group: 'practice', num: 'Q5', label: '情報の特性とフェイクニュース', probId: 'p5' },
+    { idx: 11, group: 'practice', num: 'Q6', label: 'フィルターバブル', probId: 'p6' },
+    { idx: 12, group: 'result',   num: '✓',   label: '結果サマリ' }
+  ];
+
+  function buildTimeline() {
+    const groups = { overview: [], examples: [], practice: [], result: [] };
+    TIMELINE_ENTRIES.forEach(e => groups[e.group].push(e));
+    Object.keys(groups).forEach((g) => {
+      const ol = document.getElementById('tl-' + g);
+      if (!ol) return;
+      ol.innerHTML = '';
+      groups[g].forEach((e) => {
+        const li = document.createElement('li');
+        li.className = 'tl-item';
+        li.dataset.target = e.idx;
+        li.dataset.probId = e.probId || '';
+        li.tabIndex = 0;
+        li.setAttribute('role', 'button');
+        li.setAttribute('aria-label', e.num + ' ' + e.label + ' へジャンプ');
+        li.innerHTML =
+          '<span class="tl-dot" aria-hidden="true"></span>' +
+          '<span class="tl-label"><span class="tl-num">' + e.num + '</span>' + e.label + '</span>' +
+          '<span class="tl-stat"></span>';
+        const onActivate = () => {
+          goToStage(e.idx);
+          if (isMobileWidth()) closeSidebar();
+        };
+        li.addEventListener('click', onActivate);
+        li.addEventListener('keydown', (ev) => {
+          if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); onActivate(); }
+        });
+        ol.appendChild(li);
+      });
+    });
+  }
+
+  function updateTimeline() {
+    document.querySelectorAll('.tl-item').forEach((el) => {
+      const idx = parseInt(el.dataset.target, 10);
+      const probId = el.dataset.probId;
+      el.classList.remove('active', 'completed', 'partial', 'wrong');
+      if (idx === currentStage) el.classList.add('active');
+      if (probId && probState[probId] && probState[probId].graded) {
+        const s = probState[probId];
+        const stat = el.querySelector('.tl-stat');
+        if (s.isExample) {
+          el.classList.add('completed');
+          stat.textContent = '✓';
+        } else if (s.score === s.total) {
+          el.classList.add('completed');
+          stat.textContent = s.score + '/' + s.total;
+        } else if (s.score === 0) {
+          el.classList.add('wrong');
+          stat.textContent = s.score + '/' + s.total;
+        } else {
+          el.classList.add('partial');
+          stat.textContent = s.score + '/' + s.total;
+        }
+      } else {
+        const stat = el.querySelector('.tl-stat');
+        if (stat) stat.textContent = '';
+      }
+    });
+    // Update score in footer
+    let full = 0;
+    TIMELINE_ENTRIES.filter(e => e.group === 'practice').forEach((e) => {
+      const s = probState[e.probId];
+      if (s && s.graded && s.score === s.total) full++;
+    });
+    const sbScore = document.getElementById('sb-score');
+    if (sbScore) sbScore.textContent = full + '/6';
+  }
+
+  buildTimeline();
+
+  // ============================================================
+  // SIDEBAR — universal toggle (PC: collapse / Mobile: drawer)
+  // ============================================================
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  const menuBtn = document.getElementById('menu-btn');
+  const isMobileWidth = () => window.innerWidth < 1100;
+
+  function openSidebar() {
+    sidebar.classList.add('open');
+    document.body.classList.add('sb-open');
+    menuBtn.classList.add('is-open');
+    menuBtn.setAttribute('aria-expanded', 'true');
+    if (isMobileWidth()) {
+      backdrop.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+  function closeSidebar() {
+    sidebar.classList.remove('open');
+    document.body.classList.remove('sb-open');
+    menuBtn.classList.remove('is-open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+    backdrop.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  function toggleSidebar() {
+    if (sidebar.classList.contains('open')) closeSidebar();
+    else openSidebar();
+  }
+
+  // Initial state: PC = open by default, Mobile = closed
+  if (!isMobileWidth()) openSidebar();
+
+  // Reflow on resize: clean up overlay state when crossing breakpoint
+  let lastIsMobile = isMobileWidth();
+  window.addEventListener('resize', () => {
+    const nowMobile = isMobileWidth();
+    if (nowMobile !== lastIsMobile) {
+      // Crossing the breakpoint: clean overlay artifacts
+      if (!nowMobile) {
+        backdrop.classList.remove('show');
+        document.body.style.overflow = '';
+      }
+      lastIsMobile = nowMobile;
+    }
+  });
+
+  menuBtn.addEventListener('click', toggleSidebar);
+  document.getElementById('sidebar-close').addEventListener('click', closeSidebar);
+  backdrop.addEventListener('click', closeSidebar);
+  document.getElementById('sb-reset').addEventListener('click', () => {
+    if (confirm('最初からやり直します。回答もリセットされます。よろしいですか?')) {
+      hardReset();
+    }
+  });
+
+  function goToStage(n) {
+    if (n < 0 || n >= totalStages) return;
+    stages[currentStage].classList.remove('active');
+    currentStage = n;
+    stages[currentStage].classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    updateUI();
+    if (currentStage === totalStages - 1) renderSummary();
+  }
+
+  elPrev.addEventListener('click', () => goToStage(currentStage - 1));
+  elNext.addEventListener('click', () => goToStage(currentStage + 1));
+
+  // Top restart
+  document.getElementById('btn-restart-top').addEventListener('click', () => {
+    if (confirm('最初からやり直します。回答もリセットされます。よろしいですか?')) {
+      hardReset();
+    }
+  });
+  document.getElementById('btn-restart-bottom').addEventListener('click', hardReset);
+
+  // ============================================================
+  // KEYBOARD
+  // ============================================================
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'Escape' && sidebar.classList.contains('open')) { closeSidebar(); return; }
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); goToStage(currentStage + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goToStage(currentStage - 1); }
+    else if (e.key === 'Home') { goToStage(0); }
+    else if (e.key === 'End') { goToStage(totalStages - 1); }
+    else if (e.key === 'm' || e.key === 'M') { toggleSidebar(); }
+  });
+
+  // ============================================================
+  // TOUCH SWIPE
+  // ============================================================
+  let touchStart = null;
+  let touchTime = 0;
+  document.addEventListener('touchstart', (e) => {
+    touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    touchTime = Date.now();
+  }, { passive: true });
+  document.addEventListener('touchend', (e) => {
+    if (!touchStart) return;
+    const dx = e.changedTouches[0].clientX - touchStart.x;
+    const dy = e.changedTouches[0].clientY - touchStart.y;
+    const dt = Date.now() - touchTime;
+    if (dt < 800 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      // Don't trigger if user is interacting with input controls
+      const target = e.target;
+      if (target.closest('button, label, input, .opt, .ox-row, .match-pill, .fill-chip, .fill-blank')) return;
+      if (dx < 0) goToStage(currentStage + 1);
+      else goToStage(currentStage - 1);
+    }
+    touchStart = null;
+  }, { passive: true });
+
+  // ============================================================
+  // DIGEST — Q&A toggle (each card is independent)
+  // ============================================================
+  document.querySelectorAll('.digest-prompt').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      btn.parentElement.classList.toggle('open');
+    });
+    // Note: <button> auto-fires click on Enter/Space — no separate keydown needed.
+  });
+
+  // ============================================================
+  // INPUT TYPE: SINGLE (radio)
+  // ============================================================
+  document.querySelectorAll('[data-input="single"]').forEach((box) => {
+    const opts = box.querySelectorAll('.opt');
+    opts.forEach((opt, idx) => {
+      opt.addEventListener('click', (e) => {
+        if (box.dataset.locked === 'true') { e.preventDefault(); return; }
+        opts.forEach(o => o.classList.remove('picked'));
+        opt.classList.add('picked');
+        const radio = opt.querySelector('input');
+        if (radio) radio.checked = true;
+      });
+    });
+  });
+
+  // ============================================================
+  // INPUT TYPE: MULTI (checkbox)
+  // ============================================================
+  document.querySelectorAll('[data-input="multi"]').forEach((box) => {
+    box.querySelectorAll('.opt').forEach((opt) => {
+      opt.addEventListener('click', (e) => {
+        if (box.dataset.locked === 'true') { e.preventDefault(); return; }
+        const cb = opt.querySelector('input');
+        // toggle
+        setTimeout(() => {
+          opt.classList.toggle('picked', cb.checked);
+        }, 0);
+      });
+    });
+  });
+
+  // ============================================================
+  // INPUT TYPE: MATCH (pills per sub-row)
+  // ============================================================
+  document.querySelectorAll('[data-input="match"]').forEach((box) => {
+    const optsList = box.dataset.options.split(',');
+    box.querySelectorAll('.match-row').forEach((row) => {
+      const pillBox = row.querySelector('.match-pills');
+      pillBox.innerHTML = '';
+      optsList.forEach((opt, i) => {
+        const pill = document.createElement('button');
+        pill.type = 'button';
+        pill.className = 'match-pill';
+        pill.dataset.idx = i;
+        pill.innerHTML = '<span class="let">(' + opt + ')</span>';
+        pill.addEventListener('click', () => {
+          if (box.dataset.locked === 'true') return;
+          pillBox.querySelectorAll('.match-pill').forEach(p => p.classList.remove('picked'));
+          pill.classList.add('picked');
+        });
+        pillBox.appendChild(pill);
+      });
+    });
+  });
+
+  // ============================================================
+  // INPUT TYPE: OX (○ / ×)
+  // ============================================================
+  document.querySelectorAll('[data-input="ox"]').forEach((box) => {
+    box.querySelectorAll('.ox-row').forEach((row) => {
+      row.querySelectorAll('.ox-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          if (box.dataset.locked === 'true') return;
+          row.querySelectorAll('.ox-btn').forEach(b => b.classList.remove('picked'));
+          btn.classList.add('picked');
+        });
+      });
+    });
+  });
+
+  // ============================================================
+  // INPUT TYPE: FILL (語群穴埋め)
+  // ============================================================
+  document.querySelectorAll('[data-input="fill"]').forEach((bullets) => {
+    const card = bullets.closest('.problem-card');
+    const blanks = bullets.querySelectorAll('.fill-blank');
+    const chips = card.querySelectorAll('.fill-chip');
+    let activeBlank = null;
+
+    blanks.forEach((blank) => {
+      blank.addEventListener('click', () => {
+        if (bullets.dataset.locked === 'true') return;
+        // Toggle active or clear filled
+        if (blank.classList.contains('filled')) {
+          // Clear it, return chip
+          const word = blank.dataset.word;
+          if (word) {
+            const chip = Array.from(chips).find(c => c.dataset.word === word && c.classList.contains('used'));
+            if (chip) chip.classList.remove('used');
+          }
+          blank.classList.remove('filled');
+          delete blank.dataset.word;
+          // Reset content (keep label only)
+          const lbl = blank.querySelector('.fill-blank-label');
+          blank.innerHTML = '';
+          blank.appendChild(lbl);
+          return;
+        }
+        blanks.forEach(b => b.classList.remove('active'));
+        blank.classList.add('active');
+        activeBlank = blank;
+      });
+    });
+
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        if (bullets.dataset.locked === 'true') return;
+        if (chip.classList.contains('used')) return;
+        // If no active blank, pick the first unfilled
+        if (!activeBlank || activeBlank.classList.contains('filled')) {
+          activeBlank = Array.from(blanks).find(b => !b.classList.contains('filled'));
+        }
+        if (!activeBlank) return;
+        // Place
+        const word = chip.dataset.word;
+        const lbl = activeBlank.querySelector('.fill-blank-label');
+        activeBlank.innerHTML = '';
+        if (lbl) activeBlank.appendChild(lbl);
+        const txt = document.createTextNode(word);
+        activeBlank.appendChild(txt);
+        activeBlank.dataset.word = word;
+        activeBlank.classList.add('filled');
+        activeBlank.classList.remove('active');
+        chip.classList.add('used');
+        activeBlank = Array.from(blanks).find(b => !b.classList.contains('filled')) || null;
+        if (activeBlank) activeBlank.classList.add('active');
+      });
+    });
+  });
+
+  // ============================================================
+  // INPUT TYPE: MULTI_PER_SUB (CCライセンス等)
+  // ============================================================
+  document.querySelectorAll('[data-input="multi_per_sub"]').forEach((box) => {
+    const optsList = box.dataset.options.split(',');
+    box.querySelectorAll('.mps-row').forEach((row) => {
+      const pillBox = row.querySelector('.match-pills');
+      pillBox.innerHTML = '';
+      optsList.forEach((opt, i) => {
+        const pill = document.createElement('button');
+        pill.type = 'button';
+        pill.className = 'match-pill';
+        pill.dataset.idx = i;
+        pill.innerHTML = '<span class="let">(' + opt + ')</span>';
+        pill.addEventListener('click', () => {
+          if (box.dataset.locked === 'true') return;
+          pill.classList.toggle('picked');
+        });
+        pillBox.appendChild(pill);
+      });
+    });
+  });
+
+  // ============================================================
+  // GRADING
+  // ============================================================
+  function getProblemData(stage) {
+    return {
+      id: stage.dataset.probId,
+      single: stage.querySelector('[data-input="single"]'),
+      multi: stage.querySelector('[data-input="multi"]'),
+      match: stage.querySelector('[data-input="match"]'),
+      ox: stage.querySelector('[data-input="ox"]'),
+      fill: stage.querySelector('[data-input="fill"]'),
+      mps: stage.querySelector('[data-input="multi_per_sub"]')
+    };
+  }
+
+  function showFeedback(stage, score, total, opts) {
+    const fb = stage.querySelector('[data-feedback]');
+    if (!fb) return;
+    const banner = fb.querySelector('.fb-banner');
+    const scoreTag = banner ? banner.querySelector('.score-tag') : null;
+    if (banner) banner.classList.remove('ok', 'partial', 'ng');
+    let icon = '✓';
+    let scoreLabel = '';
+    if (opts && opts.example) {
+      if (banner) banner.classList.add('ok');
+      icon = '✓';
+      scoreLabel = '';
+    } else if (score === total) {
+      if (banner) banner.classList.add('ok');
+      icon = '✓';
+      scoreLabel = '完答 ' + score + ' / ' + total;
+    } else if (score === 0) {
+      if (banner) banner.classList.add('ng');
+      icon = '×';
+      scoreLabel = score + ' / ' + total;
+    } else {
+      if (banner) banner.classList.add('partial');
+      icon = '△';
+      scoreLabel = score + ' / ' + total;
+    }
+    if (scoreTag) scoreTag.textContent = scoreLabel;
+    const iconEl = banner ? banner.querySelector('.icon') : null;
+    if (iconEl) iconEl.textContent = icon;
+
+    // Inject retry / next buttons (idempotent)
+    const fbBody = fb.querySelector('.fb-body');
+    if (fbBody && !fbBody.querySelector('.fb-retry')) {
+      const wrap = document.createElement('div');
+      wrap.className = 'fb-retry';
+      const isExample = !!(opts && opts.example);
+      const retryLabel = isExample ? 'もう一度確認' : 'もう一度解く';
+      wrap.innerHTML =
+        '<button class="btn-retry" data-action="retry"><span class="ico">↻</span>' + retryLabel + '</button>' +
+        '<button class="btn-retry next" data-action="goto-next"><span>次の問題へ</span><span class="ico">→</span></button>';
+      fbBody.appendChild(wrap);
+      wrap.querySelector('[data-action="retry"]').addEventListener('click', () => retryStage(stage));
+      wrap.querySelector('[data-action="goto-next"]').addEventListener('click', () => goToStage(currentStage + 1));
+    }
+
+    fb.classList.add('show');
+    setTimeout(() => fb.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+  }
+
+  function retryStage(stage) {
+    const id = stage.dataset.probId;
+    if (!id) return;
+
+    // Hide feedback
+    const fb = stage.querySelector('[data-feedback]');
+    if (fb) fb.classList.remove('show');
+
+    // Reset all input boxes — clear locks, picks, graded states
+    const boxes = ['single', 'multi', 'match', 'ox', 'fill', 'multi_per_sub']
+      .map(t => stage.querySelector('[data-input="' + t + '"]'))
+      .filter(Boolean);
+    boxes.forEach((box) => {
+      delete box.dataset.locked;
+      box.querySelectorAll('.opt').forEach(el => {
+        el.classList.remove('graded', 'correct', 'wrong', 'missed', 'picked');
+        const inp = el.querySelector('input');
+        if (inp) inp.checked = false;
+      });
+      box.querySelectorAll('.match-row, .mps-row').forEach(el => el.classList.remove('graded', 'correct', 'wrong'));
+      box.querySelectorAll('.match-pill').forEach(p => p.classList.remove('picked', 'graded-correct', 'graded-wrong', 'graded-shouldbe'));
+      box.querySelectorAll('.ox-row').forEach(r => r.classList.remove('graded', 'correct', 'wrong'));
+      box.querySelectorAll('.ox-btn').forEach(b => b.classList.remove('picked', 'shouldbe'));
+      // fill blanks
+      box.querySelectorAll('.fill-blank').forEach(blank => {
+        blank.classList.remove('filled', 'active', 'graded-correct', 'graded-wrong');
+        delete blank.dataset.word;
+        const lbl = blank.querySelector('.fill-blank-label');
+        blank.innerHTML = '';
+        if (lbl) blank.appendChild(lbl);
+      });
+    });
+    // fill chips
+    stage.querySelectorAll('.fill-chip').forEach(chip => chip.classList.remove('used'));
+
+    // Show grade / reveal button again
+    const gradeBtn = stage.querySelector('[data-action="grade"]');
+    if (gradeBtn) gradeBtn.style.display = '';
+    const revealBtn = stage.querySelector('[data-action="reveal"]');
+    if (revealBtn) revealBtn.style.display = '';
+
+    // Clear state
+    delete probState[id];
+
+    // Update timeline
+    if (typeof updateTimeline === 'function') updateTimeline();
+
+    // Scroll to top of card so user can start fresh
+    const card = stage.querySelector('.problem-card');
+    if (card) {
+      setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    }
+  }
+
+  function lockBox(box) {
+    if (box) box.dataset.locked = 'true';
+  }
+
+  function gradeStage(stage, isExample) {
+    const id = stage.dataset.probId;
+    if (!id) return;
+    if (probState[id] && probState[id].graded) return;
+
+    const single = stage.querySelector('[data-input="single"]');
+    const multi = stage.querySelector('[data-input="multi"]');
+    const match = stage.querySelector('[data-input="match"]');
+    const ox = stage.querySelector('[data-input="ox"]');
+    const fill = stage.querySelector('[data-input="fill"]');
+    const mps = stage.querySelector('[data-input="multi_per_sub"]');
+
+    let score = 0, total = 0;
+
+    if (single) {
+      total = 1;
+      const correct = parseInt(single.dataset.correct, 10);
+      const opts = single.querySelectorAll('.opt');
+      let userIdx = -1;
+      opts.forEach((o, i) => { if (o.classList.contains('picked')) userIdx = i; });
+      opts.forEach((o, i) => {
+        o.classList.add('graded');
+        if (i === correct && i === userIdx) o.classList.add('correct');
+        else if (i === userIdx && i !== correct) o.classList.add('wrong');
+        else if (i === correct && i !== userIdx) o.classList.add('missed');
+      });
+      if (userIdx === correct) score = 1;
+      lockBox(single);
+    } else if (multi) {
+      const correct = multi.dataset.correct.split(',').map(Number);
+      total = correct.length;
+      const opts = multi.querySelectorAll('.opt');
+      const userPicks = [];
+      opts.forEach((o, i) => { if (o.classList.contains('picked')) userPicks.push(i); });
+      opts.forEach((o, i) => {
+        o.classList.add('graded');
+        const isCorrect = correct.includes(i);
+        const isPicked = userPicks.includes(i);
+        if (isCorrect && isPicked) { o.classList.add('correct'); score++; }
+        else if (!isCorrect && isPicked) o.classList.add('wrong');
+        else if (isCorrect && !isPicked) o.classList.add('missed');
+      });
+      // For multi, count strict overlap
+      // If user picked anything wrong, that's a deduction. We use: score = correct picks - wrong picks (min 0)
+      const wrongPicks = userPicks.filter(i => !correct.includes(i)).length;
+      score = Math.max(0, score - wrongPicks);
+      lockBox(multi);
+    } else if (match) {
+      const correctList = match.dataset.correct.split(',').map(Number);
+      total = correctList.length;
+      const rows = match.querySelectorAll('.match-row');
+      rows.forEach((row, i) => {
+        const correctIdx = correctList[i];
+        const pills = row.querySelectorAll('.match-pill');
+        let userIdx = -1;
+        pills.forEach((p, pi) => { if (p.classList.contains('picked')) userIdx = pi; });
+        if (userIdx === correctIdx) {
+          score++;
+          row.classList.add('graded', 'correct');
+          pills[correctIdx].classList.add('graded-correct');
+          pills[correctIdx].classList.remove('picked');
+        } else {
+          row.classList.add('graded', 'wrong');
+          if (userIdx >= 0) pills[userIdx].classList.add('graded-wrong');
+          pills[correctIdx].classList.add('graded-shouldbe');
+          pills.forEach(p => p.classList.remove('picked'));
+        }
+      });
+      lockBox(match);
+    } else if (ox) {
+      const correctList = ox.dataset.correct.split(',');
+      total = correctList.length;
+      const rows = ox.querySelectorAll('.ox-row');
+      rows.forEach((row, i) => {
+        const want = correctList[i];
+        let userVal = null;
+        row.querySelectorAll('.ox-btn').forEach((b) => {
+          if (b.classList.contains('picked')) userVal = b.dataset.val;
+        });
+        if (userVal === want) {
+          score++;
+          row.classList.add('graded', 'correct');
+        } else {
+          row.classList.add('graded', 'wrong');
+          row.querySelectorAll('.ox-btn').forEach((b) => {
+            if (b.dataset.val === want && !b.classList.contains('picked')) {
+              b.classList.add('shouldbe');
+            }
+          });
+        }
+      });
+      lockBox(ox);
+    } else if (fill) {
+      const btn = stage.querySelector('[data-fill-correct]');
+      const correctList = btn.dataset.fillCorrect.split(',');
+      total = correctList.length;
+      const blanks = fill.querySelectorAll('.fill-blank');
+      blanks.forEach((blank, i) => {
+        const want = correctList[i];
+        const got = blank.dataset.word || '';
+        if (got === want) {
+          blank.classList.add('graded-correct');
+          score++;
+        } else {
+          blank.classList.add('graded-wrong');
+          // Replace with correct on next line maybe? Actually show in feedback section
+        }
+      });
+      lockBox(fill);
+    } else if (mps) {
+      // multi_per_sub: each sub gets a list of correct indices, counted as 1 point if the user's set matches exactly
+      const correctSubs = mps.dataset.correct.split('|').map(s => s.split(',').map(Number).sort());
+      total = correctSubs.length;
+      const rows = mps.querySelectorAll('.mps-row');
+      rows.forEach((row, i) => {
+        const want = correctSubs[i];
+        const pills = row.querySelectorAll('.match-pill');
+        const userPicks = [];
+        pills.forEach((p, pi) => { if (p.classList.contains('picked')) userPicks.push(pi); });
+        userPicks.sort();
+        const exact = userPicks.length === want.length && userPicks.every((v, j) => v === want[j]);
+        pills.forEach((p, pi) => {
+          const isW = want.includes(pi);
+          const isP = userPicks.includes(pi);
+          p.classList.remove('picked');
+          if (isW && isP) p.classList.add('graded-correct');
+          else if (!isW && isP) p.classList.add('graded-wrong');
+          else if (isW && !isP) p.classList.add('graded-shouldbe');
+        });
+        if (exact) {
+          score++;
+          row.classList.add('graded', 'correct');
+        } else {
+          row.classList.add('graded', 'wrong');
+        }
+      });
+      lockBox(mps);
+    }
+
+    // Hide grade button, show feedback
+    const gradeBtn = stage.querySelector('[data-action="grade"]');
+    if (gradeBtn) gradeBtn.style.display = 'none';
+    const revealBtn = stage.querySelector('[data-action="reveal"]');
+    if (revealBtn) revealBtn.style.display = 'none';
+
+    showFeedback(stage, score, total, { example: isExample });
+
+    probState[id] = { graded: true, score: score, total: total, isExample: !!isExample };
+  }
+
+  // Hook grade buttons
+  document.querySelectorAll('[data-action="grade"]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const stage = btn.closest('.stage');
+      gradeStage(stage, false);
+    });
+  });
+
+  // Hook reveal buttons (例題)
+  document.querySelectorAll('[data-action="reveal"]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const stage = btn.closest('.stage');
+      gradeStage(stage, true);
+    });
+  });
+
+  // ============================================================
+  // SUMMARY
+  // ============================================================
+  // Define mapping for summary list
+  const PROBLEMS = [
+    { id: 'p1', label: 'Q1', name: '〈情報の特性〉', stageIdx: 6 },
+    { id: 'p2', label: 'Q2', name: '〈表現のためのメディア〉', stageIdx: 7 },
+    { id: 'p3', label: 'Q3', name: '〈メディアリテラシー〉', stageIdx: 8 },
+    { id: 'p4', label: 'Q4', name: '〈エコーチェンバー〉', stageIdx: 9 },
+    { id: 'p5', label: 'Q5', name: '〈情報の特性とフェイクニュース〉', stageIdx: 10 },
+    { id: 'p6', label: 'Q6', name: '〈フィルターバブル〉', stageIdx: 11 }
+  ];
+
+  function renderSummary() {
+    let fullCount = 0, partialCount = 0, skippedCount = 0;
+    let totalSubScore = 0, totalSubMax = 0;
+    PROBLEMS.forEach((p) => {
+      const s = probState[p.id];
+      if (!s || !s.graded) skippedCount++;
+      else {
+        totalSubScore += s.score;
+        totalSubMax += s.total;
+        if (s.score === s.total) fullCount++;
+        else if (s.score === 0) {} // no full, no partial
+        else partialCount++;
+      }
+    });
+    document.getElementById('stat-full').innerHTML = fullCount + '<span class="unit">問</span>';
+    document.getElementById('stat-partial').innerHTML = partialCount + '<span class="unit">問</span>';
+    document.getElementById('stat-skipped').innerHTML = skippedCount + '<span class="unit">問</span>';
+    const rate = totalSubMax > 0 ? Math.round((totalSubScore / totalSubMax) * 100) : 0;
+    document.getElementById('stat-rate').innerHTML = (totalSubMax > 0 ? rate : '—') + '<span class="unit">%</span>';
+
+    const grade = document.getElementById('summary-grade');
+    grade.innerHTML = fullCount + '<span class="denom">/6</span>';
+    grade.classList.remove('s-high', 's-mid', 's-low');
+    if (fullCount >= 5) grade.classList.add('s-high');
+    else if (fullCount >= 3) grade.classList.add('s-mid');
+    else grade.classList.add('s-low');
+
+    // List
+    const listEl = document.getElementById('summary-list');
+    listEl.innerHTML = '';
+    PROBLEMS.forEach((p) => {
+      const s = probState[p.id];
+      const item = document.createElement('div');
+      item.className = 'summary-item';
+      let stat = '未着手', cls = '';
+      if (s && s.graded) {
+        if (s.score === s.total) { stat = '完答 ' + s.score + ' / ' + s.total; cls = 'correct s-ok'; item.classList.add('correct'); }
+        else if (s.score === 0) { stat = '不正解 0 / ' + s.total; cls = 'wrong s-ng'; item.classList.add('wrong'); }
+        else { stat = '部分正解 ' + s.score + ' / ' + s.total; cls = 'partial s-mid'; item.classList.add('partial'); }
+      }
+      item.innerHTML =
+        '<span class="num">' + p.label + '</span>' +
+        '<span class="nm">' + p.name + '</span>' +
+        '<span class="stat ' + cls + '">' + stat + '</span>';
+      item.addEventListener('click', () => goToStage(p.stageIdx));
+      listEl.appendChild(item);
+    });
+  }
+
+  function hardReset() {
+    location.reload();
+  }
+
+  // ============================================================
+  // INIT
+  // ============================================================
+  updateUI();
+})();
+</script>
+</body>
+</html>
