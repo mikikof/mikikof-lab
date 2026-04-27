@@ -420,6 +420,79 @@ if (fbBody && !fbBody.querySelector('.fb-retry')) {
 
 ---
 
+## 8.5 モバイルリッチ UI(spotlight / haptic / 横スワイプ snap カルーセル)
+
+スマホ実機でリッチに感じる工夫。新規単元でもこの3つは必ず装備する。
+
+### 8.5.1 スポットライト(タップで短冊フォーカス)
+
+`.ip-rich` `.bd-card` `.lk-card` `.cc-cat-item` のいずれかをタップすると、そのカードが拡大表示され、兄弟は半透明 + 彩度低下でディマー化。もう一度タップ・親グリッドの外側タップ・Esc キーで解除。
+
+```javascript
+const SPOT_SELECTOR = '.ip-rich, .bd-card, .lk-card, .cc-cat-item';
+document.addEventListener('click', (e) => {
+  if (e.target.closest('button, label, input, .digest-prompt')) return;
+  const card = e.target.closest(SPOT_SELECTOR);
+  if (!card) {
+    document.querySelectorAll('.spotlight').forEach(el => el.classList.remove('spotlight'));
+    document.querySelectorAll('.has-spotlight').forEach(el => el.classList.remove('has-spotlight'));
+    return;
+  }
+  const grid = card.parentElement;
+  const wasActive = card.classList.contains('spotlight');
+  grid.querySelectorAll('.spotlight').forEach(el => el.classList.remove('spotlight'));
+  if (wasActive) grid.classList.remove('has-spotlight');
+  else { card.classList.add('spotlight'); grid.classList.add('has-spotlight'); haptic(8); }
+}, { passive: true });
+```
+
+CSS:
+```css
+.has-spotlight > .ip-rich:not(.spotlight),
+.has-spotlight > .bd-card:not(.spotlight),
+.has-spotlight > .lk-card:not(.spotlight),
+.has-spotlight > .cc-cat-item:not(.spotlight) {
+  opacity: 0.34; filter: saturate(0.65);
+}
+.ip-rich.spotlight, .bd-card.spotlight, .lk-card.spotlight, .cc-cat-item.spotlight {
+  transform: scale(1.04); z-index: 3; position: relative;
+  box-shadow: 0 24px 50px -16px rgba(74, 120, 200, 0.28), 0 6px 14px -2px rgba(26, 43, 71, 0.14);
+}
+```
+
+新しい「短冊型カード」を viz パターンに加える場合は、必ず `SPOT_SELECTOR` と CSS の `.has-spotlight > .X:not(.spotlight)` 群に新クラス名を追加する。
+
+### 8.5.2 haptic フィードバック
+
+```javascript
+function haptic(ms) {
+  try { if (navigator.vibrate) navigator.vibrate(ms || 8); } catch (_) {}
+}
+// データアクション付きボタン全部に委譲
+document.addEventListener('click', (e) => {
+  const t = e.target.closest('[data-action="grade"], [data-action="reveal"], [data-action="retry"], [data-action="goto-next"]');
+  if (t) haptic(10);
+});
+```
+
+iOS Safari は Web Vibration API 非対応 → grace degrade して何も起きない(エラーにしない)。Android Chrome / 一部 PWA では実際に振動する。
+
+### 8.5.3 3-col 比較を mobile 横スワイプ snap カルーセルに変換
+
+`.origin-compare` を 3 列にしたいとき、inline style ではなく `.three-col` クラスで指定する。デスクトップは 3 列、モバイルは横スワイプの snap カルーセル(各カード幅 84vw)に切り替わる。
+
+```html
+<div class="origin-compare three-col">
+  <div class="origin-side ...">...</div>
+  <div class="origin-side ...">...</div>
+  <div class="origin-side ...">...</div>
+</div>
+```
+
+JS が自動で `<div class="carousel-hint">← 横にスワイプ →</div>` を上に挿入(モバイルのみ表示)。`isInsideHorizontalScroll` が `.three-col` の overflow-x:auto を検知するので、page-swipe ハンドラとも干渉しない。
+
+---
+
 ## 9. 既知の落とし穴(必ずチェック)
 
 ### 9.1 おさらい digest の入れ子バグ ★最重要

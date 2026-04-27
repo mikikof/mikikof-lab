@@ -498,6 +498,77 @@ input { font: inherit; }
 /* ---- Mobile UX: prevent iOS double-tap zoom delay on interactive elements ---- */
 button, .opt, .ox-btn, .ox-row, .match-pill, .fill-chip, .fill-blank,
 .digest-prompt, .tl-item, [data-action], a.unit-card, .unit-card { touch-action: manipulation; }
+
+/* ---- Mobile-rich UI: Module 3 carousel + spotlight tap + smooth transitions ---- */
+.origin-compare.three-col { grid-template-columns: 1fr 1fr 1fr; }
+@media (max-width: 720px) {
+  .origin-compare.three-col {
+    display: flex;
+    grid-template-columns: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 0.7rem;
+    margin: 0 -1rem;
+    padding: 0.25rem 1rem 0.6rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .origin-compare.three-col > .origin-side {
+    flex: 0 0 84vw;
+    max-width: 84vw;
+    scroll-snap-align: center;
+  }
+  .origin-compare.three-col::-webkit-scrollbar { display: none; }
+  .carousel-hint {
+    display: block;
+    text-align: center;
+    margin: -0.1rem 0 0.4rem;
+    font-family: var(--f-mono);
+    font-size: 0.7rem;
+    color: var(--ink-mute);
+    letter-spacing: 0.06em;
+  }
+}
+.carousel-hint { display: none; }
+
+/* ---- Spotlight: tap a card to focus, others dim. Tap outside to clear. ---- */
+.has-spotlight > .ip-rich,
+.has-spotlight > .bd-card,
+.has-spotlight > .lk-card,
+.has-spotlight > .cc-cat-item {
+  transition: opacity 0.28s ease, filter 0.28s ease, transform 0.28s ease, box-shadow 0.28s ease;
+}
+.has-spotlight > .ip-rich:not(.spotlight),
+.has-spotlight > .bd-card:not(.spotlight),
+.has-spotlight > .lk-card:not(.spotlight),
+.has-spotlight > .cc-cat-item:not(.spotlight) {
+  opacity: 0.34;
+  filter: saturate(0.65);
+}
+.ip-rich.spotlight,
+.bd-card.spotlight,
+.lk-card.spotlight,
+.cc-cat-item.spotlight {
+  transform: scale(1.04);
+  z-index: 3;
+  position: relative;
+  box-shadow: 0 24px 50px -16px rgba(74, 120, 200, 0.28), 0 6px 14px -2px rgba(26, 43, 71, 0.14);
+}
+@media (hover: hover) and (pointer: fine) {
+  .ip-rich, .bd-card, .lk-card, .cc-cat-item { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+  .ip-rich:hover, .bd-card:hover, .lk-card:hover, .cc-cat-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 36px -14px rgba(74, 120, 200, 0.18), 0 4px 10px -2px rgba(26, 43, 71, 0.08);
+  }
+}
+
+/* ---- Feedback show animation: a touch more pronounced ---- */
+@keyframes feedbackEnterRich {
+  from { opacity: 0; transform: translateY(14px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.feedback { animation: feedbackEnterRich 0.42s var(--ease); }
+
 /* ============================================================
    MAIN STAGE
 ============================================================ */
@@ -4629,6 +4700,58 @@ main {
       else goToStage(currentStage - 1);
     }
   }, { passive: true });
+
+  // ============================================================
+  // MOBILE-RICH UI: haptic + spotlight + carousel hint
+  // ============================================================
+  function haptic(ms) {
+    try { if (navigator.vibrate) navigator.vibrate(ms || 8); } catch (_) { /* iOS no-op */ }
+  }
+
+  // Spotlight: tap an info card to focus it; siblings dim. Tap outside to clear.
+  const SPOT_SELECTOR = '.ip-rich, .bd-card, .lk-card, .cc-cat-item';
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('button, label, input, .digest-prompt')) return;
+    const card = e.target.closest(SPOT_SELECTOR);
+    if (!card) {
+      document.querySelectorAll('.spotlight').forEach(el => el.classList.remove('spotlight'));
+      document.querySelectorAll('.has-spotlight').forEach(el => el.classList.remove('has-spotlight'));
+      return;
+    }
+    const grid = card.parentElement;
+    const wasActive = card.classList.contains('spotlight');
+    grid.querySelectorAll('.spotlight').forEach(el => el.classList.remove('spotlight'));
+    if (wasActive) {
+      grid.classList.remove('has-spotlight');
+    } else {
+      card.classList.add('spotlight');
+      grid.classList.add('has-spotlight');
+      haptic(8);
+    }
+  }, { passive: true });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.spotlight').forEach(el => el.classList.remove('spotlight'));
+      document.querySelectorAll('.has-spotlight').forEach(el => el.classList.remove('has-spotlight'));
+    }
+  });
+
+  // Haptic on key action buttons
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest('[data-action="grade"], [data-action="reveal"], [data-action="retry"], [data-action="goto-next"]');
+    if (t) haptic(10);
+  });
+
+  // Inject "← 横にスワイプ →" hint above Module 3 carousel (CSS shows on mobile only)
+  document.querySelectorAll('.origin-compare.three-col').forEach((cmp) => {
+    if (cmp.previousElementSibling && cmp.previousElementSibling.classList.contains('carousel-hint')) return;
+    const hint = document.createElement('div');
+    hint.className = 'carousel-hint';
+    hint.textContent = '← 横にスワイプ →';
+    cmp.parentElement.insertBefore(hint, cmp);
+  });
+
 
   // ============================================================
   // DIGEST — Q&A toggle (each card is independent)
