@@ -35,10 +35,9 @@ lectures/
 ├── index.html                      授業サイトトップ(単元一覧)
 ├── _source/                        原本素材。答えの正本
 │   ├── 学習ノート_問題/            学習ノート 章別 Word(問題編)
-│   ├── ベストフィット問題/         (将来の practice ツール用。lectures では使わない)
-│   ├── ベストフィット解答/         (同上)
 │   ├── 高校情1学習ノート-問題PDF.pdf
 │   └── 高校情1学習ノート-解答PDF.pdf  ← 答えはここを正本として扱う
+│                                    ※ ベストフィット問題/解答は practices/_source/ に移動済み
 ├── skills/
 │   └── interactive-lecture/        制作スキルパッケージ
 │       ├── SKILL.md                技術仕様・制作手順

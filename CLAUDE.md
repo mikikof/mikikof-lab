@@ -12,6 +12,7 @@
 |---|---|---|---|
 | **Visual Essay Lab**(コラム集) | `essays/` | `/essays/` | [essays/CLAUDE.md](essays/CLAUDE.md) |
 | **Interactive Lecture Lab**(授業用HTMLスライド) | `lectures/` | `/lectures/` | [lectures/CLAUDE.md](lectures/CLAUDE.md) |
+| **Interactive Practice Lab**(演習用HTML教材) | `practices/` | `/practices/` | [practices/CLAUDE.md](practices/CLAUDE.md) |
 | (将来) 一問一答 | `quiz/` | `/quiz/` | `quiz/CLAUDE.md` |
 | (将来) その他ツール | — | — | — |
 
@@ -54,9 +55,17 @@
 
 → [`lectures/CLAUDE.md`](lectures/CLAUDE.md) を読み、以降はその指示に従う
 
+### ▶ 演習教材(practices)に行くキーワード
+
+- 「演習」「練習問題」「ベストフィット」「問題集」
+- 「採点」「自走演習」「隙間時間で解ける」
+- 「ベストフィット問題集の○○」「○○の練習問題を作って」
+
+→ [`practices/CLAUDE.md`](practices/CLAUDE.md) を読み、以降はその指示に従う
+
 ### ▶ 一問一答(quiz)に行くキーワード(将来)
 
-- 「一問一答」「クイズ」「問題集」「問題を作って」
+- 「一問一答」「クイズ」「短答」
 - 「〜の確認問題」
 
 → `quiz/CLAUDE.md` を読む(まだツール未実装の場合はユーザーに確認)
@@ -131,6 +140,10 @@ GitHub Pages で公開される際のURL:
 - ポータル: `https://mikikof.github.io/mikikof-lab/`
 - コラム集トップ: `https://mikikof.github.io/mikikof-lab/essays/`
 - コラム記事: `https://mikikof.github.io/mikikof-lab/essays/articles/{slug}/`
+- 授業スライドトップ: `https://mikikof.github.io/mikikof-lab/lectures/`
+- 授業スライド単元: `https://mikikof.github.io/mikikof-lab/lectures/articles/{番号}-{slug}/`
+- 演習教材トップ: `https://mikikof.github.io/mikikof-lab/practices/`
+- 演習教材単元: `https://mikikof.github.io/mikikof-lab/practices/articles/{番号}-{slug}/`
 - (将来)クイズ: `https://mikikof.github.io/mikikof-lab/quiz/`
 
 各ツール内のリンク構造は、この階層を前提に組むこと。
@@ -149,6 +162,7 @@ GitHub Pages で公開される際のURL:
 
 - [x] Visual Essay Lab(コラム集) — 稼働中
 - [x] Interactive Lecture Lab(授業用HTMLスライド) — 稼働中
+- [x] Interactive Practice Lab(演習用HTML教材) — 稼働中(1単元: 1章03 知的財産権の扱い)
 - [ ] 一問一答ツール — ローカル開発中、統合検討中
 - [ ] その他のツール — 未定
 

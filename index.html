@@ -28,6 +28,7 @@
 
   --tool-essays: #1e3a8a;
   --tool-lectures: #7a3a1e;
+  --tool-practices: #c95b40;
   --tool-quiz: #1f6148;
   --tool-coming: #8594ae;
 
@@ -194,10 +195,11 @@ a { color: inherit; text-decoration: none; }
   height: 100%;
   background: var(--tool-accent, var(--accent));
 }
-.tool-card.essays   { --tool-accent: var(--tool-essays); }
-.tool-card.lectures { --tool-accent: var(--tool-lectures); }
-.tool-card.quiz     { --tool-accent: var(--tool-quiz); }
-.tool-card.coming   { --tool-accent: var(--tool-coming); }
+.tool-card.essays    { --tool-accent: var(--tool-essays); }
+.tool-card.lectures  { --tool-accent: var(--tool-lectures); }
+.tool-card.practices { --tool-accent: var(--tool-practices); }
+.tool-card.quiz      { --tool-accent: var(--tool-quiz); }
+.tool-card.coming    { --tool-accent: var(--tool-coming); }
 
 .tool-card:hover {
   transform: translateY(-6px);
@@ -386,10 +388,24 @@ a { color: inherit; text-decoration: none; }
       <div class="tool-cta">enter the lab →</div>
     </a>
 
-    <!-- Tool 3: Quiz (coming soon) -->
-    <div class="tool-card quiz coming">
+    <!-- Tool 3: Interactive Practice Lab -->
+    <a href="practices/" class="tool-card practices">
       <div class="tool-meta">
         <span class="tool-num">03</span>
+        <span class="tool-status live">live</span>
+      </div>
+      <div class="tool-name">Interactive Practice Lab</div>
+      <div class="tool-en">Solve, check, and review on any device</div>
+      <p class="tool-desc">
+        ベストフィット問題集を原本にした演習用Web教材。1問ずつ回答 → 採点 → 解説の流れで進められます。
+      </p>
+      <div class="tool-cta">enter the lab →</div>
+    </a>
+
+    <!-- Tool 4: Quiz (coming soon) -->
+    <div class="tool-card quiz coming">
+      <div class="tool-meta">
+        <span class="tool-num">04</span>
         <span class="tool-status coming">coming soon</span>
       </div>
       <div class="tool-name">一問一答</div>
@@ -403,7 +419,7 @@ a { color: inherit; text-decoration: none; }
 
     <!--
       新しいツールを追加する場合、上記の tool-card をコピーして調整してください。
-      カテゴリクラス: essays / quiz / coming
+      カテゴリクラス: essays / lectures / practices / quiz / coming
       ステータスクラス: live / coming
     -->
 
