@@ -64,7 +64,7 @@ Stage 13 Summary             結果サマリ
 
 **モバイルリッチ UI(§8.5 で詳述)**
 
-- **スポットライト v2**:`.ip-rich` `.bd-card` `.lk-card` `.cc-cat-item` タップで `scale(1.18)` PC / `1.12` mobile + ゴールドリング + 画面暗転 backdrop + 自動センタースクロール
+- **スポットライト v2**:`.ip-rich` `.bd-card` `.lk-card` `.cc-cat-item` タップで `scale(1.18)` PC / `1.28` mobile + ゴールドリング + 画面暗転 backdrop + 自動センタースクロール
 - **haptic フィードバック**:採点・解答表示・もう一度・次・スポットライト・ステージ送り で `navigator.vibrate(6-12ms)`(iOS は無音)
 - **3-col → モバイル横スワイプ snap カルーセル**:`.origin-compare.three-col` でクラス指定。inline style 禁止
 - **カルーセルドットインジケーター**:`.three-col` 直下に IntersectionObserver 連動で自動挿入
@@ -440,7 +440,7 @@ if (fbBody && !fbBody.querySelector('.fb-retry')) {
 
 ### 8.5.1 スポットライト v2(タップで劇場的フォーカス)
 
-`.ip-rich` `.bd-card` `.lk-card` `.cc-cat-item` のいずれかをタップすると、そのカードが大きく拡大(`scale(1.18)` PC / `scale(1.12)` モバイル)、ゴールド色のリング(`box-shadow 0 0 0 3px rgba(212,168,82,0.55)`)で縁取られ、画面全体が radial-gradient + backdrop-filter blur で暗転する(`body.has-spotlight-active .spotlight-backdrop`)。`spotPulse` キーフレームでタップの瞬間に少しオーバーシュートして落ち着く演出。フォーカスカードは自動でビューポート中央へスクロール。
+`.ip-rich` `.bd-card` `.lk-card` `.cc-cat-item` のいずれかをタップすると、そのカードが大きく拡大(`scale(1.18)` PC / `scale(1.28)` モバイル)、ゴールド色のリング(`box-shadow 0 0 0 3px rgba(212,168,82,0.55)`)で縁取られ、画面全体が radial-gradient + backdrop-filter blur で暗転する(`body.has-spotlight-active .spotlight-backdrop`)。`spotPulse` キーフレームでタップの瞬間に少しオーバーシュートして落ち着く演出。フォーカスカードは自動でビューポート中央へスクロール。モバイル拡大率は意図的に PC より大きく(1.28)している(指タップで起こす画面なので、迫力を優先)。
 
 解除条件: 同じカードを再タップ / バックドロップ(画面の暗い部分)タップ / 親グリッド外タップ / Esc キー。「タップで解除 ✕」の小さな丸い hint がモバイル底部に出る。
 
@@ -500,7 +500,12 @@ body.has-spotlight-active .spotlight-backdrop {
 }
 @media (max-width: 720px) {
   .ip-rich.spotlight, .bd-card.spotlight, .lk-card.spotlight, .cc-cat-item.spotlight {
-    transform: scale(1.12) translateY(-2px);
+    transform: scale(1.28) translateY(-4px);
+  }
+  @keyframes spotPulse {
+    0%   { transform: scale(1); }
+    60%  { transform: scale(1.34) translateY(-7px); }
+    100% { transform: scale(1.28) translateY(-4px); }
   }
 }
 .spotlight-hint {

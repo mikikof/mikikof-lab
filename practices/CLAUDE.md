@@ -133,7 +133,7 @@ practices/
 
 | 機構 | 期待される挙動 | SKILL.md 参照 |
 |------|----------------|---------------|
-| **スポットライト v2** | 短冊型カード(`.ip-rich` `.bd-card` `.lk-card` `.cc-cat-item`)タップで `scale(1.18)` PC / `1.12` mobile に拡大 + ゴールド縁取りリング + 画面全体を radial-gradient + backdrop-filter blur で暗転 + 自動で画面中央へスクロール。バックドロップ・Esc・再タップで解除。 | §8.5.1 |
+| **スポットライト v2** | 短冊型カード(`.ip-rich` `.bd-card` `.lk-card` `.cc-cat-item`)タップで `scale(1.18)` PC / `1.28` mobile に拡大 + ゴールド縁取りリング + 画面全体を radial-gradient + backdrop-filter blur で暗転 + 自動で画面中央へスクロール。バックドロップ・Esc・再タップで解除。モバイルは PC より意図的に大きく拡大して迫力を出す。 | §8.5.1 |
 | **haptic フィードバック** | 採点・解答表示・もう一度・次の問題・スポットライト切替・ステージ送りで `navigator.vibrate(6-12ms)`。iOS は grace degrade で無音。 | §8.5.2 / §8.5.5 |
 | **3-col → モバイル横スワイプ snap カルーセル** | `.origin-compare.three-col`(inline style 禁止、必ずクラスで指定)。モバイルは 84vw 幅で snap、上に「← 横にスワイプ →」hint、下に IntersectionObserver 連動のドットインジケーター。 | §8.5.3 |
 | **サマリスコアのカウントアップ** | サマリ到達時に `summary-grade` `stat-full/partial/skipped/rate` が 0 → 実値へ easeOutCubic でカウントアップ。 | §8.5.4 |
