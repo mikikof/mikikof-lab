@@ -118,7 +118,7 @@ practices/
 ### 4.8 文章トーン
 - ルート `CLAUDE.md` の「文章トーン」節を全面適用
 - カード説明・サマリ・フッターまで、**理路整然・抑制的・アカデミック**
-- 詳細な禁止表現と Before/After は `essays/CLAUDE.md` §7-2/7-6 を参照
+- 詳細な禁止表現と Before/After は `column/CLAUDE.md` §7-2/7-6 を参照
 
 ### 4.9 デザインは lectures とは差別化(青基調)
 - lectures は紺・青系のフォーマル
@@ -305,7 +305,7 @@ practices: 1章03 のCCマーク組み合わせを原本準拠に修正
 practices: SKILL.md に新しい viz パターンを追記
 ```
 
-他ツール(`lectures/` `essays/`)と混在させない。push 先は常に `origin main`。
+他ツール(`lectures/` `column/`)と混在させない。push 先は常に `origin main`。
 
 ---
 

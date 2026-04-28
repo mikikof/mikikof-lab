@@ -8,7 +8,7 @@
 mikikof-lab/
 ├── index.html              ポータルトップ(全ツールへのリンク)
 ├── CLAUDE.md               Claude Code 運用指示(交通整理役)
-├── essays/                 ツール01:ビジュアル・エッセイ集
+├── column/                 ツール01:ビジュアル・エッセイ集
 │   ├── index.html
 │   ├── CLAUDE.md           コラム制作専用の指示書
 │   ├── templates/
@@ -32,8 +32,8 @@ mikikof-lab/
 ## 公開URL(GitHub Pages)
 
 - ポータル: `https://mikikof.github.io/mikikof-lab/`
-- コラム集: `https://mikikof.github.io/mikikof-lab/essays/`
-- コラム記事: `https://mikikof.github.io/mikikof-lab/essays/articles/{slug}/`
+- コラム集: `https://mikikof.github.io/mikikof-lab/column/`
+- コラム記事: `https://mikikof.github.io/mikikof-lab/column/articles/{slug}/`
 - 授業サイト: `https://mikikof.github.io/mikikof-lab/lectures/`
 - 授業単元ページ: `https://mikikof.github.io/mikikof-lab/lectures/articles/{slug}/`
 
@@ -45,7 +45,7 @@ git clone https://github.com/mikikof/mikikof-lab.git
 cd mikikof-lab
 
 # 2. スクリプトに実行権限
-chmod +x essays/scripts/*.sh
+chmod +x column/scripts/*.sh
 
 # 3. 認証確認
 gh auth status
@@ -56,12 +56,12 @@ GitHub Pages の有効化は、リポジトリの `Settings → Pages → Source
 ## 新しい記事を作る(コラム集)
 
 ```bash
-cd essays/
+cd column/
 bash scripts/new-article.sh "your-slug" "記事タイトル"
 # → Claude Code が本文を埋め、scripts/check.sh → scripts/publish.sh の順に実行
 ```
 
-詳しくは `essays/CLAUDE.md` を参照。
+詳しくは `column/CLAUDE.md` を参照。
 
 ## 新しい授業単元を作る(授業サイト)
 
@@ -84,5 +84,5 @@ cd lectures/
 
 - **モノレポ構造**:複数ツールを一つの屋根にまとめ、共通のポータルから辿れるように
 - **ツールごとに完全独立**:他ツールを壊さないよう配下のファイルは自己完結
-- **コミットプレフィックス**:`essays:`, `quiz:`, `root:` で変更範囲を明示
+- **コミットプレフィックス**:`column:`, `quiz:`, `root:` で変更範囲を明示
 - **各記事は自己完結**:インライン CSS/JS で書き、将来の共通CSS変更が古い記事を壊さないように
