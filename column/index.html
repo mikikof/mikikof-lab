@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Visual Column — 世界を読み解くビジュアル・エッセイ</title>
-<meta name="description" content="受験生のための、ビジュアル・エッセイ形式のコラム集。世界史・情報・経済・理系まで、知のハブを目指して。">
+<title>Visual Column — ビジュアル・エッセイ集</title>
+<meta name="description" content="情報社会から見た「歴史・経済・思想・科学」をまとめたビジュアル・エッセイ集。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400;1,9..144,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
@@ -129,6 +129,8 @@ a { color: inherit; text-decoration: none; }
   font-weight: 500;
   line-height: 2.15;
   color: var(--ink);
+  text-wrap: pretty;
+  line-break: strict;
 }
 .hero-lede strong {
   font-weight: 500;
@@ -176,10 +178,87 @@ a { color: inherit; text-decoration: none; }
   color: var(--mute);
 }
 
+/* ============ FILTER BAR ============ */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 3rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.filter-label {
+  font-family: var(--f-la-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--mute);
+  margin-right: 1rem;
+}
+.filter-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  padding: 0.5rem 1.05rem;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-family: var(--f-jp-body);
+  font-size: 0.86rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.28s var(--ease), color 0.28s var(--ease), border-color 0.28s var(--ease), transform 0.28s var(--ease), box-shadow 0.28s var(--ease);
+  user-select: none;
+  position: relative;
+}
+.filter-chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+.filter-chip .chip-count {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: var(--mute-soft);
+  letter-spacing: 0;
+  transition: color 0.28s var(--ease);
+}
+.filter-chip:hover .chip-count {
+  color: var(--accent-bright);
+}
+.filter-chip.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 10px 22px -12px rgba(30, 58, 138, 0.55);
+  transform: translateY(-1px);
+}
+.filter-chip.active .chip-count {
+  color: rgba(255, 255, 255, 0.78);
+}
+
 .articles-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 2rem;
+}
+.article-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+.article-card.filter-out {
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+}
+.article-card.filter-hidden {
+  display: none;
 }
 
 .article-card {
@@ -187,7 +266,7 @@ a { color: inherit; text-decoration: none; }
   border: 1px solid var(--line);
   padding: 2rem 2rem 2.25rem;
   border-radius: 4px;
-  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease), border-color 0.35s var(--ease);
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease), border-color 0.35s var(--ease), opacity 0.32s var(--ease);
   display: flex;
   flex-direction: column;
   min-height: 320px;
@@ -339,12 +418,10 @@ a { color: inherit; text-decoration: none; }
 
 <!-- ==================== HERO ==================== -->
 <section class="hero">
-  <div class="hero-kicker">Visual Column</div>
-  <h1 class="hero-title">The <span class="pop">Hub</span> of Knowledge</h1>
-  <div class="hero-sub-jp">世界を読み解く、知のハブ</div>
+  <div class="hero-kicker">Essay Collection · エッセイ集</div>
+  <h1 class="hero-title"><span class="pop">Visual</span> Column</h1>
   <p class="hero-lede">
-    教科書のなかで分断されている知識を、<strong>ひとつの物語として読み解く</strong>ビジュアル・エッセイ集。
-    情報科目を軸に、歴史・経済・理系・時事まで横断して、受験生の学びに奥行きをもたらす場所として運営しています。
+    情報社会から見た「歴史・経済・思想・科学」をコラムでまとめています。
   </p>
 </section>
 
@@ -352,10 +429,21 @@ a { color: inherit; text-decoration: none; }
 <section class="articles-section">
   <div class="section-head">
     <h2 class="section-title">記事一覧 <span class="en">Columns</span></h2>
-    <div class="section-meta">newest first</div>
+    <div class="section-meta" id="resultMeta">all 7</div>
   </div>
 
-  <div class="articles-grid">
+  <!-- Filter chips -->
+  <div class="filter-bar" id="filterBar" role="tablist" aria-label="記事のジャンル絞り込み">
+    <span class="filter-label">filter ·</span>
+    <button class="filter-chip active" data-filter="all" type="button" role="tab" aria-selected="true">すべて<span class="chip-count">7</span></button>
+    <button class="filter-chip" data-filter="info-ai" type="button" role="tab" aria-selected="false">情報・AI<span class="chip-count">5</span></button>
+    <button class="filter-chip" data-filter="thought" type="button" role="tab" aria-selected="false">思想<span class="chip-count">2</span></button>
+    <button class="filter-chip" data-filter="economy-law" type="button" role="tab" aria-selected="false">経済・法<span class="chip-count">4</span></button>
+    <button class="filter-chip" data-filter="math-sci" type="button" role="tab" aria-selected="false">数学・科学<span class="chip-count">2</span></button>
+    <button class="filter-chip" data-filter="history" type="button" role="tab" aria-selected="false">歴史<span class="chip-count">1</span></button>
+  </div>
+
+  <div class="articles-grid" id="articlesGrid">
 
     <!--
       ============ ARTICLE CARD TEMPLATE ============
@@ -376,7 +464,20 @@ a { color: inherit; text-decoration: none; }
       </a>
     -->
 
-    <a href="articles/distance-and-similarity/" class="article-card info">
+    <a href="articles/three-layers-of-information/" class="article-card phil" data-tags="info-ai,thought">
+      <div class="card-meta">
+        <span class="card-cat">情報 · 哲学</span>
+        <span>2026-04-28</span>
+      </div>
+      <div class="card-title">『ありがとう』はどこで情報になるか</div>
+      <div class="card-en">Three Layers, One Word</div>
+      <p class="card-summary">
+        生命情報・社会情報・機械情報という西垣通の三層モデルを軸に、シャノン、ソシュール、ユクスキュル、ベイトソンを横断。AIが立つ位置と、まだ届かない場所を、五つの章で確かめます。
+      </p>
+      <div class="card-cta">read column →</div>
+    </a>
+
+    <a href="articles/distance-and-similarity/" class="article-card info" data-tags="info-ai,math-sci">
       <div class="card-meta">
         <span class="card-cat">情報 · 数学</span>
         <span>2026-04-27</span>
@@ -389,7 +490,7 @@ a { color: inherit; text-decoration: none; }
       <div class="card-cta">read column →</div>
     </a>
 
-    <a href="articles/meme-coin-and-value/" class="article-card econ">
+    <a href="articles/meme-coin-and-value/" class="article-card econ" data-tags="info-ai,economy-law">
       <div class="card-meta">
         <span class="card-cat">経済 · 法 · 情報</span>
         <span>2026-04-26</span>
@@ -403,7 +504,7 @@ a { color: inherit; text-decoration: none; }
       <div class="card-cta">read column →</div>
     </a>
 
-    <a href="articles/who-sued-the-machine/" class="article-card info">
+    <a href="articles/who-sued-the-machine/" class="article-card info" data-tags="info-ai,economy-law">
       <div class="card-meta">
         <span class="card-cat">AI · 法</span>
         <span>2026-04-22</span>
@@ -417,7 +518,7 @@ a { color: inherit; text-decoration: none; }
       <div class="card-cta">read column →</div>
     </a>
 
-    <a href="articles/what-patents-protect/" class="article-card phys">
+    <a href="articles/what-patents-protect/" class="article-card phys" data-tags="math-sci,economy-law">
       <div class="card-meta">
         <span class="card-cat">科学技術 · 法</span>
         <span>2026-04-22</span>
@@ -431,7 +532,7 @@ a { color: inherit; text-decoration: none; }
       <div class="card-cta">read column →</div>
     </a>
 
-    <a href="articles/public-sphere-rewritten/" class="article-card phil">
+    <a href="articles/public-sphere-rewritten/" class="article-card phil" data-tags="thought,info-ai">
       <div class="card-meta">
         <span class="card-cat">思想 · 情報</span>
         <span>2026-04-22</span>
@@ -445,7 +546,7 @@ a { color: inherit; text-decoration: none; }
       <div class="card-cta">read column →</div>
     </a>
 
-    <a href="articles/civil-vs-common-law/" class="article-card hist">
+    <a href="articles/civil-vs-common-law/" class="article-card hist" data-tags="history,economy-law">
       <div class="card-meta">
         <span class="card-cat">歴史 · 法律</span>
         <span>2026-04-21</span>
@@ -467,9 +568,88 @@ a { color: inherit; text-decoration: none; }
 <!-- ==================== FOOTER ==================== -->
 <footer class="footer">
   <div class="footer-mark">知</div>
-  <div class="footer-tag">Visual Column · 世界を読み解くビジュアル・エッセイ</div>
+  <div class="footer-tag">Visual Column · ビジュアル・エッセイ集</div>
   <div class="footer-meta">for students, by a thinking machine and a human hand</div>
 </footer>
+
+<script>
+(function () {
+  const bar = document.getElementById('filterBar');
+  const grid = document.getElementById('articlesGrid');
+  const meta = document.getElementById('resultMeta');
+  if (!bar || !grid) return;
+
+  const chips = bar.querySelectorAll('.filter-chip');
+  const cards = grid.querySelectorAll('.article-card');
+  const FADE_MS = 280;
+
+  const labelFor = (filter) => {
+    const chip = bar.querySelector('.filter-chip[data-filter="' + filter + '"]');
+    if (!chip) return '';
+    return chip.firstChild ? chip.firstChild.nodeValue : '';
+  };
+
+  const apply = (filter) => {
+    const matches = new Set();
+    cards.forEach(card => {
+      const tags = (card.dataset.tags || '').split(',').map(s => s.trim()).filter(Boolean);
+      if (filter === 'all' || tags.includes(filter)) matches.add(card);
+    });
+
+    // Phase 1: fade out non-matching
+    cards.forEach(card => {
+      if (!matches.has(card)) card.classList.add('filter-out');
+    });
+
+    // Phase 2: after fade duration, swap display and fade in newly revealed
+    setTimeout(() => {
+      cards.forEach(card => {
+        if (!matches.has(card)) {
+          card.classList.add('filter-hidden');
+        } else if (card.classList.contains('filter-hidden')) {
+          card.classList.remove('filter-hidden');
+          void card.offsetWidth; // force reflow before removing filter-out
+          card.classList.remove('filter-out');
+        }
+      });
+    }, FADE_MS);
+
+    if (meta) {
+      meta.textContent = filter === 'all'
+        ? 'all ' + matches.size
+        : labelFor(filter) + ' · ' + matches.size;
+    }
+
+    chips.forEach(c => {
+      const isActive = c.dataset.filter === filter;
+      c.classList.toggle('active', isActive);
+      c.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+  };
+
+  // Compute counts from card data, overwrite the static numbers
+  const counts = { all: cards.length };
+  cards.forEach(card => {
+    const tags = (card.dataset.tags || '').split(',').map(s => s.trim()).filter(Boolean);
+    tags.forEach(t => { counts[t] = (counts[t] || 0) + 1; });
+  });
+  chips.forEach(chip => {
+    const filter = chip.dataset.filter;
+    const countEl = chip.querySelector('.chip-count');
+    if (countEl && counts[filter] != null) {
+      countEl.textContent = counts[filter];
+    }
+  });
+  if (meta) meta.textContent = 'all ' + cards.length;
+
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => apply(chip.dataset.filter));
+  });
+
+  // ensure clean initial state
+  cards.forEach(card => card.classList.remove('filter-out', 'filter-hidden'));
+})();
+</script>
 
 </body>
 </html>
