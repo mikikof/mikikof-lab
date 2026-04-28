@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>『ありがとう』はどこで情報になるか — Visual Column</title>
+<meta name="description" content="生命情報・社会情報・機械情報という三層モデルで、「情報」という語の射程を読み直す。シャノン、ユクスキュル、ベイトソン、そして西垣通が示した、AI時代の情報観。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400;1,9..144,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7fafd;
+  --bg-card: #ffffff;
+  --bg-soft: #eff4fb;
+  --bg-tint: #e0ecf9;
+  --bg-deep: #0a2540;
+  --bg-wash: #dce8f6;
+
+  /* Theme: Burgundy × Cream (哲学・思想・情報学系) */
+  --accent-primary-deep: #4a0f1e;
+  --accent-primary: #7a2034;
+  --accent-primary-bright: #a83c58;
+  --accent-primary-light: #c87186;
+  --accent-primary-pale: #ecd1da;
+  --accent-primary-wash: #f5e6ea;
+
+  --accent-secondary-deep: #5c4a20;
+  --accent-secondary: #a68b3e;
+  --accent-secondary-bright: #c9a95b;
+  --accent-secondary-light: #d8be7e;
+  --accent-secondary-pale: #ecdfb8;
+  --accent-secondary-wash: #f5edd3;
+
+  --ink: #0b1424;
+  --text: #1a2541;
+  --mute: #5b6a82;
+  --mute-soft: #8594ae;
+  --line: #d6e0ee;
+  --line-soft: #e8edf5;
+  --warn: #b54316;
+
+  --gold: #f4b93a;
+  --white: #ffffff;
+
+  --f-jp-display: 'Zen Old Mincho', 'Noto Serif JP', serif;
+  --f-jp-body: 'Zen Kaku Gothic New', 'Hiragino Sans', sans-serif;
+  --f-la-display: 'Fraunces', 'Playfair Display', Georgia, serif;
+  --f-la-body: 'DM Sans', system-ui, sans-serif;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--f-jp-body);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 2.0;
+  letter-spacing: 0.025em;
+  font-feature-settings: 'palt' 1;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  position: relative;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(circle at 1px 1px, rgba(122,32,52,0.06) 1px, transparent 0);
+  background-size: 28px 28px;
+}
+::selection { background: var(--accent-secondary); color: var(--ink); }
+a { color: inherit; text-decoration: none; }
+
+/* ============ TOP NAV ============ */
+.topnav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 1.1rem 2.5rem;
+  background: rgba(247, 250, 253, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.4s var(--ease);
+}
+.topnav.hidden { transform: translateY(-100%); }
+.topnav-brand { display: flex; align-items: baseline; gap: 0.75rem; }
+.topnav-mark {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1.25rem;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+}
+.topnav-sub {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--mute);
+  letter-spacing: 0.05em;
+}
+.topnav-back {
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mute);
+  transition: color 0.25s var(--ease);
+}
+.topnav-back:hover { color: var(--accent-secondary); }
+
+/* ============ HERO ============ */
+.hero {
+  min-height: 100vh;
+  padding: 8rem 2rem 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.hero-kicker {
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--accent-secondary-deep);
+  margin-bottom: 3rem;
+  display: flex; align-items: center; gap: 1rem;
+  animation: fadeUp 1.1s var(--ease-out) 0.1s both;
+}
+.hero-kicker::before, .hero-kicker::after {
+  content: '';
+  width: 36px; height: 1px;
+  background: var(--accent-secondary);
+}
+.hero-title {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: clamp(2.4rem, 7vw, 5.4rem);
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 2.25rem;
+  text-wrap: balance;
+  line-break: strict;
+  word-break: normal;
+  overflow-wrap: anywhere;
+  animation: fadeUp 1.3s var(--ease-out) 0.3s both;
+}
+.hero-title .pop {
+  color: var(--accent-primary-deep);
+  font-style: normal;
+  position: relative;
+  display: inline-block;
+}
+.hero-title .pop::after {
+  content: '';
+  position: absolute;
+  left: -4%;
+  bottom: 0.08em;
+  width: 108%;
+  height: 0.14em;
+  background: var(--gold);
+  z-index: -1;
+  opacity: 0.55;
+}
+.hero-sub {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.05rem, 2vw, 1.5rem);
+  color: var(--accent-primary);
+  letter-spacing: 0.02em;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  animation: fadeUp 1.3s var(--ease-out) 0.5s both;
+}
+.hero-sub .x {
+  margin: 0 0.5em;
+  color: var(--accent-secondary-deep);
+  font-style: normal;
+  font-weight: 800;
+}
+.hero-lede {
+  max-width: 660px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 2.15;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 4rem;
+  text-wrap: pretty;
+  line-break: strict;
+  animation: fadeUp 1.3s var(--ease-out) 0.7s both;
+}
+.hero-lede strong {
+  font-weight: 500;
+  color: var(--accent-primary-deep);
+  border-bottom: 2px solid var(--accent-secondary-pale);
+  padding: 0 0.1em;
+}
+.scroll-cue {
+  position: absolute;
+  bottom: 2.5rem; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.85rem;
+  font-family: var(--f-la-body);
+  font-size: 0.7rem; font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--mute);
+  animation: fadeUp 1.3s var(--ease-out) 1.1s both;
+}
+.scroll-cue::after {
+  content: '';
+  width: 1px; height: 48px;
+  background: linear-gradient(to bottom, var(--mute), transparent);
+  animation: scrollBar 2.2s var(--ease) infinite;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scrollBar {
+  0% { transform: scaleY(0); transform-origin: top; opacity: 0.3; }
+  40% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+  60% { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
+  100% { transform: scaleY(0); transform-origin: bottom; opacity: 0.3; }
+}
+
+/* ============ CHAPTER BASE ============ */
+.chapter {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 7rem 2rem 5rem;
+  position: relative;
+}
+.ch-kicker {
+  display: flex; align-items: baseline; gap: 1.25rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+.ch-num {
+  font-family: var(--f-la-display);
+  font-style: italic; font-weight: 400;
+  font-size: 1.3rem;
+  color: var(--accent-secondary-deep);
+  letter-spacing: 0.02em;
+}
+.ch-cat {
+  font-family: var(--f-la-body);
+  font-size: 0.75rem; font-weight: 500;
+  letter-spacing: 0.4em; text-transform: uppercase;
+  color: var(--mute);
+  padding-left: 1.25rem;
+  border-left: 1px solid var(--line);
+}
+.ch-title {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: clamp(2.1rem, 4.8vw, 3.4rem);
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  color: var(--ink);
+  margin-bottom: 0.85rem;
+  display: flex; align-items: baseline; gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  text-align: center;
+  text-wrap: balance;
+  line-break: strict;
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+.ch-title .ch-ja {
+  display: inline-block;
+  word-break: keep-all;
+  line-break: strict;
+  overflow-wrap: anywhere;
+}
+.ch-title .en {
+  font-family: var(--f-la-display);
+  font-style: italic; font-weight: 400;
+  font-size: 0.38em;
+  color: var(--mute-soft);
+  letter-spacing: 0.03em;
+}
+.ch-subtitle {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.08rem;
+  letter-spacing: 0.1em;
+  color: var(--accent-secondary-deep);
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--line);
+  text-align: center;
+}
+.ch-lede {
+  max-width: 780px;
+  font-size: 1.18rem; font-weight: 500;
+  line-height: 2.2;
+  color: var(--ink);
+  margin: 0 auto 4rem;
+  text-align: center;
+}
+.ch-lede strong {
+  font-weight: 500;
+  color: var(--ink);
+  background: linear-gradient(transparent 62%, var(--gold) 62%, var(--gold) 88%, transparent 88%);
+  background-size: 100% 100%;
+  padding: 0 0.1em;
+}
+.ch-lede em {
+  font-style: normal;
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  color: var(--accent-primary-deep);
+  letter-spacing: 0.03em;
+}
+.ch-body { max-width: 780px; margin: 0 auto; }
+.ch-body p {
+  font-size: 1.05rem; font-weight: 500;
+  line-height: 2.1;
+  margin-bottom: 1.75rem;
+  color: var(--ink);
+}
+.ch-body p strong {
+  font-weight: 700;
+  color: var(--ink);
+}
+.ch-body p em {
+  font-style: normal;
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  color: var(--accent-primary-deep);
+  background: linear-gradient(transparent 65%, var(--accent-secondary-pale) 65%);
+  padding: 0 0.15em;
+}
+.ch-body .interlude {
+  margin: 2.5rem 0 1.5rem;
+  padding: 1rem 0 0;
+  border-top: 1px dashed var(--line);
+  font-family: var(--f-la-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent-secondary-deep);
+}
+
+/* ============ DIAGRAMS ============ */
+.dgm {
+  margin: 3rem auto;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 2rem 2rem 1.6rem;
+  max-width: 920px;
+}
+.dgm-head {
+  margin-bottom: 1.4rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.dgm-kicker {
+  font-family: var(--f-la-body);
+  font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--accent-secondary);
+  margin-bottom: 0.4rem;
+}
+.dgm-title {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--ink);
+  letter-spacing: 0.06em;
+}
+.dgm-svg-wrap {
+  width: 100%;
+  background: var(--bg);
+  border-radius: 3px;
+  padding: 1.2rem 0.5rem;
+}
+.dgm-svg-wrap svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.dgm-caption {
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  line-height: 1.85;
+  color: var(--mute);
+}
+.dgm-caption strong {
+  color: var(--accent-primary-deep);
+  font-weight: 700;
+}
+
+.svg-label { font-family: 'Zen Kaku Gothic New', sans-serif; font-weight: 700; font-size: 13px; fill: #0b1424; }
+.svg-sub { font-family: 'Zen Kaku Gothic New', sans-serif; font-weight: 500; font-size: 11px; fill: #5b6a82; }
+.svg-en { font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 11px; fill: #5b6a82; }
+.svg-stroke-dim { fill: none; stroke: #d6e0ee; stroke-width: 1.2; }
+.svg-fill-pale { fill: #f5e6ea; }
+.svg-fill-card { fill: #ffffff; stroke: #d6e0ee; stroke-width: 1; }
+.svg-fill-prim { fill: #7a2034; }
+.svg-fill-sec { fill: #a68b3e; }
+
+/* ============ PULL-QUOTE ============ */
+.pull-quote {
+  margin: 3.5rem 0;
+  padding: 2rem 2.25rem;
+  background: var(--bg-card);
+  border-left: 4px solid var(--accent-secondary);
+  border-radius: 0 4px 4px 0;
+  position: relative;
+}
+.pull-quote::before {
+  content: '\201C';
+  position: absolute;
+  top: -0.3rem; left: 1rem;
+  font-family: var(--f-la-display);
+  font-size: 3.5rem; line-height: 1;
+  color: var(--accent-secondary);
+  opacity: 0.35;
+  font-weight: 800;
+}
+.pull-quote p {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.2rem;
+  line-height: 2;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  margin-bottom: 0;
+  text-align: center;
+}
+.pull-quote .attribution {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--mute);
+  margin-top: 0.85rem;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+/* ============ TIER (three-layer model) ============ */
+.tier {
+  margin: 3rem 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+}
+.tier-row {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--mute);
+  border-radius: 0 3px 3px 0;
+  padding: 1.4rem 1.6rem;
+}
+.tier-row.life { border-left-color: #1f6148; }
+.tier-row.social { border-left-color: var(--accent-secondary); }
+.tier-row.machine { border-left-color: var(--accent-primary); }
+.tier-head {
+  display: flex; align-items: baseline; gap: 1rem; margin-bottom: 0.5rem;
+}
+.tier-label {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1.1rem;
+  color: var(--ink);
+  letter-spacing: 0.1em;
+}
+.tier-en {
+  font-family: var(--f-la-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+.tier-body {
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: var(--text);
+}
+.tier-body strong { color: var(--accent-primary-deep); font-weight: 700; }
+
+/* ============ REFERENCES ============ */
+.refs {
+  max-width: 820px;
+  margin: 6rem auto 2rem;
+  padding: 3rem 2.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.refs-head {
+  font-family: var(--f-la-body);
+  font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--mute);
+  margin-bottom: 1.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.refs-list { list-style: none; counter-reset: ref; }
+.refs-list li {
+  counter-increment: ref;
+  padding-left: 2.5rem;
+  position: relative;
+  margin-bottom: 1.25rem;
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: var(--ink);
+}
+.refs-list li::before {
+  content: '[' counter(ref) ']';
+  position: absolute; left: 0; top: 0.1rem;
+  font-family: var(--f-la-display);
+  font-style: italic; font-weight: 600;
+  color: var(--accent-secondary);
+}
+.ref-author { font-weight: 700; }
+.ref-title { margin-left: 0.3em; }
+.ref-meta {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--mute);
+  font-family: var(--f-la-body);
+  margin-top: 0.2rem;
+  letter-spacing: 0.01em;
+}
+.ref-meta a { color: var(--accent-secondary-deep); text-decoration: underline; word-break: break-all; }
+.refs-note {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line-soft);
+  font-size: 0.85rem;
+  color: var(--mute);
+  line-height: 1.8;
+  font-weight: 400;
+}
+
+/* ============ FOOTER ============ */
+.footer {
+  border-top: 1px solid var(--line);
+  background: var(--bg-soft);
+  margin-top: 4rem;
+  padding: 5rem 2rem 3rem;
+  text-align: center;
+}
+.footer-mark {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 2.5rem;
+  letter-spacing: 0.15em;
+  color: var(--ink);
+  margin-bottom: 0.75rem;
+}
+.footer-tag {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--mute);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.02em;
+}
+.footer-back {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.6rem 1.5rem;
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--mute);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  transition: all 0.25s var(--ease);
+}
+.footer-back:hover {
+  color: var(--ink);
+  border-color: var(--accent-secondary);
+}
+
+/* ============ TOC SECTION ============ */
+.toc-section {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 6rem 2rem 7rem;
+}
+.toc-kicker {
+  font-family: var(--f-la-body);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--accent-secondary-deep);
+  text-align: center;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+.toc-kicker::before, .toc-kicker::after {
+  content: '';
+  width: 36px; height: 1px;
+  background: var(--accent-secondary);
+}
+.toc-title {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  letter-spacing: 0.1em;
+  text-align: center;
+  color: var(--ink);
+  margin-bottom: 0.6rem;
+}
+.toc-title .en {
+  display: block;
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.55em;
+  letter-spacing: 0.04em;
+  color: var(--mute-soft);
+  margin-top: 0.4rem;
+}
+.toc-note {
+  font-family: var(--f-jp-body);
+  font-size: 0.92rem;
+  text-align: center;
+  color: var(--mute);
+  margin-bottom: 3.25rem;
+}
+.toc-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.1rem;
+}
+.toc-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1.4rem;
+  align-items: center;
+  padding: 1.4rem 1.6rem;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.32s var(--ease), box-shadow 0.32s var(--ease), border-color 0.32s var(--ease);
+}
+.toc-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--accent-secondary);
+  transform: scaleY(0);
+  transform-origin: top center;
+  transition: transform 0.32s var(--ease);
+}
+.toc-card:hover {
+  border-color: var(--accent-secondary-pale);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 32px -18px rgba(122,32,52,0.45);
+}
+.toc-card:hover::before { transform: scaleY(1); }
+.toc-num {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 2.4rem;
+  line-height: 1;
+  color: var(--accent-primary-deep);
+  letter-spacing: 0.02em;
+}
+.toc-text-title {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  margin-bottom: 0.25rem;
+}
+.toc-text-sub {
+  font-family: var(--f-jp-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--mute);
+  letter-spacing: 0.04em;
+  line-height: 1.55;
+}
+.toc-arrow {
+  font-family: var(--f-la-display);
+  font-size: 1.3rem;
+  color: var(--mute-soft);
+  transition: transform 0.32s var(--ease), color 0.32s var(--ease);
+}
+.toc-card:hover .toc-arrow {
+  color: var(--accent-primary-deep);
+  transform: translateX(4px);
+}
+
+/* ============ SIDE RAIL (desktop) ============ */
+.rail {
+  position: fixed;
+  left: 1.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 90;
+  display: none;
+}
+.rail-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  position: relative;
+}
+.rail-list::before {
+  content: '';
+  position: absolute;
+  left: 13px;
+  top: 14px;
+  bottom: 14px;
+  width: 1px;
+  background: var(--line);
+  z-index: 0;
+}
+.rail-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.25rem 0;
+  position: relative;
+  z-index: 1;
+}
+.rail-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 0.74rem;
+  color: var(--mute);
+  letter-spacing: 0.02em;
+  transition: all 0.32s var(--ease);
+}
+.rail-title {
+  font-family: var(--f-jp-body);
+  font-weight: 500;
+  font-size: 0.78rem;
+  color: var(--ink);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.28s var(--ease), transform 0.28s var(--ease);
+  pointer-events: none;
+  background: rgba(247, 250, 253, 0.9);
+  backdrop-filter: blur(6px);
+  padding: 0.1rem 0.5rem;
+  border-radius: 2px;
+}
+.rail:hover .rail-title { opacity: 1; transform: translateX(0); }
+.rail-item.active .rail-num {
+  background: var(--accent-primary);
+  color: #fff;
+  border-color: var(--accent-primary);
+  transform: scale(1.08);
+}
+.rail-item.active .rail-title {
+  opacity: 1;
+  transform: translateX(0);
+  color: var(--accent-primary-deep);
+  font-weight: 700;
+}
+@media (min-width: 1180px) {
+  .rail { display: block; }
+}
+
+/* ============ MOBILE MENU + DRAWER ============ */
+.m-menu-btn {
+  position: fixed;
+  bottom: 1.4rem;
+  right: 1.4rem;
+  z-index: 95;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent-primary);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 10px 28px -10px rgba(74,15,30,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+  transition: background 0.25s var(--ease), transform 0.25s var(--ease);
+}
+.m-menu-btn:hover { background: var(--accent-secondary); transform: scale(1.05); }
+.m-menu-btn span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+}
+@media (min-width: 1180px) { .m-menu-btn { display: none; } }
+
+.m-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(11, 20, 36, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s var(--ease);
+}
+.m-drawer.open { opacity: 1; pointer-events: auto; }
+.m-drawer-panel {
+  width: 100%;
+  max-height: 82vh;
+  background: var(--bg);
+  border-radius: 14px 14px 0 0;
+  padding: 1.5rem 1.25rem 2.5rem;
+  overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform 0.34s var(--ease);
+  box-shadow: 0 -10px 40px -10px rgba(11,20,36,0.3);
+}
+.m-drawer.open .m-drawer-panel { transform: translateY(0); }
+.m-drawer-handle {
+  width: 40px; height: 4px;
+  background: var(--line);
+  border-radius: 2px;
+  margin: 0 auto 1.25rem;
+}
+.m-drawer-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0 0.5rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.m-drawer-title {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+}
+.m-drawer-title .en {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.7rem;
+  color: var(--mute);
+  margin-left: 0.6rem;
+  letter-spacing: 0.06em;
+}
+.m-drawer-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--mute);
+  cursor: pointer;
+  line-height: 1;
+  padding: 0.25rem 0.5rem;
+}
+.m-drawer-list {
+  list-style: none;
+}
+.m-drawer-list a {
+  display: grid;
+  grid-template-columns: 52px 1fr auto;
+  gap: 0.85rem;
+  padding: 1rem 0.5rem;
+  border-bottom: 1px solid var(--line-soft);
+  align-items: center;
+}
+.m-drawer-list a:last-child { border-bottom: none; }
+.md-num {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.6rem;
+  color: var(--accent-primary-deep);
+  line-height: 1;
+}
+.md-title {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--ink);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.15rem;
+}
+.md-sub {
+  font-family: var(--f-jp-body);
+  font-size: 0.78rem;
+  color: var(--mute);
+  letter-spacing: 0.03em;
+  line-height: 1.55;
+}
+.md-arrow {
+  font-family: var(--f-la-display);
+  font-size: 1.1rem;
+  color: var(--mute-soft);
+}
+.m-drawer-list a.active .md-num,
+.m-drawer-list a.active .md-title { color: var(--accent-primary-deep); }
+.m-drawer-list a.active .md-arrow { color: var(--accent-primary-deep); }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 960px) {
+  .topnav { padding: 0.9rem 1.25rem; }
+  .chapter { padding: 5rem 1.25rem 3.5rem; }
+  .dgm { padding: 1.5rem 1rem 1.2rem; }
+  .pull-quote { margin: 2.5rem 0; padding: 1.6rem 1.4rem; }
+  .pull-quote p { font-size: 1.05rem; }
+  .refs { padding: 2rem 1.5rem; }
+}
+@media (max-width: 760px) {
+  .toc-section { padding: 4rem 1.25rem 5rem; }
+  .toc-list { grid-template-columns: 1fr; gap: 0.75rem; }
+  .toc-card { padding: 1.1rem 1.25rem; gap: 1rem; }
+  .toc-num { font-size: 1.9rem; }
+  .toc-text-title { font-size: 1rem; }
+  .toc-text-sub { font-size: 0.78rem; }
+}
+@media (max-width: 600px) {
+  body { font-size: 15px; }
+  .hero-title { font-size: 2.1rem; }
+  .ch-title { font-size: 1.85rem; }
+  .ch-lede { font-size: 1.05rem; }
+  .ch-body p { font-size: 0.98rem; }
+  .m-menu-btn { width: 50px; height: 50px; bottom: 1rem; right: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav" id="topnav">
+  <div class="topnav-brand">
+    <span class="topnav-mark">情</span>
+    <span class="topnav-sub">a visual column</span>
+  </div>
+  <a href="../../" class="topnav-back">← all articles</a>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="hero-kicker">情報 · 哲学 / 2026</div>
+
+  <h1 class="hero-title">『<span class="pop">ありがとう</span>』はどこで情報になるか</h1>
+
+  <div class="hero-sub">Three Layers<span class="x">×</span>One Word</div>
+
+  <p class="hero-lede">
+    文字としての「ありがとう」、意味としての「ありがとう」、<strong>感情としての「ありがとう」</strong>。<br>
+    同じ言葉が、機械・社会・生命というそれぞれの場所で、別の情報として立ち上がります。<br>
+    西垣通の三層モデルから、AI時代の「情報」を捉え直します。
+  </p>
+
+  <div class="scroll-cue">scroll</div>
+</section>
+
+<!-- ==================== TABLE OF CONTENTS ==================== -->
+<section class="toc-section" id="contents">
+  <div class="toc-kicker">Contents · 目次</div>
+  <h2 class="toc-title">三つの情報、ひとつの言葉<span class="en">Three Layers, One Word</span></h2>
+  <p class="toc-note">教科書の図に出てくる三層を、一語の中で重ねてほどき、AIが立つ位置までたどります。</p>
+  <ol class="toc-list">
+    <li>
+      <a href="#ch1" class="toc-card">
+        <span class="toc-num">01</span>
+        <span>
+          <span class="toc-text-title">「ありがとう」は３階層で伝わる</span>
+          <span class="toc-text-sub">一語に重なる三つの層</span>
+        </span>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+    <li>
+      <a href="#ch2" class="toc-card">
+        <span class="toc-num">02</span>
+        <span>
+          <span class="toc-text-title">機械情報、意味なき記号</span>
+          <span class="toc-text-sub">シャノンが切り離したもの</span>
+        </span>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+    <li>
+      <a href="#ch3" class="toc-card">
+        <span class="toc-num">03</span>
+        <span>
+          <span class="toc-text-title">社会情報、共有される意味</span>
+          <span class="toc-text-sub">記号と意味のあいだに共同体がある</span>
+        </span>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+    <li>
+      <a href="#ch4" class="toc-card">
+        <span class="toc-num">04</span>
+        <span>
+          <span class="toc-text-title">生命情報、もっとも古い情報</span>
+          <span class="toc-text-sub">差異と環世界をめぐって</span>
+        </span>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+    <li>
+      <a href="#ch5" class="toc-card">
+        <span class="toc-num">05</span>
+        <span>
+          <span class="toc-text-title">三層から見るAI時代</span>
+          <span class="toc-text-sub">LLMは何を扱い、何を欠くか</span>
+        </span>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+  </ol>
+</section>
+
+<!-- ==================== SIDE RAIL ==================== -->
+<aside class="rail" id="rail" aria-label="目次ナビゲーション">
+  <ol class="rail-list">
+    <li><a href="#ch1" class="rail-item" data-ch="1"><span class="rail-num">01</span><span class="rail-title">「ありがとう」は３階層で伝わる</span></a></li>
+    <li><a href="#ch2" class="rail-item" data-ch="2"><span class="rail-num">02</span><span class="rail-title">機械情報、意味なき記号</span></a></li>
+    <li><a href="#ch3" class="rail-item" data-ch="3"><span class="rail-num">03</span><span class="rail-title">社会情報、共有される意味</span></a></li>
+    <li><a href="#ch4" class="rail-item" data-ch="4"><span class="rail-num">04</span><span class="rail-title">生命情報、もっとも古い情報</span></a></li>
+    <li><a href="#ch5" class="rail-item" data-ch="5"><span class="rail-num">05</span><span class="rail-title">三層から見るAI時代</span></a></li>
+  </ol>
+</aside>
+
+<!-- ==================== CHAPTER 1 ==================== -->
+<section class="chapter" id="ch1">
+  <div class="ch-kicker">
+    <span class="ch-num">01</span>
+    <span class="ch-cat">Chapter One · Opening</span>
+  </div>
+  <h2 class="ch-title"><span class="ch-ja">「ありがとう」は<wbr>３階層で伝わる</span> <span class="en">One Word, Three Layers</span></h2>
+  <div class="ch-subtitle">一語に重なる三つの層</div>
+
+  <p class="ch-lede">
+    画面に並ぶ「ありがとう」の文字、相手に届く感謝の言葉、胸の奥に残る嬉しさ。<strong>同じ一語が、三つの場所で別の情報として動いている</strong>ことに、まず気づくところから始めます。
+  </p>
+
+  <div class="ch-body">
+    <p>スマートフォンの画面に「ありがとう」と表示されたとき、その瞬間を分けて眺めてみます。最初に目に入るのは、画面のドットが描く<strong>文字の並び</strong>です。つぎに届くのは、その文字が運ぶ<strong>感謝という意味</strong>です。そして最後に、受け取った人の中に<strong>うれしいという感情</strong>が広がります。</p>
+
+    <p>同じひとつの語が、ここで三つの異なるものに姿を変えています。文字として、意味として、感情として。<em>情報</em> という言葉は、本来この三つを束ねる広い概念ですが、私たちは普段、文字や意味のレベルで止めて使ってしまいがちです。</p>
+
+    <div class="dgm">
+      <div class="dgm-head">
+        <div class="dgm-kicker">Diagram 01 / 一語の三層</div>
+        <div class="dgm-title">「ありがとう」が情報になる三段</div>
+      </div>
+      <div class="dgm-svg-wrap">
+        <svg viewBox="0 0 880 360" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arr-up" viewBox="0 0 10 10" refX="5" refY="0" markerWidth="8" markerHeight="8" orient="auto">
+              <path d="M0,10 L5,0 L10,10 z" fill="#7a2034"/>
+            </marker>
+          </defs>
+          <!-- Layer 1: machine (bottom) -->
+          <rect x="180" y="270" width="520" height="60" rx="4" fill="#f5e6ea" stroke="#a83c58" stroke-width="1.2"/>
+          <text x="220" y="300" class="svg-label" fill="#4a0f1e">「ありがとう」という文字</text>
+          <text x="220" y="318" class="svg-en">a sequence of characters</text>
+          <text x="660" y="300" text-anchor="end" class="svg-sub" font-weight="700" fill="#4a0f1e">機械情報</text>
+
+          <line x1="440" y1="265" x2="440" y2="225" stroke="#7a2034" stroke-width="1.6" marker-end="url(#arr-up)"/>
+
+          <!-- Layer 2: social (middle) -->
+          <rect x="180" y="170" width="520" height="60" rx="4" fill="#f5edd3" stroke="#a68b3e" stroke-width="1.2"/>
+          <text x="220" y="200" class="svg-label" fill="#5c4a20">感謝の意味がわかる言葉</text>
+          <text x="220" y="218" class="svg-en">a word that carries meaning</text>
+          <text x="660" y="200" text-anchor="end" class="svg-sub" font-weight="700" fill="#5c4a20">社会情報</text>
+
+          <line x1="440" y1="165" x2="440" y2="125" stroke="#7a2034" stroke-width="1.6" marker-end="url(#arr-up)"/>
+
+          <!-- Layer 3: life (top) -->
+          <rect x="180" y="70" width="520" height="60" rx="4" fill="#d3e9dc" stroke="#1f6148" stroke-width="1.2"/>
+          <text x="220" y="100" class="svg-label" fill="#0f3d2e">「うれしい」という感情</text>
+          <text x="220" y="118" class="svg-en">a felt emotion in the body</text>
+          <text x="660" y="100" text-anchor="end" class="svg-sub" font-weight="700" fill="#0f3d2e">生命情報</text>
+
+          <text x="120" y="50" class="svg-label" fill="#0b1424">情報の三層</text>
+          <text x="120" y="68" class="svg-en">three layers of information</text>
+        </svg>
+      </div>
+      <div class="dgm-caption">
+        下から、<strong>機械情報(文字)</strong> → <strong>社会情報(意味)</strong> → <strong>生命情報(感情)</strong>。一つの「ありがとう」のなかに、三つの情報が積み重なって動いている。
+      </div>
+    </div>
+
+    <p>この三層を区別する枠組みを最初に整理したのが、東京大学の情報学者・<em>西垣通</em>です。1990年代後半から提唱された「基礎情報学」では、情報を <strong>生命情報・社会情報・機械情報</strong> という三つの階層でとらえ直しました。下の機械情報がもっとも狭く、上の生命情報がもっとも広い。三層は同心円状に包み合う関係にあります。</p>
+
+    <p>順番が大切です。情報の歴史で見ると、最初に存在したのは生命の情報です。生き物が世界の差異を感じ取り、選び取って生きてきた営みは、文字どころか言語以前から続いていました。社会情報はそれよりずっと若く、人間が言葉と記号を共有するようになって生まれます。機械情報はもっと若い、二十世紀の発明です。次の章から、新しい順にではなく、<strong>もっとも狭い層から外へ</strong>と歩いていきます。</p>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 2 ==================== -->
+<section class="chapter" id="ch2">
+  <div class="ch-kicker">
+    <span class="ch-num">02</span>
+    <span class="ch-cat">Chapter Two · Machine</span>
+  </div>
+  <h2 class="ch-title">機械情報、意味なき記号 <span class="en">Machine Information</span></h2>
+  <div class="ch-subtitle">シャノンが切り離したもの</div>
+
+  <p class="ch-lede">
+    意味する内容を一度切り離し、記号だけを取り出す。<strong>不便にも見える割り切り</strong>が、二十世紀の通信工学を成立させ、今のデジタル社会の土台になりました。
+  </p>
+
+  <div class="ch-body">
+    <p>機械情報とは、教科書の言い方を借りれば「意味する内容が切り離され、記号だけが独立した情報」です。「ありがとう」のひらがな五文字は、<strong>0と1の列</strong>として保存され、電気信号として送られ、また文字に戻って画面に並びます。この経路で動いているのは記号そのものであって、感謝の意味ではありません。</p>
+
+    <p>この発想を理論化したのが、アメリカの数学者 <em>クロード・シャノン</em> による1948年の論文「通信の数学的理論」です。電話線を使って情報を効率よく送るにはどうすればよいか、という現実的な問いに、シャノンは見事な割り切りで答えました。<strong>意味を一度カッコに入れて、どれだけの記号を、どれだけ正確に運べるかだけを考えよう</strong>、と。</p>
+
+    <p>意味を切り離すと、情報の量を厳密に測れるようになります。シャノンは情報量の単位として <strong>ビット</strong> を導入しました。コインの表裏のように、二つの可能性のうち一方を選ぶとき、そこに含まれる情報量を1ビットと定義する。文字や画像も、突き詰めれば0と1の列に翻訳でき、何ビットを使ったかで運搬コストを計算できます。</p>
+
+    <div class="dgm">
+      <div class="dgm-head">
+        <div class="dgm-kicker">Diagram 02 / 通信の数学的モデル</div>
+        <div class="dgm-title">送信者から受信者への、記号の流れ</div>
+      </div>
+      <div class="dgm-svg-wrap">
+        <svg viewBox="0 0 900 280" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arr-flow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#5b6a82"/>
+            </marker>
+          </defs>
+          <!-- Sender -->
+          <g transform="translate(40,80)">
+            <rect width="120" height="100" rx="4" fill="#ffffff" stroke="#7a2034" stroke-width="1.5"/>
+            <text x="60" y="42" text-anchor="middle" class="svg-label" fill="#4a0f1e">送信者</text>
+            <text x="60" y="62" text-anchor="middle" class="svg-en">sender</text>
+            <text x="60" y="82" text-anchor="middle" class="svg-sub">情報源</text>
+          </g>
+          <line x1="160" y1="130" x2="200" y2="130" stroke="#5b6a82" stroke-width="1.4" marker-end="url(#arr-flow)"/>
+
+          <!-- Encoder -->
+          <g transform="translate(200,80)">
+            <rect width="130" height="100" rx="4" fill="#f5e6ea" stroke="#a83c58" stroke-width="1.3"/>
+            <text x="65" y="42" text-anchor="middle" class="svg-label" fill="#4a0f1e">符号化</text>
+            <text x="65" y="62" text-anchor="middle" class="svg-en">encoder</text>
+            <text x="65" y="82" text-anchor="middle" class="svg-sub">文字 → ビット列</text>
+          </g>
+          <line x1="330" y1="130" x2="370" y2="130" stroke="#5b6a82" stroke-width="1.4" marker-end="url(#arr-flow)"/>
+
+          <!-- Channel -->
+          <g transform="translate(370,80)">
+            <rect width="160" height="100" rx="4" fill="#f5edd3" stroke="#a68b3e" stroke-width="1.3"/>
+            <text x="80" y="42" text-anchor="middle" class="svg-label" fill="#5c4a20">通信路</text>
+            <text x="80" y="62" text-anchor="middle" class="svg-en">channel</text>
+            <text x="80" y="82" text-anchor="middle" class="svg-sub">電線・電波・光</text>
+          </g>
+          <line x1="530" y1="130" x2="570" y2="130" stroke="#5b6a82" stroke-width="1.4" marker-end="url(#arr-flow)"/>
+
+          <!-- Decoder -->
+          <g transform="translate(570,80)">
+            <rect width="130" height="100" rx="4" fill="#f5e6ea" stroke="#a83c58" stroke-width="1.3"/>
+            <text x="65" y="42" text-anchor="middle" class="svg-label" fill="#4a0f1e">復号</text>
+            <text x="65" y="62" text-anchor="middle" class="svg-en">decoder</text>
+            <text x="65" y="82" text-anchor="middle" class="svg-sub">ビット列 → 文字</text>
+          </g>
+          <line x1="700" y1="130" x2="740" y2="130" stroke="#5b6a82" stroke-width="1.4" marker-end="url(#arr-flow)"/>
+
+          <!-- Receiver -->
+          <g transform="translate(740,80)">
+            <rect width="120" height="100" rx="4" fill="#ffffff" stroke="#7a2034" stroke-width="1.5"/>
+            <text x="60" y="42" text-anchor="middle" class="svg-label" fill="#4a0f1e">受信者</text>
+            <text x="60" y="62" text-anchor="middle" class="svg-en">receiver</text>
+            <text x="60" y="82" text-anchor="middle" class="svg-sub">届く先</text>
+          </g>
+
+          <!-- Noise -->
+          <g>
+            <line x1="450" y1="80" x2="450" y2="40" stroke="#b54316" stroke-width="1.4" stroke-dasharray="4 3"/>
+            <text x="450" y="30" text-anchor="middle" class="svg-sub" fill="#b54316">雑音 / noise</text>
+          </g>
+
+          <text x="450" y="240" text-anchor="middle" class="svg-en">Shannon 1948 — A Mathematical Theory of Communication</text>
+        </svg>
+      </div>
+      <div class="dgm-caption">
+        シャノンが描いた通信モデル。<strong>意味は端の人間に任せ、その間で動くのは記号と確率だけ</strong>。この割り切りが、デジタル時代の設計図となった。
+      </div>
+    </div>
+
+    <p>機械情報の特徴は、<strong>運ぶ側の機械にとって、内容が何であれ違いがない</strong>点です。猫の写真でも交響曲でも、株価のチャートでもラブレターでも、すべて同じビット列という型に変換され、同じ通信路を流れます。意味を切り離したからこそ、情報は誰のもとにでも、安価に、ほとんど誤りなく運ばれるようになりました。</p>
+
+    <p>けれども、ここで運ばれているのは「意味の入れ物」です。中身がどんな意味を担っているかは、機械情報のレベルでは問われません。「ありがとう」というビット列と「ばかやろう」というビット列は、機械にとっては似た重みでしかなく、感謝と怒りの違いを判断する手がかりは、この層の中にはありません。判断は、次の社会情報のレベルから先に持ち越されます。</p>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 3 ==================== -->
+<section class="chapter" id="ch3">
+  <div class="ch-kicker">
+    <span class="ch-num">03</span>
+    <span class="ch-cat">Chapter Three · Society</span>
+  </div>
+  <h2 class="ch-title">社会情報、共有される意味 <span class="en">Social Information</span></h2>
+  <div class="ch-subtitle">記号と意味のあいだに共同体がある</div>
+
+  <p class="ch-lede">
+    記号が意味を持つのは、それを読み解く<strong>共有された約束</strong>があるからです。社会情報は、人間の共同体が長い時間をかけて編み上げた、意味の網のうえに成立します。
+  </p>
+
+  <div class="ch-body">
+    <p>「ありがとう」という五文字が感謝の意味を運べるのは、日本語の話者が「ありがとう」と感謝を結びつけた長い慣習を共有しているからです。同じ五文字を、日本語を知らない人に見せても、模様にしか映りません。<strong>記号が意味を獲得するのは、その記号を解釈する共同体に置かれたとき</strong>です。</p>
+
+    <p>近代言語学の出発点に立つスイスの言語学者 <em>フェルディナン・ド・ソシュール</em> は、20世紀初頭の講義で、言葉を二つの面から記述しました。耳で聞こえ目で見える側を <strong>シニフィアン(記号表現)</strong>、それが指し示す観念の側を <strong>シニフィエ(記号内容)</strong> と呼ぶ。両者は紙の表と裏のように切り離せず、しかも両者の結びつきは恣意的です。日本語で「いぬ」と呼ぶ動物を、英語では dog と呼び、フランス語では chien と呼ぶ。記号と意味のあいだに必然はなく、共同体ごとの約束だけがあります。</p>
+
+    <p>社会情報の世界では、この約束の網が静かに、しかし強力に働いています。同じ「ありがとう」でも、家族との何気ない場面、店員と客の儀礼、ビジネスメールの末尾、葬儀の挨拶。文脈ごとに重みは変わり、相手の関係や場の性格が、記号に新しい意味が継ぎ足されます。<em>社会情報とは、記号と意味のあいだを共同体が橋渡ししている情報</em> だと言えます。</p>
+
+    <p>翻訳の難しさは、この層の厚みを示す格好の例です。「ありがとう」を英語の thank you に置き換えれば、伝わるのは感謝の核だけで、日本語が抱える距離感や謙譲のニュアンスは零れ落ちます。記号の対応を取るだけでは社会情報は移し替えられません。共同体ごとの意味の網が、それぞれ別の織り方をしているからです。</p>
+
+    <p>機械情報がビット列の運搬で完結するのに対し、社会情報は <strong>意味の共有</strong> という重い荷物を担います。法律の条文、ニュースの記事、SNSのつぶやき。私たちが日常で「情報」と呼ぶものの多くは、実はこの社会情報の層に位置しています。教科書が言う「コミュニケーションで用いられる情報」とは、まさにこの層のことです。</p>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 4 ==================== -->
+<section class="chapter" id="ch4">
+  <div class="ch-kicker">
+    <span class="ch-num">04</span>
+    <span class="ch-cat">Chapter Four · Life</span>
+  </div>
+  <h2 class="ch-title">生命情報、もっとも古い情報 <span class="en">Life Information</span></h2>
+  <div class="ch-subtitle">差異と環世界をめぐって</div>
+
+  <p class="ch-lede">
+    文字も言葉もない遥か昔から、生き物は世界を読み、選び、生きてきました。<strong>生命情報は、文明よりずっと古い情報</strong>です。
+  </p>
+
+  <div class="ch-body">
+    <p>三層モデルでもっとも広いのが生命情報です。教科書では「生きていくための選択に役立てている情報」と説明されます。短い表現ですが、含意は深い。記号を読み書きする人間だけでなく、すべての生き物が<strong>世界の差異を感じ取り、選び取る</strong>営みを通じて生きていることを指しています。</p>
+
+    <p>20世紀の生物学者 <em>ヤーコブ・フォン・ユクスキュル</em> は、生き物ごとに異なる知覚世界を <strong>環世界(ウムヴェルト, Umwelt)</strong> と名付けました。たとえばダニの環世界には、視覚はほとんどなく、ある種の脂肪酸の匂いと、皮膚の温度、暗さの三つの手がかりしかない。それでもダニはこの三つを頼りに、宿主の哺乳類を待ち、跳びかかり、血を吸い、子孫を残します。<em>同じ世界に同居しながら、生き物ごとに別々の情報の地図を持って暮らしている</em> のです。</p>
+
+    <p>人間にとっての街路には、信号、看板、店の匂い、足音、行き交う人の顔が並びます。蜂にとっての同じ街路は、紫外線で発光する花の模様、蜜の濃度、空気の流れに置き換わります。情報の総量が決まっているのではありません。<strong>生き物が選び取った差異の集合が、それぞれの「世界」を形作っている</strong>のです。</p>
+
+    <p>イギリスの人類学者 <em>グレゴリー・ベイトソン</em> は、こうした生命情報の本質を一行で言い当てました。</p>
+
+    <div class="pull-quote">
+      <p>情報とは、差異を生む差異のこと。</p>
+      <div class="attribution">— Gregory Bateson, <i>Steps to an Ecology of Mind</i> (1972)</div>
+    </div>
+
+    <p>原文は "a difference that makes a difference"。風が吹けば葉が揺れ、葉が揺れれば鳥が飛び立ち、鳥が飛び立てば虫が逃げる。世界に無数にある差異のうち、生き物の行動に違いをもたらす差異だけが、その生き物にとっての情報になります。シャノンの定義した機械情報が「記号の量」を測るのに対し、ベイトソンの定義は <strong>「行動を変える差異」</strong> を捉えます。</p>
+
+    <p>「ありがとう」を受け取った身体には、表情の和らぎや胸の温かさといった微細な変化が起こります。その変化は、つぎの行動を少しだけ書き換えます。これは紛れもなく一つの情報のやりとりですが、機械情報のレベルでも、社会情報のレベルでも、完全には捉えきれません。生命情報は、こうした<em>身体に染み込む差異</em>として、もっとも下に、しかし同時にもっとも広い基盤として、ずっと存在し続けてきました。</p>
+
+    <p>機械情報も社会情報も、突き詰めれば、この生命情報のうえに乗っています。ビットの列が意味を持つのは、それを読む生き物がいるからであり、社会の約束が機能するのは、約束を共有する身体がいるからです。三層は積み重ねられているだけでなく、上の層は下の層に支えられて初めて機能する、という入れ子の構造を持ちます。</p>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 5 ==================== -->
+<section class="chapter" id="ch5">
+  <div class="ch-kicker">
+    <span class="ch-num">05</span>
+    <span class="ch-cat">Chapter Five · Reflection</span>
+  </div>
+  <h2 class="ch-title">三層から見るAI時代 <span class="en">AI in Three Layers</span></h2>
+  <div class="ch-subtitle">LLMは何を扱い、何を欠くか</div>
+
+  <p class="ch-lede">
+    ChatGPTが流暢に「ありがとう」と返してくれる時代に、改めて三層を当ててみます。<strong>AIは三層のどこに立ち、どこから先には来ていないのか</strong>。
+  </p>
+
+  <div class="ch-body">
+    <p>大規模言語モデルは、ひとことで言えば <strong>機械情報のかたまりを、社会情報のパターンに従って並べ替える装置</strong> です。インターネット上の膨大なテキスト ―― すなわち、人類が共同で蓄積してきた社会情報の痕跡 ―― を、ビット列として読み込み、次にどの単語が来るかの確率を計算する。学習が終わったあとのモデルは、人間の書きそうな文章を確率的に再現できるようになります。</p>
+
+    <p>この仕組みは驚くほど強力で、しばしば不気味なほど人間らしい応答を返します。けれども三層モデルを当てると、AIが立っている場所がはっきり見えます。LLMはまず<em>機械情報の層</em>で動き、社会情報の層に対しては <strong>パターンとして外側から触れている</strong>状態です。生命情報の層には、まだ届いていません。</p>
+
+    <div class="tier">
+      <div class="tier-row machine">
+        <div class="tier-head">
+          <span class="tier-label">機械情報</span>
+          <span class="tier-en">Machine</span>
+        </div>
+        <div class="tier-body">
+          AIは <strong>ここで動く</strong>。トークンと確率、ベクトルと行列。文字と意味は切り離されたまま、記号だけが計算される。
+        </div>
+      </div>
+      <div class="tier-row social">
+        <div class="tier-head">
+          <span class="tier-label">社会情報</span>
+          <span class="tier-en">Social</span>
+        </div>
+        <div class="tier-body">
+          AIは <strong>外側から模倣する</strong>。学習データに残った人間の意味のやりとりを統計的に再現し、文化や慣習をそれらしく真似る。共同体の内側にいるわけではない。
+        </div>
+      </div>
+      <div class="tier-row life">
+        <div class="tier-head">
+          <span class="tier-label">生命情報</span>
+          <span class="tier-en">Life</span>
+        </div>
+        <div class="tier-body">
+          AIは <strong>立ち入っていない</strong>。生きるための選択も、身体の差異も、空腹も嬉しさもない。ベイトソンが言う「差異を生む差異」を、生命としては経験していない。
+        </div>
+      </div>
+    </div>
+
+    <p>「ありがとう」と打ち返してくる ChatGPT を見て、私たちはつい、相手が感謝を持ったと感じます。けれども、その「ありがとう」の三層を順に剥がすと、機械情報の層には正確にビット列が走り、社会情報の層には学習済みの応答パターンが乗っているだけで、<em>感情としての「ありがとう」は空白のまま</em>です。AIが流暢になればなるほど、私たちはこの空白を見落としやすくなります。</p>
+
+    <p>西垣の三層モデルが受験生にとって意味を持つのは、まさにここです。情報という言葉を、機械情報の層だけで使い切ってしまうと、私たちは「ChatGPTは情報を生み出している」と簡単に言ってしまいます。けれども三層を区別して使えば、生み出されているのは機械情報のレベルの記号列であって、社会情報の層では模倣であり、生命情報の層では沈黙だ、と精密に語れるようになります。<strong>同じ「情報」という語の中身を、層ごとに見分ける目</strong>が、これからの時代の読み書きの一部になります。</p>
+
+    <p>三層は対立するものではありません。機械情報があるから記号は遠くまで届き、社会情報があるから意味が共有され、生命情報があるから受け取った身体が動かされる。三つは積み重なって、初めて私たちのコミュニケーションを成り立たせています。AIが急速に上の層を侵食し始めたいま、生命情報の層を持つということが、人間に固有の経験として残されています。次に誰かに「ありがとう」と言われたら、その一語が三層をまたいで届いている事実を、ぜひ意識してみてください。</p>
+  </div>
+</section>
+
+<!-- ==================== REFERENCES ==================== -->
+<section class="refs">
+  <div class="refs-head">参考文献 · References</div>
+  <ol class="refs-list">
+    <li>
+      <span class="ref-author">西垣通</span>
+      <span class="ref-title">『基礎情報学 ―― 生命から社会へ』</span>
+      <span class="ref-meta">NTT出版, 2004</span>
+    </li>
+    <li>
+      <span class="ref-author">西垣通</span>
+      <span class="ref-title">『新基礎情報学 ―― 機能主義から構成主義へ』</span>
+      <span class="ref-meta">NTT出版, 2021</span>
+    </li>
+    <li>
+      <span class="ref-author">Shannon, C. E.</span>
+      <span class="ref-title">"A Mathematical Theory of Communication"</span>
+      <span class="ref-meta">Bell System Technical Journal, vol. 27, 1948</span>
+    </li>
+    <li>
+      <span class="ref-author">Bateson, G.</span>
+      <span class="ref-title"><i>Steps to an Ecology of Mind</i>(邦訳『精神の生態学へ』佐藤良明訳)</span>
+      <span class="ref-meta">University of Chicago Press, 1972 / 岩波文庫, 2023(改訳版)</span>
+    </li>
+    <li>
+      <span class="ref-author">ユクスキュル, J. v.</span>
+      <span class="ref-title">『生物から見た世界』(日高敏隆・羽田節子訳)</span>
+      <span class="ref-meta">岩波文庫, 2005(原著 1934)</span>
+    </li>
+  </ol>
+  <div class="refs-note">
+    本記事は上記ソースをもとに、受験生向けに編集・再構成したものです。三層モデルの厳密な定義や、基礎情報学のオートポイエーシス的な議論については、原典をご参照ください。
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="footer">
+  <div class="footer-mark">情</div>
+  <div class="footer-tag">Visual Column · 情報 · 哲学</div>
+  <div class="footer-tag">Three Layers × One Word</div>
+  <a href="../../" class="footer-back">← all articles</a>
+</footer>
+
+<!-- ==================== MOBILE MENU + DRAWER ==================== -->
+<button class="m-menu-btn" id="mMenuBtn" aria-label="目次を開く">
+  <span></span><span></span><span></span>
+</button>
+
+<div class="m-drawer" id="mDrawer" role="dialog" aria-modal="true" aria-label="目次">
+  <div class="m-drawer-panel">
+    <div class="m-drawer-handle" aria-hidden="true"></div>
+    <div class="m-drawer-head">
+      <span class="m-drawer-title">目次<span class="en">contents</span></span>
+      <button class="m-drawer-close" id="mDrawerClose" aria-label="閉じる">×</button>
+    </div>
+    <ol class="m-drawer-list">
+      <li><a href="#ch1" data-ch="1"><span class="md-num">01</span><span><span class="md-title">「ありがとう」は３階層で伝わる</span><span class="md-sub">一語に重なる三つの層</span></span><span class="md-arrow">→</span></a></li>
+      <li><a href="#ch2" data-ch="2"><span class="md-num">02</span><span><span class="md-title">機械情報、意味なき記号</span><span class="md-sub">シャノンが切り離したもの</span></span><span class="md-arrow">→</span></a></li>
+      <li><a href="#ch3" data-ch="3"><span class="md-num">03</span><span><span class="md-title">社会情報、共有される意味</span><span class="md-sub">記号と意味のあいだに共同体がある</span></span><span class="md-arrow">→</span></a></li>
+      <li><a href="#ch4" data-ch="4"><span class="md-num">04</span><span><span class="md-title">生命情報、もっとも古い情報</span><span class="md-sub">差異と環世界をめぐって</span></span><span class="md-arrow">→</span></a></li>
+      <li><a href="#ch5" data-ch="5"><span class="md-num">05</span><span><span class="md-title">三層から見るAI時代</span><span class="md-sub">LLMは何を扱い、何を欠くか</span></span><span class="md-arrow">→</span></a></li>
+    </ol>
+  </div>
+</div>
+
+<script>
+(function () {
+  const nav = document.getElementById('topnav');
+  let lastY = window.scrollY;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y > 120 && y > lastY) {
+      nav.classList.add('hidden');
+    } else {
+      nav.classList.remove('hidden');
+    }
+    lastY = y;
+  }, { passive: true });
+
+  const sections = document.querySelectorAll('section.chapter');
+  const railItems = document.querySelectorAll('.rail-item');
+  const drawerItems = document.querySelectorAll('.m-drawer-list a');
+
+  const setActive = (id) => {
+    railItems.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+    drawerItems.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+  };
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter(e => e.isIntersecting);
+      if (visible.length === 0) return;
+      visible.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      const top = visible[0];
+      if (top.boundingClientRect.top < window.innerHeight * 0.55) {
+        setActive(top.target.id);
+      }
+    }, { rootMargin: '-20% 0px -45% 0px', threshold: 0 });
+    sections.forEach(s => observer.observe(s));
+  }
+
+  const btn = document.getElementById('mMenuBtn');
+  const drawer = document.getElementById('mDrawer');
+  const closeBtn = document.getElementById('mDrawerClose');
+
+  const openDrawer = () => {
+    drawer.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+  const closeDrawer = () => {
+    drawer.classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
+  btn.addEventListener('click', openDrawer);
+  closeBtn.addEventListener('click', closeDrawer);
+  drawer.addEventListener('click', (e) => {
+    if (e.target === drawer) closeDrawer();
+  });
+  drawerItems.forEach(a => a.addEventListener('click', () => setTimeout(closeDrawer, 100)));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+  });
+})();
+</script>
+
+</body>
+</html>
