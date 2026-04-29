@@ -3179,7 +3179,17 @@ function toggleCase(headEl) {
 // ══════════════════════════════════════════════════════════
 function answerQuiz(el, isCorrect) {
   const options = el.parentElement.querySelectorAll('.quiz-option');
-  options.forEach(o => { o.style.pointerEvents = 'none'; });
+  const fb = el.closest('.quiz-container').querySelector('.quiz-feedback');
+  // Toggle off when re-tapping the chosen option
+  if (el.classList.contains('chosen')) {
+    options.forEach(o => o.classList.remove('correct', 'incorrect', 'chosen'));
+    if (fb) fb.classList.remove('show');
+    haptic(8);
+    return;
+  }
+  // Otherwise reset previous answer, then apply
+  options.forEach(o => o.classList.remove('correct', 'incorrect', 'chosen'));
+  el.classList.add('chosen');
   if (isCorrect) {
     el.classList.add('correct');
     haptic(20);
@@ -3190,7 +3200,6 @@ function answerQuiz(el, isCorrect) {
     });
     haptic([40, 30, 40]);
   }
-  const fb = el.closest('.quiz-container').querySelector('.quiz-feedback');
   if (fb) fb.classList.add('show');
 }
 
@@ -3199,6 +3208,11 @@ function answerQuiz(el, isCorrect) {
 // ══════════════════════════════════════════════════════════
 function revealPractice(item) {
   const verdict = item.querySelector('.practice-verdict');
+  if (item.classList.contains('revealed')) {
+    item.classList.remove('revealed', 'ok', 'ng');
+    verdict.textContent = '?';
+    return;
+  }
   const ok = verdict.dataset.ok === 'true';
   item.classList.add('revealed');
   item.classList.add(ok ? 'ok' : 'ng');
@@ -3538,7 +3552,7 @@ function resetAllInteractions() {
   });
   document.querySelectorAll('.case-expander.open').forEach(c => c.classList.remove('open'));
   document.querySelectorAll('.quiz-option').forEach(o => {
-    o.classList.remove('correct', 'incorrect');
+    o.classList.remove('correct', 'incorrect', 'chosen');
     o.style.pointerEvents = 'auto';
   });
   document.querySelectorAll('.quiz-feedback.show').forEach(f => f.classList.remove('show'));

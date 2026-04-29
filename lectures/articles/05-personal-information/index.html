@@ -3046,7 +3046,17 @@ buildMenu();
 // QUIZ
 function answerQuiz(el, isCorrect) {
   const options = el.parentElement.querySelectorAll('.quiz-option');
-  options.forEach(o => { o.style.pointerEvents = 'none'; });
+  const fb = el.closest('.quiz-container').querySelector('.quiz-feedback');
+  // Toggle off when re-tapping the chosen option
+  if (el.classList.contains('chosen')) {
+    options.forEach(o => o.classList.remove('correct', 'incorrect', 'chosen'));
+    if (fb) fb.classList.remove('show');
+    haptic(8);
+    return;
+  }
+  // Otherwise reset previous answer, then apply
+  options.forEach(o => o.classList.remove('correct', 'incorrect', 'chosen'));
+  el.classList.add('chosen');
   if (isCorrect) {
     el.classList.add('correct');
     haptic(20);
@@ -3057,7 +3067,6 @@ function answerQuiz(el, isCorrect) {
     });
     haptic([40, 30, 40]);
   }
-  const fb = el.closest('.quiz-container').querySelector('.quiz-feedback');
   if (fb) fb.classList.add('show');
 }
 
@@ -3117,15 +3126,29 @@ function switchFilter(type, btn) {
 // TERM PICK
 function pickTerm(el, wrapId) {
   const wrap = document.getElementById(wrapId);
-  if (wrap.classList.contains('answered')) return;
+  const fb = document.getElementById(wrapId + 'Fb');
+  // Toggle off when re-tapping the chosen option
+  if (el.classList.contains('chosen')) {
+    wrap.classList.remove('answered');
+    wrap.querySelectorAll('.term-pick-opt').forEach(o => {
+      o.classList.remove('correct', 'wrong', 'chosen');
+      o.style.pointerEvents = 'auto';
+    });
+    if (fb) fb.classList.remove('show');
+    return;
+  }
+  // Reset any previous answer, then apply
+  wrap.querySelectorAll('.term-pick-opt').forEach(o => {
+    o.classList.remove('correct', 'wrong', 'chosen');
+    o.style.pointerEvents = 'auto';
+  });
   wrap.classList.add('answered');
+  el.classList.add('chosen');
   const isCorrect = el.dataset.correct === 'true';
   wrap.querySelectorAll('.term-pick-opt').forEach(o => {
-    o.style.pointerEvents = 'none';
     if (o.dataset.correct === 'true') o.classList.add('correct');
   });
   if (!isCorrect) el.classList.add('wrong');
-  const fb = document.getElementById(wrapId + 'Fb');
   if (fb) fb.classList.add('show');
 }
 
@@ -3137,6 +3160,11 @@ function toggleCase(headEl) {
 // PRACTICE LIST
 function revealPractice(item) {
   const verdict = item.querySelector('.practice-verdict');
+  if (item.classList.contains('revealed')) {
+    item.classList.remove('revealed', 'ok', 'ng');
+    verdict.textContent = '?';
+    return;
+  }
   const ok = verdict.dataset.ok === 'true';
   item.classList.add('revealed');
   item.classList.add(ok ? 'ok' : 'ng');
@@ -3430,7 +3458,7 @@ function resetAllInteractions() {
   });
   document.querySelectorAll('.case-expander.open').forEach(c => c.classList.remove('open'));
   document.querySelectorAll('.quiz-option').forEach(o => {
-    o.classList.remove('correct', 'incorrect');
+    o.classList.remove('correct', 'incorrect', 'chosen');
     o.style.pointerEvents = 'auto';
   });
   document.querySelectorAll('.quiz-feedback.show').forEach(f => f.classList.remove('show'));
@@ -3439,6 +3467,12 @@ function resetAllInteractions() {
     const v = p.querySelector('.practice-verdict');
     if (v) v.textContent = '?';
   });
+  document.querySelectorAll('.term-pick-item.answered').forEach(w => w.classList.remove('answered'));
+  document.querySelectorAll('.term-pick-opt').forEach(o => {
+    o.classList.remove('correct', 'wrong', 'chosen');
+    o.style.pointerEvents = 'auto';
+  });
+  document.querySelectorAll('.term-pick-feedback.show').forEach(f => f.classList.remove('show'));
   document.querySelectorAll('.answer-row.revealed').forEach(r => {
     r.classList.remove('revealed');
     const rv = r.querySelector('.answer-reveal');

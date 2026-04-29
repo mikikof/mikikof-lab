@@ -1812,6 +1812,41 @@ input[type="range"].cool-range::-moz-range-thumb {
   animation: fadeIn 0.3s;
 }
 .rights-pole.open .rights-pole-detail { display: block; }
+.column-link {
+  display: flex; align-items: center; gap: 12px;
+  margin-top: 14px; padding: 11px 14px;
+  background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy) 100%);
+  border-radius: 6px;
+  border-left: 3px solid var(--accent-gold);
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  min-height: 44px;
+}
+.column-link:hover { transform: translateX(3px); box-shadow: 0 6px 16px rgba(15,40,71,0.25); }
+.column-link-body { flex: 1; min-width: 0; }
+.column-link-eyebrow {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 0.2em;
+  color: var(--accent-gold); font-weight: 700;
+  margin-bottom: 3px;
+}
+.column-link-title {
+  display: block;
+  font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif;
+  font-size: 13.5px; font-weight: 700;
+  color: white; line-height: 1.45;
+}
+.column-link-arrow {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent-gold);
+  font-size: 18px; font-weight: 700;
+  flex-shrink: 0;
+}
+@media (max-width: 720px) {
+  .column-link { padding: 12px 14px; }
+  .column-link-title { font-size: 13px; }
+}
 .rights-center {
   text-align: center;
   display: flex;
@@ -2812,6 +2847,13 @@ input[type="range"].cool-range::-moz-range-thumb {
       <div class="def-label">③ 憲法十三条から導かれる権利</div>
       <div class="def-term"><span class="note-blank" data-answer="知る権利">クリックで正解</span></div>
       <div class="def-desc">国や自治体の情報を国民が知る権利。情報公開法はこの考えに基づく。報道の自由と表裏の関係にある。</div>
+      <a class="column-link" href="../../../column/articles/right-to-know-inverted/" target="_blank" rel="noopener">
+        <div class="column-link-body">
+          <span class="column-link-eyebrow">RELATED COLUMN</span>
+          <span class="column-link-title">「知る権利」が反転するとき</span>
+        </div>
+        <span class="column-link-arrow">→</span>
+      </a>
     </div>
   </div>
   <p style="margin-top:14px; font-size:13px; color:var(--text-sub);">※ ②と③は順不同。どちらも憲法13条を根拠とする「新しい人権」。</p>
@@ -3213,7 +3255,7 @@ input[type="range"].cool-range::-moz-range-thumb {
 <div class="slide" data-title="実習2 応用 / グレーゾーン判定">
   <div class="eyebrow">PRACTICE 2+ / 応用問題(難度高め)</div>
   <h2 class="slide-title">この行動、不正アクセス禁止法違反?</h2>
-  <p class="slide-subtitle">教科書の例より一段難しい。境界線上の高校生リアル行動を、自力で判定する。クリックで答えと理由が出る。</p>
+  <p class="slide-subtitle">違反かどうかの判断が分かれやすい事例を集めた。クリックで判定と根拠が表示される。再タップで非表示に戻せる。</p>
 
   <div class="practice-list">
     <div class="practice-item" onclick="revealPractice(this)">
@@ -3255,6 +3297,14 @@ input[type="range"].cool-range::-moz-range-thumb {
         <div class="practice-reason"><strong>違反にはあたらない(ただしグレー)</strong>すでにログイン済みの画面を見る行為は「識別符号の入力」がないため不正アクセス禁止法の構成要件を満たしにくい。しかし民事で<strong>プライバシー侵害</strong>を問われる可能性、学校・塾の規則違反は別途成立する。「法的にOK=倫理的にOK」ではない。</div>
       </div>
       <span class="practice-verdict" data-ok="false">?</span>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <span class="practice-letter">(6)</span>
+      <div class="practice-text">
+        学校の進路指導室にある、ネットワーク非接続のスタンドアロン端末(校内LAN・インターネット双方に未接続)に、知っている担任のID/パスワードを打ち込んでログインし、自分の調査書データを閲覧した。
+        <div class="practice-reason"><strong>違反 — ただし「不正アクセス行為」としてではない</strong>同法 2条4項の<strong>「不正アクセス行為」は「電気通信回線を通じて」</strong>行うものに限ると明記されている。ネットワーク非経由の直接ログインは構成要件を欠き、この条文では問えない。<strong>しかし</strong>、担任のID/PWを目的をもって取得・保管していた時点で<strong>識別符号の不正取得罪・保管罪(同法 4・6条)</strong>が成立し、<strong>同法違反は免れない</strong>。さらに校務PCの無断操作は<strong>電子計算機損壊等業務妨害罪(刑法 234条の2)</strong>や民事のプライバシー侵害でも問われ得る。<strong>「ネット非経由なら同法は無関係」は誤り</strong>。同法は 2条4項の不正アクセス行為と、4〜6条の識別符号の取得・提供・保管罪という<strong>二層構造</strong>を持つ。</div>
+      </div>
+      <span class="practice-verdict" data-ok="true">?</span>
     </div>
   </div>
 </div>
@@ -4459,7 +4509,16 @@ function toggleCase(headEl) { headEl.parentElement.classList.toggle('open'); }
 function caseQ(el, isCorrect) {
   const group = el.parentElement;
   const opts = group.querySelectorAll('.case-inline-opt');
-  opts.forEach(o => { o.style.pointerEvents = 'none'; });
+  const fb = el.closest('.case-inline-quiz').querySelector('.case-inline-fb');
+  // Toggle off when re-tapping the chosen option
+  if (el.classList.contains('chosen')) {
+    opts.forEach(o => o.classList.remove('correct', 'wrong', 'chosen'));
+    if (fb) fb.classList.remove('show');
+    return;
+  }
+  // Otherwise reset previous answer, then apply
+  opts.forEach(o => o.classList.remove('correct', 'wrong', 'chosen'));
+  el.classList.add('chosen');
   if (isCorrect) {
     el.classList.add('correct');
   } else {
@@ -4468,14 +4527,23 @@ function caseQ(el, isCorrect) {
       if (o.onclick && o.onclick.toString().includes('true')) o.classList.add('correct');
     });
   }
-  const fb = el.closest('.case-inline-quiz').querySelector('.case-inline-fb');
   if (fb) fb.classList.add('show');
 }
 
 // ══════ QUIZ CONTAINER ══════
 function answerQuiz(el, isCorrect) {
   const options = el.parentElement.querySelectorAll('.quiz-option');
-  options.forEach(o => { o.style.pointerEvents = 'none'; });
+  const fb = el.closest('.quiz-container').querySelector('.quiz-feedback');
+  // Toggle off when re-tapping the chosen option
+  if (el.classList.contains('chosen')) {
+    options.forEach(o => o.classList.remove('correct', 'incorrect', 'chosen'));
+    if (fb) fb.classList.remove('show');
+    haptic(8);
+    return;
+  }
+  // Otherwise reset previous answer, then apply
+  options.forEach(o => o.classList.remove('correct', 'incorrect', 'chosen'));
+  el.classList.add('chosen');
   if (isCorrect) {
     el.classList.add('correct');
     haptic(20);
@@ -4486,13 +4554,18 @@ function answerQuiz(el, isCorrect) {
     });
     haptic([40, 30, 40]);
   }
-  const fb = el.closest('.quiz-container').querySelector('.quiz-feedback');
   if (fb) fb.classList.add('show');
 }
 
 // ══════ PRACTICE LIST ══════
 function revealPractice(item) {
   const verdict = item.querySelector('.practice-verdict');
+  // Toggle off when revealed already
+  if (item.classList.contains('revealed')) {
+    item.classList.remove('revealed', 'ok', 'ng');
+    verdict.textContent = '?';
+    return;
+  }
   const ok = verdict.dataset.ok === 'true';
   item.classList.add('revealed');
   item.classList.add(ok ? 'ok' : 'ng');
@@ -4535,6 +4608,21 @@ function focusPyr(n) {
 function pickPyr(opt, isCorrect, reason) {
   const group = opt.parentElement;
   const target = group.dataset.target;
+  // Tap a correct option again -> undo this tier (re-enable choice)
+  if (opt.classList.contains('correct')) {
+    opt.classList.remove('correct');
+    group.querySelectorAll('.pyramid-opt').forEach(o => o.classList.remove('disabled', 'wrong'));
+    const tier = document.getElementById('pyrTier' + target);
+    if (tier) {
+      tier.classList.remove('filled-ho', 'filled-sei', 'filled-jo');
+      const label = tier.querySelector('text');
+      if (label) {
+        label.textContent = '(' + target + ')' + (target === '2' ? ' · 省令' : '');
+        label.setAttribute('fill', '#2C5F8D');
+      }
+    }
+    return;
+  }
   group.querySelectorAll('.pyramid-opt').forEach(o => { o.classList.add('disabled'); });
   if (isCorrect) {
     opt.classList.add('correct');
@@ -4576,12 +4664,18 @@ function switchPhish(idx, btn) {
 }
 function hitPhish(el) {
   const key = el.dataset.dm + ':' + el.dataset.hit;
-  if (phishFound.has(key)) return;
-  phishFound.add(key);
-  el.classList.add('found');
-  // light up the hint row
   const hintsBlock = document.getElementById('phishHints' + el.dataset.dm);
   const row = hintsBlock.querySelector('.phish-hint-row[data-hit="' + el.dataset.hit + '"]');
+  // Toggle off if already found
+  if (phishFound.has(key)) {
+    phishFound.delete(key);
+    el.classList.remove('found');
+    if (row) row.classList.remove('lit');
+    updatePhishMeter();
+    return;
+  }
+  phishFound.add(key);
+  el.classList.add('found');
   if (row) row.classList.add('lit');
   updatePhishMeter();
 }
@@ -4806,12 +4900,22 @@ function selectYsNode(key) {
 }
 
 function judgeScope(chip) {
-  if (chip.classList.contains('judged-correct') || chip.classList.contains('judged-wrong')) return;
-  const ok = chip.dataset.correct === 'true';
-  chip.classList.add(ok ? 'judged-correct' : 'judged-wrong');
   const panel = chip.closest('#scopeMoral, #scopeCitizen');
   if (!panel) return;
   const fbBox = panel.querySelector('.scope-chip-fb');
+  // Toggle off when re-tapping a judged chip
+  if (chip.classList.contains('judged-correct') || chip.classList.contains('judged-wrong')) {
+    chip.classList.remove('judged-correct', 'judged-wrong');
+    if (fbBox) { fbBox.classList.remove('show', 'fb-correct', 'fb-wrong'); fbBox.textContent = ''; }
+    panel.querySelector('.scope-verdict').classList.remove('show');
+    const all0 = panel.querySelectorAll('.scope-chip');
+    const judged0 = panel.querySelectorAll('.scope-chip.judged-correct, .scope-chip.judged-wrong');
+    const counter0 = panel.querySelector('.scope-progress-count');
+    if (counter0) counter0.textContent = judged0.length + ' / ' + all0.length;
+    return;
+  }
+  const ok = chip.dataset.correct === 'true';
+  chip.classList.add(ok ? 'judged-correct' : 'judged-wrong');
   if (fbBox && chip.dataset.fb) {
     fbBox.classList.remove('show', 'fb-correct', 'fb-wrong');
     fbBox.innerHTML = '<strong>' + (ok ? '○ 該当' : '✕ 該当しない') + '</strong> ─ ' + chip.dataset.fb;
@@ -5048,13 +5152,13 @@ function resetAllInteractions() {
   document.querySelectorAll('.case-expander.open').forEach(c => c.classList.remove('open'));
   // case inline quiz
   document.querySelectorAll('.case-inline-opt').forEach(o => {
-    o.classList.remove('correct', 'wrong');
+    o.classList.remove('correct', 'wrong', 'chosen');
     o.style.pointerEvents = 'auto';
   });
   document.querySelectorAll('.case-inline-fb.show').forEach(f => f.classList.remove('show'));
   // quiz
   document.querySelectorAll('.quiz-option').forEach(o => {
-    o.classList.remove('correct', 'incorrect');
+    o.classList.remove('correct', 'incorrect', 'chosen');
     o.style.pointerEvents = 'auto';
   });
   document.querySelectorAll('.quiz-feedback.show').forEach(f => f.classList.remove('show'));

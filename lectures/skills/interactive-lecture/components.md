@@ -365,22 +365,41 @@ function toggleCase(headEl) {
 ```
 
 ### JS
+
+トグル標準準拠(再タップで初期状態に戻す / 別選択肢タップで前回をリセット)。`chosen` クラスでユーザー選択を追跡し、自動付与の `correct`(不正解時の正答ハイライト)と区別する。
+
 ```javascript
 function answerQuiz(el, isCorrect) {
   const options = el.parentElement.querySelectorAll('.quiz-option');
-  options.forEach(o => { o.style.pointerEvents = 'none'; });
+  const fb = el.closest('.quiz-container').querySelector('.quiz-feedback');
+  // 同じ選択肢を再タップ -> 初期状態へ
+  if (el.classList.contains('chosen')) {
+    options.forEach(o => o.classList.remove('correct', 'incorrect', 'chosen'));
+    if (fb) fb.classList.remove('show');
+    haptic(8);
+    return;
+  }
+  // 別の選択肢を選び直し -> 前回をリセットして新しい解答を反映
+  options.forEach(o => o.classList.remove('correct', 'incorrect', 'chosen'));
+  el.classList.add('chosen');
   if (isCorrect) {
     el.classList.add('correct');
+    haptic(20);
   } else {
     el.classList.add('incorrect');
     options.forEach(o => {
       if (o.onclick && o.onclick.toString().includes('true')) o.classList.add('correct');
     });
+    haptic([40, 30, 40]);
   }
-  const fb = el.closest('.quiz-container').querySelector('.quiz-feedback');
   if (fb) fb.classList.add('show');
 }
 ```
+
+**注意点**:
+- `pointerEvents = 'none'` は使わない(再タップで戻せなくなる)
+- `chosen` クラスはユーザーが実際にタップしたものだけ。不正解時に自動でハイライトされる正答(別の選択肢が `correct` になる)は `chosen` を持たない。これによりどれが「ユーザーの選択」かを後から再判定できる
+- `resetAllInteractions` 内で `quiz-option` から `chosen` も併せて除去する
 
 ---
 
@@ -456,15 +475,26 @@ function answerQuiz(el, isCorrect) {
 ```
 
 ### JS
+
+トグル標準準拠(再タップで判定を非表示に戻す)。
+
 ```javascript
 function revealPractice(item) {
   const verdict = item.querySelector('.practice-verdict');
+  // 再タップ -> 初期状態へ
+  if (item.classList.contains('revealed')) {
+    item.classList.remove('revealed', 'ok', 'ng');
+    verdict.textContent = '？';  // ← HTML の初期テキストに合わせる(半角'?'を使う場合は半角に)
+    return;
+  }
   const ok = verdict.dataset.ok === 'true';
   item.classList.add('revealed');
   item.classList.add(ok ? 'ok' : 'ng');
   verdict.textContent = ok ? '適切' : '不適切';
 }
 ```
+
+判定ラベルが `○`/`×` になる単元では、最後の行を `verdict.textContent = ok ? '○' : '×';` に変える。トグル off 時のテキストは HTML の初期値(`？` または `?`)と必ず揃える。
 
 ---
 
