@@ -1,6 +1,6 @@
 ---
 name: interactive-lecture
-description: 授業用インタラクティブHTMLスライドサイトを制作するときに使う skill。情報Ⅰ・情報数理入門などの単元解説を、単一HTMLファイルで投影と復習の両方に使える形で作る。紺・青系フォーマルなデザイン、クリック展開式の答え隠し、学習ノート対応、最新実例の取り込みを標準装備する。新しい単元 (例: 第3回 コンピュータの仕組み) を作る依頼、既存単元の修正、あるいは類似のインタラクティブ教材の作成を頼まれたときに、この skill を読み込んで使用する。
+description: 授業用インタラクティブHTMLスライドサイトを制作するときに使う skill。情報Ⅰ・情報数理入門などの単元解説を、単一HTMLファイルで投影と復習の両方に使える形で作る。紺・青系フォーマルなデザイン、クリック展開式の答え隠し、学習ノート対応、最新実例の取り込みに加え、**学習ノート全 POINT 項目に SVG アイコン(law-illust)とインタラクティブ図解(interactive-svg-node / comparison-visual / flow-diagram / tree-diagram)を必須で併設する** ビジュアル重視運用を標準装備する。新しい単元 (例: 第3回 コンピュータの仕組み) を作る依頼、既存単元の修正、あるいは類似のインタラクティブ教材の作成を頼まれたときに、この skill を読み込んで使用する。
 ---
 
 # interactive-lecture / 授業用インタラクティブHTMLスライドサイト制作 skill
@@ -99,14 +99,20 @@ CSS変数で統一管理する。スライド単位で色を変えない。
 
 ```css
 body { font-family: 'Noto Sans JP', sans-serif; }
-.slide-title, .title-main, .section-heading { font-family: 'Noto Serif JP', serif; }
+.slide-title, .title-main, .section-heading { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; }
 .eyebrow, .page-indicator { font-family: 'JetBrains Mono', monospace; }
+```
+
+`<head>` の Google Fonts link には Klee One を含める(macOS/iOS 以外で教科書体フォールバックが効くように):
+
+```html
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Noto+Serif+JP:wght@400;500;600;700;900&family=Noto+Sans+JP:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 ```
 
 #### 書体の使い分けルール
 
-- **Noto Serif JP(明朝)**:「見出し」「スライドタイトル」「定義用語名」「セクション大見出し」「実習の問題文」など、<strong>視線を止めて読む短い要素</strong> に限定。
-- **Noto Sans JP(ゴシック)**:本文、解説、事例の長文、タイムラインのセル本文、メニュー項目など、<strong>連続して読む全ての長文</strong>。連続文に明朝を使うとスマホ・低解像度投影で読みづらくなるため禁止。
+- **教科書体(游教科書体 横 → UD デジタル教科書体 → Klee One → Noto Serif JP の順でフォールバック)**:「見出し」「スライドタイトル」「定義用語名」「セクション大見出し」「実習の問題文」など、<strong>視線を止めて読む短い要素</strong> に限定。macOS/iOS は游教科書体 横、Windows 10+ は UD デジタル教科書体、Android その他は Klee One(Webフォント)、最終フォールバックが Noto Serif JP(明朝)。
+- **Noto Sans JP(ゴシック)**:本文、解説、事例の長文、タイムラインのセル本文、メニュー項目など、<strong>連続して読む全ての長文</strong>。連続文に教科書体・明朝を使うとスマホ・低解像度投影で読みづらくなるため禁止。
 - **JetBrains Mono**:ラベル・メタ情報・ページ番号・コード系の等幅表示専用。
 
 #### 標準フォントサイズ・太さ(2026年改訂・投影視認性基準)
@@ -278,6 +284,7 @@ function toggleFullscreen() {
 
 詳細コードは `components.md` に。
 
+### 基本パターン
 | パターン | 用途 | 答え隠し |
 |---|---|---|
 | 穴埋め(note-blank) | 学習ノートの空欄(①②③...) | クリックで正解表示 |
@@ -292,7 +299,31 @@ function toggleFullscreen() {
 | トグルタブ(filter-toggle) | 2つの概念の対比 | 切替式 + メリデメ展開 |
 | 逆転クイズカード(malware-grid) | 説明→用語を当てる | クリックで用語展開 |
 
+### ビジュアル必須パターン(2026-04 追加・lec06/lec07 標準)
+
+**学習ノートの全 POINT 項目には基本パターンに加えて、以下から最低 1 つを併設すること**(`lectures/CLAUDE.md` §4.9 参照)。
+
+| パターン | 用途 | 動作 |
+|---|---|---|
+| **law-illust**(18) | def-box 上部の SVG アイコン(法律・概念の象徴的なポンチ図) | 静的(視覚的補強用) |
+| **judgment-chip**(19) | 正解 chip と不正解 chip を混ぜた判定型 | タップ → ○✕ + 個別fb / 全判定後に総括 verdict / RESET 可 |
+| **interactive-svg-node**(20) | N 者関係の図(三角形・三方向保護など) | ノードタップ → 下部 info パネルに解説表示 |
+| **comparison-visual**(21) | 二項対比図(紙 vs 電磁的・黒 vs 白リスト など) | 静的 + 場合により判定 chip 連動 |
+| **flow-diagram**(22) | 処理の順序を可視化(ログイン・オプトイン・期間バー) | 各ステップタップ → 役割解説、または静的可視化 |
+| **tree-diagram**(23) | 階層・分類(マルウェア家系・法のピラミッド) | ノードタップ → 解説表示 |
+
 **各パターンは必ず `components.md` から該当コードをコピーして使う**。自己流で作り直さない。
+
+### SVG 文字サイズの最小ルール(2026-04 追加)
+
+law-illust など `viewBox="0 0 100 100"`(表示 92×92 px、モバイル 80×80 px)の SVG 内で:
+
+- **漢字 1 文字(円・盾の中)**:`font-size 11+`、`font-weight 900` 推奨
+- **英文ラベル**:`font-size 9+`(JetBrains Mono は字面が小さいので 10+ 推奨)
+- **数字バッジ**:`font-size 14+`(目立たせる)
+- **5px 以下は禁止**(モバイル表示で完全に潰れる)
+
+過去事故:CIA 盾の `font-size 7-8` 文字「読めない」と指摘され全面修正。容器の円・盾は文字サイズに合わせて余裕をもって設計する(円は r=9+、盾は幅 36+ など)。
 
 ---
 
@@ -399,9 +430,9 @@ function toggleFullscreen() {
 - **原因**: 判定後に `pointer-events: none` を付けていない
 - **対策**: `answerQuiz()` 内で全 option に `pointerEvents = 'none'`
 
-### 9.8 本文に明朝体を使うと読みづらい(特にスマホ)
-- **原因**: `font-family: 'Noto Serif JP'` を case-content や dm-cell-head のような連続読み要素に適用していた
-- **対策**: 明朝は見出し・用語名・問題文などの短い要素のみに限定。連続文はすべて Noto Sans に(3.2節 書体の使い分けルール参照)
+### 9.8 本文に教科書体・明朝体を使うと読みづらい(特にスマホ)
+- **原因**: 教科書体フォールバックチェーン(`'游教科書体 横', ..., 'Noto Serif JP', serif`)を case-content や dm-cell-head のような連続読み要素に適用していた
+- **対策**: 教科書体・明朝は見出し・用語名・問題文などの短い要素のみに限定。連続文はすべて Noto Sans に(3.2節 書体の使い分けルール参照)
 
 ### 9.9 語群(候補リスト)で正解が先に色付きで見えている
 - **原因**: 正解にうっかり赤・太字スタイルをインラインで付けて「ハイライト」にしてしまう
@@ -419,6 +450,28 @@ function toggleFullscreen() {
 - **原因**: `label.textContent = answers[target]` で全置換してしまう
 - **対策**: 複数語のラベル(例「政令・省令」)は書き換え時も全文を渡す。初期表示の `(2) · 省令` のような複合情報は書き換え対象外か、辞書に完全形を持たせる
 
+### 9.13 SVG 内の文字が小さくて読めない(law-illust 共通)
+- **原因**: `viewBox="0 0 100 100"` で表示が 92×92 px しかないのに、`font-size 6-8` で書いていた
+- **対策**: `font-size 9+`(漢字 1 文字は 11+ + `font-weight 900`)を最低基準に。容器(円・盾)も文字に合わせて十分大きく(円は r=9+、盾は幅 36+)。詳細は §5「SVG 文字サイズの最小ルール」
+- 過去事故:lec07 ① CIA 盾で `font-size 7-8`、ユーザーから「小さくて読めない」と指摘 → 全 law-illust を一斉修正
+
+### 9.14 判定型 chip(scope-chip)の意図が不明・反応に見えない
+- **原因**: 全 chip が `data-correct="true"` のみで、タップしても全て同じ色・同じ verdict が出るだけ。判定の感覚がない
+- **対策**:
+  - 各パネルに **正解 chip と不正解 chip を混ぜる**(モラル視点パネルなら、モラル正解 + シティズンシップ独自=不正解の引っかけ)
+  - `judgeScope(chip)` で `data-correct` を読み、`judged-correct`(○ 緑)/`judged-wrong`(✕ 赤)を分岐
+  - 個別 fb はその chip 専用テキストを `data-fb` から表示
+  - 全 chip 判定後にようやく総括 verdict を出す
+  - **RESET ボタンで再挑戦可**(タップ後フリーズ放置にしない)
+- components.md `19. judgment-chip` 参照
+
+### 9.15 タップ反応のフィードバックが弱い
+- **原因**: クラスを add するだけで、視覚的変化が地味/無音
+- **対策**:
+  - `:hover` だけでなく `:active`、または `transform: translateY(-2px) + box-shadow` でタップ感を出す
+  - 同じ要素を再タップ時はアニメ再再生(`void el.offsetWidth; el.classList.add('show')` で再トリガ)
+  - info パネル系は `animation: fadeIn 0.3s` を付ける
+
 ---
 
 ## 10. 納品前の最終確認
@@ -435,7 +488,7 @@ function toggleFullscreen() {
 - [ ] MENU ドロワーが開閉、目次から任意スライドに飛べる
 - [ ] インタラクション全リセットが機能する(単元固有要素は `onResetHook` に登録)
 - [ ] 幅 1100px / 720px / 380px / landscape phone すべてで崩れない
-- [ ] 本文・連続文にNoto Serif JP(明朝)を使っていない
+- [ ] 本文・連続文に教科書体フォールバックチェーン(`'游教科書体 横', ..., 'Noto Serif JP', serif`)を使っていない(短い見出しのみ教科書体)
 - [ ] NG表現なし
 - [ ] 最新事例が含まれている(該当する場合)
 - [ ] examples/ に凍結コピー
@@ -448,17 +501,20 @@ function toggleFullscreen() {
 | ファイル | 内容 |
 |---|---|
 | `template.html` | 空の骨組みHTML(メニュー・リセット・スマホ対応を含む完成済み基盤。コピーして articles/ に配置) |
-| `components.md` | 再利用可能パーツカタログ(標準+2026年追加分) |
-| `examples/06-information-law.html` | **最新リファレンス**(情報に関する法規)。メニュー・リセット・スマホ対応・リッチインタラクション6種の完全実装例 |
-| `examples/07-information-security.html` | 旧リファレンス(情報セキュリティ)。レイアウト確認用 |
+| `components.md` | 再利用可能パーツカタログ(標準 17 種 + 2026-04 追加 6 種) |
+| `examples/06-information-law.html` | **最新リファレンス**(情報に関する法規)。メニュー・リセット・スマホ対応・リッチインタラクション + ビジュアル必須6パターン全実装 |
+| `examples/07-information-security.html` | **同等リファレンス**(情報セキュリティ)。CIA三角・ログインフロー・マルウェア家系・フィルタ比較を実装 |
 
-新規単元を作るときは必ず `examples/06-information-law.html` を開いて、以下の実装を参照すること:
+新規単元を作るときは必ず `examples/06-information-law.html`(または `07-information-security.html`)を開いて、以下の実装を参照すること:
 
+- 学習ノート POINT 項目ごとの **law-illust(SVG アイコン)+ インタラクティブ図解** の併設パターン
 - インタラクション多数(穴埋め・分類ゲーム・タイムライン比較・シミュレーター)と `onResetHook` の連動
 - スマホ時のタイムライン縦積み表示
-- SVGの選択ハイライト(pym-tier.selected の金枠+グロー)
-- フィッシング風スマホUIのCSS専用実装
+- SVGの選択ハイライト(`.pf-node.selected` / `.cia-vertex.selected` の金枠)
+- 対話型 SVG の info パネル(`#pfInfo` / `#ciaInfo` / `#malwareInfo` 等)+ JS の Map 構造
+- フィッシング風スマホUIのCSS専用実装(07)
 - case-expander 内部に quiz を連動させるパターン
 - 「県立聖女学院」のような覚え方カード(暗記術)
+- judgment-chip の正解/不正解混在 + RESET ボタン
 
 この単元で確立された新パターンは、今後の単元にも積極的に転用する。
