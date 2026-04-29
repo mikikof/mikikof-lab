@@ -23,7 +23,7 @@
   --white: #FFFFFF;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 html, body {
   height: 100%;
@@ -32,6 +32,15 @@ html, body {
   background: var(--navy-darkest);
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
+  /* ダブルタップ ズームを無効化(縦スクロール・ピンチズームは維持) */
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+/* テキスト要素のみ選択可(コピペ用) */
+.slide p, .slide li, .case-content, .practice-text, .def-desc, .quiz-question, .quiz-feedback, .ch-body p, .answer-text {
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 .slide-container {
@@ -707,6 +716,46 @@ html, body {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============ SWIPE HINT (mobile, on first-load) ============ */
+.swipe-hint {
+  position: fixed;
+  bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(15, 40, 71, 0.92);
+  color: white;
+  padding: 10px 22px;
+  border-radius: 24px;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.swipe-hint::before, .swipe-hint::after {
+  content: '';
+  width: 14px; height: 14px;
+  border-top: 2px solid var(--accent-gold);
+  border-right: 2px solid var(--accent-gold);
+}
+.swipe-hint::before { transform: rotate(-135deg); }
+.swipe-hint::after { transform: rotate(45deg); }
+.swipe-hint.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  animation: swipeHintPulse 1.6s ease-in-out 1 0.4s;
+}
+@keyframes swipeHintPulse {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-4px); }
 }
 
 /* ============ PASSWORD CALCULATOR ============ */
@@ -1700,21 +1749,43 @@ input[type="range"]::-moz-range-thumb {
   .progress { top: 40px; }
 
   .bottombar {
-    height: calc(44px + env(safe-area-inset-bottom, 0px));
-    padding: 0 12px env(safe-area-inset-bottom, 0px);
+    height: calc(52px + env(safe-area-inset-bottom, 0px));
+    padding: 0 14px env(safe-area-inset-bottom, 0px);
     font-size: 11px;
   }
-  .bottombar-nav { gap: 8px; }
-  .nav-btn { width: 30px; height: 30px; font-size: 13px; }
+  .bottombar-nav { gap: 10px; }
+  .nav-btn { width: 40px; height: 40px; font-size: 16px; }
   .slide-title-small { display: none; }
   .keyboard-hint { display: none; }
-  .page-indicator { font-size: 11px; margin-right: 0; margin-left: auto; }
+  .page-indicator { font-size: 12px; margin-right: 0; margin-left: auto; }
 
   .slide {
     top: 43px;
-    bottom: calc(44px + env(safe-area-inset-bottom, 0px));
-    padding: 4vw 5vw 40px;
-    touch-action: pan-y;
+    bottom: calc(52px + env(safe-area-inset-bottom, 0px));
+    padding: 4vw 5vw 64px;
+    touch-action: pan-y pinch-zoom;
+  }
+  /* タップ視覚反応 ─ モバイル */
+  .nav-btn:active,
+  .menu-toggle:active,
+  .quiz-option:active:not(.correct):not(.incorrect),
+  .practice-item:active:not(.revealed),
+  .answer-row:active:not(.revealed),
+  .case-head:active,
+  .scope-chip:active:not(.judged-correct):not(.judged-wrong),
+  .access-card:active,
+  .cyber-role:active,
+  .records-ex:active:not(.judged-paper):not(.judged-electronic),
+  .pf-node:active,
+  .ys-node:active,
+  .cia-vertex:active,
+  .login-step:active,
+  .malware-leaf:active,
+  .malware-card:active,
+  .filter-toggle button:active,
+  .rights-pole:active {
+    transform: scale(0.96);
+    transition: transform 0.08s;
   }
 
   /* title / section divider */
@@ -2891,6 +2962,29 @@ input[type="range"]::-moz-range-thumb {
 
 <script>
 // ══════════════════════════════════════════════════════════
+// MOBILE UX HELPERS (haptic + double-tap zoom prevention)
+// ══════════════════════════════════════════════════════════
+const isMobile = () => window.innerWidth <= 720;
+function haptic(ms) {
+  if (typeof ms !== 'number') ms = 8;
+  if (navigator.vibrate) { try { navigator.vibrate(ms); } catch (_) {} }
+}
+
+// iOS Safari は touch-action: manipulation だけだと不十分なため、
+// 300ms 以内の連続 touchend を抑制してダブルタップ ズームを防ぐ
+let lastTouchEndAt = 0;
+document.addEventListener('touchend', (e) => {
+  const now = Date.now();
+  if (now - lastTouchEndAt <= 320) {
+    // 入力フォーカスやリンクのデフォルト挙動は妨げない
+    const t = e.target;
+    if (t && t.tagName && /^(INPUT|TEXTAREA|SELECT|A)$/.test(t.tagName)) return;
+    e.preventDefault();
+  }
+  lastTouchEndAt = now;
+}, { passive: false });
+
+// ══════════════════════════════════════════════════════════
 // NAVIGATION
 // ══════════════════════════════════════════════════════════
 const slides = document.querySelectorAll('.slide');
@@ -2899,6 +2993,7 @@ let currentSlide = 0;
 
 function goToSlide(n) {
   if (n < 0 || n >= totalSlides) return;
+  haptic(8);
   slides[currentSlide].classList.remove('active');
   currentSlide = n;
   slides[currentSlide].classList.add('active');
@@ -3006,11 +3101,13 @@ function answerQuiz(el, isCorrect) {
   options.forEach(o => { o.style.pointerEvents = 'none'; });
   if (isCorrect) {
     el.classList.add('correct');
+    haptic(20);
   } else {
     el.classList.add('incorrect');
     options.forEach(o => {
       if (o.onclick && o.onclick.toString().includes('true')) o.classList.add('correct');
     });
+    haptic([40, 30, 40]);
   }
   const fb = el.closest('.quiz-container').querySelector('.quiz-feedback');
   if (fb) fb.classList.add('show');
@@ -3322,6 +3419,7 @@ buildMenu();
 // RESET ALL INTERACTIONS
 // ══════════════════════════════════════════════════════════
 function resetAllInteractions() {
+  haptic([15, 40, 15]);
   if (!confirm('このページのすべてのインタラクションを初期状態に戻します。よろしいですか?')) return;
 
   document.querySelectorAll('.note-blank.reveal').forEach(b => {
@@ -3381,6 +3479,24 @@ function resetAllInteractions() {
   closeMenu();
   goToSlide(0);
 }
+
+// ══════════════════════════════════════════════════════════
+// SWIPE HINT (mobile only, first-load)
+// ══════════════════════════════════════════════════════════
+window.addEventListener('load', () => {
+  if (!isMobile()) return;
+  if (window._swipeHintShown) return;
+  window._swipeHintShown = true;
+  setTimeout(() => {
+    const hint = document.createElement('div');
+    hint.className = 'swipe-hint';
+    hint.textContent = 'スワイプで送る';
+    document.body.appendChild(hint);
+    requestAnimationFrame(() => hint.classList.add('show'));
+    setTimeout(() => hint.classList.remove('show'), 3200);
+    setTimeout(() => hint.remove(), 3700);
+  }, 900);
+});
 
 </script>
 </body>
