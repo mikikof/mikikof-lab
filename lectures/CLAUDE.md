@@ -268,6 +268,15 @@ lectures/
 - [ ] `<meta viewport-fit=cover>` が入っている
 - [ ] bottombar/slide が `env(safe-area-inset-bottom)` で iPhone ホームインジケータを避けている
 
+### モバイル UX 強化(SKILL.md §12 標準パッケージ)
+- [ ] **下端の余白**:`.slide padding-bottom: 64px` + `bottom: calc(52px + safe-area)` で最終行が隠れない(safe-area 非対応端末も含めて確認)
+- [ ] **ダブルタップ ズーム抑制**:`body { touch-action: manipulation }` + JS の 320ms 連続 touchend prevent を実装
+- [ ] **触覚フィードバック**:`navigator.vibrate` で送り 8ms / 正解 20ms / 不正解 [40,30,40] / リセット [15,40,15]
+- [ ] **タップ視覚反応**:`button:active / [onclick]:active { transform: scale(0.96) }` を mobile @media に
+- [ ] **nav-btn 40×40 px**(モバイル)
+- [ ] **スワイプ ヒント**:初回モバイル ロード時に 3.2 秒だけ表示
+- [ ] **テキスト選択**:全体 `user-select: none`、本文系のみ `user-select: text`
+
 ### リリース
 - [ ] `examples/` に凍結コピーを配置
 - [ ] `lectures/index.html` にエントリ追加

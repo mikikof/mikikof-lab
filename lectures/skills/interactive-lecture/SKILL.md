@@ -472,6 +472,21 @@ law-illust など `viewBox="0 0 100 100"`(表示 92×92 px、モバイル 80×80
   - 同じ要素を再タップ時はアニメ再再生(`void el.offsetWidth; el.classList.add('show')` で再トリガ)
   - info パネル系は `animation: fadeIn 0.3s` を付ける
 
+### 9.16 スマホで下端が切れる/ダブルタップでズーム/タップ感が無い(2026-04 標準パッケージで対応)
+- **症状**:
+  - スマホによっては最後の行が bottombar/ホームインジケータに隠れる
+  - 連続タップで意図せずダブルタップ ズームが効いてしまう
+  - タップしても押した感がなく反応が分かりにくい
+- **対策パッケージ(template.html / 全 lecture HTML に標準装備、§12 参照)**:
+  - bottombar 高さを 44 → 52px、`.slide` の `bottom: calc(52px + safe-area-inset-bottom)` + `padding-bottom: 64px`(safe-area 非対応端末でも余裕)
+  - `body { touch-action: manipulation }`(縦スクロール+ピンチ維持、ダブルタップ ズーム抑制)+ `* { -webkit-tap-highlight-color: transparent }`
+  - iOS Safari 用に JS で 320ms 以内の連続 touchend を `preventDefault`(input/select/a/textarea は除外)
+  - `navigator.vibrate` の触覚フィードバック(送り 8ms / 正解 20ms / 不正解 [40,30,40] / リセット [15,40,15])
+  - `nav-btn` モバイル 30×30 → 40×40 px(Apple HIG の最低 44px に近づける)
+  - 主要タップ要素に `:active { transform: scale(0.96) }`(0.08s で押した感)
+  - 初回モバイル ロード時に「スワイプで送る」フローティング ヒント(3.2 秒で自動消滅)
+  - 全体 `user-select: none`、本文 `p / li / .case-content / .practice-text / .def-desc / .quiz-question / .quiz-feedback / .ch-body p / .answer-text` のみ選択可
+
 ---
 
 ## 10. 納品前の最終確認
@@ -516,5 +531,44 @@ law-illust など `viewBox="0 0 100 100"`(表示 92×92 px、モバイル 80×80
 - case-expander 内部に quiz を連動させるパターン
 - 「県立聖女学院」のような覚え方カード(暗記術)
 - judgment-chip の正解/不正解混在 + RESET ボタン
+- §12 のモバイル UX 強化パッケージ(haptic / dblclick prevent / :active scale / swipe hint)
+
+---
+
+## 12. モバイル UX 強化パッケージ(2026-04 標準・全 lecture 共通)
+
+スマホでの「下端切れ・ダブルタップ ズーム・タップ感の弱さ」を解消する標準パッケージ。
+**template.html に組み込み済み、新規単元はそのまま継承される**。既存単元には perl/Python で一括投入(本パッケージの全 lec への展開コミットを参照)。
+
+### 12.1 含まれる対策
+
+| 対策 | 実装場所 | 効果 |
+|---|---|---|
+| bottombar 44 → 52px / `.slide bottom: calc(52px + safe-area)` / padding-bottom 40 → 64px | CSS @media (≤720px) | 下端コンテンツが bar/ホームインジケータに隠れない。safe-area 非対応端末でも安全マージン |
+| `* { -webkit-tap-highlight-color: transparent }` | CSS グローバル | iOS の青タップハイライト除去 |
+| `body { touch-action: manipulation }` + `.slide { touch-action: pan-y pinch-zoom }` | CSS | ダブルタップ ズーム抑制(縦スクロール+ピンチ維持) |
+| 320ms 以内の連続 touchend を `preventDefault`(input 等は除外) | JS グローバル | iOS Safari でも確実にダブルタップ無効化 |
+| `navigator.vibrate` 触覚フィードバック(送り 8ms / 正解 20ms / 不正解 [40,30,40] / リセット [15,40,15]) | JS | Android で押した感 |
+| `nav-btn` モバイル 30 → 40px | CSS @media | タップ精度向上(Apple HIG 44px に近づく) |
+| `:active { transform: scale(0.96) }` (button / [onclick] / .nav-btn / .menu-toggle) | CSS @media | タップ視覚反応 |
+| `.swipe-hint` フローティング バッジ(初回モバイル ロード時のみ・3.2秒) | CSS + JS | 初見ユーザーへのスワイプ操作の暗示 |
+| 全体 `user-select: none` + 本文系のみ `user-select: text` | CSS | 誤選択防止 + 必要箇所のコピペは可能 |
+
+### 12.2 標準コードの場所
+
+- CSS の主要部分:`* { ... -webkit-tap-highlight-color: transparent; }` / `html, body { ... touch-action: manipulation; user-select: none; }` / `@media (max-width: 720px)` ブロック内の `.bottombar` / `.slide` / `.nav-btn` / `:active` / `.swipe-hint`
+- JS の主要部分:`<script>` 直後に `isMobile()` / `haptic(ms)` / `touchend dblclick prevent`、`goToSlide` 内に `haptic(8)`、`answerQuiz` の正誤分岐に `haptic`、`resetAllInteractions` 冒頭に `haptic`、`</script>` 直前に swipe-hint init
+
+具体的な実装は `template.html` の対応箇所、または `examples/07-information-security.html` を参照。
+
+### 12.3 新規 lecture 制作時の確認
+
+- `template.html` をコピーすれば 12.1 の対策はすべて入る
+- 単元固有のコンポーネント(scope-chip 等)を追加した場合、`onclick` を持つ要素なら自動で `:active scale` が効く(汎用 CSS のため)
+- `answerQuiz` 以外の判定系関数を新規に追加した場合は、関数内で `haptic(20)` / `haptic([40,30,40])` を呼ぶこと
+
+### 12.4 既存 lecture に後付けする場合
+
+`/tmp/mobile_ux_patch.py`(または同等の共通スクリプト)を流す。CSS は文字列が完全一致するなら一括置換可能。JS は `<script>` 直後と関数内で個別 Edit が必要(各 lec によりコメント体裁が違うため)。
 
 この単元で確立された新パターンは、今後の単元にも積極的に転用する。
