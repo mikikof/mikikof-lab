@@ -531,6 +531,43 @@ law-illust など `viewBox="0 0 100 100"`(表示 92×92 px、モバイル 80×80
 - **canonical 参照**: `articles/03-problem-solving/index.html` の 5 つの law-illust SVG(山+ギャップ / 階段 / 天秤 / 漏斗 / 逆漏斗)。同単元のメイン天秤 (slide 6) と演繹/帰納 cmp-svg (slide 15) も同じ流儀
 - 過去事故: lec03 初版で ②階段 SVG「課題=各段の踏み石」白字 on 白背景で消失、①山 SVG「理想/現状」テキスト同化、⑤逆漏斗「個別事実」白字が透過 polygon に被って読めず、`law-illust-tag` の `INDUCTIVE · SPECIFIC→GENERA…` 切れ → ユーザー指摘で全 5 SVG 再設計
 
+### 9.18 単元内 SVG が「それぞれ違う作家が描いた」ようにバラバラに見える(2026-04 lec02 制作で発覚)
+
+- **症状**: ユーザーから「全体的にチープ」「フリー素材でいいのでもっと **統一感** のあるおしゃれでわかりやすいイラストが良い」とのフィードバック。9.17 を守って各 SVG 単体は破綻していなくても、**SVG 同士の design language が揃っていない** と単元全体が素人くさく見える
+- **原因**:
+  - SVG ごとに独自の色・グラデ ID・形状言語(角を尖らせるか / 丸めるか、線か面か)を採用
+  - 主役要素の色が SVG ごとに変わる(slide A は青系、slide B は赤系、slide C は金系...)
+  - icon の概念表現が個別最適(円・矩形・自由曲線のミックス)で、見比べたときに「家族」に見えない
+- **対策(2026-04 lec02 で確立した design system)**:
+  - **共通の `<defs>` セットを全 SVG で使い回す**: 各 SVG の `<defs>` 内で同じ ID 名(または lec 単位で一意な接頭辞)で定義
+    ```svg
+    <linearGradient id="icoNavy" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#5d8eb3"/>
+      <stop offset="100%" stop-color="#0F2847"/>
+    </linearGradient>
+    <linearGradient id="icoGold" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f4d995"/>
+      <stop offset="100%" stop-color="#8a6d1f"/>
+    </linearGradient>
+    <radialGradient id="icoBg" cx="50%" cy="50%" r="65%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F3F6FB"/>
+    </radialGradient>
+    <filter id="icoSh"><feGaussianBlur in="SourceAlpha" stdDeviation="0.7"/><feOffset dx="0.4" dy="1.2"/><feComponentTransfer><feFuncA type="linear" slope="0.4"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    ```
+  - **役割を色で固定**:
+    - **navy グラデ** = 主役・概念の本体
+    - **gold グラデ / 単色** = アクセント・正解・「中心の重要要素」
+    - **red グラデ / 単色** = 対比・警告・「逆側」
+    - **navy-pale 単色 / opacity 0.3-0.5** = 補助線・connection
+    - 中間色を作りたくなったら opacity で表現する
+  - **背景は radialGradient で統一**(`#FFFFFF` 中心 → `#F3F6FB` 周辺)。flat な `#F3F6FB` よりわずかな立体感が出る
+  - **シルエット重視**: 「目を細めて見ても何か分かる」レベルのアウトラインを最初に決める。詳細は後から
+  - **同じ単元の全 SVG を並べて見比べる**: 「同じデザイナーが描いた」と感じるか?感じなければ揃え直す
+- **フリー素材という選択肢**: 自作で揃えるのが難しい場合、確立された **オープンソース アイコン ライブラリ** から SVG path を借りるのが筋。**§13 アイコン ライブラリ ガイド** 参照
+- **canonical 参照**: `articles/02-society-and-it/index.html` の 9 法則 SVG(SNS / IoT / ビッグデータ / サイバー犯罪 / 情報格差 / AI / 自律他律 / フレーム問題 / 生成AI)。すべて同じ navy + gold + 部分 red の三色制で統一されている
+- 過去事故: lec02 初版で 9 SVG 各自が異なる color scheme(SNS=赤・IoT=赤箱・3V=円柱に文字・AI=脳の輪郭・フレーム=多重円)を採用。ユーザー指摘で全 9 SVG を design system で再設計
+
 ---
 
 ## 10. 納品前の最終確認
@@ -564,6 +601,7 @@ law-illust など `viewBox="0 0 100 100"`(表示 92×92 px、モバイル 80×80
 | `examples/06-information-law.html` | **最新リファレンス**(情報に関する法規)。メニュー・リセット・スマホ対応・リッチインタラクション + ビジュアル必須6パターン全実装 |
 | `examples/07-information-security.html` | **同等リファレンス**(情報セキュリティ)。CIA三角・ログインフロー・マルウェア家系・フィルタ比較を実装 |
 | `articles/03-problem-solving/index.html` | **2026-04-30 SVG ビジュアル標準のリファレンス**(問題の発見と解決)。5 つの law-illust 全てに gradient + drop-shadow + 上端ハイライトを実装、テキストは SVG 外(law-illust-tag)に逃がし、main 天秤と演繹/帰納 cmp-svg にも同じ流儀。`§9.17` 参照 |
+| `articles/02-society-and-it/index.html` | **2026-04-30 SVG design system 統一のリファレンス**(情報技術による社会の変化)。9 法則 SVG(SNS / IoT / ビッグデータ / サイバー犯罪 / 情報格差 / AI / 自律他律 / フレーム問題 / 生成AI)が共通の `<defs>`(icoNavy / icoGold / icoBg / icoSh)で完全統一。色役割固定(navy=主役、gold=アクセント、red=対比)。`§9.18` `§13` 参照。さらに IoT スライドには **センサ⇄アクチュエータの 4 段階閉ループ infographic**(560×230)+ 12 種の具体例カードを配置、本格的なインフォグラフィックの参考実装 |
 
 新規単元を作るときは必ず `examples/06-information-law.html`(または `07-information-security.html`)を開いて、以下の実装を参照すること:
 
@@ -617,3 +655,61 @@ law-illust など `viewBox="0 0 100 100"`(表示 92×92 px、モバイル 80×80
 `/tmp/mobile_ux_patch.py`(または同等の共通スクリプト)を流す。CSS は文字列が完全一致するなら一括置換可能。JS は `<script>` 直後と関数内で個別 Edit が必要(各 lec によりコメント体裁が違うため)。
 
 この単元で確立された新パターンは、今後の単元にも積極的に転用する。
+
+---
+
+## 13. アイコン・イラスト ライブラリ ガイド(2026-04 lec02 制作で確立)
+
+「自作 SVG が単元内でバラバラに見える」問題(§9.18)を解決する選択肢として、**確立された OSS アイコン ライブラリ** を活用する。
+
+### 13.1 採用基準
+
+- **ライセンス**: MIT / CC0 / Apache 2.0 など、商用・教育用途で使えるもの
+- **デザインの一貫性**: 同じライブラリ内の任意の 2 アイコンを並べて、明らかに「同じ家族」と感じられる
+- **網羅性**: 教材で使う概念(SNS / AI / IoT / 法律 / セキュリティ / 文章構造 等)が一通り揃う
+- **SVG エクスポート可**: コピペで HTML に埋め込める
+
+### 13.2 推奨ライブラリ
+
+| ライブラリ | 特徴 | URL | 推奨用途 |
+|---|---|---|---|
+| **Lucide** | clean line-art、stroke-width 統一、24×24 viewBox、MIT | <https://lucide.dev/> | 抽象概念の標準アイコン(全般) |
+| **Phosphor** | 6 weight(thin/light/regular/bold/fill/duotone)、MIT | <https://phosphoricons.com/> | デュオトーンが教材に映える。法学・統計・心理など |
+| **Heroicons** | Tailwind 製、outline / solid 2 種、MIT | <https://heroicons.com/> | UI 寄りのシンプルさ重視 |
+| **Tabler Icons** | 4000+ 個、line-art、MIT | <https://tabler-icons.io/> | 専門用語まで揃う豊富さ |
+| **Material Symbols** | Google 製、3 fill レベル、Apache 2.0 | <https://fonts.google.com/icons> | 共通テスト系の馴染みやすさ |
+
+### 13.3 単元内の運用ルール
+
+- **1 単元 = 1 ライブラリ** が原則。混ぜるとデザインがバラつく
+- 例外: 自作 SVG とライブラリ icon を併用するときは、**自作側を library 側のスタイルに寄せる**(同じ stroke-width、同じ角丸半径、同じ余白)
+- アイコンの色は library のデフォルト(currentColor)に依存させず、**`fill="url(#icoNavy)"` 等で本リポの design tokens に揃える**(§9.18 参照)
+
+### 13.4 取り込み方
+
+1. ライブラリの web で対象アイコンを開く
+2. 「Copy SVG」または `viewBox` と `path d="..."` をコピー
+3. `viewBox="0 0 100 100"`(本リポ標準)に合わせて scaling
+4. `fill` / `stroke` を本リポの design token(`url(#icoNavy)`, `#C9A961` 等)に置換
+5. `<filter>` で drop-shadow を当てる(§9.17)
+
+### 13.5 自作で揃える場合
+
+ライブラリを使わず自作する場合も、**§9.18 の design system** を厳守:
+
+- 共通 `<defs>`(navy / gold / red の linearGradient + radialGradient bg + filter shadow)
+- 役割を色で固定(navy = 主役 / gold = アクセント / red = 対比)
+- 同じ stroke-width(line-art の場合は 2-3、面の場合は filter shadow で代替)
+- 同じ「枠の使い方」(viewBox 余白の取り方)
+
+canonical 参照: `articles/02-society-and-it/index.html` の 9 法則 SVG(自作だが design system で統一)。
+
+### 13.6 アイコンが「カバーしきれない」概念への対処
+
+学習指導要領の専門概念(「フレーム問題」「Society 5.0」「PPDAC サイクル」など)は、汎用ライブラリにアイコンが無い。その場合は:
+
+1. ライブラリのアイコンを **組み合わせる**(例: Lucide の `cpu` + `infinity` を重ねて「フレーム問題」)
+2. ライブラリのアイコンを **下絵**として、本リポの design tokens で補修
+3. 完全自作する場合も、ライブラリ風の line-art 言語(stroke 2-3、丸めた角、ミニマル)に揃える
+
+「全部自作するのがしんどい」「ライブラリだけだと足りない」のあいだで、**柔軟に組み合わせて統一感を保つ** のが現実的なスイートスポット。

@@ -145,11 +145,18 @@ lectures/
 - 5px 以下の文字は禁止(モバイル 80×80 px 表示で完全に潰れる)
 - 過去事故:lec07 ① CIA 盾の `font-size 7-8` 文字が「小さすぎて読めない」と指摘された
 
-**SVG ビジュアル品質ルール(2026-04 lec03 で確立):**
-- 法則 SVG は **flat polygon + 直接 text** だと即チープ化する。`<defs>` に **`linearGradient` + drop-shadow filter** を仕込み、上端 2-3px のホワイトハイライトで立体感を出す
+**SVG ビジュアル品質ルール(2026-04 lec03 / lec02 で確立):**
+- 法則 SVG は **flat polygon + 直接 text** だと即チープ化する。`<defs>` に **`linearGradient` + drop-shadow filter** を仕込み、上端 2-3px のホワイトハイライトで立体感を出す(SKILL.md §9.17)
 - テキストは可能な限り SVG 外(`law-illust-tag` / `def-desc`)に逃がす。SVG 内のテキストは「GAP」「?」のような **超短いシンボル** に限定し、必ず塗りのある rect / circle / polygon の上に置く(canvas 余白に置くと白に同化)
 - `law-illust-tag` は **1 単語**(`DEDUCTIVE` / `TRADE-OFF` 程度)に短縮。letter-spacing 0.2em と相まって 92px 幅で切れる
-- 詳細は `skills/interactive-lecture/SKILL.md §9.17` 参照。canonical 参照は `articles/03-problem-solving/`
+
+**SVG 統一感ルール(2026-04 lec02 で確立 / SKILL.md §9.18 §13):**
+- 単元内の **すべての SVG は同じ design system** で統一。バラバラだと「素人くさい」見え方になる
+- 共通の `<defs>`: `icoNavy`(linearGradient 5d8eb3→0F2847)/ `icoGold`(linearGradient f4d995→8a6d1f)/ `icoBg`(radialGradient 白→F3F6FB)/ `icoSh`(drop-shadow filter)を全 SVG で使い回す
+- **役割を色で固定**: navy グラデ = 主役、gold グラデ/単色 = アクセント・正解、red グラデ/単色 = 対比・警告、navy-pale + opacity = 補助線
+- シルエット重視。「目を細めて見ても何か分かる」レベルのアウトラインを最初に決めてから詳細を足す
+- 自作で揃えるのが難しい場合、**Lucide / Phosphor / Heroicons / Tabler / Material Symbols** などの **OSS アイコン ライブラリ**(MIT/CC0/Apache)から SVG path を借りる。**1 単元 = 1 ライブラリ** が原則(混ぜない)。詳細は SKILL.md §13
+- 単元の全 SVG を並べて見比べる:「同じデザイナーが描いた」と感じなければ揃え直す。canonical 参照は `articles/02-society-and-it/`(9 法則 SVG が design system で統一)
 
 ### 4.10 概念定義の断定を避ける(2026-04 lec03 codex audit より)
 
@@ -274,6 +281,9 @@ lectures/
 - [ ] **判定型 chip(judgment-chip)** を使う場合、正解 chip と不正解 chip が混在している(全部正解の見せかけ判定にしない)
 - [ ] **SVG 内の文字は 9px 以上**(viewBox 100×100、表示 92×92 px の場合)。漢字 1 文字は 11px 以上 + `font-weight 900`
 - [ ] **対話型 SVG ノード**(CIA 三角・PF 三角等)は、すべて info パネルへ解説を出す動作を実装。初期メッセージ + リセット時の復帰も実装
+- [ ] **単元内の全 SVG が design system で統一**(SKILL.md §9.18 / §13)。共通 `<defs>`(navy / gold / bg / shadow)を使い回し、色の役割を固定(navy=主役、gold=アクセント、red=対比)。「同じデザイナーが描いた」と感じる
+- [ ] **平面ポリゴン + 白字 のチープ化を回避**(SKILL.md §9.17)。gradient + drop-shadow + 上端ハイライトで立体感、テキストは SVG 外(`law-illust-tag` / `def-desc`)に逃がす
+- [ ] **OSS アイコン ライブラリ活用**(該当する場合):Lucide / Phosphor / Heroicons / Tabler / Material Symbols から SVG を借りる場合は **1 単元 = 1 ライブラリ**、ライセンス(MIT/CC0/Apache)を確認
 
 ### デザイン・書体
 - [ ] 紺・青系のデザイントークンが守られている
