@@ -514,6 +514,23 @@ law-illust など `viewBox="0 0 100 100"`(表示 92×92 px、モバイル 80×80
   - 初回モバイル ロード時に「スワイプで送る」フローティング ヒント(3.2 秒で自動消滅)
   - 全体 `user-select: none`、本文 `p / li / .case-content / .practice-text / .def-desc / .quiz-question / .quiz-feedback / .ch-body p / .answer-text` のみ選択可
 
+### 9.17 法則 SVG が「平面ポリゴン + 白字テキスト」でチープに見える(2026-04 lec03 制作で発覚)
+
+- **症状**: ユーザーから「文字が背景に同化して読めない」「全体的にビジュアル面がチープ」とのフィードバック。SVG 外周(viewBox 端の余白部分)に置いた `fill="white"` テキストが SVG 描画面の白に被って消える、opacity 0.4 等の透過 polygon に被るとさらに悲惨
+- **原因**:
+  - `<defs>` を使わず flat color の polygon + 直接 text を並べていた
+  - text を SVG 外周(色のない余白部分)に置いて canvas の白と同化させていた
+  - 透過 polygon に text を被せて視認性を捨てていた
+- **対策(2026-04 lec03 で確立した SVG ビジュアル標準)**:
+  - **`<defs>` で `<linearGradient>` を 2〜3 種類定義**(top-light → bottom-dark のグラデーション)。主要な polygon / rect は gradient 塗り
+  - **`<filter>` で drop-shadow を仕込む**(`feGaussianBlur stdDeviation="0.7-2.2"` + `feOffset dx="0.5" dy="1.3"` + `feComponentTransfer slope="0.35-0.45"`)。主要素に `filter="url(#sh)"` を当てる
+  - **上端 2-3px のホワイトハイライト線**(`fill="#FFFFFF" opacity="0.25-0.35"`)で立体感
+  - **テキストは可能な限り SVG 外に逃がす**: 説明は `law-illust-tag`(SVG 直下のキャプション)と `def-desc`(def-box 本文)で。SVG 内テキストは「GAP」「?」のような **超短いシンボル** に限定
+  - SVG 内テキストを置く場合、**必ず塗りのある rect / circle / polygon の上**に置く(canvas 余白に置かない)
+  - `law-illust-tag` の文字列は **1 単語**(`DEDUCTIVE` / `TRADE-OFF` / `IDEAL ⇄ ACTUAL` 程度)に短縮。`SPECIFIC→GENERAL` のような 2 単語以上は letter-spacing 0.2em と相まって 92px 幅で切れる
+- **canonical 参照**: `articles/03-problem-solving/index.html` の 5 つの law-illust SVG(山+ギャップ / 階段 / 天秤 / 漏斗 / 逆漏斗)。同単元のメイン天秤 (slide 6) と演繹/帰納 cmp-svg (slide 15) も同じ流儀
+- 過去事故: lec03 初版で ②階段 SVG「課題=各段の踏み石」白字 on 白背景で消失、①山 SVG「理想/現状」テキスト同化、⑤逆漏斗「個別事実」白字が透過 polygon に被って読めず、`law-illust-tag` の `INDUCTIVE · SPECIFIC→GENERA…` 切れ → ユーザー指摘で全 5 SVG 再設計
+
 ---
 
 ## 10. 納品前の最終確認
@@ -546,6 +563,7 @@ law-illust など `viewBox="0 0 100 100"`(表示 92×92 px、モバイル 80×80
 | `components.md` | 再利用可能パーツカタログ(標準 17 種 + 2026-04 追加 6 種) |
 | `examples/06-information-law.html` | **最新リファレンス**(情報に関する法規)。メニュー・リセット・スマホ対応・リッチインタラクション + ビジュアル必須6パターン全実装 |
 | `examples/07-information-security.html` | **同等リファレンス**(情報セキュリティ)。CIA三角・ログインフロー・マルウェア家系・フィルタ比較を実装 |
+| `articles/03-problem-solving/index.html` | **2026-04-30 SVG ビジュアル標準のリファレンス**(問題の発見と解決)。5 つの law-illust 全てに gradient + drop-shadow + 上端ハイライトを実装、テキストは SVG 外(law-illust-tag)に逃がし、main 天秤と演繹/帰納 cmp-svg にも同じ流儀。`§9.17` 参照 |
 
 新規単元を作るときは必ず `examples/06-information-law.html`(または `07-information-security.html`)を開いて、以下の実装を参照すること:
 

@@ -1,0 +1,2204 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>問題の発見と解決 | 情報Ⅰ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Noto+Serif+JP:wght@400;500;600;700;900&family=Noto+Sans+JP:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy-darkest: #0F2847;
+  --navy-dark: #1B3A5B;
+  --navy: #2C5F8D;
+  --navy-light: #4A7FA8;
+  --navy-pale: #D4E1EF;
+  --navy-bg: #F3F6FB;
+  --accent-red: #C8102E;
+  --accent-red-dark: #8B0A1F;
+  --accent-gold: #C9A961;
+  --text-main: #1A2332;
+  --text-sub: #5A6378;
+  --white: #FFFFFF;
+  --ok-green: #1E824C;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body {
+  height: 100%;
+  font-family: 'Noto Sans JP', sans-serif;
+  color: var(--text-main);
+  background: var(--navy-darkest);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.slide p, .slide li, .case-content, .practice-text, .def-desc, .quiz-question, .quiz-feedback, .ch-body p, .answer-text {
+  -webkit-user-select: text; user-select: text;
+}
+.slide-container { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+.slide {
+  position: absolute;
+  top: 47px; bottom: 52px; left: 0; right: 0;
+  padding: 4vh 5vw;
+  opacity: 0; pointer-events: none;
+  transform: translateX(30px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  background: var(--white);
+  overflow-y: auto;
+}
+.slide.active { opacity: 1; pointer-events: all; transform: translateX(0); }
+
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; height: 44px;
+  background: linear-gradient(180deg, var(--navy-darkest) 0%, var(--navy-dark) 100%);
+  color: rgba(255,255,255,0.9);
+  display: flex; align-items: center; padding: 0 24px; z-index: 100;
+  font-size: 13px; letter-spacing: 0.05em;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+.topbar-title { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 600; margin-right: 20px; }
+.topbar-subtitle { color: rgba(255,255,255,0.6); font-size: 12px; flex: 1; }
+.topbar-chapter { font-family: 'JetBrains Mono', monospace; color: var(--accent-gold); letter-spacing: 0.1em; font-size: 11px; }
+.progress {
+  position: fixed; top: 44px; left: 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent-red) 0%, var(--accent-gold) 100%);
+  z-index: 99; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 8px rgba(201, 169, 97, 0.5);
+}
+.bottombar {
+  position: fixed; bottom: 0; left: 0; right: 0; height: 52px;
+  background: var(--navy-darkest); color: rgba(255,255,255,0.85);
+  display: flex; align-items: center; padding: 0 24px; z-index: 100;
+  font-size: 13px;
+}
+.bottombar-nav { display: flex; gap: 12px; align-items: center; }
+.nav-btn {
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+  color: white; width: 34px; height: 34px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s; font-size: 16px;
+}
+.nav-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.page-indicator { font-family: 'JetBrains Mono', monospace; margin-left: auto; margin-right: 16px; color: rgba(255,255,255,0.7); font-size: 12px; letter-spacing: 0.08em; }
+.slide-title-small { flex: 1; margin-left: 16px; font-size: 12px; color: rgba(255,255,255,0.5); font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; max-width: 40vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.keyboard-hint { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.4); margin-left: 10px; }
+
+.eyebrow { font-family: 'JetBrains Mono', monospace; color: var(--accent-red); font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 16px; }
+.slide-title { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; color: var(--navy-darkest); font-size: clamp(32px, 4.4vw, 56px); line-height: 1.15; margin-bottom: 10px; letter-spacing: -0.01em; }
+.slide-subtitle { font-size: clamp(17px, 1.7vw, 22px); color: var(--text-sub); font-weight: 500; margin-bottom: 30px; line-height: 1.7; }
+.section-heading { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; color: var(--navy-dark); font-size: 26px; margin: 18px 0 14px; padding-left: 14px; border-left: 4px solid var(--accent-red); line-height: 1.3; }
+.body-text { font-size: 19px; line-height: 1.85; color: var(--text-main); font-weight: 500; }
+.highlight { background: linear-gradient(180deg, transparent 60%, rgba(201,169,97,0.4) 60%); font-weight: 700; padding: 0 2px; }
+
+.title-slide { display: flex; flex-direction: column; justify-content: center; background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy-dark) 60%, var(--navy) 100%); color: white; padding: 0 10vw; overflow: hidden; }
+.title-slide::before { content: ''; position: absolute; top: 0; right: 0; width: 45%; height: 100%; background: radial-gradient(circle at 70% 30%, rgba(201,169,97,0.15) 0%, transparent 50%), radial-gradient(circle at 30% 70%, rgba(200,16,46,0.1) 0%, transparent 50%); pointer-events: none; }
+.title-slide::after { content: ''; position: absolute; top: 50%; right: 8vw; width: 300px; height: 300px; border: 1px solid rgba(201,169,97,0.3); border-radius: 50%; transform: translateY(-50%); animation: rotate 40s linear infinite; }
+@keyframes rotate { to { transform: translateY(-50%) rotate(360deg); } }
+.title-label { font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.3em; color: var(--accent-gold); margin-bottom: 24px; }
+.title-main { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; font-size: clamp(60px, 8vw, 120px); line-height: 1; margin-bottom: 20px; letter-spacing: -0.02em; position: relative; z-index: 2; }
+.title-sub { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: clamp(22px, 2.5vw, 34px); font-weight: 300; color: rgba(255,255,255,0.85); margin-bottom: 60px; letter-spacing: 0.05em; }
+.title-meta { display: flex; gap: 40px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.6); letter-spacing: 0.15em; position: relative; z-index: 2; flex-wrap: wrap; }
+.title-meta-item strong { color: var(--accent-gold); margin-right: 8px; }
+
+.section-divider { display: flex !important; flex-direction: column; justify-content: center !important; align-items: center !important; background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy) 100%); color: white; position: absolute; padding: 0 5vw !important; overflow: hidden !important; text-align: center; }
+.section-divider > * { position: relative; z-index: 2; }
+.section-divider::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(201,169,97,0.1) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(200,16,46,0.08) 0%, transparent 40%); z-index: 1; }
+.section-number { font-family: 'JetBrains Mono', monospace; font-size: 14px; letter-spacing: 0.3em; color: var(--accent-gold); margin-bottom: 20px; }
+.section-title-big { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: clamp(48px, 7vw, 90px); font-weight: 900; line-height: 1; margin-bottom: 18px; text-align: center; }
+.section-tagline { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: clamp(18px, 2vw, 26px); font-weight: 300; color: rgba(255,255,255,0.75); letter-spacing: 0.05em; }
+
+.agenda-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 30px; }
+.agenda-item { padding: 24px 28px; background: var(--navy-bg); border-left: 4px solid var(--navy); border-radius: 4px; transition: all 0.3s; display: flex; gap: 20px; align-items: flex-start; }
+.agenda-item:hover { background: var(--navy-pale); transform: translateX(4px); }
+.agenda-num { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: 36px; font-weight: 700; color: var(--accent-red); line-height: 1; min-width: 50px; }
+.agenda-content h3 { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 600; font-size: 20px; color: var(--navy-darkest); margin-bottom: 6px; }
+.agenda-content p { font-size: 15px; color: var(--text-sub); line-height: 1.7; font-weight: 500; }
+
+.def-box { background: var(--navy-bg); border: 1px solid var(--navy-pale); border-radius: 6px; padding: 26px 30px; margin-bottom: 14px; }
+.def-box .def-label { font-family: 'JetBrains Mono', monospace; color: var(--accent-red); font-size: 12px; font-weight: 700; letter-spacing: 0.15em; margin-bottom: 8px; }
+.def-box .def-term { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 24px; color: var(--navy-darkest); margin-bottom: 10px; }
+.def-box .def-desc { font-size: 16px; line-height: 1.85; color: var(--text-main); font-weight: 500; }
+.def-box.has-illust { padding-top: 0; overflow: hidden; }
+.law-illust { margin: 0 -30px 18px; padding: 18px 0 12px; background: linear-gradient(180deg, rgba(201,169,97,0.12) 0%, transparent 100%); text-align: center; border-bottom: 1px dashed var(--navy-pale); }
+.law-illust-svg { width: 92px; height: 92px; display: block; margin: 0 auto; }
+.law-illust-tag { margin-top: 4px; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.2em; color: var(--text-sub); font-weight: 700; }
+
+.note-blank { display: inline-block; min-width: 110px; padding: 2px 14px; background: var(--navy-pale); border-bottom: 2px solid var(--navy); color: var(--navy-dark); font-weight: 700; border-radius: 4px 4px 0 0; cursor: pointer; transition: all 0.2s; }
+.note-blank:hover { background: #BDD0E6; }
+.note-blank.reveal { background: var(--accent-gold); color: var(--navy-darkest); border-bottom-color: var(--accent-red); animation: reveal 0.5s; }
+@keyframes reveal { 0% { transform: scale(0.9); opacity: 0.5; } 50% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 14px; }
+
+.practice-list { margin-top: 22px; }
+.practice-item { display: flex; gap: 18px; padding: 16px 20px; background: var(--white); border: 1px solid var(--navy-pale); border-radius: 6px; margin-bottom: 12px; transition: all 0.25s; cursor: pointer; align-items: flex-start; flex-wrap: wrap; }
+.practice-item:hover { background: var(--navy-bg); }
+.practice-letter { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; color: var(--navy); min-width: 36px; font-size: 19px; }
+.practice-text { flex: 1; font-size: 16px; line-height: 1.75; min-width: 0; font-weight: 500; }
+.practice-verdict { padding: 5px 14px; border-radius: 3px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; white-space: nowrap; min-width: 64px; text-align: center; background: transparent; color: var(--navy); border: 1px dashed var(--navy-light); transition: all 0.3s; }
+.practice-item.revealed .practice-verdict { border-style: solid; letter-spacing: 0.15em; }
+.practice-item.revealed.ok .practice-verdict { background: var(--ok-green); color: white; border-color: var(--ok-green); }
+.practice-item.revealed.ng .practice-verdict { background: var(--accent-red); color: white; border-color: var(--accent-red); }
+.practice-item.revealed .practice-reason { display: block; margin-top: 10px; padding: 12px 16px; background: var(--navy-bg); border-left: 3px solid var(--accent-gold); font-size: 14px; color: var(--text-main); line-height: 1.7; width: 100%; font-weight: 500; }
+.practice-reason { display: none; }
+
+.quiz-container { max-width: 940px; margin: 26px auto 0; }
+.quiz-question { background: var(--navy-darkest); color: white; padding: 20px 28px; border-radius: 6px 6px 0 0; font-size: 19px; line-height: 1.65; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 600; }
+.quiz-question-num { font-family: 'JetBrains Mono', monospace; color: var(--accent-gold); font-size: 12px; letter-spacing: 0.2em; margin-bottom: 10px; display: block; font-weight: 700; }
+.quiz-options { background: var(--white); border: 1px solid var(--navy-pale); border-top: none; border-radius: 0 0 6px 6px; padding: 18px; }
+.quiz-option { padding: 15px 20px; margin-bottom: 10px; background: var(--navy-bg); border: 2px solid transparent; border-radius: 4px; cursor: pointer; transition: all 0.2s; display: flex; gap: 14px; align-items: flex-start; font-size: 16.5px; font-weight: 500; line-height: 1.65; }
+.quiz-option:hover { border-color: var(--navy); background: var(--navy-pale); }
+.quiz-option:last-child { margin-bottom: 0; }
+.quiz-option-letter { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--navy); min-width: 26px; font-size: 15px; }
+.quiz-option.correct { background: rgba(30,130,76,0.1); border-color: var(--ok-green); }
+.quiz-option.correct .quiz-option-letter { color: var(--ok-green); }
+.quiz-option.incorrect { background: rgba(200,16,46,0.08); border-color: var(--accent-red); opacity: 0.6; }
+.quiz-feedback { display: none; margin-top: 16px; padding: 18px 22px; background: var(--navy-bg); border-left: 4px solid var(--accent-gold); font-size: 16px; line-height: 1.8; border-radius: 0 4px 4px 0; font-weight: 500; }
+.quiz-feedback.show { display: block; animation: fadeIn 0.4s; }
+.quiz-feedback strong { color: var(--navy-darkest); }
+
+.answers-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 22px; }
+.answer-row { display: flex; align-items: center; padding: 10px 14px; background: var(--navy-bg); border-radius: 4px; gap: 12px; border-left: 3px solid var(--navy); cursor: pointer; transition: all 0.2s; }
+.answer-row:hover { background: var(--navy-pale); }
+.answer-num { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--accent-red); font-size: 15px; min-width: 32px; }
+.answer-text { flex: 1; font-size: 15px; font-weight: 600; color: var(--navy-darkest); line-height: 1.55; }
+.answer-reveal { font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 5px 12px; background: var(--navy-dark); color: white; border-radius: 3px; letter-spacing: 0.08em; transition: all 0.3s; font-weight: 700; }
+.answer-row.revealed .answer-reveal { background: var(--accent-gold); color: var(--navy-darkest); font-weight: 700; }
+
+.summary-tree { display: flex; justify-content: center; margin-top: 22px; padding: 10px; }
+.tree-center { background: var(--navy-darkest); color: white; padding: 20px 36px; border-radius: 8px; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: 26px; font-weight: 700; position: relative; box-shadow: 0 8px 24px rgba(15,40,71,0.25); }
+.tree-branches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 36px; }
+.tree-branch { background: var(--white); border: 2px solid var(--navy-pale); border-radius: 6px; padding: 16px; position: relative; transition: all 0.25s; }
+.tree-branch:hover { border-color: var(--accent-red); transform: translateY(-3px); }
+.tree-branch::before { content: ''; position: absolute; top: -18px; left: 50%; width: 2px; height: 18px; background: var(--navy-pale); }
+.tree-branch h4 { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 17px; color: var(--navy-darkest); margin-bottom: 10px; }
+.tree-branch ul { list-style: none; font-size: 13.5px; line-height: 1.85; color: var(--text-main); font-weight: 500; }
+.tree-branch li::before { content: '▸ '; color: var(--accent-red); }
+
+.review-container { max-width: 800px; margin: 16px auto 0; text-align: center; }
+.review-intro { font-size: 16px; color: var(--text-main); margin-bottom: 24px; line-height: 1.85; font-weight: 500; }
+.review-start-btn { background: var(--navy-darkest); color: white; border: none; padding: 14px 42px; font-size: 17px; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; border-radius: 50px; cursor: pointer; transition: all 0.3s; box-shadow: 0 6px 20px rgba(15,40,71,0.25); }
+.review-start-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(15,40,71,0.35); background: var(--navy); }
+.review-q-area { display: none; margin-top: 20px; }
+.review-q-area.active { display: block; }
+.review-progress { font-family: 'JetBrains Mono', monospace; color: var(--navy); font-size: 13px; letter-spacing: 0.15em; margin-bottom: 14px; font-weight: 700; }
+.review-result { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: 48px; font-weight: 700; color: var(--accent-red); margin: 20px 0 10px; }
+.review-result-sub { font-size: 15px; color: var(--text-main); margin-bottom: 24px; font-weight: 500; }
+.review-retry-btn { background: transparent; border: 2px solid var(--navy); color: var(--navy-darkest); padding: 9px 22px; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 600; border-radius: 30px; cursor: pointer; transition: all 0.2s; }
+.review-retry-btn:hover { background: var(--navy-darkest); color: white; }
+
+@media (max-width: 1100px) {
+  .two-col { grid-template-columns: 1fr; gap: 18px; }
+  .agenda-grid { grid-template-columns: 1fr; }
+  .tree-branches { grid-template-columns: repeat(2, 1fr); }
+  .answers-grid { grid-template-columns: 1fr; }
+}
+
+.slide::-webkit-scrollbar { width: 6px; }
+.slide::-webkit-scrollbar-track { background: transparent; }
+.slide::-webkit-scrollbar-thumb { background: var(--navy-pale); border-radius: 3px; }
+
+@media print { .topbar, .bottombar, .progress { display: none; } }
+</style>
+<style>
+/* ═══════════════════════════════════════════════════════════
+   LEC-03 SPECIFIC COMPONENTS
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── ① 問題 ── ideal-actual gap visualizer ── */
+.gap-viz { display: grid; grid-template-columns: 1fr 80px 1fr; gap: 16px; margin-top: 18px; padding: 22px 22px; background: var(--navy-bg); border-radius: 10px; align-items: stretch; }
+.gap-pole { background: white; padding: 18px 18px; border-radius: 8px; cursor: pointer; transition: all 0.25s; display: flex; flex-direction: column; }
+.gap-pole.gap-ideal { border-top: 3px solid var(--accent-gold); }
+.gap-pole.gap-actual { border-top: 3px solid var(--accent-red); }
+.gap-pole:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(15,40,71,0.1); }
+.gap-pole.open { background: linear-gradient(180deg, white 0%, var(--navy-bg) 100%); }
+.gap-pole-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; color: var(--accent-red); font-weight: 700; margin-bottom: 8px; }
+.gap-pole.gap-ideal .gap-pole-tag { color: #8a6d1f; }
+.gap-pole-name { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 19px; color: var(--navy-darkest); margin-bottom: 6px; }
+.gap-pole-sub { font-size: 13.5px; color: var(--text-sub); line-height: 1.65; font-weight: 500; }
+.gap-pole-detail { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--navy-pale); font-size: 13.5px; line-height: 1.75; color: var(--text-main); font-weight: 500; }
+.gap-pole.open .gap-pole-detail { display: block; animation: fadeIn 0.35s; }
+.gap-pole-hint { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.18em; color: var(--text-sub); font-weight: 700; margin-top: auto; padding-top: 10px; }
+.gap-pole.open .gap-pole-hint { display: none; }
+.gap-center { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.gap-center-svg { width: 80px; height: 130px; }
+.gap-center-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; color: var(--accent-red); font-weight: 700; margin-top: 6px; text-align: center; }
+.gap-cases { margin-top: 18px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.gap-case { background: var(--white); border: 1px solid var(--navy-pale); border-radius: 6px; padding: 12px 14px; cursor: pointer; transition: all 0.2s; }
+.gap-case:hover { border-color: var(--accent-red); transform: translateY(-2px); }
+.gap-case.active { background: var(--navy-darkest); border-color: var(--navy-darkest); color: white; }
+.gap-case-title { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.gap-case-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--accent-red); font-weight: 700; }
+.gap-case.active .gap-case-num { color: var(--accent-gold); }
+
+/* ── ② 課題 ── kadai cards ── */
+.kadai-flow { margin-top: 18px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.kadai-card { background: var(--white); border: 1px solid var(--navy-pale); border-radius: 6px; padding: 14px 14px; cursor: pointer; transition: all 0.25s; position: relative; display: flex; flex-direction: column; }
+.kadai-card:hover { border-color: var(--navy); transform: translateY(-2px); box-shadow: 0 4px 14px rgba(15,40,71,0.08); }
+.kadai-card.open { background: var(--navy-darkest); color: white; border-color: var(--navy-darkest); }
+.kadai-letter { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--accent-red); letter-spacing: 0.2em; font-weight: 700; margin-bottom: 4px; }
+.kadai-card.open .kadai-letter { color: var(--accent-gold); }
+.kadai-name { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 15px; color: var(--navy-darkest); margin-bottom: 6px; line-height: 1.45; }
+.kadai-card.open .kadai-name { color: white; }
+.kadai-detail { display: none; margin-top: 8px; padding-top: 8px; border-top: 1px dashed rgba(255,255,255,0.18); font-size: 12.5px; line-height: 1.7; color: rgba(255,255,255,0.92); font-weight: 500; }
+.kadai-card.open .kadai-detail { display: block; animation: fadeIn 0.3s; }
+.kadai-meta { display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; }
+.kadai-meta span { padding: 2px 7px; border-radius: 3px; background: rgba(201,169,97,0.2); color: var(--accent-gold); font-weight: 700; }
+
+/* ── ③ トレードオフ ── balance ── */
+.tradeoff-wrap { margin-top: 18px; display: grid; grid-template-columns: 1fr 1.1fr; gap: 22px; align-items: start; }
+.tradeoff-svg-box { background: var(--navy-bg); padding: 18px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+.tradeoff-svg { width: 100%; max-width: 320px; }
+.tradeoff-list { display: flex; flex-direction: column; gap: 10px; }
+.tradeoff-card { background: white; border: 1px solid var(--navy-pale); border-radius: 8px; padding: 14px 16px; cursor: pointer; transition: all 0.2s; }
+.tradeoff-card:hover { border-color: var(--navy); transform: translateX(2px); }
+.tradeoff-card.active { background: var(--navy-darkest); color: white; border-color: var(--navy-darkest); }
+.tradeoff-card-title { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 15px; color: var(--navy-darkest); margin-bottom: 4px; }
+.tradeoff-card.active .tradeoff-card-title { color: white; }
+.tradeoff-card-axis { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-sub); letter-spacing: 0.08em; font-weight: 700; }
+.tradeoff-card.active .tradeoff-card-axis { color: var(--accent-gold); }
+.tradeoff-axis-label-l, .tradeoff-axis-label-r { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; }
+
+/* ── 実習1 cycle diagram ── */
+.cycle-wrap { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 30px; margin-top: 18px; align-items: center; }
+.cycle-svg { width: 100%; max-width: 460px; margin: 0 auto; display: block; }
+.cycle-step { cursor: pointer; transition: all 0.3s; }
+.cycle-step .cycle-circle { transition: fill 0.4s; }
+.cycle-step.fixed .cycle-circle { fill: #4A7FA8; }
+.cycle-step.fixed .cycle-label { fill: white; }
+.cycle-step.blank .cycle-circle { fill: var(--navy-pale); stroke: var(--navy); stroke-width: 2; stroke-dasharray: 5 4; }
+.cycle-step.blank .cycle-label { fill: var(--navy); }
+.cycle-step.solved .cycle-circle { fill: #C9A961; stroke: var(--accent-red); stroke-dasharray: none; }
+.cycle-step.solved .cycle-label { fill: var(--navy-darkest); font-weight: 900; }
+.cycle-step.focus .cycle-circle { stroke: var(--accent-red); stroke-width: 3; stroke-dasharray: none; }
+.cycle-arrow { fill: var(--navy-light); stroke: var(--navy); stroke-width: 1; }
+.cycle-label { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; pointer-events: none; }
+.cycle-fb-arrow { fill: none; stroke: var(--accent-red); stroke-width: 2; stroke-dasharray: 4 3; }
+.cycle-fb-arrow.lit { stroke: var(--accent-gold); stroke-dasharray: none; }
+.cycle-choices { background: var(--navy-bg); padding: 22px 24px; border-radius: 8px; }
+.cycle-choices h4 { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.2em; color: var(--accent-red); margin-bottom: 14px; font-weight: 700; }
+.cycle-choice-group { margin-bottom: 16px; }
+.cycle-choice-label { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 15px; color: var(--navy-darkest); margin-bottom: 8px; line-height: 1.5; }
+.cycle-options { display: flex; gap: 8px; flex-wrap: wrap; }
+.cycle-opt { padding: 7px 14px; background: var(--white); border: 2px solid var(--navy-pale); border-radius: 22px; cursor: pointer; font-size: 14px; font-weight: 700; transition: all 0.2s; line-height: 1.3; }
+.cycle-opt:hover { border-color: var(--navy); }
+.cycle-opt.correct { background: var(--ok-green); color: white; border-color: var(--ok-green); }
+.cycle-opt.wrong { background: rgba(200,16,46,0.1); color: var(--accent-red); border-color: var(--accent-red); opacity: 0.7; }
+.cycle-opt.disabled { pointer-events: none; opacity: 0.45; }
+
+/* ── PPDAC cycle (slide 9) ── */
+.ppdac-wrap { display: grid; grid-template-columns: 1.05fr 1fr; gap: 26px; margin-top: 16px; align-items: start; }
+.ppdac-svg-box { background: var(--navy-bg); border-radius: 10px; padding: 14px; }
+.ppdac-svg { width: 100%; max-width: 420px; display: block; margin: 0 auto; }
+.ppdac-node { cursor: pointer; transition: all 0.25s; }
+.ppdac-node circle { transition: all 0.3s; }
+.ppdac-node:hover circle { filter: brightness(1.1); }
+.ppdac-node.selected circle { stroke: var(--accent-gold); stroke-width: 4; }
+.ppdac-letter { font-family: 'JetBrains Mono', monospace; font-weight: 700; pointer-events: none; }
+.ppdac-jp { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; pointer-events: none; }
+.ppdac-arrow { fill: none; stroke: var(--navy); stroke-width: 1.5; }
+.ppdac-arrowhead { fill: var(--navy); }
+.ppdac-panel { background: white; border: 2px solid var(--navy-pale); border-radius: 10px; padding: 22px 22px; min-height: 240px; }
+.ppdac-panel-letter { font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.2em; color: var(--accent-red); font-weight: 700; margin-bottom: 6px; }
+.ppdac-panel-jp { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; font-size: 26px; color: var(--navy-darkest); margin-bottom: 12px; line-height: 1.2; }
+.ppdac-panel-en { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-sub); letter-spacing: 0.1em; margin-bottom: 14px; font-weight: 700; }
+.ppdac-panel-detail { font-size: 14.5px; line-height: 1.85; color: var(--text-main); font-weight: 500; }
+.ppdac-panel-detail strong { color: var(--accent-red-dark); font-weight: 700; }
+.ppdac-panel-eg { margin-top: 14px; padding: 12px 14px; background: var(--navy-bg); border-left: 3px solid var(--accent-gold); font-size: 13.5px; line-height: 1.7; font-weight: 500; border-radius: 0 4px 4px 0; }
+.ppdac-panel-eg-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--navy); letter-spacing: 0.18em; font-weight: 700; margin-bottom: 4px; }
+
+/* ── 実習2 PPDAC match ── */
+.ppdac-match { margin-top: 18px; display: flex; flex-direction: column; gap: 8px; }
+.match-row { display: grid; grid-template-columns: 50px 1fr 24px 1.4fr; gap: 12px; align-items: center; padding: 12px 16px; background: var(--navy-bg); border-radius: 6px; border-left: 3px solid var(--navy); }
+.match-letter { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--accent-red); font-size: 22px; text-align: center; }
+.match-en { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--navy-darkest); font-weight: 700; }
+.match-arrow { color: var(--navy); font-family: 'JetBrains Mono', monospace; text-align: center; }
+.match-jp { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; color: var(--navy-darkest); font-size: 16px; }
+.match-row .note-blank { font-size: 14px; min-width: 90px; }
+
+/* ── 実習3 brainstorming judgment chips ── */
+.bs-wrap { margin-top: 16px; }
+.bs-instr { background: var(--navy-darkest); color: white; padding: 14px 20px; border-radius: 6px; font-size: 15px; line-height: 1.7; margin-bottom: 14px; font-weight: 500; }
+.bs-instr strong { color: var(--accent-gold); }
+.bs-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.bs-chip { background: white; border: 2px solid var(--navy-pale); border-radius: 8px; padding: 16px 18px; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; gap: 8px; }
+.bs-chip:hover { border-color: var(--navy); transform: translateY(-2px); }
+.bs-chip-letter { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent-red); letter-spacing: 0.18em; font-weight: 700; }
+.bs-chip-text { font-size: 15px; line-height: 1.65; color: var(--text-main); font-weight: 500; }
+.bs-chip-judge { margin-top: 6px; padding: 6px 12px; border-radius: 20px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; align-self: flex-start; background: var(--navy-pale); color: var(--navy); border: 1px dashed var(--navy); }
+.bs-chip.judged-correct { border-color: var(--ok-green); background: rgba(30,130,76,0.06); }
+.bs-chip.judged-correct .bs-chip-judge { background: var(--ok-green); color: white; border-style: solid; border-color: var(--ok-green); }
+.bs-chip.judged-wrong { border-color: var(--accent-red); background: rgba(200,16,46,0.06); }
+.bs-chip.judged-wrong .bs-chip-judge { background: var(--accent-red); color: white; border-style: solid; border-color: var(--accent-red); }
+.bs-chip-fb { display: none; font-size: 13px; line-height: 1.65; color: var(--text-main); padding: 8px 12px; border-left: 3px solid var(--accent-gold); background: var(--navy-bg); margin-top: 4px; font-weight: 500; }
+.bs-chip.judged-correct .bs-chip-fb, .bs-chip.judged-wrong .bs-chip-fb { display: block; animation: fadeIn 0.3s; }
+.bs-verdict { margin-top: 14px; padding: 16px 20px; background: var(--navy-bg); border: 2px solid var(--navy-pale); border-radius: 8px; display: none; }
+.bs-verdict.show { display: block; animation: fadeIn 0.4s; }
+.bs-verdict-title { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: var(--accent-red); font-weight: 700; margin-bottom: 6px; }
+.bs-verdict-body { font-size: 14.5px; line-height: 1.7; color: var(--text-main); font-weight: 500; }
+.bs-verdict-body strong { color: var(--accent-red-dark); }
+
+/* ── 演繹/帰納 reasoning flow ── */
+.reasoning-flow { margin-top: 16px; display: flex; flex-direction: column; gap: 12px; max-width: 600px; margin-left: auto; margin-right: auto; }
+.r-row { background: white; border: 1px solid var(--navy-pale); border-radius: 6px; padding: 12px 16px; display: flex; gap: 14px; align-items: center; transition: all 0.25s; cursor: pointer; }
+.r-row:hover { border-color: var(--navy); }
+.r-row.lit { border-color: var(--navy-dark); background: var(--navy-bg); }
+.r-row.lit.conclusion { border-color: var(--accent-red); background: rgba(200,16,46,0.06); }
+.r-tag { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent-red); letter-spacing: 0.15em; font-weight: 700; min-width: 80px; }
+.r-row.conclusion .r-tag { color: var(--accent-red-dark); }
+.r-text { font-size: 15.5px; line-height: 1.65; color: var(--text-main); font-weight: 500; flex: 1; }
+.r-row.conclusion .r-text { font-weight: 700; color: var(--navy-darkest); }
+.r-arrow { text-align: center; font-family: 'JetBrains Mono', monospace; color: var(--navy); font-size: 18px; padding: 2px 0; }
+.r-arrow.up { color: var(--accent-gold); }
+.r-eg-tabs { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+.r-eg-tab { padding: 6px 14px; background: var(--navy-bg); border: 1px solid var(--navy-pale); border-radius: 18px; cursor: pointer; font-size: 12.5px; font-weight: 700; color: var(--navy-dark); transition: all 0.2s; }
+.r-eg-tab.active { background: var(--navy-darkest); color: white; border-color: var(--navy-darkest); }
+
+/* ── 演繹 vs 帰納 comparison-visual ── */
+.cmp-vs { display: grid; grid-template-columns: 1fr 70px 1fr; gap: 14px; margin-top: 18px; align-items: stretch; }
+.cmp-side { background: white; border: 2px solid var(--navy-pale); border-radius: 10px; padding: 22px 20px 18px; }
+.cmp-side.deductive { border-top: 4px solid var(--navy); }
+.cmp-side.inductive { border-top: 4px solid var(--accent-red); }
+.cmp-side h4 { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 22px; color: var(--navy-darkest); margin-bottom: 4px; text-align: center; }
+.cmp-side .cmp-en { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: var(--text-sub); text-align: center; margin-bottom: 12px; font-weight: 700; }
+.cmp-svg { display: block; margin: 0 auto 10px; max-width: 180px; width: 100%; }
+.cmp-row { display: flex; gap: 10px; padding: 8px 10px; border-bottom: 1px dashed var(--navy-pale); align-items: flex-start; }
+.cmp-row:last-child { border-bottom: none; }
+.cmp-row-label { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--navy); letter-spacing: 0.1em; font-weight: 700; min-width: 64px; padding-top: 1px; }
+.cmp-row-text { flex: 1; font-size: 13.5px; line-height: 1.65; color: var(--text-main); font-weight: 500; }
+.cmp-axis { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.cmp-axis-svg { width: 50px; height: 200px; }
+.cmp-axis-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--text-sub); writing-mode: vertical-rl; font-weight: 700; }
+
+/* ── 表現と伝達 文章構造 ── */
+.struct-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0 22px; }
+.struct-card { background: white; border: 1px solid var(--navy-pale); border-radius: 8px; padding: 16px 18px; }
+.struct-card h5 { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 17px; color: var(--navy-darkest); margin-bottom: 6px; }
+.struct-card .struct-en { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.18em; color: var(--accent-red); margin-bottom: 10px; font-weight: 700; }
+.struct-flow { display: flex; gap: 4px; margin-bottom: 10px; flex-wrap: wrap; }
+.struct-flow span { padding: 4px 9px; background: var(--navy-bg); border-radius: 14px; font-size: 11.5px; font-weight: 700; color: var(--navy-dark); }
+.struct-flow .conc { background: var(--accent-gold); color: var(--navy-darkest); }
+.struct-flow .reason { background: var(--navy-pale); color: var(--navy-dark); }
+.struct-card p { font-size: 13px; line-height: 1.7; color: var(--text-sub); font-weight: 500; }
+
+/* ── 倫理 ethics 4 axes ── */
+.ethics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0 18px; }
+.ethics-card { background: white; border-top: 3px solid var(--navy); border: 1px solid var(--navy-pale); border-top: 3px solid var(--navy); border-radius: 8px; padding: 14px 14px; cursor: pointer; transition: all 0.2s; }
+.ethics-card:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(15,40,71,0.08); border-top-color: var(--accent-red); }
+.ethics-card.open { background: var(--navy-darkest); color: white; }
+.ethics-num { font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; color: var(--accent-red); margin-bottom: 4px; }
+.ethics-card.open .ethics-num { color: var(--accent-gold); }
+.ethics-name { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 16px; color: var(--navy-darkest); margin-bottom: 6px; line-height: 1.4; }
+.ethics-card.open .ethics-name { color: white; }
+.ethics-detail { display: none; margin-top: 8px; padding-top: 8px; border-top: 1px dashed rgba(255,255,255,0.18); font-size: 13px; line-height: 1.65; color: rgba(255,255,255,0.92); font-weight: 500; }
+.ethics-card.open .ethics-detail { display: block; animation: fadeIn 0.3s; }
+
+/* ── note-blank-jiken / 倫理 穴埋め ── */
+.fill-text { background: var(--navy-bg); padding: 22px 24px; border-radius: 8px; font-size: 17px; line-height: 2.4; color: var(--text-main); font-weight: 500; }
+.fill-text strong { color: var(--accent-red-dark); }
+.fill-text .note-blank { min-width: 88px; }
+
+/* ═════════════════════════════════════════
+   MENU (drawer + reset) — 標準装備
+   ═════════════════════════════════════════ */
+.menu-toggle { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: white; padding: 6px 14px 6px 12px; border-radius: 18px; cursor: pointer; font-size: 11px; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.15em; font-weight: 700; margin-left: 14px; transition: all 0.25s; display: flex; align-items: center; gap: 8px; height: 28px; }
+.menu-toggle:hover { background: rgba(201,169,97,0.25); border-color: var(--accent-gold); }
+.menu-toggle-icon { display: inline-flex; flex-direction: column; gap: 3px; width: 14px; justify-content: center; }
+.menu-toggle-icon span { display: block; height: 1.5px; background: white; border-radius: 1px; transition: all 0.2s; }
+.menu-toggle:hover .menu-toggle-icon span { background: var(--accent-gold); }
+.menu-overlay { position: fixed; inset: 0; background: rgba(15,40,71,0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.35s; }
+.menu-overlay.open { opacity: 1; pointer-events: all; }
+.menu-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 400px; max-width: 92vw; background: white; box-shadow: -16px 0 40px rgba(0,0,0,0.2); z-index: 201; transform: translateX(100%); transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
+.menu-panel.open { transform: translateX(0); }
+.menu-head { padding: 24px 26px 20px; display: flex; align-items: center; justify-content: space-between; background: linear-gradient(180deg, var(--navy-darkest) 0%, var(--navy-dark) 100%); color: white; flex-shrink: 0; }
+.menu-head-title { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 20px; }
+.menu-head-sub { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--accent-gold); letter-spacing: 0.2em; margin-top: 4px; font-weight: 700; }
+.menu-close { background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.15); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 16px; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+.menu-close:hover { background: rgba(200,16,46,0.3); border-color: var(--accent-red); }
+.menu-reset-btn { margin: 14px 22px 4px; padding: 11px 16px; background: transparent; border: 1.5px dashed var(--accent-red); color: var(--accent-red); border-radius: 6px; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; font-weight: 600; font-size: 13.5px; transition: all 0.25s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.menu-reset-btn:hover { background: var(--accent-red); color: white; border-style: solid; }
+.menu-reset-icon { display: inline-block; font-size: 15px; transition: transform 0.4s; }
+.menu-reset-btn:hover .menu-reset-icon { transform: rotate(-180deg); }
+.menu-list { flex: 1; overflow-y: auto; padding: 8px 14px 28px; }
+.menu-list::-webkit-scrollbar { width: 6px; }
+.menu-list::-webkit-scrollbar-thumb { background: var(--navy-pale); border-radius: 3px; }
+.menu-section { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.2em; color: var(--accent-red); font-weight: 700; padding: 16px 14px 8px; margin-top: 6px; border-top: 1px solid var(--navy-pale); }
+.menu-section:first-of-type { border-top: none; margin-top: 6px; }
+.menu-item { display: flex; gap: 12px; padding: 11px 14px; border-radius: 6px; cursor: pointer; transition: all 0.2s; align-items: center; margin-bottom: 2px; }
+.menu-item:hover { background: var(--navy-bg); transform: translateX(-2px); }
+.menu-item-num { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--text-sub); font-size: 12px; min-width: 26px; }
+.menu-item-title { font-size: 14px; font-weight: 500; color: var(--navy-darkest); flex: 1; line-height: 1.45; }
+.menu-item.active { background: var(--navy-darkest); color: white; box-shadow: 0 4px 14px rgba(15,40,71,0.25); }
+.menu-item.active .menu-item-num { color: var(--accent-gold); }
+.menu-item.active .menu-item-title { color: white; font-weight: 700; }
+.menu-item-tag { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.1em; padding: 3px 7px; border-radius: 3px; font-weight: 700; background: rgba(200,16,46,0.1); color: var(--accent-red); white-space: nowrap; }
+.menu-item-tag.tag-interactive { background: rgba(201,169,97,0.18); color: #8a6d1f; }
+.menu-item-tag.tag-review { background: rgba(44,95,141,0.12); color: var(--navy); }
+.menu-item-tag.tag-section, .menu-item-tag.tag-title, .menu-item-tag.tag-end { background: rgba(15,40,71,0.08); color: var(--navy-dark); }
+.menu-item.active .menu-item-tag { background: rgba(201,169,97,0.3); color: var(--accent-gold); }
+
+/* ═════════════════════════════════════════
+   MOBILE / RESPONSIVE
+   ═════════════════════════════════════════ */
+@media (max-width: 720px) {
+  .topbar { height: 40px; padding: 0 12px; font-size: 11px; letter-spacing: 0; }
+  .topbar-title { font-size: 13px; margin-right: 8px; }
+  .topbar-subtitle { display: none; }
+  .topbar-chapter { font-size: 10px; letter-spacing: 0.08em; }
+  .menu-toggle { margin-left: 8px; padding: 4px 10px; font-size: 10px; height: 24px; gap: 6px; }
+  .menu-toggle-icon { width: 11px; gap: 2px; }
+  .menu-toggle-icon span { height: 1.3px; }
+  .progress { top: 40px; }
+  .bottombar { height: calc(52px + env(safe-area-inset-bottom, 0px)); padding: 0 14px env(safe-area-inset-bottom, 0px); font-size: 11px; }
+  .bottombar-nav { gap: 8px; }
+  .nav-btn { width: 40px; height: 40px; font-size: 16px; }
+  .slide-title-small { display: none; }
+  .keyboard-hint { display: none; }
+  .page-indicator { font-size: 11px; margin-right: 0; margin-left: auto; }
+  .slide { top: 43px; bottom: calc(52px + env(safe-area-inset-bottom, 0px)); padding: 4vw 5vw 64px; touch-action: pan-y pinch-zoom; }
+
+  button:active:not([disabled]), [onclick]:active, .nav-btn:active, .menu-toggle:active { transform: scale(0.96); transition: transform 0.08s; }
+
+  .swipe-hint { position: fixed; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%) translateY(20px); background: rgba(15, 40, 71, 0.92); color: white; padding: 10px 22px; border-radius: 24px; font-size: 13px; letter-spacing: 0.06em; font-weight: 600; z-index: 200; pointer-events: none; opacity: 0; transition: opacity 0.4s ease, transform 0.4s ease; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25); display: flex; align-items: center; gap: 10px; }
+  .swipe-hint::before, .swipe-hint::after { content: ""; width: 14px; height: 14px; border-top: 2px solid var(--accent-gold); border-right: 2px solid var(--accent-gold); }
+  .swipe-hint::before { transform: rotate(-135deg); }
+  .swipe-hint::after { transform: rotate(45deg); }
+  .swipe-hint.show { opacity: 1; transform: translateX(-50%) translateY(0); animation: swipeHintPulse 1.6s ease-in-out 1 0.4s; }
+  @keyframes swipeHintPulse { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-4px); } }
+
+  .title-slide { padding: 0 6vw; }
+  .title-slide::before, .title-slide::after { display: none; }
+  .title-label { font-size: 10.5px; letter-spacing: 0.2em; margin-bottom: 18px; }
+  .title-main { font-size: clamp(36px, 10vw, 58px); letter-spacing: -0.01em; margin-bottom: 14px; }
+  .title-sub { font-size: clamp(14px, 4vw, 20px); margin-bottom: 32px; }
+  .title-meta { gap: 14px 22px; font-size: 10.5px; flex-direction: column; }
+  .section-number { font-size: 11px; letter-spacing: 0.25em; margin-bottom: 14px; }
+  .section-title-big { font-size: clamp(34px, 9vw, 54px); }
+  .section-tagline { font-size: clamp(14px, 3.8vw, 18px); }
+
+  .eyebrow { font-size: 10px; letter-spacing: 0.15em; margin-bottom: 12px; }
+  .slide-title { font-size: clamp(24px, 6.2vw, 34px); margin-bottom: 8px; }
+  .slide-subtitle { font-size: clamp(13.5px, 3.8vw, 17px); margin-bottom: 20px; line-height: 1.65; }
+  .section-heading { font-size: 19px; margin: 14px 0 10px; padding-left: 10px; border-left-width: 3px; }
+  .body-text { font-size: 15px; }
+
+  .agenda-grid { grid-template-columns: 1fr; gap: 12px; margin-top: 18px; }
+  .agenda-item { padding: 16px 18px; gap: 14px; }
+  .agenda-num { font-size: 28px; min-width: 38px; }
+  .agenda-content h3 { font-size: 16px; }
+  .agenda-content p { font-size: 13px; }
+
+  .def-box { padding: 18px 20px; margin-bottom: 12px; }
+  .def-box .def-term { font-size: 19px; margin-bottom: 8px; }
+  .def-box .def-desc { font-size: 14.5px; line-height: 1.75; }
+  .def-box.has-illust { padding-top: 0; }
+  .law-illust { margin: 0 -20px 14px; padding: 14px 0 10px; }
+  .law-illust-svg { width: 80px; height: 80px; }
+  .two-col { grid-template-columns: 1fr; gap: 14px; margin-top: 14px; }
+
+  .gap-viz { grid-template-columns: 1fr; gap: 12px; padding: 16px; }
+  .gap-center { order: -1; }
+  .gap-center-svg { width: 60px; height: 80px; }
+  .gap-pole { padding: 14px; }
+  .gap-pole-name { font-size: 16px; }
+  .gap-cases { grid-template-columns: 1fr; gap: 8px; margin-top: 14px; }
+
+  .kadai-flow { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 14px; }
+  .kadai-card { padding: 12px; }
+  .kadai-name { font-size: 13.5px; }
+  .kadai-detail { font-size: 12px; }
+
+  .tradeoff-wrap { grid-template-columns: 1fr; gap: 14px; }
+  .tradeoff-svg { max-width: 240px; }
+  .tradeoff-card { padding: 12px 14px; }
+
+  .cycle-wrap { grid-template-columns: 1fr; gap: 18px; }
+  .cycle-svg { max-width: 320px; }
+  .cycle-choices { padding: 16px 18px; }
+  .cycle-choice-label { font-size: 14px; }
+  .cycle-opt { font-size: 13px; padding: 6px 12px; }
+
+  .ppdac-wrap { grid-template-columns: 1fr; gap: 16px; }
+  .ppdac-svg { max-width: 300px; }
+  .ppdac-panel { min-height: auto; padding: 18px; }
+  .ppdac-panel-jp { font-size: 22px; }
+  .ppdac-panel-detail { font-size: 13.5px; }
+
+  .match-row { grid-template-columns: 36px 1fr 18px 1.4fr; gap: 8px; padding: 10px 12px; }
+  .match-letter { font-size: 18px; }
+  .match-en { font-size: 12px; }
+  .match-jp { font-size: 14px; }
+  .match-row .note-blank { font-size: 12px; min-width: 64px; padding: 2px 8px; }
+
+  .bs-grid { grid-template-columns: 1fr; gap: 10px; }
+  .bs-instr { font-size: 13.5px; padding: 12px 16px; }
+  .bs-chip { padding: 14px 16px; }
+  .bs-chip-text { font-size: 14px; }
+
+  .reasoning-flow { gap: 10px; }
+  .r-row { padding: 10px 12px; gap: 10px; flex-wrap: wrap; }
+  .r-tag { min-width: 64px; font-size: 10px; }
+  .r-text { font-size: 13.5px; }
+  .r-arrow { font-size: 16px; }
+
+  .cmp-vs { grid-template-columns: 1fr; gap: 12px; }
+  .cmp-axis { display: none; }
+  .cmp-side { padding: 16px; }
+  .cmp-side h4 { font-size: 18px; }
+  .cmp-svg { max-width: 130px; }
+
+  .struct-grid { grid-template-columns: 1fr; gap: 10px; margin: 12px 0 18px; }
+  .ethics-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .ethics-card { padding: 12px; }
+  .ethics-name { font-size: 14.5px; }
+
+  .fill-text { padding: 16px; font-size: 15px; line-height: 2.2; }
+
+  .practice-list { margin-top: 16px; }
+  .practice-item { padding: 14px 16px; gap: 12px; }
+  .practice-text { font-size: 14.5px; }
+  .practice-letter { font-size: 16px; min-width: 28px; }
+
+  .quiz-container { margin: 18px auto 0; }
+  .quiz-question { padding: 16px 18px; font-size: 15.5px; }
+  .quiz-options { padding: 12px; }
+  .quiz-option { padding: 12px 14px; font-size: 14.5px; }
+  .quiz-feedback { font-size: 14px; padding: 14px 16px; }
+
+  .answers-grid { grid-template-columns: 1fr; }
+  .answer-text { font-size: 14px; }
+  .answer-reveal { font-size: 12px; padding: 4px 10px; }
+
+  .summary-tree { margin-top: 16px; }
+  .tree-center { font-size: 19px; padding: 14px 22px; }
+  .tree-branches { grid-template-columns: 1fr; gap: 12px; margin-top: 26px; }
+  .tree-branch { padding: 14px; }
+  .tree-branch h4 { font-size: 15px; }
+  .tree-branch ul { font-size: 12.5px; }
+
+  .review-result { font-size: 38px; }
+  .review-start-btn { padding: 12px 30px; font-size: 15px; }
+
+  .menu-panel { width: 100%; max-width: 100%; box-shadow: none; }
+  .menu-head { padding: 20px 22px 16px; }
+  .menu-head-title { font-size: 18px; }
+  .menu-head-sub { font-size: 9.5px; }
+  .menu-reset-btn { margin: 14px 20px 6px; font-size: 13px; }
+  .menu-list { padding: 6px 12px 22px; }
+  .menu-item { padding: 10px 12px; }
+  .menu-item-title { font-size: 13.5px; }
+  .menu-item-tag { font-size: 8.5px; padding: 2px 6px; }
+  .menu-section { font-size: 10px; padding: 14px 12px 6px; }
+}
+@media (max-width: 380px) {
+  .slide { padding: 3vw 4.5vw 40px; }
+  .title-main { font-size: 36px; }
+  .slide-title { font-size: 22px; }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  .title-main { font-size: clamp(30px, 6vw, 50px); }
+  .title-sub { font-size: clamp(13px, 2.5vw, 18px); margin-bottom: 20px; }
+  .section-title-big { font-size: clamp(26px, 6vw, 46px); }
+  .slide-title { font-size: clamp(20px, 4vw, 30px); }
+  .slide-subtitle { margin-bottom: 14px; }
+  .slide { padding: 3vh 5vw; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="topbar-title">問題の発見と解決</span>
+  <span class="topbar-subtitle">情報Ⅰ | 学習ノート p.6-7 (1章 03)</span>
+  <span class="topbar-chapter">CHAPTER · 03</span>
+  <button class="menu-toggle" onclick="openMenu()" title="スライド目次(M)">
+    <span class="menu-toggle-icon"><span></span><span></span><span></span></span>
+    MENU
+  </button>
+</div>
+<div class="progress" id="progressBar"></div>
+
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+<div class="menu-panel" id="menuPanel">
+  <div class="menu-head">
+    <div>
+      <div class="menu-head-title">スライド目次</div>
+      <div class="menu-head-sub">CHAPTER · 03</div>
+    </div>
+    <button class="menu-close" onclick="closeMenu()" title="閉じる">✕</button>
+  </div>
+  <button class="menu-reset-btn" onclick="resetAllInteractions()">
+    <span class="menu-reset-icon">⟲</span>
+    インタラクションを全リセット
+  </button>
+  <div class="menu-list" id="menuList"></div>
+</div>
+
+<div class="slide-container" id="slideContainer">
+
+<!-- ═════ 01. TITLE ═════ -->
+<div class="slide title-slide active" data-title="タイトル">
+  <div class="title-label">CHAPTER · 03 / FINDING & SOLVING PROBLEMS</div>
+  <h1 class="title-main">問題の発見<br>と解決</h1>
+  <p class="title-sub">― 理想と現状のギャップを、PPDACと推論でつなぐ ―</p>
+  <div class="title-meta">
+    <div class="title-meta-item"><strong>UNIT</strong>第1章 03</div>
+    <div class="title-meta-item"><strong>PAGES</strong>p.6 - 7</div>
+    <div class="title-meta-item"><strong>ITEMS</strong>5 points · 6 practices</div>
+  </div>
+</div>
+
+<!-- ═════ 02. AGENDA ═════ -->
+<div class="slide" data-title="このサイトで扱う内容">
+  <div class="eyebrow">AGENDA / 全体構成</div>
+  <h2 class="slide-title">このサイトで扱う内容</h2>
+  <p class="slide-subtitle">学習ノート p.6-7 の POINT ①〜⑤ と実習1〜6を、対話的な図解で順にたどる。</p>
+  <div class="agenda-grid">
+    <div class="agenda-item">
+      <div class="agenda-num">01</div>
+      <div class="agenda-content">
+        <h3>問題と課題</h3>
+        <p>理想と現状のギャップ=問題、取り組むべき焦点=課題、両立しないトレードオフ。</p>
+      </div>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num">02</div>
+      <div class="agenda-content">
+        <h3>PPDACサイクル</h3>
+        <p>Problem → Plan → Data → Analysis → Conclusion を繰り返して継続的に改善する。</p>
+      </div>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num">03</div>
+      <div class="agenda-content">
+        <h3>推論と検証</h3>
+        <p>演繹的推論(一般→特殊)と帰納的推論(特殊→一般)の違い、文献調査と妥当性評価。</p>
+      </div>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num">04</div>
+      <div class="agenda-content">
+        <h3>表現・伝達と倫理</h3>
+        <p>頭括式・尾括式の文章構造、ポスター発表と相互評価、探究活動における4つの倫理規範。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 03. SECTION 1 DIVIDER ═════ -->
+<div class="slide section-divider" data-title="第1節 問題と課題">
+  <div class="section-number">SECTION · 01</div>
+  <h2 class="section-title-big">問題と<br>課題</h2>
+  <p class="section-tagline">― 何が問題で、何をやるべきか ―</p>
+</div>
+
+<!-- ═════ 04. POINT ① 問題 ═════ -->
+<div class="slide" data-title="POINT ① 問題">
+  <div class="eyebrow">POINT 1 / 学習ノート ①</div>
+  <h2 class="slide-title">問題 ― 理想と現状のギャップ</h2>
+  <p class="slide-subtitle">問題とは「こうあってほしい」と「いまこうである」のあいだに横たわる距離のこと。距離をはかれて初めて、問題として扱える。</p>
+
+  <div class="def-box has-illust">
+    <div class="law-illust">
+      <svg class="law-illust-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g1mt" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient>
+          <linearGradient id="g1sky" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#F3F6FB"/><stop offset="100%" stop-color="#D4E1EF"/></linearGradient>
+          <filter id="g1sh" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur in="SourceAlpha" stdDeviation="0.9"/><feOffset dx="0.6" dy="1.6"/><feComponentTransfer><feFuncA type="linear" slope="0.45"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <rect x="0" y="0" width="100" height="100" fill="url(#g1sky)"/>
+        <polygon points="0,80 28,42 56,80" fill="#7BA0C4" opacity="0.5"/>
+        <polygon points="44,80 78,30 100,80" fill="#7BA0C4" opacity="0.65"/>
+        <polygon points="20,80 50,16 80,80" fill="url(#g1mt)" filter="url(#g1sh)"/>
+        <polygon points="46,30 50,16 54,30 51,32 50,28 49,32" fill="#FFFFFF" opacity="0.92"/>
+        <rect x="0" y="80" width="100" height="20" fill="#0F2847"/>
+        <line x1="36" y1="56" x2="49" y2="22" stroke="#C8102E" stroke-width="1.6" stroke-dasharray="2.5 2"/>
+        <circle cx="32" cy="58" r="4.4" fill="#FFFFFF" stroke="#C8102E" stroke-width="2.2" filter="url(#g1sh)"/>
+        <line x1="50" y1="20" x2="50" y2="4" stroke="#0F2847" stroke-width="1.6"/>
+        <polygon points="50,4 64,8 64,14 50,17" fill="#C9A961" stroke="#8a6d1f" stroke-width="0.6"/>
+        <text x="50" y="93" text-anchor="middle" fill="#C9A961" font-size="11" font-weight="900" font-family="JetBrains Mono" letter-spacing="2.5">GAP</text>
+      </svg>
+      <div class="law-illust-tag">IDEAL ⇄ ACTUAL</div>
+    </div>
+    <div class="def-label">① 問題解決の出発点</div>
+    <div class="def-term"><span class="note-blank" data-answer="問題">クリックで正解</span></div>
+    <div class="def-desc">理想の姿と現状とのあいだにあるギャップそのもの。気づかれていなければ問題は存在しない。<strong>「気持ち悪さ」「違和感」「もやもや」</strong> を言語化することが最初の作業になる。</div>
+  </div>
+
+  <div class="gap-viz">
+    <div class="gap-pole gap-ideal" onclick="toggleGap(this)">
+      <div class="gap-pole-tag">IDEAL · 理想</div>
+      <div class="gap-pole-name" id="gapIdealName">文化祭の入場者数 400人</div>
+      <div class="gap-pole-sub" id="gapIdealSub">実行委員が当初目標として掲げた数</div>
+      <div class="gap-pole-detail" id="gapIdealDetail">過去5年の平均入場者数 380人 + 新企画3つの上乗せ効果 20人を合わせた、現実的に届く水準。<strong>「夢」ではなく「達成可能な目標値」</strong> として設定する点が重要。</div>
+      <div class="gap-pole-hint">CLICK FOR DETAIL</div>
+    </div>
+    <div class="gap-center">
+      <svg class="gap-center-svg" viewBox="0 0 80 130" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="gcBar" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#C9A961"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient>
+          <linearGradient id="gcBarLow" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#E83A52"/><stop offset="100%" stop-color="#8B0A1F"/></linearGradient>
+          <filter id="gcsh" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur in="SourceAlpha" stdDeviation="0.7"/><feOffset dx="0.5" dy="1.3"/><feComponentTransfer><feFuncA type="linear" slope="0.4"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <rect x="6" y="14" width="68" height="6" fill="url(#gcBar)" rx="1.5" filter="url(#gcsh)"/>
+        <rect x="6" y="14" width="68" height="1.5" fill="#FFFFFF" opacity="0.4" rx="1.5"/>
+        <text x="40" y="11" text-anchor="middle" font-size="8" fill="#8a6d1f" font-weight="900" font-family="JetBrains Mono" letter-spacing="1.2">IDEAL</text>
+        <rect x="6" y="108" width="68" height="6" fill="url(#gcBarLow)" rx="1.5" filter="url(#gcsh)"/>
+        <rect x="6" y="108" width="68" height="1.5" fill="#FFFFFF" opacity="0.35" rx="1.5"/>
+        <text x="40" y="124" text-anchor="middle" font-size="8" fill="#8B0A1F" font-weight="900" font-family="JetBrains Mono" letter-spacing="1.2">ACTUAL</text>
+        <line x1="20" y1="22" x2="20" y2="106" stroke="#0F2847" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.4"/>
+        <line x1="60" y1="22" x2="60" y2="106" stroke="#0F2847" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.4"/>
+        <line x1="40" y1="22" x2="40" y2="106" stroke="#0F2847" stroke-width="2.2"/>
+        <polygon points="34,30 46,30 40,20" fill="#0F2847"/>
+        <polygon points="34,98 46,98 40,108" fill="#0F2847"/>
+        <rect x="20" y="56" width="40" height="20" rx="3" fill="#0F2847" filter="url(#gcsh)"/>
+        <text x="40" y="70" text-anchor="middle" font-size="13" fill="#C9A961" font-weight="900" font-family="JetBrains Mono" letter-spacing="2">GAP</text>
+      </svg>
+      <div class="gap-center-label">これが問題</div>
+    </div>
+    <div class="gap-pole gap-actual" onclick="toggleGap(this)">
+      <div class="gap-pole-tag">ACTUAL · 現状</div>
+      <div class="gap-pole-name" id="gapActualName">前年実績 240人</div>
+      <div class="gap-pole-sub" id="gapActualSub">現状のままだと届かない数値</div>
+      <div class="gap-pole-detail" id="gapActualDetail">広報がほぼSNSのみ、地域住民への告知が不十分、駅前のポスター掲示も任意。<strong>「現状を測れる」状態</strong> が問題発見の前提。数値化していないと、改善したかどうかも分からない。</div>
+      <div class="gap-pole-hint">CLICK FOR DETAIL</div>
+    </div>
+  </div>
+
+  <div class="gap-cases">
+    <div class="gap-case active" onclick="switchGapCase(this, 0)">
+      <div class="gap-case-num">CASE 01</div>
+      <div class="gap-case-title">文化祭の入場者数</div>
+    </div>
+    <div class="gap-case" onclick="switchGapCase(this, 1)">
+      <div class="gap-case-num">CASE 02</div>
+      <div class="gap-case-title">部活の大会成績</div>
+    </div>
+    <div class="gap-case" onclick="switchGapCase(this, 2)">
+      <div class="gap-case-num">CASE 03</div>
+      <div class="gap-case-title">SNS発信のリーチ</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 05. POINT ② 課題 ═════ -->
+<div class="slide" data-title="POINT ② 課題">
+  <div class="eyebrow">POINT 2 / 学習ノート ②</div>
+  <h2 class="slide-title">課題 ― 問題を解くために取り組む焦点</h2>
+  <p class="slide-subtitle">問題が「ギャップ」だとすれば、課題は「そのギャップを埋めるためにやるべきこと」。漠然とした「問題」を、行動に落とし込む工程。</p>
+
+  <div class="def-box has-illust">
+    <div class="law-illust">
+      <svg class="law-illust-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g2s1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#94b3d0"/><stop offset="100%" stop-color="#7BA0C4"/></linearGradient>
+          <linearGradient id="g2s2" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#6691b6"/><stop offset="100%" stop-color="#4A7FA8"/></linearGradient>
+          <linearGradient id="g2s3" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#3d77a8"/><stop offset="100%" stop-color="#2C5F8D"/></linearGradient>
+          <linearGradient id="g2s4" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#1B3A5B"/><stop offset="100%" stop-color="#0F2847"/></linearGradient>
+          <filter id="g2sh" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur in="SourceAlpha" stdDeviation="0.7"/><feOffset dx="0.5" dy="1.4"/><feComponentTransfer><feFuncA type="linear" slope="0.4"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <rect x="0" y="0" width="100" height="100" fill="#F3F6FB"/>
+        <rect x="6" y="76" width="20" height="20" fill="url(#g2s1)" filter="url(#g2sh)"/>
+        <rect x="6" y="76" width="20" height="2.5" fill="#FFFFFF" opacity="0.45"/>
+        <rect x="26" y="62" width="20" height="34" fill="url(#g2s2)" filter="url(#g2sh)"/>
+        <rect x="26" y="62" width="20" height="2.5" fill="#FFFFFF" opacity="0.4"/>
+        <rect x="46" y="48" width="20" height="48" fill="url(#g2s3)" filter="url(#g2sh)"/>
+        <rect x="46" y="48" width="20" height="2.5" fill="#FFFFFF" opacity="0.35"/>
+        <rect x="66" y="32" width="22" height="64" fill="url(#g2s4)" filter="url(#g2sh)"/>
+        <rect x="66" y="32" width="22" height="2.5" fill="#FFFFFF" opacity="0.3"/>
+        <path d="M 24 70 Q 50 50 74 32" stroke="#C9A961" stroke-width="1.6" stroke-dasharray="2.5 2" fill="none" opacity="0.85"/>
+        <polygon points="71,28 78,32 73,37" fill="#C9A961"/>
+        <circle cx="16" cy="70" r="3.2" fill="#FFFFFF" stroke="#C8102E" stroke-width="2" filter="url(#g2sh)"/>
+        <line x1="77" y1="32" x2="77" y2="14" stroke="#0F2847" stroke-width="1.5"/>
+        <polygon points="77,14 91,17 91,23 77,26" fill="#C8102E" stroke="#8B0A1F" stroke-width="0.5"/>
+      </svg>
+      <div class="law-illust-tag">TASKS / STEPS</div>
+    </div>
+    <div class="def-label">② 問題を解くために設定するもの</div>
+    <div class="def-term"><span class="note-blank" data-answer="課題">クリックで正解</span></div>
+    <div class="def-desc">問題を解決するために <strong>取り組むべき焦点</strong>。問題そのものより一段解像度が高く、解決策(具体的な施策)より一段抽象的な、<strong>問いの形</strong> で表される。<br><br>例:<br>・<strong>問題</strong>:文化祭の入場者数が目標(400人)に届かない<br>・<strong>課題</strong>:広報経路が在校生 SNS に偏り、地域・保護者層に届いていない<br>・<strong>解決策</strong>:地域広報誌への掲載、駅前ビラ、招待 DM、SNS 動画 など<br><br>同じ問題でも、課題の取り方しだいで打つ手は変わる。</div>
+  </div>
+
+  <p style="margin-top: 18px; font-size: 14px; color: var(--text-sub); font-weight: 500;"><strong style="color: var(--navy-darkest);">課題:広報経路が在校生 SNS に偏っている</strong> に対する <strong style="color: var(--accent-red);">解決策候補</strong> を並べる。タップで効果と実現性を確認。</p>
+
+  <div class="kadai-flow">
+    <div class="kadai-card" onclick="toggleKadai(this)">
+      <div class="kadai-letter">解決策 A</div>
+      <div class="kadai-name">SNSで動画拡散</div>
+      <div class="kadai-detail">在校生が出演する15秒動画をTikTok/Instagram Reelsに投稿。生徒の友人ネットワーク経由で同世代に届く。<div class="kadai-meta"><span>効果◎</span><span>コスト低</span></div></div>
+    </div>
+    <div class="kadai-card" onclick="toggleKadai(this)">
+      <div class="kadai-letter">解決策 B</div>
+      <div class="kadai-name">駅前で<br>チラシ配布</div>
+      <div class="kadai-detail">最寄り駅前で生徒がチラシを配る。地域の保護者世代・近隣住民に届く。一過性で印象は薄いが、確実に手元に残る。<div class="kadai-meta"><span>効果△</span><span>労力高</span></div></div>
+    </div>
+    <div class="kadai-card" onclick="toggleKadai(this)">
+      <div class="kadai-letter">解決策 C</div>
+      <div class="kadai-name">地域広報誌<br>に掲載依頼</div>
+      <div class="kadai-detail">市報や地域フリーペーパーへ掲載依頼。掲載枠の確保に1〜2ヶ月かかるが、地域全体に届く強力な経路。<div class="kadai-meta"><span>効果◎</span><span>納期長</span></div></div>
+    </div>
+    <div class="kadai-card" onclick="toggleKadai(this)">
+      <div class="kadai-letter">解決策 D</div>
+      <div class="kadai-name">前年来場者へ<br>招待DM</div>
+      <div class="kadai-detail">事前申込のあった人や中学校の出前授業先に、招待状を送付。<strong>確度の高いリピーター層</strong> に集中投下。<div class="kadai-meta"><span>効果○</span><span>確度高</span></div></div>
+    </div>
+  </div>
+
+  <p style="margin-top: 14px; font-size: 13px; color: var(--text-sub); font-weight: 500;">※ <strong style="color: var(--accent-red-dark);">問題 → 課題 → 解決策</strong> の3層を分けて持つのがコツ。「課題」を立てれば、解決策はその下に複数並列で並ぶ。1つの課題に対し、解決策を <strong>同時並行</strong> で走らせるのが普通。</p>
+</div>
+
+<!-- ═════ 06. POINT ③ トレードオフ ═════ -->
+<div class="slide" data-title="POINT ③ トレードオフ">
+  <div class="eyebrow">POINT 3 / 学習ノート ③</div>
+  <h2 class="slide-title">トレードオフ ― 何かを得れば、何かを失う</h2>
+  <p class="slide-subtitle">課題には複数の選択肢があり、ある利点を得るために別の利点を諦めることが多い。これを意識せずに「全部叶える」と決めると、そもそも実行できない。</p>
+
+  <div class="def-box has-illust">
+    <div class="law-illust">
+      <svg class="law-illust-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g3pL" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#1B3A5B"/></linearGradient>
+          <linearGradient id="g3pR" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#E83A52"/><stop offset="100%" stop-color="#8B0A1F"/></linearGradient>
+          <radialGradient id="g3pivot" cx="50%" cy="35%" r="60%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></radialGradient>
+          <filter id="g3sh" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur in="SourceAlpha" stdDeviation="0.8"/><feOffset dx="0.5" dy="1.4"/><feComponentTransfer><feFuncA type="linear" slope="0.4"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <rect x="0" y="0" width="100" height="100" fill="#F3F6FB"/>
+        <rect x="36" y="78" width="28" height="6" fill="#1B3A5B" rx="1"/>
+        <rect x="20" y="84" width="60" height="8" fill="#0F2847" rx="2" filter="url(#g3sh)"/>
+        <rect x="14" y="92" width="72" height="4" fill="#0F2847" rx="2"/>
+        <line x1="50" y1="78" x2="50" y2="36" stroke="#0F2847" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="22" y1="30" x2="78" y2="42" stroke="#0F2847" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="50" cy="36" r="4.2" fill="url(#g3pivot)" stroke="#8a6d1f" stroke-width="0.7" filter="url(#g3sh)"/>
+        <line x1="22" y1="30" x2="22" y2="42" stroke="#0F2847" stroke-width="1.2"/>
+        <ellipse cx="22" cy="44" rx="13" ry="3" fill="#0F2847"/>
+        <path d="M 9 44 L 12 60 L 32 60 L 35 44 Z" fill="url(#g3pL)" filter="url(#g3sh)"/>
+        <line x1="78" y1="42" x2="78" y2="58" stroke="#0F2847" stroke-width="1.2"/>
+        <ellipse cx="78" cy="60" rx="13" ry="3" fill="#0F2847"/>
+        <path d="M 65 60 L 68 76 L 88 76 L 91 60 Z" fill="url(#g3pR)" filter="url(#g3sh)"/>
+      </svg>
+      <div class="law-illust-tag">TRADE-OFF</div>
+    </div>
+    <div class="def-label">③ 二項のあいだのジレンマ</div>
+    <div class="def-term"><span class="note-blank" data-answer="トレードオフ">クリックで正解</span></div>
+    <div class="def-desc">何かを得ようとすると別の何かを諦めなければならない関係。<strong>「コストと品質」「速度と正確性」「便利さと安全性」</strong> など。問題解決の現場では、<strong style="color: var(--accent-red-dark);">「両方とも欲しい」のままで止まる</strong> のがいちばんよくない。</div>
+  </div>
+
+  <div class="tradeoff-wrap">
+    <div class="tradeoff-svg-box">
+      <svg class="tradeoff-svg" id="tradeoffSvg" viewBox="0 0 320 230" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="trL" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="60%" stop-color="#2C5F8D"/><stop offset="100%" stop-color="#1B3A5B"/></linearGradient>
+          <linearGradient id="trR" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#E83A52"/><stop offset="60%" stop-color="#C8102E"/><stop offset="100%" stop-color="#8B0A1F"/></linearGradient>
+          <radialGradient id="trPiv" cx="50%" cy="35%" r="65%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></radialGradient>
+          <filter id="trSh" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2.2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.32"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <rect x="140" y="180" width="40" height="22" fill="#1B3A5B" rx="2"/>
+        <rect x="76" y="200" width="168" height="14" fill="#0F2847" rx="4" filter="url(#trSh)"/>
+        <rect x="60" y="214" width="200" height="6" fill="#0F2847" rx="3" opacity="0.7"/>
+        <line x1="160" y1="180" x2="160" y2="80" stroke="#0F2847" stroke-width="5" stroke-linecap="round"/>
+        <rect x="155" y="74" width="10" height="6" rx="1.5" fill="#1B3A5B"/>
+        <circle cx="160" cy="80" r="7" fill="url(#trPiv)" stroke="#8a6d1f" stroke-width="1" filter="url(#trSh)"/>
+        <g id="tBeam"><line id="tBeamLine" x1="60" y1="70" x2="260" y2="90" stroke="#0F2847" stroke-width="5" stroke-linecap="round"/></g>
+        <g id="tLeft">
+          <line id="tLeftRope" x1="60" y1="70" x2="60" y2="100" stroke="#0F2847" stroke-width="2"/>
+          <ellipse id="tLeftPan" cx="60" cy="106" rx="42" ry="5" fill="#0F2847"/>
+          <rect x="20" y="84" width="80" height="22" rx="5" fill="url(#trL)" filter="url(#trSh)"/>
+          <text id="tLeftLabel" x="60" y="99" text-anchor="middle" font-size="14" fill="white" font-weight="900" class="tradeoff-axis-label-l">拡散性</text>
+        </g>
+        <g id="tRight">
+          <line id="tRightRope" x1="260" y1="90" x2="260" y2="124" stroke="#0F2847" stroke-width="2"/>
+          <ellipse id="tRightPan" cx="260" cy="130" rx="42" ry="5" fill="#0F2847"/>
+          <rect x="220" y="108" width="80" height="22" rx="5" fill="url(#trR)" filter="url(#trSh)"/>
+          <text id="tRightLabel" x="260" y="123" text-anchor="middle" font-size="14" fill="white" font-weight="900" class="tradeoff-axis-label-r">正確性</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="tradeoff-list">
+      <div class="tradeoff-card active" onclick="switchTradeoff(this, 0)">
+        <div class="tradeoff-card-title">SNS発信</div>
+        <div class="tradeoff-card-axis">拡散性 ⇄ 正確性</div>
+      </div>
+      <div class="tradeoff-card" onclick="switchTradeoff(this, 1)">
+        <div class="tradeoff-card-title">パスワード設計</div>
+        <div class="tradeoff-card-axis">安全性 ⇄ 覚えやすさ</div>
+      </div>
+      <div class="tradeoff-card" onclick="switchTradeoff(this, 2)">
+        <div class="tradeoff-card-title">AI画像生成</div>
+        <div class="tradeoff-card-axis">効率 ⇄ 独自性</div>
+      </div>
+      <div class="tradeoff-card" onclick="switchTradeoff(this, 3)">
+        <div class="tradeoff-card-title">スマホ依存対策</div>
+        <div class="tradeoff-card-axis">利便性 ⇄ 健康・集中</div>
+      </div>
+      <div class="tradeoff-card" onclick="switchTradeoff(this, 4)">
+        <div class="tradeoff-card-title">無料サービス</div>
+        <div class="tradeoff-card-axis">無料 ⇄ プライバシー</div>
+      </div>
+    </div>
+  </div>
+
+  <p style="margin-top: 14px; font-size: 13.5px; color: var(--text-sub); font-weight: 500;">※ <strong style="color:var(--navy-darkest);">「両立できない」と認めること</strong> が、実は問題解決の決定的な一歩。どちらに寄せるかを <strong style="color:var(--accent-red-dark);">明示的に選ぶ</strong> ことで、あとから「思っていたのと違う」を防げる。</p>
+</div>
+
+<!-- ═════ 07. 実習1 + 問題解決の過程 ═════ -->
+<div class="slide" data-title="実習1 問題解決の過程">
+  <div class="eyebrow">PRACTICE 1 / 学習ノート 実習1</div>
+  <h2 class="slide-title">問題解決の過程</h2>
+  <p class="slide-subtitle">問題発見→課題化→計画→実施→評価。やって終わりではなく、評価から戻る矢印=フィードバックがあってサイクルが閉じる。</p>
+
+  <div class="cycle-wrap">
+    <svg class="cycle-svg" viewBox="0 0 460 360" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#2C5F8D"/></marker>
+        <marker id="arrowGold" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#C9A961"/></marker>
+        <marker id="arrowRed" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#C8102E"/></marker>
+      </defs>
+      <!-- step 1 (blank) — 問題の把握 -->
+      <g class="cycle-step blank" id="cycStep1" data-blank="1" onclick="focusCycle(1)">
+        <circle class="cycle-circle" cx="80" cy="100" r="48"/>
+        <text class="cycle-label" x="80" y="106" text-anchor="middle" font-size="22" font-weight="900">(1)</text>
+      </g>
+      <!-- step 2: 分析 -->
+      <g class="cycle-step fixed">
+        <circle class="cycle-circle" cx="230" cy="60" r="42" fill="#4A7FA8"/>
+        <text class="cycle-label" x="230" y="58" text-anchor="middle" font-size="14" font-weight="700">分析・</text>
+        <text class="cycle-label" x="230" y="76" text-anchor="middle" font-size="14" font-weight="700">課題化</text>
+      </g>
+      <!-- step 3: 計画 -->
+      <g class="cycle-step fixed">
+        <circle class="cycle-circle" cx="380" cy="100" r="42" fill="#4A7FA8"/>
+        <text class="cycle-label" x="380" y="106" text-anchor="middle" font-size="16" font-weight="700">計画</text>
+      </g>
+      <!-- step 4: 実施 -->
+      <g class="cycle-step fixed">
+        <circle class="cycle-circle" cx="380" cy="240" r="42" fill="#4A7FA8"/>
+        <text class="cycle-label" x="380" y="246" text-anchor="middle" font-size="16" font-weight="700">実施</text>
+      </g>
+      <!-- step 5: 評価 -->
+      <g class="cycle-step fixed">
+        <circle class="cycle-circle" cx="230" cy="300" r="42" fill="#4A7FA8"/>
+        <text class="cycle-label" x="230" y="306" text-anchor="middle" font-size="16" font-weight="700">評価</text>
+      </g>
+      <!-- arrows step1 → step2 -->
+      <path d="M 124 80 Q 175 50 188 53" stroke="#2C5F8D" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+      <!-- arrows step2 → step3 -->
+      <path d="M 272 67 Q 330 70 340 90" stroke="#2C5F8D" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+      <!-- arrows step3 → step4 -->
+      <path d="M 380 144 L 380 196" stroke="#2C5F8D" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+      <!-- arrows step4 → step5 -->
+      <path d="M 340 252 Q 280 280 272 290" stroke="#2C5F8D" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+      <!-- step 6 (blank) フィードバック arrow loop back -->
+      <g class="cycle-step blank" id="cycStep2" data-blank="2" onclick="focusCycle(2)">
+        <path id="fbPath" class="cycle-fb-arrow" d="M 188 308 Q 100 320 80 152" fill="none" stroke-width="3" stroke-dasharray="6 4" marker-end="url(#arrowRed)"/>
+        <rect x="100" y="220" width="100" height="44" rx="6" fill="var(--navy-pale)" stroke="#0F2847" stroke-width="2" stroke-dasharray="5 4"/>
+        <text class="cycle-label" x="150" y="247" text-anchor="middle" font-size="20" fill="#2C5F8D" font-weight="900">(2)</text>
+      </g>
+    </svg>
+
+    <div class="cycle-choices">
+      <h4>◆ 実習1 / (1)(2)に当てはまる語</h4>
+      <div class="cycle-choice-group">
+        <div class="cycle-choice-label">(1) サイクルの起点 ─ ここから始まる</div>
+        <div class="cycle-options" data-target="1">
+          <span class="cycle-opt" data-ok="false" onclick="pickCycle(this, false, 'ショートカットは省略・近道。問題解決の正規ステップではない')">エ. ショートカット</span>
+          <span class="cycle-opt" data-ok="true" onclick="pickCycle(this, true, '問題解決の出発点。ギャップに気づき、現状を測ることから始まる')">ウ. 問題の把握(発見)</span>
+          <span class="cycle-opt" data-ok="false" onclick="pickCycle(this, false, 'トレードオフは選択時のジレンマ。サイクルの段階名ではない')">オ. トレードオフ</span>
+          <span class="cycle-opt" data-ok="false" onclick="pickCycle(this, false, '蓄積は結果。出発点ではない')">カ. 問題の蓄積</span>
+          <span class="cycle-opt" data-ok="false" onclick="pickCycle(this, false, '遂行は実施・行動段階のこと。サイクルの起点ではない')">ア. 問題解決の遂行</span>
+        </div>
+      </div>
+      <div class="cycle-choice-group">
+        <div class="cycle-choice-label">(2) 評価から起点へ戻る矢印 ─ 改善のループ</div>
+        <div class="cycle-options" data-target="2">
+          <span class="cycle-opt" data-ok="false" onclick="pickCycle(this, false, '把握は起点 (1) の答え。同じものは入らない')">ウ. 問題の把握(発見)</span>
+          <span class="cycle-opt" data-ok="true" onclick="pickCycle(this, true, '評価結果を次の問題発見に戻す。これでサイクルが閉じる')">イ. フィードバック</span>
+          <span class="cycle-opt" data-ok="false" onclick="pickCycle(this, false, 'ショートカットは正規ステップを飛ばす行為')">エ. ショートカット</span>
+          <span class="cycle-opt" data-ok="false" onclick="pickCycle(this, false, 'トレードオフは選択のジレンマ')">オ. トレードオフ</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 08. SECTION 2 DIVIDER ═════ -->
+<div class="slide section-divider" data-title="第2節 PPDACサイクル">
+  <div class="section-number">SECTION · 02</div>
+  <h2 class="section-title-big">PPDAC<br>サイクル</h2>
+  <p class="section-tagline">― 5段階を回し続けて、問題を継続的に改善する ―</p>
+</div>
+
+<!-- ═════ 09. PPDAC overview (interactive) ═════ -->
+<div class="slide" data-title="PPDACサイクル概観">
+  <div class="eyebrow">FRAMEWORK / PPDAC</div>
+  <h2 class="slide-title">PPDACサイクル</h2>
+  <p class="slide-subtitle">問題解決の手順を <strong style="color:var(--accent-red);">5段階の頭文字</strong> で覚える代表的な手法。各段階をタップして役割を確認。一周したら、評価結果を次の Problem に戻して回し続ける。</p>
+
+  <div class="ppdac-wrap">
+    <div class="ppdac-svg-box">
+      <svg class="ppdac-svg" viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="ppdacArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#2C5F8D"/></marker>
+        </defs>
+        <!-- center label -->
+        <circle cx="200" cy="190" r="42" fill="rgba(15,40,71,0.06)" stroke="#0F2847" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="200" y="184" text-anchor="middle" font-size="11" fill="#2C5F8D" font-weight="700" font-family="JetBrains Mono">PPDAC</text>
+        <text x="200" y="200" text-anchor="middle" font-size="10" fill="#0F2847" font-weight="700">サイクル</text>
+        <!-- 5 cycle nodes (pentagon) -->
+        <!-- node 1: Problem (top) -->
+        <g class="ppdac-node" data-key="problem" onclick="selectPpdac('problem')">
+          <circle cx="200" cy="56" r="44" fill="#0F2847"/>
+          <text class="ppdac-letter" x="200" y="48" text-anchor="middle" font-size="22" fill="#C9A961">P</text>
+          <text class="ppdac-jp" x="200" y="70" text-anchor="middle" font-size="12" fill="white">Problem</text>
+        </g>
+        <!-- node 2: Plan (top-right) -->
+        <g class="ppdac-node" data-key="plan" onclick="selectPpdac('plan')">
+          <circle cx="340" cy="158" r="44" fill="#1B3A5B"/>
+          <text class="ppdac-letter" x="340" y="150" text-anchor="middle" font-size="22" fill="#C9A961">P</text>
+          <text class="ppdac-jp" x="340" y="172" text-anchor="middle" font-size="12" fill="white">Plan</text>
+        </g>
+        <!-- node 3: Data (bottom-right) -->
+        <g class="ppdac-node" data-key="data" onclick="selectPpdac('data')">
+          <circle cx="288" cy="320" r="44" fill="#2C5F8D"/>
+          <text class="ppdac-letter" x="288" y="312" text-anchor="middle" font-size="22" fill="#C9A961">D</text>
+          <text class="ppdac-jp" x="288" y="334" text-anchor="middle" font-size="12" fill="white">Data</text>
+        </g>
+        <!-- node 4: Analysis (bottom-left) -->
+        <g class="ppdac-node" data-key="analysis" onclick="selectPpdac('analysis')">
+          <circle cx="112" cy="320" r="44" fill="#4A7FA8"/>
+          <text class="ppdac-letter" x="112" y="312" text-anchor="middle" font-size="22" fill="#C9A961">A</text>
+          <text class="ppdac-jp" x="112" y="334" text-anchor="middle" font-size="12" fill="white">Analysis</text>
+        </g>
+        <!-- node 5: Conclusion (top-left) -->
+        <g class="ppdac-node" data-key="conclusion" onclick="selectPpdac('conclusion')">
+          <circle cx="60" cy="158" r="44" fill="#7BA0C4"/>
+          <text class="ppdac-letter" x="60" y="150" text-anchor="middle" font-size="22" fill="#0F2847">C</text>
+          <text class="ppdac-jp" x="60" y="172" text-anchor="middle" font-size="12" fill="#0F2847">Conclusion</text>
+        </g>
+        <!-- curved arrows -->
+        <path class="ppdac-arrow" d="M 244 78 Q 320 100 320 130" marker-end="url(#ppdacArrow)"/>
+        <path class="ppdac-arrow" d="M 338 200 Q 330 280 304 282" marker-end="url(#ppdacArrow)"/>
+        <path class="ppdac-arrow" d="M 244 326 Q 200 348 158 326" marker-end="url(#ppdacArrow)"/>
+        <path class="ppdac-arrow" d="M 96 282 Q 70 280 64 200" marker-end="url(#ppdacArrow)"/>
+        <path class="ppdac-arrow" d="M 80 130 Q 80 100 158 78" marker-end="url(#ppdacArrow)"/>
+      </svg>
+    </div>
+
+    <div class="ppdac-panel" id="ppdacPanel"><!-- JS が埋める --></div>
+  </div>
+
+  <p style="margin-top: 14px; font-size: 13px; color: var(--text-sub); font-weight: 500;">※ <strong style="color:var(--navy-darkest);">最後の Conclusion</strong> で「次の Problem」が見えてくる。<strong style="color:var(--accent-red-dark);">一周して終わりではない</strong>のが PDCA / PPDAC の本質。</p>
+</div>
+
+<!-- ═════ 10. 実習2 PPDAC マッチング ═════ -->
+<div class="slide" data-title="実習2 PPDAC マッチング">
+  <div class="eyebrow">PRACTICE 2 / 学習ノート 実習2</div>
+  <h2 class="slide-title">PPDACの英単語と意味</h2>
+  <p class="slide-subtitle">P・P・D・A・C それぞれの英単語と、その段階で行う作業を <strong style="color:var(--accent-red);">語群</strong> から特定する。クリックで答えを表示。</p>
+
+  <div style="background: var(--navy-bg); padding: 14px 18px; border-radius: 6px; font-size: 14px; line-height: 1.85; color: var(--text-sub); margin-bottom: 14px; font-weight: 500;">
+    《語群》　ア．分析　　イ．データ収集　　ウ．結論　　エ．計画　　オ．問題
+  </div>
+
+  <div class="ppdac-match">
+    <div class="match-row">
+      <div class="match-letter">P</div>
+      <div class="match-en"><span class="note-blank" data-answer="Problem">英単語</span></div>
+      <div class="match-arrow">→</div>
+      <div class="match-jp"><span class="note-blank" data-answer="オ. 問題">意味</span></div>
+    </div>
+    <div class="match-row">
+      <div class="match-letter">P</div>
+      <div class="match-en"><span class="note-blank" data-answer="Plan">英単語</span></div>
+      <div class="match-arrow">→</div>
+      <div class="match-jp"><span class="note-blank" data-answer="エ. 計画">意味</span></div>
+    </div>
+    <div class="match-row">
+      <div class="match-letter">D</div>
+      <div class="match-en"><span class="note-blank" data-answer="Data">英単語</span></div>
+      <div class="match-arrow">→</div>
+      <div class="match-jp"><span class="note-blank" data-answer="イ. データ収集">意味</span></div>
+    </div>
+    <div class="match-row">
+      <div class="match-letter">A</div>
+      <div class="match-en"><span class="note-blank" data-answer="Analysis">英単語</span></div>
+      <div class="match-arrow">→</div>
+      <div class="match-jp"><span class="note-blank" data-answer="ア. 分析">意味</span></div>
+    </div>
+    <div class="match-row">
+      <div class="match-letter">C</div>
+      <div class="match-en"><span class="note-blank" data-answer="Conclusion">英単語</span></div>
+      <div class="match-arrow">→</div>
+      <div class="match-jp"><span class="note-blank" data-answer="ウ. 結論">意味</span></div>
+    </div>
+  </div>
+
+  <div style="margin-top: 18px; padding: 14px 18px; background: rgba(201,169,97,0.12); border-left: 3px solid var(--accent-gold); border-radius: 0 6px 6px 0; font-size: 13.5px; line-height: 1.8; color: var(--text-main); font-weight: 500;">
+    <strong>覚え方:</strong> 「<strong style="color:var(--accent-red-dark);">問計収析論</strong>」(もんけいしゅうせきろん)。問題→計画→収集→分析→結論。語呂は素っ気ないが、5段階の順序を一文字で覚えるのに便利。
+  </div>
+</div>
+
+<!-- ═════ 11. 実習3 ブレーンストーミング ═════ -->
+<div class="slide" data-title="実習3 ブレーンストーミング">
+  <div class="eyebrow">PRACTICE 3 / 学習ノート 実習3</div>
+  <h2 class="slide-title">ブレーンストーミングの作法</h2>
+  <p class="slide-subtitle">自由にアイデアを出し合うための発想法。各カードをタップして、ブレーンストーミングの作法として <strong style="color:var(--accent-red);">適切か / 不適切か</strong> を判定する。</p>
+
+  <div class="bs-wrap">
+    <div class="bs-instr"><strong>原則:</strong> 質より量・批判禁止・自由奔放・便乗歓迎。たくさん出して、選別はあと。</div>
+
+    <div class="bs-grid">
+      <div class="bs-chip" data-correct="false" onclick="judgeBs(this)">
+        <div class="bs-chip-letter">選択肢 ア</div>
+        <div class="bs-chip-text">奇抜な提案は却下し、発言の内容範囲を限定する。</div>
+        <span class="bs-chip-judge">タップで判定</span>
+        <div class="bs-chip-fb"><strong>不適切</strong> ─ ブレーンストーミングの第一原則「批判禁止」「自由奔放」に反する。奇抜さこそが新しいアイデアの種になる。</div>
+      </div>
+      <div class="bs-chip" data-correct="true" onclick="judgeBs(this)">
+        <div class="bs-chip-letter">選択肢 イ</div>
+        <div class="bs-chip-text">他人の意見への追加や修正意見も認める。</div>
+        <span class="bs-chip-judge">タップで判定</span>
+        <div class="bs-chip-fb"><strong>適切</strong> ─ 「便乗歓迎」の原則。他人のアイデアに乗っかって発展させることが推奨される。</div>
+      </div>
+      <div class="bs-chip" data-correct="true" onclick="judgeBs(this)">
+        <div class="bs-chip-letter">選択肢 ウ</div>
+        <div class="bs-chip-text">意見の質より、多くの意見提案を求める。</div>
+        <span class="bs-chip-judge">タップで判定</span>
+        <div class="bs-chip-fb"><strong>適切</strong> ─ 「質より量」の原則。質を選別するのは後の段階。発想中は数を稼ぐ。</div>
+      </div>
+      <div class="bs-chip" data-correct="false" onclick="judgeBs(this)">
+        <div class="bs-chip-letter">選択肢 エ</div>
+        <div class="bs-chip-text">時間的な制約があるので、できる限り実現可能な意見を述べる。</div>
+        <span class="bs-chip-judge">タップで判定</span>
+        <div class="bs-chip-fb"><strong>不適切</strong> ─ 「実現可能性で絞る」のは選別工程。発想段階で実現可能性を持ち込むと、思考の枠が狭くなる。</div>
+      </div>
+    </div>
+
+    <div class="bs-verdict" id="bsVerdict">
+      <div class="bs-verdict-title">ANSWER · 適切でないもの</div>
+      <div class="bs-verdict-body"><strong>答え: ア・エ</strong> ─ どちらも「自由奔放」「実現可能性は後回し」というブレーンストーミングの基本原則に反する。発想の段階でストッパーをかけると、後から振り返ったときの選択肢の幅が狭くなる。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 12. SECTION 3 DIVIDER ═════ -->
+<div class="slide section-divider" data-title="第3節 推論と検証">
+  <div class="section-number">SECTION · 03</div>
+  <h2 class="section-title-big">推論と<br>検証</h2>
+  <p class="section-tagline">― 演繹は妥当性、帰納は蓋然性。両方を使い分ける ―</p>
+</div>
+
+<!-- ═════ 13. POINT ④ 演繹的推論 ═════ -->
+<div class="slide" data-title="POINT ④ 演繹的推論">
+  <div class="eyebrow">POINT 4 / 学習ノート ④</div>
+  <h2 class="slide-title">演繹的推論 ― 一般則から特殊な結論へ</h2>
+  <p class="slide-subtitle">あらかじめ確立された <strong style="color:var(--accent-red);">一般則・大原則</strong> を出発点に、個別のケースに当てはめて結論を導く。<strong style="color:var(--accent-red);">妥当な</strong>推論形式で組み立てれば、前提が真なら結論も必ず真になる。</p>
+
+  <div class="def-box has-illust">
+    <div class="law-illust">
+      <svg class="law-illust-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g4top" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#1B3A5B"/></linearGradient>
+          <linearGradient id="g4bot" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#E83A52"/><stop offset="100%" stop-color="#8B0A1F"/></linearGradient>
+          <filter id="g4sh" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur in="SourceAlpha" stdDeviation="0.7"/><feOffset dx="0.5" dy="1.3"/><feComponentTransfer><feFuncA type="linear" slope="0.4"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <rect x="0" y="0" width="100" height="100" fill="#F3F6FB"/>
+        <rect x="8" y="12" width="84" height="22" fill="url(#g4top)" rx="3" filter="url(#g4sh)"/>
+        <rect x="8" y="12" width="84" height="3" fill="#FFFFFF" opacity="0.28" rx="3"/>
+        <circle cx="28" cy="23" r="2.5" fill="#FFFFFF" opacity="0.55"/>
+        <circle cx="50" cy="23" r="2.5" fill="#FFFFFF" opacity="0.85"/>
+        <circle cx="72" cy="23" r="2.5" fill="#FFFFFF" opacity="0.55"/>
+        <path d="M 8 36 L 92 36 L 62 70 L 38 70 Z" fill="rgba(74,127,168,0.18)" stroke="#2C5F8D" stroke-width="0.8" stroke-dasharray="3 2"/>
+        <line x1="50" y1="40" x2="50" y2="66" stroke="#0F2847" stroke-width="3" stroke-linecap="round"/>
+        <polygon points="44,64 56,64 50,74" fill="#0F2847"/>
+        <rect x="34" y="76" width="32" height="18" fill="url(#g4bot)" rx="3" filter="url(#g4sh)"/>
+        <rect x="34" y="76" width="32" height="2.5" fill="#FFFFFF" opacity="0.3" rx="3"/>
+        <path d="M 41 86 L 47 90 L 59 80" stroke="#FFFFFF" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="law-illust-tag">DEDUCTIVE</div>
+    </div>
+    <div class="def-label">④ 一般から特殊へ</div>
+    <div class="def-term"><span class="note-blank" data-answer="演繹的推論">クリックで正解</span></div>
+    <div class="def-desc">大前提(一般則)+ 小前提(個別事実)→ 結論、という三段論法が代表例。<strong>数学・論理学</strong> はほぼすべてこの推論に乗る。<strong style="color:var(--accent-red-dark);">妥当な</strong>演繹的推論であれば、前提が真なら結論も必ず真になる(健全性)。</div>
+  </div>
+
+  <h3 class="section-heading">三段論法の例</h3>
+  <div class="r-eg-tabs">
+    <span class="r-eg-tab active" onclick="switchDeduct(this, 0)">EX 01 · ソクラテス</span>
+    <span class="r-eg-tab" onclick="switchDeduct(this, 1)">EX 02 · 著作権</span>
+    <span class="r-eg-tab" onclick="switchDeduct(this, 2)">EX 03 · ピタゴラス</span>
+  </div>
+  <div class="reasoning-flow" id="deductFlow">
+    <div class="r-row lit"><div class="r-tag">大前提</div><div class="r-text" id="dRow1">すべての人間は死ぬ。</div></div>
+    <div class="r-arrow">▼</div>
+    <div class="r-row lit"><div class="r-tag">小前提</div><div class="r-text" id="dRow2">ソクラテスは人間である。</div></div>
+    <div class="r-arrow">▼</div>
+    <div class="r-row lit conclusion"><div class="r-tag">結論</div><div class="r-text" id="dRow3">ゆえに、ソクラテスは死ぬ。</div></div>
+  </div>
+</div>
+
+<!-- ═════ 14. POINT ⑤ 帰納的推論 ═════ -->
+<div class="slide" data-title="POINT ⑤ 帰納的推論">
+  <div class="eyebrow">POINT 5 / 学習ノート ⑤</div>
+  <h2 class="slide-title">帰納的推論 ― 個別事実から一般則を導く</h2>
+  <p class="slide-subtitle">複数の <strong style="color:var(--accent-red);">具体的な事実</strong> を観察して、それらに共通する一般法則を仮説として立てる。<strong>自然科学・統計学</strong> の基本動作。</p>
+
+  <div class="def-box has-illust">
+    <div class="law-illust">
+      <svg class="law-illust-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g5top" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#1B3A5B"/></linearGradient>
+          <linearGradient id="g5bot" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#E83A52"/><stop offset="100%" stop-color="#8B0A1F"/></linearGradient>
+          <filter id="g5sh" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur in="SourceAlpha" stdDeviation="0.7"/><feOffset dx="0.5" dy="1.3"/><feComponentTransfer><feFuncA type="linear" slope="0.4"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <rect x="0" y="0" width="100" height="100" fill="#F3F6FB"/>
+        <rect x="8" y="74" width="22" height="20" fill="url(#g5bot)" rx="3" filter="url(#g5sh)"/>
+        <rect x="8" y="74" width="22" height="2.5" fill="#FFFFFF" opacity="0.3" rx="3"/>
+        <rect x="39" y="74" width="22" height="20" fill="url(#g5bot)" rx="3" filter="url(#g5sh)"/>
+        <rect x="39" y="74" width="22" height="2.5" fill="#FFFFFF" opacity="0.3" rx="3"/>
+        <rect x="70" y="74" width="22" height="20" fill="url(#g5bot)" rx="3" filter="url(#g5sh)"/>
+        <rect x="70" y="74" width="22" height="2.5" fill="#FFFFFF" opacity="0.3" rx="3"/>
+        <path d="M 8 74 L 92 74 L 64 38 L 36 38 Z" fill="rgba(74,127,168,0.18)" stroke="#2C5F8D" stroke-width="0.8" stroke-dasharray="3 2"/>
+        <line x1="50" y1="68" x2="50" y2="42" stroke="#0F2847" stroke-width="3" stroke-linecap="round"/>
+        <polygon points="44,44 56,44 50,34" fill="#0F2847"/>
+        <rect x="20" y="12" width="60" height="22" fill="url(#g5top)" rx="3" filter="url(#g5sh)"/>
+        <rect x="20" y="12" width="60" height="3" fill="#FFFFFF" opacity="0.28" rx="3"/>
+        <text x="50" y="29" text-anchor="middle" fill="#FFFFFF" font-size="14" font-weight="900" font-family="JetBrains Mono">?</text>
+      </svg>
+      <div class="law-illust-tag">INDUCTIVE</div>
+    </div>
+    <div class="def-label">⑤ 特殊から一般へ</div>
+    <div class="def-term"><span class="note-blank" data-answer="帰納的推論">クリックで正解</span></div>
+    <div class="def-desc">観察された個別事実から共通する一般則を導く。<strong>結論はあくまで「仮説」</strong> であり、「すべてのXはY」のような<strong>全称命題</strong>は反例1つで否定される。一方、統計的・確率的な仮説は、反例や追加データによって信頼度が下がったり、条件が修正されたりする。実験・データ分析・市場調査などはこの推論に立つ。<strong style="color:var(--accent-red-dark);">確実性は弱いが、新発見の可能性がある</strong>のが特徴。</div>
+  </div>
+
+  <h3 class="section-heading">帰納的推論の例</h3>
+  <div class="r-eg-tabs">
+    <span class="r-eg-tab active" onclick="switchInduct(this, 0)">EX 01 · 白鳥観察</span>
+    <span class="r-eg-tab" onclick="switchInduct(this, 1)">EX 02 · スマホ依存</span>
+    <span class="r-eg-tab" onclick="switchInduct(this, 2)">EX 03 · SNS拡散</span>
+  </div>
+  <div class="reasoning-flow" id="inductFlow">
+    <div class="r-row lit conclusion"><div class="r-tag">仮説(結論)</div><div class="r-text" id="iRow0">ゆえに、世界中の白鳥は白い。</div></div>
+    <div class="r-arrow up">▲</div>
+    <div class="r-row lit"><div class="r-tag">事実 3</div><div class="r-text" id="iRow3">C公園の白鳥も白い。</div></div>
+    <div class="r-row lit"><div class="r-tag">事実 2</div><div class="r-text" id="iRow2">B池の白鳥も白い。</div></div>
+    <div class="r-row lit"><div class="r-tag">事実 1</div><div class="r-text" id="iRow1">A湖の白鳥は白い。</div></div>
+  </div>
+
+  <div style="margin-top: 14px; padding: 12px 16px; background: rgba(200,16,46,0.06); border-left: 3px solid var(--accent-red); border-radius: 0 4px 4px 0; font-size: 13.5px; line-height: 1.75; font-weight: 500;">
+    <strong style="color:var(--accent-red-dark);">注意:</strong> 全称命題型の帰納の結論は反例で崩れる。実際、オーストラリアで黒い白鳥(コクチョウ)が見つかった瞬間に「すべての白鳥は白い」は誤りになった。<strong>「ブラックスワン」</strong> の語源。統計的仮説は反例 1 つで完全に崩れるわけではないが、想定外データの登場で信頼度が下がる、という同型の現象が起きる。
+  </div>
+</div>
+
+<!-- ═════ 15. 演繹 vs 帰納 比較 ═════ -->
+<div class="slide" data-title="演繹 vs 帰納">
+  <div class="eyebrow">COMPARE / 演繹 ⇄ 帰納</div>
+  <h2 class="slide-title">2つの推論を並べて見る</h2>
+  <p class="slide-subtitle">どちらが「正しい」推論というわけではない。<strong style="color:var(--accent-red);">扱う対象</strong> と <strong style="color:var(--accent-red);">求める確実性</strong> に応じて使い分ける。</p>
+
+  <div class="cmp-vs">
+    <div class="cmp-side deductive">
+      <h4>演繹的推論</h4>
+      <div class="cmp-en">DEDUCTIVE</div>
+      <svg class="cmp-svg" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="cmpDtop" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#1B3A5B"/></linearGradient>
+          <linearGradient id="cmpDbot" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#E83A52"/><stop offset="100%" stop-color="#8B0A1F"/></linearGradient>
+          <filter id="cmpDsh" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="1.4"/><feOffset dx="1" dy="2"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <rect x="10" y="14" width="140" height="32" fill="url(#cmpDtop)" rx="4" filter="url(#cmpDsh)"/>
+        <rect x="10" y="14" width="140" height="4" fill="#FFFFFF" opacity="0.25" rx="4"/>
+        <text x="80" y="36" text-anchor="middle" fill="white" font-size="14" font-weight="900">一般則</text>
+        <circle cx="40" cy="32" r="3" fill="#FFFFFF" opacity="0.5"/>
+        <circle cx="80" cy="32" r="3" fill="#FFFFFF" opacity="0.7"/>
+        <circle cx="120" cy="32" r="3" fill="#FFFFFF" opacity="0.5"/>
+        <path d="M 10 46 L 150 46 L 100 116 L 60 116 Z" fill="rgba(74,127,168,0.2)" stroke="#2C5F8D" stroke-width="1.2" stroke-dasharray="4 3"/>
+        <line x1="80" y1="50" x2="80" y2="106" stroke="#0F2847" stroke-width="3.5" stroke-linecap="round"/>
+        <polygon points="72,104 88,104 80,118" fill="#0F2847"/>
+        <rect x="48" y="120" width="64" height="30" fill="url(#cmpDbot)" rx="4" filter="url(#cmpDsh)"/>
+        <rect x="48" y="120" width="64" height="3.5" fill="#FFFFFF" opacity="0.3" rx="4"/>
+        <text x="80" y="140" text-anchor="middle" fill="white" font-size="13" font-weight="900">結論</text>
+      </svg>
+      <div class="cmp-row"><div class="cmp-row-label">方向</div><div class="cmp-row-text">一般則 → 個別の結論</div></div>
+      <div class="cmp-row"><div class="cmp-row-label">確実性</div><div class="cmp-row-text"><strong>妥当な</strong>推論形式なら、前提が真であれば結論も <strong>必ず真</strong> になる(健全性)</div></div>
+      <div class="cmp-row"><div class="cmp-row-label">使い場</div><div class="cmp-row-text">数学の証明、論理学、法律の当てはめ、プログラムの形式検証</div></div>
+      <div class="cmp-row"><div class="cmp-row-label">弱点</div><div class="cmp-row-text">前提が間違っていると、結論も丸ごと間違う</div></div>
+    </div>
+
+    <div class="cmp-axis">
+      <svg class="cmp-axis-svg" viewBox="0 0 50 200" xmlns="http://www.w3.org/2000/svg">
+        <line x1="25" y1="20" x2="25" y2="180" stroke="#0F2847" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <polygon points="20,30 30,30 25,18" fill="#2C5F8D"/>
+        <polygon points="20,170 30,170 25,182" fill="#C8102E"/>
+        <text x="25" y="58" text-anchor="middle" font-size="9" fill="#2C5F8D" font-weight="700">広い</text>
+        <text x="25" y="105" text-anchor="middle" font-size="9" fill="#0F2847" font-weight="700">VS</text>
+        <text x="25" y="150" text-anchor="middle" font-size="9" fill="#C8102E" font-weight="700">狭い</text>
+      </svg>
+    </div>
+
+    <div class="cmp-side inductive">
+      <h4>帰納的推論</h4>
+      <div class="cmp-en">INDUCTIVE</div>
+      <svg class="cmp-svg" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="cmpItop" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#1B3A5B"/></linearGradient>
+          <linearGradient id="cmpIbot" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#E83A52"/><stop offset="100%" stop-color="#8B0A1F"/></linearGradient>
+          <filter id="cmpIsh" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="1.4"/><feOffset dx="1" dy="2"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <rect x="10" y="120" width="40" height="30" fill="url(#cmpIbot)" rx="4" filter="url(#cmpIsh)"/>
+        <rect x="10" y="120" width="40" height="3.5" fill="#FFFFFF" opacity="0.3" rx="4"/>
+        <rect x="60" y="120" width="40" height="30" fill="url(#cmpIbot)" rx="4" filter="url(#cmpIsh)"/>
+        <rect x="60" y="120" width="40" height="3.5" fill="#FFFFFF" opacity="0.3" rx="4"/>
+        <rect x="110" y="120" width="40" height="30" fill="url(#cmpIbot)" rx="4" filter="url(#cmpIsh)"/>
+        <rect x="110" y="120" width="40" height="3.5" fill="#FFFFFF" opacity="0.3" rx="4"/>
+        <text x="30" y="140" text-anchor="middle" fill="white" font-size="11" font-weight="900">事実</text>
+        <text x="80" y="140" text-anchor="middle" fill="white" font-size="11" font-weight="900">事実</text>
+        <text x="130" y="140" text-anchor="middle" fill="white" font-size="11" font-weight="900">事実</text>
+        <path d="M 10 120 L 150 120 L 100 50 L 60 50 Z" fill="rgba(74,127,168,0.2)" stroke="#2C5F8D" stroke-width="1.2" stroke-dasharray="4 3"/>
+        <line x1="80" y1="116" x2="80" y2="58" stroke="#0F2847" stroke-width="3.5" stroke-linecap="round"/>
+        <polygon points="72,60 88,60 80,46" fill="#0F2847"/>
+        <rect x="40" y="14" width="80" height="32" fill="url(#cmpItop)" rx="4" filter="url(#cmpIsh)"/>
+        <rect x="40" y="14" width="80" height="4" fill="#FFFFFF" opacity="0.25" rx="4"/>
+        <text x="80" y="36" text-anchor="middle" fill="white" font-size="13" font-weight="900">仮説</text>
+      </svg>
+      <div class="cmp-row"><div class="cmp-row-label">方向</div><div class="cmp-row-text">複数の個別事実 → 一般則(仮説)</div></div>
+      <div class="cmp-row"><div class="cmp-row-label">確実性</div><div class="cmp-row-text">結論はあくまで <strong>仮説</strong>。反例 1 つで覆る</div></div>
+      <div class="cmp-row"><div class="cmp-row-label">使い場</div><div class="cmp-row-text">自然科学、市場調査、機械学習、データサイエンス</div></div>
+      <div class="cmp-row"><div class="cmp-row-label">強み</div><div class="cmp-row-text">新しい一般則を発見できる(演繹は既知の一般則の応用にとどまる)</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 16. 実習4 問題解決の遂行 ═════ -->
+<div class="slide" data-title="実習4 問題解決の遂行">
+  <div class="eyebrow">PRACTICE 4 / 学習ノート 実習4</div>
+  <h2 class="slide-title">問題解決の遂行 ─ ○か×か</h2>
+  <p class="slide-subtitle">文献調査・検索・引用・推論・評価について、正しいものに ○、誤っているものに ×。各行をタップで判定が出る。</p>
+
+  <div class="practice-list">
+    <div class="practice-item" onclick="revealPractice(this)">
+      <div class="practice-letter">(1)</div>
+      <div class="practice-text">文献調査は、信憑性の高い情報源を使って行うことが大切である。</div>
+      <div class="practice-verdict" data-ok="true">?</div>
+      <div class="practice-reason"><strong>○ 適切。</strong> 文献調査は <strong>査読付き論文・公的統計・教科書・学術書・大手報道機関</strong> など、検証された情報源を優先する。Wikipedia や個人ブログは出発点には使えても、それだけで根拠にしない。</div>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <div class="practice-letter">(2)</div>
+      <div class="practice-text">Web検索の結果は、検索エンジンのアルゴリズムによってランキングされており、最初のページに表示される結果の信頼性が最も高い。</div>
+      <div class="practice-verdict" data-ok="false">?</div>
+      <div class="practice-reason"><strong>× 不適切。</strong> ランキングが上位であっても、情報の信頼性が高いとは言えない。検索エンジンは <strong>関連性・人気度・SEO対策</strong> など複数要素で並べているだけで、内容の正しさは保証していない。</div>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <div class="practice-letter">(3)</div>
+      <div class="practice-text">他者の著作物を引用する場合は、自分の著作部分と引用部分を区別し、出所・出典を明示するなど、著作権を侵害することのないように注意する。</div>
+      <div class="practice-verdict" data-ok="true">?</div>
+      <div class="practice-reason"><strong>○ 適切。</strong> 引用は著作権法 <strong>32条</strong> により、公表された著作物について、<strong>公正な慣行</strong> に合致し、<strong>引用の目的上正当な範囲内</strong> で行う場合に認められる。実務上は、引用部分の明確化(かぎ括弧等)、自分の文と引用との主従関係、引用の必然性、出所の明示(<strong>48条</strong>)にも注意する。</div>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <div class="practice-letter">(4)</div>
+      <div class="practice-text">演繹的推論では、個々の具体的な事実から、一般的な原理・原則を導く。</div>
+      <div class="practice-verdict" data-ok="false">?</div>
+      <div class="practice-reason"><strong>× 不適切。</strong> 個々の具体的な事実から、一般的な原理・原則を導こうとする推論の仕方を <strong>帰納的推論</strong> という。演繹は逆方向(一般→特殊)。<strong style="color:var(--accent-red-dark);">演繹と帰納は方向が逆</strong> と覚える。</div>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <div class="practice-letter">(5)</div>
+      <div class="practice-text">結論の妥当性を評価するには、自己評価、相互評価、外部評価などの方法がある。</div>
+      <div class="practice-verdict" data-ok="true">?</div>
+      <div class="practice-reason"><strong>○ 適切。</strong> 自己評価=自分で振り返る、相互評価=同じ立場の仲間に評価してもらう、外部評価=第三者の専門家やユーザーから見てもらう。<strong>3段の組み合わせ</strong> で評価の信頼性が上がる。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 17. SECTION 4 DIVIDER ═════ -->
+<div class="slide section-divider" data-title="第4節 表現・伝達と倫理">
+  <div class="section-number">SECTION · 04</div>
+  <h2 class="section-title-big">表現・伝達<br>と倫理</h2>
+  <p class="section-tagline">― 伝わる文章構造と、探究活動の規範 ―</p>
+</div>
+
+<!-- ═════ 18. 表現と伝達 + 実習5 ═════ -->
+<div class="slide" data-title="表現と伝達(文章構造) + 実習5">
+  <div class="eyebrow">EXPRESSION / 学習ノート 実習5</div>
+  <h2 class="slide-title">表現と伝達の方法</h2>
+  <p class="slide-subtitle">レポート・ポスター・スライドのいずれも、論理構造の <strong style="color:var(--accent-red);">並べ方</strong> で説得力が変わる。代表的な3つの型を理解する。</p>
+
+  <div class="struct-grid">
+    <div class="struct-card">
+      <h5>頭括式(演繹型)</h5>
+      <div class="struct-en">CONCLUSION FIRST</div>
+      <div class="struct-flow"><span class="conc">結論</span><span>→</span><span class="reason">理由</span><span>→</span><span class="reason">事例</span></div>
+      <p>結論を先に述べ、後から理由・事例を並べる。<strong style="color:var(--navy-darkest);">論文・ビジネス文書</strong> の標準。読者がいま結論を知りたい場面に強い。</p>
+    </div>
+    <div class="struct-card">
+      <h5>尾括式(帰納型)</h5>
+      <div class="struct-en">CONCLUSION LAST</div>
+      <div class="struct-flow"><span class="reason">事例</span><span>→</span><span class="reason">理由</span><span>→</span><span class="conc">結論</span></div>
+      <p>事実・理由を積み上げてから最後に結論。<strong style="color:var(--navy-darkest);">エッセイ・物語</strong> 向き。読者を結論に導く感覚を作りやすい。</p>
+    </div>
+    <div class="struct-card">
+      <h5>双括式</h5>
+      <div class="struct-en">CONCLUSION BOTH</div>
+      <div class="struct-flow"><span class="conc">結論</span><span>→</span><span class="reason">理由</span><span>→</span><span class="conc">結論</span></div>
+      <p>頭と尾の両方に結論を置き、中間で理由を述べる。<strong style="color:var(--navy-darkest);">プレゼン・スピーチ</strong> で記憶に残りやすい。情報量が多い時に。</p>
+    </div>
+  </div>
+
+  <h3 class="section-heading">実習5 / 表現と伝達 ○×</h3>
+  <div class="practice-list">
+    <div class="practice-item" onclick="revealPractice(this)">
+      <div class="practice-letter">(1)</div>
+      <div class="practice-text">問題解決の過程をわかりやすく表現・伝達するために、報告書(レポート)を作成したり、ポスターやスライド資料などを用いて発表したりする。</div>
+      <div class="practice-verdict" data-ok="true">?</div>
+      <div class="practice-reason"><strong>○ 適切。</strong> 媒体は対象に応じて選ぶ。詳細な記録はレポート、一目で伝えるならポスター、口頭発表ならスライド。</div>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <div class="practice-letter">(2)</div>
+      <div class="practice-text">数値データは、文書作成ソフトウェア(ワープロソフト)を用いて統計的なデータ分析を行い、グラフ化するとよい。</div>
+      <div class="practice-verdict" data-ok="false">?</div>
+      <div class="practice-reason"><strong>× 不適切。</strong> 数値データは <strong>表計算ソフトウェア(Excel・Google Sheets など)</strong> を用いて統計的なデータ分析やグラフ化を行う。ワープロソフトは文章作成用で、データ分析機能は限定的。</div>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <div class="practice-letter">(3)</div>
+      <div class="practice-text">発表を行うことによって他者から意見や評価をもらい、新たな問題が発見されたとしても、一度設定した問題解決の過程は繰り返さないほうがよい。</div>
+      <div class="practice-verdict" data-ok="false">?</div>
+      <div class="practice-reason"><strong>× 不適切。</strong> 新たに見出された問題点から、再度、問題解決の過程を繰り返す。<strong style="color:var(--accent-red-dark);">フィードバックを次のサイクルに活かす</strong> のが PPDAC の本質。</div>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <div class="practice-letter">(4)</div>
+      <div class="practice-text">論理的な文章の基本構造である頭括式(演繹型)では、理由を先に述べて、後から結論を述べる。</div>
+      <div class="practice-verdict" data-ok="false">?</div>
+      <div class="practice-reason"><strong>× 不適切。</strong> 頭括式(演繹型)では <strong>結論を先に述べて、後から理由を述べる</strong>。理由を先に述べて結論を最後に置くのは尾括式(帰納型)。</div>
+    </div>
+    <div class="practice-item" onclick="revealPractice(this)">
+      <div class="practice-letter">(5)</div>
+      <div class="practice-text">ポスター発表では、ほかの人やグループの作品を見て相互評価を行い、内容の適切さや妥当性などについても評価し合うとよい。</div>
+      <div class="practice-verdict" data-ok="true">?</div>
+      <div class="practice-reason"><strong>○ 適切。</strong> 相互評価は <strong>視点の多様化</strong> と <strong>当事者間の学び</strong> の両方を生む。見られる側だけでなく、見る側にも気付きが生まれる仕組み。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 19. 探究活動の倫理 + 実習6 ═════ -->
+<div class="slide" data-title="探究活動の倫理 + 実習6">
+  <div class="eyebrow">ETHICS / 学習ノート 実習6</div>
+  <h2 class="slide-title">探究活動における倫理</h2>
+  <p class="slide-subtitle">他人の積み上げた成果のうえに自分の成果を載せるのが研究・探究。<strong style="color:var(--accent-red);">参照と区別の規律</strong> がないと、新しい知見にならない。</p>
+
+  <div class="ethics-grid">
+    <div class="ethics-card" onclick="toggleEthics(this)">
+      <div class="ethics-num">01</div>
+      <div class="ethics-name">情報源の信頼性に注意</div>
+      <div class="ethics-detail">参照する情報の <strong>出所・著者・査読の有無</strong> を確認する。SNS や個人ブログは仮説の出発点までで、根拠にしない。<strong>一次資料</strong> に当たれるなら必ずそうする。</div>
+    </div>
+    <div class="ethics-card" onclick="toggleEthics(this)">
+      <div class="ethics-num">02</div>
+      <div class="ethics-name">出所・出典を明示する</div>
+      <div class="ethics-detail">参照した文献・データの <strong>著者・発行年・タイトル・URL・取得日</strong> を必ず記す。引用は自分の文と区別。後から他人が検証できる状態にしておく。</div>
+    </div>
+    <div class="ethics-card" onclick="toggleEthics(this)">
+      <div class="ethics-num">03</div>
+      <div class="ethics-name">ねつ造・改ざんをしない</div>
+      <div class="ethics-detail">データを作りこんだり、都合よく修正したりしない。<strong>一度の不正</strong>で過去の業績まですべて疑われる。「データが思い通りにならない」=新発見の手がかりであって、隠すものではない。</div>
+    </div>
+    <div class="ethics-card" onclick="toggleEthics(this)">
+      <div class="ethics-num">04</div>
+      <div class="ethics-name">事実と意見を区別する</div>
+      <div class="ethics-detail">「データが示している事実」と「自分の解釈・主張」を明確に分ける。<strong>「〜である」(事実) と「〜と考えられる」(意見)</strong> の文末で区別すると読者が誤解しない。</div>
+    </div>
+  </div>
+
+  <h3 class="section-heading">実習6 / 倫理 穴埋め</h3>
+  <p style="font-size: 14px; color: var(--text-sub); font-weight: 500; margin-bottom: 10px;">語群: ア．ねつ造　イ．信頼性　ウ．意見　エ．詐欺　オ．出所・出典</p>
+  <div class="fill-text">
+    問題解決をはじめとする探究的な活動では、これまでに多くの人が積み重ねてきた成果を踏まえるため、参照した情報の(<span class="note-blank" data-answer="① 信頼性">①</span>)に十分注意するとともに、(<span class="note-blank" data-answer="② 出所・出典">②</span>)を明示することが必要である。データの(<span class="note-blank" data-answer="③ ねつ造">③</span>)などの不適切な行為をしないことはもちろん、事実と(<span class="note-blank" data-answer="④ 意見">④</span>)を明確に区別し、自らの成果が新たな知見として(①)のあるものになるように最大限の配慮をしなければならない。
+  </div>
+</div>
+
+<!-- ═════ 20. 答え合わせ ═════ -->
+<div class="slide" data-title="学習ノート 答え合わせ">
+  <div class="eyebrow">ANSWERS / 学習ノート ①〜⑤</div>
+  <h2 class="slide-title">学習ノート 答え合わせ</h2>
+  <p class="slide-subtitle">行ごとにクリックで個別表示。下のボタンで一括表示・一括非表示。</p>
+
+  <div class="answers-grid">
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">①</span>
+      <span class="answer-text">理想と現状のギャップ</span>
+      <span class="answer-reveal" data-ans="問題">クリック</span>
+    </div>
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">②</span>
+      <span class="answer-text">問題を解くために取り組むべき焦点</span>
+      <span class="answer-reveal" data-ans="課題">クリック</span>
+    </div>
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">③</span>
+      <span class="answer-text">何かを得れば何かを失う関係</span>
+      <span class="answer-reveal" data-ans="トレードオフ">クリック</span>
+    </div>
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">④</span>
+      <span class="answer-text">一般則 → 個別の結論を導く</span>
+      <span class="answer-reveal" data-ans="演繹的推論">クリック</span>
+    </div>
+    <div class="answer-row" onclick="revealAnswer(this)">
+      <span class="answer-num">⑤</span>
+      <span class="answer-text">個別事実 → 一般則を導く</span>
+      <span class="answer-reveal" data-ans="帰納的推論">クリック</span>
+    </div>
+  </div>
+
+  <div style="margin-top:18px; display:flex; gap:10px; justify-content:center; flex-wrap: wrap;">
+    <button onclick="revealAll()" style="background:var(--navy-darkest); color:white; border:none; padding:10px 26px; font-family:'游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight:600; border-radius:30px; cursor:pointer; font-size:13px;">すべて一括表示</button>
+    <button onclick="hideAll()" style="background:transparent; color:var(--navy-darkest); border:2px solid var(--navy); padding:10px 26px; font-family:'游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight:600; border-radius:30px; cursor:pointer; font-size:13px;">すべて隠す</button>
+  </div>
+</div>
+
+<!-- ═════ 21. まとめツリー ═════ -->
+<div class="slide" data-title="まとめ">
+  <div class="eyebrow">SUMMARY / 4分野の俯瞰</div>
+  <h2 class="slide-title">問題の発見と解決 ─ 全体像</h2>
+  <p class="slide-subtitle">4つの節を1枚に俯瞰する。試験前の最終確認に。</p>
+
+  <div class="summary-tree"><div class="tree-center">問題の発見と解決</div></div>
+  <div class="tree-branches">
+    <div class="tree-branch">
+      <h4>01 問題と課題</h4>
+      <ul>
+        <li>問題=理想と現状のギャップ</li>
+        <li>課題=取り組むべき焦点(問いの形)</li>
+        <li>トレードオフ=両立しない関係</li>
+        <li>問題解決の過程(発見→評価→FB)</li>
+      </ul>
+    </div>
+    <div class="tree-branch">
+      <h4>02 PPDACサイクル</h4>
+      <ul>
+        <li>P・Problem(問題)</li>
+        <li>P・Plan(計画)</li>
+        <li>D・Data(データ収集)</li>
+        <li>A・Analysis(分析)</li>
+        <li>C・Conclusion(結論)</li>
+      </ul>
+    </div>
+    <div class="tree-branch">
+      <h4>03 推論と検証</h4>
+      <ul>
+        <li>演繹的推論(一般→特殊)</li>
+        <li>帰納的推論(特殊→一般)</li>
+        <li>文献調査の信頼性</li>
+        <li>自己/相互/外部評価</li>
+      </ul>
+    </div>
+    <div class="tree-branch">
+      <h4>04 表現・伝達と倫理</h4>
+      <ul>
+        <li>頭括式 / 尾括式 / 双括式</li>
+        <li>ポスター・スライド・レポート</li>
+        <li>相互評価でフィードバック</li>
+        <li>倫理4規範(信頼性/出所/ねつ造禁/事実意見)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 22. 復習チャレンジ ═════ -->
+<div class="slide" data-title="復習チャレンジ">
+  <div class="eyebrow">REVIEW / ランダム10問</div>
+  <h2 class="slide-title">復習チャレンジ</h2>
+
+  <div class="review-container">
+    <div id="reviewStart">
+      <p class="review-intro">この単元の問題プールからランダムに10問出題する。<br>即時採点で、自分の理解度を可視化する。</p>
+      <button class="review-start-btn" onclick="startReview()">▶ 開始する</button>
+    </div>
+    <div id="reviewQuiz" class="review-q-area">
+      <div class="review-progress" id="reviewProgress">QUESTION 1 / 10</div>
+      <div class="quiz-container" style="margin:0;">
+        <div class="quiz-question" id="reviewQText"></div>
+        <div class="quiz-options" id="reviewQOpts"></div>
+      </div>
+    </div>
+    <div id="reviewDone" class="review-q-area" style="text-align:center;">
+      <div style="font-family:'JetBrains Mono',monospace; color:var(--navy); font-size:12px; letter-spacing:0.2em; margin-bottom:12px;">RESULT</div>
+      <div class="review-result" id="reviewScore">0 / 10</div>
+      <div class="review-result-sub" id="reviewComment"></div>
+      <button class="review-retry-btn" onclick="startReview()">もう一度</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ 23. END CARD ═════ -->
+<div class="slide title-slide" data-title="完了">
+  <div class="title-label">END OF CHAPTER · 03</div>
+  <h1 class="title-main" style="font-size: clamp(40px, 6vw, 80px);">お疲れさま<br>でした</h1>
+  <p class="title-sub">問題発見からPPDAC、推論・表現・倫理までを、対話的にたどった。</p>
+  <div class="title-meta">
+    <div class="title-meta-item"><strong>COVERED</strong>学習ノート ①〜⑤ + 実習 1〜6</div>
+    <div class="title-meta-item"><strong>INTERACTIONS</strong>GAP / KADAI / TRADE / CYCLE / PPDAC / BS</div>
+  </div>
+</div>
+
+</div><!-- /slide-container -->
+
+<div class="bottombar">
+  <div class="bottombar-nav">
+    <button class="nav-btn" id="prevBtn" onclick="goToSlide(currentSlide - 1)" title="前へ">◀</button>
+    <button class="nav-btn" id="nextBtn" onclick="goToSlide(currentSlide + 1)" title="次へ">▶</button>
+  </div>
+  <div class="slide-title-small" id="slideTitleSmall">タイトル</div>
+  <span class="keyboard-hint">← → / SPACE / F / M</span>
+  <div class="page-indicator" id="pageIndicator">01 / 23</div>
+</div>
+
+<script>
+// ═════ MOBILE UX HELPERS ═════
+const isMobile = () => window.innerWidth <= 720;
+function haptic(ms) {
+  if (typeof ms !== 'number' && !Array.isArray(ms)) ms = 8;
+  if (navigator.vibrate) { try { navigator.vibrate(ms); } catch (_) {} }
+}
+let lastTouchEndAt = 0;
+document.addEventListener('touchend', (e) => {
+  const now = Date.now();
+  if (now - lastTouchEndAt <= 320) {
+    const t = e.target;
+    if (t && t.tagName && /^(INPUT|TEXTAREA|SELECT|A)$/.test(t.tagName)) return;
+    e.preventDefault();
+  }
+  lastTouchEndAt = now;
+}, { passive: false });
+
+// ═════ NAVIGATION ═════
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+let currentSlide = 0;
+function goToSlide(n) {
+  if (n < 0 || n >= totalSlides) return;
+  haptic(8);
+  slides[currentSlide].classList.remove('active');
+  currentSlide = n;
+  slides[currentSlide].classList.add('active');
+  slides[currentSlide].scrollTop = 0;
+  updateUI();
+}
+function updateUI() {
+  const pct = ((currentSlide + 1) / totalSlides) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('pageIndicator').textContent =
+    String(currentSlide + 1).padStart(2, '0') + ' / ' + String(totalSlides).padStart(2, '0');
+  document.getElementById('slideTitleSmall').textContent = slides[currentSlide].dataset.title || '';
+  document.getElementById('prevBtn').disabled = currentSlide === 0;
+  document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+  updateMenuActive();
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('menuPanel').classList.contains('open')) { closeMenu(); return; }
+  }
+  if (document.getElementById('menuPanel').classList.contains('open')) return;
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); goToSlide(currentSlide + 1); }
+  else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goToSlide(currentSlide - 1); }
+  else if (e.key === 'Home') { goToSlide(0); }
+  else if (e.key === 'End') { goToSlide(totalSlides - 1); }
+  else if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); }
+  else if (e.key === 'm' || e.key === 'M') { openMenu(); }
+});
+let touchStartX = 0, touchStartY = 0, touchStartT = 0;
+document.addEventListener('touchstart', (e) => {
+  if (e.touches.length !== 1) return;
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+  touchStartT = Date.now();
+}, { passive: true });
+document.addEventListener('touchend', (e) => {
+  if (e.changedTouches.length !== 1) return;
+  const menuPanel = document.getElementById('menuPanel');
+  if (menuPanel && menuPanel.classList.contains('open')) return;
+  const target = e.target;
+  if (target && target.closest && target.closest('button, .nav-btn, input, select, a')) return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  const dt = Date.now() - touchStartT;
+  if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) && dt < 800) {
+    if (dx < 0) goToSlide(currentSlide + 1);
+    else goToSlide(currentSlide - 1);
+  }
+}, { passive: true });
+function toggleFullscreen() {
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+  else document.exitFullscreen().catch(() => {});
+}
+updateUI();
+
+// ═════ NOTE BLANK REVEAL ═════
+document.querySelectorAll('.note-blank').forEach(b => {
+  const initial = b.textContent.trim();
+  b.dataset.placeholder = initial;
+  b.addEventListener('click', () => {
+    if (b.classList.contains('reveal')) {
+      b.classList.remove('reveal');
+      b.textContent = b.dataset.placeholder;
+    } else {
+      b.classList.add('reveal');
+      b.textContent = b.dataset.answer;
+    }
+  });
+});
+
+// ═════ MENU (drawer) ═════
+function buildMenu() {
+  const menuList = document.getElementById('menuList');
+  if (!menuList) return;
+  menuList.innerHTML = '';
+  const sections = [];
+  let currentSection = { label: 'OVERVIEW', items: [] };
+  sections.push(currentSection);
+  slides.forEach((slide, idx) => {
+    const title = slide.dataset.title || '';
+    if (slide.classList.contains('section-divider')) {
+      const label = title.replace(/^第\d節\s*/, '');
+      currentSection = { label: label.toUpperCase(), items: [] };
+      sections.push(currentSection);
+    }
+    let tag = '', tagClass = '';
+    if (slide.classList.contains('title-slide') && idx === 0) { tag = 'TITLE'; tagClass = 'tag-title'; }
+    else if (slide.classList.contains('title-slide')) { tag = 'END'; tagClass = 'tag-end'; }
+    else if (slide.classList.contains('section-divider')) { tag = 'SECTION'; tagClass = 'tag-section'; }
+    else if (/実習/.test(title)) { tag = 'PRACTICE'; tagClass = ''; }
+    else if (/POINT|サイクル|演繹|帰納|表現|倫理/.test(title)) { tag = 'INTERACTIVE'; tagClass = 'tag-interactive'; }
+    else if (/答え合わせ|まとめ|復習/.test(title)) { tag = 'REVIEW'; tagClass = 'tag-review'; }
+    currentSection.items.push({ idx, title, tag, tagClass });
+  });
+  sections.forEach(sec => {
+    if (sec.items.length === 0) return;
+    const h = document.createElement('div');
+    h.className = 'menu-section';
+    h.textContent = sec.label;
+    menuList.appendChild(h);
+    sec.items.forEach(it => {
+      const el = document.createElement('div');
+      el.className = 'menu-item';
+      el.dataset.idx = it.idx;
+      el.onclick = () => { goToSlide(it.idx); closeMenu(); };
+      const num = String(it.idx + 1).padStart(2, '0');
+      const tagHtml = it.tag ? '<span class="menu-item-tag ' + it.tagClass + '">' + it.tag + '</span>' : '';
+      el.innerHTML = '<span class="menu-item-num">' + num + '</span>' +
+        '<span class="menu-item-title">' + it.title + '</span>' + tagHtml;
+      menuList.appendChild(el);
+    });
+  });
+  updateMenuActive();
+}
+function updateMenuActive() {
+  document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+  const curr = document.querySelector('.menu-item[data-idx="' + currentSlide + '"]');
+  if (curr) {
+    curr.classList.add('active');
+    if (document.getElementById('menuPanel').classList.contains('open')) {
+      curr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+}
+function openMenu() {
+  document.getElementById('menuOverlay').classList.add('open');
+  document.getElementById('menuPanel').classList.add('open');
+  updateMenuActive();
+}
+function closeMenu() {
+  document.getElementById('menuOverlay').classList.remove('open');
+  document.getElementById('menuPanel').classList.remove('open');
+}
+buildMenu();
+
+// ═════ ① 問題 ─ gap visualizer ═════
+const gapCases = [
+  { idealName: '文化祭の入場者数 400人', idealSub: '実行委員が当初目標として掲げた数', idealDetail: '過去5年の平均入場者数 380人 + 新企画3つの上乗せ効果 20人を合わせた、現実的に届く水準。<strong>「夢」ではなく「達成可能な目標値」</strong> として設定する点が重要。', actualName: '前年実績 240人', actualSub: '現状のままだと届かない数値', actualDetail: '広報がほぼSNSのみ、地域住民への告知が不十分、駅前のポスター掲示も任意。<strong>「現状を測れる」状態</strong> が問題発見の前提。数値化していないと、改善したかどうかも分からない。' },
+  { idealName: '部活の県大会ベスト16', idealSub: '今年度シーズン目標として設定', idealDetail: '昨年の県大会成績(ベスト32)から1段階の進歩を狙う。<strong>「優勝」のような大目標ではなく、当面のチェックポイント</strong> として設定する。', actualName: '練習試合で5割勝率', actualSub: '基礎力は伸びているが詰めが甘い', actualDetail: 'ラリーは続くが終盤で集中が切れる。<strong>「試合運び」「最後の1点」</strong> という具体的なギャップとして掴むと、課題化しやすい。' },
+  { idealName: 'SNSでの月間リーチ 5万人', idealSub: 'クラブ広報のKPIとして設定', idealDetail: '対象は地域の中高生・保護者・OB/OG。<strong>「とりあえずバズる」ではなく、誰に届かせたいかが先</strong>。母数の見当をつけてから目標を立てる。', actualName: '月間リーチ 8千人', actualSub: '主にフォロワー内に閉じている', actualDetail: 'シェアが少なく外部に届きにくい。<strong>「届かない原因」</strong> を分解できるかが次の課題化につながる(投稿頻度? 内容? 時間帯?)。' }
+];
+function toggleGap(el) { el.classList.toggle('open'); }
+function switchGapCase(el, idx) {
+  document.querySelectorAll('.gap-case').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  const c = gapCases[idx];
+  document.getElementById('gapIdealName').textContent = c.idealName;
+  document.getElementById('gapIdealSub').textContent = c.idealSub;
+  document.getElementById('gapIdealDetail').innerHTML = c.idealDetail;
+  document.getElementById('gapActualName').textContent = c.actualName;
+  document.getElementById('gapActualSub').textContent = c.actualSub;
+  document.getElementById('gapActualDetail').innerHTML = c.actualDetail;
+  document.querySelectorAll('.gap-pole').forEach(p => p.classList.remove('open'));
+}
+
+// ═════ ② 課題 ─ kadai cards ═════
+function toggleKadai(el) { el.classList.toggle('open'); }
+
+// ═════ ③ トレードオフ ─ balance ═════
+const tradeoffData = [
+  { l: '拡散性', r: '正確性', tilt: 1 },
+  { l: '安全性', r: '覚えやすさ', tilt: -1 },
+  { l: '効率', r: '独自性', tilt: 1 },
+  { l: '利便性', r: '健康・集中', tilt: -1 },
+  { l: '無料', r: 'プライバシー', tilt: 1 }
+];
+function switchTradeoff(el, idx) {
+  document.querySelectorAll('.tradeoff-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  const d = tradeoffData[idx];
+  document.getElementById('tLeftLabel').textContent = d.l;
+  document.getElementById('tRightLabel').textContent = d.r;
+  // animate beam tilt
+  const beam = document.getElementById('tBeamLine');
+  const lRope = document.getElementById('tLeftRope');
+  const lPan = document.getElementById('tLeftPan');
+  const lLabel = document.getElementById('tLeftLabel');
+  const rRope = document.getElementById('tRightRope');
+  const rPan = document.getElementById('tRightPan');
+  const rLabel = document.getElementById('tRightLabel');
+  const lY = d.tilt > 0 ? 70 : 90;
+  const rY = d.tilt > 0 ? 90 : 70;
+  beam.setAttribute('y1', lY);
+  beam.setAttribute('y2', rY);
+  lRope.setAttribute('y1', lY); lRope.setAttribute('y2', lY + 30);
+  lPan.setAttribute('cy', lY + 36);
+  // pan rect for left
+  let lRect = lPan.parentElement.querySelector('rect');
+  if (lRect) lRect.setAttribute('y', lY + 14);
+  lLabel.setAttribute('y', lY + 28);
+  rRope.setAttribute('y1', rY); rRope.setAttribute('y2', rY + 34);
+  rPan.setAttribute('cy', rY + 40);
+  let rRect = rPan.parentElement.querySelector('rect');
+  if (rRect) rRect.setAttribute('y', rY + 18);
+  rLabel.setAttribute('y', rY + 32);
+}
+
+// ═════ 実習1 ─ cycle blanks ═════
+function focusCycle(n) {
+  document.querySelectorAll('.cycle-step').forEach(s => s.classList.remove('focus'));
+  const step = document.querySelector('.cycle-step[data-blank="' + n + '"]');
+  if (step) step.classList.add('focus');
+}
+function pickCycle(opt, isCorrect, reason) {
+  const group = opt.parentElement;
+  const target = group.dataset.target;
+  // tap-to-undo when already correct
+  if (opt.classList.contains('correct')) {
+    opt.classList.remove('correct');
+    group.querySelectorAll('.cycle-opt').forEach(o => o.classList.remove('disabled', 'wrong'));
+    const step = document.querySelector('.cycle-step[data-blank="' + target + '"]');
+    if (step) {
+      step.classList.remove('solved');
+      step.classList.add('blank');
+      const lbl = step.querySelector('text');
+      if (lbl) lbl.textContent = '(' + target + ')';
+    }
+    return;
+  }
+  group.querySelectorAll('.cycle-opt').forEach(o => o.classList.add('disabled'));
+  if (isCorrect) {
+    opt.classList.add('correct');
+    const step = document.querySelector('.cycle-step[data-blank="' + target + '"]');
+    if (step) {
+      step.classList.remove('blank');
+      step.classList.add('solved');
+      const lbl = step.querySelector('text');
+      const ans = target === '1' ? '問題の把握' : 'フィードバック';
+      if (lbl) {
+        lbl.textContent = ans;
+        lbl.setAttribute('font-size', target === '1' ? '13' : '12');
+      }
+      // light up FB arrow when (2) solved
+      if (target === '2') {
+        const fb = document.getElementById('fbPath');
+        if (fb) fb.classList.add('lit');
+      }
+    }
+    haptic(20);
+  } else {
+    opt.classList.add('wrong');
+    haptic([40, 30, 40]);
+    setTimeout(() => {
+      opt.classList.remove('wrong');
+      group.querySelectorAll('.cycle-opt').forEach(o => o.classList.remove('disabled'));
+    }, 1100);
+  }
+}
+
+// ═════ PPDAC overview ═════
+const ppdacData = {
+  problem: { letter: 'P · PROBLEM', jp: '問題', en: 'PROBLEM ─ ギャップを言葉にする', detail: '理想と現状の <strong>ギャップを特定</strong>し、解くべき問いとして言語化する。曖昧な気持ち悪さを「具体的な問題文」に落とすのが、サイクルの起点。', eg: '【例】文化祭の入場者数が前年比 -30%。広報経路に偏りがあるのではないか?' },
+  plan: { letter: 'P · PLAN', jp: '計画', en: 'PLAN ─ 何を集めるか決める', detail: 'どんなデータを、どこから、どう集めるかを <strong>事前に</strong> 決める。後づけで「ついでに測ったデータ」を解析に混ぜると、結論を歪める原因になる。', eg: '【例】Googleフォームで来場者属性アンケート。SNSの投稿データを期間で抽出。'},
+  data: { letter: 'D · DATA', jp: 'データ収集', en: 'DATA ─ 計画通りに集める', detail: '計画した方法で <strong>機械的に</strong> データを集める。集めながら方針を変えると恣意的になる。途中で計画変更が必要になったら、サイクルを巻き戻して Plan からやり直す。', eg: '【例】期間中の入場者カウント、アンケート回収、SNS分析データの保存。' },
+  analysis: { letter: 'A · ANALYSIS', jp: '分析', en: 'ANALYSIS ─ 数字を意味に翻訳する', detail: '集めたデータを <strong>表・グラフ・統計量</strong> に整理し、パターン・傾向・相関を読み取る。表計算ソフトや可視化ツールが活躍する段階。', eg: '【例】曜日別の入場ピーク、年代別のSNS流入元、リピーター率を可視化。' },
+  conclusion: { letter: 'C · CONCLUSION', jp: '結論', en: 'CONCLUSION ─ 次の問題を見つける', detail: '分析結果から <strong>仮説に対する答え</strong> を出す。同時に、新しく見つかった問題を次の Problem として記録し、サイクルを回し続ける。', eg: '【例】広報は SNS 動画が最も効くが、保護者層には届いていない → 次サイクルへ。' }
+};
+function selectPpdac(key) {
+  document.querySelectorAll('.ppdac-node').forEach(n => n.classList.remove('selected'));
+  const sel = document.querySelector('.ppdac-node[data-key="' + key + '"]');
+  if (sel) sel.classList.add('selected');
+  renderPpdac(key);
+}
+function renderPpdac(key) {
+  const d = ppdacData[key];
+  const p = document.getElementById('ppdacPanel');
+  if (!p || !d) return;
+  p.innerHTML =
+    '<div class="ppdac-panel-letter">' + d.letter + '</div>' +
+    '<div class="ppdac-panel-jp">' + d.jp + '</div>' +
+    '<div class="ppdac-panel-en">' + d.en + '</div>' +
+    '<div class="ppdac-panel-detail">' + d.detail + '</div>' +
+    '<div class="ppdac-panel-eg"><div class="ppdac-panel-eg-label">EXAMPLE / 文化祭の入場者数</div>' + d.eg + '</div>';
+}
+selectPpdac('problem');
+
+// ═════ 実習3 ─ ブレーンストーミング judgment ═════
+function judgeBs(chip) {
+  // toggle off
+  if (chip.classList.contains('judged-correct') || chip.classList.contains('judged-wrong')) {
+    chip.classList.remove('judged-correct', 'judged-wrong');
+    chip.querySelector('.bs-chip-judge').textContent = 'タップで判定';
+    updateBsVerdict();
+    return;
+  }
+  const ok = chip.dataset.correct === 'true';
+  if (ok) { chip.classList.add('judged-correct'); chip.querySelector('.bs-chip-judge').textContent = '○ 適切'; haptic(20); }
+  else { chip.classList.add('judged-wrong'); chip.querySelector('.bs-chip-judge').textContent = '× 不適切'; haptic([40,30,40]); }
+  updateBsVerdict();
+}
+function updateBsVerdict() {
+  const judged = document.querySelectorAll('.bs-chip.judged-correct, .bs-chip.judged-wrong').length;
+  const verdict = document.getElementById('bsVerdict');
+  if (judged === 4) verdict.classList.add('show');
+  else verdict.classList.remove('show');
+}
+
+// ═════ 演繹推論 例タブ ═════
+const deductExamples = [
+  { r1: 'すべての人間は死ぬ。', r2: 'ソクラテスは人間である。', r3: 'ゆえに、ソクラテスは死ぬ。' },
+  { r1: '著作権法上、私的使用の範囲を超えた複製は権利者の許諾が必要である。', r2: '部活で市販の楽譜を全員分コピーするのは私的使用の範囲を超える。', r3: 'ゆえに、その複製は権利者の許諾が必要である。' },
+  { r1: '直角三角形では a² + b² = c² が成り立つ(ピタゴラスの定理)。', r2: '辺の長さが 3, 4 で直角を挟むこの三角形は直角三角形である。', r3: 'ゆえに、斜辺の長さは √(9+16) = 5 である。' }
+];
+function switchDeduct(tab, idx) {
+  document.querySelectorAll('#deductFlow').length;
+  tab.parentElement.querySelectorAll('.r-eg-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  const d = deductExamples[idx];
+  document.getElementById('dRow1').textContent = d.r1;
+  document.getElementById('dRow2').textContent = d.r2;
+  document.getElementById('dRow3').textContent = d.r3;
+}
+const inductExamples = [
+  { i1: 'A湖の白鳥は白い。', i2: 'B池の白鳥も白い。', i3: 'C公園の白鳥も白い。', i0: 'ゆえに、世界中の白鳥は白い。' },
+  { i1: '友人 A はスマホを1日5時間使っており、夜に寝つきが悪い。', i2: '友人 B も4時間以上で同様に不眠傾向。', i3: '同じ部活の C も4時間超で集中力低下を訴える。', i0: 'ゆえに、スマホ長時間使用は若年層の睡眠・集中に悪影響を与える(仮説)。' },
+  { i1: '校内のアンケート動画は再生数が伸びた。', i2: '昨年度の文化祭リハ動画もシェア多数。', i3: 'OB対談動画はコメント欄が活発化。', i0: 'ゆえに、本校アカウントでは「動画」フォーマットがシェア・関与を生みやすい(仮説)。' }
+];
+function switchInduct(tab, idx) {
+  tab.parentElement.querySelectorAll('.r-eg-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  const d = inductExamples[idx];
+  document.getElementById('iRow1').textContent = d.i1;
+  document.getElementById('iRow2').textContent = d.i2;
+  document.getElementById('iRow3').textContent = d.i3;
+  document.getElementById('iRow0').textContent = d.i0;
+}
+
+// ═════ 倫理 cards ═════
+function toggleEthics(el) { el.classList.toggle('open'); }
+
+// ═════ PRACTICE LIST ═════
+function revealPractice(item) {
+  const verdict = item.querySelector('.practice-verdict');
+  if (item.classList.contains('revealed')) {
+    item.classList.remove('revealed', 'ok', 'ng');
+    verdict.textContent = '?';
+    return;
+  }
+  const ok = verdict.dataset.ok === 'true';
+  item.classList.add('revealed');
+  item.classList.add(ok ? 'ok' : 'ng');
+  verdict.textContent = ok ? '○' : '×';
+  haptic(ok ? 20 : [40, 30, 40]);
+}
+
+// ═════ ANSWERS GRID ═════
+function revealAnswer(row) {
+  const reveal = row.querySelector('.answer-reveal');
+  if (row.classList.contains('revealed')) {
+    row.classList.remove('revealed');
+    reveal.textContent = 'クリック';
+  } else {
+    row.classList.add('revealed');
+    reveal.textContent = reveal.dataset.ans;
+  }
+}
+function revealAll() {
+  document.querySelectorAll('.answer-row').forEach(r => {
+    r.classList.add('revealed');
+    const reveal = r.querySelector('.answer-reveal');
+    reveal.textContent = reveal.dataset.ans;
+  });
+}
+function hideAll() {
+  document.querySelectorAll('.answer-row').forEach(r => {
+    r.classList.remove('revealed');
+    r.querySelector('.answer-reveal').textContent = 'クリック';
+  });
+}
+
+// ═════ REVIEW CHALLENGE ═════
+const reviewPool = [
+  { q: '理想と現状のギャップとして、最初に発見すべきものは?', opts: ['課題', '問題', 'トレードオフ', 'フィードバック'], a: 1 },
+  { q: '問題を解くために取り組むべき焦点を、問いの形で表したものを何という?', opts: ['問題', '課題', 'シナリオ', '前提'], a: 1 },
+  { q: '何かを得れば何かを失う、両立しない二項関係を何という?', opts: ['ジレンマ', 'パラドックス', 'トレードオフ', 'シナジー'], a: 2 },
+  { q: 'PPDACサイクルの最初のPは?', opts: ['Plan', 'Process', 'Problem', 'Performance'], a: 2 },
+  { q: 'PPDACサイクルのDは?', opts: ['Decision', 'Develop', 'Display', 'Data'], a: 3 },
+  { q: 'PPDACサイクルのAは?', opts: ['Action', 'Analysis', 'Application', 'Adapt'], a: 1 },
+  { q: 'PPDACサイクルのCは?', opts: ['Confirmation', 'Calculation', 'Conclusion', 'Comparison'], a: 2 },
+  { q: 'ブレーンストーミングの作法として適切でないものは?', opts: ['他人の意見への追加・修正を歓迎する', '質より量を優先する', '実現可能性で発言を絞る', '自由奔放な発想を許容する'], a: 2 },
+  { q: '一般則から個別の結論を導く推論は?', opts: ['帰納的推論', '演繹的推論', '類推', 'アブダクション'], a: 1 },
+  { q: '個別の事実から一般則(仮説)を導く推論は?', opts: ['演繹的推論', '帰納的推論', '反証', '反例'], a: 1 },
+  { q: 'Web検索の結果について、適切な記述は?', opts: ['上位ほど信頼性が高い', 'すべて広告', 'ランキングは信頼性ではなく関連性・人気度で決まる', 'AIで自動生成された結果しかない'], a: 2 },
+  { q: '頭括式(演繹型)の文章構造は?', opts: ['理由→結論', '結論→理由', '結論→理由→結論', '事実→事実→事実'], a: 1 },
+  { q: '数値データの分析・グラフ化に最も適したソフトは?', opts: ['ワープロソフト', 'プレゼンソフト', '表計算ソフト', 'ペイントソフト'], a: 2 },
+  { q: '探究活動における4つの倫理規範に含まれないものは?', opts: ['情報源の信頼性', '出所・出典の明示', 'ねつ造の禁止', '結論を先に決めること'], a: 3 },
+  { q: '問題解決の過程で、評価結果を次の問題発見に戻す矢印を何という?', opts: ['ショートカット', 'フィードバック', 'リターン', 'ループバック'], a: 1 }
+];
+let reviewQuestions = [];
+let reviewIdx = 0;
+let reviewScore = 0;
+function startReview() {
+  reviewQuestions = [...reviewPool].sort(() => Math.random() - 0.5).slice(0, 10);
+  reviewIdx = 0; reviewScore = 0;
+  document.getElementById('reviewStart').style.display = 'none';
+  document.getElementById('reviewDone').classList.remove('active');
+  document.getElementById('reviewQuiz').classList.add('active');
+  showReviewQ();
+}
+function showReviewQ() {
+  const q = reviewQuestions[reviewIdx];
+  document.getElementById('reviewProgress').textContent = 'QUESTION ' + (reviewIdx + 1) + ' / 10';
+  document.getElementById('reviewQText').innerHTML =
+    '<span class="quiz-question-num">Q' + (reviewIdx + 1) + '</span>' + q.q;
+  const opts = document.getElementById('reviewQOpts');
+  opts.innerHTML = '';
+  const letters = ['ア', 'イ', 'ウ', 'エ'];
+  q.opts.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-option';
+    div.innerHTML = '<span class="quiz-option-letter">' + letters[i] + '</span><span>' + opt + '</span>';
+    div.onclick = () => answerReview(div, i === q.a);
+    opts.appendChild(div);
+  });
+}
+function answerReview(el, isCorrect) {
+  const options = el.parentElement.querySelectorAll('.quiz-option');
+  options.forEach(o => { o.style.pointerEvents = 'none'; });
+  const q = reviewQuestions[reviewIdx];
+  if (isCorrect) { el.classList.add('correct'); reviewScore++; haptic(20); }
+  else { el.classList.add('incorrect'); options[q.a].classList.add('correct'); haptic([40, 30, 40]); }
+  setTimeout(() => {
+    reviewIdx++;
+    if (reviewIdx < 10) showReviewQ(); else showReviewResult();
+  }, 900);
+}
+function showReviewResult() {
+  document.getElementById('reviewQuiz').classList.remove('active');
+  document.getElementById('reviewDone').classList.add('active');
+  document.getElementById('reviewScore').textContent = reviewScore + ' / 10';
+  const comments = { 10: '完璧。共通テスト余裕レベル。', 9: '素晴らしい。あと一歩で満点。', 8: '合格ライン。理解はほぼ十分。', 7: 'もう一歩。苦手項目を復習しよう。', 6: '6割ライン。スライドを見返そう。' };
+  document.getElementById('reviewComment').textContent = comments[reviewScore] || '基礎から見直そう。学習ノートを手元に。';
+}
+
+// ═════ RESET ALL ═════
+function resetAllInteractions() {
+  haptic([15, 40, 15]);
+  if (!confirm('このページのすべてのインタラクションを初期状態に戻します。よろしいですか?')) return;
+  // note-blank
+  document.querySelectorAll('.note-blank.reveal').forEach(b => {
+    b.classList.remove('reveal');
+    b.textContent = b.dataset.placeholder || 'クリックで正解';
+  });
+  // gap pole
+  document.querySelectorAll('.gap-pole.open').forEach(p => p.classList.remove('open'));
+  document.querySelectorAll('.gap-case').forEach((c, i) => c.classList.toggle('active', i === 0));
+  switchGapCase(document.querySelector('.gap-case'), 0);
+  // kadai
+  document.querySelectorAll('.kadai-card.open').forEach(k => k.classList.remove('open'));
+  // tradeoff
+  document.querySelectorAll('.tradeoff-card').forEach((c, i) => c.classList.toggle('active', i === 0));
+  switchTradeoff(document.querySelector('.tradeoff-card'), 0);
+  // cycle
+  document.querySelectorAll('.cycle-opt').forEach(o => o.classList.remove('correct', 'wrong', 'disabled'));
+  document.querySelectorAll('.cycle-step.solved').forEach(s => {
+    s.classList.remove('solved'); s.classList.add('blank');
+    const lbl = s.querySelector('text');
+    if (lbl) {
+      lbl.textContent = '(' + s.dataset.blank + ')';
+      lbl.setAttribute('font-size', s.dataset.blank === '1' ? '22' : '20');
+    }
+  });
+  document.querySelectorAll('.cycle-step.focus').forEach(s => s.classList.remove('focus'));
+  const fb = document.getElementById('fbPath');
+  if (fb) fb.classList.remove('lit');
+  // ppdac
+  selectPpdac('problem');
+  // bs
+  document.querySelectorAll('.bs-chip').forEach(c => {
+    c.classList.remove('judged-correct', 'judged-wrong');
+    c.querySelector('.bs-chip-judge').textContent = 'タップで判定';
+  });
+  document.getElementById('bsVerdict').classList.remove('show');
+  // deduct/induct tabs reset
+  document.querySelectorAll('.r-eg-tab').forEach((t, i) => t.classList.toggle('active', (i % 3) === 0));
+  switchDeduct(document.querySelectorAll('.r-eg-tab')[0], 0);
+  switchInduct(document.querySelectorAll('.r-eg-tab')[3], 0);
+  // ethics
+  document.querySelectorAll('.ethics-card.open').forEach(e => e.classList.remove('open'));
+  // practice
+  document.querySelectorAll('.practice-item.revealed').forEach(p => {
+    p.classList.remove('revealed', 'ok', 'ng');
+    const v = p.querySelector('.practice-verdict');
+    if (v) v.textContent = '?';
+  });
+  // answers
+  document.querySelectorAll('.answer-row.revealed').forEach(r => {
+    r.classList.remove('revealed');
+    const rv = r.querySelector('.answer-reveal');
+    if (rv) rv.textContent = 'クリック';
+  });
+  // review
+  const rs = document.getElementById('reviewStart');
+  const rq = document.getElementById('reviewQuiz');
+  const rd = document.getElementById('reviewDone');
+  if (rs) rs.style.display = 'block';
+  if (rq) rq.classList.remove('active');
+  if (rd) rd.classList.remove('active');
+  closeMenu();
+  goToSlide(0);
+}
+
+// ═════ SWIPE HINT ═════
+window.addEventListener('load', () => {
+  if (!isMobile()) return;
+  if (window._swipeHintShown) return;
+  window._swipeHintShown = true;
+  setTimeout(() => {
+    const hint = document.createElement('div');
+    hint.className = 'swipe-hint';
+    hint.textContent = 'スワイプで送る';
+    document.body.appendChild(hint);
+    requestAnimationFrame(() => hint.classList.add('show'));
+    setTimeout(() => hint.classList.remove('show'), 3200);
+    setTimeout(() => hint.remove(), 3700);
+  }, 900);
+});
+</script>
+</body>
+</html>
