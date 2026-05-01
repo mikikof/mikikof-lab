@@ -13,7 +13,7 @@
 | **Visual Column**(コラム集) | `column/` | `/column/` | [column/CLAUDE.md](column/CLAUDE.md) |
 | **Interactive Lecture Lab**(授業用HTMLスライド) | `lectures/` | `/lectures/` | [lectures/CLAUDE.md](lectures/CLAUDE.md) |
 | **Interactive Practice Lab**(演習用HTML教材) | `practices/` | `/practices/` | [practices/CLAUDE.md](practices/CLAUDE.md) |
-| (将来) 一問一答 | `quiz/` | `/quiz/` | `quiz/CLAUDE.md` |
+| **Quiz Form Kit**(Google フォーム小テスト作成キット / GAS) | `quiz/` | `/quiz/` | [quiz/CLAUDE.md](quiz/CLAUDE.md) |
 | (将来) その他ツール | — | — | — |
 
 ---
@@ -63,12 +63,15 @@
 
 → [`practices/CLAUDE.md`](practices/CLAUDE.md) を読み、以降はその指示に従う
 
-### ▶ 一問一答(quiz)に行くキーワード(将来)
+### ▶ Google フォーム小テスト(quiz)に行くキーワード
 
-- 「一問一答」「クイズ」「短答」
-- 「〜の確認問題」
+- 「小テスト」「単元テスト」「Google フォーム」「GAS でフォーム」「クイズ」
+- 「採点付きフォーム」「N 問の選択式テスト」
+- フォーム自動生成キットへの依頼全般
 
-→ `quiz/CLAUDE.md` を読む(まだツール未実装の場合はユーザーに確認)
+→ [`quiz/CLAUDE.md`](quiz/CLAUDE.md) を読み、以降はその指示に従う
+
+> 注: 旧「一問一答(HTML 単一ファイルのフラッシュカード)」は本ツールとは別物。`quiz/` 枠は 2026-05 から **GAS による Google フォーム小テスト作成キット** で確定運用。HTML 単一ファイルの一問一答が必要になった場合は別フォルダ(例: `flashcards/`)で新設する。
 
 ### ▶ ツールが判別できない場合
 
@@ -163,7 +166,7 @@ GitHub Pages で公開される際のURL:
 - [x] Visual Column(コラム集) — 稼働中
 - [x] Interactive Lecture Lab(授業用HTMLスライド) — 稼働中
 - [x] Interactive Practice Lab(演習用HTML教材) — 稼働中(1単元: 1章03 知的財産権の扱い)
-- [ ] 一問一答ツール — ローカル開発中、統合検討中
+- [x] Quiz Form Kit(Google フォーム小テスト作成キット / GAS) — 稼働中(Phase 1: ツール枠 + サンプル設問 3 問。Phase 2 で 25 問に拡張予定)
 - [ ] その他のツール — 未定
 
 統合予定のツールがあれば、ユーザーに「今のタイミングで統合しますか?」と確認してから着手。
