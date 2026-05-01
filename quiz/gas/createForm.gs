@@ -17,16 +17,13 @@ function createQuiz() {
   form.setDescription(CONFIG.description);
   form.setIsQuiz(true);
 
-  // メール収集(API 名が揺れているため try/fallback)
-  try {
+  // メール収集 (Verified 優先): サインイン済み Google アカウントから
+  // 自動取得し、回答者の手入力を不要にする。古い GAS 環境では setCollectEmail(true)
+  // にフォールバック(この場合は手入力欄になる)。
+  if (typeof FormApp.EmailCollectionType !== 'undefined') {
+    form.setEmailCollectionType(FormApp.EmailCollectionType.VERIFIED);
+  } else {
     form.setCollectEmail(true);
-  } catch (e) {
-    // 新 API では setEmailCollectionType
-    if (typeof FormApp.EmailCollectionType !== 'undefined') {
-      form.setEmailCollectionType(FormApp.EmailCollectionType.VERIFIED);
-    } else {
-      throw e;
-    }
   }
 
   form.setLimitOneResponsePerUser(true);

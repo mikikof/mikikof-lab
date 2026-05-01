@@ -166,7 +166,7 @@ GitHub Pages で公開される際のURL:
 - [x] Visual Column(コラム集) — 稼働中
 - [x] Interactive Lecture Lab(授業用HTMLスライド) — 稼働中
 - [x] Interactive Practice Lab(演習用HTML教材) — 稼働中(1単元: 1章03 知的財産権の扱い)
-- [x] Quiz Form Kit(Google フォーム小テスト作成キット / GAS) — 稼働中(Phase 1: ツール枠 + サンプル設問 3 問。Phase 2 で 25 問に拡張予定)
+- [x] Quiz Form Kit(Google フォーム小テスト作成キット / GAS) — 稼働中(Phase 2 完了: 25 問構成 / 04 知財 6 + 05 個人情報 6 + 06 情報法 6 + 07 セキュリティ 7)
 - [ ] その他のツール — 未定
 
 統合予定のツールがあれば、ユーザーに「今のタイミングで統合しますか?」と確認してから着手。
