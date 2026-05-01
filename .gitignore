@@ -17,5 +17,6 @@ Desktop.ini
 .env
 .env.local
 
-# Claude Code internal
-.claude/
+# Claude Code internal (commands は共有する)
+.claude/*
+!.claude/commands/

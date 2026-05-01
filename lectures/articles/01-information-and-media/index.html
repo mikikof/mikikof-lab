@@ -1,0 +1,2193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>情報とメディア | 情報Ⅰ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Noto+Serif+JP:wght@400;500;600;700;900&family=Noto+Sans+JP:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy-darkest: #0F2847;
+  --navy-dark: #1B3A5B;
+  --navy: #2C5F8D;
+  --navy-light: #4A7FA8;
+  --navy-pale: #D4E1EF;
+  --navy-bg: #F3F6FB;
+  --accent-red: #C8102E;
+  --accent-red-dark: #8B0A1F;
+  --accent-gold: #C9A961;
+  --text-main: #1A2332;
+  --text-sub: #5A6378;
+  --white: #FFFFFF;
+  --ok-green: #1E824C;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(--text-main); background: var(--navy-darkest); overflow: hidden; -webkit-font-smoothing: antialiased; touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+.slide p, .slide li, .case-content, .practice-text, .def-desc, .quiz-question, .quiz-feedback, .ch-body p, .answer-text { -webkit-user-select: text; user-select: text; }
+.slide-container { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+.slide { position: absolute; top: 47px; bottom: 52px; left: 0; right: 0; padding: 4vh 5vw; opacity: 0; pointer-events: none; transform: translateX(30px); transition: opacity 0.4s ease, transform 0.4s ease; background: var(--white); overflow-y: auto; }
+.slide.active { opacity: 1; pointer-events: all; transform: translateX(0); }
+.topbar { position: fixed; top: 0; left: 0; right: 0; height: 44px; background: linear-gradient(180deg, var(--navy-darkest) 0%, var(--navy-dark) 100%); color: rgba(255,255,255,0.9); display: flex; align-items: center; padding: 0 24px; z-index: 100; font-size: 13px; letter-spacing: 0.05em; box-shadow: 0 2px 12px rgba(0,0,0,0.2); }
+.topbar-title { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 600; margin-right: 20px; }
+.topbar-subtitle { color: rgba(255,255,255,0.6); font-size: 12px; flex: 1; }
+.topbar-chapter { font-family: 'JetBrains Mono', monospace; color: var(--accent-gold); letter-spacing: 0.1em; font-size: 11px; }
+.progress { position: fixed; top: 44px; left: 0; height: 3px; background: linear-gradient(90deg, var(--accent-red) 0%, var(--accent-gold) 100%); z-index: 99; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 8px rgba(201, 169, 97, 0.5); }
+.bottombar { position: fixed; bottom: 0; left: 0; right: 0; height: 52px; background: var(--navy-darkest); color: rgba(255,255,255,0.85); display: flex; align-items: center; padding: 0 24px; z-index: 100; font-size: 13px; }
+.bottombar-nav { display: flex; gap: 12px; align-items: center; }
+.nav-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: white; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-size: 16px; }
+.nav-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.page-indicator { font-family: 'JetBrains Mono', monospace; margin-left: auto; margin-right: 16px; color: rgba(255,255,255,0.7); font-size: 12px; letter-spacing: 0.08em; }
+.slide-title-small { flex: 1; margin-left: 16px; font-size: 12px; color: rgba(255,255,255,0.5); font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; max-width: 40vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.keyboard-hint { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.4); margin-left: 10px; }
+.eyebrow { font-family: 'JetBrains Mono', monospace; color: var(--accent-red); font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 16px; }
+.slide-title { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; color: var(--navy-darkest); font-size: clamp(32px, 4.4vw, 56px); line-height: 1.15; margin-bottom: 10px; letter-spacing: -0.01em; }
+.slide-subtitle { font-size: clamp(17px, 1.7vw, 22px); color: var(--text-sub); font-weight: 500; margin-bottom: 30px; line-height: 1.7; }
+.section-heading { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; color: var(--navy-dark); font-size: 26px; margin: 18px 0 14px; padding-left: 14px; border-left: 4px solid var(--accent-red); line-height: 1.3; }
+.body-text { font-size: 19px; line-height: 1.85; color: var(--text-main); font-weight: 500; }
+.highlight { background: linear-gradient(180deg, transparent 60%, rgba(201,169,97,0.4) 60%); font-weight: 700; padding: 0 2px; }
+
+.title-slide { display: flex; flex-direction: column; justify-content: center; background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy-dark) 60%, var(--navy) 100%); color: white; padding: 0 10vw; overflow: hidden; }
+.title-slide::before { content: ''; position: absolute; top: 0; right: 0; width: 45%; height: 100%; background: radial-gradient(circle at 70% 30%, rgba(201,169,97,0.15) 0%, transparent 50%), radial-gradient(circle at 30% 70%, rgba(200,16,46,0.1) 0%, transparent 50%); pointer-events: none; }
+.title-slide::after { content: ''; position: absolute; top: 50%; right: 8vw; width: 300px; height: 300px; border: 1px solid rgba(201,169,97,0.3); border-radius: 50%; transform: translateY(-50%); animation: rotate 40s linear infinite; }
+@keyframes rotate { to { transform: translateY(-50%) rotate(360deg); } }
+.title-label { font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.3em; color: var(--accent-gold); margin-bottom: 24px; }
+.title-main { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; font-size: clamp(60px, 8vw, 120px); line-height: 1; margin-bottom: 20px; letter-spacing: -0.02em; position: relative; z-index: 2; }
+.title-sub { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: clamp(22px, 2.5vw, 34px); font-weight: 300; color: rgba(255,255,255,0.85); margin-bottom: 60px; letter-spacing: 0.05em; }
+.title-meta { display: flex; gap: 40px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.6); letter-spacing: 0.15em; position: relative; z-index: 2; flex-wrap: wrap; }
+.title-meta-item strong { color: var(--accent-gold); margin-right: 8px; }
+
+.section-divider { display: flex !important; flex-direction: column; justify-content: center !important; align-items: center !important; background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy) 100%); color: white; position: absolute; padding: 0 5vw !important; overflow: hidden !important; text-align: center; }
+.section-divider > * { position: relative; z-index: 2; }
+.section-divider::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(201,169,97,0.1) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(200,16,46,0.08) 0%, transparent 40%); z-index: 1; }
+.section-number { font-family: 'JetBrains Mono', monospace; font-size: 14px; letter-spacing: 0.3em; color: var(--accent-gold); margin-bottom: 20px; }
+.section-title-big { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: clamp(48px, 7vw, 90px); font-weight: 900; line-height: 1; margin-bottom: 18px; text-align: center; }
+.section-tagline { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: clamp(18px, 2vw, 26px); font-weight: 300; color: rgba(255,255,255,0.75); letter-spacing: 0.05em; }
+
+.agenda-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 30px; }
+.agenda-item { padding: 22px 26px; background: var(--navy-bg); border-left: 4px solid var(--navy); border-radius: 4px; transition: all 0.3s; display: flex; gap: 18px; align-items: flex-start; }
+.agenda-item:hover { background: var(--navy-pale); transform: translateX(4px); }
+.agenda-num { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: 34px; font-weight: 700; color: var(--accent-red); line-height: 1; min-width: 46px; }
+.agenda-content h3 { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 600; font-size: 19px; color: var(--navy-darkest); margin-bottom: 6px; }
+.agenda-content p { font-size: 14.5px; color: var(--text-sub); line-height: 1.7; font-weight: 500; }
+
+.def-box { background: var(--navy-bg); border: 1px solid var(--navy-pale); border-radius: 6px; padding: 22px 26px; margin-bottom: 14px; }
+.def-box .def-label { font-family: 'JetBrains Mono', monospace; color: var(--accent-red); font-size: 12px; font-weight: 700; letter-spacing: 0.15em; margin-bottom: 8px; }
+.def-box .def-term { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 22px; color: var(--navy-darkest); margin-bottom: 10px; }
+.def-box .def-desc { font-size: 16px; line-height: 1.85; color: var(--text-main); font-weight: 500; }
+.def-box.has-illust { padding-top: 0; overflow: hidden; }
+.law-illust { margin: 0 -26px 16px; padding: 14px 0 10px; background: transparent; text-align: center; border-bottom: 1px dashed var(--navy-pale); }
+.law-illust-svg { width: 92px; height: 92px; display: block; margin: 0 auto; }
+.law-illust-tag { margin-top: 4px; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.2em; color: var(--text-sub); font-weight: 700; }
+
+.note-blank { display: inline-block; min-width: 110px; padding: 2px 14px; background: var(--navy-pale); border-bottom: 2px solid var(--navy); color: var(--navy-dark); font-weight: 700; border-radius: 4px 4px 0 0; cursor: pointer; transition: all 0.2s; }
+.note-blank:hover { background: #BDD0E6; }
+.note-blank.reveal { background: var(--accent-gold); color: var(--navy-darkest); border-bottom-color: var(--accent-red); animation: reveal 0.5s; }
+@keyframes reveal { 0% { transform: scale(0.9); opacity: 0.5; } 50% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 14px; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 14px; }
+
+.practice-list { margin-top: 22px; }
+.practice-item { display: flex; gap: 18px; padding: 16px 20px; background: var(--white); border: 1px solid var(--navy-pale); border-radius: 6px; margin-bottom: 12px; transition: all 0.25s; cursor: pointer; align-items: flex-start; flex-wrap: wrap; }
+.practice-item:hover { background: var(--navy-bg); }
+.practice-letter { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; color: var(--navy); min-width: 36px; font-size: 19px; }
+.practice-text { flex: 1; font-size: 16px; line-height: 1.75; min-width: 0; font-weight: 500; }
+.practice-verdict { padding: 5px 14px; border-radius: 3px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; white-space: nowrap; min-width: 64px; text-align: center; background: transparent; color: var(--navy); border: 1px dashed var(--navy-light); transition: all 0.3s; }
+.practice-item.revealed .practice-verdict { border-style: solid; letter-spacing: 0.15em; }
+.practice-item.revealed.ok .practice-verdict { background: var(--ok-green); color: white; border-color: var(--ok-green); }
+.practice-item.revealed.ng .practice-verdict { background: var(--accent-red); color: white; border-color: var(--accent-red); }
+.practice-item.revealed .practice-reason { display: block; margin-top: 10px; padding: 12px 16px; background: var(--navy-bg); border-left: 3px solid var(--accent-gold); font-size: 14px; color: var(--text-main); line-height: 1.7; width: 100%; font-weight: 500; }
+.practice-reason { display: none; }
+
+.quiz-container { max-width: 940px; margin: 22px auto 0; }
+.quiz-question { background: var(--navy-darkest); color: white; padding: 18px 26px; border-radius: 6px 6px 0 0; font-size: 18px; line-height: 1.65; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 600; }
+.quiz-question-num { font-family: 'JetBrains Mono', monospace; color: var(--accent-gold); font-size: 12px; letter-spacing: 0.2em; margin-bottom: 8px; display: block; font-weight: 700; }
+.quiz-options { background: var(--white); border: 1px solid var(--navy-pale); border-top: none; border-radius: 0 0 6px 6px; padding: 16px; }
+.quiz-option { padding: 13px 18px; margin-bottom: 8px; background: var(--navy-bg); border: 2px solid transparent; border-radius: 4px; cursor: pointer; transition: all 0.2s; display: flex; gap: 12px; align-items: flex-start; font-size: 15.5px; font-weight: 500; line-height: 1.65; }
+.quiz-option:hover { border-color: var(--navy); background: var(--navy-pale); }
+.quiz-option:last-child { margin-bottom: 0; }
+.quiz-option-letter { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--navy); min-width: 24px; font-size: 14.5px; }
+.quiz-option.correct { background: rgba(30,130,76,0.1); border-color: var(--ok-green); }
+.quiz-option.correct .quiz-option-letter { color: var(--ok-green); }
+.quiz-option.incorrect { background: rgba(200,16,46,0.08); border-color: var(--accent-red); opacity: 0.7; }
+.quiz-feedback { display: none; margin-top: 14px; padding: 16px 20px; background: var(--navy-bg); border-left: 4px solid var(--accent-gold); font-size: 15px; line-height: 1.8; border-radius: 0 4px 4px 0; font-weight: 500; }
+.quiz-feedback.show { display: block; animation: fadeIn 0.4s; }
+.quiz-feedback strong { color: var(--navy-darkest); }
+
+.answers-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 22px; }
+.answer-row { display: flex; align-items: center; padding: 10px 14px; background: var(--navy-bg); border-radius: 4px; gap: 12px; border-left: 3px solid var(--navy); cursor: pointer; transition: all 0.2s; }
+.answer-row:hover { background: var(--navy-pale); }
+.answer-num { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--accent-red); font-size: 15px; min-width: 32px; }
+.answer-text { flex: 1; font-size: 14.5px; font-weight: 600; color: var(--navy-darkest); line-height: 1.55; }
+.answer-reveal { font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 5px 12px; background: var(--navy-dark); color: white; border-radius: 3px; letter-spacing: 0.08em; transition: all 0.3s; font-weight: 700; white-space: nowrap; }
+.answer-row.revealed .answer-reveal { background: var(--accent-gold); color: var(--navy-darkest); font-weight: 700; }
+
+.summary-tree { display: flex; justify-content: center; margin-top: 22px; padding: 10px; flex-direction: column; align-items: center; }
+.tree-center { background: var(--navy-darkest); color: white; padding: 18px 32px; border-radius: 8px; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: 24px; font-weight: 700; position: relative; box-shadow: 0 8px 24px rgba(15,40,71,0.25); }
+.tree-branches { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 32px; width: 100%; }
+.tree-branch { background: var(--white); border: 2px solid var(--navy-pale); border-radius: 6px; padding: 14px; position: relative; transition: all 0.25s; }
+.tree-branch:hover { border-color: var(--accent-red); transform: translateY(-3px); }
+.tree-branch::before { content: ''; position: absolute; top: -16px; left: 50%; width: 2px; height: 16px; background: var(--navy-pale); }
+.tree-branch h4 { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 15px; color: var(--navy-darkest); margin-bottom: 8px; }
+.tree-branch ul { list-style: none; font-size: 12.5px; line-height: 1.75; color: var(--text-main); font-weight: 500; }
+.tree-branch li::before { content: '▸ '; color: var(--accent-red); }
+
+.review-container { max-width: 800px; margin: 16px auto 0; text-align: center; }
+.review-intro { font-size: 16px; color: var(--text-main); margin-bottom: 24px; line-height: 1.85; font-weight: 500; }
+.review-start-btn { background: var(--navy-darkest); color: white; border: none; padding: 14px 42px; font-size: 17px; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; border-radius: 50px; cursor: pointer; transition: all 0.3s; box-shadow: 0 6px 20px rgba(15,40,71,0.25); }
+.review-start-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(15,40,71,0.35); background: var(--navy); }
+.review-q-area { display: none; margin-top: 20px; }
+.review-q-area.active { display: block; }
+.review-progress { font-family: 'JetBrains Mono', monospace; color: var(--navy); font-size: 13px; letter-spacing: 0.15em; margin-bottom: 14px; font-weight: 700; }
+.review-result { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: 48px; font-weight: 700; color: var(--accent-red); margin: 20px 0 10px; }
+.review-result-sub { font-size: 15px; color: var(--text-main); margin-bottom: 24px; font-weight: 500; }
+.review-retry-btn { background: transparent; border: 2px solid var(--navy); color: var(--navy-darkest); padding: 9px 22px; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 600; border-radius: 30px; cursor: pointer; transition: all 0.2s; }
+.review-retry-btn:hover { background: var(--navy-darkest); color: white; }
+
+.case-expander { margin-top: 18px; border: 1px solid var(--navy-pale); border-radius: 8px; overflow: hidden; }
+.case-head { padding: 14px 20px; background: var(--navy-bg); cursor: pointer; display: flex; gap: 14px; align-items: center; transition: all 0.2s; }
+.case-head:hover { background: var(--navy-pale); }
+.case-year { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent-red); font-weight: 700; letter-spacing: 0.15em; }
+.case-title { flex: 1; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; color: var(--navy-darkest); font-size: 16px; }
+.case-tag { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; padding: 3px 8px; background: rgba(201,169,97,0.2); color: #8a6d1f; border-radius: 3px; letter-spacing: 0.1em; font-weight: 700; }
+.case-toggle { font-family: 'JetBrains Mono', monospace; color: var(--navy); font-size: 18px; font-weight: 700; transition: transform 0.3s; }
+.case-expander.open .case-toggle { transform: rotate(45deg); }
+.case-body { max-height: 0; overflow: hidden; transition: max-height 0.4s; }
+.case-expander.open .case-body { max-height: 700px; }
+.case-content { padding: 18px 22px; font-size: 15px; line-height: 1.85; color: var(--text-main); font-weight: 500; }
+.case-content p { margin-bottom: 10px; }
+.case-meta { display: flex; gap: 18px; margin-top: 12px; flex-wrap: wrap; padding-top: 12px; border-top: 1px dashed var(--navy-pale); }
+.case-meta-item { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--text-sub); font-weight: 500; }
+.case-meta-item strong { display: block; color: var(--accent-red); font-size: 9.5px; letter-spacing: 0.15em; margin-bottom: 2px; }
+
+/* Property cards (情報の3特性 interactive — HTML カード版で可読性向上) */
+.prop-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 14px; align-items: start; }
+.icon-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.icon-cards.med-cards { grid-template-columns: repeat(3, 1fr); }
+.icon-card { background: white; border: 2px solid var(--navy-pale); border-radius: 14px; padding: 14px 8px 16px; text-align: center; cursor: pointer; transition: all 0.25s; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.icon-card:hover { border-color: var(--accent-gold); transform: translateY(-3px); box-shadow: 0 6px 18px rgba(15,40,71,0.1); }
+.icon-card.selected { border-color: var(--accent-red); background: linear-gradient(180deg, rgba(201,169,97,0.10) 0%, white 100%); box-shadow: 0 4px 14px rgba(200,16,46,0.12); }
+.icon-card-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; color: var(--accent-red); font-weight: 900; line-height: 1.2; }
+.icon-card-svg { width: 78px; height: 78px; display: block; margin: 4px 0 2px; }
+.icon-card-name { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; font-size: 17px; color: var(--navy-darkest); line-height: 1.3; margin-top: 2px; }
+.icon-card-sub { font-family: 'Noto Sans JP', sans-serif; font-size: 11.5px; color: var(--text-sub); font-weight: 600; line-height: 1.4; margin-top: 1px; }
+.cards-hint { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--text-sub); font-weight: 700; text-align: center; margin-top: 10px; }
+.prop-panel { background: white; border: 2px solid var(--navy-pale); border-radius: 10px; padding: 20px; min-height: 220px; }
+.prop-panel-tag { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: var(--accent-red); font-weight: 700; margin-bottom: 4px; }
+.prop-panel-name { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; font-size: 26px; color: var(--navy-darkest); margin-bottom: 12px; }
+.prop-panel-desc { font-size: 14.5px; line-height: 1.85; color: var(--text-main); font-weight: 500; }
+.prop-panel-eg { margin-top: 12px; padding: 10px 14px; background: var(--navy-bg); border-left: 3px solid var(--accent-gold); font-size: 13.5px; line-height: 1.7; font-weight: 500; border-radius: 0 4px 4px 0; }
+.prop-panel-eg strong { color: var(--accent-red-dark); }
+
+/* 包含構造 nested rings (生命 ⊃ 社会 ⊃ 機械) */
+.nest-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 14px; align-items: center; }
+.nest-svg-box { background: var(--navy-bg); border-radius: 10px; padding: 18px; display: flex; align-items: center; justify-content: center; }
+.nest-svg { width: 100%; max-width: 320px; }
+.nest-ring { cursor: pointer; transition: all 0.3s; }
+.nest-ring:hover ellipse { filter: brightness(1.1); }
+.nest-ring.selected ellipse { stroke: var(--accent-gold); stroke-width: 4; }
+.nest-panel { background: white; border: 2px solid var(--navy-pale); border-radius: 10px; padding: 20px; min-height: 220px; }
+
+/* メディア3分類 (interactive nodes) */
+.med-wrap { display: grid; grid-template-columns: 1.05fr 1fr; gap: 22px; margin-top: 14px; align-items: start; }
+.med-svg-box { background: var(--navy-bg); border-radius: 10px; padding: 16px; }
+.med-svg { width: 100%; max-width: 380px; display: block; margin: 0 auto; }
+.med-node { cursor: pointer; transition: all 0.3s; }
+.med-node circle { transition: all 0.3s; }
+.med-node:hover circle { filter: brightness(1.12); }
+.med-node.selected circle { stroke: var(--accent-gold); stroke-width: 4; }
+.med-panel { background: white; border: 2px solid var(--navy-pale); border-radius: 10px; padding: 20px; min-height: 240px; }
+
+/* judgment-chip (メディアリテラシー) */
+.jc-wrap { margin-top: 16px; }
+.jc-instr { background: var(--navy-darkest); color: white; padding: 14px 20px; border-radius: 6px; font-size: 15px; line-height: 1.7; margin-bottom: 14px; font-weight: 500; }
+.jc-instr strong { color: var(--accent-gold); }
+.jc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.jc-chip { background: white; border: 2px solid var(--navy-pale); border-radius: 8px; padding: 14px 16px; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; gap: 8px; }
+.jc-chip:hover { border-color: var(--navy); transform: translateY(-2px); }
+.jc-chip-letter { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent-red); letter-spacing: 0.18em; font-weight: 700; }
+.jc-chip-text { font-size: 14.5px; line-height: 1.65; color: var(--text-main); font-weight: 500; }
+.jc-chip-judge { margin-top: 4px; padding: 6px 12px; border-radius: 20px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; align-self: flex-start; background: var(--navy-pale); color: var(--navy); border: 1px dashed var(--navy); }
+.jc-chip.judged-correct { border-color: var(--ok-green); background: rgba(30,130,76,0.06); }
+.jc-chip.judged-correct .jc-chip-judge { background: var(--ok-green); color: white; border-style: solid; border-color: var(--ok-green); }
+.jc-chip.judged-wrong { border-color: var(--accent-red); background: rgba(200,16,46,0.06); }
+.jc-chip.judged-wrong .jc-chip-judge { background: var(--accent-red); color: white; border-style: solid; border-color: var(--accent-red); }
+.jc-chip-fb { display: none; font-size: 13px; line-height: 1.65; color: var(--text-main); padding: 8px 12px; border-left: 3px solid var(--accent-gold); background: var(--navy-bg); margin-top: 4px; font-weight: 500; }
+.jc-chip.judged-correct .jc-chip-fb, .jc-chip.judged-wrong .jc-chip-fb { display: block; animation: fadeIn 0.3s; }
+.jc-verdict { margin-top: 14px; padding: 14px 18px; background: var(--navy-bg); border: 2px solid var(--navy-pale); border-radius: 8px; display: none; }
+.jc-verdict.show { display: block; animation: fadeIn 0.4s; }
+.jc-verdict-title { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: var(--accent-red); font-weight: 700; margin-bottom: 6px; }
+.jc-verdict-body { font-size: 14px; line-height: 1.7; color: var(--text-main); font-weight: 500; }
+.jc-verdict-body strong { color: var(--accent-red-dark); }
+
+/* comparison-visual (エコーチェンバー vs フィルターバブル) */
+.cmp-vs { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 12px; margin-top: 16px; align-items: stretch; }
+.cmp-side { background: white; border: 2px solid var(--navy-pale); border-radius: 10px; padding: 18px 18px 16px; }
+.cmp-side.echo { border-top: 4px solid var(--navy); }
+.cmp-side.bubble { border-top: 4px solid var(--accent-red); }
+.cmp-side h4 { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 19px; color: var(--navy-darkest); margin-bottom: 4px; text-align: center; }
+.cmp-side .cmp-en { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.2em; color: var(--text-sub); text-align: center; margin-bottom: 10px; font-weight: 700; }
+.cmp-svg { display: block; margin: 0 auto 8px; max-width: 160px; width: 100%; }
+.cmp-row { display: flex; gap: 10px; padding: 7px 8px; border-bottom: 1px dashed var(--navy-pale); align-items: flex-start; }
+.cmp-row:last-child { border-bottom: none; }
+.cmp-row-label { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--navy); letter-spacing: 0.1em; font-weight: 700; min-width: 56px; padding-top: 1px; }
+.cmp-row-text { flex: 1; font-size: 13.5px; line-height: 1.65; color: var(--text-main); font-weight: 500; }
+.cmp-axis { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+.cmp-axis svg { width: 36px; height: 36px; }
+.cmp-axis-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--text-sub); font-weight: 700; text-align: center; }
+
+/* DIKW フロー (SLIDE 4) - データ→情報→知識→知恵 */
+.dikw-wrap { margin-top: 18px; }
+.dikw-flow { display: flex; gap: 6px; align-items: stretch; }
+.dikw-step { flex: 1; background: white; border: 2px solid var(--navy-pale); border-radius: 10px; padding: 16px 12px 14px; text-align: center; position: relative; transition: all 0.25s; display: flex; flex-direction: column; }
+.dikw-step:hover { border-color: var(--accent-gold); transform: translateY(-3px); box-shadow: 0 6px 18px rgba(15,40,71,0.1); }
+.dikw-step.current { border-color: var(--accent-red); background: linear-gradient(180deg, rgba(201,169,97,0.10) 0%, white 100%); }
+.dikw-step.current::before { content: 'POINT ① ここ'; position: absolute; top: -11px; left: 50%; transform: translateX(-50%); background: var(--accent-red); color: white; padding: 3px 12px; border-radius: 12px; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; font-weight: 900; letter-spacing: 0.12em; white-space: nowrap; }
+.dikw-icon { width: 56px; height: 56px; margin: 8px auto 8px; display: block; }
+.dikw-jp { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; font-size: 19px; color: var(--navy-darkest); margin-bottom: 2px; }
+.dikw-en { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.18em; color: var(--accent-red); margin-bottom: 8px; font-weight: 700; }
+.dikw-desc { font-size: 12.5px; line-height: 1.65; color: var(--text-main); font-weight: 500; margin-bottom: 8px; }
+.dikw-eg { font-size: 12px; line-height: 1.55; color: var(--navy-darkest); padding: 6px 8px; background: var(--navy-bg); border-radius: 4px; font-weight: 600; margin-top: auto; }
+.dikw-step.current .dikw-eg { background: rgba(201,169,97,0.18); color: var(--accent-red-dark); }
+.dikw-arrow { flex: 0 0 22px; align-self: center; color: var(--navy); font-size: 22px; font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+
+/* グラフ基本パターン (SLIDE 19a) */
+.gp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+.gp-card { background: white; border: 2px solid var(--navy-pale); border-radius: 12px; padding: 14px 14px 16px; transition: all 0.25s; display: flex; flex-direction: column; gap: 6px; }
+.gp-card:hover { border-color: var(--accent-gold); transform: translateY(-3px); box-shadow: 0 6px 18px rgba(15,40,71,0.1); }
+.gp-card-head { display: flex; align-items: center; gap: 12px; }
+.gp-card-icon { width: 48px; height: 48px; flex-shrink: 0; }
+.gp-card-jp { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; font-size: 17px; color: var(--navy-darkest); line-height: 1.25; }
+.gp-card-en { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.18em; color: var(--accent-red); font-weight: 700; }
+.gp-card-purpose { font-size: 13px; line-height: 1.6; color: var(--text-main); font-weight: 500; padding-bottom: 8px; border-bottom: 1px dashed var(--navy-pale); }
+.gp-card-purpose strong { color: var(--accent-red-dark); }
+.gp-card-eg { font-size: 12.5px; line-height: 1.6; color: var(--text-sub); font-weight: 500; }
+.gp-card-eg strong { color: var(--navy-darkest); }
+
+/* 印象操作テクニック (SLIDE 19b/c/d) - 対比カード */
+.tk-wrap { margin-top: 16px; }
+.tk-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+.tk-card { background: white; border: 2px solid var(--navy-pale); border-radius: 10px; padding: 14px 16px 16px; }
+.tk-card.bad { border-top: 4px solid var(--accent-red); }
+.tk-card.good { border-top: 4px solid var(--ok-green); }
+.tk-card-head { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; }
+.tk-card-icon { width: 30px; height: 30px; flex-shrink: 0; }
+.tk-card-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; font-weight: 900; }
+.tk-card.bad .tk-card-tag { color: var(--accent-red); }
+.tk-card.good .tk-card-tag { color: var(--ok-green); }
+.tk-card-title { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 16px; color: var(--navy-darkest); flex: 1; }
+.tk-card-svg { display: block; margin: 6px auto 8px; max-width: 280px; width: 100%; }
+.tk-card-note { font-size: 13px; line-height: 1.7; color: var(--text-main); font-weight: 500; padding: 8px 10px; background: var(--navy-bg); border-radius: 4px; }
+.tk-card-note strong { color: var(--accent-red-dark); }
+.tk-section-head { display: flex; align-items: center; gap: 12px; margin: 18px 0 6px; padding-left: 12px; border-left: 4px solid var(--accent-red); }
+.tk-section-icon { width: 28px; height: 28px; flex-shrink: 0; }
+.tk-section-title { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 22px; color: var(--navy-dark); line-height: 1.3; }
+.tk-section-tag { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.18em; color: var(--accent-red); font-weight: 700; margin-left: auto; }
+
+@media (max-width: 1100px) {
+  .gp-grid { grid-template-columns: 1fr; }
+  .tk-row { grid-template-columns: 1fr; gap: 10px; }
+}
+
+/* 印象操作 (実習5) - 2つのグラフ比較 */
+.graph-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 14px; }
+.graph-card { background: white; border: 2px solid var(--navy-pale); border-radius: 10px; padding: 16px; }
+.graph-card.bad { border-top: 4px solid var(--accent-red); }
+.graph-card.good { border-top: 4px solid var(--ok-green); }
+.graph-card h5 { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 17px; color: var(--navy-darkest); margin-bottom: 4px; text-align: center; }
+.graph-card .graph-tag { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.18em; color: var(--accent-red); text-align: center; margin-bottom: 10px; font-weight: 700; }
+.graph-card.good .graph-tag { color: var(--ok-green); }
+.graph-svg { display: block; margin: 0 auto 6px; max-width: 280px; width: 100%; }
+.graph-note { font-size: 13px; line-height: 1.7; color: var(--text-main); font-weight: 500; padding: 8px 10px; background: var(--navy-bg); border-radius: 4px; }
+
+@media (max-width: 1100px) {
+  .agenda-grid { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; gap: 12px; }
+  .two-col { grid-template-columns: 1fr; gap: 14px; }
+  .answers-grid { grid-template-columns: 1fr; }
+  .tree-branches { grid-template-columns: repeat(2, 1fr); }
+  .prop-wrap, .nest-wrap, .med-wrap { grid-template-columns: 1fr; }
+  .cmp-vs { grid-template-columns: 1fr; gap: 10px; }
+  .cmp-axis { flex-direction: row; }
+  .graph-wrap { grid-template-columns: 1fr; }
+  .jc-grid { grid-template-columns: 1fr; }
+  .dikw-flow { flex-direction: column; gap: 14px; }
+  .dikw-arrow { transform: rotate(90deg); flex: 0 0 auto; padding: 2px 0; }
+}
+
+.slide::-webkit-scrollbar { width: 6px; }
+.slide::-webkit-scrollbar-track { background: transparent; }
+.slide::-webkit-scrollbar-thumb { background: var(--navy-pale); border-radius: 3px; }
+
+@media print { .topbar, .bottombar, .progress { display: none; } }
+
+/* MENU */
+.menu-toggle { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: white; padding: 6px 14px 6px 12px; border-radius: 18px; cursor: pointer; font-size: 11px; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.15em; font-weight: 700; margin-left: 14px; transition: all 0.25s; display: flex; align-items: center; gap: 8px; height: 28px; }
+.menu-toggle:hover { background: rgba(201,169,97,0.25); border-color: var(--accent-gold); }
+.menu-toggle-icon { display: inline-flex; flex-direction: column; gap: 3px; width: 14px; justify-content: center; }
+.menu-toggle-icon span { display: block; height: 1.5px; background: white; border-radius: 1px; transition: all 0.2s; }
+.menu-toggle:hover .menu-toggle-icon span { background: var(--accent-gold); }
+.menu-overlay { position: fixed; inset: 0; background: rgba(15,40,71,0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.35s; }
+.menu-overlay.open { opacity: 1; pointer-events: all; }
+.menu-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 400px; max-width: 92vw; background: white; box-shadow: -16px 0 40px rgba(0,0,0,0.2); z-index: 201; transform: translateX(100%); transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
+.menu-panel.open { transform: translateX(0); }
+.menu-head { padding: 24px 26px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; background: linear-gradient(180deg, var(--navy-darkest) 0%, var(--navy-dark) 100%); color: white; flex-shrink: 0; }
+.menu-head-title { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 20px; }
+.menu-head-sub { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--accent-gold); letter-spacing: 0.2em; margin-top: 4px; font-weight: 700; }
+.menu-close { background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.15); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 16px; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+.menu-close:hover { background: rgba(200,16,46,0.3); border-color: var(--accent-red); }
+.menu-reset-btn { margin: 14px 22px 4px; padding: 11px 16px; background: transparent; border: 1.5px dashed var(--accent-red); color: var(--accent-red); border-radius: 6px; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; font-weight: 600; font-size: 13.5px; transition: all 0.25s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.menu-reset-btn:hover { background: var(--accent-red); color: white; border-style: solid; }
+.menu-reset-icon { display: inline-block; font-size: 15px; transition: transform 0.4s; }
+.menu-reset-btn:hover .menu-reset-icon { transform: rotate(-180deg); }
+.menu-list { flex: 1; overflow-y: auto; padding: 8px 14px 28px; }
+.menu-list::-webkit-scrollbar { width: 6px; }
+.menu-list::-webkit-scrollbar-thumb { background: var(--navy-pale); border-radius: 3px; }
+.menu-section { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.2em; color: var(--accent-red); font-weight: 700; padding: 16px 14px 8px; margin-top: 6px; border-top: 1px solid var(--navy-pale); }
+.menu-section:first-of-type { border-top: none; margin-top: 6px; }
+.menu-item { display: flex; gap: 12px; padding: 11px 14px; border-radius: 6px; cursor: pointer; transition: all 0.2s; align-items: center; margin-bottom: 2px; }
+.menu-item:hover { background: var(--navy-bg); transform: translateX(-2px); }
+.menu-item-num { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--text-sub); font-size: 12px; min-width: 26px; }
+.menu-item-title { font-size: 14px; font-weight: 500; color: var(--navy-darkest); flex: 1; line-height: 1.45; }
+.menu-item.active { background: var(--navy-darkest); color: white; box-shadow: 0 4px 14px rgba(15,40,71,0.25); }
+.menu-item.active .menu-item-num { color: var(--accent-gold); }
+.menu-item.active .menu-item-title { color: white; font-weight: 700; }
+.menu-item-tag { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.1em; padding: 3px 7px; border-radius: 3px; font-weight: 700; background: rgba(200,16,46,0.1); color: var(--accent-red); white-space: nowrap; }
+.menu-item-tag.tag-interactive { background: rgba(201,169,97,0.18); color: #8a6d1f; }
+.menu-item-tag.tag-review { background: rgba(44,95,141,0.12); color: var(--navy); }
+.menu-item-tag.tag-section, .menu-item-tag.tag-title, .menu-item-tag.tag-end { background: rgba(15,40,71,0.08); color: var(--navy-dark); }
+.menu-item.active .menu-item-tag { background: rgba(201,169,97,0.3); color: var(--accent-gold); }
+
+@media (max-width: 720px) {
+  .topbar { height: 40px; padding: 0 12px; font-size: 11px; letter-spacing: 0; }
+  .topbar-title { font-size: 13px; margin-right: 8px; }
+  .topbar-subtitle { display: none; }
+  .topbar-chapter { font-size: 10px; letter-spacing: 0.08em; }
+  .menu-toggle { margin-left: 8px; padding: 4px 10px; font-size: 10px; height: 24px; gap: 6px; }
+  .menu-toggle-icon { width: 11px; gap: 2px; }
+  .menu-toggle-icon span { height: 1.3px; }
+  .progress { top: 40px; }
+  .bottombar { height: calc(52px + env(safe-area-inset-bottom, 0px)); padding: 0 14px env(safe-area-inset-bottom, 0px); font-size: 11px; }
+  .bottombar-nav { gap: 8px; }
+  .nav-btn { width: 40px; height: 40px; font-size: 16px; }
+  .slide-title-small { display: none; }
+  .keyboard-hint { display: none; }
+  .page-indicator { font-size: 11px; margin-right: 0; margin-left: auto; }
+  .slide { top: 43px; bottom: calc(52px + env(safe-area-inset-bottom, 0px)); padding: 4vw 5vw 64px; touch-action: pan-y pinch-zoom; }
+  button:active:not([disabled]), [onclick]:active, .nav-btn:active, .menu-toggle:active { transform: scale(0.96); transition: transform 0.08s; }
+  .swipe-hint { position: fixed; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%) translateY(20px); background: rgba(15, 40, 71, 0.92); color: white; padding: 10px 22px; border-radius: 24px; font-size: 13px; letter-spacing: 0.06em; font-weight: 600; z-index: 200; pointer-events: none; opacity: 0; transition: opacity 0.4s ease, transform 0.4s ease; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25); display: flex; align-items: center; gap: 10px; }
+  .swipe-hint::before, .swipe-hint::after { content: ""; width: 14px; height: 14px; border-top: 2px solid var(--accent-gold); border-right: 2px solid var(--accent-gold); }
+  .swipe-hint::before { transform: rotate(-135deg); }
+  .swipe-hint::after { transform: rotate(45deg); }
+  .swipe-hint.show { opacity: 1; transform: translateX(-50%) translateY(0); animation: swipeHintPulse 1.6s ease-in-out 1 0.4s; }
+  @keyframes swipeHintPulse { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-4px); } }
+  .title-slide { padding: 0 6vw; }
+  .title-slide::before, .title-slide::after { display: none; }
+  .title-label { font-size: 10.5px; letter-spacing: 0.2em; margin-bottom: 18px; }
+  .title-main { font-size: clamp(36px, 10vw, 58px); letter-spacing: -0.01em; margin-bottom: 14px; }
+  .title-sub { font-size: clamp(14px, 4vw, 20px); margin-bottom: 32px; }
+  .title-meta { gap: 14px 22px; font-size: 10.5px; flex-direction: column; }
+  .section-number { font-size: 11px; letter-spacing: 0.25em; margin-bottom: 14px; }
+  .section-title-big { font-size: clamp(34px, 9vw, 54px); }
+  .section-tagline { font-size: clamp(14px, 3.8vw, 18px); }
+  .eyebrow { font-size: 10px; letter-spacing: 0.15em; margin-bottom: 12px; }
+  .slide-title { font-size: clamp(24px, 6.2vw, 34px); margin-bottom: 8px; }
+  .slide-subtitle { font-size: clamp(13.5px, 3.8vw, 17px); margin-bottom: 20px; line-height: 1.65; }
+  .section-heading { font-size: 20px; margin-bottom: 14px; padding-left: 12px; border-left-width: 3px; }
+  .body-text { font-size: 15px; }
+  .def-box { padding: 16px 18px; margin-bottom: 12px; }
+  .def-box.has-illust { padding-top: 0; }
+  .law-illust { margin: 0 -18px 14px; padding: 12px 0 8px; }
+  .law-illust-svg { width: 80px; height: 80px; }
+  .def-box .def-term { font-size: 19px; margin-bottom: 8px; }
+  .def-box .def-desc { font-size: 14.5px; line-height: 1.75; }
+  .quiz-question { font-size: 16px; padding: 14px 18px; }
+  .quiz-option { font-size: 14.5px; padding: 11px 14px; }
+  .practice-text { font-size: 14.5px; }
+  .answer-text { font-size: 13.5px; }
+  .tree-branches { grid-template-columns: 1fr; gap: 10px; }
+  .menu-panel { width: 100%; max-width: 100%; box-shadow: none; }
+}
+@media (max-width: 380px) { .slide { padding: 3vw 4.5vw 40px; } .title-main { font-size: 36px; } .slide-title { font-size: 22px; } }
+@media (max-height: 500px) and (orientation: landscape) { .title-main { font-size: clamp(30px, 6vw, 50px); } .title-sub { font-size: clamp(13px, 2.5vw, 18px); margin-bottom: 20px; } .section-title-big { font-size: clamp(26px, 6vw, 46px); } .slide-title { font-size: clamp(20px, 4vw, 30px); } .slide-subtitle { margin-bottom: 14px; } .slide { padding: 3vh 5vw; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="topbar-title">情報とメディア</span>
+  <span class="topbar-subtitle">情報Ⅰ | 学習ノート p.2-3</span>
+  <span class="topbar-chapter">CHAPTER · 01</span>
+  <button class="menu-toggle" onclick="openMenu()" title="スライド目次(M)">
+    <span class="menu-toggle-icon"><span></span><span></span><span></span></span>
+    MENU
+  </button>
+</div>
+<div class="progress" id="progressBar"></div>
+
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+<div class="menu-panel" id="menuPanel">
+  <div class="menu-head">
+    <div>
+      <div class="menu-head-title">スライド目次</div>
+      <div class="menu-head-sub">CHAPTER · 01</div>
+    </div>
+    <button class="menu-close" onclick="closeMenu()" title="閉じる">✕</button>
+  </div>
+  <button class="menu-reset-btn" onclick="resetAllInteractions()">
+    <span class="menu-reset-icon">⟲</span>
+    インタラクションを全リセット
+  </button>
+  <div class="menu-list" id="menuList"></div>
+</div>
+
+<div class="slide-container" id="slideContainer">
+<!-- ═════ SLIDE 1: TITLE ═════ -->
+<div class="slide title-slide active" data-title="タイトル">
+  <div class="title-label">CHAPTER · 01 / INFORMATION & MEDIA</div>
+  <h1 class="title-main">情報と<br>メディア</h1>
+  <p class="title-sub">― 情報の特性・分類と、それを運ぶ媒体 ―</p>
+  <div class="title-meta">
+    <div class="title-meta-item"><strong>UNIT</strong>第1章 第1節</div>
+    <div class="title-meta-item"><strong>PAGES</strong>p.2 - p.3</div>
+    <div class="title-meta-item"><strong>ITEMS</strong>14 points / 5 practices</div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 2: AGENDA ═════ -->
+<div class="slide" data-title="このサイトで扱う内容">
+  <div class="eyebrow">AGENDA / 全体構成</div>
+  <h2 class="slide-title">このサイトで扱う内容</h2>
+  <p class="slide-subtitle">情報そのものの性質、3つの分類、運び手としてのメディア、そして情報を扱う側に求められるリテラシーまでを通しで扱う。</p>
+  <div class="agenda-grid">
+    <div class="agenda-item"><div class="agenda-num">01</div><div class="agenda-content"><h3>情報の特性</h3><p>残存・複製・伝播の3つの性質。「物」とは異なる情報固有のふるまい。</p></div></div>
+    <div class="agenda-item"><div class="agenda-num">02</div><div class="agenda-content"><h3>情報の分類</h3><p>生命情報 ⊃ 社会情報 ⊃ 機械情報 の包含関係。</p></div></div>
+    <div class="agenda-item"><div class="agenda-num">03</div><div class="agenda-content"><h3>メディア</h3><p>情報を表現・伝達・記録する媒体。伝播メディアと成果メディア。</p></div></div>
+    <div class="agenda-item"><div class="agenda-num">04</div><div class="agenda-content"><h3>メディアリテラシー</h3><p>情報を分析・評価し、発信者としての責任を持つ能力。</p></div></div>
+    <div class="agenda-item"><div class="agenda-num">05</div><div class="agenda-content"><h3>情報社会の影</h3><p>炎上、エコーチェンバー、フィルターバブル、印象操作。</p></div></div>
+    <div class="agenda-item"><div class="agenda-num">+</div><div class="agenda-content"><h3>実習(5問)+ 復習チャレンジ</h3><p>学習ノート p.2-3 の全項目に対応。最後にランダム10問の振り返り。</p></div></div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 3: SECTION 1 ═════ -->
+<div class="slide section-divider" data-title="第1節 情報の特性">
+  <div class="section-number">SECTION · 01 / 情報の特性</div>
+  <h2 class="section-title-big">情報とは何か<br>どう振るまうか</h2>
+  <p class="section-tagline">― 物(モノ)とは異なる、情報の3つの性質 ―</p>
+</div>
+
+<!-- ═════ SLIDE 4: POINT ① 情報 ═════ -->
+<div class="slide" data-title="POINT ① 情報">
+  <div class="eyebrow">POINT 1 / 学習ノート ①</div>
+  <h2 class="slide-title">情報 ― 形のない存在</h2>
+  <p class="slide-subtitle">情報は「物(モノ)」とは違う。手で触れず、目で見えず、与えても自分のところからなくならない。この単元の起点となる用語の定義を押さえる。</p>
+  <div class="def-box has-illust">
+    <div class="law-illust">
+      <svg class="law-illust-svg" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="iN1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient>
+          <linearGradient id="iG1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient>
+          <radialGradient id="iB1" cx="50%" cy="50%" r="65%"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="100%" stop-color="#F3F6FB"/></radialGradient>
+          <filter id="iS1" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        
+        <circle cx="128" cy="128" r="96" fill="url(#iG1)" opacity="0.45"/>
+        <circle cx="128" cy="128" r="96" fill="none" stroke="url(#iN1)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" filter="url(#iS1)"/>
+        <path d="M120,120a8,8,0,0,1,8,8v40a8,8,0,0,0,8,8" fill="none" stroke="url(#iN1)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+        <circle cx="124" cy="84" r="12" fill="url(#iN1)"/>
+      </svg>
+      <div class="law-illust-tag">PHOSPHOR · INFO</div>
+    </div>
+    <div class="def-label">① 単元の起点となる用語</div>
+    <div class="def-term"><span class="note-blank" data-answer="情報">クリックで正解</span></div>
+    <div class="def-desc">人間や機械にとって<strong>意味のある内容</strong>であり、物と違って <strong style="color:var(--accent-red-dark);">「形がない」</strong>という根本的な特徴を持つ。次の3つの性質(残存・複製・伝播)はすべて、この「形のなさ」から派生する。</div>
+  </div>
+
+  <h3 class="section-heading">参考: データから知恵へ ― 情報の位置づけ</h3>
+  <p style="font-size: 14.5px; color: var(--text-main); font-weight: 500; line-height: 1.75; margin-bottom: 4px;">「情報」はもっと大きな階層 <strong style="color:var(--accent-red-dark);">データ → 情報 → 知識 → 知恵</strong> の 2 段目に位置する。下は体温の例。POINT ① <strong>情報</strong>は、データに「意味」が与えられた段階。</p>
+  <div class="dikw-wrap">
+    <div class="dikw-flow">
+
+      <!-- データ (database) -->
+      <div class="dikw-step">
+        <svg class="dikw-icon" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="iNd" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient>
+            <linearGradient id="iGd" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient>
+            <filter id="iSd" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <ellipse cx="128" cy="80" rx="88" ry="48" fill="url(#iGd)" opacity="0.5"/>
+          <ellipse cx="128" cy="80" rx="88" ry="48" fill="none" stroke="url(#iNd)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" filter="url(#iSd)"/>
+          <path d="M40,80v48c0,26.51,39.4,48,88,48s88-21.49,88-48V80" fill="none" stroke="url(#iNd)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+          <path d="M40,128v48c0,26.51,39.4,48,88,48s88-21.49,88-48V128" fill="none" stroke="url(#iNd)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+        </svg>
+        <div class="dikw-jp">データ</div>
+        <div class="dikw-en">DATA</div>
+        <div class="dikw-desc">単独では意味を持たない、生の数値や記号</div>
+        <div class="dikw-eg">例 : 「36.5」</div>
+      </div>
+
+      <div class="dikw-arrow">▶</div>
+
+      <!-- 情報 (info) ← 現在地 -->
+      <div class="dikw-step current">
+        <svg class="dikw-icon" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="iNi" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#E83A52"/><stop offset="100%" stop-color="#8B0A1F"/></linearGradient>
+            <linearGradient id="iGi" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient>
+            <filter id="iSi" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <circle cx="128" cy="128" r="96" fill="url(#iGi)" opacity="0.5"/>
+          <circle cx="128" cy="128" r="96" fill="none" stroke="url(#iNi)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" filter="url(#iSi)"/>
+          <path d="M120,120a8,8,0,0,1,8,8v40a8,8,0,0,0,8,8" fill="none" stroke="url(#iNi)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+          <circle cx="124" cy="84" r="12" fill="url(#iNi)"/>
+        </svg>
+        <div class="dikw-jp">情報</div>
+        <div class="dikw-en">INFORMATION</div>
+        <div class="dikw-desc">文脈や意味が与えられたデータ。「何を表すのか」がわかる段階</div>
+        <div class="dikw-eg">例 : 「<strong>体温</strong>が 36.5 度」</div>
+      </div>
+
+      <div class="dikw-arrow">▶</div>
+
+      <!-- 知識 (book-open) -->
+      <div class="dikw-step">
+        <svg class="dikw-icon" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="iNk" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient>
+            <linearGradient id="iGk" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient>
+            <filter id="iSk" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <path d="M160,56a32,32,0,0,0-32,32A32,32,0,0,0,96,56H24V200H96a32,32,0,0,1,32,32,32,32,0,0,1,32-32h72V56Z" fill="url(#iGk)" opacity="0.5"/>
+          <path d="M128,88a32,32,0,0,1,32-32h72V200H160a32,32,0,0,0-32,32" fill="none" stroke="url(#iNk)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" filter="url(#iSk)"/>
+          <path d="M24,200H96a32,32,0,0,1,32,32V88A32,32,0,0,0,96,56H24Z" fill="none" stroke="url(#iNk)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+        </svg>
+        <div class="dikw-jp">知識</div>
+        <div class="dikw-en">KNOWLEDGE</div>
+        <div class="dikw-desc">情報を整理・関連づけて<strong>構造化</strong>した理解</div>
+        <div class="dikw-eg">例 : 平熱より高い → <strong>発熱の可能性</strong></div>
+      </div>
+
+      <div class="dikw-arrow">▶</div>
+
+      <!-- 知恵 (lightbulb) -->
+      <div class="dikw-step">
+        <svg class="dikw-icon" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="iNw" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient>
+            <linearGradient id="iGw" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient>
+            <filter id="iSw" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <path d="M78.7,167A79.87,79.87,0,0,1,48,104.45C47.76,61.09,82.72,25,126.07,24a80,80,0,0,1,51.34,142.9A24.3,24.3,0,0,0,168,186v6a8,8,0,0,1-8,8H96a8,8,0,0,1-8-8v-6A24.11,24.11,0,0,0,78.7,167Z" fill="url(#iGw)" opacity="0.55"/>
+          <line x1="88" y1="232" x2="168" y2="232" fill="none" stroke="url(#iNw)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+          <path d="M78.7,167A79.87,79.87,0,0,1,48,104.45C47.76,61.09,82.72,25,126.07,24a80,80,0,0,1,51.34,142.9A24.3,24.3,0,0,0,168,186v6a8,8,0,0,1-8,8H96a8,8,0,0,1-8-8v-6A24.11,24.11,0,0,0,78.7,167Z" fill="none" stroke="url(#iNw)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" filter="url(#iSw)"/>
+          <path d="M136,56c20,3.37,36.61,20,40,40" fill="none" stroke="url(#iNw)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+        </svg>
+        <div class="dikw-jp">知恵</div>
+        <div class="dikw-en">WISDOM</div>
+        <div class="dikw-desc">知識を活用し、状況に応じて<strong>判断・行動</strong>する力</div>
+        <div class="dikw-eg">例 : 早めに休んで栄養を取ろう</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 5: POINT ②③④ 情報の3特性 (interactive) ═════ -->
+<div class="slide" data-title="情報の3特性 (interactive)">
+  <div class="eyebrow">POINT 2-4 / 学習ノート ②③④</div>
+  <h2 class="slide-title">情報の3つの特性</h2>
+  <p class="slide-subtitle">物との違いを生む 3 つのキーワード。下の 3 つの円のうち 1 つをタップすると、定義と典型例が右(下)のパネルに表示される。</p>
+  <div class="prop-wrap">
+    <div>
+      <div class="icon-cards">
+        <div class="icon-card prop-card" data-key="zansonsei" onclick="selectProp('zansonsei')">
+          <div class="icon-card-tag">② POINT</div>
+          <svg class="icon-card-svg" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="iN52" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient>
+              <linearGradient id="iG52" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient>
+              <filter id="iS52" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <circle cx="128" cy="56" r="24" fill="url(#iG52)" opacity="0.55"/>
+            <line x1="128" y1="232" x2="128" y2="80" fill="none" stroke="url(#iN52)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18" filter="url(#iS52)"/>
+            <circle cx="128" cy="56" r="24" fill="none" stroke="url(#iN52)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/>
+            <line x1="88" y1="120" x2="168" y2="120" fill="none" stroke="url(#iN52)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/>
+            <path d="M216,144c0,64-88,24-88,88,0-64-88-24-88-88" fill="none" stroke="url(#iN52)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/>
+          </svg>
+          <div class="icon-card-name">残存性</div>
+        </div>
+        <div class="icon-card prop-card" data-key="fukuseisei" onclick="selectProp('fukuseisei')">
+          <div class="icon-card-tag">③ POINT</div>
+          <svg class="icon-card-svg" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="iN53" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient>
+              <linearGradient id="iG53" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient>
+              <filter id="iS53" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <polygon points="88 40 88 88 168 88 168 168 216 168 216 40 88 40" fill="url(#iG53)" opacity="0.55"/>
+            <polyline points="168 168 216 168 216 40 88 40 88 88" fill="none" stroke="url(#iN53)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18" filter="url(#iS53)"/>
+            <rect x="40" y="88" width="128" height="128" fill="none" stroke="url(#iN53)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/>
+          </svg>
+          <div class="icon-card-name">複製性</div>
+        </div>
+        <div class="icon-card prop-card" data-key="denpasei" onclick="selectProp('denpasei')">
+          <div class="icon-card-tag">④ POINT</div>
+          <svg class="icon-card-svg" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="iN54" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient>
+              <linearGradient id="iG54" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient>
+              <filter id="iS54" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <circle cx="128" cy="128" r="32" fill="url(#iG54)" opacity="0.55"/>
+            <circle cx="128" cy="128" r="32" fill="none" stroke="url(#iN54)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18" filter="url(#iS54)"/>
+            <path d="M181.67,80a71.94,71.94,0,0,1,0,96" fill="none" stroke="url(#iN54)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/>
+            <path d="M74.33,176a71.94,71.94,0,0,1,0-96" fill="none" stroke="url(#iN54)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/>
+            <path d="M208,49.62a111.88,111.88,0,0,1,0,156.76" fill="none" stroke="url(#iN54)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/>
+            <path d="M48,206.38A111.88,111.88,0,0,1,48,49.62" fill="none" stroke="url(#iN54)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/>
+          </svg>
+          <div class="icon-card-name">伝播性</div>
+        </div>
+      </div>
+      <div class="cards-hint">タップして詳細を表示</div>
+    </div>
+    <div class="prop-panel" id="propPanel"></div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 6: 実習1 情報の特性 ═════ -->
+<div class="slide" data-title="実習1 情報の特性">
+  <div class="eyebrow">PRACTICE 1 / 実習1</div>
+  <h2 class="slide-title">実習1 ― 情報の特性</h2>
+  <p class="slide-subtitle">次の3つの記述それぞれに該当する性質を、語群(ア.残存性 / イ.複製性 / ウ.伝播性 / エ.制御性)から選ぶ。クリックで解答と解説を展開。</p>
+  <div class="quiz-container">
+    <div>
+      <div class="quiz-question"><span class="quiz-question-num">Q1 / 実習1 (1)</span>インターネットで発信する情報は<strong>短時間で広範囲に拡散</strong>する。</div>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">ア</span>残存性</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">イ</span>複製性</div>
+        <div class="quiz-option" onclick="answerQuiz(this, true)" data-correct="true"><span class="quiz-option-letter">ウ</span>伝播性</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">エ</span>制御性</div>
+      </div>
+      <div class="quiz-feedback"><strong>正解 : ウ.伝播性</strong>。短時間で広範囲に広がるのが伝播性。「制御性」は語群の引っかけで、3特性には含まれない。</div>
+    </div>
+    <div style="margin-top: 16px;">
+      <div class="quiz-question"><span class="quiz-question-num">Q2 / 実習1 (2)</span>デジタル情報は<strong>コピーやダウンロードが容易</strong>であり、また劣化しない。</div>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">ア</span>残存性</div>
+        <div class="quiz-option" onclick="answerQuiz(this, true)" data-correct="true"><span class="quiz-option-letter">イ</span>複製性</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">ウ</span>伝播性</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">エ</span>制御性</div>
+      </div>
+      <div class="quiz-feedback"><strong>正解 : イ.複製性</strong>。コピーが容易で劣化しないのは複製性。アナログ情報(写真の焼き直しなど)とは違って、デジタルは何度コピーしても情報が劣化しない点に注意。</div>
+    </div>
+    <div style="margin-top: 16px;">
+      <div class="quiz-question"><span class="quiz-question-num">Q3 / 実習1 (3)</span>情報を他人に与えても、自分のところからなくなることはない。</div>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="answerQuiz(this, true)" data-correct="true"><span class="quiz-option-letter">ア</span>残存性</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">イ</span>複製性</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">ウ</span>伝播性</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">エ</span>制御性</div>
+      </div>
+      <div class="quiz-feedback"><strong>正解 : ア.残存性</strong>。情報は与えても自分の手元から消えない。物(モノ)を渡したら自分の手元から消えるのと対照的。これら3特性に加えて「<strong>形がない</strong>」という性質もある。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 7: SECTION 2 ═════ -->
+<div class="slide section-divider" data-title="第2節 情報の分類">
+  <div class="section-number">SECTION · 02 / 情報の分類</div>
+  <h2 class="section-title-big">生命・社会・機械<br>情報の3層</h2>
+  <p class="section-tagline">― 生命情報 ⊃ 社会情報 ⊃ 機械情報 という包含関係 ―</p>
+</div>
+
+<!-- ═════ SLIDE 8: POINT ⑤⑥⑦ 情報の3分類 ═════ -->
+<div class="slide" data-title="情報の3分類 (interactive)">
+  <div class="eyebrow">POINT 5-7 / 学習ノート ⑤⑥⑦</div>
+  <h2 class="slide-title">情報の3分類 ― 包含構造</h2>
+  <p class="slide-subtitle">最も広義の<strong>生命情報</strong>の中に<strong>社会情報</strong>が、その中に<strong>機械情報</strong>が含まれる。図の3つの楕円のうち1つをタップすると、定義と例が右(下)に表示される。</p>
+  <div class="nest-wrap">
+    <div class="nest-svg-box">
+      <svg class="nest-svg" viewBox="0 0 340 280" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="iN6" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient>
+          <linearGradient id="iN6B" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#94b3d0"/><stop offset="100%" stop-color="#2C5F8D"/></linearGradient>
+          <linearGradient id="iG6" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient>
+          <linearGradient id="iR6" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#E83A52"/><stop offset="100%" stop-color="#8B0A1F"/></linearGradient>
+          <filter id="iS6" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="1.6"/><feOffset dx="0.8" dy="2"/><feComponentTransfer><feFuncA type="linear" slope="0.38"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        
+        <text x="170" y="32" text-anchor="middle" fill="#1B3A5B" font-size="13" font-weight="700" font-family="'游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif">情報の包含構造</text>
+
+        <!-- ⑤ 生命情報 (heartbeat) -->
+        <g class="nest-ring" data-key="seimei" onclick="selectNest('seimei')">
+          <ellipse cx="170" cy="148" rx="148" ry="98" fill="url(#iN6)" filter="url(#iS6)" stroke="#FFFFFF" stroke-width="1.5"/>
+          <ellipse cx="170" cy="148" rx="148" ry="98" fill="none" stroke="#FFFFFF" stroke-width="1" opacity="0.3"/>
+          <text x="170" y="80" text-anchor="middle" fill="#C9A961" font-size="13" font-weight="900" font-family="JetBrains Mono" letter-spacing="0.12em">⑤ 生命情報</text>
+          <g transform="translate(36, 92) scale(0.13)" opacity="0.55">
+            <path d="M128,224S24,168,24,102A54,54,0,0,1,78,48c22.59,0,41.94,12.31,50,32,8.06-19.69,27.41-32,50-32a54,54,0,0,1,54,54C232,168,128,224,128,224Z" fill="#FFFFFF" opacity="0.4"/>
+            <polyline points="32 136 72 136 88 112 120 160 136 136 160 136" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+            <path d="M24,104c0-.67,0-1.33,0-2A54,54,0,0,1,78,48c22.59,0,41.94,12.31,50,32,8.06-19.69,27.41-32,50-32a54,54,0,0,1,54,54c0,66-104,122-104,122s-42-22.6-72.58-56" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+          </g>
+        </g>
+
+        <!-- ⑥ 社会情報 (users-three) -->
+        <g class="nest-ring" data-key="shakai" onclick="selectNest('shakai')">
+          <ellipse cx="170" cy="158" rx="104" ry="70" fill="url(#iN6B)" filter="url(#iS6)" stroke="#FFFFFF" stroke-width="1.5"/>
+          <text x="170" y="116" text-anchor="middle" fill="#C9A961" font-size="13" font-weight="900" font-family="JetBrains Mono" letter-spacing="0.12em">⑥ 社会情報</text>
+          <g transform="translate(82, 132) scale(0.10)" opacity="0.5">
+            <circle cx="128" cy="144" r="40" fill="#FFFFFF" opacity="0.4"/>
+            <circle cx="64" cy="88" r="32" fill="#FFFFFF" opacity="0.4"/>
+            <circle cx="192" cy="88" r="32" fill="#FFFFFF" opacity="0.4"/>
+            <path d="M192,120a59.91,59.91,0,0,1,48,24" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+            <path d="M16,144a59.91,59.91,0,0,1,48-24" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+            <circle cx="128" cy="144" r="40" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+            <path d="M72,216a65,65,0,0,1,112,0" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+            <path d="M161,80a32,32,0,1,1,31,40" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+            <path d="M64,120A32,32,0,1,1,95,80" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+          </g>
+        </g>
+
+        <!-- ⑦ 機械情報 (cpu) -->
+        <g class="nest-ring" data-key="kikai" onclick="selectNest('kikai')">
+          <ellipse cx="170" cy="178" rx="62" ry="40" fill="url(#iG6)" filter="url(#iS6)" stroke="#0F2847" stroke-width="1.5"/>
+          <text x="170" y="173" text-anchor="middle" fill="#0F2847" font-size="13" font-weight="900" font-family="JetBrains Mono" letter-spacing="0.12em">⑦ 機械情報</text>
+          <g transform="translate(190, 162) scale(0.13)" opacity="0.7">
+            <rect x="48" y="48" width="160" height="160" rx="8" fill="#0F2847" opacity="0.3"/>
+            <rect x="104" y="104" width="48" height="48" fill="none" stroke="#0F2847" stroke-linecap="round" stroke-linejoin="round" stroke-width="20"/>
+            <rect x="48" y="48" width="160" height="160" rx="8" fill="none" stroke="#0F2847" stroke-linecap="round" stroke-linejoin="round" stroke-width="20"/>
+          </g>
+        </g>
+
+        <text x="170" y="252" text-anchor="middle" fill="#1B3A5B" font-size="11" font-weight="700" font-family="'游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif">⑤ ⊃ ⑥ ⊃ ⑦ ─ 外側ほど広義の情報</text>
+        <text x="170" y="270" text-anchor="middle" fill="#5A6378" font-size="9.5" font-weight="700" font-family="JetBrains Mono" letter-spacing="0.2em">TAP TO INSPECT</text>
+      </svg>
+    </div>
+    <div class="prop-panel" id="nestPanel"></div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 9: 実習2 情報の分類 ═════ -->
+<div class="slide" data-title="実習2 情報の分類">
+  <div class="eyebrow">PRACTICE 2 / 実習2</div>
+  <h2 class="slide-title">実習2 ― 情報の分類</h2>
+  <p class="slide-subtitle">語群: ア.意味を理解できない外国語 / イ.ジェスチャー / ウ.咳などの身体反応 / エ.ピクトグラム / オ.空腹で分泌されたホルモン / カ.0と1だけのデジタルデータ。あてはまるものを<strong>すべて</strong>選ぶ問題。</p>
+  <div class="quiz-container">
+    <div>
+      <div class="quiz-question"><span class="quiz-question-num">Q1 / 実習2 (1)</span>「<strong>生命情報</strong>」の例として正しい組み合わせは?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">ア</span>イ・エ(ジェスチャー、ピクトグラム)</div>
+        <div class="quiz-option" onclick="answerQuiz(this, true)" data-correct="true"><span class="quiz-option-letter">イ</span>ウ・オ(咳などの身体反応、空腹で分泌されたホルモン)</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">ウ</span>ア・カ(意味を理解できない外国語、0と1のデジタルデータ)</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">エ</span>ア・イ(意味を理解できない外国語、ジェスチャー)</div>
+      </div>
+      <div class="quiz-feedback"><strong>正解 : イ(ウ・オ)</strong>。生命情報は<strong>生物が生きていくために自己の内部に形成される情報</strong>。咳などの身体反応や、空腹で分泌されたホルモンが該当する。最も広義の情報で、社会情報・機械情報をすべて含む。</div>
+    </div>
+    <div style="margin-top: 16px;">
+      <div class="quiz-question"><span class="quiz-question-num">Q2 / 実習2 (2)</span>「<strong>社会情報</strong>」の例として正しい組み合わせは?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="answerQuiz(this, true)" data-correct="true"><span class="quiz-option-letter">ア</span>イ・エ(ジェスチャー、ピクトグラム)</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">イ</span>ウ・オ(咳などの身体反応、ホルモン)</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">ウ</span>ア・カ(理解できない外国語、デジタルデータ)</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">エ</span>エ・カ(ピクトグラム、デジタルデータ)</div>
+      </div>
+      <div class="quiz-feedback"><strong>正解 : ア(イ・エ)</strong>。社会情報は<strong>意味する内容が切り離されて独立した情報</strong>で、コミュニケーションで伝達される。ジェスチャー(身振り)やピクトグラム(視覚記号)が該当する。</div>
+    </div>
+    <div style="margin-top: 16px;">
+      <div class="quiz-question"><span class="quiz-question-num">Q3 / 実習2 (3)</span>「<strong>機械情報</strong>」の例として正しい組み合わせは?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">ア</span>イ・エ(ジェスチャー、ピクトグラム)</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">イ</span>ウ・オ(咳、ホルモン)</div>
+        <div class="quiz-option" onclick="answerQuiz(this, true)" data-correct="true"><span class="quiz-option-letter">ウ</span>ア・カ(意味を理解できない外国語、0と1のデジタルデータ)</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">エ</span>ウ・カ(咳、デジタルデータ)</div>
+      </div>
+      <div class="quiz-feedback"><strong>正解 : ウ(ア・カ)</strong>。機械情報は<strong>意味を理解できなくても処理できる</strong>形に符号化された情報。読み手にとって意味が成立しない外国語や、0と1だけのデジタルデータが該当する。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 10: SECTION 3 ═════ -->
+<div class="slide section-divider" data-title="第3節 メディア">
+  <div class="section-number">SECTION · 03 / メディア</div>
+  <h2 class="section-title-big">情報の<br>運び手</h2>
+  <p class="section-tagline">― 表現・伝達・記録の3つの役割 ―</p>
+</div>
+
+<!-- ═════ SLIDE 11: POINT ⑧ メディア ═════ -->
+<div class="slide" data-title="POINT ⑧ メディア">
+  <div class="eyebrow">POINT 8 / 学習ノート ⑧</div>
+  <h2 class="slide-title">メディア ― 情報の媒介者</h2>
+  <p class="slide-subtitle">情報そのものは形がない。それを物理的な世界に乗せて運ぶ「<strong>媒体</strong>」がメディア。役割によって、伝達するもの(POINT ⑨)と保存するもの(POINT ⑩)に分けられる。</p>
+  <div class="def-box has-illust">
+    <div class="law-illust">
+      <svg class="law-illust-svg" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="iN8" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient>
+          <linearGradient id="iG8" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient>
+          <radialGradient id="iB8" cx="50%" cy="50%" r="65%"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="100%" stop-color="#F3F6FB"/></radialGradient>
+          <filter id="iS8" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        
+        <path d="M223.69,42.18a8,8,0,0,0-9.87-9.87l-192,58.22a8,8,0,0,0-1.25,14.93L108,148l42.54,87.42a8,8,0,0,0,14.93-1.25Z" fill="url(#iG8)" opacity="0.45"/>
+        <path d="M223.69,42.18a8,8,0,0,0-9.87-9.87l-192,58.22a8,8,0,0,0-1.25,14.93L108,148l42.54,87.42a8,8,0,0,0,14.93-1.25Z" fill="none" stroke="url(#iN8)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" filter="url(#iS8)"/>
+        <line x1="108" y1="148" x2="160" y2="96" fill="none" stroke="url(#iN8)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+      </svg>
+      <div class="law-illust-tag">PHOSPHOR · PAPER-PLANE</div>
+    </div>
+    <div class="def-label">⑧ 情報を運ぶ媒体</div>
+    <div class="def-term"><span class="note-blank" data-answer="メディア">クリックで正解</span></div>
+    <div class="def-desc">情報の発信側と受信側の<strong>あいだに立って、情報を運ぶ媒体</strong>。形のない情報を、空間を越えて伝えたり、時間を越えて保存したりするためには必ずメディアを介する。学習ノートでは <strong style="color:var(--accent-red-dark);">伝播メディア</strong>(⑨) と <strong style="color:var(--accent-red-dark);">成果メディア</strong>(⑩) の 2 種に大きく分ける。</div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 12: POINT ⑨⑩ メディアの3分類 (interactive) ═════ -->
+<div class="slide" data-title="メディアの3分類 (interactive)">
+  <div class="eyebrow">POINT 9-10 / 学習ノート ⑨⑩ + 実習3 の前提</div>
+  <h2 class="slide-title">表現 / 伝達 / 記録 ― 役割で分ける</h2>
+  <p class="slide-subtitle">メディアは役割によって 3 つに分けられる。学習ノート ⑨「<strong>伝播メディア</strong>」が伝達の役割、⑩「<strong>成果メディア</strong>」が記録(およびその表現)の役割に対応する。下の 3 ノードをタップして詳細を確認。</p>
+  <div class="med-wrap">
+    <div>
+      <div class="icon-cards med-cards">
+        <div class="icon-card med-card" data-key="hyogen" onclick="selectMed('hyogen')">
+          <div class="icon-card-tag">表現</div>
+          <svg class="icon-card-svg" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="iN9a" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient>
+              <linearGradient id="iG9a" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient>
+              <filter id="iS9a" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <path d="M223.69,42.18a8,8,0,0,0-9.87-9.87l-192,58.22a8,8,0,0,0-1.25,14.93L108,148l42.54,87.42a8,8,0,0,0,14.93-1.25Z" fill="url(#iG9a)" opacity="0.55"/>
+            <line x1="108" y1="148" x2="160" y2="96" fill="none" stroke="url(#iN9a)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/>
+            <path d="M223.69,42.18a8,8,0,0,0-9.87-9.87l-192,58.22a8,8,0,0,0-1.25,14.93L108,148l42.54,87.42a8,8,0,0,0,14.93-1.25Z" fill="none" stroke="url(#iN9a)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18" filter="url(#iS9a)"/>
+          </svg>
+          <div class="icon-card-name">文字・音声</div>
+          <div class="icon-card-sub">情報を具体的に表す</div>
+        </div>
+        <div class="icon-card med-card" data-key="dentatsu" onclick="selectMed('dentatsu')">
+          <div class="icon-card-tag">⑨ 伝達</div>
+          <svg class="icon-card-svg" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="iN9b" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient>
+              <linearGradient id="iG9b" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient>
+              <filter id="iS9b" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <path d="M134.15,213.12l104-125.43a7.79,7.79,0,0,0-1.31-11.21,180.75,180.75,0,0,0-217.78,0A7.79,7.79,0,0,0,17.8,87.69L121.85,213.12A8,8,0,0,0,134.15,213.12Z" fill="url(#iG9b)" opacity="0.55"/>
+            <path d="M134.15,213.12l104-125.43a7.79,7.79,0,0,0-1.31-11.21,180.75,180.75,0,0,0-217.78,0A7.79,7.79,0,0,0,17.8,87.69L121.85,213.12A8,8,0,0,0,134.15,213.12Z" fill="none" stroke="url(#iN9b)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18" filter="url(#iS9b)"/>
+          </svg>
+          <div class="icon-card-name">電波・光ファイバー</div>
+          <div class="icon-card-sub">空間を越える</div>
+        </div>
+        <div class="icon-card med-card" data-key="kiroku" onclick="selectMed('kiroku')">
+          <div class="icon-card-tag">⑩ 記録</div>
+          <svg class="icon-card-svg" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="iN9c" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient>
+              <linearGradient id="iG9c" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient>
+              <filter id="iS9c" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <rect x="40" y="144" width="176" height="64" rx="8" fill="url(#iG9c)" opacity="0.55"/>
+            <rect x="40" y="48" width="176" height="64" rx="8" fill="url(#iG9c)" opacity="0.55"/>
+            <rect x="40" y="144" width="176" height="64" rx="8" fill="none" stroke="url(#iN9c)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18" filter="url(#iS9c)"/>
+            <rect x="40" y="48" width="176" height="64" rx="8" fill="none" stroke="url(#iN9c)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/>
+            <circle cx="180" cy="80" r="12" fill="url(#iN9c)"/>
+            <circle cx="180" cy="176" r="12" fill="url(#iN9c)"/>
+          </svg>
+          <div class="icon-card-name">紙・光ディスク</div>
+          <div class="icon-card-sub">時間を越える</div>
+        </div>
+      </div>
+      <div class="cards-hint">タップして詳細を表示</div>
+    </div>
+    <div class="prop-panel" id="medPanel"></div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 13: 実習3 メディアの分類 ═════ -->
+<div class="slide" data-title="実習3 メディアの分類">
+  <div class="eyebrow">PRACTICE 3 / 実習3</div>
+  <h2 class="slide-title">実習3 ― メディアの分類</h2>
+  <p class="slide-subtitle">語群: ア.静止画 / イ.電波 / ウ.文字 / エ.紙 / オ.音声 / カ.光ディスク / キ.光ファイバー。あてはまるものを<strong>すべて</strong>選ぶ。</p>
+  <div class="quiz-container">
+    <div>
+      <div class="quiz-question"><span class="quiz-question-num">Q1 / 実習3 (1)</span>「<strong>表現のためのメディア</strong>」の例として正しい組み合わせは?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="answerQuiz(this, true)" data-correct="true"><span class="quiz-option-letter">ア</span>ア・ウ・オ(静止画、文字、音声)</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">イ</span>イ・キ(電波、光ファイバー)</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">ウ</span>エ・カ(紙、光ディスク)</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">エ</span>ア・エ(静止画、紙)</div>
+      </div>
+      <div class="quiz-feedback"><strong>正解 : ア(ア・ウ・オ)</strong>。文字・記号・音声・静止画・動画などは情報を具体的に表す<strong>表現のためのメディア</strong>。</div>
+    </div>
+    <div style="margin-top: 16px;">
+      <div class="quiz-question"><span class="quiz-question-num">Q2 / 実習3 (2)</span>「<strong>伝達のためのメディア</strong>」の例として正しい組み合わせは?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">ア</span>ア・ウ・オ(静止画、文字、音声)</div>
+        <div class="quiz-option" onclick="answerQuiz(this, true)" data-correct="true"><span class="quiz-option-letter">イ</span>イ・キ(電波、光ファイバー)</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">ウ</span>エ・カ(紙、光ディスク)</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">エ</span>イ・エ(電波、紙)</div>
+      </div>
+      <div class="quiz-feedback"><strong>正解 : イ(イ・キ)</strong>。空気・光ファイバー・電波などは<strong>空間を越えて</strong>物理的に伝えることができる伝達のためのメディア(POINT ⑨ 伝播メディア)。</div>
+    </div>
+    <div style="margin-top: 16px;">
+      <div class="quiz-question"><span class="quiz-question-num">Q3 / 実習3 (3)</span>「<strong>記録のためのメディア</strong>」の例として正しい組み合わせは?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">ア</span>ア・ウ・オ(静止画、文字、音声)</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">イ</span>イ・キ(電波、光ファイバー)</div>
+        <div class="quiz-option" onclick="answerQuiz(this, true)" data-correct="true"><span class="quiz-option-letter">ウ</span>エ・カ(紙、光ディスク)</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">エ</span>ウ・エ(文字、紙)</div>
+      </div>
+      <div class="quiz-feedback"><strong>正解 : ウ(エ・カ)</strong>。紙・光ディスク・フラッシュメモリなどは<strong>時間を越えて</strong>保存することができる記録のためのメディア(POINT ⑩ 成果メディア)。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 14: SECTION 4 ═════ -->
+<div class="slide section-divider" data-title="第4節 メディアリテラシー">
+  <div class="section-number">SECTION · 04 / メディアリテラシー</div>
+  <h2 class="section-title-big">情報を<br>読み解く力</h2>
+  <p class="section-tagline">― 受け手として、発信者として ―</p>
+</div>
+
+<!-- ═════ SLIDE 15: POINT ⑪ メディアリテラシー ═════ -->
+<div class="slide" data-title="POINT ⑪ メディアリテラシー">
+  <div class="eyebrow">POINT 11 / 学習ノート ⑪</div>
+  <h2 class="slide-title">メディアリテラシー ― 分析・評価・責任</h2>
+  <p class="slide-subtitle">情報を多くの視点から分析・評価して真偽を判断し、効果的に表現する能力。さらに、自らが情報の発信者として責任を持つ意味も含む。単なる「リテラシー」(読み書き能力)とは別物。</p>
+  <div class="def-box has-illust">
+    <div class="law-illust">
+      <svg class="law-illust-svg" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="iN11" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient>
+          <linearGradient id="iG11" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient>
+          <radialGradient id="iB11" cx="50%" cy="50%" r="65%"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="100%" stop-color="#F3F6FB"/></radialGradient>
+          <filter id="iS11" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        
+        <circle cx="112" cy="112" r="80" fill="url(#iG11)" opacity="0.45"/>
+        <circle cx="112" cy="112" r="80" fill="none" stroke="url(#iN11)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" filter="url(#iS11)"/>
+        <line x1="168.57" y1="168.57" x2="224" y2="224" fill="none" stroke="url(#iN11)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" filter="url(#iS11)"/>
+        <line x1="80" y1="112" x2="144" y2="112" fill="none" stroke="url(#iN11)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+        <line x1="112" y1="80" x2="112" y2="144" fill="none" stroke="url(#iN11)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+      </svg>
+      <div class="law-illust-tag">PHOSPHOR · ZOOM-IN</div>
+    </div>
+    <div class="def-label">⑪ 情報の真偽を判断する能力</div>
+    <div class="def-term"><span class="note-blank" data-answer="メディアリテラシー">クリックで正解</span></div>
+    <div class="def-desc"><strong>情報をさまざまな視点で分析・評価し、その真偽を正しく判断する能力</strong>。さらに、効果的に表現する能力や、<strong>発信者としての責任</strong>を持つ意味も含む。マスメディアの情報も SNS の情報も、<strong style="color:var(--accent-red-dark);">「情報源は誰か」「根拠は何か」「対立する見解はあるか」</strong>を意識して受け取る習慣が必要になる。</div>
+  </div>
+  <div class="case-expander">
+    <div class="case-head" onclick="toggleCase(this)">
+      <span class="case-year">2024-25</span>
+      <span class="case-title">生成 AI による偽画像・偽音声と、SNS が選挙戦に影響した事例</span>
+      <span class="case-tag">真偽判断</span>
+      <span class="case-toggle">+</span>
+    </div>
+    <div class="case-body"><div class="case-content">
+      <p>2025 年 10 月、警視庁は生成 AI を使い<strong>実在の女性芸能人 262 人に酷似した偽わいせつ画像を約 2 万枚作成・販売</strong>していた会社員を逮捕。生成 AI による著名人ディープフェイク事件として全国初の摘発。</p>
+      <p>同年、警察庁が初公表したデータでは、<strong>18 歳未満から生成 AI 偽画像被害の相談が 79 件</strong>(中学生 41 / 高校生 25 / 小学生 4)あり、<strong>半数超は同じ学校の児童生徒が関与</strong>していた。「AI で生成した画像だから本人ではない」では済まない。</p>
+      <p>2024 年 11 月の<strong>兵庫県知事選</strong>では、SNS 上での切り抜き動画・支持コミュニティの形成・印象操作的な投稿が選挙戦に大きな影響を与えたと分析・報道された。マスメディアの情報も SNS の情報も、<strong>「発信者は誰か」「根拠は何か」「別の見解はあるか」</strong>を確認する習慣がないと信頼性を見失う。</p>
+      <div class="case-meta">
+        <div class="case-meta-item"><strong>論点</strong>偽情報の生成コスト ≪ 検証コスト</div>
+        <div class="case-meta-item"><strong>影響</strong>個人の名誉・選挙結果・市場価格</div>
+        <div class="case-meta-item"><strong>教訓</strong>発信者・根拠・対立見解の確認</div>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 16: 実習4 メディアリテラシー判定 ═════ -->
+<div class="slide" data-title="実習4 メディアリテラシー判定">
+  <div class="eyebrow">PRACTICE 4 / 実習4</div>
+  <h2 class="slide-title">実習4 ― メディアリテラシーに該当するもの</h2>
+  <p class="slide-subtitle">次の 6 つの記述のうち、<strong>メディアリテラシーの説明として該当するもの</strong>をすべて選ぶ。各カードをタップして判定。</p>
+  <div class="jc-wrap">
+    <div class="jc-instr">語群: ア〜カ の各記述について、<strong>メディアリテラシーの説明</strong>かどうかを判定する。誤りには引っかけが含まれる(例: マスメディアの定義 / 単なる「リテラシー」)。</div>
+    <div class="jc-grid">
+      <div class="jc-chip" data-correct="false" onclick="judgeJC(this)">
+        <span class="jc-chip-letter">ア</span>
+        <span class="jc-chip-text">さまざまな情報を多くの人に伝えるためのメディアのことである。</span>
+        <span class="jc-chip-judge">判定する</span>
+        <div class="jc-chip-fb">これは「<strong>マスメディア</strong>」の定義。メディアリテラシーは「メディア」そのものではなく、それを<strong>読み解く能力</strong>。</div>
+      </div>
+      <div class="jc-chip" data-correct="true" onclick="judgeJC(this)">
+        <span class="jc-chip-letter">イ</span>
+        <span class="jc-chip-text">情報をさまざまな視点で分析・評価し、その真偽を正しく判断する能力のことである。</span>
+        <span class="jc-chip-judge">判定する</span>
+        <div class="jc-chip-fb">メディアリテラシーの中核。「分析・評価・真偽判断」の3つは押さえる。</div>
+      </div>
+      <div class="jc-chip" data-correct="false" onclick="judgeJC(this)">
+        <span class="jc-chip-letter">ウ</span>
+        <span class="jc-chip-text">情報の信憑性を高めるため、なるべく<strong>マスメディアの情報を信頼する</strong>ことである。</span>
+        <span class="jc-chip-judge">判定する</span>
+        <div class="jc-chip-fb">マスメディアの情報も<strong>必ずしも正しいとは限らない</strong>。発信者・根拠・対立する見解を併せて確認するのがリテラシー。</div>
+      </div>
+      <div class="jc-chip" data-correct="true" onclick="judgeJC(this)">
+        <span class="jc-chip-letter">エ</span>
+        <span class="jc-chip-text">さまざまなメディアを活用して効果的な形態で表現する能力である。</span>
+        <span class="jc-chip-judge">判定する</span>
+        <div class="jc-chip-fb">受け手としての判断だけでなく、<strong>発信側としての表現能力</strong>もメディアリテラシーに含まれる。</div>
+      </div>
+      <div class="jc-chip" data-correct="false" onclick="judgeJC(this)">
+        <span class="jc-chip-letter">オ</span>
+        <span class="jc-chip-text">文字を読んだり書いたりする能力のことである。</span>
+        <span class="jc-chip-judge">判定する</span>
+        <div class="jc-chip-fb">これは単なる「<strong>リテラシー</strong>」(識字能力)の意味で、<strong>メディア</strong>リテラシーとは別物。</div>
+      </div>
+      <div class="jc-chip" data-correct="true" onclick="judgeJC(this)">
+        <span class="jc-chip-letter">カ</span>
+        <span class="jc-chip-text">発信者の意図を理解するために、また、自らが情報の発信者としての責任を持つために必要である。</span>
+        <span class="jc-chip-judge">判定する</span>
+        <div class="jc-chip-fb">受信側の理解 + 発信側の責任、両面に必要。デジタル・タトゥー(伝播性)を踏まえた発信責任が現代では重要。</div>
+      </div>
+    </div>
+    <div class="jc-verdict" id="jcVerdict">
+      <div class="jc-verdict-title">判定の整理</div>
+      <div class="jc-verdict-body">該当するのは <strong>イ・エ・カ</strong>。<br>誤りの 3 つはそれぞれ「<strong>マスメディアの定義</strong>(ア)」「マスメディア=正という誤解(ウ)」「<strong>単なるリテラシー</strong>(オ)」が引っかけ。メディアリテラシーは <strong>分析・評価・真偽判断 + 効果的な表現 + 発信者としての責任</strong> を含む複合的な能力。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 17: SECTION 5 ═════ -->
+<div class="slide section-divider" data-title="第5節 情報社会の影">
+  <div class="section-number">SECTION · 05 / 情報社会の影</div>
+  <h2 class="section-title-big">炎上・エコー<br>フィルター・印象操作</h2>
+  <p class="section-tagline">― 情報の特性が裏返ると、こうなる ―</p>
+</div>
+
+<!-- ═════ SLIDE 18: POINT ⑫⑬⑭ 炎上・エコーチェンバー・フィルターバブル ═════ -->
+<div class="slide" data-title="炎上・エコー・フィルター">
+  <div class="eyebrow">POINT 12-14 / 学習ノート ⑫⑬⑭</div>
+  <h2 class="slide-title">情報社会の3つの影</h2>
+  <p class="slide-subtitle">伝播性・複製性が「裏返った」結果として現れる現象。<strong>炎上</strong>(⑫) は急速な拡散の暴走、<strong>エコーチェンバー</strong>(⑬) は同質な意見の反響、<strong>フィルターバブル</strong>(⑭) は推奨アルゴリズムによる情報の偏り。</p>
+  <div class="three-col">
+    <div class="def-box has-illust">
+      <div class="law-illust">
+        <svg class="law-illust-svg" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="iR12" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#E83A52"/><stop offset="100%" stop-color="#8B0A1F"/></linearGradient>
+            <linearGradient id="iG12" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#C8102E"/></linearGradient>
+            <radialGradient id="iB12" cx="50%" cy="50%" r="65%"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="100%" stop-color="#F3F6FB"/></radialGradient>
+            <filter id="iS12" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          
+          <path d="M128,24S48,72,48,144A80,80,0,0,0,125.94,224,40,40,0,0,1,88,184c0-40,40-64,40-64s40,24,40,64A40,40,0,0,1,130.06,224,80,80,0,0,0,208,144C208,72,128,24,128,24Z" fill="url(#iG12)" opacity="0.5"/>
+          <path d="M208,144c0-72-80-120-80-120S48,72,48,144a80,80,0,0,0,160,0Z" fill="none" stroke="url(#iR12)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" filter="url(#iS12)"/>
+          <path d="M88,184a40,40,0,0,0,80,0c0-40-40-64-40-64S88,144,88,184Z" fill="none" stroke="url(#iR12)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+        </svg>
+        <div class="law-illust-tag">PHOSPHOR · FLAME</div>
+      </div>
+      <div class="def-label">⑫ 急激な批判の集中</div>
+      <div class="def-term"><span class="note-blank" data-answer="炎上">クリックで正解</span></div>
+      <div class="def-desc">SNS や掲示板で<strong>批判やネガティブな反応が急速に集中</strong>する現象。1 件の投稿が伝播性によって短時間で拡散し、複製・改変されて広がることで起きる。</div>
+    </div>
+    <div class="def-box has-illust">
+      <div class="law-illust">
+        <svg class="law-illust-svg" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="iN13" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient>
+            <linearGradient id="iG13" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient>
+            <radialGradient id="iB13" cx="50%" cy="50%" r="65%"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="100%" stop-color="#F3F6FB"/></radialGradient>
+            <filter id="iS13" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          
+          <path d="M80,168H32a8,8,0,0,1-8-8V96a8,8,0,0,1,8-8H80Z" fill="url(#iG13)" opacity="0.5"/>
+          <path d="M80,168H32a8,8,0,0,1-8-8V96a8,8,0,0,1,8-8H80l72-56V224Z" fill="none" stroke="url(#iN13)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" filter="url(#iS13)"/>
+          <line x1="80" y1="88" x2="80" y2="168" fill="none" stroke="url(#iN13)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+          <path d="M192,106.85a32,32,0,0,1,0,42.3" fill="none" stroke="url(#iN13)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+          <path d="M221.67,80a72,72,0,0,1,0,96" fill="none" stroke="url(#iN13)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+        </svg>
+        <div class="law-illust-tag">PHOSPHOR · SPEAKER</div>
+      </div>
+      <div class="def-label">⑬ 同じ意見だけが反響する</div>
+      <div class="def-term"><span class="note-blank" data-answer="エコーチェンバー">クリックで正解</span></div>
+      <div class="def-desc"><strong>自分と似た意見ばかりが反響して増幅</strong>される現象。閉じたコミュニティでは異論が届きにくく、極端な意見が「みんなそう思っている」と感じられてしまう。</div>
+    </div>
+    <div class="def-box has-illust">
+      <div class="law-illust">
+        <svg class="law-illust-svg" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="iN14" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient>
+            <linearGradient id="iG14" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient>
+            <radialGradient id="iB14" cx="50%" cy="50%" r="65%"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="100%" stop-color="#F3F6FB"/></radialGradient>
+            <filter id="iS14" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          
+          <path d="M34.1,61.38A8,8,0,0,1,40,48H216a8,8,0,0,1,5.92,13.38L152,136v58.65a8,8,0,0,1-3.56,6.66l-32,21.33A8,8,0,0,1,104,216V136Z" fill="url(#iG14)" opacity="0.5"/>
+          <path d="M34.1,61.38A8,8,0,0,1,40,48H216a8,8,0,0,1,5.92,13.38L152,136v58.65a8,8,0,0,1-3.56,6.66l-32,21.33A8,8,0,0,1,104,216V136Z" fill="none" stroke="url(#iN14)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" filter="url(#iS14)"/>
+        </svg>
+        <div class="law-illust-tag">PHOSPHOR · FUNNEL</div>
+      </div>
+      <div class="def-label">⑭ 推奨で異なる情報が届かない</div>
+      <div class="def-term"><span class="note-blank" data-answer="フィルターバブル">クリックで正解</span></div>
+      <div class="def-desc">検索や SNS の<strong>個人ごとに最適化された推奨</strong>によって、自分の関心や信条に近い情報ばかりが届き、異なる視点の情報に触れにくくなる現象。アルゴリズムが「泡」のように利用者を包み込む。</div>
+    </div>
+  </div>
+
+  <h3 class="section-heading">エコーチェンバー vs フィルターバブル ― 違いを整理</h3>
+  <div class="cmp-vs">
+    <div class="cmp-side echo">
+      <h4>エコーチェンバー</h4>
+      <div class="cmp-en">ECHO CHAMBER</div>
+      <div class="cmp-row"><span class="cmp-row-label">原因</span><span class="cmp-row-text">利用者自身の<strong>選択</strong>(似た人をフォロー、同質なコミュニティに参加)</span></div>
+      <div class="cmp-row"><span class="cmp-row-label">構造</span><span class="cmp-row-text">同じ意見が<strong>反響</strong>して増幅。異論が届きにくい</span></div>
+      <div class="cmp-row"><span class="cmp-row-label">気づき</span><span class="cmp-row-text">主体が比較的気づきやすい(コミュニティが閉じている自覚)</span></div>
+    </div>
+    <div class="cmp-axis">
+      <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg"><circle cx="18" cy="18" r="14" fill="none" stroke="#5A6378" stroke-width="1.5"/><text x="18" y="22" text-anchor="middle" font-size="13" font-weight="900" fill="#5A6378" font-family="JetBrains Mono">vs</text></svg>
+      <span class="cmp-axis-label">主体 ⇄ 仕組み</span>
+    </div>
+    <div class="cmp-side bubble">
+      <h4>フィルターバブル</h4>
+      <div class="cmp-en">FILTER BUBBLE</div>
+      <div class="cmp-row"><span class="cmp-row-label">原因</span><span class="cmp-row-text">プラットフォームの<strong>推奨アルゴリズム</strong>(履歴・属性ベース)</span></div>
+      <div class="cmp-row"><span class="cmp-row-label">構造</span><span class="cmp-row-text">そもそも異なる情報が<strong>表示されない</strong>。利用者の視野の外に置かれる</span></div>
+      <div class="cmp-row"><span class="cmp-row-label">気づき</span><span class="cmp-row-text">気づきにくい(「見えていないものは見えていない」)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 19a: グラフの基本パターン ═════ -->
+<div class="slide" data-title="グラフの基本パターン">
+  <div class="eyebrow">DEEP DIVE / グラフの基本パターン</div>
+  <h2 class="slide-title">グラフの基本パターン ― 何を見せるか</h2>
+  <p class="slide-subtitle">グラフはデータを「見える化」する道具。<strong>何を伝えたいか</strong>によって選ぶ型が違う。型を間違えると、本来見えるべきものが見えなくなる。</p>
+
+  <div class="gp-grid">
+    <!-- 棒グラフ -->
+    <div class="gp-card">
+      <div class="gp-card-head">
+        <svg class="gp-card-icon" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="gpN1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><linearGradient id="gpG1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient></defs>
+          <rect x="152" y="40" width="56" height="168" fill="url(#gpG1)" opacity="0.55"/>
+          <polyline points="48 208 48 136 96 136" fill="none" stroke="url(#gpN1)" stroke-linecap="round" stroke-linejoin="round" stroke-width="20"/>
+          <line x1="224" y1="208" x2="32" y2="208" fill="none" stroke="url(#gpN1)" stroke-linecap="round" stroke-linejoin="round" stroke-width="20"/>
+          <polyline points="96 208 96 88 152 88" fill="none" stroke="url(#gpN1)" stroke-linecap="round" stroke-linejoin="round" stroke-width="20"/>
+          <polyline points="152 208 152 40 208 40 208 208" fill="none" stroke="url(#gpN1)" stroke-linecap="round" stroke-linejoin="round" stroke-width="20"/>
+        </svg>
+        <div><div class="gp-card-jp">棒グラフ</div><div class="gp-card-en">BAR</div></div>
+      </div>
+      <div class="gp-card-purpose">項目ごとの<strong>大小を比較</strong>する。長さで量を表す。</div>
+      <div class="gp-card-eg"><strong>例</strong> : クラス別人数、都道府県別の生産量、商品別売上</div>
+    </div>
+
+    <!-- 折れ線グラフ -->
+    <div class="gp-card">
+      <div class="gp-card-head">
+        <svg class="gp-card-icon" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="gpN2" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><linearGradient id="gpG2" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient></defs>
+          <path d="M32,48H208a16,16,0,0,1,16,16V208a0,0,0,0,1,0,0H32a0,0,0,0,1,0,0V48A0,0,0,0,1,32,48Z" fill="url(#gpG2)" opacity="0.5"/>
+          <polyline points="224 208 32 208 32 48" fill="none" stroke="url(#gpN2)" stroke-linecap="round" stroke-linejoin="round" stroke-width="20"/>
+          <polyline points="200 72 128 144 96 112 32 176" fill="none" stroke="url(#gpN2)" stroke-linecap="round" stroke-linejoin="round" stroke-width="20"/>
+          <polyline points="200 112 200 72 160 72" fill="none" stroke="url(#gpN2)" stroke-linecap="round" stroke-linejoin="round" stroke-width="20"/>
+        </svg>
+        <div><div class="gp-card-jp">折れ線グラフ</div><div class="gp-card-en">LINE</div></div>
+      </div>
+      <div class="gp-card-purpose"><strong>時間に伴う変化</strong>の傾向を見る。点をつないだ線で動きを表す。</div>
+      <div class="gp-card-eg"><strong>例</strong> : 月別気温、株価推移、有効求人倍率の推移</div>
+    </div>
+
+    <!-- 円グラフ -->
+    <div class="gp-card">
+      <div class="gp-card-head">
+        <svg class="gp-card-icon" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="gpN3" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><linearGradient id="gpG3" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient></defs>
+          <path d="M33.6,145.5A96,96,0,0,1,96,37.5v72Z" fill="url(#gpG3)" opacity="0.65"/>
+          <path d="M33.6,145.5A96,96,0,0,1,96,37.5v72Z" fill="none" stroke="url(#gpN3)" stroke-linecap="round" stroke-linejoin="round" stroke-width="20"/>
+          <path d="M128,128.42V32A96,96,0,1,1,45.22,176.64Z" fill="none" stroke="url(#gpN3)" stroke-linecap="round" stroke-linejoin="round" stroke-width="20"/>
+        </svg>
+        <div><div class="gp-card-jp">円グラフ</div><div class="gp-card-en">PIE</div></div>
+      </div>
+      <div class="gp-card-purpose">全体に対する<strong>各項目の割合(構成比)</strong>を見る。1 つの集計に対して使う。</div>
+      <div class="gp-card-eg"><strong>例</strong> : 政党別議席占有率、家計の支出内訳</div>
+    </div>
+
+    <!-- 帯グラフ -->
+    <div class="gp-card">
+      <div class="gp-card-head">
+        <svg class="gp-card-icon" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="gpN4" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><linearGradient id="gpG4" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient></defs>
+          <rect x="32" y="56" width="192" height="32" rx="6" fill="url(#gpG4)" opacity="0.55"/>
+          <rect x="32" y="56" width="80" height="32" rx="6" fill="url(#gpN4)" opacity="0.7"/>
+          <rect x="32" y="112" width="192" height="32" rx="6" fill="url(#gpG4)" opacity="0.55"/>
+          <rect x="32" y="112" width="120" height="32" rx="6" fill="url(#gpN4)" opacity="0.7"/>
+          <rect x="32" y="168" width="192" height="32" rx="6" fill="url(#gpG4)" opacity="0.55"/>
+          <rect x="32" y="168" width="60" height="32" rx="6" fill="url(#gpN4)" opacity="0.7"/>
+          <rect x="32" y="56" width="192" height="32" rx="6" fill="none" stroke="url(#gpN4)" stroke-width="14"/>
+          <rect x="32" y="112" width="192" height="32" rx="6" fill="none" stroke="url(#gpN4)" stroke-width="14"/>
+          <rect x="32" y="168" width="192" height="32" rx="6" fill="none" stroke="url(#gpN4)" stroke-width="14"/>
+        </svg>
+        <div><div class="gp-card-jp">帯グラフ</div><div class="gp-card-en">STACKED BAR</div></div>
+      </div>
+      <div class="gp-card-purpose">複数の集計の<strong>構成比を横に並べて比較</strong>する。年度別・地域別の構成変化に強い。</div>
+      <div class="gp-card-eg"><strong>例</strong> : 年度別の進路内訳、世代別 SNS 利用率の構成</div>
+    </div>
+
+    <!-- 散布図 -->
+    <div class="gp-card">
+      <div class="gp-card-head">
+        <svg class="gp-card-icon" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="gpN5" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><linearGradient id="gpG5" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient></defs>
+          <path d="M32,208V48H208a16,16,0,0,1,16,16V208Z" fill="url(#gpG5)" opacity="0.45"/>
+          <polyline points="224 208 32 208 32 48" fill="none" stroke="url(#gpN5)" stroke-linecap="round" stroke-linejoin="round" stroke-width="20"/>
+          <circle cx="132" cy="148" r="14" fill="url(#gpN5)"/>
+          <circle cx="108" cy="92" r="14" fill="url(#gpN5)"/>
+          <circle cx="76" cy="164" r="14" fill="url(#gpN5)"/>
+          <circle cx="172" cy="116" r="14" fill="url(#gpN5)"/>
+          <circle cx="196" cy="76" r="14" fill="url(#gpN5)"/>
+          <circle cx="188" cy="164" r="14" fill="url(#gpN5)"/>
+        </svg>
+        <div><div class="gp-card-jp">散布図</div><div class="gp-card-en">SCATTER</div></div>
+      </div>
+      <div class="gp-card-purpose">2 つの量の<strong>関係(相関)</strong>を見る。点の散らばりが直線状なら強い相関。</div>
+      <div class="gp-card-eg"><strong>例</strong> : 身長と体重、学習時間と成績、気温とアイス売上</div>
+    </div>
+
+    <!-- ヒストグラム -->
+    <div class="gp-card">
+      <div class="gp-card-head">
+        <svg class="gp-card-icon" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="gpN6" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><linearGradient id="gpG6" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient></defs>
+          <line x1="32" y1="208" x2="224" y2="208" fill="none" stroke="url(#gpN6)" stroke-linecap="round" stroke-linejoin="round" stroke-width="20"/>
+          <line x1="32" y1="48" x2="32" y2="208" fill="none" stroke="url(#gpN6)" stroke-linecap="round" stroke-linejoin="round" stroke-width="20"/>
+          <rect x="48" y="172" width="28" height="36" fill="url(#gpG6)" opacity="0.7" stroke="url(#gpN6)" stroke-width="6"/>
+          <rect x="80" y="132" width="28" height="76" fill="url(#gpG6)" opacity="0.7" stroke="url(#gpN6)" stroke-width="6"/>
+          <rect x="112" y="76" width="28" height="132" fill="url(#gpG6)" opacity="0.85" stroke="url(#gpN6)" stroke-width="6"/>
+          <rect x="144" y="100" width="28" height="108" fill="url(#gpG6)" opacity="0.7" stroke="url(#gpN6)" stroke-width="6"/>
+          <rect x="176" y="160" width="28" height="48" fill="url(#gpG6)" opacity="0.7" stroke="url(#gpN6)" stroke-width="6"/>
+        </svg>
+        <div><div class="gp-card-jp">ヒストグラム</div><div class="gp-card-en">HISTOGRAM</div></div>
+      </div>
+      <div class="gp-card-purpose">1 つの量の<strong>分布(どの値が多いか)</strong>を見る。階級ごとに度数を積む。棒グラフとは別物。</div>
+      <div class="gp-card-eg"><strong>例</strong> : テストの得点分布、人口の年齢構成</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 19b: 印象操作 (1) 目盛り ═════ -->
+<div class="slide" data-title="印象操作 (1) 目盛り">
+  <div class="eyebrow">DEEP DIVE / 印象操作 (1) 目盛り</div>
+  <h2 class="slide-title">印象操作 (1) ― 目盛りで嘘をつく</h2>
+  <p class="slide-subtitle">同じデータでも、<strong>縦軸の目盛り設計</strong>を変えるだけで「急成長している」「安定している」「ほとんど伸びていない」と全然違う印象を作れる。3 つの代表的な手口。</p>
+
+  <div class="tk-wrap">
+
+    <!-- 1. 不均等目盛り -->
+    <div class="tk-section-head">
+      <svg class="tk-section-icon" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="tk1N" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><linearGradient id="tk1G" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient></defs>
+        <polygon points="200 160 232 128 200 96 56 96 24 128 56 160 200 160" fill="url(#tk1G)" opacity="0.5"/>
+        <polyline points="56 96 24 128 56 160" fill="none" stroke="url(#tk1N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+        <polyline points="200 96 232 128 200 160" fill="none" stroke="url(#tk1N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+        <line x1="24" y1="128" x2="232" y2="128" fill="none" stroke="url(#tk1N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+      </svg>
+      <h3 class="tk-section-title">不均等な目盛り幅</h3>
+      <span class="tk-section-tag">TECHNIQUE 1</span>
+    </div>
+    <p style="font-size: 14px; color: var(--text-main); font-weight: 500; line-height: 1.7; margin: 4px 0 6px;">後半だけ目盛りを狭めると、後半が急上昇しているように見える。<strong>同じデータ・同じ期間</strong>。</p>
+    <div class="tk-row">
+      <div class="tk-card bad">
+        <div class="tk-card-head"><span class="tk-card-tag">CAUTION</span><span class="tk-card-title">不均等目盛り</span></div>
+        <svg class="tk-card-svg" viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
+          <line x1="40" y1="20" x2="40" y2="140" stroke="#1A2332" stroke-width="1.5"/>
+          <line x1="40" y1="140" x2="270" y2="140" stroke="#1A2332" stroke-width="1.5"/>
+          <line x1="40" y1="130" x2="270" y2="130" stroke="#D4E1EF" stroke-width="0.8"/>
+          <line x1="40" y1="115" x2="270" y2="115" stroke="#D4E1EF" stroke-width="0.8"/>
+          <line x1="40" y1="95" x2="270" y2="95" stroke="#D4E1EF" stroke-width="0.8"/>
+          <line x1="40" y1="60" x2="270" y2="60" stroke="#D4E1EF" stroke-width="0.8"/>
+          <line x1="40" y1="20" x2="270" y2="20" stroke="#D4E1EF" stroke-width="0.8"/>
+          <text x="34" y="143" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">10</text>
+          <text x="34" y="133" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">11</text>
+          <text x="34" y="118" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">12</text>
+          <text x="34" y="98" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">13</text>
+          <text x="34" y="63" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">14</text>
+          <text x="34" y="23" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">15</text>
+          <polyline points="60,130 110,115 160,95 210,60 260,20" fill="none" stroke="#C8102E" stroke-width="2.5"/>
+          <circle cx="60" cy="130" r="3" fill="#C8102E"/><circle cx="110" cy="115" r="3" fill="#C8102E"/><circle cx="160" cy="95" r="3" fill="#C8102E"/><circle cx="210" cy="60" r="3" fill="#C8102E"/><circle cx="260" cy="20" r="3" fill="#C8102E"/>
+        </svg>
+        <div class="tk-card-note">後半の目盛り幅を <strong>3 倍</strong> に広げ、急成長を演出。</div>
+      </div>
+      <div class="tk-card good">
+        <div class="tk-card-head"><span class="tk-card-tag">REFERENCE</span><span class="tk-card-title">等間隔目盛り</span></div>
+        <svg class="tk-card-svg" viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
+          <line x1="40" y1="20" x2="40" y2="140" stroke="#1A2332" stroke-width="1.5"/>
+          <line x1="40" y1="140" x2="270" y2="140" stroke="#1A2332" stroke-width="1.5"/>
+          <line x1="40" y1="116" x2="270" y2="116" stroke="#D4E1EF" stroke-width="0.8"/>
+          <line x1="40" y1="92" x2="270" y2="92" stroke="#D4E1EF" stroke-width="0.8"/>
+          <line x1="40" y1="68" x2="270" y2="68" stroke="#D4E1EF" stroke-width="0.8"/>
+          <line x1="40" y1="44" x2="270" y2="44" stroke="#D4E1EF" stroke-width="0.8"/>
+          <line x1="40" y1="20" x2="270" y2="20" stroke="#D4E1EF" stroke-width="0.8"/>
+          <text x="34" y="143" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">10</text>
+          <text x="34" y="119" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">11</text>
+          <text x="34" y="95" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">12</text>
+          <text x="34" y="71" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">13</text>
+          <text x="34" y="47" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">14</text>
+          <text x="34" y="23" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">15</text>
+          <polyline points="60,140 110,128 160,116 210,92 260,20" fill="none" stroke="#1E824C" stroke-width="2.5"/>
+          <circle cx="60" cy="140" r="3" fill="#1E824C"/><circle cx="110" cy="128" r="3" fill="#1E824C"/><circle cx="160" cy="116" r="3" fill="#1E824C"/><circle cx="210" cy="92" r="3" fill="#1E824C"/><circle cx="260" cy="20" r="3" fill="#1E824C"/>
+        </svg>
+        <div class="tk-card-note">同じデータでも、目盛りが等間隔だと伸びは<strong>後半だけ急</strong>でデコボコ。</div>
+      </div>
+    </div>
+
+    <!-- 2. 原点省略 -->
+    <div class="tk-section-head">
+      <svg class="tk-section-icon" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="tk2N" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><linearGradient id="tk2G" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient></defs>
+        <circle cx="60" cy="76" r="28" fill="url(#tk2G)" opacity="0.5"/>
+        <circle cx="60" cy="180" r="28" fill="url(#tk2G)" opacity="0.5"/>
+        <circle cx="60" cy="76" r="28" fill="none" stroke="url(#tk2N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+        <circle cx="60" cy="180" r="28" fill="none" stroke="url(#tk2N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+        <line x1="136" y1="128" x2="83.11" y2="164.19" fill="none" stroke="url(#tk2N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+        <line x1="232" y1="62.32" x2="164.33" y2="108.61" fill="none" stroke="url(#tk2N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+        <line x1="232" y1="193.68" x2="83.11" y2="91.81" fill="none" stroke="url(#tk2N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+      </svg>
+      <h3 class="tk-section-title">原点(ゼロ)の省略</h3>
+      <span class="tk-section-tag">TECHNIQUE 2</span>
+    </div>
+    <p style="font-size: 14px; color: var(--text-main); font-weight: 500; line-height: 1.7; margin: 4px 0 6px;">縦軸の下を切ってゼロを表示しないと、わずかな差が<strong>大きな差</strong>に見える。棒グラフでは特に致命的。</p>
+    <div class="tk-row">
+      <div class="tk-card bad">
+        <div class="tk-card-head"><span class="tk-card-tag">CAUTION</span><span class="tk-card-title">ゼロを省略</span></div>
+        <svg class="tk-card-svg" viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
+          <line x1="40" y1="20" x2="40" y2="140" stroke="#1A2332" stroke-width="1.5"/>
+          <line x1="40" y1="140" x2="270" y2="140" stroke="#1A2332" stroke-width="1.5"/>
+          <text x="34" y="143" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">98</text>
+          <text x="34" y="83" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">100</text>
+          <text x="34" y="23" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">102</text>
+          <rect x="80" y="100" width="44" height="40" fill="#C8102E" opacity="0.7"/>
+          <rect x="160" y="35" width="44" height="105" fill="#C8102E" opacity="0.85"/>
+          <text x="102" y="156" text-anchor="middle" font-size="10" font-family="JetBrains Mono" fill="#1A2332" font-weight="700">A 社</text>
+          <text x="182" y="156" text-anchor="middle" font-size="10" font-family="JetBrains Mono" fill="#1A2332" font-weight="700">B 社</text>
+        </svg>
+        <div class="tk-card-note">B 社が A 社の <strong>3 倍</strong> 売上があるように錯視。実際は 100 vs 102。</div>
+      </div>
+      <div class="tk-card good">
+        <div class="tk-card-head"><span class="tk-card-tag">REFERENCE</span><span class="tk-card-title">ゼロから表示</span></div>
+        <svg class="tk-card-svg" viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
+          <line x1="40" y1="20" x2="40" y2="140" stroke="#1A2332" stroke-width="1.5"/>
+          <line x1="40" y1="140" x2="270" y2="140" stroke="#1A2332" stroke-width="1.5"/>
+          <text x="34" y="143" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">0</text>
+          <text x="34" y="83" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">50</text>
+          <text x="34" y="23" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">100</text>
+          <rect x="80" y="22" width="44" height="118" fill="#1E824C" opacity="0.85"/>
+          <rect x="160" y="20" width="44" height="120" fill="#1E824C" opacity="0.85"/>
+          <text x="102" y="156" text-anchor="middle" font-size="10" font-family="JetBrains Mono" fill="#1A2332" font-weight="700">A 社</text>
+          <text x="182" y="156" text-anchor="middle" font-size="10" font-family="JetBrains Mono" fill="#1A2332" font-weight="700">B 社</text>
+        </svg>
+        <div class="tk-card-note">ゼロから描けば、両者の差は<strong>ごく僅か</strong>と一目でわかる。</div>
+      </div>
+    </div>
+
+    <!-- 3. 対数軸 -->
+    <div class="tk-section-head">
+      <svg class="tk-section-icon" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="tk3N" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><linearGradient id="tk3G" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient></defs>
+        <polyline points="200 160 232 128 200 96" fill="none" stroke="url(#tk3N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+        <polyline points="56 96 24 128 56 160" fill="none" stroke="url(#tk3N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+        <line x1="24" y1="128" x2="232" y2="128" fill="none" stroke="url(#tk3N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+      </svg>
+      <h3 class="tk-section-title">対数軸への変換</h3>
+      <span class="tk-section-tag">TECHNIQUE 3</span>
+    </div>
+    <p style="font-size: 14px; color: var(--text-main); font-weight: 500; line-height: 1.7; margin: 4px 0 6px;">対数軸は<strong>桁違いの値の比較</strong>に有用な正当な手法だが、<strong>本来の差を視覚的に縮める</strong>効果も持つ。何の軸かを示さないと誤解を招く。</p>
+    <div class="tk-row">
+      <div class="tk-card bad">
+        <div class="tk-card-head"><span class="tk-card-tag">注意</span><span class="tk-card-title">対数軸(log) ─ 差が縮んで見える</span></div>
+        <div class="tk-card-note" style="margin-top: 6px; padding: 12px 14px;">縦軸が <strong>1 → 10 → 100 → 1000</strong> のように対数になっていると、10 倍の差が同じ間隔で表示される。「微増」に見えるが実際は<strong>桁違いの増加</strong>のことがある。グラフを見るときは <strong>軸の目盛り表記</strong> を必ず確認する。</div>
+      </div>
+      <div class="tk-card good">
+        <div class="tk-card-head"><span class="tk-card-tag">使い所</span><span class="tk-card-title">適切な対数軸の例</span></div>
+        <div class="tk-card-note" style="margin-top: 6px; padding: 12px 14px;">桁違いの値(地震のマグニチュード、感染者数の指数増加、星の明るさ)を<strong>同時に見渡す</strong>必要があるときは対数軸が正しい選択。<strong>軸の種類(線形/対数)</strong>と単位を明記すれば誤解は防げる。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 19c: 印象操作 (2) 視覚効果と切り取り ═════ -->
+<div class="slide" data-title="印象操作 (2) 視覚効果">
+  <div class="eyebrow">DEEP DIVE / 印象操作 (2) 視覚効果</div>
+  <h2 class="slide-title">印象操作 (2) ― 見せ方で誤解させる</h2>
+  <p class="slide-subtitle">数値そのものは正しくても、<strong>見せ方</strong>で誤解を生む。3D、絵グラフ、期間切り取りの 3 つは特に頻出。</p>
+
+  <div class="tk-wrap">
+
+    <!-- 1. 3D 円グラフ -->
+    <div class="tk-section-head">
+      <svg class="tk-section-icon" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="tk4N" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><linearGradient id="tk4G" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient></defs>
+        <path d="M128,224a96,96,0,0,0,0-192V88a40,40,0,0,1,0,80Z" fill="url(#tk4G)" opacity="0.5"/>
+        <line x1="128" y1="168" x2="128" y2="224" fill="none" stroke="url(#tk4N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+        <path d="M44.85,80A96,96,0,1,0,128,32V88a40,40,0,1,1-34.65,20Z" fill="none" stroke="url(#tk4N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+        <line x1="89.35" y1="138.36" x2="35.25" y2="152.85" fill="none" stroke="url(#tk4N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+      </svg>
+      <h3 class="tk-section-title">3D 円グラフの歪み</h3>
+      <span class="tk-section-tag">TECHNIQUE 4</span>
+    </div>
+    <p style="font-size: 14px; color: var(--text-main); font-weight: 500; line-height: 1.7; margin: 4px 0 6px;">立体的な傾きにより、<strong>手前のスライスが大きく</strong>、奥のスライスが小さく見える。同じ 30% でも手前なら 40% に見える。</p>
+    <div class="tk-row">
+      <div class="tk-card bad">
+        <div class="tk-card-head"><span class="tk-card-tag">CAUTION</span><span class="tk-card-title">3D 円グラフ(歪んだ印象)</span></div>
+        <svg class="tk-card-svg" viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="140" cy="92" rx="80" ry="36" fill="#8B0A1F"/>
+          <path d="M 60 92 L 60 110 A 80 36 0 0 0 220 110 L 220 92 Z" fill="#5A0612"/>
+          <ellipse cx="140" cy="92" rx="80" ry="36" fill="#C8102E"/>
+          <path d="M 140 92 L 220 92 A 80 36 0 0 1 70 102 Z" fill="#f4d995"/>
+          <text x="60" y="148" text-anchor="middle" font-size="10" font-family="JetBrains Mono" fill="#1A2332" font-weight="700">A 30%</text>
+          <text x="160" y="148" text-anchor="middle" font-size="10" font-family="JetBrains Mono" fill="#1A2332" font-weight="700">B 30%</text>
+          <text x="220" y="148" text-anchor="middle" font-size="10" font-family="JetBrains Mono" fill="#1A2332" font-weight="700">C 40%</text>
+        </svg>
+        <div class="tk-card-note">奥の A・B(各 30%)が小さく、手前の C(40%)が<strong>過大に</strong>見える。</div>
+      </div>
+      <div class="tk-card good">
+        <div class="tk-card-head"><span class="tk-card-tag">REFERENCE</span><span class="tk-card-title">2D 円グラフ(正しい印象)</span></div>
+        <svg class="tk-card-svg" viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="140" cy="80" r="56" fill="#C8102E" opacity="0.85"/>
+          <path d="M 140 80 L 140 24 A 56 56 0 0 1 195 87 Z" fill="#1E824C" opacity="0.85"/>
+          <path d="M 140 80 L 195 87 A 56 56 0 0 1 96 109 Z" fill="#f4d995"/>
+          <text x="160" y="50" text-anchor="middle" font-size="10" font-family="JetBrains Mono" fill="#FFFFFF" font-weight="700">A 30%</text>
+          <text x="170" y="100" text-anchor="middle" font-size="10" font-family="JetBrains Mono" fill="#1A2332" font-weight="700">C 40%</text>
+          <text x="100" y="90" text-anchor="middle" font-size="10" font-family="JetBrains Mono" fill="#1A2332" font-weight="700">B 30%</text>
+        </svg>
+        <div class="tk-card-note">真上から見れば<strong>角度が割合に正確に対応</strong>する。3D は装飾以上の意味を持たない。</div>
+      </div>
+    </div>
+
+    <!-- 2. 絵グラフの面積 -->
+    <div class="tk-section-head">
+      <svg class="tk-section-icon" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="tk5N" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><linearGradient id="tk5G" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient></defs>
+        <path d="M142.41,40.22l87.46,151.87C236,202.79,228.08,216,215.46,216H40.54C27.92,216,20,202.79,26.13,192.09L113.59,40.22C119.89,29.26,136.11,29.26,142.41,40.22Z" fill="url(#tk5G)" opacity="0.5"/>
+        <path d="M142.41,40.22l87.46,151.87C236,202.79,228.08,216,215.46,216H40.54C27.92,216,20,202.79,26.13,192.09L113.59,40.22C119.89,29.26,136.11,29.26,142.41,40.22Z" fill="none" stroke="url(#tk5N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+        <line x1="128" y1="144" x2="128" y2="104" fill="none" stroke="url(#tk5N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+        <circle cx="128" cy="180" r="14" fill="url(#tk5N)"/>
+      </svg>
+      <h3 class="tk-section-title">絵グラフの面積トリック</h3>
+      <span class="tk-section-tag">TECHNIQUE 5</span>
+    </div>
+    <p style="font-size: 14px; color: var(--text-main); font-weight: 500; line-height: 1.7; margin: 4px 0 6px;">「2 倍」を表すために絵を<strong>縦横ともに 2 倍</strong>すると、面積は <strong>4 倍</strong> になり過大に見える。</p>
+    <div class="tk-row">
+      <div class="tk-card bad">
+        <div class="tk-card-head"><span class="tk-card-tag">CAUTION</span><span class="tk-card-title">縦横比を変える(面積 4 倍)</span></div>
+        <svg class="tk-card-svg" viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
+          <rect x="60" y="100" width="30" height="40" fill="#C8102E" opacity="0.7"/>
+          <rect x="160" y="20" width="60" height="120" fill="#C8102E" opacity="0.85"/>
+          <text x="75" y="156" text-anchor="middle" font-size="10" font-family="JetBrains Mono" fill="#1A2332" font-weight="700">2020 (×1)</text>
+          <text x="190" y="156" text-anchor="middle" font-size="10" font-family="JetBrains Mono" fill="#1A2332" font-weight="700">2025 (×2)</text>
+        </svg>
+        <div class="tk-card-note">2 倍を表現するつもりで縦横とも 2 倍 → 面積 <strong>4 倍</strong> で印象は過大。</div>
+      </div>
+      <div class="tk-card good">
+        <div class="tk-card-head"><span class="tk-card-tag">REFERENCE</span><span class="tk-card-title">高さだけ 2 倍(面積 2 倍)</span></div>
+        <svg class="tk-card-svg" viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
+          <rect x="60" y="100" width="40" height="40" fill="#1E824C" opacity="0.85"/>
+          <rect x="160" y="60" width="40" height="80" fill="#1E824C" opacity="0.85"/>
+          <text x="80" y="156" text-anchor="middle" font-size="10" font-family="JetBrains Mono" fill="#1A2332" font-weight="700">2020 (×1)</text>
+          <text x="180" y="156" text-anchor="middle" font-size="10" font-family="JetBrains Mono" fill="#1A2332" font-weight="700">2025 (×2)</text>
+        </svg>
+        <div class="tk-card-note">幅は同じで高さだけ 2 倍 → 面積も<strong>正確に 2 倍</strong>。</div>
+      </div>
+    </div>
+
+    <!-- 3. 期間切り取り -->
+    <div class="tk-section-head">
+      <svg class="tk-section-icon" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="tk6N" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><linearGradient id="tk6G" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient></defs>
+        <circle cx="60" cy="76" r="28" fill="url(#tk6G)" opacity="0.5"/>
+        <circle cx="60" cy="180" r="28" fill="url(#tk6G)" opacity="0.5"/>
+        <circle cx="60" cy="76" r="28" fill="none" stroke="url(#tk6N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+        <circle cx="60" cy="180" r="28" fill="none" stroke="url(#tk6N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+        <line x1="136" y1="128" x2="83.11" y2="164.19" fill="none" stroke="url(#tk6N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+        <line x1="232" y1="62.32" x2="164.33" y2="108.61" fill="none" stroke="url(#tk6N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+        <line x1="232" y1="193.68" x2="83.11" y2="91.81" fill="none" stroke="url(#tk6N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+      </svg>
+      <h3 class="tk-section-title">期間の選択的切り取り</h3>
+      <span class="tk-section-tag">TECHNIQUE 6</span>
+    </div>
+    <p style="font-size: 14px; color: var(--text-main); font-weight: 500; line-height: 1.7; margin: 4px 0 6px;">長期データのうち<strong>都合のいい期間だけ</strong>を切り取って見せる。トレンドが逆転して見えることすらある。</p>
+    <div class="tk-row">
+      <div class="tk-card bad">
+        <div class="tk-card-head"><span class="tk-card-tag">CAUTION</span><span class="tk-card-title">3 年だけ切り取り</span></div>
+        <svg class="tk-card-svg" viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
+          <line x1="40" y1="20" x2="40" y2="140" stroke="#1A2332" stroke-width="1.5"/>
+          <line x1="40" y1="140" x2="270" y2="140" stroke="#1A2332" stroke-width="1.5"/>
+          <polyline points="60,30 150,80 260,130" fill="none" stroke="#C8102E" stroke-width="2.5"/>
+          <circle cx="60" cy="30" r="3.5" fill="#C8102E"/><circle cx="150" cy="80" r="3.5" fill="#C8102E"/><circle cx="260" cy="130" r="3.5" fill="#C8102E"/>
+          <text x="60" y="156" text-anchor="middle" font-size="9" font-family="JetBrains Mono" fill="#5A6378">'23</text>
+          <text x="150" y="156" text-anchor="middle" font-size="9" font-family="JetBrains Mono" fill="#5A6378">'24</text>
+          <text x="260" y="156" text-anchor="middle" font-size="9" font-family="JetBrains Mono" fill="#5A6378">'25</text>
+        </svg>
+        <div class="tk-card-note">直近 3 年だけ見ると<strong>急減少</strong>に見える。</div>
+      </div>
+      <div class="tk-card good">
+        <div class="tk-card-head"><span class="tk-card-tag">REFERENCE</span><span class="tk-card-title">10 年の全体トレンド</span></div>
+        <svg class="tk-card-svg" viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
+          <line x1="40" y1="20" x2="40" y2="140" stroke="#1A2332" stroke-width="1.5"/>
+          <line x1="40" y1="140" x2="270" y2="140" stroke="#1A2332" stroke-width="1.5"/>
+          <polyline points="50,120 75,100 100,90 125,70 150,50 175,40 200,30 225,60 248,90 268,130" fill="none" stroke="#1E824C" stroke-width="2.5"/>
+          <text x="50" y="156" text-anchor="middle" font-size="9" font-family="JetBrains Mono" fill="#5A6378">'15</text>
+          <text x="160" y="156" text-anchor="middle" font-size="9" font-family="JetBrains Mono" fill="#5A6378">'20</text>
+          <text x="268" y="156" text-anchor="middle" font-size="9" font-family="JetBrains Mono" fill="#5A6378">'25</text>
+        </svg>
+        <div class="tk-card-note">10 年で見ると<strong>長期的には大きく上昇</strong>。直近 3 年は調整局面。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 19d: 印象操作 (3) 比較の罠 ═════ -->
+<div class="slide" data-title="印象操作 (3) 比較の罠">
+  <div class="eyebrow">DEEP DIVE / 印象操作 (3) 比較の罠</div>
+  <h2 class="slide-title">印象操作 (3) ― 比較で誤解させる</h2>
+  <p class="slide-subtitle">グラフは正しくても、<strong>比較対象</strong>や<strong>サンプルの選び方</strong>で結論を誘導できる。SNS で拡散される統計の多くがこのタイプ。</p>
+
+  <div class="tk-wrap">
+
+    <!-- 1. 不公正な比較対象 -->
+    <div class="tk-section-head">
+      <svg class="tk-section-icon" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="tk7N" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><linearGradient id="tk7G" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient></defs>
+        <path d="M142.41,40.22l87.46,151.87C236,202.79,228.08,216,215.46,216H40.54C27.92,216,20,202.79,26.13,192.09L113.59,40.22C119.89,29.26,136.11,29.26,142.41,40.22Z" fill="url(#tk7G)" opacity="0.5"/>
+        <path d="M142.41,40.22l87.46,151.87C236,202.79,228.08,216,215.46,216H40.54C27.92,216,20,202.79,26.13,192.09L113.59,40.22C119.89,29.26,136.11,29.26,142.41,40.22Z" fill="none" stroke="url(#tk7N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+        <line x1="128" y1="144" x2="128" y2="104" fill="none" stroke="url(#tk7N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+        <circle cx="128" cy="180" r="14" fill="url(#tk7N)"/>
+      </svg>
+      <h3 class="tk-section-title">不公正な比較対象</h3>
+      <span class="tk-section-tag">TECHNIQUE 7</span>
+    </div>
+    <div class="tk-card-note" style="margin-bottom: 12px;"><strong>比較してはいけないもの</strong>を比べて結論を導く。母数の規模・年齢層・地理条件・収集方法が違う数値を並べると、本来は無意味な比較が「事実」のように見える。</div>
+    <div class="tk-row">
+      <div class="tk-card bad">
+        <div class="tk-card-head"><span class="tk-card-tag">CAUTION</span><span class="tk-card-title">違うものを並べる</span></div>
+        <div class="tk-card-note" style="margin-top: 6px;">「東京の犯罪件数は地方都市の <strong>10 倍</strong>」 → 母数(人口)が違う。<strong>人口あたり</strong>に直すと地方都市の方が高いことも珍しくない。</div>
+      </div>
+      <div class="tk-card good">
+        <div class="tk-card-head"><span class="tk-card-tag">REFERENCE</span><span class="tk-card-title">同じ条件で比較</span></div>
+        <div class="tk-card-note" style="margin-top: 6px;">「東京と地方都市の<strong>人口 10 万人あたり</strong>の犯罪件数」を比較。母数を揃えれば比較は意味を持つ。<strong>絶対数 vs 比率</strong>をいつも意識する。</div>
+      </div>
+    </div>
+
+    <!-- 2. 相関と因果 -->
+    <div class="tk-section-head">
+      <svg class="tk-section-icon" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="tk8N" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><linearGradient id="tk8G" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient></defs>
+        <path d="M32,208V48H208a16,16,0,0,1,16,16V208Z" fill="url(#tk8G)" opacity="0.45"/>
+        <polyline points="224 208 32 208 32 48" fill="none" stroke="url(#tk8N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+        <circle cx="132" cy="148" r="14" fill="url(#tk8N)"/>
+        <circle cx="108" cy="92" r="14" fill="url(#tk8N)"/>
+        <circle cx="76" cy="164" r="14" fill="url(#tk8N)"/>
+        <circle cx="172" cy="116" r="14" fill="url(#tk8N)"/>
+        <circle cx="196" cy="76" r="14" fill="url(#tk8N)"/>
+        <circle cx="188" cy="164" r="14" fill="url(#tk8N)"/>
+      </svg>
+      <h3 class="tk-section-title">相関と因果の混同</h3>
+      <span class="tk-section-tag">TECHNIQUE 8</span>
+    </div>
+    <div class="tk-card-note" style="margin-bottom: 12px;">2 つの量に<strong>相関</strong>(一緒に動く関係)があっても、それが<strong>因果</strong>(片方が原因で片方が結果)とは限らない。第三の隠れた要因(交絡)が真の原因のことも多い。</div>
+    <div class="tk-row">
+      <div class="tk-card bad">
+        <div class="tk-card-head"><span class="tk-card-tag">誤った推論</span><span class="tk-card-title">アイスと水難事故</span></div>
+        <div class="tk-card-note" style="margin-top: 6px;">「アイスの売上が増えると水難事故が増える」 → だからアイスは禁止すべき? <strong>×</strong>。両者を引き起こしているのは<strong>気温(夏)</strong>という第三の要因。アイスをやめても水難事故は減らない。</div>
+      </div>
+      <div class="tk-card good">
+        <div class="tk-card-head"><span class="tk-card-tag">問うべき</span><span class="tk-card-title">3 つのチェック</span></div>
+        <div class="tk-card-note" style="margin-top: 6px;">(1) 因果の<strong>方向</strong>は逆ではないか / (2) <strong>第三の要因</strong>はないか / (3) 単なる<strong>偶然</strong>ではないか。これらを潰してはじめて「因果」と言える。</div>
+      </div>
+    </div>
+
+    <!-- 3. チェリーピッキング -->
+    <div class="tk-section-head">
+      <svg class="tk-section-icon" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="tk9N" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><linearGradient id="tk9G" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient></defs>
+        <path d="M176,80a63.92,63.92,0,0,0-52.19,27A64,64,0,1,0,140.2,197l0,.07A64,64,0,1,0,176,80Z" fill="url(#tk9G)" opacity="0.5"/>
+        <circle cx="88" cy="160" r="64" fill="none" stroke="url(#tk9N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+        <path d="M112,136s-8,8-24,8-24-8-24-8" fill="none" stroke="url(#tk9N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+        <path d="M200,120s-8,8-24,8-24-8-24-8" fill="none" stroke="url(#tk9N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+        <path d="M176,128C168,16,56,32,56,32c48,32,32,112,32,112" fill="none" stroke="url(#tk9N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+        <path d="M123.81,107a64,64,0,1,1,16.41,90.12" fill="none" stroke="url(#tk9N)" stroke-linecap="round" stroke-linejoin="round" stroke-width="22"/>
+      </svg>
+      <h3 class="tk-section-title">チェリーピッキング(都合のいい例だけ)</h3>
+      <span class="tk-section-tag">TECHNIQUE 9</span>
+    </div>
+    <div class="tk-card-note" style="margin-bottom: 12px;">主張に<strong>合うデータだけ</strong>を選び、<strong>合わないデータを無視</strong>する。SNS で拡散される「成功事例」「○○で病気が治った人」の多くがこれ。母集団全体での傾向と、選んだ事例の傾向は別物。</div>
+    <div class="tk-row">
+      <div class="tk-card bad">
+        <div class="tk-card-head"><span class="tk-card-tag">CAUTION</span><span class="tk-card-title">成功者だけ並べる</span></div>
+        <div class="tk-card-note" style="margin-top: 6px;">「この勉強法で東大に受かった 5 人」 → 同じ勉強法で<strong>受からなかった人数</strong>が示されない。母数 5 人なら成功率 100%、母数 1000 人なら成功率 0.5%。</div>
+      </div>
+      <div class="tk-card good">
+        <div class="tk-card-head"><span class="tk-card-tag">問うべき</span><span class="tk-card-title">分母を確認</span></div>
+        <div class="tk-card-note" style="margin-top: 6px;">「成功者は何人」だけでなく <strong>「全体で何人試して、何人成功したか」</strong> を確認する。同様に「死亡例○件」も <strong>母集団の比率</strong> で評価。</div>
+      </div>
+    </div>
+
+    <p style="margin-top: 20px; padding: 14px 18px; background: var(--navy-darkest); color: white; border-radius: 6px; font-size: 14.5px; line-height: 1.7; font-weight: 500;">これら 9 の技法は、<strong style="color:var(--accent-gold);">情報を出す側の意図</strong>がある場面でしばしば使われる。広告・選挙運動・SNS で誇張された投稿を見るとき、<strong style="color:var(--accent-gold);">「目盛りは適切か / 比較対象は揃っているか / 母数は何か」</strong>を反射的に問えるようになる ─ それがメディアリテラシー(POINT ⑪)の実践。</p>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 19: 実習5 印象操作 ═════ -->
+<div class="slide" data-title="実習5 印象操作">
+  <div class="eyebrow">PRACTICE 5 / 実習5</div>
+  <h2 class="slide-title">実習5 ― 印象操作とグラフの読み方</h2>
+  <p class="slide-subtitle">下の 2 つのグラフは、同じ A 市の有効求人倍率の変化を示している。違いは何か、何が読み取れるか、何に注意すべきかを順に確認する。</p>
+  <div class="graph-wrap">
+    <div class="graph-card bad">
+      <h5>図1 (a)</h5>
+      <div class="graph-tag">CAUTION / 不均等な目盛り</div>
+      <svg class="graph-svg" viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
+        <line x1="40" y1="20" x2="40" y2="160" stroke="#1A2332" stroke-width="1.5"/>
+        <line x1="40" y1="160" x2="270" y2="160" stroke="#1A2332" stroke-width="1.5"/>
+        <line x1="40" y1="150" x2="270" y2="150" stroke="#D4E1EF" stroke-width="0.8"/>
+        <line x1="40" y1="135" x2="270" y2="135" stroke="#D4E1EF" stroke-width="0.8"/>
+        <line x1="40" y1="115" x2="270" y2="115" stroke="#D4E1EF" stroke-width="0.8"/>
+        <line x1="40" y1="80" x2="270" y2="80" stroke="#D4E1EF" stroke-width="0.8"/>
+        <line x1="40" y1="30" x2="270" y2="30" stroke="#D4E1EF" stroke-width="0.8"/>
+        <text x="34" y="163" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">1.0</text>
+        <text x="34" y="153" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">1.05</text>
+        <text x="34" y="138" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">1.10</text>
+        <text x="34" y="118" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">1.15</text>
+        <text x="34" y="83" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">1.20</text>
+        <text x="34" y="33" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">1.25</text>
+        <polyline points="60,150 110,135 160,115 210,80 260,30" fill="none" stroke="#C8102E" stroke-width="2.5"/>
+        <circle cx="60" cy="150" r="3" fill="#C8102E"/>
+        <circle cx="110" cy="135" r="3" fill="#C8102E"/>
+        <circle cx="160" cy="115" r="3" fill="#C8102E"/>
+        <circle cx="210" cy="80" r="3" fill="#C8102E"/>
+        <circle cx="260" cy="30" r="3" fill="#C8102E"/>
+        <text x="60" y="173" text-anchor="middle" font-size="9" font-family="JetBrains Mono" fill="#5A6378">'15</text>
+        <text x="110" y="173" text-anchor="middle" font-size="9" font-family="JetBrains Mono" fill="#5A6378">'16</text>
+        <text x="160" y="173" text-anchor="middle" font-size="9" font-family="JetBrains Mono" fill="#5A6378">'17</text>
+        <text x="210" y="173" text-anchor="middle" font-size="9" font-family="JetBrains Mono" fill="#5A6378">'18</text>
+        <text x="260" y="173" text-anchor="middle" font-size="9" font-family="JetBrains Mono" fill="#5A6378">'19</text>
+      </svg>
+      <div class="graph-note">縦軸の目盛り幅が<strong>場所によって異なる</strong>(1.0→1.05 と 1.20→1.25 の間隔が違う)。改善が急に伸びているように見える。</div>
+    </div>
+    <div class="graph-card good">
+      <h5>図1 (b)</h5>
+      <div class="graph-tag">REFERENCE / 等間隔の目盛り</div>
+      <svg class="graph-svg" viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
+        <line x1="40" y1="20" x2="40" y2="160" stroke="#1A2332" stroke-width="1.5"/>
+        <line x1="40" y1="160" x2="270" y2="160" stroke="#1A2332" stroke-width="1.5"/>
+        <line x1="40" y1="132" x2="270" y2="132" stroke="#D4E1EF" stroke-width="0.8"/>
+        <line x1="40" y1="104" x2="270" y2="104" stroke="#D4E1EF" stroke-width="0.8"/>
+        <line x1="40" y1="76" x2="270" y2="76" stroke="#D4E1EF" stroke-width="0.8"/>
+        <line x1="40" y1="48" x2="270" y2="48" stroke="#D4E1EF" stroke-width="0.8"/>
+        <line x1="40" y1="20" x2="270" y2="20" stroke="#D4E1EF" stroke-width="0.8"/>
+        <text x="34" y="163" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">1.00</text>
+        <text x="34" y="135" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">1.05</text>
+        <text x="34" y="107" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">1.10</text>
+        <text x="34" y="79" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">1.15</text>
+        <text x="34" y="51" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">1.20</text>
+        <text x="34" y="23" text-anchor="end" font-size="9" font-family="JetBrains Mono" fill="#5A6378">1.25</text>
+        <polyline points="60,160 110,148 160,134 210,98 260,32" fill="none" stroke="#1E824C" stroke-width="2.5"/>
+        <circle cx="60" cy="160" r="3" fill="#1E824C"/>
+        <circle cx="110" cy="148" r="3" fill="#1E824C"/>
+        <circle cx="160" cy="134" r="3" fill="#1E824C"/>
+        <circle cx="210" cy="98" r="3" fill="#1E824C"/>
+        <circle cx="260" cy="32" r="3" fill="#1E824C"/>
+        <text x="60" y="173" text-anchor="middle" font-size="9" font-family="JetBrains Mono" fill="#5A6378">'15</text>
+        <text x="110" y="173" text-anchor="middle" font-size="9" font-family="JetBrains Mono" fill="#5A6378">'16</text>
+        <text x="160" y="173" text-anchor="middle" font-size="9" font-family="JetBrains Mono" fill="#5A6378">'17</text>
+        <text x="210" y="173" text-anchor="middle" font-size="9" font-family="JetBrains Mono" fill="#5A6378">'18</text>
+        <text x="260" y="173" text-anchor="middle" font-size="9" font-family="JetBrains Mono" fill="#5A6378">'19</text>
+      </svg>
+      <div class="graph-note">目盛りが<strong>等間隔</strong>。実際の数値の伸びは(a)ほど急ではない。同じデータでも、目盛りの設計で見た目の印象が変わる。</div>
+    </div>
+  </div>
+
+  <div class="quiz-container" style="margin-top: 18px;">
+    <div>
+      <div class="quiz-question"><span class="quiz-question-num">Q1 / 実習5 (1)</span>図1 (a) と (b) の違いは?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">ア</span>(a) は折れ線、(b) は棒グラフである。</div>
+        <div class="quiz-option" onclick="answerQuiz(this, true)" data-correct="true"><span class="quiz-option-letter">イ</span>(a) は縦軸の目盛り幅が場所によって異なるが、(b) は均等になっている。</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">ウ</span>(a) は 5 年分、(b) は 10 年分のデータである。</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">エ</span>(a) のデータは A 市、(b) は他の市のものである。</div>
+      </div>
+      <div class="quiz-feedback"><strong>正解 : イ</strong>。(a) は縦軸の目盛り幅が不均等なため、後半の伸びが過剰に強調されて見える。データそのものは(b)と同じ。</div>
+    </div>
+    <div style="margin-top: 16px;">
+      <div class="quiz-question"><span class="quiz-question-num">Q2 / 実習5 (2)</span>図1 (a) のグラフを見た人はどのような印象を持つと考えられるか?</div>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">ア</span>有効求人倍率は 5 年間で大きく低下している。</div>
+        <div class="quiz-option" onclick="answerQuiz(this, true)" data-correct="true"><span class="quiz-option-letter">イ</span>2019 年度に近づくにつれて、急激に改善しているように感じる。</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">ウ</span>5 年間ほぼ横ばいで変化していない。</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">エ</span>2017 年度だけ突出して悪化している。</div>
+      </div>
+      <div class="quiz-feedback"><strong>正解 : イ</strong>。目盛りの不均等によって、特に後半の上昇が急に見え、「<strong>急激に改善している</strong>」という印象操作になる。</div>
+    </div>
+    <div style="margin-top: 16px;">
+      <div class="quiz-question"><span class="quiz-question-num">Q3 / 実習5 (3)</span>(a) のようなグラフだけを見るときの注意点は?(「印象」「数値」を含めて)</div>
+      <div class="quiz-options">
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">ア</span>とにかく折れ線グラフは信用しない。</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">イ</span>横軸の年度だけを確認すれば十分である。</div>
+        <div class="quiz-option" onclick="answerQuiz(this, true)" data-correct="true"><span class="quiz-option-letter">ウ</span>見た目の<strong>印象</strong>だけで判断せず、実際に変化している<strong>数値</strong>を確認する。</div>
+        <div class="quiz-option" onclick="answerQuiz(this, false)" data-correct="false"><span class="quiz-option-letter">エ</span>グラフが綺麗に右肩上がりなら正しいデータである。</div>
+      </div>
+      <div class="quiz-feedback"><strong>正解 : ウ</strong>。グラフを見るときは、<strong>縦軸の目盛りが適切か</strong>を確認することが大事。見た目の印象に流されず、実際の数値で評価する。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 20: 答え合わせ POINT 14項目 ═════ -->
+<div class="slide" data-title="答え合わせ POINT 14項目">
+  <div class="eyebrow">REVIEW / 学習ノート POINT</div>
+  <h2 class="slide-title">学習ノート POINT 一括確認</h2>
+  <p class="slide-subtitle">学習ノート ① 〜 ⑭ の答えを確認する。各行をタップで解答が表示される。</p>
+  <div class="answers-grid">
+    <div class="answer-row" data-answer="情報" onclick="revealAnswer(this)"><span class="answer-num">①</span><span class="answer-text">単元の起点となる用語</span><span class="answer-reveal">クリック</span></div>
+    <div class="answer-row" data-answer="残存性" onclick="revealAnswer(this)"><span class="answer-num">②</span><span class="answer-text">他人に与えても自分の手元から消えない性質</span><span class="answer-reveal">クリック</span></div>
+    <div class="answer-row" data-answer="複製性" onclick="revealAnswer(this)"><span class="answer-num">③</span><span class="answer-text">コピーが容易で劣化しない性質</span><span class="answer-reveal">クリック</span></div>
+    <div class="answer-row" data-answer="伝播性" onclick="revealAnswer(this)"><span class="answer-num">④</span><span class="answer-text">短時間で広範囲に拡散する性質</span><span class="answer-reveal">クリック</span></div>
+    <div class="answer-row" data-answer="生命情報" onclick="revealAnswer(this)"><span class="answer-num">⑤</span><span class="answer-text">生物が自己の内部に形成する最も広義の情報</span><span class="answer-reveal">クリック</span></div>
+    <div class="answer-row" data-answer="社会情報" onclick="revealAnswer(this)"><span class="answer-num">⑥</span><span class="answer-text">意味が独立した、コミュニケーションで伝達される情報</span><span class="answer-reveal">クリック</span></div>
+    <div class="answer-row" data-answer="機械情報" onclick="revealAnswer(this)"><span class="answer-num">⑦</span><span class="answer-text">符号化された、意味理解なしに処理できる情報</span><span class="answer-reveal">クリック</span></div>
+    <div class="answer-row" data-answer="メディア" onclick="revealAnswer(this)"><span class="answer-num">⑧</span><span class="answer-text">情報を運ぶ媒体</span><span class="answer-reveal">クリック</span></div>
+    <div class="answer-row" data-answer="伝播メディア" onclick="revealAnswer(this)"><span class="answer-num">⑨</span><span class="answer-text">空間を越えて伝える媒体(電波・光ファイバー等)</span><span class="answer-reveal">クリック</span></div>
+    <div class="answer-row" data-answer="成果メディア" onclick="revealAnswer(this)"><span class="answer-num">⑩</span><span class="answer-text">時間を越えて記録する媒体(紙・光ディスク等)</span><span class="answer-reveal">クリック</span></div>
+    <div class="answer-row" data-answer="メディアリテラシー" onclick="revealAnswer(this)"><span class="answer-num">⑪</span><span class="answer-text">分析・評価・真偽判断+発信責任の能力</span><span class="answer-reveal">クリック</span></div>
+    <div class="answer-row" data-answer="炎上" onclick="revealAnswer(this)"><span class="answer-num">⑫</span><span class="answer-text">SNS で批判が急速に集中する現象</span><span class="answer-reveal">クリック</span></div>
+    <div class="answer-row" data-answer="エコーチェンバー" onclick="revealAnswer(this)"><span class="answer-num">⑬</span><span class="answer-text">同質な意見が反響して増幅される現象</span><span class="answer-reveal">クリック</span></div>
+    <div class="answer-row" data-answer="フィルターバブル" onclick="revealAnswer(this)"><span class="answer-num">⑭</span><span class="answer-text">推奨アルゴリズムにより情報が偏る現象</span><span class="answer-reveal">クリック</span></div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 21: まとめツリー ═════ -->
+<div class="slide" data-title="まとめ">
+  <div class="eyebrow">SUMMARY / 単元のまとめ</div>
+  <h2 class="slide-title">情報とメディア ― 全体の地図</h2>
+  <p class="slide-subtitle">この単元で扱った 5 つのブロックを一枚にまとめる。情報そのもの → 分類 → 媒体 → リテラシー → 影、の順。</p>
+  <div class="summary-tree">
+    <div class="tree-center">情報とメディア</div>
+    <div class="tree-branches">
+      <div class="tree-branch"><h4>① 情報の特性</h4><ul><li>残存性</li><li>複製性</li><li>伝播性</li><li>形がない</li></ul></div>
+      <div class="tree-branch"><h4>② 情報の分類</h4><ul><li>生命情報</li><li>社会情報</li><li>機械情報</li><li>(包含構造)</li></ul></div>
+      <div class="tree-branch"><h4>③ メディア</h4><ul><li>表現メディア</li><li>伝播メディア</li><li>成果メディア</li></ul></div>
+      <div class="tree-branch"><h4>④ リテラシー</h4><ul><li>分析・評価</li><li>真偽判断</li><li>発信責任</li></ul></div>
+      <div class="tree-branch"><h4>⑤ 影</h4><ul><li>炎上</li><li>エコーチェンバー</li><li>フィルターバブル</li><li>印象操作</li></ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 22: 復習チャレンジ ═════ -->
+<div class="slide" data-title="復習チャレンジ">
+  <div class="eyebrow">REVIEW / ランダム10問</div>
+  <h2 class="slide-title">復習チャレンジ ― ランダム10問</h2>
+  <p class="slide-subtitle">この単元の重要論点からランダムに 10 問。1 問選択するごとに即時判定。最後にスコアを表示。</p>
+  <div class="review-container">
+    <div id="reviewStart">
+      <p class="review-intro">情報の特性・分類・メディア・リテラシー・情報社会の影 から出題。<br>同じ単元でも出題順は毎回異なる。</p>
+      <button class="review-start-btn" onclick="startReview()">挑戦する</button>
+    </div>
+    <div class="review-q-area" id="reviewQuiz">
+      <div class="review-progress" id="reviewProgress">1 / 10</div>
+      <div class="quiz-question" id="reviewQ" style="border-radius: 6px; margin-bottom: 12px;"></div>
+      <div id="reviewOpts" style="display: flex; flex-direction: column; gap: 8px;"></div>
+    </div>
+    <div class="review-q-area" id="reviewDone">
+      <div class="review-result" id="reviewScore">0 / 0</div>
+      <div class="review-result-sub">この単元の理解度を確認できた。間違えた問題は POINT スライド・実習スライドに戻って確認しよう。</div>
+      <button class="review-retry-btn" onclick="startReview()">もう一度</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ SLIDE 23: END ═════ -->
+<div class="slide title-slide" data-title="完了">
+  <div class="title-label">END OF CHAPTER · 01</div>
+  <h1 class="title-main" style="font-size: clamp(40px, 6vw, 80px);">お疲れさま<br>でした</h1>
+  <p class="title-sub">情報の特性 / 分類 / メディア / リテラシー / 情報社会の影</p>
+  <div class="title-meta">
+    <div class="title-meta-item"><strong>COVERED</strong>学習ノート p.2-3 + 実習1〜5 全網羅</div>
+  </div>
+</div>
+</div>
+
+<div class="bottombar">
+  <div class="bottombar-nav">
+    <button class="nav-btn" id="prevBtn" onclick="goToSlide(currentSlide - 1)" title="前へ">◀</button>
+    <button class="nav-btn" id="nextBtn" onclick="goToSlide(currentSlide + 1)" title="次へ">▶</button>
+  </div>
+  <div class="slide-title-small" id="slideTitleSmall">タイトル</div>
+  <span class="keyboard-hint">← → / SPACE / F / M</span>
+  <div class="page-indicator" id="pageIndicator">01 / XX</div>
+</div>
+
+<script>
+const isMobile = () => window.innerWidth <= 720;
+function haptic(ms) { if (typeof ms !== 'number' && !Array.isArray(ms)) ms = 8; if (navigator.vibrate) { try { navigator.vibrate(ms); } catch (_) {} } }
+let lastTouchEndAt = 0;
+document.addEventListener('touchend', (e) => {
+  const now = Date.now();
+  if (now - lastTouchEndAt <= 320) {
+    const t = e.target;
+    if (t && t.tagName && /^(INPUT|TEXTAREA|SELECT|A)$/.test(t.tagName)) return;
+    e.preventDefault();
+  }
+  lastTouchEndAt = now;
+}, { passive: false });
+
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+let currentSlide = 0;
+
+function goToSlide(n) {
+  if (n < 0 || n >= totalSlides) return;
+  haptic(8);
+  slides[currentSlide].classList.remove('active');
+  currentSlide = n;
+  slides[currentSlide].classList.add('active');
+  slides[currentSlide].scrollTop = 0;
+  updateUI();
+}
+function updateUI() {
+  const pct = ((currentSlide + 1) / totalSlides) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('pageIndicator').textContent = String(currentSlide + 1).padStart(2, '0') + ' / ' + String(totalSlides).padStart(2, '0');
+  document.getElementById('slideTitleSmall').textContent = slides[currentSlide].dataset.title || '';
+  document.getElementById('prevBtn').disabled = currentSlide === 0;
+  document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+  updateMenuActive();
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { if (document.getElementById('menuPanel').classList.contains('open')) { closeMenu(); return; } }
+  if (document.getElementById('menuPanel').classList.contains('open')) return;
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); goToSlide(currentSlide + 1); }
+  else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goToSlide(currentSlide - 1); }
+  else if (e.key === 'Home') { goToSlide(0); }
+  else if (e.key === 'End') { goToSlide(totalSlides - 1); }
+  else if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); }
+  else if (e.key === 'm' || e.key === 'M') { openMenu(); }
+});
+let touchStartX = 0, touchStartY = 0, touchStartT = 0;
+document.addEventListener('touchstart', (e) => {
+  if (e.touches.length !== 1) return;
+  touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; touchStartT = Date.now();
+}, { passive: true });
+document.addEventListener('touchend', (e) => {
+  if (e.changedTouches.length !== 1) return;
+  const menuPanel = document.getElementById('menuPanel');
+  if (menuPanel && menuPanel.classList.contains('open')) return;
+  const target = e.target;
+  if (target && target.closest && target.closest('button, .nav-btn, input, select, a')) return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  const dt = Date.now() - touchStartT;
+  if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) && dt < 800) {
+    if (dx < 0) goToSlide(currentSlide + 1); else goToSlide(currentSlide - 1);
+  }
+}, { passive: true });
+function toggleFullscreen() { if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {}); else document.exitFullscreen().catch(() => {}); }
+updateUI();
+
+// note-blank
+document.querySelectorAll('.note-blank').forEach(b => {
+  const initial = b.textContent.trim();
+  const isPlaceholder = /^[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮]$/.test(initial);
+  if (isPlaceholder) b.dataset.placeholder = initial;
+  b.addEventListener('click', () => {
+    if (b.classList.contains('reveal')) {
+      b.classList.remove('reveal');
+      b.textContent = isPlaceholder ? b.dataset.placeholder : 'クリックで正解';
+    } else {
+      b.classList.add('reveal');
+      b.textContent = b.dataset.answer;
+    }
+  });
+});
+
+// case-expander
+function toggleCase(head) {
+  const exp = head.closest('.case-expander');
+  exp.classList.toggle('open');
+}
+
+// quiz
+function answerQuiz(opt, isCorrect) {
+  const container = opt.closest('.quiz-options');
+  const allOptions = container.querySelectorAll('.quiz-option');
+  const wasChosen = opt.classList.contains('chosen');
+  if (wasChosen) {
+    allOptions.forEach(o => o.classList.remove('correct', 'incorrect', 'chosen'));
+    const fb = container.parentElement.querySelector('.quiz-feedback');
+    if (fb) fb.classList.remove('show');
+    return;
+  }
+  allOptions.forEach(o => o.classList.remove('correct', 'incorrect', 'chosen'));
+  opt.classList.add('chosen');
+  if (isCorrect) {
+    opt.classList.add('correct');
+    haptic(20);
+  } else {
+    opt.classList.add('incorrect');
+    allOptions.forEach(o => { if (o.dataset.correct === 'true') o.classList.add('correct'); });
+    haptic([40, 30, 40]);
+  }
+  const fb = container.parentElement.querySelector('.quiz-feedback');
+  if (fb) fb.classList.add('show');
+}
+
+// practice-item judgment
+function judgePractice(item) {
+  const isOk = item.dataset.ok === 'true';
+  if (item.classList.contains('revealed')) {
+    item.classList.remove('revealed', 'ok', 'ng');
+    const v = item.querySelector('.practice-verdict');
+    if (v) v.textContent = '?';
+    return;
+  }
+  item.classList.add('revealed', isOk ? 'ok' : 'ng');
+  const v = item.querySelector('.practice-verdict');
+  if (v) v.textContent = isOk ? '適切' : '不適切';
+  haptic(isOk ? 20 : [40, 30, 40]);
+}
+
+// answers-grid reveal
+function revealAnswer(row) {
+  if (row.classList.contains('revealed')) {
+    row.classList.remove('revealed');
+    const rv = row.querySelector('.answer-reveal');
+    if (rv) rv.textContent = 'クリック';
+  } else {
+    row.classList.add('revealed');
+    const rv = row.querySelector('.answer-reveal');
+    if (rv) rv.textContent = row.dataset.answer;
+  }
+}
+
+// prop-circle (情報の3特性)
+const propData = {
+  zansonsei: { tag: 'POINT ②', name: '残存性', desc: '情報を他人に与えても、自分のところからなくならず<strong>残り続ける</strong>性質。物(モノ)は渡せば自分の手元から消えるが、情報は与えても保持される。', eg: '<strong>例</strong>：友人にレシピを教えても、自分の頭の中からレシピは消えない。' },
+  fukuseisei: { tag: 'POINT ③', name: '複製性', desc: 'デジタル情報は<strong>コピーやダウンロードが容易</strong>で、複製しても情報は劣化しない。原本と複製の区別がつきにくいことが、著作権や偽情報の問題につながる。', eg: '<strong>例</strong>：画像を保存・SNS転載するだけで何度でも同じ品質のコピーが生まれる。' },
+  denpasei: { tag: 'POINT ④', name: '伝播性', desc: 'インターネットで発信した情報は、<strong>短時間で広範囲に拡散</strong>する。一度公開された情報は完全に取り戻すことが難しい(<em>デジタル・タトゥー</em>と呼ばれる)。', eg: '<strong>例</strong>：軽い気持ちで投稿した動画が数時間でリポスト数万に達することがある。' }
+};
+function selectProp(key) {
+  document.querySelectorAll('.prop-card').forEach(c => c.classList.remove('selected'));
+  const node = document.querySelector('.prop-card[data-key="' + key + '"]');
+  if (node) node.classList.add('selected');
+  const panel = document.getElementById('propPanel');
+  const d = propData[key];
+  if (panel && d) panel.innerHTML = '<div class="prop-panel-tag">' + d.tag + '</div><div class="prop-panel-name">' + d.name + '</div><div class="prop-panel-desc">' + d.desc + '</div><div class="prop-panel-eg">' + d.eg + '</div>';
+}
+
+// nest-ring (情報の3分類 包含)
+const nestData = {
+  seimei: { tag: 'POINT ⑤', name: '生命情報', desc: '生物が生きていくために自己の内部に形成される情報。<strong>最も広義の情報</strong>で、社会情報・機械情報をすべて含む。', eg: '<strong>例</strong>：かぜを引いたときの咳などの身体反応、空腹で分泌されるホルモン。' },
+  shakai: { tag: 'POINT ⑥', name: '社会情報', desc: '<strong>意味する内容</strong>が切り離されて独立した情報。コミュニケーションで伝達されるもの。', eg: '<strong>例</strong>：ジェスチャー、ピクトグラム。' },
+  kikai: { tag: 'POINT ⑦', name: '機械情報', desc: 'コンピュータが扱う、<strong>意味を理解しなくても処理できる</strong>形に符号化された情報。', eg: '<strong>例</strong>：意味を理解できない外国語、0と1だけで表されたデジタルデータ。' }
+};
+function selectNest(key) {
+  document.querySelectorAll('.nest-ring').forEach(c => c.classList.remove('selected'));
+  const node = document.querySelector('.nest-ring[data-key="' + key + '"]');
+  if (node) node.classList.add('selected');
+  const panel = document.getElementById('nestPanel');
+  const d = nestData[key];
+  if (panel && d) panel.innerHTML = '<div class="prop-panel-tag">' + d.tag + '</div><div class="prop-panel-name">' + d.name + '</div><div class="prop-panel-desc">' + d.desc + '</div><div class="prop-panel-eg">' + d.eg + '</div>';
+}
+
+// med-node (メディアの3分類)
+const medData = {
+  hyogen: { tag: '表現のためのメディア', name: '情報を具体的に表す', desc: '文字・記号・音声・静止画・動画など、情報を<strong>そのまま表現する</strong>媒体。', eg: '<strong>例</strong>：文字、音声、静止画、動画、ピクトグラム。' },
+  dentatsu: { tag: '伝達のためのメディア', name: '空間を越えて伝える', desc: '空気・電波・光ファイバーなど、情報を<strong>空間的に物理的に伝える</strong>媒体。POINT ⑨「<strong>伝播メディア</strong>」が対応する。', eg: '<strong>例</strong>：空気(声の伝達)、電波(放送・通信)、光ファイバー。' },
+  kiroku: { tag: '記録のためのメディア', name: '時間を越えて保存する', desc: '紙・光ディスク・フラッシュメモリなど、情報を<strong>時間的に保存する</strong>媒体。POINT ⑩「<strong>成果メディア</strong>」が対応する。', eg: '<strong>例</strong>：紙、光ディスク(CD/DVD)、フラッシュメモリ、ハードディスク。' }
+};
+function selectMed(key) {
+  document.querySelectorAll('.med-card').forEach(c => c.classList.remove('selected'));
+  const node = document.querySelector('.med-card[data-key="' + key + '"]');
+  if (node) node.classList.add('selected');
+  const panel = document.getElementById('medPanel');
+  const d = medData[key];
+  if (panel && d) panel.innerHTML = '<div class="prop-panel-tag">' + d.tag + '</div><div class="prop-panel-name">' + d.name + '</div><div class="prop-panel-desc">' + d.desc + '</div><div class="prop-panel-eg">' + d.eg + '</div>';
+}
+
+// judgment-chip (メディアリテラシー)
+function judgeJC(chip) {
+  const isCorrect = chip.dataset.correct === 'true';
+  if (chip.classList.contains('judged-correct') || chip.classList.contains('judged-wrong')) {
+    chip.classList.remove('judged-correct', 'judged-wrong');
+    const j = chip.querySelector('.jc-chip-judge');
+    if (j) j.textContent = '判定する';
+    updateJCVerdict();
+    return;
+  }
+  chip.classList.add(isCorrect ? 'judged-correct' : 'judged-wrong');
+  const j = chip.querySelector('.jc-chip-judge');
+  if (j) j.textContent = isCorrect ? '○ 該当' : '✕ 該当しない';
+  haptic(isCorrect ? 20 : [40, 30, 40]);
+  updateJCVerdict();
+}
+function updateJCVerdict() {
+  const chips = document.querySelectorAll('.jc-chip');
+  const total = chips.length;
+  let judged = 0;
+  chips.forEach(c => { if (c.classList.contains('judged-correct') || c.classList.contains('judged-wrong')) judged++; });
+  const v = document.getElementById('jcVerdict');
+  if (!v) return;
+  if (judged === total) v.classList.add('show'); else v.classList.remove('show');
+}
+
+// MENU
+function buildMenu() {
+  const menuList = document.getElementById('menuList');
+  if (!menuList) return;
+  menuList.innerHTML = '';
+  const sections = [];
+  let currentSection = { label: 'OVERVIEW', items: [] };
+  sections.push(currentSection);
+  slides.forEach((slide, idx) => {
+    const title = slide.dataset.title || '';
+    if (slide.classList.contains('section-divider')) {
+      const label = title.replace(/^第\d節\s*/, '');
+      currentSection = { label: label.toUpperCase(), items: [] };
+      sections.push(currentSection);
+    }
+    let tag = '', tagClass = '';
+    if (slide.classList.contains('title-slide') && idx === 0) { tag = 'TITLE'; tagClass = 'tag-title'; }
+    else if (slide.classList.contains('title-slide')) { tag = 'END'; tagClass = 'tag-end'; }
+    else if (slide.classList.contains('section-divider')) { tag = 'SECTION'; tagClass = 'tag-section'; }
+    else if (/実習/.test(title)) { tag = 'PRACTICE'; tagClass = ''; }
+    else if (/3特性|3分類|interactive/i.test(title) || /分類|包含|構造/.test(title)) { tag = 'INTERACTIVE'; tagClass = 'tag-interactive'; }
+    else if (/答え合わせ|まとめ|復習/.test(title)) { tag = 'REVIEW'; tagClass = 'tag-review'; }
+    currentSection.items.push({ idx, title, tag, tagClass });
+  });
+  sections.forEach(sec => {
+    if (sec.items.length === 0) return;
+    const h = document.createElement('div');
+    h.className = 'menu-section';
+    h.textContent = sec.label;
+    menuList.appendChild(h);
+    sec.items.forEach(it => {
+      const el = document.createElement('div');
+      el.className = 'menu-item';
+      el.dataset.idx = it.idx;
+      el.onclick = () => { goToSlide(it.idx); closeMenu(); };
+      const num = String(it.idx + 1).padStart(2, '0');
+      const tagHtml = it.tag ? '<span class="menu-item-tag ' + it.tagClass + '">' + it.tag + '</span>' : '';
+      el.innerHTML = '<span class="menu-item-num">' + num + '</span><span class="menu-item-title">' + it.title + '</span>' + tagHtml;
+      menuList.appendChild(el);
+    });
+  });
+  updateMenuActive();
+}
+function updateMenuActive() {
+  document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+  const curr = document.querySelector('.menu-item[data-idx="' + currentSlide + '"]');
+  if (curr) {
+    curr.classList.add('active');
+    if (document.getElementById('menuPanel').classList.contains('open')) curr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+function openMenu() { document.getElementById('menuOverlay').classList.add('open'); document.getElementById('menuPanel').classList.add('open'); updateMenuActive(); }
+function closeMenu() { document.getElementById('menuOverlay').classList.remove('open'); document.getElementById('menuPanel').classList.remove('open'); }
+buildMenu();
+
+function resetAllInteractions() {
+  haptic([15, 40, 15]);
+  if (!confirm('このページのすべてのインタラクションを初期状態に戻します。よろしいですか?')) return;
+  document.querySelectorAll('.note-blank.reveal').forEach(b => { b.classList.remove('reveal'); b.textContent = b.dataset.placeholder || 'クリックで正解'; });
+  document.querySelectorAll('.case-expander.open').forEach(c => c.classList.remove('open'));
+  document.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('correct', 'incorrect', 'chosen'));
+  document.querySelectorAll('.quiz-feedback.show').forEach(f => f.classList.remove('show'));
+  document.querySelectorAll('.practice-item.revealed').forEach(p => { p.classList.remove('revealed', 'ok', 'ng'); const v = p.querySelector('.practice-verdict'); if (v) v.textContent = '?'; });
+  document.querySelectorAll('.answer-row.revealed').forEach(r => { r.classList.remove('revealed'); const rv = r.querySelector('.answer-reveal'); if (rv) rv.textContent = 'クリック'; });
+  document.querySelectorAll('.prop-card.selected, .nest-ring.selected, .med-card.selected').forEach(n => n.classList.remove('selected'));
+  document.querySelectorAll('.jc-chip').forEach(c => { c.classList.remove('judged-correct', 'judged-wrong'); const j = c.querySelector('.jc-chip-judge'); if (j) j.textContent = '判定する'; });
+  const jcv = document.getElementById('jcVerdict'); if (jcv) jcv.classList.remove('show');
+  if (document.getElementById('propPanel')) selectProp('zansonsei');
+  if (document.getElementById('nestPanel')) selectNest('seimei');
+  if (document.getElementById('medPanel')) selectMed('hyogen');
+  const reviewStart = document.getElementById('reviewStart');
+  const reviewQuiz = document.getElementById('reviewQuiz');
+  const reviewDone = document.getElementById('reviewDone');
+  if (reviewStart) reviewStart.style.display = 'block';
+  if (reviewQuiz) reviewQuiz.classList.remove('active');
+  if (reviewDone) reviewDone.classList.remove('active');
+  if (typeof onResetHook === 'function') onResetHook();
+  closeMenu();
+  goToSlide(0);
+}
+
+// REVIEW (random 10)
+const reviewBank = [
+  { q: '情報のうち、<strong>他人に与えても自分のところからなくならない</strong>性質は?', opts: ['残存性', '複製性', '伝播性', '形がない'], correct: 0 },
+  { q: 'デジタル情報の<strong>コピーやダウンロードが容易</strong>で劣化しないという性質は?', opts: ['残存性', '複製性', '伝播性', '記録性'], correct: 1 },
+  { q: 'インターネット上で短時間で広範囲に拡散する性質は?', opts: ['残存性', '複製性', '伝播性', '永続性'], correct: 2 },
+  { q: '咳などの身体反応やホルモンに対応する情報の分類は?', opts: ['機械情報', '社会情報', '生命情報', 'メディア情報'], correct: 2 },
+  { q: 'ジェスチャーやピクトグラムに対応する情報の分類は?', opts: ['生命情報', '社会情報', '機械情報', '伝達情報'], correct: 1 },
+  { q: '0と1だけで表されたデジタルデータに対応する情報の分類は?', opts: ['機械情報', '生命情報', '社会情報', '記録情報'], correct: 0 },
+  { q: '生命情報・社会情報・機械情報の<strong>包含関係</strong>として正しいのは?', opts: ['機械 ⊃ 社会 ⊃ 生命', '社会 ⊃ 生命 ⊃ 機械', '生命 ⊃ 社会 ⊃ 機械', '三者は独立している'], correct: 2 },
+  { q: '電波・光ファイバーなど<strong>空間を越えて</strong>情報を伝える媒体は?', opts: ['表現のためのメディア', '伝達のためのメディア', '記録のためのメディア', '生命のためのメディア'], correct: 1 },
+  { q: '紙や光ディスクなど<strong>時間を越えて</strong>情報を保存する媒体は?', opts: ['表現のためのメディア', '伝達のためのメディア', '記録のためのメディア', '伝播のためのメディア'], correct: 2 },
+  { q: 'メディアリテラシーの説明として<strong>適切でない</strong>ものは?', opts: ['情報を多くの視点で分析・評価し真偽を判断する能力', '情報の発信者としての責任を持つこと', 'マスメディアの情報をなるべく信頼すること', '効果的に情報を表現する能力'], correct: 2 },
+  { q: '自分と似た意見ばかりが反響して増幅される現象は?', opts: ['炎上', 'エコーチェンバー', 'フィルターバブル', '印象操作'], correct: 1 },
+  { q: '個人の<strong>履歴に応じた推奨</strong>で異なる情報に触れにくくなる現象は?', opts: ['炎上', 'エコーチェンバー', 'フィルターバブル', '残存性'], correct: 2 }
+];
+let reviewIdx = 0, reviewScore = 0, reviewOrder = [];
+function startReview() {
+  reviewOrder = [...Array(reviewBank.length).keys()].sort(() => Math.random() - 0.5).slice(0, 10);
+  reviewIdx = 0; reviewScore = 0;
+  document.getElementById('reviewStart').style.display = 'none';
+  document.getElementById('reviewDone').classList.remove('active');
+  document.getElementById('reviewQuiz').classList.add('active');
+  showReviewQ();
+}
+function showReviewQ() {
+  if (reviewIdx >= reviewOrder.length) { finishReview(); return; }
+  const q = reviewBank[reviewOrder[reviewIdx]];
+  document.getElementById('reviewProgress').textContent = (reviewIdx + 1) + ' / ' + reviewOrder.length;
+  document.getElementById('reviewQ').innerHTML = q.q;
+  const optsEl = document.getElementById('reviewOpts');
+  optsEl.innerHTML = '';
+  const order = [...Array(q.opts.length).keys()].sort(() => Math.random() - 0.5);
+  order.forEach((origIdx, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.style.width = '100%';
+    btn.style.textAlign = 'left';
+    btn.style.cursor = 'pointer';
+    btn.innerHTML = '<span class="quiz-option-letter">' + ['ア','イ','ウ','エ'][i] + '</span><span>' + q.opts[origIdx] + '</span>';
+    btn.onclick = () => answerReview(btn, origIdx === q.correct);
+    optsEl.appendChild(btn);
+  });
+}
+function answerReview(btn, isCorrect) {
+  document.querySelectorAll('#reviewOpts .quiz-option').forEach(b => b.style.pointerEvents = 'none');
+  if (isCorrect) { btn.classList.add('correct'); reviewScore++; haptic(20); }
+  else { btn.classList.add('incorrect'); document.querySelectorAll('#reviewOpts .quiz-option').forEach(b => { /* highlight correct */ }); haptic([40,30,40]); }
+  setTimeout(() => { reviewIdx++; showReviewQ(); }, 700);
+}
+function finishReview() {
+  document.getElementById('reviewQuiz').classList.remove('active');
+  const done = document.getElementById('reviewDone');
+  done.classList.add('active');
+  document.getElementById('reviewScore').textContent = reviewScore + ' / ' + reviewOrder.length;
+}
+
+// SWIPE HINT
+window.addEventListener('load', () => {
+  if (!isMobile()) return;
+  if (window._swipeHintShown) return;
+  window._swipeHintShown = true;
+  setTimeout(() => {
+    const hint = document.createElement('div');
+    hint.className = 'swipe-hint';
+    hint.textContent = 'スワイプで送る';
+    document.body.appendChild(hint);
+    requestAnimationFrame(() => hint.classList.add('show'));
+    setTimeout(() => hint.classList.remove('show'), 3200);
+    setTimeout(() => hint.remove(), 3700);
+  }, 900);
+});
+
+// initialize panels
+window.addEventListener('DOMContentLoaded', () => {
+  if (document.getElementById('propPanel')) selectProp('zansonsei');
+  if (document.getElementById('nestPanel')) selectNest('seimei');
+  if (document.getElementById('medPanel')) selectMed('hyogen');
+});
+</script>
+</body>
+</html>
