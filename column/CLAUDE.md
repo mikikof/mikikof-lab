@@ -1,47 +1,22 @@
-# column/CLAUDE.md — Column 制作ハブマニュアル
+# column/CLAUDE.md — Visual Column 制作マニュアル
 
-> 本ファイルは **mikikof-lab モノレポ配下の column/ ツール専用の指示書**です。ルートの `mikikof-lab/CLAUDE.md` からここへ誘導される構造になっています。コラム系の依頼が来たら、本ドキュメントの手順にしたがって作業してください。
+> 本ファイルは **mikikof-lab モノレポ配下の column/ ツール(visual-column)専用の指示書**です。ルートの `mikikof-lab/CLAUDE.md` からここへ誘導されます。
 >
-> column/ には複数の制作スキルが同居します。本ファイルは**判別ハブ + 全スキル共通規約**を担当し、レイアウト・部品・凍結リファレンスといったスキル固有の規約は、各 `skills/{スキル名}/SKILL.md` 側で定義します。
+> 本ツールの位置づけ: 法律・社会・歴史・政治・経済・情報・時事をテーマとする商業誌スタイルのビジュアル・エッセイ集。読者は大学受験生。
+>
+> **数学コラム(受験数学↔大学数学の橋渡し読み物)は別ツール `daisu-column/` で運用しています**。数学・大学数学・線形代数・解析などの依頼は [`../daisu-column/CLAUDE.md`](../daisu-column/CLAUDE.md) を参照してください。
 
-Claude Code は、ユーザーから渡された素材(PDF・URL・スライド・画像・テキスト)を読み解き、依頼内容から該当スキルを判別し、そのスキルの凍結リファレンスと同水準のコラム記事を制作してください。
+Claude Code は、ユーザーから渡された素材(PDF・URL・スライド・画像・テキスト)を読み解き、本ファイルと配下の SKILL.md・components.md の指示にしたがって記事を制作してください。
 
 ---
 
-## スキル判別ルール(最初に読む)
+## スキル必読ファイル
 
-依頼を受けたら、まず以下の表で**どのスキルで書くか**を決定してください。判別が済んでから、共通規約(本ファイル §1 以降)とスキル個別規約(`skills/{選んだスキル}/SKILL.md`)の両方を読みます。
+執筆前に、次の 3 点を必ず読みます。
 
-| スキル | 適用領域 | キーワード |
-|---|---|---|
-| **visual-column** | 法律・社会・歴史・政治・経済・情報・時事の読み物。商業誌の長文記事スタイル | 「法」「歴史」「経済」「情報」「時事」「社会」「思想」「制度」一般のコラム依頼 |
-| **daisu-column** | 受験数学と大学数学の橋渡しコラム。硬派な数学読み物 | 「数学」「受験数学」「大学数学」「大数」「東大京大」「数Ⅰ〜Ⅲ」「線形代数」「解析」「証明」 |
-
-判別が曖昧なら(例: 「数学史」「数理経済」「物理コラム」など境界事例)、ユーザーに確認します。
-
-### スキル別の必読ファイル
-
-判別後、次の 3 点を**そのスキル分**だけ読みます。
-
-#### visual-column を選んだとき
 1. [`skills/visual-column/SKILL.md`](skills/visual-column/SKILL.md) — 技術仕様(寸法・ナビゲーション・0章・落とし穴)
 2. [`skills/visual-column/components.md`](skills/visual-column/components.md) — 部品カタログ(コピー&ペースト可能な HTML/CSS)
 3. [`skills/visual-column/examples/meme-coin-and-value.html`](skills/visual-column/examples/meme-coin-and-value.html) — 凍結リファレンス
-
-#### daisu-column を選んだとき
-1. [`skills/daisu-column/SKILL.md`](skills/daisu-column/SKILL.md) — 数学コラムの書き分け方針・数式表記・章構成・**§0-X 出版方針(自誌引用禁止)**・**§4-0 SVG 内絶対禁止事項**・**§6 数学的正確性チェックリスト**
-2. [`skills/daisu-column/components.md`](skills/daisu-column/components.md) — 数学コラム用の部品カタログ(KaTeX 設定・凡例方式・stack 方式・タイムライン方式の完成版 HTML/CSS)
-3. [`skills/daisu-column/examples/dimension-and-equations.html`](skills/daisu-column/examples/dimension-and-equations.html) — **凍結リファレンス**(第 1 回「空間と図形の次元」)。迷ったらまずここ
-
-> **daisu-column の最重要ガード**(第 1 回制作の長い試行錯誤で確立): SVG 内に **KaTeX 構文 / Unicode subscript / `<foreignObject>` / 番号バッジ** を書いてはいけません。代わりに **記号ラベル方式**(SVG 内は短い記号 P, n, ∇F のみ + 凡例で数式説明)を使います。詳しくは SKILL.md §4-0。
->
-> **出版方針(必須)**: 本サイトは東京出版『大学への数学』媒体上で公開される前提です。記事は新規寄稿として書き、**本文・参考文献ともに『大学への数学』および同社の関連刊行物(『解法の探求』『新数学スタンダード演習』等)・著者個人を出典として明示しない**(自誌・自社内引用となるため)。詳しくは SKILL.md §0-X。
->
-> **最大推論モード(必須)**: daisu-column の記事制作・編集と `skills/daisu-column/**` の編集は、papers 配下と同じ「時間度外視・最強推論」モードで行います。Opus 4.7 [1M] 死守、毎ターン ultrathink、codex audit-review は `-p review-paper`。`/fast` や Sonnet/Haiku を検出したら作業を止めて警告。詳しくは SKILL.md §0-Y。
-
-### 共通必読
-
-スキルにかかわらず、**本ファイル(column/CLAUDE.md)の §1 以降は全スキル共通**で適用します。文体・出典・公開フロー・Git 運用は両スキル横断のルールです。
 
 ---
 
@@ -203,11 +178,7 @@ bash scripts/new-article.sh "civil-vs-common-law" "法の二大系統"
 
 ---
 
-## 6. デザイン・レイアウトの固定ルール(visual-column 用)
-
-> 本セクションは **visual-column スキルで記事を書くとき**のレイアウト規約です。daisu-column を使う場合は本セクションを読み飛ばし、代わりに [`skills/daisu-column/SKILL.md`](skills/daisu-column/SKILL.md) のレイアウト節を参照してください。
->
-> ただし §6-1「配色テーマ」と §6-2「変えてはいけないもの」のうちフォント構成・タイポグラフィ・背景色は、**両スキル共通**として扱います(統一感のため)。
+## 6. デザイン・レイアウトの固定ルール
 
 **指示がない限り、`templates/base.html` のデザインと[`skills/visual-column/SKILL.md`](skills/visual-column/SKILL.md) §2 の固定値を一切崩さないこと**。崩していいのは以下の1点のみです。
 

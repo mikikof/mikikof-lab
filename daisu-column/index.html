@@ -3,11 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Visual Column — ビジュアル・エッセイ集</title>
-<meta name="description" content="情報社会から見た「歴史・経済・思想・科学」をまとめたビジュアル・エッセイ集。">
+<title>Daisu Column — 数学コラム</title>
+<meta name="description" content="受験数学と大学数学の橋渡しを目的とする硬派な数学読み物。受験で出会った題材を、線形代数・解析・微分方程式・微分幾何の道具で読み返します。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400;1,9..144,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+<!-- KaTeX (math typesetting for card summaries) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '\\[', right: '\\]', display: true},
+      {left: '$',  right: '$',  display: false},
+      {left: '\\(', right: '\\)', display: false}
+    ],
+    throwOnError: false,
+    ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'option', 'svg']
+  });"></script>
+
 <style>
 :root {
   --bg: #f7fafd;
@@ -413,15 +429,16 @@ a { color: inherit; text-decoration: none; }
     <span style="font-family: var(--f-la-display); font-style: italic; font-weight: 800; font-size: 1.1rem;">mikikof<span style="color: var(--pop); font-style: normal;">.</span>lab</span>
     <span style="font-family: var(--f-la-body); font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--mute);">portal</span>
   </a>
-  <span style="font-family: var(--f-la-body); font-size: 0.72rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent);">column · 01</span>
+  <span style="font-family: var(--f-la-body); font-size: 0.72rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent);">daisu-column</span>
 </nav>
 
 <!-- ==================== HERO ==================== -->
 <section class="hero">
-  <div class="hero-kicker">Essay Collection · エッセイ集</div>
-  <h1 class="hero-title"><span class="pop">Visual</span> Column</h1>
+  <div class="hero-kicker">Mathematics · 数学コラム</div>
+  <h1 class="hero-title"><span class="pop">Daisu</span> Column</h1>
   <p class="hero-lede">
-    情報社会から見た「歴史・経済・思想・科学」をコラムでまとめています。
+    受験数学と大学数学の橋渡しを目的とする<strong>硬派な数学読み物</strong>。<br>
+    受験で出会った題材を、線形代数・解析・微分方程式・微分幾何の道具で読み返します。
   </p>
 </section>
 
@@ -429,21 +446,10 @@ a { color: inherit; text-decoration: none; }
 <section class="articles-section">
   <div class="section-head">
     <h2 class="section-title">記事一覧 <span class="en">Columns</span></h2>
-    <div class="section-meta" id="resultMeta">all 8</div>
+    <div class="section-meta">all 2</div>
   </div>
 
-  <!-- Filter chips -->
-  <div class="filter-bar" id="filterBar" role="tablist" aria-label="記事のジャンル絞り込み">
-    <span class="filter-label">filter ·</span>
-    <button class="filter-chip active" data-filter="all" type="button" role="tab" aria-selected="true">すべて<span class="chip-count">8</span></button>
-    <button class="filter-chip" data-filter="info-ai" type="button" role="tab" aria-selected="false">情報・AI<span class="chip-count">6</span></button>
-    <button class="filter-chip" data-filter="thought" type="button" role="tab" aria-selected="false">思想<span class="chip-count">2</span></button>
-    <button class="filter-chip" data-filter="economy-law" type="button" role="tab" aria-selected="false">経済・法<span class="chip-count">4</span></button>
-    <button class="filter-chip" data-filter="math-sci" type="button" role="tab" aria-selected="false">数学・科学<span class="chip-count">2</span></button>
-    <button class="filter-chip" data-filter="history" type="button" role="tab" aria-selected="false">歴史<span class="chip-count">2</span></button>
-  </div>
-
-  <div class="articles-grid" id="articlesGrid">
+  <div class="articles-grid">
 
     <!--
       ============ ARTICLE CARD TEMPLATE ============
@@ -464,111 +470,28 @@ a { color: inherit; text-decoration: none; }
       </a>
     -->
 
-<a href="articles/what-is-ai/" class="article-card info" data-tags="info-ai,history">
+    <a href="articles/envelopes-and-singular-solutions/" class="article-card info" data-tags="math-sci">
       <div class="card-meta">
-        <span class="card-cat">情報 · AI 史</span>
-        <span>2026-05-01</span>
+        <span class="card-cat">数学 · 解析・微分方程式</span>
+        <span>2026-05-04</span>
       </div>
-      <div class="card-title">AIとは何か</div>
-      <div class="card-en">The Drifting Definition</div>
+      <div class="card-title">包絡線と特異解</div>
+      <div class="card-en">Envelopes and Singular Solutions</div>
       <p class="card-summary">
-        計算機が AI と呼ばれていた時代から、チューリングの問い、三度のブームと冬、機械学習の三本柱、そして深層学習と Transformer まで。AIという言葉が時代ごとに何を指してきたかを、七章でたどります。
+        共通テストや国公立大の通過領域問題に顔を出す「包絡線」を、判別式法から $F=0\,\wedge\,\partial_t F=0$ の連立、クレローの方程式の特異解、ホイヘンスの原理まで一直線に読み返します。直線族と曲線、$300$ 年の特異点論を五つの章でたどります。
       </p>
       <div class="card-cta">read column →</div>
     </a>
 
-    <a href="articles/three-layers-of-information/" class="article-card phil" data-tags="info-ai,thought">
+    <a href="articles/dimension-and-equations/" class="article-card info" data-tags="math-sci">
       <div class="card-meta">
-        <span class="card-cat">情報 · 哲学</span>
-        <span>2026-04-28</span>
+        <span class="card-cat">数学 · 線形代数</span>
+        <span>2026-05-02</span>
       </div>
-      <div class="card-title">『ありがとう』はどこで情報になるか</div>
-      <div class="card-en">Three Layers, One Word</div>
+      <div class="card-title">空間と図形の次元</div>
+      <div class="card-en">Dimension of Space and Figure</div>
       <p class="card-summary">
-        生命情報・社会情報・機械情報という西垣通の三層モデルを軸に、シャノン、ソシュール、ユクスキュル、ベイトソンを横断。AIが立つ位置と、まだ届かない場所を、五つの章で確かめます。
-      </p>
-      <div class="card-cta">read column →</div>
-    </a>
-
-    <a href="articles/distance-and-similarity/" class="article-card info" data-tags="info-ai,math-sci">
-      <div class="card-meta">
-        <span class="card-cat">情報 · 数学</span>
-        <span>2026-04-27</span>
-      </div>
-      <div class="card-title">AIにおける距離について</div>
-      <div class="card-en">Distance and Similarity in AI</div>
-      <p class="card-summary">
-        ベクトルと空間という基礎から、ユークリッド距離・コサイン類似度・編集距離、そして埋め込み空間の幾何学まで。「似ている」を数で測るとは何かを、六つの章でたどります。
-      </p>
-      <div class="card-cta">read column →</div>
-    </a>
-
-    <a href="articles/meme-coin-and-value/" class="article-card econ" data-tags="info-ai,economy-law">
-      <div class="card-meta">
-        <span class="card-cat">経済 · 法 · 情報</span>
-        <span>2026-04-26</span>
-      </div>
-      <div class="card-title">価値はどこから来るのか</div>
-      <div class="card-en">Distributed Ledger × Speculative Memes</div>
-      <p class="card-summary">
-        ブロックチェーンの基本から、Dogecoin・SHIB・TRUMP・SANAEまで。
-        暗号資産は本当に通貨なのか、合法性と詐欺の境界はどこにあるのかを、首相の名を冠したミームコイン騒動を軸に六つの章でたどります。
-      </p>
-      <div class="card-cta">read column →</div>
-    </a>
-
-    <a href="articles/who-sued-the-machine/" class="article-card info" data-tags="info-ai,economy-law">
-      <div class="card-meta">
-        <span class="card-cat">AI · 法</span>
-        <span>2026-04-22</span>
-      </div>
-      <div class="card-title">AIを訴えた人々</div>
-      <div class="card-en">Those Who Sued the Machine</div>
-      <p class="card-summary">
-        NYT、Getty、SAG-AFTRA、山寺宏一ら声優26名、そして EU と日本。
-        ChatGPT 公開から3年、機械に線を引こうとした四つの原告群を、実判決・実協定・実数字で辿ります。
-      </p>
-      <div class="card-cta">read column →</div>
-    </a>
-
-    <a href="articles/what-patents-protect/" class="article-card phys" data-tags="math-sci,economy-law">
-      <div class="card-meta">
-        <span class="card-cat">科学技術 · 法</span>
-        <span>2026-04-22</span>
-      </div>
-      <div class="card-title">特許が守ってきたもの</div>
-      <div class="card-en">Steam Engines × Poké Balls</div>
-      <p class="card-summary">
-        1474年ヴェネツィアから2024年の任天堂対パルワールド訴訟まで。ワットの蒸気機関、ハーバー・ボッシュ法、青色LED、FATファイルシステム、アップルの丸い角 ——
-        500年の特許史を、理系の教科書と法廷の記録から読みなおします。
-      </p>
-      <div class="card-cta">read column →</div>
-    </a>
-
-    <a href="articles/public-sphere-rewritten/" class="article-card phil" data-tags="thought,info-ai">
-      <div class="card-meta">
-        <span class="card-cat">思想 · 情報</span>
-        <span>2026-04-22</span>
-      </div>
-      <div class="card-title">公共圏、二度の構造転換</div>
-      <div class="card-en">Coffeehouse × Algorithm</div>
-      <p class="card-summary">
-        18世紀のコーヒーハウスから、21世紀のアルゴリズムへ。SNSと生成AIが揺らす「公共圏」のゆくえを、
-        ハーバーマスの60年越しの問い直しを軸に、五つの章からたどります。
-      </p>
-      <div class="card-cta">read column →</div>
-    </a>
-
-    <a href="articles/civil-vs-common-law/" class="article-card hist" data-tags="history,economy-law">
-      <div class="card-meta">
-        <span class="card-cat">歴史 · 法律</span>
-        <span>2026-04-21</span>
-      </div>
-      <div class="card-title">法の二大系統</div>
-      <div class="card-en">Civil Law × Common Law</div>
-      <p class="card-summary">
-        世界の法律はなぜ二つの流派に分かれているのか。ローマから続く大陸法と、イギリスに生まれた英米法。
-        両者の違いを、歴史・地理・実務の三つの軸から読み解きます。
+        受験で書き慣れたベクトル方程式や直線・平面の式を、線形代数・微分幾何・代数幾何の言葉で読み返します。次元と方程式の関係、双対空間と陰関数定理、東大・和歌山県立医大の入試問題への適用を、五つの章でたどります。
       </p>
       <div class="card-cta">read column →</div>
     </a>
@@ -578,91 +501,20 @@ a { color: inherit; text-decoration: none; }
   </div>
 </section>
 
+<!-- ==================== INTRO NOTE ==================== -->
+<section class="articles-section" style="padding-top: 0;">
+  <div style="max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem; background: var(--bg-card); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 4px; font-size: 0.95rem; line-height: 1.95; color: var(--text);">
+    <strong style="font-family: var(--f-jp-display); color: var(--ink);">本コラムについて。</strong>
+    入試問題の解法だけで終わらせず、その背後にある大学数学の構造まで一直線に読み返す、受験↔大学の橋渡しを目的とした硬派な数学読み物です。各記事はおおむね 5 章構成で、受験での顔・解き直し・大学からの読み返し・入試問題で確かめる・補章、というリズムで進みます。
+  </div>
+</section>
+
 <!-- ==================== FOOTER ==================== -->
 <footer class="footer">
-  <div class="footer-mark">知</div>
-  <div class="footer-tag">Visual Column · ビジュアル・エッセイ集</div>
-  <div class="footer-meta">for students, by a thinking machine and a human hand</div>
+  <div class="footer-mark">数</div>
+  <div class="footer-tag">Daisu Column · 数学コラム</div>
+  <div class="footer-meta">受験数学 ↔ 大学数学</div>
 </footer>
-
-<script>
-(function () {
-  const bar = document.getElementById('filterBar');
-  const grid = document.getElementById('articlesGrid');
-  const meta = document.getElementById('resultMeta');
-  if (!bar || !grid) return;
-
-  const chips = bar.querySelectorAll('.filter-chip');
-  const cards = grid.querySelectorAll('.article-card');
-  const FADE_MS = 280;
-
-  const labelFor = (filter) => {
-    const chip = bar.querySelector('.filter-chip[data-filter="' + filter + '"]');
-    if (!chip) return '';
-    return chip.firstChild ? chip.firstChild.nodeValue : '';
-  };
-
-  const apply = (filter) => {
-    const matches = new Set();
-    cards.forEach(card => {
-      const tags = (card.dataset.tags || '').split(',').map(s => s.trim()).filter(Boolean);
-      if (filter === 'all' || tags.includes(filter)) matches.add(card);
-    });
-
-    // Phase 1: fade out non-matching
-    cards.forEach(card => {
-      if (!matches.has(card)) card.classList.add('filter-out');
-    });
-
-    // Phase 2: after fade duration, swap display and fade in newly revealed
-    setTimeout(() => {
-      cards.forEach(card => {
-        if (!matches.has(card)) {
-          card.classList.add('filter-hidden');
-        } else if (card.classList.contains('filter-hidden')) {
-          card.classList.remove('filter-hidden');
-          void card.offsetWidth; // force reflow before removing filter-out
-          card.classList.remove('filter-out');
-        }
-      });
-    }, FADE_MS);
-
-    if (meta) {
-      meta.textContent = filter === 'all'
-        ? 'all ' + matches.size
-        : labelFor(filter) + ' · ' + matches.size;
-    }
-
-    chips.forEach(c => {
-      const isActive = c.dataset.filter === filter;
-      c.classList.toggle('active', isActive);
-      c.setAttribute('aria-selected', isActive ? 'true' : 'false');
-    });
-  };
-
-  // Compute counts from card data, overwrite the static numbers
-  const counts = { all: cards.length };
-  cards.forEach(card => {
-    const tags = (card.dataset.tags || '').split(',').map(s => s.trim()).filter(Boolean);
-    tags.forEach(t => { counts[t] = (counts[t] || 0) + 1; });
-  });
-  chips.forEach(chip => {
-    const filter = chip.dataset.filter;
-    const countEl = chip.querySelector('.chip-count');
-    if (countEl && counts[filter] != null) {
-      countEl.textContent = counts[filter];
-    }
-  });
-  if (meta) meta.textContent = 'all ' + cards.length;
-
-  chips.forEach(chip => {
-    chip.addEventListener('click', () => apply(chip.dataset.filter));
-  });
-
-  // ensure clean initial state
-  cards.forEach(card => card.classList.remove('filter-out', 'filter-hidden'));
-})();
-</script>
 
 </body>
 </html>

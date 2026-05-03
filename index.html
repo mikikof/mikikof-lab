@@ -27,6 +27,7 @@
   --gold: #f4b93a;
 
   --tool-column: #1e3a8a;
+  --tool-daisu: #4c1d95;
   --tool-lectures: #7a3a1e;
   --tool-practices: #c95b40;
   --tool-quiz: #1f6148;
@@ -195,10 +196,11 @@ a { color: inherit; text-decoration: none; }
   height: 100%;
   background: var(--tool-accent, var(--accent));
 }
-.tool-card.column    { --tool-accent: var(--tool-column); }
-.tool-card.lectures  { --tool-accent: var(--tool-lectures); }
-.tool-card.practices { --tool-accent: var(--tool-practices); }
-.tool-card.quiz      { --tool-accent: var(--tool-quiz); }
+.tool-card.column       { --tool-accent: var(--tool-column); }
+.tool-card.daisu-column { --tool-accent: var(--tool-daisu); }
+.tool-card.lectures     { --tool-accent: var(--tool-lectures); }
+.tool-card.practices    { --tool-accent: var(--tool-practices); }
+.tool-card.quiz         { --tool-accent: var(--tool-quiz); }
 .tool-card.coming    { --tool-accent: var(--tool-coming); }
 
 .tool-card:hover {
@@ -368,15 +370,30 @@ a { color: inherit; text-decoration: none; }
       <div class="tool-en">Visual column for thinking students</div>
       <p class="tool-desc">
         教科書で分断されている知識を、ひとつの物語として読み解くビジュアル・エッセイ集。
-        世界史・情報・経済・理系・時事まで、横断的に扱います。
+        世界史・情報・経済・時事まで、横断的に扱います。
       </p>
       <div class="tool-cta">enter the lab →</div>
     </a>
 
-    <!-- Tool 2: Interactive Lecture Lab -->
-    <a href="lectures/" class="tool-card lectures">
+    <!-- Tool 2: Daisu Column -->
+    <a href="daisu-column/" class="tool-card daisu-column">
       <div class="tool-meta">
         <span class="tool-num">02</span>
+        <span class="tool-status live">live</span>
+      </div>
+      <div class="tool-name">Daisu Column</div>
+      <div class="tool-en">Bridging high school and university mathematics</div>
+      <p class="tool-desc">
+        受験で出会った題材を、線形代数・解析・微分方程式・微分幾何の道具で読み返す硬派な数学読み物。
+        受験↔大学の橋渡しを五つの章で運びます。
+      </p>
+      <div class="tool-cta">enter the lab →</div>
+    </a>
+
+    <!-- Tool 3: Interactive Lecture Lab -->
+    <a href="lectures/" class="tool-card lectures">
+      <div class="tool-meta">
+        <span class="tool-num">03</span>
         <span class="tool-status live">live</span>
       </div>
       <div class="tool-name">Interactive Lecture Lab</div>
@@ -388,10 +405,10 @@ a { color: inherit; text-decoration: none; }
       <div class="tool-cta">enter the lab →</div>
     </a>
 
-    <!-- Tool 3: Interactive Practice Lab -->
+    <!-- Tool 4: Interactive Practice Lab -->
     <a href="practices/" class="tool-card practices">
       <div class="tool-meta">
-        <span class="tool-num">03</span>
+        <span class="tool-num">04</span>
         <span class="tool-status live">live</span>
       </div>
       <div class="tool-name">Interactive Practice Lab</div>
@@ -402,10 +419,10 @@ a { color: inherit; text-decoration: none; }
       <div class="tool-cta">enter the lab →</div>
     </a>
 
-    <!-- Tool 4: Quiz Form Kit -->
+    <!-- Tool 5: Quiz Form Kit -->
     <a href="quiz/" class="tool-card quiz">
       <div class="tool-meta">
-        <span class="tool-num">04</span>
+        <span class="tool-num">05</span>
         <span class="tool-status live">live</span>
       </div>
       <div class="tool-name">Quiz Form Kit</div>

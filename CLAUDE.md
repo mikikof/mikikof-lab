@@ -10,7 +10,8 @@
 
 | ツール名 | フォルダ | 公開URL | 専用指示書 |
 |---|---|---|---|
-| **Visual Column**(コラム集) | `column/` | `/column/` | [column/CLAUDE.md](column/CLAUDE.md) |
+| **Visual Column**(法・歴史・経済・情報のエッセイ集) | `column/` | `/column/` | [column/CLAUDE.md](column/CLAUDE.md) |
+| **Daisu Column**(受験↔大学の橋渡し数学コラム) | `daisu-column/` | `/daisu-column/` | [daisu-column/CLAUDE.md](daisu-column/CLAUDE.md) |
 | **Interactive Lecture Lab**(授業用HTMLスライド) | `lectures/` | `/lectures/` | [lectures/CLAUDE.md](lectures/CLAUDE.md) |
 | **Interactive Practice Lab**(演習用HTML教材) | `practices/` | `/practices/` | [practices/CLAUDE.md](practices/CLAUDE.md) |
 | **Quiz Form Kit**(Google フォーム小テスト作成キット / GAS) | `quiz/` | `/quiz/` | [quiz/CLAUDE.md](quiz/CLAUDE.md) |
@@ -37,14 +38,23 @@
 
 ユーザーの依頼が来たら、以下のキーワードでまずツールを識別してください。
 
-### ▶ コラム(column)に行くキーワード
+### ▶ ビジュアル・エッセイ(column / visual-column)に行くキーワード
 
 - 「コラム」「エッセイ」「記事」「ビジュアルエッセイ」「Visual Column」
+- 「法」「歴史」「経済」「情報」「時事」「社会」「思想」「制度」一般のコラム依頼
 - 「〜について解説して」「〜を読み解く記事を」
 - 「PDFから記事を作って」「この資料で記事を書いて」
-- 読み物系の成果物全般
+- 読み物系の成果物全般(数学コラム以外)
 
 → [`column/CLAUDE.md`](column/CLAUDE.md) を読み、以降はその指示に従う
+
+### ▶ 数学コラム(daisu-column)に行くキーワード
+
+- 「数学コラム」「Daisu Column」「数学の記事」
+- 「数学」「受験数学」「大学数学」「東大京大」「数Ⅰ〜Ⅲ」「線形代数」「解析」「微分方程式」「証明」
+- 受験数学と大学数学の橋渡しを意識した硬派な数学読み物の依頼
+
+→ [`daisu-column/CLAUDE.md`](daisu-column/CLAUDE.md) を読み、以降はその指示に従う(本ツールは Opus 4.7 [1M] 死守 + ultrathink + codex は `-p review-paper`)
 
 ### ▶ 授業スライド(lectures)に行くキーワード
 
@@ -128,6 +138,7 @@ cd column/
 
 ```
 column: 法の二大系統の記事を追加
+daisu-column: 包絡線と特異解を公開
 quiz: 情報社会の確認問題を追加
 root: ポータルページのデザイン調整
 ```
@@ -143,6 +154,8 @@ GitHub Pages で公開される際のURL:
 - ポータル: `https://mikikof.github.io/mikikof-lab/`
 - コラム集トップ: `https://mikikof.github.io/mikikof-lab/column/`
 - コラム記事: `https://mikikof.github.io/mikikof-lab/column/articles/{slug}/`
+- 数学コラムトップ: `https://mikikof.github.io/mikikof-lab/daisu-column/`
+- 数学コラム記事: `https://mikikof.github.io/mikikof-lab/daisu-column/articles/{slug}/`
 - 授業スライドトップ: `https://mikikof.github.io/mikikof-lab/lectures/`
 - 授業スライド単元: `https://mikikof.github.io/mikikof-lab/lectures/articles/{番号}-{slug}/`
 - 演習教材トップ: `https://mikikof.github.io/mikikof-lab/practices/`
@@ -163,7 +176,8 @@ GitHub Pages で公開される際のURL:
 
 ## Appendix: 現在の状態
 
-- [x] Visual Column(コラム集) — 稼働中
+- [x] Visual Column(法・歴史・経済・情報のエッセイ集) — 稼働中
+- [x] Daisu Column(受験↔大学の橋渡し数学コラム) — 稼働中(2026-05 に column/ から独立。第 1 回「空間と図形の次元」+ 第 2 回「包絡線と特異解」)
 - [x] Interactive Lecture Lab(授業用HTMLスライド) — 稼働中
 - [x] Interactive Practice Lab(演習用HTML教材) — 稼働中(1単元: 1章03 知的財産権の扱い)
 - [x] Quiz Form Kit(Google フォーム小テスト作成キット / GAS) — 稼働中(Phase 2 完了: 25 問構成 / 04 知財 6 + 05 個人情報 6 + 06 情報法 6 + 07 セキュリティ 7)
