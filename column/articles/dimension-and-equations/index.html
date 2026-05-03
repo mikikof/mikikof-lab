@@ -1711,9 +1711,7 @@ a { color: inherit; text-decoration: none; }
 
     <p>けれど、よく考えると不思議なことがあります。式 (★) は座標成分の個数(つまり「空間の次元」)を一切問いません。$\vec{\mathrm{OA}}, \vec{\mathrm{OB}}$ が平面ベクトルなら平面の話、空間ベクトルなら空間の話。同じ書き方が両方で通用してしまう。</p>
 
-    <p>これはじつに含蓄のある話で、本稿はここから出発します。受験で書き慣れた直線・平面・球面の式を、伊香匡史氏の言う「<strong>空間全体の次元</strong>」と「<strong>図形自身の次元</strong>」という二つの目盛りで読み直してみる。すると、線形代数・微分幾何・代数幾何という大学の三つの分野が、同じ問題を別々の言葉で語っていただけだということが分かります。</p>
-
-    <p class="meta-note">本稿は、伊香匡史「方程式の図形的意味1 — 空間と図形の次元」(『大学への数学』2021 年 8 月号、補助プリント所収)の内容を出発点としています。同氏の章は、受験生が空間ベクトルでぼんやり感じている直観に、はじめて名前を与えてくれる稀有な解説です。</p>
+    <p>これはじつに含蓄のある話で、本稿はここから出発します。受験で書き慣れた直線・平面・球面の式を、「<strong>空間全体の次元</strong>」と「<strong>図形自身の次元</strong>」という二つの目盛りで読み直してみる。すると、線形代数・微分幾何・代数幾何という大学の三つの分野が、同じ問題を別々の言葉で語っていただけだということが分かります。</p>
   </div>
 </section>
 
@@ -1916,9 +1914,24 @@ a { color: inherit; text-decoration: none; }
       <div class="dgm-stack">
         <div class="dgm-stack-row">
           <div class="dgm-stack-fig">
-            <svg viewBox="0 0 160 140" xmlns="http://www.w3.org/2000/svg">
-              <rect x="0" y="0" width="160" height="140" fill="#ffffff" stroke="#d6e0ee" stroke-width="1.2"/>
-              <polygon points="20,40 140,30 140,110 20,120" fill="#c5ebf2" stroke="#0891a8" stroke-width="1.4" opacity="0.8"/>
+            <svg viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="3次元空間内の1平面">
+              <defs>
+                <marker id="ax04a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+                  <path d="M0 0 L10 5 L0 10 z" fill="#94a3b8"/>
+                </marker>
+              </defs>
+              <rect x="0" y="0" width="200" height="180" fill="#ffffff" stroke="#d6e0ee" stroke-width="1.2"/>
+              <g stroke="#94a3b8" stroke-width="1" fill="none">
+                <line x1="60" y1="150" x2="180" y2="150" marker-end="url(#ax04a)"/>
+                <line x1="60" y1="150" x2="60" y2="30" marker-end="url(#ax04a)"/>
+                <line x1="60" y1="150" x2="12" y2="102" marker-end="url(#ax04a)"/>
+              </g>
+              <g font-family="'Fraunces', Georgia, serif" font-size="13" font-style="italic" fill="#64748b">
+                <text x="184" y="154">X</text>
+                <text x="52" y="26">Y</text>
+                <text x="2" y="100">Z</text>
+              </g>
+              <path d="M 60 102 L 156 102 L 118 64 L 22 64 Z" fill="#6366f1" fill-opacity="0.22" stroke="#4338ca" stroke-width="1.5"/>
             </svg>
           </div>
           <div class="dgm-stack-text">
@@ -1929,10 +1942,26 @@ a { color: inherit; text-decoration: none; }
         </div>
         <div class="dgm-stack-row">
           <div class="dgm-stack-fig">
-            <svg viewBox="0 0 160 140" xmlns="http://www.w3.org/2000/svg">
-              <rect x="0" y="0" width="160" height="140" fill="#ffffff" stroke="#d6e0ee" stroke-width="1.2"/>
-              <polygon points="20,40 140,30 140,110 20,120" fill="#e5f6fa" stroke="#22b8cf" stroke-width="1" opacity="0.5"/>
-              <line x1="20" y1="60" x2="140" y2="100" stroke="#0891a8" stroke-width="2.5"/>
+            <svg viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="3次元空間内で2平面が交わって直線が現れる">
+              <defs>
+                <marker id="ax04b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+                  <path d="M0 0 L10 5 L0 10 z" fill="#94a3b8"/>
+                </marker>
+              </defs>
+              <rect x="0" y="0" width="200" height="180" fill="#ffffff" stroke="#d6e0ee" stroke-width="1.2"/>
+              <g stroke="#94a3b8" stroke-width="1" fill="none">
+                <line x1="60" y1="150" x2="180" y2="150" marker-end="url(#ax04b)"/>
+                <line x1="60" y1="150" x2="60" y2="30" marker-end="url(#ax04b)"/>
+                <line x1="60" y1="150" x2="12" y2="102" marker-end="url(#ax04b)"/>
+              </g>
+              <g font-family="'Fraunces', Georgia, serif" font-size="13" font-style="italic" fill="#64748b">
+                <text x="184" y="154">X</text>
+                <text x="52" y="26">Y</text>
+                <text x="2" y="100">Z</text>
+              </g>
+              <path d="M 60 102 L 156 102 L 118 64 L 22 64 Z" fill="#6366f1" fill-opacity="0.20" stroke="#4338ca" stroke-width="1.3"/>
+              <path d="M 108 150 L 108 54 L 70 16 L 70 112 Z" fill="#06b6d4" fill-opacity="0.20" stroke="#0891a8" stroke-width="1.3"/>
+              <line x1="108" y1="102" x2="70" y2="64" stroke="#0f172a" stroke-width="3" stroke-linecap="round"/>
             </svg>
           </div>
           <div class="dgm-stack-text">
@@ -1943,11 +1972,32 @@ a { color: inherit; text-decoration: none; }
         </div>
         <div class="dgm-stack-row">
           <div class="dgm-stack-fig">
-            <svg viewBox="0 0 160 140" xmlns="http://www.w3.org/2000/svg">
-              <rect x="0" y="0" width="160" height="140" fill="#ffffff" stroke="#d6e0ee" stroke-width="1.2"/>
-              <polygon points="20,40 140,30 140,110 20,120" fill="#e5f6fa" stroke="#22b8cf" stroke-width="1" opacity="0.4"/>
-              <line x1="20" y1="60" x2="140" y2="100" stroke="#22b8cf" stroke-width="1" opacity="0.5"/>
-              <circle cx="80" cy="80" r="4.5" fill="#0891a8" stroke="#065563" stroke-width="1.5"/>
+            <svg viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="3次元空間内で3平面が交わって1点が現れる">
+              <defs>
+                <marker id="ax04c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+                  <path d="M0 0 L10 5 L0 10 z" fill="#94a3b8"/>
+                </marker>
+              </defs>
+              <rect x="0" y="0" width="200" height="180" fill="#ffffff" stroke="#d6e0ee" stroke-width="1.2"/>
+              <g stroke="#94a3b8" stroke-width="1" fill="none">
+                <line x1="60" y1="150" x2="180" y2="150" marker-end="url(#ax04c)"/>
+                <line x1="60" y1="150" x2="60" y2="30" marker-end="url(#ax04c)"/>
+                <line x1="60" y1="150" x2="12" y2="102" marker-end="url(#ax04c)"/>
+              </g>
+              <g font-family="'Fraunces', Georgia, serif" font-size="13" font-style="italic" fill="#64748b">
+                <text x="184" y="154">X</text>
+                <text x="52" y="26">Y</text>
+                <text x="2" y="100">Z</text>
+              </g>
+              <path d="M 60 102 L 156 102 L 118 64 L 22 64 Z" fill="#6366f1" fill-opacity="0.18" stroke="#4338ca" stroke-width="1.2"/>
+              <path d="M 108 150 L 108 54 L 70 16 L 70 112 Z" fill="#06b6d4" fill-opacity="0.18" stroke="#0891a8" stroke-width="1.2"/>
+              <path d="M 41 131 L 137 131 L 137 35 L 41 35 Z" fill="#14b8a6" fill-opacity="0.18" stroke="#0d9488" stroke-width="1.2"/>
+              <g stroke="#475569" stroke-width="1.4" stroke-dasharray="3 2" opacity="0.7" fill="none">
+                <line x1="108" y1="102" x2="70" y2="64"/>
+                <line x1="41" y1="83" x2="137" y2="83"/>
+                <line x1="89" y1="131" x2="89" y2="35"/>
+              </g>
+              <circle cx="89" cy="83" r="6" fill="#0f172a" stroke="#ffffff" stroke-width="2"/>
             </svg>
           </div>
           <div class="dgm-stack-text">
@@ -1964,14 +2014,13 @@ a { color: inherit; text-decoration: none; }
 
     <p>連立方程式 $\{x = 1, y = 2\}$ を、$2$ 次元平面で見れば「$2$ 直線 $x = 1$ と $y = 2$ の交点」、$3$ 次元空間で見れば「$2$ 平面の交線」。同じ式が、置かれる空間の次元によって違う図形を表します。</p>
 
-    <p>これを伊香氏は端的に、こう言い切っています。</p>
+    <p>ここまでの観察を、本稿では一行の中心テーゼとして掲げます。</p>
 
     <div class="pull-quote">
       <p>「座標成分の方程式は、その本数だけ図形の次元を下げる」</p>
-      <div class="attribution">— 伊香匡史「空間と図形の次元」</div>
     </div>
 
-    <p>受験参考書ではここまではっきり書かれることはまずありません。けれどこの一行は、線形代数の定理を一行に圧縮した、極めて精度の高い格言です。</p>
+    <p>この一行は、線形代数の言葉では<strong>階数・退化次数定理</strong> (rank–nullity theorem) に当たります。$n$ 個の変数に独立な $r$ 本の $1$ 次方程式を課したとき、解集合の次元はちょうど $n - r$ になる、という定理です。</p>
 
     <p class="meta-note">もちろん厳密には、この格言は「追加する式が<strong>互いに独立で、しかも矛盾しないとき</strong>」に成立します。たとえば $x = 0$ と $2x = 0$ は同じ条件を二度数えているだけ(独立でない)で、図形は依然として平面のまま。$x = 0$ と $x = 1$ は矛盾していて解集合は空。こうした病的な場合を除く、と読み替えてください。式が「効率よく次元を削る」状態を指して、本稿はこの格言を使います。</p>
   </div>
@@ -1994,7 +2043,7 @@ a { color: inherit; text-decoration: none; }
 
     <h3>3-1 「次元」という言葉の二義<span class="en">Two meanings of dimension</span></h3>
 
-    <p>大学に進学すると、線形代数の最初の章で「ベクトル空間の次元」を習います。これは、空間全体に何個の独立な軸を立てられるか、という量です。座標を入れた $xy$ 平面なら $2$、$xyz$ 空間なら $3$。これが伊香氏の言う<strong>空間全体の次元</strong>に当たります。</p>
+    <p>大学に進学すると、線形代数の最初の章で「ベクトル空間の次元」を習います。これは、空間全体に何個の独立な軸を立てられるか、という量です。座標を入れた $xy$ 平面なら $2$、$xyz$ 空間なら $3$。これが本稿で言う<strong>空間全体の次元</strong>に当たります。</p>
 
     <p>けれど数学では、次元という語はもう一つ別の意味を持ちます。空間の中に置かれた図形(部分集合)が、それ自身として何次元か、という意味です。直線は $1$、平面は $2$、点は $0$。これらは図形自身の次元で、配置される空間の次元には依りません。</p>
 
@@ -2011,7 +2060,7 @@ a { color: inherit; text-decoration: none; }
 
     <p class="meta-note">これは大学初年次で習う <strong>多様体</strong> の素朴な定義そのものです。一般の集合に対する次元論(ハウスドルフ次元、被覆次元など)はこれとは別の流儀で、第 $5$ 章の余韻で軽く触れます。</p>
 
-    <p>二つ目はやや高度なので置いておくとして、一つ目「<em>拡大すると $n$ 次元の開球に見える</em>」が、伊香氏が「微分の考え方そのもの」と書いた本筋です。これは大学では <strong>接空間</strong> (tangent space) の次元として定式化されます。球面上の一点を顕微鏡で覗き込めば、その近くは平面に見える。これが「球面は $2$ 次元」の正体で、図形の各点ごとに $2$ 次元の<em>接平面</em>が貼り付いていることが、球面の $2$ 次元性の数学的な表現です。</p>
+    <p>二つ目はやや高度なので置いておくとして、一つ目「<em>拡大すると $n$ 次元の開球に見える</em>」が、まさに微分の考え方そのものです。これは大学では <strong>接空間</strong> (tangent space) の次元として定式化されます。球面上の一点を顕微鏡で覗き込めば、その近くは平面に見える。これが「球面は $2$ 次元」の正体で、図形の各点ごとに $2$ 次元の<em>接平面</em>が貼り付いていることが、球面の $2$ 次元性の数学的な表現です。</p>
 
     <div class="dgm">
       <div class="dgm-head">
@@ -2534,7 +2583,7 @@ a { color: inherit; text-decoration: none; }
 
     <div class="math-display">$$\frac{1}{\sqrt{2}}\,x + \frac{1}{2}\,y + \frac{1}{2}\,z = 1, \quad つまり \quad \sqrt{2}\,x + y + z = 2.$$</div>
 
-    <p>これが (3) の答えです。受験の解答では (1)(2) を経由して (3) に到達することが想定されていますが、大学初年次の知識(陰関数定理と勾配)があれば、(1)(2) を経由せずとも一行で書けます。「<strong>原問題ではこの誘導が付いていた</strong>」と注記される伊香氏の章は、まさにその差を示すための引用でした。</p>
+    <p>これが (3) の答えです。受験の解答では (1)(2) を経由して (3) に到達することが想定されていますが、大学初年次の知識(陰関数定理と勾配)があれば、(1)(2) を経由せずとも一行で書けます。受験での誘導の役割と、大学からの一直線の解法とがちょうど好対照をなす一問です。</p>
 
     <div class="when-how">
       <div>
@@ -2609,7 +2658,7 @@ a { color: inherit; text-decoration: none; }
 
     <p>$20$ 世紀の数学は、この次元の概念を一般化し続けました。リーマンの多様体、ハウスドルフの非整数次元、グロタンディークのスキームの次元論。受験で書いた「直線は $1$ 次元、平面は $2$ 次元」という素朴な区別は、これらの一般化の出発点に位置しています。</p>
 
-    <p>本稿の出発点だった「方程式の本数だけ次元が下がる」という伊香氏の格言も、現代では<strong>余次元</strong> (codimension) という概念のもとで一般化されています。代数幾何では、典型的に $n$ 次元の空間内で $1$ 本の非定数多項式 $F(x_1, \ldots, x_n) = 0$ が定める図形(超曲面)が余次元 $1$ と扱われます。複数本の多項式に対しては、余次元が本数と一致するために<em>完全交叉</em>のような追加条件が要りますが、ここでも「式の本数 = 余次元」の素朴な対応が骨格として生きています。</p>
+    <p>本稿の中心テーゼだった「方程式の本数だけ次元が下がる」という格言も、現代では<strong>余次元</strong> (codimension) という概念のもとで一般化されています。代数幾何では、典型的に $n$ 次元の空間内で $1$ 本の非定数多項式 $F(x_1, \ldots, x_n) = 0$ が定める図形(超曲面)が余次元 $1$ と扱われます。複数本の多項式に対しては、余次元が本数と一致するために<em>完全交叉</em>のような追加条件が要りますが、ここでも「式の本数 = 余次元」の素朴な対応が骨格として生きています。</p>
 
     <p>受験で出会ったベクトル方程式や直線・平面の式は、いずれも<em>パラメータと方程式</em>という二つの言語で同じ図形を語ろうとする試みでした。線形代数では「像と核」、解析学では「陰関数定理の仮説と結論」、代数幾何では「超曲面と射影」として、それぞれの分野が異なる名前で同じ事実を扱っています。</p>
 
@@ -2621,11 +2670,6 @@ a { color: inherit; text-decoration: none; }
 <section class="refs">
   <div class="refs-head">参考文献 · References</div>
   <ol class="refs-list">
-    <li>
-      <span class="ref-author">伊香匡史</span>
-      <span class="ref-title">「方程式の図形的意味1 — 空間と図形の次元」</span>
-      <span class="ref-meta">『大学への数学』2021 年 8 月号 / 解法の探求(図形中心)補助プリント所収</span>
-    </li>
     <li>
       <span class="ref-author">齋藤正彦</span>
       <span class="ref-title">『線型代数入門』</span>

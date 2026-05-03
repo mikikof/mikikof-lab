@@ -639,6 +639,94 @@
 
 ---
 
+## 11-bis. 3D 平面交差図のテンプレ(オブリーク投影)
+
+「$3$ 次元空間で式の本数だけ図形の次元が落ちる」を視覚化するときの標準テンプレ。Diagram 04(stack 方式)で確立。
+
+### 投影の定数
+
+```
+原点: (cx, cy) = (60, 150)
+単位: 32px
+z 方向のずれ: (-12.8, -12.8) per unit
+投影式:
+  screen_x = 60 + 32*x - 12.8*z
+  screen_y = 150 - 32*y - 12.8*z
+viewBox: "0 0 200 180"  (.dgm-stack-fig 220px に収まる)
+軸長: 3.75 単位
+平面: x = 1.5, y = 1.5, z = 1.5(中央で交わるよう統一)
+```
+
+### 主要座標(算出済み)
+
+| 物体 | corners (screen) |
+|---|---|
+| 軸 X 終点 | (180, 150) |
+| 軸 Y 終点 | (60, 30) |
+| 軸 Z 終点 | (12, 102) |
+| $\pi_1$ (y=1.5) | (60,102) (156,102) (118,64) (22,64) |
+| $\pi_2$ (x=1.5) | (108,150) (108,54) (70,16) (70,112) |
+| $\pi_3$ (z=1.5) | (41,131) (137,131) (137,35) (41,35) |
+| $\pi_1 \cap \pi_2$ 交線 | (108,102) → (70,64) |
+| $\pi_1 \cap \pi_3$ 交線 | (41,83) → (137,83) |
+| $\pi_2 \cap \pi_3$ 交線 | (89,131) → (89,35) |
+| 三平面交点 | (89, 83) |
+
+### 行 1(平面 1 枚)
+
+```html
+<svg viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="3次元空間内の1平面">
+  <defs>
+    <marker id="ax04a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="200" height="180" fill="#ffffff" stroke="#d6e0ee" stroke-width="1.2"/>
+  <g stroke="#94a3b8" stroke-width="1" fill="none">
+    <line x1="60" y1="150" x2="180" y2="150" marker-end="url(#ax04a)"/>
+    <line x1="60" y1="150" x2="60" y2="30" marker-end="url(#ax04a)"/>
+    <line x1="60" y1="150" x2="12" y2="102" marker-end="url(#ax04a)"/>
+  </g>
+  <g font-family="'Fraunces', Georgia, serif" font-size="13" font-style="italic" fill="#64748b">
+    <text x="184" y="154">X</text>
+    <text x="52" y="26">Y</text>
+    <text x="2" y="100">Z</text>
+  </g>
+  <path d="M 60 102 L 156 102 L 118 64 L 22 64 Z" fill="#6366f1" fill-opacity="0.22" stroke="#4338ca" stroke-width="1.5"/>
+</svg>
+```
+
+### 行 2(2 平面 → 交線)
+
+行 1 の中身に以下を追加(プレートの直後)し、軸グループの marker id を `ax04b` にする:
+
+```html
+<path d="M 108 150 L 108 54 L 70 16 L 70 112 Z" fill="#06b6d4" fill-opacity="0.20" stroke="#0891a8" stroke-width="1.3"/>
+<line x1="108" y1="102" x2="70" y2="64" stroke="#0f172a" stroke-width="3" stroke-linecap="round"/>
+```
+
+行 1 の $\pi_1$ の `fill-opacity` も 0.20、stroke-width 1.3 に揃える(2 枚以上ある場合は弱めに)。
+
+### 行 3(3 平面 → 交点)
+
+行 2 の構造に、$\pi_3$、3 つの対偶交線(ダッシュ薄色)、交点(濃色 dot)を追加。各 fill-opacity は 0.18 に下げる:
+
+```html
+<path d="M 41 131 L 137 131 L 137 35 L 41 35 Z" fill="#14b8a6" fill-opacity="0.18" stroke="#0d9488" stroke-width="1.2"/>
+<g stroke="#475569" stroke-width="1.4" stroke-dasharray="3 2" opacity="0.7" fill="none">
+  <line x1="108" y1="102" x2="70" y2="64"/>
+  <line x1="41" y1="83" x2="137" y2="83"/>
+  <line x1="89" y1="131" x2="89" y2="35"/>
+</g>
+<circle cx="89" cy="83" r="6" fill="#0f172a" stroke="#ffffff" stroke-width="2"/>
+```
+
+### 投影を変えるとき
+
+平面の傾きや位置を変えたい場合は、投影式に新しい (x, y, z) を入れて screen 座標を計算してから path を組み立てる。**目視で「だいたいこんなもん」で書かない** — 内積計算と同じく、必ず数値で出す(SKILL.md §6-10 の方針を 3D に拡張)。
+
+---
+
 ## 12. 配色テーマ(Indigo × Cyan の例)
 
 ```css
