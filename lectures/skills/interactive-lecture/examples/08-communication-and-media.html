@@ -847,7 +847,7 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
     <button onclick="revealAll()" style="background:var(--navy-darkest);color:white;border:none;padding:9px 22px;font-family:'游教科書体 横',serif;font-weight:600;border-radius:30px;cursor:pointer;font-size:13px;margin:0 4px;">すべて一括表示</button>
     <button onclick="hideAll()" style="background:transparent;color:var(--navy-darkest);border:2px solid var(--navy);padding:9px 22px;font-family:'游教科書体 横',serif;font-weight:600;border-radius:30px;cursor:pointer;font-size:13px;margin:0 4px;">すべて隠す</button>
   </div>
-  <div class="answers-grid">
+  <div class="answers-grid" id="pointAnswersGrid">
     <div class="answer-section-head">節 1:コミュニケーションとは</div>
     <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">①</span><span class="answer-text">コミュニケーションが成立しているとき、発信者と受信者の間でできている状態</span><span class="answer-reveal" data-ans="相互理解">クリック</span></div>
     <div class="answer-section-head">節 2:形態の分類(3 軸)</div>
@@ -1100,14 +1100,15 @@ function revealAnswer(row) {
   }
 }
 function revealAll() {
-  document.querySelectorAll('.answer-row').forEach(r => {
+  // SLIDE 16 の POINT 用語答え合わせ grid のみ対象(SLIDE 11 練習 3 等を巻き込まない)
+  document.querySelectorAll('#pointAnswersGrid .answer-row').forEach(r => {
     r.classList.add('revealed');
     const reveal = r.querySelector('.answer-reveal');
     reveal.textContent = reveal.dataset.ans;
   });
 }
 function hideAll() {
-  document.querySelectorAll('.answer-row').forEach(r => {
+  document.querySelectorAll('#pointAnswersGrid .answer-row').forEach(r => {
     r.classList.remove('revealed');
     r.querySelector('.answer-reveal').textContent = 'クリック';
   });
@@ -1200,7 +1201,7 @@ function revealMail(el) {
 const shannonData = {
   src: { term: '発信者 (Source)', desc: '情報を発信したい主体。シャノンの理論では「メッセージの集合からどれを選ぶか」が出発点になります(<strong>等確率の N 通りから 1 つを選ぶ場合</strong>、情報量は log₂N ビットと考えられます。一般には出現確率を用いてエントロピーで定義します)。' },
   enc: { term: '符号化 (Encoder)', desc: 'メッセージを物理的に伝送できる信号(電気・電磁波・音・光)に変換する装置。電話なら音 → 電気信号、SMS なら文字 → 0/1 のビット列。' },
-  ch: { term: '媒体 + 雑音 (Channel + Noise)', desc: '信号が通る経路。雑音(ノイズ)が必ず混入し、信号が劣化します。シャノンはこの「雑音中でも誤りなく伝えられる情報量の上限」を <strong>シャノン限界</strong> として数学的に証明しました(1948)。' },
+  ch: { term: '媒体 + 雑音 (Channel + Noise)', desc: '信号が通る経路。雑音(ノイズ)が必ず混入し、信号が劣化します。シャノンはこの「雑音中でも <strong>誤り確率を限りなく小さくしながら</strong> 伝えられる情報量の上限」を <strong>シャノン限界</strong> として数学的に証明しました(1948)。' },
   dec: { term: '復号 (Decoder)', desc: '受信した信号を、元のメッセージに復元する装置。誤り訂正符号(リード=ソロモン等)で雑音による誤りを訂正できます。' },
   dst: { term: '受信者 (Destination)', desc: '復号されたメッセージを受け取る主体。<strong>シャノンモデルではここで終わりますが</strong>、本講の「相互理解」はさらに「受信者の中で意味が組み立てられる」段階を要求します。' }
 };
