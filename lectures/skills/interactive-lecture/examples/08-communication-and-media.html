@@ -72,13 +72,24 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
 .slide::-webkit-scrollbar-thumb { background: var(--navy-pale); border-radius: 3px; }
 @media print { .topbar, .bottombar, .progress { display: none; } }
 
-.agenda-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
-.agenda-item { padding: 22px 24px; background: var(--navy-bg); border-left: 4px solid var(--navy); border-radius: 4px; transition: all 0.3s; display: flex; gap: 18px; align-items: flex-start; }
+.agenda-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 22px; }
+.agenda-item { padding: 20px 22px; background: var(--navy-bg); border-left: 4px solid var(--navy); border-radius: 4px; transition: all 0.3s; display: flex; gap: 16px; align-items: flex-start; }
 .agenda-item:hover { background: var(--navy-pale); transform: translateX(4px); }
-.agenda-num { font-family: '游教科書体 横', serif; font-size: 32px; font-weight: 700; color: var(--accent-red); line-height: 1; min-width: 50px; }
-.agenda-content h3 { font-family: '游教科書体 横', serif; font-weight: 600; font-size: 18px; color: var(--navy-darkest); margin-bottom: 5px; }
-.agenda-content p { font-size: 13px; color: var(--text-sub); line-height: 1.5; }
-@media (max-width: 1100px) { .agenda-grid { grid-template-columns: 1fr; } }
+.agenda-item.appendix { border-left-color: var(--accent-gold); background: linear-gradient(180deg, rgba(201,169,97,0.08) 0%, var(--navy-bg) 100%); }
+.agenda-item.appendix .agenda-num { color: var(--accent-gold); }
+.agenda-num { font-family: '游教科書体 横', serif; font-size: 28px; font-weight: 700; color: var(--accent-red); line-height: 1; min-width: 44px; }
+.agenda-content h3 { font-family: '游教科書体 横', serif; font-weight: 600; font-size: 17px; color: var(--navy-darkest); margin-bottom: 5px; }
+.agenda-content .a-tag { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.18em; color: var(--accent-gold); font-weight: 700; display: block; margin-bottom: 4px; }
+.agenda-content p { font-size: 12.5px; color: var(--text-sub); line-height: 1.55; }
+@media (max-width: 720px) { .agenda-grid { grid-template-columns: 1fr; } }
+
+/* section-divider に Phosphor 大アイコン */
+.section-divider .section-icon { width: 84px; height: 84px; margin: 0 auto 22px; display: block; opacity: 0.95; }
+@media (max-width: 720px) { .section-divider .section-icon { width: 60px; height: 60px; margin-bottom: 16px; } }
+
+/* case-expander の case-icon */
+.case-icon { width: 30px; height: 30px; flex-shrink: 0; color: var(--accent-red); }
+@media (max-width: 720px) { .case-icon { width: 24px; height: 24px; } }
 
 .icon-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 18px; }
 .icon-cards.cols-3 { grid-template-columns: repeat(3, 1fr); }
@@ -437,15 +448,19 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
   <div class="agenda-grid">
     <div class="agenda-item">
       <div class="agenda-num">1</div>
-      <div class="agenda-content"><h3>コミュニケーションとは</h3><p>「相互理解ができている状態」という定義の核心。物理的な通信や伝達との違い。</p></div>
+      <div class="agenda-content"><span class="a-tag">SECTION 01</span><h3>コミュニケーションとは</h3><p>「相互理解ができている状態」という定義の核心。物理的な通信や伝達との違い。</p></div>
     </div>
     <div class="agenda-item">
       <div class="agenda-num">2</div>
-      <div class="agenda-content"><h3>形態の分類</h3><p>人数(個別 / マスコミ / 逆マスコミ / 会議)、位置関係(直接 / 間接)、同期性(同期 / 非同期)の 3 軸。</p></div>
+      <div class="agenda-content"><span class="a-tag">SECTION 02</span><h3>形態の分類</h3><p>人数(個別 / マスコミ / 逆マスコミ / 会議)、位置関係(直接 / 間接)、同期性(同期 / 非同期)の 3 軸。</p></div>
     </div>
     <div class="agenda-item">
       <div class="agenda-num">3</div>
-      <div class="agenda-content"><h3>変遷と社会への影響</h3><p>伝播性・即時性・利便性・情報量の 4 つの方向にメディアは進化してきた。</p></div>
+      <div class="agenda-content"><span class="a-tag">SECTION 03</span><h3>変遷と社会への影響</h3><p>伝播性・即時性・利便性・情報量の 4 つの方向にメディアは進化してきた。</p></div>
+    </div>
+    <div class="agenda-item appendix">
+      <div class="agenda-num">+</div>
+      <div class="agenda-content"><span class="a-tag" style="color:var(--accent-gold);">APPENDIX</span><h3>深掘り + 最新事例</h3><p>シャノン=ウィーバーモデル / メディア・リテラシー 4 観点 / テレワーク・能登地震 SNS・生成 AI の現代事例。</p></div>
     </div>
   </div>
 </div>
@@ -453,6 +468,7 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
 <!-- SLIDE 3: SECTION 1 DIVIDER -->
 <div class="slide section-divider" data-title="第1節 コミュニケーションとは">
   <div class="section-number">SECTION · 01</div>
+  <svg class="section-icon" viewBox="0 0 256 256"><path d="M32.5,138A72,72,0,1,1,62,167.5l-27.76,8.16a8,8,0,0,1-9.93-9.93Z" fill="none" stroke="rgba(255,255,255,0.9)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><path d="M163.94,80.11A72,72,0,0,1,223.5,186l8.16,27.76a8,8,0,0,1-9.93,9.93L194,215.5A72.05,72.05,0,0,1,92.06,175.89" fill="none" stroke="url(#icoGold)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/></svg>
   <h2 class="section-title-big">コミュニケーション<br>とは何か</h2>
   <p class="section-tagline">― 通信・伝達ではなく、「相互理解」が成立する状態 ―</p>
 </div>
@@ -497,6 +513,7 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
 <!-- SLIDE 6: SECTION 2 DIVIDER -->
 <div class="slide section-divider" data-title="第2節 形態の分類">
   <div class="section-number">SECTION · 02</div>
+  <svg class="section-icon" viewBox="0 0 256 256"><rect x="48" y="48" width="64" height="64" rx="8" fill="none" stroke="rgba(255,255,255,0.9)" stroke-linejoin="round" stroke-width="14"/><rect x="144" y="48" width="64" height="64" rx="8" fill="none" stroke="rgba(255,255,255,0.9)" stroke-linejoin="round" stroke-width="14"/><rect x="48" y="144" width="64" height="64" rx="8" fill="none" stroke="rgba(255,255,255,0.9)" stroke-linejoin="round" stroke-width="14"/><rect x="144" y="144" width="64" height="64" rx="8" fill="none" stroke="url(#icoGold)" stroke-linejoin="round" stroke-width="14"/></svg>
   <h2 class="section-title-big">3 軸で分類する<br>コミュニケーション</h2>
   <p class="section-tagline">― 人数 × 位置関係 × 同期性 ―</p>
 </div>
@@ -570,6 +587,7 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
 <!-- SLIDE 9: SECTION 3 DIVIDER -->
 <div class="slide section-divider" data-title="第3節 変遷と社会への影響">
   <div class="section-number">SECTION · 03</div>
+  <svg class="section-icon" viewBox="0 0 256 256"><circle cx="128" cy="128" r="96" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="14"/><path d="M168,128c0,64-40,96-40,96s-40-32-40-96,40-96,40-96S168,64,168,128Z" fill="none" stroke="url(#icoGold)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><line x1="37.46" y1="96" x2="218.54" y2="96" stroke="rgba(255,255,255,0.9)" stroke-linecap="round" stroke-width="14"/><line x1="37.46" y1="160" x2="218.54" y2="160" stroke="rgba(255,255,255,0.9)" stroke-linecap="round" stroke-width="14"/></svg>
   <h2 class="section-title-big">メディアの変遷と<br>社会への影響</h2>
   <p class="section-tagline">― 伝播性・即時性・利便性・情報量、4 つの方向への進化 ―</p>
 </div>
@@ -620,6 +638,7 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
   <div style="max-width:880px;margin:18px auto 0;">
     <div class="case-expander" onclick="toggleCase(this)">
       <div class="case-head">
+        <svg class="case-icon" viewBox="0 0 256 256"><rect x="24" y="64" width="208" height="128" rx="16" transform="translate(256) rotate(90)" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><circle cx="128" cy="60" r="12" fill="currentColor"/></svg>
         <span class="case-year">2020</span>
         <span class="case-title">COVID-19 パンデミック → テレワークの定着</span>
         <span class="case-toggle">+</span>
@@ -634,6 +653,7 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
     </div>
     <div class="case-expander" onclick="toggleCase(this)">
       <div class="case-head">
+        <svg class="case-icon" viewBox="0 0 256 256"><circle cx="128" cy="128" r="32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M181.67,80a71.94,71.94,0,0,1,0,96" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M74.33,176a71.94,71.94,0,0,1,0-96" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M208,49.62a111.88,111.88,0,0,1,0,156.76" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M48,206.38A111.88,111.88,0,0,1,48,49.62" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
         <span class="case-year">2024</span>
         <span class="case-title">能登半島地震 → SNS が初動情報源に</span>
         <span class="case-toggle">+</span>
@@ -649,6 +669,7 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
     </div>
     <div class="case-expander" onclick="toggleCase(this)">
       <div class="case-head">
+        <svg class="case-icon" viewBox="0 0 256 256"><polygon points="160 16 144 96 208 120 96 240 112 160 48 136 160 16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
         <span class="case-year">2022〜</span>
         <span class="case-title">生成 AI(ChatGPT 等)で発信コストが激減</span>
         <span class="case-toggle">+</span>
@@ -810,6 +831,10 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
   <div style="margin-top:14px;padding:14px 18px;background:white;border:1px dashed var(--accent-red);border-radius:4px;font-size:13.5px;line-height:1.75;color:var(--text-main);font-weight:500;max-width:980px;margin-left:auto;margin-right:auto;">
     <strong style="color:var(--accent-red);">シャノンモデルが扱わないもの = 「意味」「相互理解」</strong><br>
     シャノンの理論は <strong>メッセージの意味ではなく、信号(記号列)を雑音中でどれだけ確実・効率よく送れるか</strong> を扱います。「信号が届いたか」≠「意味が共有されたか」。本講 POINT 08 が定義する <strong>相互理解</strong> は、復号後にさらに「受信者の中で意味が組み立てられ、必要に応じて確認・応答する」段階まで含み、シャノンモデルの先にある問題です。
+  </div>
+  <div style="margin-top:10px;padding:14px 18px;background:rgba(201,169,97,0.08);border:1px dashed var(--accent-gold);border-radius:4px;font-size:13.5px;line-height:1.75;color:var(--text-main);font-weight:500;max-width:980px;margin-left:auto;margin-right:auto;">
+    <strong style="color:#8a6d1f;">補足: ウィーナー的拡張(双方向フィードバック)</strong><br>
+    シャノンモデルは Source → Destination の <strong>一方向</strong> です。実際の対話では Destination からの応答(フィードバック)が Source に返り、<strong>双方向のループ</strong> になります。これを数学的に整理したのがウィーナーらの <strong>サイバネティクス</strong>(1948)。本講で出てくる <strong>双方向性</strong>(練習 3 オ)は、この拡張の現代的な現れです。
   </div>
 </div>
 
