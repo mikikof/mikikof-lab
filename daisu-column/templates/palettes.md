@@ -168,6 +168,30 @@
 
 ---
 
+## テーマ8: Slate × Amber(論証・最適化系)
+
+落ち着いた灰青に、達成例を象徴する温度感のある琥珀色。論証・評価・例の構成という対をなす作業を視覚化する。
+
+```css
+--accent-primary-deep: #1c2738;
+--accent-primary: #344358;
+--accent-primary-bright: #51678a;
+--accent-primary-pale: #cfd6e1;
+--accent-primary-wash: #e6ebf2;
+
+--accent-secondary-deep: #7a4a00;
+--accent-secondary: #c08218;
+--accent-secondary-bright: #e89c2a;
+--accent-secondary-pale: #f6daa1;
+--accent-secondary-wash: #fbedce;
+```
+
+適合題材: 論証・最適化・最大最小問題・線形計画・変分法・凸解析
+
+`primary` の灰青は「評価(理論的な上下界)」を、`secondary` の琥珀は「達成(具体例の構成)」を象徴。両者の対比で評価と達成の二段論法を視覚的に表現する。第 3 回「評価と達成」(2026-05-04 公開予定)で初使用。
+
+---
+
 ## パレットを追加する場合
 
 記事の題材がどの既存パレットにも合わないと判断したときのみ、新パレットを追加してよい。その場合:
