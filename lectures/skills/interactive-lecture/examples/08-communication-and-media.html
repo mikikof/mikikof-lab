@@ -114,9 +114,11 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
 /* timeline */
 .timeline-wrap { max-width: 980px; margin: 16px auto 0; padding: 18px; background: var(--navy-bg); border-radius: 8px; }
 .timeline-line { position: relative; height: 4px; background: linear-gradient(90deg, var(--navy-light) 0%, var(--accent-gold) 50%, var(--accent-red) 100%); border-radius: 2px; margin: 60px 16px 80px; }
-.tl-node { position: absolute; top: -40px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; min-width: 70px; }
+.tl-node { position: absolute; top: -40px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; min-width: 70px; cursor: pointer; }
 .tl-node .tl-dot { width: 16px; height: 16px; border-radius: 50%; background: white; border: 3px solid var(--navy); margin-top: 32px; transition: all 0.2s; }
 .tl-node.fixed .tl-dot { background: var(--navy); }
+.tl-node:hover .tl-dot { transform: scale(1.2); box-shadow: 0 0 0 4px rgba(201,169,97,0.25); }
+.tl-node.selected .tl-dot { box-shadow: 0 0 0 6px rgba(200,16,46,0.25); border-color: var(--accent-red); }
 .tl-node.blank { cursor: pointer; }
 .tl-node.blank .tl-dot { background: var(--accent-gold); border-color: var(--accent-red); animation: tlPulse 1.6s ease-in-out infinite; }
 @keyframes tlPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(200,16,46,0.4); } 50% { box-shadow: 0 0 0 8px rgba(200,16,46,0); } }
@@ -128,6 +130,12 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
 .tl-node.blank.reveal .tl-label { color: var(--navy-darkest); font-style: normal; }
 .tl-pool { margin-top: 48px; padding: 14px 18px; background: white; border: 1px dashed var(--navy-pale); border-radius: 6px; font-size: 13px; color: var(--text-sub); line-height: 1.85; }
 .tl-pool .sp-label { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.15em; color: var(--accent-red); font-weight: 700; margin-right: 8px; }
+.tl-info-panel { margin-top: 14px; padding: 16px 20px; background: var(--navy-bg); border-left: 4px solid var(--accent-gold); border-radius: 0 4px 4px 0; min-height: 80px; font-size: 14px; line-height: 1.8; color: var(--text-main); font-weight: 500; }
+.tl-info-panel .ti-term { font-family: '游教科書体 横', serif; font-weight: 900; color: var(--navy-darkest); font-size: 17px; margin-right: 10px; }
+.tl-info-panel .ti-period { font-family: 'JetBrains Mono', monospace; color: var(--accent-red); font-size: 11px; letter-spacing: 0.08em; padding: 2px 8px; border: 1px solid var(--accent-red); border-radius: 3px; }
+.tl-info-panel .ti-desc { display: block; margin-top: 8px; }
+.tl-info-panel .ti-ex { display: block; margin-top: 8px; padding: 8px 12px; background: white; border-left: 3px solid var(--navy); border-radius: 0 4px 4px 0; font-size: 13px; color: var(--text-sub); }
+.tl-info-panel .ti-ex strong { color: var(--navy-darkest); font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.1em; margin-right: 6px; }
 @media (max-width: 1100px) { .timeline-line { margin: 60px 8px 100px; } .tl-node .tl-label { font-size: 10.5px; max-width: 80px; white-space: normal; } }
 
 /* mail diagram (To/CC/BCC) */
@@ -680,35 +688,36 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
   <p class="slide-subtitle">年表上の <span style="color:var(--accent-red);font-weight:700;">⑴〜⑸</span> の空所をタップで答え合わせ。<strong>日本での</strong>サービス開始・普及順で、古い順 (左) → 新しい順 (右)。</p>
   <div class="timeline-wrap">
     <div class="timeline-line">
-      <div class="tl-node blank" style="left: 5%;" data-ans="ウ. 電話サービス開始" onclick="revealTl(this)">
+      <div class="tl-node blank" data-key="phone" style="left: 5%;" data-ans="ウ. 電話サービス開始" onclick="revealTl(this,'phone')">
         <span class="tl-blank-mark">⑴</span><div class="tl-dot"></div><div class="tl-label">クリックで答え</div>
       </div>
-      <div class="tl-node fixed" style="left: 17%;">
+      <div class="tl-node fixed" data-key="radio" style="left: 17%;" onclick="revealTl(this,'radio')">
         <span class="tl-blank-mark">イ</span><div class="tl-dot"></div><div class="tl-label">ラジオ放送開始</div>
       </div>
-      <div class="tl-node fixed" style="left: 29%;">
+      <div class="tl-node fixed" data-key="tv" style="left: 29%;" onclick="revealTl(this,'tv')">
         <span class="tl-blank-mark">ア</span><div class="tl-dot"></div><div class="tl-label">テレビ放送開始</div>
       </div>
-      <div class="tl-node blank" style="left: 41%;" data-ans="ケ. ISP の登場" onclick="revealTl(this)">
+      <div class="tl-node blank" data-key="isp" style="left: 41%;" data-ans="ケ. ISP の登場" onclick="revealTl(this,'isp')">
         <span class="tl-blank-mark">⑵</span><div class="tl-dot"></div><div class="tl-label">クリックで答え</div>
       </div>
-      <div class="tl-node blank" style="left: 53%;" data-ans="エ. 携帯電話の登場" onclick="revealTl(this)">
+      <div class="tl-node blank" data-key="mobile" style="left: 53%;" data-ans="エ. 携帯電話の登場" onclick="revealTl(this,'mobile')">
         <span class="tl-blank-mark">⑶</span><div class="tl-dot"></div><div class="tl-label">クリックで答え</div>
       </div>
-      <div class="tl-node fixed" style="left: 65%;">
+      <div class="tl-node fixed" data-key="search" style="left: 65%;" onclick="revealTl(this,'search')">
         <span class="tl-blank-mark">ク</span><div class="tl-dot"></div><div class="tl-label">検索サイトの登場</div>
       </div>
-      <div class="tl-node blank" style="left: 77%;" data-ans="カ. SNS サービス開始" onclick="revealTl(this)">
+      <div class="tl-node blank" data-key="sns" style="left: 77%;" data-ans="カ. SNS サービス開始" onclick="revealTl(this,'sns')">
         <span class="tl-blank-mark">⑷</span><div class="tl-dot"></div><div class="tl-label">クリックで答え</div>
       </div>
-      <div class="tl-node blank" style="left: 89%;" data-ans="オ. スマートフォンの登場" onclick="revealTl(this)">
+      <div class="tl-node blank" data-key="smartphone" style="left: 89%;" data-ans="オ. スマートフォンの登場" onclick="revealTl(this,'smartphone')">
         <span class="tl-blank-mark">⑸</span><div class="tl-dot"></div><div class="tl-label">クリックで答え</div>
       </div>
-      <div class="tl-node fixed" style="left: 100%;">
+      <div class="tl-node fixed" data-key="cloud" style="left: 100%;" onclick="revealTl(this,'cloud')">
         <span class="tl-blank-mark">キ</span><div class="tl-dot"></div><div class="tl-label">クラウドサービスの登場</div>
       </div>
     </div>
     <div class="tl-pool"><span class="sp-label">語群</span> ア. テレビ放送開始 / イ. ラジオ放送開始 / ウ. 電話サービス開始 / エ. 携帯電話の登場 / オ. スマートフォンの登場 / カ. SNS サービス開始 / キ. クラウドサービスの登場 / ク. 検索サイトの登場 / ケ. インターネットサービスプロバイダ(ISP)の登場</div>
+    <div class="tl-info-panel" id="tlInfo"><span style="color:var(--text-sub);font-style:italic;">▲ 各ノード(固定 / 空所どちらも)をタップすると、その通信サービスの背景・時代・具体例が表示されます。空所(⑴〜⑸)をタップすると答えも合わせて表示されます。</span></div>
   </div>
 </div>
 
@@ -1174,13 +1183,45 @@ function selectFormCell(cell, key) {
 }
 
 // timeline
-function revealTl(node) {
-  if (node.classList.contains('reveal')) {
-    node.classList.remove('reveal');
-    node.querySelector('.tl-label').textContent = 'クリックで答え';
-  } else {
+const tlData = {
+  phone:      { term: 'ウ. 電話サービス開始',  period: '日本: 1890 年(明治 23 年)', desc: '東京-横浜間で電話交換業務が開始。1 対 1 の音声通話による「個別型・間接型・同期型」コミュニケーションが、距離の制約を超えて初めて可能になりました。', ex: '当初は手動交換手が中継。現在の固定電話・スマートフォンによる通話の起源です。' },
+  radio:      { term: 'イ. ラジオ放送開始',     period: '日本: 1925 年(大正 14 年)', desc: 'JOAK(現 NHK 東京)が東京・芝浦から本放送開始。1 人 → 多数へ音声で同時発信する「マスコミ型」の最初の電子メディアです。', ex: '戦時中は政府発表の主要経路に。スポーツ実況や音楽番組も、活字メディアでは伝えきれない臨場感を全国へ届けました。' },
+  tv:         { term: 'ア. テレビ放送開始',     period: '日本: 1953 年(昭和 28 年)', desc: 'NHK が本放送開始。映像 + 音声で「マスコミ型・間接型・同期型」コミュニケーションを実現。練習 3 ⑴「全国で同じ映像を見られる = 伝播性の向上」の出発点です。', ex: '1959 年のミッチー・ブームから 1964 年東京五輪まで、社会現象を国民的体験に変える媒体となりました。' },
+  isp:        { term: 'ケ. ISP(インターネットサービスプロバイダ)の登場', period: '日本: 1992 年〜(IIJ など商用 ISP の事業開始)', desc: '個人や企業を電話線などでインターネットに接続する事業者。これにより、研究機関の専有物だったインターネットが「誰でも使えるインフラ」になりました。', ex: 'ダイヤルアップ → ADSL → 光ファイバ → モバイル(LTE/5G)とアクセス手段が進化、ISP 事業者の主役も変わってきました。' },
+  mobile:     { term: 'エ. 携帯電話の登場',     period: '日本: 1979 年自動車電話 → 1987 年携帯電話(ショルダーフォン)→ 1990 年代後半に普及', desc: '電話を「家や会社に固定された機器」から「個人が持ち歩く機器」へ変えました。場所の制約から解放された個別型・同期型コミュニケーションが日常になります。', ex: 'i-mode(1999)で携帯からメール・Web 接続が可能に。日本独自の「ガラケー」文化が形成されましたが、後にスマートフォンに置き換わります。' },
+  search:     { term: 'ク. 検索サイトの登場',  period: '日本: 1996 年 Yahoo! JAPAN、1998 年 Google 設立(日本語版は 2000 年)', desc: '膨大な Web ページの中から目的の情報を「キーワード」で探せるサービス。情報量(⑧)の爆発に対する受け手側の対処手段で、メディア・リテラシーの一部です。', ex: '「ググる」が動詞化するほど一般化。後に AI による要約検索(Perplexity、ChatGPT 検索 等)へと発展しています。' },
+  sns:        { term: 'カ. SNS サービス開始', period: '日本: 2004 年 mixi、2008 年 Twitter / Facebook の日本上陸', desc: '個人が「マスコミ型・間接型・非同期型」の発信者になれる仕組み。SLIDE 11 能登地震 case で扱った「個人発信が広範に到達」現象を社会化しました。', ex: 'mixi → Twitter(現 X) → Instagram → TikTok と主役が変わりながらも、「誰でも世界に発信できる」基本構造は不変です。' },
+  smartphone: { term: 'オ. スマートフォンの登場', period: '日本: 2008 年 iPhone 3G 発売(ソフトバンク)', desc: '電話・カメラ・Web ブラウザ・GPS・センサを 1 台に統合(⑦ 利便性の典型例)。ガラケー時代の独自文化を一気に塗り替え、アプリ経済を立ち上げました。', ex: 'LINE(2011 リリース)、Uber、メルカリ等、スマホを前提とするサービスが社会インフラ化しました。' },
+  cloud:      { term: 'キ. クラウドサービスの登場', period: '世界: 2006 年 Amazon AWS、2008 年 Google App Engine / 日本企業の本格移行は 2010 年代', desc: '計算資源・ストレージ・アプリを「自社で持たず、必要な分だけ借りる」モデル。⑧ 情報量の爆発を支えるインフラで、ビッグデータと生成 AI 時代の基盤です。', ex: 'AWS、Google Cloud、Microsoft Azure の三大クラウドが世界の Web サービスを支えています。' }
+};
+function revealTl(node, key) {
+  const isBlank = node.classList.contains('blank');
+  // 同じノード再タップ -> 初期化
+  if (node.classList.contains('selected')) {
+    node.classList.remove('selected');
+    if (isBlank) {
+      node.classList.remove('reveal');
+      node.querySelector('.tl-label').textContent = 'クリックで答え';
+    }
+    const info0 = document.getElementById('tlInfo');
+    if (info0) info0.innerHTML = '<span style="color:var(--text-sub);font-style:italic;">▲ 各ノード(固定 / 空所どちらも)をタップすると、その通信サービスの背景・時代・具体例が表示されます。空所(⑴〜⑸)をタップすると答えも合わせて表示されます。</span>';
+    haptic(8);
+    return;
+  }
+  // 別ノードタップ -> 全初期化してから自分を反映
+  document.querySelectorAll('.tl-node.selected').forEach(n => n.classList.remove('selected'));
+  document.querySelectorAll('.tl-node.blank.reveal').forEach(n => {
+    n.classList.remove('reveal');
+    n.querySelector('.tl-label').textContent = 'クリックで答え';
+  });
+  node.classList.add('selected');
+  if (isBlank) {
     node.classList.add('reveal');
     node.querySelector('.tl-label').textContent = node.dataset.ans;
+  }
+  const d = tlData[key];
+  if (d) {
+    document.getElementById('tlInfo').innerHTML = '<span class="ti-term">' + d.term + '</span><span class="ti-period">' + d.period + '</span><span class="ti-desc">' + d.desc + '</span><span class="ti-ex"><strong>具体例</strong>' + d.ex + '</span>';
   }
   haptic(8);
 }
@@ -1305,6 +1346,9 @@ function resetAllInteractions() {
     n.classList.remove('reveal');
     n.querySelector('.tl-label').textContent = 'クリックで答え';
   });
+  document.querySelectorAll('.tl-node.selected').forEach(n => n.classList.remove('selected'));
+  const tlInfo = document.getElementById('tlInfo');
+  if (tlInfo) tlInfo.innerHTML = '<span style="color:var(--text-sub);font-style:italic;">▲ 各ノード(固定 / 空所どちらも)をタップすると、その通信サービスの背景・時代・具体例が表示されます。空所(⑴〜⑸)をタップすると答えも合わせて表示されます。</span>';
   document.querySelectorAll('.mf-value.reveal').forEach(v => { v.classList.remove('reveal'); v.textContent = 'クリック'; });
   document.querySelectorAll('.shannon-step.selected').forEach(s => s.classList.remove('selected'));
   const shannonInfo = document.getElementById('shannonInfo');
