@@ -171,6 +171,28 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
 .answer-row:hover .ar-icon { background: rgba(201,169,97,0.30); }
 .answer-row.revealed .ar-icon { background: rgba(30,130,76,0.18); color: var(--ok-green); }
 
+/* /visual: agenda 4 ブロックに小アイコン */
+.agenda-item .ai-icon { width: 28px; height: 28px; flex-shrink: 0; color: var(--accent-red); margin-top: 2px; }
+.agenda-item.appendix .ai-icon { color: var(--accent-gold); }
+
+/* /visual: 練習用 hero */
+.practice-hero { display: flex; align-items: center; gap: 18px; max-width: 880px; margin: 0 auto 18px; padding: 16px 22px; background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy) 100%); border-radius: 12px; color: white; box-shadow: 0 6px 20px rgba(15,40,71,0.22); position: relative; overflow: hidden; }
+.practice-hero::before { content: ''; position: absolute; top: -20px; right: -20px; width: 140px; height: 140px; background: radial-gradient(circle at 30% 30%, rgba(201,169,97,0.15) 0%, transparent 60%); pointer-events: none; }
+.practice-hero svg.ph-svg { width: 72px; height: 72px; flex-shrink: 0; color: var(--accent-gold); position: relative; z-index: 2; }
+.practice-hero .ph-text { flex: 1; position: relative; z-index: 2; }
+.practice-hero .ph-tag { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--accent-gold); letter-spacing: 0.2em; font-weight: 700; margin-bottom: 4px; }
+.practice-hero .ph-title { font-family: '游教科書体 横', serif; font-weight: 900; font-size: 18px; margin-bottom: 4px; line-height: 1.3; }
+.practice-hero .ph-sub { font-size: 12.5px; color: rgba(255,255,255,0.85); line-height: 1.55; }
+@media (max-width: 720px) {
+  .practice-hero { flex-direction: column; text-align: center; padding: 14px; }
+  .practice-hero svg.ph-svg { width: 52px; height: 52px; }
+}
+
+/* /visual: SLIDE 1 / 19 / 20 decoration */
+.title-deco { position: absolute; bottom: 8vh; left: 10vw; width: 60px; height: 60px; opacity: 0.4; color: var(--accent-gold); z-index: 3; pointer-events: none; }
+.end-deco { width: 88px; height: 88px; margin: 0 auto 18px; display: block; color: var(--accent-gold); }
+.review-hero-icon { width: 56px; height: 56px; margin: 0 auto 10px; display: block; color: var(--accent-red); }
+
 .icon-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 18px; }
 .icon-cards.cols-3 { grid-template-columns: repeat(3, 1fr); }
 .icon-cards.cols-2 { grid-template-columns: repeat(2, 1fr); }
@@ -512,6 +534,7 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
 
 <!-- SLIDE 1: TITLE -->
 <div class="slide title-slide active" data-title="タイトル">
+  <svg class="title-deco" viewBox="0 0 256 256"><path d="M32.5,138A72,72,0,1,1,62,167.5l-27.76,8.16a8,8,0,0,1-9.93-9.93Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M163.94,80.11A72,72,0,0,1,223.5,186l8.16,27.76a8,8,0,0,1-9.93,9.93L194,215.5A72.05,72.05,0,0,1,92.06,175.89" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
   <div class="title-label">CHAPTER · 08 / COMMUNICATION & MEDIA</div>
   <h1 class="title-main">コミュニケーション<br>とメディア</h1>
   <p class="title-sub">― 相互理解という営みは、メディアの変遷とともにどう変わってきたか ―</p>
@@ -530,18 +553,22 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
   <div class="agenda-grid">
     <div class="agenda-item">
       <div class="agenda-num">1</div>
+      <svg class="ai-icon" viewBox="0 0 256 256"><path d="M32.5,138A72,72,0,1,1,62,167.5l-27.76,8.16a8,8,0,0,1-9.93-9.93Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M163.94,80.11A72,72,0,0,1,223.5,186l8.16,27.76a8,8,0,0,1-9.93,9.93L194,215.5A72.05,72.05,0,0,1,92.06,175.89" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
       <div class="agenda-content"><span class="a-tag">SECTION 01</span><h3>コミュニケーションとは</h3><p>「相互理解ができている状態」という定義の核心。物理的な通信や伝達との違い。</p></div>
     </div>
     <div class="agenda-item">
       <div class="agenda-num">2</div>
+      <svg class="ai-icon" viewBox="0 0 256 256"><rect x="48" y="48" width="64" height="64" rx="8" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="16"/><rect x="144" y="48" width="64" height="64" rx="8" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="16"/><rect x="48" y="144" width="64" height="64" rx="8" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="16"/><rect x="144" y="144" width="64" height="64" rx="8" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="16"/></svg>
       <div class="agenda-content"><span class="a-tag">SECTION 02</span><h3>形態の分類</h3><p>人数(個別 / マスコミ / 逆マスコミ / 会議)、位置関係(直接 / 間接)、同期性(同期 / 非同期)の 3 軸。</p></div>
     </div>
     <div class="agenda-item">
       <div class="agenda-num">3</div>
+      <svg class="ai-icon" viewBox="0 0 256 256"><circle cx="128" cy="128" r="96" fill="none" stroke="currentColor" stroke-width="16"/><path d="M168,128c0,64-40,96-40,96s-40-32-40-96,40-96,40-96S168,64,168,128Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="37.46" y1="96" x2="218.54" y2="96" stroke="currentColor" stroke-linecap="round" stroke-width="16"/><line x1="37.46" y1="160" x2="218.54" y2="160" stroke="currentColor" stroke-linecap="round" stroke-width="16"/></svg>
       <div class="agenda-content"><span class="a-tag">SECTION 03</span><h3>変遷と社会への影響</h3><p>伝播性・即時性・利便性・情報量の 4 つの方向にメディアは進化してきた。</p></div>
     </div>
     <div class="agenda-item appendix">
       <div class="agenda-num">+</div>
+      <svg class="ai-icon" viewBox="0 0 256 256"><polygon points="160 16 144 96 208 120 96 240 112 160 48 136 160 16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
       <div class="agenda-content"><span class="a-tag" style="color:var(--accent-gold);">APPENDIX</span><h3>深掘り + 最新事例</h3><p>シャノン=ウィーバーモデル / メディア・リテラシー 4 観点 / テレワーク・能登地震 SNS・生成 AI の現代事例。</p></div>
     </div>
   </div>
@@ -583,6 +610,14 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
   <div class="eyebrow">PRACTICE 1 / 学習ノート p.18</div>
   <h2 class="slide-title">「相互理解」までの 5 段階</h2>
   <p class="slide-subtitle">空欄をタップして、コミュニケーションが成立する条件を順に確認します。物理的な伝達 → 相互理解までの階段です。</p>
+  <div class="practice-hero">
+    <svg class="ph-svg" viewBox="0 0 256 256"><polyline points="200 152 160 192 96 176 40 136" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="72.68 70.63 128 56 183.32 70.63" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M34.37,60.42,8.85,111.48a8,8,0,0,0,3.57,10.73L40,136,72.68,70.63,45.11,56.85A8,8,0,0,0,34.37,60.42Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M216,136l27.58-13.79a8,8,0,0,0,3.57-10.73L221.63,60.42a8,8,0,0,0-10.74-3.57L183.32,70.63Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
+    <div class="ph-text">
+      <div class="ph-tag">PRACTICE 1 / KEY CONCEPT</div>
+      <div class="ph-title">「届いた」と「理解された」は違う</div>
+      <div class="ph-sub">情報が物理的に届くだけでは足りず、意味が共有されるまで段階を踏む必要があります。下の階段で 4 段階を順に追いましょう。</div>
+    </div>
+  </div>
   <div style="background:var(--navy-bg);padding:22px 26px;border-radius:6px;border-left:4px solid var(--navy);font-size:15.5px;line-height:2.15;color:var(--text-main);font-weight:500;max-width:880px;margin:0 auto;">
     私たちは、日頃、同級生や家族と直接話をしたり、SNS やメッセージアプリなどを利用したりして、<span class="note-blank" data-answer="コミュニケーション">①</span> をはかっている。<br>
     <span style="color:var(--accent-red);font-weight:700;">①</span> が成立している状態とは、単に物理的な <span class="note-blank" data-answer="通信">②</span> や情報の <span class="note-blank" data-answer="伝達">③</span> ができるだけでなく、情報の <span class="note-blank" data-answer="共有">④</span> を通して、発信者と受信者の間で <span class="note-blank" data-answer="相互理解">⑤</span> ができていることを意味する。
@@ -799,14 +834,14 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
   <h2 class="slide-title">8 つの事柄が社会に与えた影響</h2>
   <p class="slide-subtitle">それぞれの事柄が、5 つの性質(ア〜オ)のどれを高めたかを答えます。「クリック」で正解。</p>
   <div class="answers-grid">
-    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑴</span><span class="answer-text">テレビ放送の開始により、全国で同じ映像が見られるようになった</span><span class="answer-reveal" data-ans="イ. 伝播性">クリック</span></div>
-    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑵</span><span class="answer-text">お店からのお知らせが、郵便はがきから電子メールへ移行した</span><span class="answer-reveal" data-ans="ア. 即時性">クリック</span></div>
-    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑶</span><span class="answer-text">文字に加えて、画像や動画による情報発信が増加した</span><span class="answer-reveal" data-ans="エ. 情報量">クリック</span></div>
-    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑷</span><span class="answer-text">テレビ会議システムの登場により、テレワークが普及した</span><span class="answer-reveal" data-ans="オ. 双方向性">クリック</span></div>
-    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑸</span><span class="answer-text">情報端末が小型化して、持ち運びが容易になった</span><span class="answer-reveal" data-ans="ウ. 利便性">クリック</span></div>
-    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑹</span><span class="answer-text">SNS などの普及によって、情報を隠すことが難しくなった</span><span class="answer-reveal" data-ans="イ. 伝播性">クリック</span></div>
-    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑺</span><span class="answer-text">さまざまな場面で活用するためにビッグデータが蓄積されてきた</span><span class="answer-reveal" data-ans="エ. 情報量">クリック</span></div>
-    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑻</span><span class="answer-text">カメラ付き携帯電話の登場以降、デバイスの多機能化が進んだ</span><span class="answer-reveal" data-ans="ウ. 利便性">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><svg class="ar-icon" viewBox="0 0 256 256"><circle cx="128" cy="128" r="32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M181.67,80a71.94,71.94,0,0,1,0,96" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M74.33,176a71.94,71.94,0,0,1,0-96" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M208,49.62a111.88,111.88,0,0,1,0,156.76" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M48,206.38A111.88,111.88,0,0,1,48,49.62" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg><span class="answer-num">⑴</span><span class="answer-text">テレビ放送の開始により、全国で同じ映像が見られるようになった</span><span class="answer-reveal" data-ans="イ. 伝播性">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><svg class="ar-icon" viewBox="0 0 256 256"><path d="M32,56H224a0,0,0,0,1,0,0V192a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V56A0,0,0,0,1,32,56Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="224 56 128 144 32 56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg><span class="answer-num">⑵</span><span class="answer-text">お店からのお知らせが、郵便はがきから電子メールへ移行した</span><span class="answer-reveal" data-ans="ア. 即時性">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><svg class="ar-icon" viewBox="0 0 256 256"><rect x="24" y="64" width="176" height="128" rx="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="200 112 248 80 248 176 200 144" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg><span class="answer-num">⑶</span><span class="answer-text">文字に加えて、画像や動画による情報発信が増加した</span><span class="answer-reveal" data-ans="エ. 情報量">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><svg class="ar-icon" viewBox="0 0 256 256"><path d="M32.5,138A72,72,0,1,1,62,167.5l-27.76,8.16a8,8,0,0,1-9.93-9.93Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M163.94,80.11A72,72,0,0,1,223.5,186l8.16,27.76a8,8,0,0,1-9.93,9.93L194,215.5A72.05,72.05,0,0,1,92.06,175.89" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg><span class="answer-num">⑷</span><span class="answer-text">テレビ会議システムの登場により、テレワークが普及した</span><span class="answer-reveal" data-ans="オ. 双方向性">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><svg class="ar-icon" viewBox="0 0 256 256"><rect x="24" y="64" width="208" height="128" rx="16" transform="translate(256) rotate(90)" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><circle cx="128" cy="60" r="12" fill="currentColor"/></svg><span class="answer-num">⑸</span><span class="answer-text">情報端末が小型化して、持ち運びが容易になった</span><span class="answer-reveal" data-ans="ウ. 利便性">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><svg class="ar-icon" viewBox="0 0 256 256"><path d="M128,56C48,56,16,128,16,128s32,72,112,72,112-72,112-72S208,56,128,56Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><circle cx="128" cy="128" r="40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg><span class="answer-num">⑹</span><span class="answer-text">SNS などの普及によって、情報を隠すことが難しくなった</span><span class="answer-reveal" data-ans="イ. 伝播性">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><svg class="ar-icon" viewBox="0 0 256 256"><ellipse cx="128" cy="80" rx="88" ry="48" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M40,80v48c0,26.51,39.4,48,88,48s88-21.49,88-48V80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M40,128v48c0,26.51,39.4,48,88,48s88-21.49,88-48V128" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg><span class="answer-num">⑺</span><span class="answer-text">さまざまな場面で活用するためにビッグデータが蓄積されてきた</span><span class="answer-reveal" data-ans="エ. 情報量">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><svg class="ar-icon" viewBox="0 0 256 256"><path d="M208,208H48a16,16,0,0,1-16-16V80A16,16,0,0,1,48,64H80L96,40h64l16,24h32a16,16,0,0,1,16,16V192A16,16,0,0,1,208,208Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><circle cx="128" cy="132" r="36" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg><span class="answer-num">⑻</span><span class="answer-text">カメラ付き携帯電話の登場以降、デバイスの多機能化が進んだ</span><span class="answer-reveal" data-ans="ウ. 利便性">クリック</span></div>
   </div>
   <div class="select-pool" style="max-width:880px;margin:14px auto 0;">
     <span class="sp-label">語群</span> ア. 情報の即時性の向上 / イ. 情報の伝播性の向上 / ウ. 情報機器の利便性の向上 / エ. 流通する情報量の増加 / オ. コミュニケーションの双方向性の向上
@@ -818,6 +853,14 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
   <div class="eyebrow">PRACTICE 4 / 学習ノート p.19</div>
   <h2 class="slide-title">日本における通信サービス 9 つを古い順に並べる</h2>
   <p class="slide-subtitle">年表上の <span style="color:var(--accent-red);font-weight:700;">⑴〜⑸</span> の空所をタップで答え合わせ。<strong>日本での</strong>サービス開始・普及順で、古い順 (左) → 新しい順 (右)。</p>
+  <div class="practice-hero">
+    <svg class="ph-svg" viewBox="0 0 256 256"><polyline points="128 80 128 128 168 152" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="184 104 224 104 224 64" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M188.4,192a88,88,0,1,1,1.83-126.23C202,77.69,211.72,88.93,224,104" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
+    <div class="ph-text">
+      <div class="ph-tag">PRACTICE 4 / TIMELINE</div>
+      <div class="ph-title">電話 → ラジオ → テレビ → … → クラウドへ</div>
+      <div class="ph-sub">130 年の通信サービス進歩を、9 つのマイルストーンで俯瞰します。各ノードをタップして時代背景・具体例も見てください。</div>
+    </div>
+  </div>
   <div class="timeline-wrap">
     <div class="timeline-line">
       <div class="tl-node blank" data-key="phone" style="left: 5%;" data-ans="ウ. 電話サービス開始" onclick="revealTl(this,'phone')">
@@ -1122,6 +1165,7 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
 <!-- SLIDE 16: 復習チャレンジ -->
 <div class="slide" data-title="復習チャレンジ 10 問">
   <div class="eyebrow">REVIEW CHALLENGE / ランダム 10 問</div>
+  <svg class="review-hero-icon" viewBox="0 0 256 256"><line x1="128" y1="128" x2="224" y2="32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M195.88,60.12a95.88,95.88,0,1,0,18.77,26.49" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M161.94,94.06a48,48,0,1,0,14,31.2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
   <h2 class="slide-title">理解度チェック</h2>
   <p class="slide-subtitle">学習ノートと本サイトの内容から 10 問を出題。即時採点で自分の理解度を可視化します。</p>
   <div class="review-container">
@@ -1148,6 +1192,7 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
 <!-- SLIDE 17: END CARD -->
 <div class="slide title-slide" data-title="完了">
   <div class="title-label">END OF CHAPTER · 08</div>
+  <svg class="end-deco" viewBox="0 0 256 256"><line x1="96" y1="224" x2="160" y2="224" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="128" y1="184" x2="128" y2="224" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M58,128H48A32,32,0,0,1,16,96V80a8,8,0,0,1,8-8H56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M198,128h10a32,32,0,0,0,32-32V80a8,8,0,0,0-8-8H200" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M56,48H200v63.1c0,39.7-31.75,72.6-71.45,72.9A72,72,0,0,1,56,112Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
   <h1 class="title-main" style="font-size: clamp(40px, 6vw, 80px);">お疲れさま<br>でした</h1>
   <p class="title-sub">コミュニケーションは、メディアという「中間」を通じて成り立つ「相互理解」。</p>
   <div class="title-meta">
