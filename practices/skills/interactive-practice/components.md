@@ -768,11 +768,107 @@ grep -c 'isInsideHorizontalScroll\|function haptic\|function animateCounter\|SPO
 ## 7. 編集の最小手順(チートシート)
 
 1. `examples/01-01-information-and-media.html` を `articles/{{番号}}-{{slug}}/index.html` にコピー
-2. `<title>` と Welcome stage のメタ情報を更新
-3. **おさらいセクションの6モジュール**: 新単元のテーマに合わせて Q&A を書き直し、ビジュアルもテーマに沿ったものに差し替える
-4. **例題ステージ**: 問題数に合わせて追加/削除、内容差し替え。各例題に「補足」+ viz を追加
-5. **練習ステージ**: 問題数・問題タイプに合わせて追加/削除、内容差し替え。各練習に viz を追加
-6. **JS の TIMELINE_ENTRIES と PROBLEMS** を新しい問題群に合わせて更新
-7. **サマリの分母**(2箇所)を新しい練習問題数に更新
-8. `practices/index.html` の単元一覧にカードを追加
-9. 動作確認 → コミット → `examples/{{番号}}-{{slug}}.html` に凍結コピー
+2. **原本 docx に図があれば**: 画像を `articles/{{番号}}-{{slug}}/assets/` に抽出(§8 参照、`practices/CLAUDE.md` §6 [1.5])
+3. `<title>` と Welcome stage のメタ情報を更新
+4. **おさらいセクションの6モジュール**: 新単元のテーマに合わせて Q&A を書き直し、ビジュアルもテーマに沿ったものに差し替える
+5. **例題ステージ**: 問題数に合わせて追加/削除、内容差し替え。各例題に「補足」+ viz を追加。**原本に図があれば §8 の figure コンポーネントを使う**
+6. **練習ステージ**: 問題数・問題タイプに合わせて追加/削除、内容差し替え。各練習に viz を追加。**原本に図があれば §8 の figure コンポーネントを使う**
+7. **JS の TIMELINE_ENTRIES と PROBLEMS** を新しい問題群に合わせて更新
+8. **サマリの分母**(2箇所)を新しい練習問題数に更新
+9. `practices/index.html` の単元一覧にカードを追加
+10. 動作確認 → コミット → `examples/{{番号}}-{{slug}}.html` に凍結コピー(assets/ は articles/ 側に残す)
+
+---
+
+## 8. 原本図画像 (figure / assets/) ★必須
+
+原本 docx に図 / 写真 / イラストが含まれる場合、テキスト placeholder ではなく**実画像を抽出して掲載**する。詳細は `practices/CLAUDE.md` §4.10b と `SKILL.md` §13。
+
+### 8.1 画像抽出(コピペ用 bash)
+
+```bash
+SLUG="{{番号}}-{{slug}}"
+SRC_DOCX="_source/ベストフィット問題/{{file}}.docx"
+
+# unzip して画像確認
+unzip -q "${SRC_DOCX}" -d "/tmp/extract-${SLUG}"
+ls "/tmp/extract-${SLUG}/word/media/"
+
+# assets フォルダ作成 + リネームコピー(画像を Read で目視確認 → 適切な fig 番号と description で)
+mkdir -p "articles/${SLUG}/assets/"
+cp "/tmp/extract-${SLUG}/word/media/image1.jpeg" "articles/${SLUG}/assets/fig1-{{description}}.jpeg"
+cp "/tmp/extract-${SLUG}/word/media/image2.jpeg" "articles/${SLUG}/assets/fig2-{{description}}.jpeg"
+```
+
+### 8.2 figure コンポーネント — 会話文中(blockquote 内)
+
+例題で先輩・後輩の会話に「画面(図 1)何ですか?」のような文脈がある場合:
+
+```html
+<blockquote style="margin: 0.6rem 0 1.1rem; padding: 0.95rem 1.1rem; background: var(--bg-soft); border-left: 4px solid var(--action-pale2); border-radius: 0 8px 8px 0; font-family: var(--f-jp-display); font-size: 0.95rem; line-height: 1.95; color: var(--ink);">
+  <strong>後輩:</strong> その画面(図1)何ですか?<br>
+  <strong>先輩:</strong> ああ、これは {{文章}}。<br>
+  <figure style="margin: 0.7rem 0 0.7rem 0.5rem; padding: 0.7rem 0.9rem; background: var(--bg-card); border: 1px solid var(--line); border-radius: 6px; display: inline-block; max-width: 320px;">
+    <img src="assets/fig1-{{description}}.jpeg"
+         alt="図1: {{原本キャプション}}"
+         style="display: block; width: 100%; height: auto; max-width: 280px;">
+    <figcaption style="margin-top: 0.4rem; font-family: var(--f-mono); font-size: 0.74rem; color: var(--ink-mute); text-align: center;">図 1: {{キャプション}}</figcaption>
+  </figure><br>
+  …会話の続き…
+</blockquote>
+```
+
+### 8.3 figure コンポーネント — 問題文中(numfill-fields 内)
+
+練習問題の小問内で「図 1 のように〜」のような文脈がある場合:
+
+```html
+<div class="numfill-row" data-sub="{{N}}">
+  <span class="numfill-sub-label">⑵</span>
+  <div class="numfill-fields">
+    <span class="numfill-prefix">…ディスプレイの一部が <strong>図 1 のように破損</strong>してしまい…</span>
+    <span class="numfill-slot">…input…</span>
+    <span class="numfill-unit">% 損失したことになる。</span>
+    <figure style="margin: 0.6rem 0 0.2rem; padding: 0.7rem 0.9rem; background: var(--bg-card); border: 1px solid var(--line); border-radius: 6px; display: inline-block; max-width: 220px;">
+      <img src="assets/fig1-{{description}}.jpeg"
+           alt="図1: {{原本キャプション}}"
+           style="display: block; width: 100%; height: auto; max-width: 180px; margin: 0 auto;">
+      <figcaption style="margin-top: 0.4rem; font-family: var(--f-mono); font-size: 0.72rem; color: var(--ink-mute); text-align: center; line-height: 1.5;">図 1: {{キャプション}}<br>(補足が必要な場合は2行目)</figcaption>
+    </figure>
+  </div>
+</div>
+```
+
+### 8.4 figure コンポーネント — 問題文 lead 内(独立した図 1 ボックス)
+
+問題文の冒頭 lead 直後に図を独立ブロックとして示す場合(原本でも図が問題文と並列に置かれている場合に向く):
+
+```html
+<p class="problem-q lead">{{問題文}}</p>
+<figure style="margin: 0.8rem auto; padding: 0.8rem 1rem; background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; display: block; max-width: 360px; text-align: center;">
+  <img src="assets/fig{{N}}-{{description}}.{{ext}}"
+       alt="図{{N}}: {{原本キャプション}}"
+       style="display: block; width: 100%; height: auto; max-width: 320px; margin: 0 auto;">
+  <figcaption style="margin-top: 0.5rem; font-family: var(--f-mono); font-size: 0.74rem; color: var(--ink-mute);">図 {{N}}: {{キャプション}}</figcaption>
+</figure>
+```
+
+### 8.5 max-width のガイドライン
+
+| 図の種類 | figure max-width | img max-width |
+|---|---|---|
+| 単純な図(4 点パターン等) | 280-320px | 240-280px |
+| スマホ画面のスクショ | 200-240px | 160-200px |
+| ワイドな図(タイムライン等) | 480-560px | 440-520px |
+| 解説中のサブ図 | 200px 以下 | 160px 以下 |
+
+スマホ実機でも図が指タップサイズ(160px+)で読めること。
+
+### 8.6 落とし穴
+
+- **画像名 `image1.jpeg` のまま使わない** → 後で何の図か追えなくなる。必ず `fig{N}-{kebab}.{ext}` にリネーム
+- **どの画像が「図 N」か必ず Read で目視確認** → 通常 image1=図1 だが、原本によっては並びが違う
+- **alt と figcaption が原本キャプションと一致するか** → 学習者の検索性 + アクセシビリティ
+- **複数の練習で同じ図を使う場合** → assets には 1 ファイル、HTML から複数箇所で参照(コピーは作らない)
+- **凍結コピー (`examples/`) は assets/ 相対パスが切れる** → これは仕様、ライブ表示は articles/ 経由
+- **gitignore で *.jpeg がブロックされていないか確認** → submodule 含む

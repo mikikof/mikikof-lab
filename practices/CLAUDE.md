@@ -128,6 +128,16 @@ practices/
 
 詳細な色・フォント仕様は `skills/interactive-practice/SKILL.md` の Design Tokens を見ること。
 
+### 4.10b 原本の図は必ず実画像を抽出して掲載する ★必須
+
+- 原本 docx に**図 / 写真 / イラスト**が含まれる場合、**テキスト placeholder で代替してはいけない**
+- 「図 1: パターンによるロック解除の画面」のような注記だけだと、学習者は本文「図 1 を見て」が読み解けない
+- 必ず `unzip docx → word/media/*.{jpeg,png,...}` で原本画像を抽出し、`articles/{slug}/assets/` に配置して `<img>` で掲載する
+- 命名規則: `fig{N}-{kebab-slug}.{ext}`(例: `fig1-pattern-lock.jpeg` / `fig2-passcode-broken.jpeg`)
+- 配置位置: 該当する会話文・問題文の文脈に近い場所(blockquote 内 / numfill-row 内 等)
+- 抽出手順とテンプレートは `skills/interactive-practice/SKILL.md` §13 と `components.md` §8 を参照
+- これを破ると「図 1 を見て」と書いてあるのに図がない教材が出来上がる(過去にこの罠に落ちた)
+
 ### 4.10 スマホ実機の体験を必ず作り込む
 スマホで触ったときに「リッチで気持ちいい」と感じる仕掛けを、**標準装備として必ず搭載**する。例題追加・新規単元・既存修正どれでも、これらを削ってはいけない。
 
@@ -192,6 +202,28 @@ practices/
 - **節ごとの問題範囲を特定**(解答 docx は1章まとめなので、対応問題番号でフィルタする)
 - 例: 1章03 → 問題は類題15〜17 + 練習18〜22
 
+### [1.5] 原本画像の抽出 ★必須(§4.10b)
+
+問題本文に「図 1 を見て」のような図への参照があれば必ず実施:
+
+```bash
+# 1. docx を unzip(/tmp に展開)
+unzip -q "_source/ベストフィット問題/{file}.docx" -d /tmp/extract-{slug}
+
+# 2. 画像一覧を確認(jpeg / png 等)
+ls /tmp/extract-{slug}/word/media/
+
+# 3. articles 側に assets/ を作る
+mkdir -p articles/{番号}-{slug}/assets/
+
+# 4. 各画像をリネームしてコピー(命名: fig{N}-{kebab-description}.{ext})
+cp /tmp/extract-{slug}/word/media/image1.jpeg articles/{番号}-{slug}/assets/fig1-{description}.jpeg
+```
+
+- 原本 docx には通常 `image1.jpeg`, `image2.jpeg` … の連番で画像が格納される
+- どの画像がどの「図 N」に対応するかは、画像を Read(目視)して確認する
+- コピー後は HTML で `<img src="assets/fig1-...">` で参照(figure コンポーネントは `components.md` §8)
+
 ### [2] 構成案の提示と合意
 - カバー範囲、問題数、問題タイプ(single/multi/match/ox/fill/multi_per_sub)を案として出す
 - 例題と練習問題で扱いを分ける(例題=お手本ツアー、練習=採点付き)
@@ -249,6 +281,13 @@ practices/
 - [ ] 練習問題8問すべてに「解説」+ ビジュアルが付いている
 - [ ] 原本に無い解説は独自に補完済み(4.3)
 - [ ] 禁止表現(「やってみよう」「サクッと」「素晴らしい!」等)が残っていない
+
+### 原本図画像(§4.10b)
+- [ ] 原本 docx の全図が `articles/{slug}/assets/` に抽出済み(image1, image2 …)
+- [ ] 「図 N」「図 N のように」等の本文参照すべての箇所で実画像が `<img>` で表示されている
+- [ ] テキスト placeholder(「図 1: …」と書いただけの注記)が残っていない
+- [ ] alt 属性に原本のキャプションが入っている
+- [ ] figcaption が原本「図 N: ...」と一致(または同等)
 
 ### おさらい(REVIEW Digest)
 - [ ] Q&A 形式の6モジュール構成(独立トグル、アコーディオンにしない)

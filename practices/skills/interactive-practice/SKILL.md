@@ -754,7 +754,100 @@ JS が自動で挿入:
 
 ---
 
-## 13. 参照ファイル
+## 13. 原本画像 (figure / assets/) の扱い ★必須
+
+原本 docx に図 / 写真 / イラスト(「図 1」のような参照付き)が含まれる場合、テキスト placeholder で代替してはいけない。`practices/CLAUDE.md` §4.10b の哲学を実装する技術仕様。
+
+### 13.1 docx からの画像抽出
+
+```bash
+# 1. docx を unzip
+unzip -q "_source/ベストフィット問題/{file}.docx" -d /tmp/extract-{slug}
+
+# 2. media フォルダの画像一覧
+ls /tmp/extract-{slug}/word/media/
+# → image1.jpeg, image2.jpeg, image3.png ...
+
+# 3. articles 側に assets/ フォルダ
+mkdir -p articles/{番号}-{slug}/assets/
+
+# 4. リネームしてコピー(命名: fig{N}-{kebab-description}.{ext})
+cp /tmp/extract-{slug}/word/media/image1.jpeg \
+   articles/{番号}-{slug}/assets/fig1-{description}.jpeg
+```
+
+**どの画像が「図 N」か特定する方法**:
+- 画像ファイルを Read ツールで開いて目視確認(jpeg/png は Claude Code が画像表示できる)
+- docx 本文「図 1 は〜」「図 2 のように〜」の説明と画像内容を突合
+- 通常 image1 = 図 1、image2 = 図 2 だが、必ず目視で確認すること
+
+### 13.2 figure コンポーネント(共通テンプレート)
+
+会話文 / 問題文の文脈に近い場所に inline 配置する。`components.md` §8 のコピペ元と同じ。
+
+**会話文中(blockquote 内)に配置するパターン**(例題 1 のような場合):
+
+```html
+<blockquote ...>
+  …会話文…<br>
+  <figure style="margin: 0.7rem 0 0.7rem 0.5rem; padding: 0.7rem 0.9rem; background: var(--bg-card); border: 1px solid var(--line); border-radius: 6px; display: inline-block; max-width: 320px;">
+    <img src="assets/fig1-{description}.jpeg"
+         alt="{原本キャプション}"
+         style="display: block; width: 100%; height: auto; max-width: 280px;">
+    <figcaption style="margin-top: 0.4rem; font-family: var(--f-mono); font-size: 0.74rem; color: var(--ink-mute); text-align: center;">図 1: {原本キャプション}</figcaption>
+  </figure><br>
+  …会話文の続き…
+</blockquote>
+```
+
+**問題文中(numfill-fields 内)に配置するパターン**(練習 1 のように図参照が小問内にある場合):
+
+```html
+<div class="numfill-row" data-sub="1">
+  <span class="numfill-sub-label">⑵</span>
+  <div class="numfill-fields">
+    <span class="numfill-prefix">…ディスプレイの一部が <strong>図 1 のように破損</strong>してしまい…</span>
+    <span class="numfill-slot">…input…</span>
+    <span class="numfill-unit">% 損失したことになる。</span>
+    <figure style="margin: 0.6rem 0 0.2rem; padding: 0.7rem 0.9rem; background: var(--bg-card); border: 1px solid var(--line); border-radius: 6px; display: inline-block; max-width: 220px;">
+      <img src="assets/fig1-passcode-broken.jpeg"
+           alt="図1: ディスプレイの一部が破損したスマートフォンのパスコード入力画面(0 が使えない)"
+           style="display: block; width: 100%; height: auto; max-width: 180px; margin: 0 auto;">
+      <figcaption style="margin-top: 0.4rem; font-family: var(--f-mono); font-size: 0.72rem; color: var(--ink-mute); text-align: center; line-height: 1.5;">図 1: 破損後の入力画面<br>(0 が使用不可)</figcaption>
+    </figure>
+  </div>
+</div>
+```
+
+### 13.3 配置原則
+
+| 図の文脈 | 配置場所 |
+|---|---|
+| 会話文の登場人物が「これ何?」と図を示す | blockquote 内、その発言の直後 |
+| 問題文の小問内で「図 N のように」 | 該当 numfill-row / problem-q lead 内 |
+| 例題の解説で図を再掲したい | feedback の `.fb-section` 内 |
+| 複数の図を並列に見せたい | `<div class="figure-row">` で横並び(別途 CSS 追加) |
+
+### 13.4 max-width のガイドライン
+
+| 図の種類 | 推奨 max-width | 内側 img max-width |
+|---|---|---|
+| 単純な図(4 点パターン等) | 280-320px | 240-280px |
+| スマホ画面のスクショ | 200-240px | 160-200px |
+| ワイドな図(タイムライン等) | 480-560px | 440-520px |
+
+スマホ表示でも図が指タップサイズで読める程度(最低 160px 幅)を確保する。
+
+### 13.5 落とし穴
+
+- **画像ファイル名を `image1.jpeg` のまま使わない** → 後で見て何の図か分からなくなる。必ず `fig{N}-{description}.{ext}` にリネーム
+- **assets フォルダを README に書かない** → `.gitignore` でブロックされていないか確認。submodule なら通常通り add 対象
+- **alt と figcaption が矛盾しない** → スクリーンリーダーで読まれる alt は「原本キャプションそのまま」が原則
+- **凍結コピー(`examples/`)では assets 相対パスが切れる** → これは仕様(凍結コピーは code snapshot のみ、ライブ表示は articles/ 経由)。assets を凍結コピー側にも置く必要なし
+
+---
+
+## 14. 参照ファイル
 
 | ファイル | 内容 |
 |---|---|

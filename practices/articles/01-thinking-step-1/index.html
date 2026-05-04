@@ -1,0 +1,5108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>思考のステップ1 — パターンロックと経路問題 | Practice Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400;1,9..144,600;1,9..144,800&family=Klee+One:wght@400;600&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Background — cool blue-white */
+  --bg-cream: #F4F8FC;
+  --bg-card: #FFFFFF;
+  --bg-soft: #E8F0F9;
+  --bg-paper: #FAFCFF;
+
+  /* Ink — deep navy */
+  --ink: #1A2B47;
+  --ink-soft: #475673;
+  --ink-mute: #75839B;
+  --ink-faint: #B0BAC9;
+
+  /* Action: refined medium blue */
+  --action: #4A78C8;
+  --action-deep: #2E5894;
+  --action-pale: #DAE6F5;
+  --action-pale2: #B8CDE6;
+
+  /* Anchor: deep navy */
+  --anchor: #122E55;
+  --anchor-mid: #2A4A78;
+  --anchor-pale: #DDE7F2;
+
+  /* Success: muted teal-green */
+  --ok: #41A38C;
+  --ok-pale: #C5E2D9;
+  --ok-deep: #2E826F;
+
+  /* Error: muted rose */
+  --ng: #C84A60;
+  --ng-pale: #F0D5DB;
+  --ng-deep: #8E3344;
+
+  /* Highlight: sophisticated amber (warm pop) */
+  --gold: #D4A852;
+  --gold-pale: #F5E5BB;
+  --gold-deep: #A37A1F;
+
+  /* Lines — cool light blue-grey */
+  --line: #D8E2EE;
+  --line-soft: #E8EFF7;
+  --line-strong: #B8C5D7;
+
+  --f-display: 'Fraunces', 'Playfair Display', Georgia, serif;
+  --f-jp-display: 'YuKyokasho Yoko', 'YuKyokasho', '游教科書体 横用', '游教科書体', 'Klee One', 'UD Digi Kyokasho N-R', 'Hiragino Mincho ProN', 'Yu Mincho', '游明朝', serif;
+  --f-jp-body: 'Zen Kaku Gothic New', 'Hiragino Sans', sans-serif;
+  --f-mono: 'JetBrains Mono', monospace;
+  --f-la: 'DM Sans', system-ui, sans-serif;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --shadow-card: 0 14px 30px -12px rgba(26, 43, 71, 0.12), 0 2px 8px -2px rgba(26, 43, 71, 0.06);
+  --shadow-card-hover: 0 22px 44px -14px rgba(74, 120, 200, 0.18), 0 4px 12px -2px rgba(26, 43, 71, 0.08);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: var(--f-jp-body);
+  font-weight: 500;
+  background: var(--bg-cream);
+  color: var(--ink);
+  line-height: 1.85;
+  letter-spacing: 0.02em;
+  font-feature-settings: 'palt' 1;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(26, 43, 71, 0.05) 1px, transparent 0);
+  background-size: 26px 26px;
+  pointer-events: none;
+}
+
+button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input { font: inherit; }
+::selection { background: var(--action-pale2); color: var(--ink); }
+
+/* ============================================================
+   SIDEBAR (TIMELINE)
+============================================================ */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 280px;
+  background: var(--bg-card);
+  border-right: 1px solid var(--line);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.35s var(--ease);
+}
+.sidebar-head {
+  padding: 1.1rem 1.5rem 1rem;
+  border-bottom: 1px solid var(--line-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.sidebar-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+}
+.sidebar-brand .mk {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.sidebar-brand .mk .dot { color: var(--action); font-style: normal; }
+.sidebar-brand .tg {
+  font-family: var(--f-la);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.sidebar-close {
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-paper);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-family: var(--f-mono);
+  font-weight: 700;
+  font-size: 1rem;
+  flex-shrink: 0;
+  transition: all 0.2s var(--ease);
+}
+.sidebar-close:hover { background: var(--action-pale); color: var(--action-deep); border-color: var(--action-pale2); }
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.25rem 0 1.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+.sidebar-content::-webkit-scrollbar { width: 6px; }
+.sidebar-content::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 3px; }
+.sidebar-content::-webkit-scrollbar-track { background: transparent; }
+
+.sb-section { margin-bottom: 1.4rem; }
+.sb-section-title {
+  font-family: var(--f-la);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding: 0 1.5rem;
+  margin-bottom: 0.65rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.sb-section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line-soft);
+}
+
+.timeline {
+  list-style: none;
+  position: relative;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  bottom: 14px;
+  left: calc(1.5rem + 9px);
+  width: 1.5px;
+  background: linear-gradient(to bottom, var(--line-soft) 0%, var(--line-strong) 50%, var(--line-soft) 100%);
+}
+
+.tl-item {
+  position: relative;
+  padding: 0.5rem 1.5rem 0.5rem 2.85rem;
+  cursor: pointer;
+  transition: background 0.2s var(--ease);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 38px;
+  outline: none;
+}
+.tl-item:hover { background: var(--bg-paper); }
+.tl-item:focus-visible {
+  background: var(--bg-paper);
+  box-shadow: inset 3px 0 0 var(--action);
+}
+.tl-item:active { background: var(--action-pale); }
+
+.tl-dot {
+  position: absolute;
+  left: calc(1.5rem + 3px);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 2px solid var(--line-strong);
+  z-index: 2;
+  transition: all 0.25s var(--ease);
+}
+.tl-item.completed .tl-dot {
+  border-color: var(--ok);
+  background: var(--ok);
+}
+.tl-item.completed .tl-dot::after {
+  content: '';
+  position: absolute;
+  top: 1px; left: 3px;
+  width: 4px; height: 7px;
+  border: 2px solid var(--bg-card);
+  border-top: 0; border-left: 0;
+  transform: rotate(45deg);
+}
+.tl-item.partial .tl-dot {
+  border-color: var(--gold);
+  background: var(--gold);
+}
+.tl-item.partial .tl-dot::after {
+  content: '';
+  position: absolute;
+  top: 4px; left: 2px;
+  width: 5px; height: 1.5px;
+  background: var(--ink);
+}
+.tl-item.wrong .tl-dot {
+  border-color: var(--ng);
+  background: var(--ng);
+}
+.tl-item.wrong .tl-dot::after {
+  content: '×';
+  position: absolute;
+  top: -3px; left: 1.5px;
+  font-family: var(--f-mono);
+  font-weight: 700;
+  font-size: 11px;
+  color: var(--bg-card);
+  line-height: 1;
+}
+.tl-item.active .tl-dot {
+  border-color: var(--action);
+  background: var(--action);
+  width: 16px;
+  height: 16px;
+  left: calc(1.5rem + 1px);
+  box-shadow: 0 0 0 4px var(--action-pale);
+}
+.tl-item.active.completed .tl-dot { background: var(--action); border-color: var(--action); }
+.tl-item.active .tl-dot::after { display: none; }
+
+.tl-label {
+  flex: 1;
+  font-size: 0.83rem;
+  color: var(--ink-soft);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: color 0.2s var(--ease);
+}
+.tl-item.active .tl-label {
+  color: var(--ink);
+  font-weight: 700;
+}
+.tl-num {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--anchor);
+  margin-right: 0.3em;
+}
+.tl-item.active .tl-num { color: var(--action); }
+.tl-stat {
+  font-family: var(--f-mono);
+  font-size: 0.68rem;
+  color: var(--ink-mute);
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+.tl-item.completed .tl-stat { color: var(--ok-deep); }
+.tl-item.partial .tl-stat { color: var(--gold-deep); }
+.tl-item.wrong .tl-stat { color: var(--ng-deep); }
+
+.sidebar-foot {
+  padding: 0.85rem 1.5rem;
+  border-top: 1px solid var(--line-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  font-family: var(--f-mono);
+  font-size: 0.7rem;
+  color: var(--ink-mute);
+  letter-spacing: 0.08em;
+}
+.sb-score {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--action);
+  font-size: 1rem;
+}
+.sb-reset {
+  font-family: var(--f-la);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding: 0.3rem 0.55rem;
+  border-radius: 4px;
+  border: 1px solid var(--line);
+  transition: all 0.2s var(--ease);
+}
+.sb-reset:hover { color: var(--action-deep); border-color: var(--action-pale2); }
+
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 30, 40, 0.45);
+  backdrop-filter: blur(2px);
+  z-index: 55;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+}
+.sidebar-backdrop.show { display: block; opacity: 1; }
+
+/* Default: sidebar closed on all screen sizes */
+.sidebar { transform: translateX(-100%); }
+.sidebar.open { transform: translateX(0); }
+
+/* ============================================================
+   TOP BAR
+============================================================ */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 248, 252, 0.92);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+.topbar-inner {
+  max-width: 920px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+}
+.menu-btn {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s var(--ease);
+}
+.menu-btn:hover { background: var(--action-pale); color: var(--action-deep); border-color: var(--action-pale2); }
+.menu-btn svg { width: 18px; height: 18px; }
+.menu-btn.is-open {
+  background: var(--anchor);
+  color: var(--bg-card);
+  border-color: var(--anchor);
+}
+.menu-btn.is-open:hover { background: var(--anchor-mid); color: var(--bg-card); border-color: var(--anchor-mid); }
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  text-decoration: none;
+  color: inherit;
+  flex-shrink: 0;
+}
+.brand-mark {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.brand-mark .dot { color: var(--action); font-style: normal; }
+.brand-tag {
+  font-family: var(--f-la);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.topbar-progress {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.progress-label {
+  font-family: var(--f-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-mute);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.progress-label .stage-name {
+  color: var(--ink-soft);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.65rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.progress-track {
+  height: 4px;
+  background: var(--line-soft);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+.progress-fill {
+  position: absolute;
+  inset: 0 100% 0 0;
+  background: linear-gradient(90deg, var(--anchor) 0%, var(--action) 100%);
+  border-radius: 999px;
+  transition: right 0.55s var(--ease);
+}
+.topbar-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.topbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  transition: all 0.25s var(--ease);
+}
+.topbar-btn:hover { background: var(--action-pale); color: var(--action-deep); border-color: var(--action-pale2); }
+.topbar-btn svg { width: 16px; height: 16px; }
+
+
+/* ---- Mobile UX: prevent iOS double-tap zoom delay on interactive elements ---- */
+button, .opt, .ox-btn, .ox-row, .match-pill, .fill-chip, .fill-blank, .numfill-input,
+.digest-prompt, .tl-item, [data-action], a.unit-card, .unit-card { touch-action: manipulation; }
+
+/* ---- Mobile-rich UI: Module 3 carousel + spotlight tap + smooth transitions ---- */
+.origin-compare.three-col { grid-template-columns: 1fr 1fr 1fr; }
+@media (max-width: 720px) {
+  .origin-compare.three-col {
+    display: flex;
+    grid-template-columns: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 0.7rem;
+    margin: 0 -1rem;
+    padding: 0.25rem 1rem 0.6rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .origin-compare.three-col > .origin-side {
+    flex: 0 0 84vw;
+    max-width: 84vw;
+    scroll-snap-align: center;
+  }
+  .origin-compare.three-col::-webkit-scrollbar { display: none; }
+  .carousel-hint {
+    display: block;
+    text-align: center;
+    margin: -0.1rem 0 0.4rem;
+    font-family: var(--f-mono);
+    font-size: 0.7rem;
+    color: var(--ink-mute);
+    letter-spacing: 0.06em;
+  }
+}
+.carousel-hint { display: none; }
+
+/* ---- Spotlight v2: dramatic scale + dark backdrop + ring highlight ---- */
+.spotlight-backdrop {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(10, 25, 47, 0.55), rgba(8, 18, 36, 0.78));
+  backdrop-filter: blur(3px) saturate(85%);
+  -webkit-backdrop-filter: blur(3px) saturate(85%);
+  z-index: 80;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.34s var(--ease), visibility 0s linear 0.34s;
+  pointer-events: none;
+}
+body.has-spotlight-active .spotlight-backdrop {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 0.34s var(--ease), visibility 0s linear 0s;
+}
+.has-spotlight > .ip-rich,
+.has-spotlight > .bd-card,
+.has-spotlight > .lk-card,
+.has-spotlight > .cc-cat-item {
+  transition: opacity 0.32s ease, filter 0.32s ease, transform 0.32s var(--ease), box-shadow 0.32s var(--ease);
+}
+.has-spotlight > .ip-rich:not(.spotlight),
+.has-spotlight > .bd-card:not(.spotlight),
+.has-spotlight > .lk-card:not(.spotlight),
+.has-spotlight > .cc-cat-item:not(.spotlight) {
+  opacity: 0.18;
+  filter: saturate(0.4) blur(1px);
+  transform: scale(0.97);
+}
+.ip-rich.spotlight,
+.bd-card.spotlight,
+.lk-card.spotlight,
+.cc-cat-item.spotlight {
+  transform: scale(1.18) translateY(-4px);
+  z-index: 90;
+  position: relative;
+  box-shadow:
+    0 0 0 3px rgba(212, 168, 82, 0.55),
+    0 32px 70px -18px rgba(0, 0, 0, 0.45),
+    0 14px 32px -6px rgba(74, 120, 200, 0.32);
+  animation: spotPulse 0.42s var(--ease);
+}
+@keyframes spotPulse {
+  0%   { transform: scale(1) translateY(0); box-shadow: 0 0 0 0 rgba(212, 168, 82, 0); }
+  60%  { transform: scale(1.22) translateY(-6px); box-shadow: 0 0 0 6px rgba(212, 168, 82, 0.45), 0 32px 70px -18px rgba(0, 0, 0, 0.45); }
+  100% { transform: scale(1.18) translateY(-4px); box-shadow: 0 0 0 3px rgba(212, 168, 82, 0.55), 0 32px 70px -18px rgba(0, 0, 0, 0.45), 0 14px 32px -6px rgba(74, 120, 200, 0.32); }
+}
+@media (max-width: 720px) {
+  .ip-rich.spotlight,
+  .bd-card.spotlight,
+  .lk-card.spotlight,
+  .cc-cat-item.spotlight {
+    transform: scale(1.28) translateY(-4px);
+  }
+  @keyframes spotPulse {
+    0%   { transform: scale(1); }
+    60%  { transform: scale(1.34) translateY(-7px); }
+    100% { transform: scale(1.28) translateY(-4px); }
+  }
+}
+.spotlight-hint {
+  position: fixed;
+  bottom: calc(env(safe-area-inset-bottom) + 80px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 95;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--ink);
+  font-family: var(--f-mono);
+  font-size: 0.72rem;
+  padding: 0.5rem 0.95rem;
+  border-radius: 999px;
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.06em;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+body.has-spotlight-active .spotlight-hint {
+  opacity: 1;
+}
+@media (hover: hover) and (pointer: fine) {
+  .ip-rich, .bd-card, .lk-card, .cc-cat-item { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+  .ip-rich:hover, .bd-card:hover, .lk-card:hover, .cc-cat-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 36px -14px rgba(74, 120, 200, 0.18), 0 4px 10px -2px rgba(26, 43, 71, 0.08);
+  }
+}
+
+/* ---- Carousel dot indicator (Module 3 mobile) ---- */
+.carousel-dots { display: none; }
+@media (max-width: 720px) {
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.42rem;
+    margin: 0.35rem 0 0.2rem;
+  }
+  .carousel-dots .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--line-strong);
+    transition: background 0.24s ease, transform 0.24s ease, width 0.24s ease;
+  }
+  .carousel-dots .dot.active {
+    background: var(--action);
+    transform: scale(1.15);
+    width: 22px;
+    border-radius: 4px;
+  }
+}
+
+/* ---- Feedback show animation: a touch more pronounced ---- */
+@keyframes feedbackEnterRich {
+  from { opacity: 0; transform: translateY(14px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.feedback { animation: feedbackEnterRich 0.42s var(--ease); }
+
+/* ============================================================
+   MAIN STAGE
+============================================================ */
+main {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 2.25rem 1.5rem 8rem;
+  position: relative;
+}
+
+.stage {
+  display: none;
+  animation: stageEnter 0.4s var(--ease);
+}
+.stage.active { display: block; }
+
+@keyframes stageEnter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   STAGE: WELCOME
+============================================================ */
+.welcome-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0.85rem;
+  background: var(--anchor-pale);
+  color: var(--anchor);
+  border-radius: 999px;
+  font-family: var(--f-la);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+.welcome-kicker .num {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.welcome-title-en {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: clamp(2.2rem, 6vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin-bottom: 0.4rem;
+}
+.welcome-title-en .accent { color: var(--action); font-style: normal; font-weight: 800; }
+.welcome-title-jp {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: clamp(1.4rem, 3.5vw, 2rem);
+  letter-spacing: 0.05em;
+  color: var(--anchor);
+  margin-bottom: 1.5rem;
+}
+.welcome-lede {
+  max-width: 620px;
+  font-size: 1rem;
+  line-height: 2;
+  color: var(--ink-soft);
+  margin-bottom: 2rem;
+}
+.welcome-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+}
+.welcome-meta-item {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.welcome-meta-label {
+  font-family: var(--f-la);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.welcome-meta-value {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.welcome-meta-value .unit {
+  font-family: var(--f-jp-body);
+  font-style: normal;
+  font-size: 0.85rem;
+  color: var(--ink-mute);
+  font-weight: 500;
+  margin-left: 0.3rem;
+}
+
+.flow-strip {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1.5rem 1.5rem 1.4rem;
+  margin-bottom: 2rem;
+}
+.flow-strip-title {
+  font-family: var(--f-la);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--anchor);
+  margin-bottom: 1rem;
+}
+.flow-list {
+  display: grid;
+  gap: 0.65rem;
+}
+.flow-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+}
+.flow-num {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--anchor-pale);
+  color: var(--anchor);
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+/* ============================================================
+   STAGE: REVIEW (おさらい)
+============================================================ */
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin: 0 0 2.5rem;
+  padding-top: 0.5rem;
+}
+.section-divider .num {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 2.4rem;
+  color: var(--action);
+  letter-spacing: -0.01em;
+  flex-shrink: 0;
+}
+.section-divider .text {
+  flex: 1;
+  border-left: 2px solid var(--line);
+  padding-left: 1.25rem;
+}
+.section-divider .label {
+  font-family: var(--f-la);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 0.2rem;
+}
+.section-divider .name {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1.4rem;
+  color: var(--ink);
+  letter-spacing: 0.05em;
+}
+
+.review-stack { display: grid; gap: 1rem; }
+
+/* ============================================================
+   DIGEST — visual one-page summary for review
+============================================================ */
+.digest {
+  display: grid;
+  gap: 1.5rem;
+}
+.digest-mod {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.25s var(--ease), box-shadow 0.3s var(--ease);
+}
+.digest-mod:hover { border-color: var(--action-pale2); }
+.digest-mod.open { border-color: var(--action-pale2); box-shadow: var(--shadow-card); }
+.digest-mod.hero {
+  background: linear-gradient(155deg, #FFFFFF 0%, var(--bg-paper) 100%);
+}
+
+.digest-prompt {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  padding: 1.2rem 1.4rem 1.3rem;
+  text-align: left;
+  cursor: pointer;
+  display: block;
+  outline: none;
+  position: relative;
+  transition: background 0.2s var(--ease);
+}
+.digest-prompt:hover { background: var(--bg-paper); }
+.digest-prompt:focus-visible {
+  background: var(--bg-paper);
+  box-shadow: inset 4px 0 0 var(--action);
+}
+.digest-prompt-head {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.6rem;
+}
+.digest-num {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: var(--action);
+  letter-spacing: -0.01em;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.digest-en {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 0.72rem;
+  color: var(--ink-mute);
+  letter-spacing: 0.05em;
+  flex: 1;
+  border-left: 1px solid var(--line);
+  padding-left: 0.7rem;
+}
+.digest-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--f-la);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--action);
+  flex-shrink: 0;
+}
+.digest-toggle::before {
+  content: 'TAP';
+}
+.digest-mod.open .digest-toggle::before {
+  content: 'CLOSE';
+}
+.digest-toggle .plus {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--action-pale);
+  color: var(--action-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--f-mono);
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: all 0.3s var(--ease);
+}
+.digest-mod.open .digest-toggle .plus {
+  background: var(--action);
+  color: var(--bg-card);
+  transform: rotate(45deg);
+}
+.digest-q {
+  font-family: var(--f-jp-display);
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--ink);
+  letter-spacing: 0.05em;
+  line-height: 1.65;
+  position: relative;
+  padding-left: 1.5rem;
+}
+.digest-q::before {
+  content: 'Q';
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 800;
+  color: var(--action);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.digest-answer {
+  display: none;
+  padding: 1.2rem 1.4rem 1.5rem;
+  border-top: 1px dashed var(--line);
+  position: relative;
+  animation: digestReveal 0.45s var(--ease);
+}
+.digest-mod.open .digest-answer { display: block; }
+.digest-answer::before {
+  content: 'A';
+  position: absolute;
+  top: 1.15rem;
+  left: 1.4rem;
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 800;
+  color: var(--ok);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+.digest-title {
+  font-family: var(--f-jp-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--ink);
+  letter-spacing: 0.05em;
+  margin: 0 0 0.7rem 1.5rem;
+  line-height: 1.55;
+}
+.digest-lede {
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  margin-bottom: 1.1rem;
+  line-height: 1.85;
+}
+
+@keyframes digestReveal {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Family tree (Module 1) */
+.family-tree-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -0.4rem;
+  padding: 0.5rem 0.4rem;
+  scrollbar-width: thin;
+}
+.family-tree-wrap::-webkit-scrollbar { height: 5px; }
+.family-tree-wrap::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 3px; }
+.family-tree-svg {
+  width: 100%;
+  height: auto;
+  min-width: 720px;
+  display: block;
+}
+
+/* ip-grid-rich (Module 2 — 4種 with example) */
+.ip-rich-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.7rem;
+}
+.ip-rich {
+  background: var(--bg-paper);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1rem 0.95rem;
+  position: relative;
+  border-top: 5px solid var(--ip-color, var(--anchor));
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+.ip-rich:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px -12px rgba(26, 43, 71, 0.18);
+}
+.ip-rich.patent { --ip-color: #4A78C8; }
+.ip-rich.utility { --ip-color: #5BA0A8; }
+.ip-rich.design { --ip-color: #C9A66B; }
+.ip-rich.trademark { --ip-color: #B85975; }
+.ip-rich-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  background: var(--ip-color);
+  color: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.65rem;
+}
+.ip-rich-icon svg { width: 22px; height: 22px; }
+.ip-rich-name {
+  font-family: var(--f-jp-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--ink);
+  margin-bottom: 0.15rem;
+  letter-spacing: 0.04em;
+}
+.ip-rich-en {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-size: 0.7rem;
+  color: var(--ip-color);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+}
+.ip-rich-period {
+  display: inline-block;
+  background: var(--ip-color);
+  color: var(--bg-card);
+  font-family: var(--f-mono);
+  font-weight: 700;
+  font-size: 0.72rem;
+  padding: 0.18rem 0.55rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+}
+.ip-rich-desc {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin-bottom: 0.55rem;
+}
+.ip-rich-ex {
+  font-family: var(--f-jp-body);
+  font-size: 0.72rem;
+  color: var(--ink-mute);
+  border-top: 1px dashed var(--line);
+  padding-top: 0.5rem;
+  line-height: 1.55;
+}
+.ip-rich-ex .label {
+  font-family: var(--f-la);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ip-color);
+  font-size: 0.6rem;
+  margin-right: 0.35em;
+}
+
+/* Origin compare (Module 3) */
+.origin-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+.origin-side {
+  background: var(--bg-paper);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.1rem 1.1rem;
+  border-top: 5px solid var(--side-color);
+  position: relative;
+}
+.origin-side.industrial { --side-color: #4A78C8; }
+.origin-side.copyright { --side-color: var(--gold-deep); }
+.origin-side h5 {
+  font-family: var(--f-jp-display);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--ink);
+  margin-bottom: 0.1rem;
+  letter-spacing: 0.05em;
+}
+.origin-side .tag-en {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-size: 0.72rem;
+  color: var(--side-color);
+  font-weight: 600;
+  margin-bottom: 0.85rem;
+  letter-spacing: 0.04em;
+}
+.origin-flow {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.7rem;
+}
+.origin-step {
+  background: var(--bg-card);
+  border: 1.5px solid var(--side-color);
+  color: var(--side-color);
+  font-weight: 700;
+  font-size: 0.78rem;
+  padding: 0.4rem 0.65rem;
+  border-radius: 8px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.origin-step.fill {
+  background: var(--side-color);
+  color: var(--bg-card);
+}
+.origin-arrow {
+  color: var(--ink-mute);
+  font-family: var(--f-mono);
+  font-weight: 700;
+}
+.origin-key {
+  font-family: var(--f-jp-display);
+  font-weight: 600;
+  color: var(--side-color);
+  font-size: 0.92rem;
+  margin-top: 0.4rem;
+  display: inline-block;
+  border-bottom: 2px solid var(--side-color);
+  padding-bottom: 0.1rem;
+}
+.origin-side .note {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  margin-top: 0.55rem;
+  line-height: 1.7;
+}
+
+/* Lock vs Key (Module 4 — 著作者人格権 vs 財産権) */
+.lk-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+.lk-card {
+  background: var(--bg-paper);
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  padding: 1.1rem 1.15rem 1.15rem;
+  position: relative;
+  border-left: 5px solid var(--lk-color);
+}
+.lk-card.locked { --lk-color: #6E5A8D; }
+.lk-card.transferable { --lk-color: #41A38C; }
+.lk-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--lk-color);
+  color: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.7rem;
+}
+.lk-icon svg { width: 22px; height: 22px; }
+.lk-card h5 {
+  font-family: var(--f-jp-display);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--ink);
+  margin-bottom: 0.15rem;
+  letter-spacing: 0.04em;
+}
+.lk-card .stamp {
+  font-family: var(--f-la);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  display: inline-block;
+  background: var(--lk-color);
+  color: var(--bg-card);
+  margin-bottom: 0.6rem;
+}
+.lk-list {
+  list-style: none;
+  display: grid;
+  gap: 0.3rem;
+  margin-bottom: 0.6rem;
+}
+.lk-list li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.lk-list li::before {
+  content: '○';
+  color: var(--lk-color);
+  font-weight: 700;
+}
+.lk-rules {
+  font-size: 0.78rem;
+  color: var(--ink-mute);
+  border-top: 1px dashed var(--line);
+  padding-top: 0.5rem;
+  line-height: 1.7;
+}
+.lk-rules strong { color: var(--ink); }
+
+/* Boundary cards (Module 5 — 例外規定) */
+.bd-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.7rem;
+}
+.bd-card {
+  background: linear-gradient(155deg, var(--bg-paper) 0%, var(--bg-card) 100%);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1rem 1rem;
+  border-top: 4px solid var(--ok);
+  position: relative;
+}
+.bd-card .key {
+  font-family: var(--f-jp-display);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--ok-deep);
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.04em;
+}
+.bd-card .bound {
+  display: inline-block;
+  background: var(--ok-pale);
+  color: var(--ok-deep);
+  border: 1px solid var(--ok);
+  border-radius: 999px;
+  font-family: var(--f-mono);
+  font-weight: 700;
+  font-size: 0.7rem;
+  padding: 0.15rem 0.55rem;
+  margin-bottom: 0.55rem;
+  letter-spacing: 0.04em;
+}
+.bd-card .desc {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  line-height: 1.65;
+}
+.bd-warn {
+  margin-top: 0.85rem;
+  background: var(--ng-pale);
+  border-left: 3px solid var(--ng);
+  border-radius: 0 8px 8px 0;
+  padding: 0.7rem 0.95rem;
+  font-size: 0.85rem;
+  color: var(--ng-deep);
+  line-height: 1.65;
+}
+
+/* CC mark catalog (Module 6) */
+.cc-cat {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.6rem;
+  margin-bottom: 0.95rem;
+}
+.cc-cat-item {
+  background: var(--bg-card);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 0.8rem 0.85rem 0.85rem;
+  text-align: center;
+  border-top: 4px solid var(--cc-color);
+}
+.cc-cat-item.by { --cc-color: #4A78C8; }
+.cc-cat-item.nc { --cc-color: #B85975; }
+.cc-cat-item.nd { --cc-color: #6E5A8D; }
+.cc-cat-item.sa { --cc-color: #41A38C; }
+.cc-cat-mark {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--cc-color);
+  color: var(--bg-card);
+  font-family: var(--f-la);
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 0.55rem;
+  letter-spacing: 0.04em;
+}
+.cc-cat-name {
+  font-family: var(--f-jp-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--ink);
+  margin-bottom: 0.15rem;
+}
+.cc-cat-rule {
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+
+.cc-presets-title {
+  font-family: var(--f-la);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0.2rem 0 0.5rem;
+}
+.cc-presets {
+  display: grid;
+  gap: 0.45rem;
+}
+.cc-preset {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.7rem;
+  align-items: center;
+  background: var(--bg-paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.55rem 0.85rem;
+}
+.cc-preset .nm {
+  font-family: var(--f-mono);
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: var(--anchor);
+  letter-spacing: 0.04em;
+}
+.cc-preset .desc {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+.cc-preset .marks {
+  display: flex;
+  gap: 0.25rem;
+}
+.cc-preset .mini {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-family: var(--f-la);
+  font-weight: 700;
+  font-size: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--mc, var(--anchor));
+  background: var(--mc, var(--anchor));
+  color: var(--bg-card);
+}
+.cc-preset .mini.by { --mc: #4A78C8; }
+.cc-preset .mini.nc { --mc: #B85975; }
+.cc-preset .mini.nd { --mc: #6E5A8D; }
+.cc-preset .mini.sa { --mc: #41A38C; }
+
+.review-card {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.review-card.open {
+  border-color: var(--action-pale2);
+  box-shadow: var(--shadow-card);
+}
+.review-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  text-align: left;
+}
+.review-head:hover { background: var(--bg-paper); }
+.review-icon {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--anchor-pale);
+  color: var(--anchor);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+.review-card.open .review-icon { background: var(--action-pale); color: var(--action-deep); }
+.review-title {
+  flex: 1;
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+}
+.review-toggle {
+  flex-shrink: 0;
+  font-family: var(--f-mono);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--ink-mute);
+  transition: transform 0.3s var(--ease);
+}
+.review-card.open .review-toggle { transform: rotate(45deg); color: var(--action); }
+.review-body {
+  display: none;
+  padding: 0 1.25rem 1.4rem;
+  border-top: 1px dashed var(--line);
+  padding-top: 1.2rem;
+  margin-top: -1px;
+}
+.review-card.open .review-body { display: block; }
+.review-body p { font-size: 0.92rem; line-height: 1.95; color: var(--ink-soft); margin-bottom: 0.7rem; }
+.review-body p:last-child { margin-bottom: 0; }
+.review-body strong { color: var(--ink); font-weight: 700; }
+.review-body em { font-style: normal; background: var(--gold-pale); padding: 0 0.2em; border-radius: 3px; }
+
+.tree {
+  background: var(--bg-paper);
+  border: 1px dashed var(--line-strong);
+  border-radius: 8px;
+  padding: 1rem 1.1rem;
+  margin: 0.75rem 0;
+  font-size: 0.88rem;
+  line-height: 1.85;
+  color: var(--ink-soft);
+}
+.tree-line {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+.tree-key {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  color: var(--anchor);
+  white-space: nowrap;
+}
+.tree-line.indent { padding-left: 1.2rem; }
+.tree-line.indent2 { padding-left: 2.4rem; }
+.tree-note {
+  font-family: var(--f-mono);
+  font-size: 0.75rem;
+  color: var(--ink-mute);
+  margin-top: 0.35rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--line);
+}
+
+/* ============================================================
+   PROBLEM CARD (例題 + 練習)
+============================================================ */
+.problem-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-bottom: 0.85rem;
+}
+.problem-tag {
+  font-family: var(--f-la);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.65rem;
+  border-radius: 4px;
+  background: var(--anchor-pale);
+  color: var(--anchor);
+}
+.problem-tag.practice { background: var(--action-pale); color: var(--action-deep); }
+.problem-tag.fill { background: var(--gold-pale); color: var(--gold-deep); }
+.problem-tag.match { background: var(--anchor-pale); color: var(--anchor); }
+.problem-tag.ox { background: var(--ok-pale); color: var(--ok-deep); }
+.problem-tag.multi { background: #DEE2F2; color: #4A56A8; }
+.problem-source {
+  font-family: var(--f-mono);
+  font-size: 0.72rem;
+  color: var(--ink-mute);
+  letter-spacing: 0.05em;
+}
+
+.problem-q-num {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 3.6rem;
+  letter-spacing: -0.02em;
+  color: var(--action);
+  line-height: 0.9;
+  margin-bottom: 0.4rem;
+}
+.problem-q-num .q {
+  font-size: 1.6rem;
+  vertical-align: 0.7em;
+  font-weight: 600;
+  color: var(--ink-faint);
+  margin-right: 0.1em;
+}
+
+.problem-title {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: clamp(1.3rem, 3vw, 1.7rem);
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  margin-bottom: 1.2rem;
+  line-height: 1.5;
+}
+
+.problem-card {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1.75rem 1.5rem 1.5rem;
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+}
+.problem-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--anchor) 0%, var(--action) 100%);
+}
+
+.problem-q {
+  font-size: 1rem;
+  line-height: 2;
+  color: var(--ink);
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+.problem-q.lead {
+  border-left: 3px solid var(--action);
+  padding-left: 1rem;
+  background: var(--bg-paper);
+  padding: 0.85rem 1rem 0.85rem 1.1rem;
+  border-radius: 0 8px 8px 0;
+}
+
+/* ============================================================
+   INPUT — single choice (radio)
+============================================================ */
+.opts {
+  display: grid;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+}
+.opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.95rem 1.1rem;
+  background: var(--bg-paper);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+  position: relative;
+}
+.opt:hover { border-color: var(--action-pale2); background: var(--action-pale); }
+.opt.picked { border-color: var(--action); background: var(--action-pale); }
+.opt input { position: absolute; opacity: 0; pointer-events: none; }
+.opt-mark {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--ink-faint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 4px;
+  background: var(--bg-card);
+  transition: all 0.2s var(--ease);
+}
+.opt.picked .opt-mark { border-color: var(--action); }
+.opt.picked .opt-mark::after {
+  content: '';
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--action);
+}
+.opt-mark.checkbox { border-radius: 5px; }
+.opt.picked .opt-mark.checkbox::after {
+  content: '';
+  width: 12px; height: 7px;
+  border: 2.5px solid var(--action);
+  border-top: 0; border-right: 0;
+  background: transparent;
+  transform: rotate(-45deg) translate(1px, -2px);
+  border-radius: 0;
+}
+.opt-text {
+  flex: 1;
+  font-size: 0.96rem;
+  line-height: 1.85;
+  color: var(--ink);
+}
+.opt-letter {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--anchor);
+  margin-right: 0.4rem;
+}
+
+/* graded states */
+.opt.graded.correct {
+  border-color: var(--ok);
+  background: var(--ok-pale);
+}
+.opt.graded.correct .opt-mark { border-color: var(--ok); background: var(--ok); }
+.opt.graded.correct .opt-mark::after { background: var(--bg-card) !important; width: 11px !important; height: 6px !important; border: 2.5px solid var(--bg-card) !important; border-top: 0 !important; border-right: 0 !important; transform: rotate(-45deg) translate(1px, -1px) !important; border-radius: 0 !important; }
+.opt.graded.correct .opt-mark.checkbox::after { background: transparent !important; }
+.opt.graded.wrong {
+  border-color: var(--ng);
+  background: var(--ng-pale);
+}
+.opt.graded.wrong .opt-mark { border-color: var(--ng); background: var(--ng); }
+.opt.graded.wrong .opt-mark::after,
+.opt.graded.wrong .opt-mark.checkbox::after {
+  content: '×';
+  background: transparent !important;
+  width: auto !important; height: auto !important;
+  border: 0 !important;
+  color: var(--bg-card);
+  font-family: var(--f-mono);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
+  transform: none !important;
+  border-radius: 0 !important;
+}
+.opt.graded.missed {
+  border-color: var(--ok);
+  background: var(--bg-card);
+  border-style: dashed;
+}
+.opt.graded.missed::after {
+  content: '正解';
+  position: absolute;
+  top: 0.5rem; right: 0.6rem;
+  font-family: var(--f-la);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--ok);
+  background: var(--ok-pale);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   INPUT — match (sub→opt)
+============================================================ */
+.match-list { display: grid; gap: 0.6rem; margin-bottom: 1.5rem; }
+.match-row {
+  background: var(--bg-paper);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem;
+  align-items: start;
+}
+.match-row.graded.correct { border-color: var(--ok); background: var(--ok-pale); }
+.match-row.graded.wrong { border-color: var(--ng); background: var(--ng-pale); }
+.match-sub-label {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--anchor);
+  flex-shrink: 0;
+  min-width: 1.6em;
+}
+.match-row .sub-content { display: flex; flex-direction: column; gap: 0.6rem; }
+.match-text { font-size: 0.94rem; line-height: 1.8; color: var(--ink); }
+.match-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.2rem;
+}
+.match-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg-card);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  transition: all 0.2s var(--ease);
+  cursor: pointer;
+  user-select: none;
+}
+.match-pill:hover { border-color: var(--action-pale2); background: var(--action-pale); color: var(--action-deep); }
+.match-pill.picked { background: var(--action); border-color: var(--action); color: var(--bg-card); }
+.match-pill.graded-correct { background: var(--ok); border-color: var(--ok); color: var(--bg-card); }
+.match-pill.graded-wrong { background: var(--ng-pale); border-color: var(--ng); color: var(--ng-deep); text-decoration: line-through; }
+.match-pill.graded-shouldbe {
+  background: var(--bg-card); border-color: var(--ok); color: var(--ok-deep);
+  border-style: dashed;
+}
+.match-pill .let {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 700;
+  margin-right: 0.2em;
+}
+
+.option-legend {
+  background: var(--bg-paper);
+  border: 1px dashed var(--line-strong);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+.option-legend-title {
+  font-family: var(--f-la);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 0.4rem;
+}
+.option-legend-list { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; }
+.option-legend-item { color: var(--ink-soft); }
+.option-legend-item .let {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--anchor);
+  margin-right: 0.3em;
+}
+
+/* ============================================================
+   INPUT — OX (各小問に ○ or ×)
+============================================================ */
+.ox-list { display: grid; gap: 0.55rem; margin-bottom: 1.5rem; }
+.ox-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.85rem;
+  align-items: center;
+  background: var(--bg-paper);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  transition: border-color 0.2s var(--ease);
+}
+.ox-row.graded.correct { border-color: var(--ok); background: var(--ok-pale); }
+.ox-row.graded.wrong { border-color: var(--ng); background: var(--ng-pale); }
+.ox-sub-label {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--anchor);
+  min-width: 1.6em;
+}
+.ox-text {
+  font-size: 0.92rem;
+  line-height: 1.8;
+  color: var(--ink);
+}
+.ox-buttons {
+  display: flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+.ox-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  border: 1.5px solid var(--line);
+  background: var(--bg-card);
+  font-family: var(--f-mono);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--ink-mute);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s var(--ease);
+}
+.ox-btn:hover { border-color: var(--action); color: var(--action-deep); }
+.ox-btn.picked.maru { background: var(--ok); border-color: var(--ok); color: var(--bg-card); }
+.ox-btn.picked.batsu { background: var(--ng); border-color: var(--ng); color: var(--bg-card); }
+.ox-row.graded .ox-btn { pointer-events: none; opacity: 0.65; }
+.ox-row.graded .ox-btn.picked { opacity: 1; }
+.ox-row.graded .ox-btn.shouldbe {
+  border-color: var(--ok);
+  border-style: dashed;
+  color: var(--ok-deep);
+  opacity: 1;
+}
+
+/* ============================================================
+   INPUT — multi-select (1問でN個選ぶ)
+============================================================ */
+.multi-hint {
+  display: inline-block;
+  font-family: var(--f-la);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--anchor);
+  background: var(--anchor-pale);
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  margin-bottom: 0.85rem;
+}
+
+/* ============================================================
+   INPUT — fill (語群穴埋め)
+============================================================ */
+.fill-bullets {
+  background: var(--bg-paper);
+  border: 1px dashed var(--line-strong);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  margin-bottom: 1.2rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.fill-line {
+  font-size: 0.96rem;
+  line-height: 2.15;
+  color: var(--ink);
+}
+.fill-line::before {
+  content: '・';
+  color: var(--action);
+  font-weight: 700;
+  margin-right: 0.2em;
+}
+.fill-blank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.5em;
+  height: 1.85em;
+  margin: 0 0.25em;
+  padding: 0 0.6em;
+  border: 1.5px dashed var(--ink-faint);
+  border-radius: 6px;
+  background: var(--bg-card);
+  color: var(--ink-faint);
+  font-size: 0.92em;
+  font-weight: 600;
+  vertical-align: middle;
+  transition: all 0.2s var(--ease);
+}
+.fill-blank.filled {
+  border-style: solid;
+  border-color: var(--action);
+  background: var(--action-pale);
+  color: var(--action-deep);
+}
+.fill-blank.active {
+  border-color: var(--action);
+  background: var(--action-pale);
+  box-shadow: 0 0 0 3px rgba(74, 120, 200, 0.18);
+}
+.fill-blank.graded-correct {
+  border-color: var(--ok);
+  border-style: solid;
+  background: var(--ok-pale);
+  color: var(--ok-deep);
+}
+.fill-blank.graded-wrong {
+  border-color: var(--ng);
+  border-style: solid;
+  background: var(--ng-pale);
+  color: var(--ng-deep);
+  text-decoration: line-through;
+}
+.fill-blank-label {
+  font-family: var(--f-mono);
+  font-size: 0.7em;
+  color: var(--ink-mute);
+  margin-right: 0.2em;
+  font-weight: 700;
+}
+.fill-blank.filled .fill-blank-label,
+.fill-blank.active .fill-blank-label { color: var(--action-deep); }
+.fill-bank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+}
+.fill-bank-title {
+  font-family: var(--f-la);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+.fill-chip {
+  padding: 0.4rem 0.85rem;
+  background: var(--bg-card);
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--ink);
+  transition: all 0.2s var(--ease);
+}
+.fill-chip:hover { border-color: var(--action); background: var(--action-pale); }
+.fill-chip.used { background: var(--anchor-pale); color: var(--anchor); border-style: dashed; }
+
+/* numfill — 数値テキスト入力 */
+.numfill-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin: 1rem 0 0.4rem;
+}
+.numfill-row {
+  display: flex;
+  gap: 0.95rem;
+  padding: 0.95rem 1.1rem;
+  background: var(--bg-paper);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  align-items: flex-start;
+  transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+}
+.numfill-row.graded.correct { border-color: var(--ok); background: rgba(65, 163, 140, 0.07); }
+.numfill-row.graded.wrong { border-color: var(--ng); background: rgba(200, 74, 96, 0.05); }
+.numfill-sub-label {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: var(--action);
+  flex-shrink: 0;
+  width: 1.8em;
+  text-align: center;
+  line-height: 1.4;
+}
+.numfill-fields {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.7rem;
+  font-family: var(--f-jp-display);
+  color: var(--ink-soft);
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+.numfill-prefix {
+  font-family: var(--f-jp-display);
+  color: var(--ink);
+  font-weight: 600;
+}
+.numfill-slot {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.numfill-slot-label {
+  font-family: var(--f-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--action-deep);
+  letter-spacing: 0.06em;
+  background: var(--action-pale);
+  padding: 0.12rem 0.45rem;
+  border-radius: 4px;
+}
+.numfill-input {
+  width: 5.6em;
+  padding: 0.45rem 0.6rem;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 7px;
+  font-family: var(--f-mono);
+  font-size: 1.18rem;
+  font-weight: 700;
+  color: var(--ink);
+  text-align: center;
+  background: var(--bg-card);
+  transition: border-color 0.18s var(--ease), background 0.18s var(--ease), box-shadow 0.18s var(--ease);
+  -webkit-appearance: none;
+  appearance: none;
+}
+.numfill-input::-webkit-outer-spin-button,
+.numfill-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.numfill-input:focus {
+  outline: none;
+  border-color: var(--action);
+  background: #FFF;
+  box-shadow: 0 0 0 3px rgba(74, 120, 200, 0.18);
+}
+.numfill-input.graded-correct { border-color: var(--ok); background: var(--ok-pale); color: var(--ok-deep); }
+.numfill-input.graded-wrong { border-color: var(--ng); background: var(--ng-pale); color: var(--ng-deep); }
+.numfill-input:disabled { cursor: default; opacity: 1; }
+.numfill-unit { font-family: var(--f-jp-body); color: var(--ink-mute); font-size: 0.92rem; }
+.numfill-note {
+  display: block;
+  margin-top: 0.45rem;
+  padding-top: 0.45rem;
+  border-top: 1px dashed var(--line);
+  font-family: var(--f-jp-body);
+  font-size: 0.85rem;
+  color: var(--ink-mute);
+  width: 100%;
+}
+@media (max-width: 720px) {
+  .numfill-row { padding: 0.8rem 0.85rem; gap: 0.65rem; }
+  .numfill-sub-label { font-size: 1.2rem; width: 1.5em; }
+  .numfill-input { width: 4.6em; font-size: 1.05rem; padding: 0.4rem 0.5rem; }
+  .numfill-fields { font-size: 0.92rem; gap: 0.4rem 0.55rem; }
+}
+
+/* ============================================================
+   Phosphor アイコン用クラス (welcome hero / digest mod / problem)
+   ============================================================ */
+.welcome-hero-art {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1.4rem 0 1rem;
+  position: relative;
+}
+.welcome-hero-svg {
+  width: clamp(78px, 16vw, 132px);
+  height: clamp(78px, 16vw, 132px);
+  filter: drop-shadow(0 8px 18px rgba(74, 120, 200, 0.22));
+}
+.welcome-hero-svg .accent { stroke: url(#icoGold); }
+
+.digest-mod-icon {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  margin: 0 0.5rem 0 0.2rem;
+  vertical-align: middle;
+}
+.digest-mod-icon * { stroke-width: 14 !important; }
+@media (max-width: 720px) {
+  .digest-mod-icon { width: 22px; height: 22px; }
+}
+
+.problem-icon-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0.4rem 0 0.55rem;
+}
+.problem-icon-svg {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  padding: 5px;
+  background: var(--action-pale);
+  border-radius: 9px;
+  filter: drop-shadow(0 3px 6px rgba(74, 120, 200, 0.18));
+}
+.problem-icon-svg * { stroke-width: 16 !important; }
+.problem-icon-row .problem-title {
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .problem-icon-svg { width: 32px; height: 32px; padding: 4px; }
+  .problem-icon-row { gap: 0.55rem; }
+}
+.fill-correct-row {
+  display: none;
+  grid-template-columns: auto 1fr;
+  gap: 0.75rem;
+  background: var(--ok-pale);
+  border: 1px solid var(--ok);
+  border-radius: 8px;
+  padding: 0.75rem 0.9rem;
+  margin-bottom: 1.1rem;
+  font-size: 0.85rem;
+}
+.fill-correct-row.show { display: grid; }
+.fill-correct-row .label {
+  font-family: var(--f-la);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--ok-deep);
+}
+.fill-correct-row .val {
+  font-family: var(--f-jp-body);
+  font-weight: 700;
+  color: var(--ok-deep);
+  line-height: 1.8;
+}
+
+/* ============================================================
+   INPUT — multi_per_sub (各小問に複数選択 — CCマーク等)
+============================================================ */
+.mps-list { display: grid; gap: 0.7rem; margin-bottom: 1.5rem; }
+.mps-row {
+  background: var(--bg-paper);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem;
+  align-items: start;
+}
+.mps-row.graded.correct { border-color: var(--ok); background: var(--ok-pale); }
+.mps-row.graded.wrong { border-color: var(--ng); background: var(--ng-pale); }
+.mps-row .sub-content { display: flex; flex-direction: column; gap: 0.55rem; }
+.mps-text { font-size: 0.92rem; line-height: 1.85; color: var(--ink); }
+
+/* ============================================================
+   GRADE BUTTON + FEEDBACK
+============================================================ */
+.actions-inline {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+.btn-grade {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.5rem;
+  background: var(--action);
+  color: var(--bg-card);
+  border-radius: 999px;
+  font-family: var(--f-jp-body);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  box-shadow: 0 6px 18px -6px rgba(74, 120, 200, 0.5);
+  transition: all 0.25s var(--ease);
+}
+.btn-grade:hover:not(:disabled) {
+  background: var(--action-deep);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px -6px rgba(74, 120, 200, 0.6);
+}
+.btn-grade:disabled { background: var(--line-strong); box-shadow: none; cursor: not-allowed; opacity: 0.7; }
+.btn-grade .arrow { font-family: var(--f-mono); font-weight: 700; }
+
+.btn-reveal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.7rem 1.2rem;
+  background: var(--anchor);
+  color: var(--bg-card);
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all 0.2s var(--ease);
+}
+.btn-reveal:hover { background: var(--anchor-mid); transform: translateY(-1px); }
+
+.btn-secondary {
+  padding: 0.7rem 1.1rem;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  background: var(--bg-card);
+  transition: all 0.2s var(--ease);
+}
+.btn-secondary:hover { border-color: var(--action-pale2); color: var(--action-deep); }
+
+.feedback {
+  display: none;
+  margin-top: 1.5rem;
+  border-radius: 12px;
+  overflow: hidden;
+  animation: feedbackEnter 0.4s var(--ease);
+}
+.feedback.show { display: block; }
+
+@keyframes feedbackEnter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fb-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1rem 1.25rem;
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+}
+.fb-banner.ok { background: var(--ok); color: var(--bg-card); }
+.fb-banner.partial { background: var(--gold); color: var(--ink); }
+.fb-banner.ng { background: var(--ng); color: var(--bg-card); }
+.fb-banner .icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--f-mono);
+  font-weight: 700;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.fb-banner.partial .icon { background: rgba(0,0,0,0.15); }
+.fb-banner .score-tag {
+  margin-left: auto;
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0;
+}
+
+.fb-body {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-top: 0;
+  border-radius: 0 0 12px 12px;
+  padding: 1.25rem 1.4rem 1.4rem;
+}
+.fb-section { margin-bottom: 1rem; }
+.fb-section:last-child { margin-bottom: 0; }
+.fb-section-title {
+  font-family: var(--f-la);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--anchor);
+  margin-bottom: 0.5rem;
+}
+.fb-bestfit, .fb-explain {
+  font-size: 0.92rem;
+  line-height: 1.95;
+  color: var(--ink-soft);
+}
+.fb-bestfit {
+  background: var(--bg-paper);
+  border-left: 3px solid var(--action);
+  padding: 0.75rem 1rem;
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 0.85rem;
+  font-style: normal;
+  color: var(--ink);
+}
+.fb-explain ul { padding-left: 1.2rem; margin: 0.4rem 0; }
+.fb-explain ul li { margin-bottom: 0.4rem; line-height: 1.85; }
+.fb-explain strong { color: var(--anchor); font-weight: 700; }
+.fb-correct-line {
+  font-family: var(--f-jp-body);
+  font-weight: 700;
+  color: var(--ok-deep);
+  margin-bottom: 0.3rem;
+}
+
+.fb-retry {
+  margin-top: 1.25rem;
+  padding-top: 1.1rem;
+  border-top: 1px dashed var(--line);
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.btn-retry {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  background: var(--bg-card);
+  border: 1.5px solid var(--action-pale2);
+  color: var(--action-deep);
+  border-radius: 999px;
+  font-family: var(--f-jp-body);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  transition: all 0.2s var(--ease);
+  cursor: pointer;
+}
+.btn-retry:hover {
+  background: var(--action);
+  border-color: var(--action);
+  color: var(--bg-card);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px -8px rgba(74, 120, 200, 0.45);
+}
+.btn-retry .ico {
+  font-family: var(--f-mono);
+  font-size: 1rem;
+  font-weight: 700;
+  display: inline-block;
+  transition: transform 0.4s var(--ease);
+}
+.btn-retry:hover .ico { transform: rotate(-180deg); }
+.btn-retry.next {
+  background: var(--anchor);
+  border-color: var(--anchor);
+  color: var(--bg-card);
+}
+.btn-retry.next:hover { background: var(--anchor-mid); border-color: var(--anchor-mid); }
+.fb-correct-line .let {
+  font-family: var(--f-display);
+  font-style: italic;
+  margin: 0 0.15em;
+  color: var(--ink);
+}
+
+/* ============================================================
+   INFOGRAPHIC / VIZ — feedback内の解説図
+============================================================ */
+.viz {
+  margin-top: 1rem;
+  padding: 1rem 1.1rem 1.1rem;
+  background: linear-gradient(155deg, var(--bg-paper) 0%, var(--bg-card) 100%);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  position: relative;
+}
+.viz-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.25rem 0.65rem;
+  background: var(--anchor);
+  color: var(--bg-card);
+  border-radius: 4px;
+  font-family: var(--f-la);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  margin-bottom: 0.85rem;
+}
+.viz-label svg { width: 12px; height: 12px; }
+.viz-caption {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ink);
+  margin-bottom: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+/* IP four-card grid (Q15, Q18) */
+.ip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.55rem;
+}
+.ip-card {
+  background: var(--bg-card);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 0.85rem 0.85rem 0.75rem;
+  position: relative;
+  overflow: hidden;
+  border-top: 4px solid var(--ip-color, var(--anchor));
+}
+.ip-card.patent { --ip-color: #4A78C8; }
+.ip-card.utility { --ip-color: #5BA0A8; }
+.ip-card.design { --ip-color: #C9A66B; }
+.ip-card.trademark { --ip-color: #B85975; }
+.ip-card.copyright { --ip-color: var(--gold-deep); }
+.ip-card .badge {
+  display: inline-block;
+  padding: 0.15rem 0.45rem;
+  background: var(--ip-color);
+  color: var(--bg-card);
+  font-family: var(--f-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border-radius: 3px;
+  margin-bottom: 0.4rem;
+}
+.ip-card .nm {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1rem;
+  color: var(--ink);
+  margin-bottom: 0.2rem;
+}
+.ip-card .term {
+  font-family: var(--f-mono);
+  font-size: 0.72rem;
+  color: var(--ip-color);
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.05em;
+}
+.ip-card .desc {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+.ip-card .marker {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--ip-color);
+  color: var(--bg-card);
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Right-tree (Q16, Q17 etc.) */
+.right-tree {
+  display: grid;
+  gap: 0.45rem;
+}
+.rt-row {
+  display: grid;
+  grid-template-columns: 18px auto 1fr;
+  gap: 0.55rem;
+  align-items: baseline;
+}
+.rt-bracket {
+  font-family: var(--f-mono);
+  color: var(--anchor);
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+.rt-row.indent { padding-left: 1.4rem; }
+.rt-row.indent2 { padding-left: 2.8rem; }
+.rt-row.indent3 { padding-left: 4.2rem; }
+.rt-name {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.rt-name.small { font-weight: 500; font-size: 0.85rem; color: var(--ink-soft); }
+.rt-name .pill {
+  display: inline-block;
+  padding: 0.1rem 0.45rem;
+  background: var(--action);
+  color: var(--bg-card);
+  border-radius: 3px;
+  font-family: var(--f-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  margin-left: 0.4em;
+  letter-spacing: 0.04em;
+}
+.rt-name .pill.dim { background: var(--anchor); }
+.rt-row.heading .rt-name {
+  font-weight: 900;
+  color: var(--anchor);
+}
+.rt-note {
+  font-size: 0.78rem;
+  color: var(--ink-mute);
+  font-family: var(--f-jp-body);
+  font-weight: 500;
+}
+
+/* compare 2-col (Q18, Q20) */
+.compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem;
+}
+.compare-col {
+  background: var(--bg-card);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 0.85rem 0.95rem;
+  border-top: 4px solid var(--col-color, var(--anchor));
+}
+.compare-col.left { --col-color: var(--anchor); }
+.compare-col.right { --col-color: var(--action); }
+.compare-col h5 {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 0.95rem;
+  color: var(--col-color);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+}
+.compare-col .row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+  border-top: 1px dashed var(--line-soft);
+  font-size: 0.85rem;
+}
+.compare-col .row:first-of-type { border-top: 0; }
+.compare-col .row .k {
+  font-family: var(--f-la);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  white-space: nowrap;
+}
+.compare-col .row .v { color: var(--ink); }
+
+/* checklist (Q21) */
+.checklist {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.4rem;
+}
+.cl-item {
+  background: var(--bg-card);
+  border: 1.5px solid var(--line);
+  border-left: 4px solid var(--ok);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+.cl-num {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--ok-deep);
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.cl-key {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  color: var(--ok-deep);
+  margin-right: 0.3em;
+}
+
+/* CC marks (Q22) */
+.cc-grid {
+  display: grid;
+  gap: 0.7rem;
+}
+.cc-row {
+  background: var(--bg-card);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 0.85rem 0.95rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.85rem;
+  align-items: center;
+}
+.cc-row .lbl {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--anchor);
+}
+.cc-row .desc {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+.cc-marks {
+  display: flex;
+  gap: 0.3rem;
+  flex-shrink: 0;
+}
+.cc-mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--f-la);
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  border: 2px solid var(--cc-color, var(--anchor));
+  color: var(--cc-color, var(--anchor));
+  background: var(--bg-card);
+}
+.cc-mark.active {
+  background: var(--cc-color);
+  color: var(--bg-card);
+}
+.cc-mark.by { --cc-color: #4A78C8; }
+.cc-mark.nc { --cc-color: #B85975; }
+.cc-mark.nd { --cc-color: #6E5A8D; }
+.cc-mark.sa { --cc-color: #41A38C; }
+
+/* SVG visualizer */
+.viz-svg-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -0.4rem;
+  padding: 0 0.4rem;
+  scrollbar-width: thin;
+}
+.viz-svg-wrap::-webkit-scrollbar { height: 5px; }
+.viz-svg-wrap::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 3px; }
+.viz-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.viz-svg.wide { min-width: 580px; }
+
+/* ============================================================
+   STAGE: SUMMARY
+============================================================ */
+.summary-hero {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem 1.25rem;
+  background: linear-gradient(155deg, var(--bg-card) 0%, var(--bg-paper) 100%);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+}
+.summary-grade {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 5rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  margin-bottom: 0.4rem;
+}
+.summary-grade .denom {
+  font-size: 2.5rem;
+  color: var(--ink-faint);
+}
+.summary-grade.s-high { color: var(--ok); }
+.summary-grade.s-mid { color: var(--gold-deep); }
+.summary-grade.s-low { color: var(--action); }
+.summary-headline {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1.3rem;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  margin-bottom: 0.4rem;
+}
+.summary-subline { font-size: 0.95rem; color: var(--ink-soft); }
+.summary-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+.summary-stat {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.85rem 0.5rem;
+}
+.summary-stat-label {
+  font-family: var(--f-la);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 0.2rem;
+}
+.summary-stat-value {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--ink);
+}
+.summary-stat-value .unit {
+  font-family: var(--f-jp-body);
+  font-style: normal;
+  font-size: 0.8rem;
+  color: var(--ink-mute);
+}
+
+.summary-list-title {
+  font-family: var(--f-la);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--anchor);
+  margin: 1.5rem 0 0.85rem;
+}
+.summary-list {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.summary-item {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--ink-faint);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.summary-item:hover { transform: translateX(2px); border-left-color: var(--action); }
+.summary-item.correct { border-left-color: var(--ok); }
+.summary-item.partial { border-left-color: var(--gold); }
+.summary-item.wrong { border-left-color: var(--ng); }
+.summary-item .num {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--anchor);
+  min-width: 2.4em;
+}
+.summary-item .nm { font-weight: 700; color: var(--ink); flex: 1; font-size: 0.95rem; }
+.summary-item .stat {
+  font-family: var(--f-mono);
+  font-size: 0.78rem;
+  color: var(--ink-mute);
+  letter-spacing: 0.05em;
+}
+.summary-item .stat.s-ok { color: var(--ok-deep); }
+.summary-item .stat.s-ng { color: var(--ng-deep); }
+.summary-item .stat.s-mid { color: var(--gold-deep); }
+
+.btn-restart {
+  display: block;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: var(--anchor);
+  color: var(--bg-card);
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  margin-top: 1rem;
+  transition: all 0.2s var(--ease);
+  text-align: center;
+}
+.btn-restart:hover { background: var(--anchor-mid); transform: translateY(-2px); box-shadow: 0 10px 22px -8px rgba(18, 46, 85, 0.35); }
+
+/* ============================================================
+   FOOTER NAV
+============================================================ */
+.footnav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(244, 248, 252, 0.94);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-top: 1px solid var(--line);
+  z-index: 40;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.footnav-inner {
+  max-width: 920px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 1.5rem;
+}
+.footnav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.7rem 1rem;
+  border: 1.5px solid var(--line);
+  background: var(--bg-card);
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  transition: all 0.2s var(--ease);
+}
+.footnav-btn:hover { border-color: var(--action-pale2); color: var(--action-deep); }
+.footnav-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.footnav-btn.next { background: var(--anchor); color: var(--bg-card); border-color: var(--anchor); margin-left: auto; }
+.footnav-btn.next:hover:not(:disabled) { background: var(--anchor-mid); border-color: var(--anchor-mid); color: var(--bg-card); }
+.footnav-btn .arr { font-family: var(--f-mono); font-weight: 700; }
+.footnav-status {
+  flex: 1;
+  text-align: center;
+  font-family: var(--f-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-mute);
+}
+
+/* ============================================================
+   DESKTOP — when sidebar open, content shifts; when closed, full width
+============================================================ */
+@media (min-width: 1100px) {
+  body { transition: padding-left 0.35s var(--ease); }
+  body.sb-open { padding-left: 280px; }
+  .footnav { left: 0; transition: left 0.35s var(--ease); }
+  body.sb-open .footnav { left: 280px; }
+  /* No backdrop on PC */
+  .sidebar-backdrop { display: none !important; }
+}
+
+/* ============================================================
+   TABLET / MOBILE — sidebar becomes drawer overlay
+============================================================ */
+@media (max-width: 1099px) {
+  .sidebar {
+    box-shadow: 0 0 40px rgba(0,0,0,0.15);
+  }
+  .sidebar-close { display: inline-flex; }
+}
+
+/* ============================================================
+   MOBILE
+============================================================ */
+@media (max-width: 720px) {
+  .sidebar { width: min(280px, 88vw); }
+  body { line-height: 1.8; }
+  main { padding: 1.5rem 1rem 7rem; }
+  .topbar-inner { padding: 0.6rem 1rem; gap: 0.6rem; }
+  .brand-tag { display: none; }
+  .progress-label { font-size: 0.65rem; }
+  .topbar-btn { width: 32px; height: 32px; }
+  .topbar-btn svg { width: 14px; height: 14px; }
+
+  .welcome-title-en { font-size: 2.2rem; }
+  .welcome-title-jp { font-size: 1.3rem; }
+  .welcome-meta { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  .welcome-meta-item { padding: 0.7rem 0.85rem; }
+  .welcome-meta-value { font-size: 1.25rem; }
+
+  .section-divider .num { font-size: 1.9rem; }
+  .section-divider .name { font-size: 1.15rem; }
+
+  .problem-q-num { font-size: 2.6rem; }
+  .problem-q-num .q { font-size: 1.2rem; }
+  .problem-title { font-size: 1.2rem; }
+  .problem-card { padding: 1.4rem 1.1rem 1.25rem; border-radius: 12px; }
+  .problem-q { font-size: 0.95rem; line-height: 1.85; }
+  .opt { padding: 0.85rem 0.95rem; }
+  .opt-text { font-size: 0.92rem; }
+  .match-row { padding: 0.85rem 0.9rem; gap: 0.6rem; }
+  .match-pill { font-size: 0.8rem; padding: 0.32rem 0.65rem; }
+  .ox-row { padding: 0.75rem 0.85rem; gap: 0.6rem; }
+  .ox-text { font-size: 0.88rem; }
+  .ox-btn { width: 34px; height: 34px; font-size: 0.95rem; }
+  .fill-line { font-size: 0.9rem; line-height: 2.2; }
+  .fill-blank { min-width: 4em; height: 1.7em; padding: 0 0.5em; font-size: 0.86em; }
+  .mps-row { padding: 0.8rem 0.9rem; gap: 0.6rem; }
+  .mps-text { font-size: 0.9rem; }
+
+  .btn-grade { padding: 0.75rem 1.25rem; font-size: 0.9rem; }
+  .btn-reveal { padding: 0.65rem 1rem; font-size: 0.85rem; }
+
+  .fb-banner { padding: 0.85rem 1rem; font-size: 1rem; gap: 0.6rem; }
+  .fb-banner .icon { width: 28px; height: 28px; font-size: 1rem; }
+  .fb-banner .score-tag { font-size: 0.8rem; }
+  .fb-body { padding: 1rem 1.1rem 1.15rem; }
+  .fb-bestfit, .fb-explain { font-size: 0.88rem; }
+
+  .summary-hero { padding: 1.5rem 1rem; }
+  .summary-grade { font-size: 4rem; }
+  .summary-grade .denom { font-size: 2rem; }
+  .summary-headline { font-size: 1.15rem; }
+  .summary-stats { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+
+  .footnav-inner { padding: 0.55rem 1rem; gap: 0.4rem; }
+  .footnav-btn { padding: 0.6rem 0.85rem; font-size: 0.8rem; }
+  .footnav-status { font-size: 0.7rem; }
+
+  /* sidebar on mobile — bigger tap targets */
+  .tl-item { padding: 0.7rem 1.5rem 0.7rem 2.85rem; min-height: 48px; }
+  .tl-label { font-size: 0.9rem; }
+  .tl-stat { font-size: 0.72rem; }
+  .sidebar-head { padding: 0.95rem 1.25rem 0.85rem; }
+  .sidebar-foot { padding: 0.95rem 1.25rem; }
+  .sidebar-close { width: 38px; height: 38px; font-size: 1.2rem; }
+  .sb-section-title { padding: 0 1.25rem; }
+
+  /* digest modules on mobile */
+  .digest-mod { padding: 1.1rem 1rem 1.15rem; border-radius: 12px; }
+  .digest-num { font-size: 1.3rem; }
+  .digest-title { font-size: 1rem; }
+  .digest-en { font-size: 0.7rem; }
+  .digest-lede { font-size: 0.85rem; }
+  .ip-rich-grid { grid-template-columns: 1fr 1fr; gap: 0.55rem; }
+  .ip-rich { padding: 0.85rem 0.85rem 0.85rem; }
+  .ip-rich-icon { width: 32px; height: 32px; }
+  .ip-rich-icon svg { width: 18px; height: 18px; }
+  .ip-rich-name { font-size: 0.95rem; }
+  .ip-rich-period { font-size: 0.68rem; padding: 0.15rem 0.45rem; }
+  .ip-rich-desc { font-size: 0.74rem; }
+  .ip-rich-ex { font-size: 0.68rem; }
+  .origin-compare { grid-template-columns: 1fr; }
+  .origin-flow { gap: 0.25rem; }
+  .origin-step { font-size: 0.72rem; padding: 0.32rem 0.5rem; }
+  .lk-grid { grid-template-columns: 1fr; }
+  .bd-grid { grid-template-columns: 1fr; }
+  .cc-cat { grid-template-columns: 1fr 1fr; }
+  .cc-preset { grid-template-columns: auto 1fr; }
+  .cc-preset .marks { grid-column: 1 / -1; justify-content: flex-end; margin-top: 0.3rem; }
+  .family-tree-svg { min-width: 720px; }
+
+  /* viz on mobile */
+  .viz { padding: 0.85rem 0.85rem 0.95rem; }
+  .ip-grid { grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+  .ip-card { padding: 0.65rem 0.7rem 0.6rem; }
+  .ip-card .nm { font-size: 0.9rem; }
+  .ip-card .desc { font-size: 0.72rem; }
+  .compare { grid-template-columns: 1fr; }
+  .cc-row { grid-template-columns: auto 1fr; padding: 0.65rem 0.75rem; gap: 0.55rem; }
+  .cc-row .cc-marks { grid-column: 1 / -1; justify-content: flex-start; }
+  .cc-mark { width: 32px; height: 32px; font-size: 0.62rem; }
+  .checklist { grid-template-columns: 1fr; }
+  .rt-row { grid-template-columns: 18px auto 1fr; }
+  .rt-name { font-size: 0.85rem; white-space: normal; }
+  .rt-name.small { font-size: 0.78rem; }
+  .rt-note { font-size: 0.72rem; }
+}
+
+@media (max-width: 380px) {
+  main { padding: 1.25rem 0.85rem 7rem; }
+  .problem-card { padding: 1.2rem 0.95rem 1.1rem; }
+  .footnav-btn { padding: 0.55rem 0.7rem; font-size: 0.75rem; }
+  .footnav-status { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== 共通 defs (Phosphor アイコン用 gradient + filter) ==================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="icoNavy" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#5d8eb3"/>
+      <stop offset="100%" stop-color="#0F2847"/>
+    </linearGradient>
+    <linearGradient id="icoGold" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f4d995"/>
+      <stop offset="100%" stop-color="#8a6d1f"/>
+    </linearGradient>
+    <linearGradient id="icoRed" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e26375"/>
+      <stop offset="100%" stop-color="#8B0A1F"/>
+    </linearGradient>
+    <filter id="icoSh" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.5"/>
+      <feOffset dx="0.5" dy="2"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+</svg>
+
+<!-- ==================== SIDEBAR (TIMELINE) ==================== -->
+<aside class="sidebar" id="sidebar" aria-label="単元タイムライン">
+  <div class="sidebar-head">
+    <a href="../../" class="sidebar-brand">
+      <span class="mk">practice<span class="dot">.</span>lab</span>
+      <span class="tg">CHAPTER 1.03</span>
+    </a>
+    <button class="sidebar-close" id="sidebar-close" aria-label="閉じる">×</button>
+  </div>
+  <div class="sidebar-content">
+    <div class="sb-section">
+      <div class="sb-section-title">Overview</div>
+      <ol class="timeline" id="tl-overview"></ol>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">Examples</div>
+      <ol class="timeline" id="tl-examples"></ol>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">Practice</div>
+      <ol class="timeline" id="tl-practice"></ol>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">Result</div>
+      <ol class="timeline" id="tl-result"></ol>
+    </div>
+  </div>
+  <div class="sidebar-foot">
+    <span>SCORE</span>
+    <span class="sb-score" id="sb-score">—/8</span>
+    <button class="sb-reset" id="sb-reset">RESET</button>
+  </div>
+</aside>
+<div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+<!-- ==================== TOP BAR ==================== -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <button class="menu-btn" id="menu-btn" aria-label="目次を開く">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="../../" class="brand">
+      <span class="brand-mark">practice<span class="dot">.</span>lab</span>
+      <span class="brand-tag">PRACTICE</span>
+    </a>
+    <div class="topbar-progress">
+      <div class="progress-label">
+        <span class="stage-name" id="stage-name">START</span>
+        <span><span id="stage-current">1</span> <span style="color: var(--ink-faint);">/</span> <span id="stage-total">14</span></span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+    <div class="topbar-actions">
+      <button class="topbar-btn" id="btn-restart-top" title="最初からやり直す" aria-label="最初からやり直す">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ==================== MAIN ==================== -->
+<main id="stages">
+
+  <!-- ============================== STAGE 0: WELCOME ============================== -->
+  <section class="stage active" data-stage-name="START">
+    <div class="welcome-kicker">
+      <span class="num">1.S1</span>
+      <span>1章 思考のステップ1</span>
+    </div>
+    <h1 class="welcome-title-en">Pattern Lock<br>&amp; Counting<span class="accent">.</span></h1>
+    <h2 class="welcome-title-jp">パターンロックと経路問題</h2>
+    <div class="welcome-hero-art" aria-hidden="true">
+      <svg class="welcome-hero-svg" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="128" cy="140" r="20" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14" filter="url(#icoSh)"/>
+        <line x1="128" y1="160" x2="128" y2="184" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/>
+        <rect x="40" y="88" width="176" height="128" rx="8" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/>
+        <path d="M88,88V56a40,40,0,0,1,80,0V88" fill="none" stroke="url(#icoGold)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/>
+      </svg>
+    </div>
+    <p class="welcome-lede">
+      パターンロック・パスコード・チェーンメールの拡散を題材に、起こりうる場合の数を順序立てて数え上げる。1章で扱った情報セキュリティと情報モラルの題材を、具体的な計算で確かめます。
+    </p>
+    <div class="welcome-meta">
+      <div class="welcome-meta-item">
+        <div class="welcome-meta-label">examples</div>
+        <div class="welcome-meta-value">1<span class="unit">問</span></div>
+      </div>
+      <div class="welcome-meta-item">
+        <div class="welcome-meta-label">practice</div>
+        <div class="welcome-meta-value">4<span class="unit">問</span></div>
+      </div>
+      <div class="welcome-meta-item">
+        <div class="welcome-meta-label">est. time</div>
+        <div class="welcome-meta-value">18-25<span class="unit">分</span></div>
+      </div>
+      <div class="welcome-meta-item">
+        <div class="welcome-meta-label">source</div>
+        <div class="welcome-meta-value" style="font-size: 0.95rem;">ベストフィット<br><span class="unit" style="margin-left:0;">1章 思考S1</span></div>
+      </div>
+    </div>
+    <div class="flow-strip">
+      <div class="flow-strip-title">本セットの流れ</div>
+      <div class="flow-list">
+        <div class="flow-item"><span class="flow-num">1</span><div><strong>おさらい</strong>ー 7モジュールで数え上げの考え方を体系的に確認(タップで展開)</div></div>
+        <div class="flow-item"><span class="flow-num">2</span><div><strong>例題ツアー</strong>ー パターンロックの数え方を3ステップで追跡</div></div>
+        <div class="flow-item"><span class="flow-num">3</span><div><strong>演習</strong>ー 4問に挑戦。回答 → 採点 → 解説</div></div>
+        <div class="flow-item"><span class="flow-num">4</span><div><strong>結果</strong>ー 正答率と間違えた問題の再確認</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== STAGE 1: REVIEW (DIGEST) ============================== -->
+  <section class="stage" data-stage-name="REVIEW">
+    <div class="section-divider">
+      <span class="num">01</span>
+      <div class="text">
+        <div class="label">Section 1 — Visual Digest</div>
+        <div class="name">ひと目でわかる おさらい</div>
+      </div>
+    </div>
+
+    <div class="digest">
+
+      <!-- Module 1: 全体地図 HERO -->
+      <div class="digest-mod hero">
+        <button class="digest-prompt" type="button"><div class="digest-prompt-head">
+            <span class="digest-num">01</span>
+            <svg class="digest-mod-icon" viewBox="0 0 256 256" aria-hidden="true"><rect x="16" y="104" width="48" height="48" rx="8" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><rect x="152" y="40" width="64" height="64" rx="8" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><rect x="152" y="152" width="64" height="64" rx="8" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="64" y1="128" x2="112" y2="128" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M152,184H128a16,16,0,0,1-16-16V88a16,16,0,0,1,16-16h24" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
+            <span class="digest-en">The Big Map</span>
+            <span class="digest-toggle"><span class="plus">+</span></span>
+          </div>
+          <div class="digest-q">数え上げ問題は、どんな型に分かれる?</div></button>
+        <div class="digest-answer">
+          <div class="digest-title">場合の数 — 本セットで扱う 3 つの出題パターン</div>
+          <p class="digest-lede">本ステップで扱うのは、共通テスト「情報I」で頻出する場合の数の3つの<strong>出題パターン</strong>。<strong>① 積の法則</strong>(各ステップの通り数を掛ける)、<strong>② 順列</strong>(さらに重複なし/重複ありで挙動が変わる)、<strong>③ 指数増加</strong>(チェーンメールのねずみ算)。いずれも数学的には「<strong>各段階の通り数を掛け合わせる</strong>」という積の考え方を含む。最後に対概念の <strong>和の法則</strong>(場合分け)も補足する(モジュール 07)。</p>
+          <div class="family-tree-wrap">
+            <svg class="family-tree-svg" viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="場合の数の体系図">
+              <defs>
+                <linearGradient id="g-root" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#1A2B47"/>
+                  <stop offset="100%" stop-color="#122E55"/>
+                </linearGradient>
+                <linearGradient id="g-prod" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#5688D5"/>
+                  <stop offset="100%" stop-color="#2E5894"/>
+                </linearGradient>
+                <linearGradient id="g-perm" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#5BA0A8"/>
+                  <stop offset="100%" stop-color="#3E7D85"/>
+                </linearGradient>
+                <linearGradient id="g-exp" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#D9B36C"/>
+                  <stop offset="100%" stop-color="#A37A1F"/>
+                </linearGradient>
+              </defs>
+              <!-- Root -->
+              <rect x="280" y="14" width="200" height="56" rx="10" fill="url(#g-root)"/>
+              <text x="380" y="40" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="17" font-weight="600" fill="#FFFFFF" text-anchor="middle">場合の数</text>
+              <text x="380" y="58" font-family="'Fraunces', serif" font-style="italic" font-size="11" fill="#DAE6F5" text-anchor="middle">Counting Strategies</text>
+              <!-- Stem -->
+              <line x1="380" y1="70" x2="380" y2="100" stroke="#75839B" stroke-width="2"/>
+              <line x1="130" y1="100" x2="630" y2="100" stroke="#75839B" stroke-width="2"/>
+              <line x1="130" y1="100" x2="130" y2="120" stroke="#75839B" stroke-width="2"/>
+              <line x1="380" y1="100" x2="380" y2="120" stroke="#75839B" stroke-width="2"/>
+              <line x1="630" y1="100" x2="630" y2="120" stroke="#75839B" stroke-width="2"/>
+
+              <!-- Branch 1: 積の法則 (left) -->
+              <rect x="30" y="120" width="200" height="58" rx="10" fill="url(#g-prod)"/>
+              <text x="130" y="143" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="14" font-weight="600" fill="#FFFFFF" text-anchor="middle">積の法則(基本)</text>
+              <text x="130" y="162" font-family="'Zen Kaku Gothic New', sans-serif" font-size="10" fill="#DAE6F5" text-anchor="middle">a × b × c で数える</text>
+              <line x1="130" y1="178" x2="130" y2="200" stroke="#4A78C8" stroke-width="1.5"/>
+              <line x1="50" y1="200" x2="210" y2="200" stroke="#4A78C8" stroke-width="1.5"/>
+              <line x1="65" y1="200" x2="65" y2="218" stroke="#4A78C8" stroke-width="1.5"/>
+              <line x1="195" y1="200" x2="195" y2="218" stroke="#4A78C8" stroke-width="1.5"/>
+              <g>
+                <rect x="32" y="218" width="98" height="46" rx="7" fill="#FFFFFF" stroke="#4A78C8" stroke-width="2"/>
+                <text x="81" y="237" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="12" font-weight="600" fill="#1A2B47" text-anchor="middle">独立な選択</text>
+                <text x="81" y="254" font-family="'Zen Kaku Gothic New', sans-serif" font-size="9" fill="#75839B" text-anchor="middle">桁ごと・段階ごと</text>
+              </g>
+              <g>
+                <rect x="130" y="218" width="98" height="46" rx="7" fill="#FFFFFF" stroke="#4A78C8" stroke-width="2"/>
+                <text x="179" y="237" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="12" font-weight="600" fill="#1A2B47" text-anchor="middle">掛け合わせる</text>
+                <text x="179" y="254" font-family="'Zen Kaku Gothic New', sans-serif" font-size="9" fill="#75839B" text-anchor="middle">それぞれの通り数</text>
+              </g>
+
+              <!-- Branch 2: 順列(重複なし/あり) (center) -->
+              <rect x="280" y="120" width="200" height="58" rx="10" fill="url(#g-perm)"/>
+              <text x="380" y="143" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="14" font-weight="600" fill="#FFFFFF" text-anchor="middle">並べる(順列)</text>
+              <text x="380" y="162" font-family="'Zen Kaku Gothic New', sans-serif" font-size="10" fill="#DAEEEC" text-anchor="middle">重複なし / 重複あり</text>
+              <line x1="380" y1="178" x2="380" y2="200" stroke="#5BA0A8" stroke-width="1.5"/>
+              <line x1="300" y1="200" x2="460" y2="200" stroke="#5BA0A8" stroke-width="1.5"/>
+              <line x1="315" y1="200" x2="315" y2="218" stroke="#5BA0A8" stroke-width="1.5"/>
+              <line x1="445" y1="200" x2="445" y2="218" stroke="#5BA0A8" stroke-width="1.5"/>
+              <g>
+                <rect x="266" y="218" width="98" height="46" rx="7" fill="#FFFFFF" stroke="#5BA0A8" stroke-width="2"/>
+                <text x="315" y="237" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="12" font-weight="600" fill="#1A2B47" text-anchor="middle">重複なし</text>
+                <text x="315" y="254" font-family="'Zen Kaku Gothic New', sans-serif" font-size="9" fill="#75839B" text-anchor="middle">毎回 1 つ減る</text>
+              </g>
+              <g>
+                <rect x="396" y="218" width="98" height="46" rx="7" fill="#FFFFFF" stroke="#5BA0A8" stroke-width="2"/>
+                <text x="445" y="237" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="12" font-weight="600" fill="#1A2B47" text-anchor="middle">重複あり</text>
+                <text x="445" y="254" font-family="'Zen Kaku Gothic New', sans-serif" font-size="9" fill="#75839B" text-anchor="middle">毎回 同じ通り数</text>
+              </g>
+
+              <!-- Branch 3: 指数増加 (right) -->
+              <rect x="530" y="120" width="200" height="58" rx="10" fill="url(#g-exp)"/>
+              <text x="630" y="143" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="14" font-weight="600" fill="#FFFFFF" text-anchor="middle">指数増加(拡散)</text>
+              <text x="630" y="162" font-family="'Zen Kaku Gothic New', sans-serif" font-size="10" fill="#F5E5BB" text-anchor="middle">回数を重ねるほど急増</text>
+              <line x1="630" y1="178" x2="630" y2="200" stroke="#A37A1F" stroke-width="1.5"/>
+              <line x1="550" y1="200" x2="710" y2="200" stroke="#A37A1F" stroke-width="1.5"/>
+              <line x1="565" y1="200" x2="565" y2="218" stroke="#A37A1F" stroke-width="1.5"/>
+              <line x1="695" y1="200" x2="695" y2="218" stroke="#A37A1F" stroke-width="1.5"/>
+              <g>
+                <rect x="516" y="218" width="98" height="46" rx="7" fill="#FFFFFF" stroke="#A37A1F" stroke-width="2"/>
+                <text x="565" y="237" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="12" font-weight="600" fill="#1A2B47" text-anchor="middle">ねずみ算</text>
+                <text x="565" y="254" font-family="'Zen Kaku Gothic New', sans-serif" font-size="9" fill="#75839B" text-anchor="middle">毎回 r 倍</text>
+              </g>
+              <g>
+                <rect x="646" y="218" width="98" height="46" rx="7" fill="#FFFFFF" stroke="#A37A1F" stroke-width="2"/>
+                <text x="695" y="237" font-family="'Klee One', 'YuKyokasho Yoko', serif" font-size="12" font-weight="600" fill="#1A2B47" text-anchor="middle">累計の総量</text>
+                <text x="695" y="254" font-family="'Zen Kaku Gothic New', sans-serif" font-size="9" fill="#75839B" text-anchor="middle">等比数列の和</text>
+              </g>
+
+              <!-- Footer note -->
+              <text x="380" y="310" font-family="'Zen Kaku Gothic New', sans-serif" font-size="11" fill="#475673" text-anchor="middle">パターンロック・パスコード・チェーンメール — どれも「各ステップの通り数を掛ける」が共通の骨子。</text>
+              <text x="380" y="334" font-family="'Fraunces', serif" font-style="italic" font-size="10" fill="#75839B" text-anchor="middle">"Multiply the choices at each step."</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Module 2: 積の法則(独立な選択) -->
+      <div class="digest-mod">
+        <button class="digest-prompt" type="button"><div class="digest-prompt-head">
+            <span class="digest-num">02</span>
+            <svg class="digest-mod-icon" viewBox="0 0 256 256" aria-hidden="true"><rect x="80" y="64" width="96" height="48" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><rect x="32" y="48" width="192" height="160" rx="8" transform="translate(256) rotate(90)" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><circle cx="88" cy="148" r="12" fill="url(#icoNavy)"/><circle cx="128" cy="148" r="12" fill="url(#icoNavy)"/><circle cx="168" cy="148" r="12" fill="url(#icoNavy)"/><circle cx="88" cy="188" r="12" fill="url(#icoNavy)"/><circle cx="128" cy="188" r="12" fill="url(#icoNavy)"/><circle cx="168" cy="188" r="12" fill="url(#icoNavy)"/></svg>
+            <span class="digest-en">Product Rule</span>
+            <span class="digest-toggle"><span class="plus">+</span></span>
+          </div>
+          <div class="digest-q">桁・段階ごとに選ぶときの全パターン数は?</div></button>
+        <div class="digest-answer">
+          <div class="digest-title">積の法則 — 各ステップの選択肢を掛け合わせる</div>
+          <p class="digest-lede">ある操作を複数のステップに分け、<strong>各ステップで選べる数が順に決まる</strong>とき、全体のパターン数は<strong>各ステップの場合の数の積</strong>になる。前の選択によって候補そのものが変わっても、各段階の通り数(例: 10 → 9 → 8 → 7)が決まれば掛け合わせてよい。これが場合の数の最も基本となる考え方。</p>
+          <div class="compare">
+            <div class="compare-col left">
+              <h5>例 A: 4桁パスコード(<strong>重複なし</strong>)— 本問 Practice 1</h5>
+              <div class="row"><span class="k">1桁目</span><span class="v">10通り(0〜9)</span></div>
+              <div class="row"><span class="k">2桁目</span><span class="v">9通り(1桁目で使った数字は除外)</span></div>
+              <div class="row"><span class="k">3桁目</span><span class="v">8通り</span></div>
+              <div class="row"><span class="k">4桁目</span><span class="v">7通り</span></div>
+              <div class="row"><span class="k">合計</span><span class="v"><strong>10×9×8×7 = 5040通り</strong></span></div>
+            </div>
+            <div class="compare-col right">
+              <h5>例 B: 4桁パスコード(参考: 重複OKの場合)</h5>
+              <div class="row"><span class="k">各桁</span><span class="v">10通り(他桁に影響されない)</span></div>
+              <div class="row"><span class="k">合計</span><span class="v">10⁴ = 10000通り</span></div>
+              <div class="row"><span class="k">骨子</span><span class="v">×(掛け算)</span></div>
+              <div class="row"><span class="k">注意</span><span class="v">本問は <strong>重複なし(全違い)</strong> の条件。「重複OK」と取り違えやすいので、問題文の条件を必ず読む。</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Module 3: 順列(重複なし) -->
+      <div class="digest-mod">
+        <button class="digest-prompt" type="button"><div class="digest-prompt-head">
+            <span class="digest-num">03</span>
+            <svg class="digest-mod-icon" viewBox="0 0 256 256" aria-hidden="true"><polyline points="32 176 128 232 224 176" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="32 128 128 184 224 128" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polygon points="32 80 128 136 224 80 128 24 32 80" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
+            <span class="digest-en">Permutations</span>
+            <span class="digest-toggle"><span class="plus">+</span></span>
+          </div>
+          <div class="digest-q">「全て異なる」並べ方の総数はどう数える?</div></button>
+        <div class="digest-answer">
+          <div class="digest-title">順列(重複なし)— 使うたびに 1 つ減る</div>
+          <p class="digest-lede">「<strong>同じものは2回使えない</strong>」「<strong>一度通った点に戻れない</strong>」のような制約があると、各ステップで選べる数が 1 つずつ減っていく。これが順列(\(_nP_r = n(n-1)(n-2)\cdots\))の本質。</p>
+          <div class="bd-grid">
+            <div class="bd-card">
+              <div class="key">パターンロック<br>(4点全て使う)</div>
+              <span class="bound">4 × 3 × 2 × 1</span>
+              <div class="desc">スタートから順に<strong>残った点だけ</strong>選べる。最初4点 → 次3点 → … → 最後1点。</div>
+            </div>
+            <div class="bd-card">
+              <div class="key">4桁パスコード<br>(全て異なる数字)</div>
+              <span class="bound">10 × 9 × 8 × 7</span>
+              <div class="desc">使った数字は次の桁で使えない。10通り → 9通り → 8通り → 7通り = <strong>5040通り</strong>。</div>
+            </div>
+            <div class="bd-card">
+              <div class="key">公式に直すと</div>
+              <span class="bound">_nP_r = n!/(n-r)!</span>
+              <div class="desc">n 個から r 個取り出して並べる場合の数。重複なしの並べ方の一般形。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Module 4: 重複あり vs 重複なし -->
+      <div class="digest-mod">
+        <button class="digest-prompt" type="button"><div class="digest-prompt-head">
+            <span class="digest-num">04</span>
+            <svg class="digest-mod-icon" viewBox="0 0 256 256" aria-hidden="true"><circle cx="80" cy="200" r="24" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><circle cx="80" cy="56" r="24" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><circle cx="208" cy="144" r="24" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M184,144l-50-7.15a16,16,0,0,1-9.88-5.42L80,80v96" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
+            <span class="digest-en">With vs Without Repetition</span>
+            <span class="digest-toggle"><span class="plus">+</span></span>
+          </div>
+          <div class="digest-q">「戻ってもよい」と「戻れない」では、何が変わる?</div></button>
+        <div class="digest-answer">
+          <div class="digest-title">重複あり / なしの対比</div>
+          <p class="digest-lede">同じ題材でも「重複OK」と「重複NG」では数が大きく変わる。パターンロックの例題③④がまさにこの対比。</p>
+          <div class="lk-grid">
+            <div class="lk-card locked">
+              <div class="lk-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+              </div>
+              <h5>重複なし(戻れない)</h5>
+              <span class="stamp">毎回 −1</span>
+              <ul class="lk-list">
+                <li><span>4点を一筆書き → 4 × 3 × 2 × 1 = 24通り</span></li>
+                <li><span>各ステップで「残った選択肢」が減る</span></li>
+              </ul>
+              <p class="lk-rules">パターンロック②③ ・ パスコード(全違い)。<strong>前の選択が次の選択肢の数を 1 ずつ減らす</strong>(順列 _nP_r)。</p>
+            </div>
+            <div class="lk-card transferable">
+              <div class="lk-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="9" fill="url(#icoNavy)"/>
+                  <path d="M8 12h8M12 8v8"/>
+                </svg>
+              </div>
+              <h5>重複あり(戻ってもよい)</h5>
+              <span class="stamp">毎回 同数</span>
+              <ul class="lk-list">
+                <li><span>4点・3回移動・他の点へなら戻れる</span></li>
+                <li><span>4 × 3 × 3 × 3 = 108通り</span></li>
+              </ul>
+              <p class="lk-rules">パターンロック④。各移動で <strong>「今の点以外の3つ」</strong> から選べるため、毎回 3 通りに分岐する(積の法則: 4 × 3³ = 108)。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Module 5: 損失率の計算 -->
+      <div class="digest-mod">
+        <button class="digest-prompt" type="button"><div class="digest-prompt-head">
+            <span class="digest-num">05</span>
+            <svg class="digest-mod-icon" viewBox="0 0 256 256" aria-hidden="true"><polyline points="48 208 48 136 96 136" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="224" y1="208" x2="32" y2="208" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="96 208 96 88 152 88" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="152 208 152 40 208 40 208 208" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
+            <span class="digest-en">Loss Rate</span>
+            <span class="digest-toggle"><span class="plus">+</span></span>
+          </div>
+          <div class="digest-q">使える選択肢が減ると、何%失われる?</div></button>
+        <div class="digest-answer">
+          <div class="digest-title">損失率 = (元の数 − 残った数) ÷ 元の数</div>
+          <p class="digest-lede">パスコード問題(2)で問われるのが「<strong>0が壊れたらパターンが何%減る?</strong>」。割合の計算は、<strong>失った部分</strong>と<strong>元全体</strong>の比で出す。</p>
+          <div class="checklist">
+            <div class="cl-item"><span class="cl-num">①</span><span><span class="cl-key">壊れる前</span> 10×9×8×7 = 5040通り</span></div>
+            <div class="cl-item"><span class="cl-num">②</span><span><span class="cl-key">壊れた後</span> 9×8×7×6 = 3024通り(0が使えないので各桁の選択肢が −1)</span></div>
+            <div class="cl-item"><span class="cl-num">③</span><span><span class="cl-key">残存率</span> 3024 ÷ 5040 = 0.6 = 60%</span></div>
+            <div class="cl-item"><span class="cl-num">④</span><span><span class="cl-key">損失率</span> 100% − 60% = <strong>40%</strong></span></div>
+          </div>
+          <div style="margin-top: 0.85rem; padding: 0.7rem 0.95rem; background: var(--gold-pale); border-left: 3px solid var(--gold); border-radius: 0 6px 6px 0; font-size: 0.85rem; color: var(--gold-deep);">
+            <strong>ポイント:</strong> 「何%減ったか」は <em>(元 − 残り) ÷ 元</em>。「何%残ったか」と取り違えないよう、最後にどちらを問われているか必ず確認する。
+          </div>
+        </div>
+      </div>
+
+      <!-- Module 6: 指数増加(ねずみ算) -->
+      <div class="digest-mod">
+        <button class="digest-prompt" type="button"><div class="digest-prompt-head">
+            <span class="digest-num">06</span>
+            <svg class="digest-mod-icon" viewBox="0 0 256 256" aria-hidden="true"><polygon points="160 16 144 96 208 120 96 240 112 160 48 136 160 16" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
+            <span class="digest-en">Chain Mail Math</span>
+            <span class="digest-toggle"><span class="plus">+</span></span>
+          </div>
+          <div class="digest-q">チェーンメールはなぜ「いつの間にか」1万人を超える?</div></button>
+        <div class="digest-answer">
+          <div class="digest-title">ねずみ算(指数増加)— 1人 → 4人 → 16人 → 64人 → ⋯</div>
+          <p class="digest-lede">1人が4人に転送し、その4人がそれぞれ4人に転送する……これは<strong>等比数列(初項 4・公比 4)</strong>。回数を重ねるごとに4倍ずつ増えるため、見た目は穏やかでも数回でいきなり大きな数に達する。</p>
+          <div class="cc-grid" style="grid-template-columns: 1fr;">
+            <div class="cc-row">
+              <span class="lbl">1回目</span>
+              <span class="desc">1人 × 4人 = <strong>4人</strong></span>
+              <div class="cc-marks"><span class="cc-mark by active">●</span></div>
+            </div>
+            <div class="cc-row">
+              <span class="lbl">2回目</span>
+              <span class="desc">4人 × 4人 = <strong>16人</strong></span>
+              <div class="cc-marks"><span class="cc-mark by active">●</span><span class="cc-mark nc active">●</span></div>
+            </div>
+            <div class="cc-row">
+              <span class="lbl">3回目</span>
+              <span class="desc">16人 × 4人 = <strong>64人</strong></span>
+              <div class="cc-marks"><span class="cc-mark by active">●</span><span class="cc-mark nc active">●</span><span class="cc-mark nd active">●</span></div>
+            </div>
+            <div class="cc-row">
+              <span class="lbl">4回目</span>
+              <span class="desc">64人 × 4人 = <strong>256人</strong></span>
+              <div class="cc-marks"><span class="cc-mark by active">●</span><span class="cc-mark nc active">●</span><span class="cc-mark nd active">●</span><span class="cc-mark sa active">●</span></div>
+            </div>
+            <div class="cc-row">
+              <span class="lbl">7回目</span>
+              <span class="desc">4096人 × 4人 = <strong>16384人</strong>(初めて1万人を超える)</span>
+              <div class="cc-marks"><span class="cc-mark by active">●</span><span class="cc-mark nc active">●</span><span class="cc-mark nd active">●</span><span class="cc-mark sa active">●</span></div>
+            </div>
+          </div>
+          <div style="margin-top: 0.85rem; padding: 0.7rem 0.95rem; background: var(--ng-pale); border-left: 3px solid var(--ng); border-radius: 0 6px 6px 0; font-size: 0.85rem; color: var(--ng-deep);">
+            <strong>受信時の対応:</strong> 拡散されてしまうと回収が困難。「面白そう」「善意で広めよう」という動機があっても、<strong>転送せずにメールを止める</strong>のが原則。情報の真偽は、報道や行政機関など信頼できる情報源で確かめる。
+          </div>
+        </div>
+      </div>
+
+      <!-- Module 7: 和の法則(場合分け)— 積の法則の対概念 -->
+      <div class="digest-mod">
+        <button class="digest-prompt" type="button"><div class="digest-prompt-head">
+            <span class="digest-num">07</span>
+            <svg class="digest-mod-icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M32.5,138A72,72,0,1,1,62,167.5l-27.76,8.16a8,8,0,0,1-9.93-9.93Z" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M163.94,80.11A72,72,0,0,1,223.5,186l8.16,27.76a8,8,0,0,1-9.93,9.93L194,215.5A72.05,72.05,0,0,1,92.06,175.89" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
+            <span class="digest-en">Sum Rule</span>
+            <span class="digest-toggle"><span class="plus">+</span></span>
+          </div>
+          <div class="digest-q">「AまたはB」のように場合を分けて数えるとき、どう足し合わせる?</div></button>
+        <div class="digest-answer">
+          <div class="digest-title">和の法則 — 排他的な場合は足し算</div>
+          <p class="digest-lede">本問では <strong>積の法則</strong>(各ステップを掛け合わせる)が中心だが、その対概念に <strong>和の法則</strong>がある。<strong>同時に起こりえない複数の場合</strong>(排他的)に分けたときは、各場合の通り数を <strong>足し合わせる</strong>。共通テスト「情報I」では、積と和の使い分けが頻出。</p>
+          <div class="bd-grid">
+            <div class="bd-card">
+              <div class="key">積の法則<br>(段階的に進む)</div>
+              <span class="bound">a × b × c</span>
+              <div class="desc">「1桁目を選び、<strong>次に</strong>2桁目を選ぶ」のように、<strong>連続するステップ</strong>では掛け合わせる。</div>
+            </div>
+            <div class="bd-card">
+              <div class="key">和の法則<br>(場合に分ける)</div>
+              <span class="bound">a + b</span>
+              <div class="desc">「<strong>4桁か 5桁か</strong>のいずれか」のように、<strong>同時には起こらない</strong>複数の場合を合わせるときは足す。</div>
+            </div>
+            <div class="bd-card">
+              <div class="key">使い分けの目安</div>
+              <span class="bound">「かつ」 vs 「または」</span>
+              <div class="desc"><strong>「かつ」(連続して)</strong> → 積、<strong>「または」(<u>同時に起こりえない</u>場合)</strong> → 和。「または」のときは<strong>重なりがないか必ず確認</strong>する。問題文の接続詞に注目。</div>
+            </div>
+          </div>
+          <div style="margin-top: 0.85rem; padding: 0.75rem 0.95rem; background: var(--gold-pale); border-left: 3px solid var(--gold); border-radius: 0 6px 6px 0; font-size: 0.86rem; color: var(--gold-deep); line-height: 1.7;">
+            <strong>応用例:</strong> 「4桁<strong>または</strong>5桁のパスコードが設定可能」(同時に4桁かつ5桁にはなれない=排他的) → <strong>足す</strong>。「4桁パスコードを入力<strong>し、その後</strong> PIN 4桁を入力」(連続) → <strong>掛ける</strong>。同じ「4桁」でも、接続関係(連続 vs 排他的選択)で演算が変わる。
+          </div>
+          <div style="margin-top: 0.65rem; padding: 0.65rem 0.85rem; background: var(--ng-pale); border-left: 3px solid var(--ng); border-radius: 0 6px 6px 0; font-size: 0.82rem; color: var(--ng-deep); line-height: 1.7;">
+            <strong>注意:</strong> 「または」が <em>排他的でない</em>(両方を同時に満たす場合がある)ときは、単純な足し算では<strong>重複を二重に数えてしまう</strong>。その場合は <em>包除原理</em>(重なりを引く)が必要。共通テストレベルでも、「両方を満たす場合がないか?」を必ず確認する。
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================== STAGE 2: 例題1 — パターンロック ============================== -->
+  <section class="stage" data-stage-name="例題 1" data-prob-id="ex1">
+    <div class="problem-meta">
+      <span class="problem-tag">EXAMPLE 1 / 1</span>
+      <span class="problem-source">ベストフィット 例題 / 2022 共テ追試「情報関係基礎」改題</span>
+    </div>
+    <div class="problem-q-num"><span class="q">Q</span>1</div>
+    <div class="problem-icon-row"><svg class="problem-icon-svg" viewBox="0 0 256 256" aria-hidden="true"><circle cx="128" cy="140" r="20" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="128" y1="160" x2="128" y2="184" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><rect x="40" y="88" width="176" height="128" rx="8" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M88,88V56a40,40,0,0,1,80,0V88" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg><h3 class="problem-title">パターンロックと経路問題</h3></div>
+    <div class="problem-card">
+      <p class="problem-q lead">次の先輩と後輩の会話文を読み、<strong>ア</strong>〜<strong>カ</strong>に当てはまる数字を答えよ。</p>
+      <blockquote style="margin: 0.6rem 0 1.1rem; padding: 0.95rem 1.1rem; background: var(--bg-soft); border-left: 4px solid var(--action-pale2); border-radius: 0 8px 8px 0; font-family: var(--f-jp-display); font-size: 0.95rem; line-height: 1.95; color: var(--ink);">
+        <strong>後輩:</strong> 先輩こんにちは。その画面(図1)何ですか?<br>
+        <strong>先輩:</strong> ああ、これは大事な情報を守ってくれるアプリの画面で、パターンでロックを解除できるんだよ。<br>
+        <figure style="margin: 0.7rem 0 0.7rem 0.5rem; padding: 0.7rem 0.9rem; background: var(--bg-card); border: 1px solid var(--line); border-radius: 6px; display: inline-block; max-width: 320px;">
+          <img src="assets/fig1-pattern-lock.jpeg" alt="図1: パターンによるロック解除の画面と操作イメージ" style="display: block; width: 100%; height: auto; max-width: 280px;">
+          <figcaption style="margin-top: 0.4rem; font-family: var(--f-mono); font-size: 0.74rem; color: var(--ink-mute); text-align: center;">図 1: パターンによるロック解除の画面と操作イメージ</figcaption>
+        </figure><br>
+        <strong>後輩:</strong> 点と点を一筆書きみたいになぞるやつですか。<br>
+        <strong>先輩:</strong> そう、このアプリの場合、<strong>① 四隅すべての点を好きな順路でなぞるタイプ</strong>なんだけど、<strong>一度通った点には戻れない</strong>んだ。<br>
+        <strong>後輩:</strong> なんかすぐ破られそうですね。<br>
+        <strong>先輩:</strong> <strong>② 左上の点から始めたら</strong>パターンは何通りあると思う?<br>
+        <strong>後輩:</strong> え~っと、<strong>ア</strong> 通りですよね。<br>
+        <strong>先輩:</strong> そう。あとは <strong>③ 始める点はどこからでもいい</strong>ので…。<br>
+        <strong>後輩:</strong> なるほど、そうやってすべてのパターンを求めると <strong>イウ</strong> 通りってことになりますね。一度通った点に戻れるとしたら、パターンまた増えそう。<br>
+        <strong>先輩:</strong> <strong>④ 一度通った点に戻ってもよいルール</strong>で、今いる点からほかの点へと <strong>3 回動いて延べ 4 点を通るなぞり書き</strong>をするとしたら <strong>エオカ</strong> 通りだね。
+        <div style="margin-top: 0.55rem; font-family: var(--f-mono); font-size: 0.72rem; color: var(--ink-mute); text-align: right;">(2022 年 大学入学共通テスト追試験「情報関係基礎」改題)</div>
+      </blockquote>
+
+      <div class="viz" style="margin: 0.4rem 0 1rem;">
+        <span class="viz-label">VISUAL AID — 会話の核心を整理</span>
+        <div class="viz-caption">問題文(上)の論点 ①〜④ を視覚化した補助。原本の本文は上の引用ボックスを参照。</div>
+        <div class="origin-compare">
+          <div class="origin-side industrial">
+            <h5>① 四隅の点を全てなぞる</h5>
+            <div class="tag-en">no revisit</div>
+            <div class="origin-flow">
+              <span class="origin-step">4点</span>
+              <span class="origin-arrow">→</span>
+              <span class="origin-step fill">一度通った点に戻れない</span>
+            </div>
+            <span class="origin-key">②③ で問う</span>
+            <p class="note">②「左上から始めると?」 → <strong>ア通り</strong> / ③「始める点はどこでもいい」 → <strong>イウ通り</strong></p>
+          </div>
+          <div class="origin-side copyright">
+            <h5>④ 戻ってもよいルール</h5>
+            <div class="tag-en">with revisit</div>
+            <div class="origin-flow">
+              <span class="origin-step">今の点</span>
+              <span class="origin-arrow">→</span>
+              <span class="origin-step">他点へ移動</span>
+              <span class="origin-arrow">→</span>
+              <span class="origin-step fill">3回動き 4点</span>
+            </div>
+            <span class="origin-key">エオカ通り</span>
+            <p class="note">同じ点に戻ってもよいが、ほかの点へは必ず移動する(止まらない)。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions-inline">
+        <button class="btn-reveal" data-action="reveal">解答を見る</button>
+      </div>
+
+      <div class="feedback" data-feedback>
+        <div class="fb-banner ok">
+          <span class="icon">✓</span>
+          <span>正答: ア = <strong>6</strong> / イウ = <strong>24</strong> / エオカ = <strong>108</strong></span>
+        </div>
+        <div class="fb-body">
+          <div class="fb-section">
+            <div class="fb-section-title">ベストフィット</div>
+            <div class="fb-bestfit">数え上げの基本は「<strong>各ステップの通り数を掛ける</strong>」。重複なし(順列)と重複あり(独立な選択)を区別することが要。</div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">解説 — Step 1 (左上から始める場合)</div>
+            <div class="fb-explain">
+              <p>左上を1番目と固定すると、残りは <strong>3点</strong>。2番目はその3点から選ぶので 3 通り、3番目は残った 2 通り、4番目は最後の 1 通り。</p>
+              <p style="font-family: var(--f-mono); background: var(--bg-soft); padding: 0.4rem 0.7rem; border-radius: 6px; display: inline-block; margin-top: 0.3rem;">3 × 2 × 1 = <strong>ア = 6 通り</strong></p>
+            </div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">解説 — Step 2 (全ての始点を考える)</div>
+            <div class="fb-explain">
+              <p>始点は4点のいずれでもよいので、4通り。各始点から ア = 6 通りずつあるので:</p>
+              <p style="font-family: var(--f-mono); background: var(--bg-soft); padding: 0.4rem 0.7rem; border-radius: 6px; display: inline-block; margin-top: 0.3rem;">4 × 6 = <strong>イウ = 24 通り</strong></p>
+            </div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">解説 — Step 3 (戻ってもよい場合)</div>
+            <div class="fb-explain">
+              <p>始点は4通り。今いる点からは「他の3点」へ自由に移動できる(同じ点に戻ってもよい)。3回の移動それぞれで 3 通りなので、<strong>独立な選択</strong>として:</p>
+              <p style="font-family: var(--f-mono); background: var(--bg-soft); padding: 0.4rem 0.7rem; border-radius: 6px; display: inline-block; margin-top: 0.3rem;">4 × 3 × 3 × 3 = 4 × 27 = <strong>エオカ = 108 通り</strong></p>
+            </div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">考えて納得の対応(補足)</div>
+            <div class="fb-explain">
+              <p>原本「考えて納得!」の文字記号と数値の対応:</p>
+              <p>A = 3, B = 3, C = 2, D = 1, E = 4, F = 4, G = 3, H = 27</p>
+              <p>A は「左上以外で残っている点の数」、B〜D が「2番目・3番目・4番目の通り数」、E は Step2 の始点数、F は Step3 の始点数、G は「他の点へ動く 1 回ぶんの通り数」、H = G × G × G。</p>
+            </div>
+          </div>
+
+          <div class="viz">
+            <span class="viz-label">PATTERN LOCK — 重複なし vs 重複あり</span>
+            <div class="viz-caption">同じ4点でも、ルールが変われば数え方が変わる。</div>
+            <div class="lk-grid">
+              <div class="lk-card locked">
+                <div class="lk-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                </div>
+                <h5>重複なし — Step 1 / 2</h5>
+                <span class="stamp">順列</span>
+                <ul class="lk-list">
+                  <li><span>左上始点 → 3 × 2 × 1 = 6</span></li>
+                  <li><span>全始点 → 4 × 6 = 24</span></li>
+                </ul>
+                <p class="lk-rules">使うたびに残りが <strong>−1</strong>。一度通った点には戻れない制約。</p>
+              </div>
+              <div class="lk-card transferable">
+                <div class="lk-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0z"/>
+                    <path d="M16 12l-4-4-4 4M12 8v8"/>
+                  </svg>
+                </div>
+                <h5>重複あり — Step 3</h5>
+                <span class="stamp">独立選択 ×3</span>
+                <ul class="lk-list">
+                  <li><span>各移動は「他の3点」から1つ → 3</span></li>
+                  <li><span>4 × 3³ = 4 × 27 = 108</span></li>
+                </ul>
+                <p class="lk-rules">同じ点に戻ってもよい(ただし<strong>その場には止まらない</strong>)ので、毎回 3 通り。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== STAGE 3: 練習1 — パスコードの組合せ ============================== -->
+  <section class="stage" data-stage-name="練習 1" data-prob-id="p1">
+    <div class="problem-meta">
+      <span class="problem-tag practice">PRACTICE 1 / 4</span>
+      <span class="problem-tag fill">NUM × 2</span>
+      <span class="problem-source">ベストフィット 解いて定着 1 / 2024 共テ追試「情報関係基礎」改題</span>
+    </div>
+    <div class="problem-q-num"><span class="q">Q</span>1</div>
+    <div class="problem-icon-row"><svg class="problem-icon-svg" viewBox="0 0 256 256" aria-hidden="true"><circle cx="128" cy="140" r="20" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="128" y1="160" x2="128" y2="184" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><rect x="40" y="88" width="176" height="128" rx="8" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M88,88V56a40,40,0,0,1,80,0V88" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg><h3 class="problem-title">パスコードの組合せ</h3></div>
+    <div class="problem-card">
+      <p class="problem-q lead">あるスマートフォンは、0 から 9 までの 10 種類の数字を組み合わせて、4桁のパスコードを設定することで画面をロックできる。ただし、<strong>4桁のパスコードはすべて異なる数字</strong>で構成される必要がある(0123 や 9876 は OK、0101 は NG)。次の ⑴ ⑵ に答えよ。</p>
+
+      <div class="numfill-list" data-input="numfill" data-correct="5040|40">
+        <div class="numfill-row" data-sub="0">
+          <span class="numfill-sub-label">⑴</span>
+          <div class="numfill-fields">
+            <span class="numfill-prefix">設定可能なパスコードの総数は</span>
+            <span class="numfill-slot">
+              <span class="numfill-slot-label">アイウエ</span>
+              <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="numfill-input" autocomplete="off">
+            </span>
+            <span class="numfill-unit">通り存在する。</span>
+          </div>
+        </div>
+        <div class="numfill-row" data-sub="1">
+          <span class="numfill-sub-label">⑵</span>
+          <div class="numfill-fields">
+            <span class="numfill-prefix">ある日、このスマートフォンのディスプレイの一部が <strong>図 1 のように破損</strong>してしまい、<strong>0 の入力ができなくなった</strong>。この破損によって、設定可能なパスコードの総数は破損前と比べると</span>
+            <span class="numfill-slot">
+              <span class="numfill-slot-label">オカ</span>
+              <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" class="numfill-input" autocomplete="off">
+            </span>
+            <span class="numfill-unit">% 損失したことになる。</span>
+            <figure style="margin: 0.6rem 0 0.2rem; padding: 0.7rem 0.9rem; background: var(--bg-card); border: 1px solid var(--line); border-radius: 6px; display: inline-block; max-width: 220px;">
+              <img src="assets/fig1-passcode-broken.jpeg" alt="図1: ディスプレイの一部が破損したスマートフォンのパスコード入力画面(0 が使えない)" style="display: block; width: 100%; height: auto; max-width: 180px; margin: 0 auto;">
+              <figcaption style="margin-top: 0.4rem; font-family: var(--f-mono); font-size: 0.72rem; color: var(--ink-mute); text-align: center; line-height: 1.5;">図 1: 破損後の入力画面<br>(0 が使用不可)</figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions-inline">
+        <button class="btn-grade" data-action="grade">採点する <span class="arrow">→</span></button>
+      </div>
+
+      <div class="feedback" data-feedback>
+        <div class="fb-banner ok">
+          <span class="icon">✓</span>
+          <span>正答: ⑴ アイウエ = <strong>5040</strong> / ⑵ オカ = <strong>40</strong></span>
+          <span class="score-tag"></span>
+        </div>
+        <div class="fb-body">
+          <div class="fb-section">
+            <div class="fb-section-title">解説</div>
+            <div class="fb-explain">
+              <ul>
+                <li><strong>⑴ アイウエ = 5040</strong> — 「すべて異なる数字」のため、1桁目に選べる数字は 10 通り、2桁目は 1桁目で使った数字が使えないので 9 通り、3桁目は 8 通り、4桁目は 7 通り。<span style="font-family: var(--f-mono); background: var(--bg-soft); padding: 0.1rem 0.4rem; border-radius: 4px;">10 × 9 × 8 × 7 = 5040 通り</span></li>
+                <li><strong>⑵ オカ = 40</strong> — 0 が使えなくなると、各桁の選択肢が 1 ずつ減る。<span style="font-family: var(--f-mono); background: var(--bg-soft); padding: 0.1rem 0.4rem; border-radius: 4px;">9 × 8 × 7 × 6 = 3024 通り</span> となる。3024 ÷ 5040 = 0.6 = 60% が残存率。<strong>損失率は 100 − 60 = 40 %</strong>。</li>
+              </ul>
+            </div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">減ったのは「何%」?(補足)</div>
+            <div class="fb-explain">
+              <p>「<strong>何%損失したか</strong>」は (元 − 残り) ÷ 元。「<strong>何%残ったか</strong>」は残り ÷ 元。問題文がどちらを問うているかで答えが大きく変わる(60 vs 40)。読み違いに注意。</p>
+              <p>また、もし各桁の選択肢が同じ比率で減る(各桁とも 10 → 9 通り)なら、全体は (9/10)⁴ = 0.6561 倍 → 損失率は <strong>1 − 0.6561 = 0.3439 ≒ 34.4 %</strong> となる。本問はこれと違って <strong>各桁の選択肢が 1 ずつ異なる</strong>(10/9/8/7 → 9/8/7/6)ため、上記とは計算式が異なる点に注意。</p>
+            </div>
+          </div>
+          <div class="viz">
+            <span class="viz-label">DIGITS — 桁ごとの選択肢</span>
+            <div class="viz-caption">壊れる前と後で、各桁の選択肢が並列にどう減るか。</div>
+            <div class="compare">
+              <div class="compare-col left">
+                <h5>壊れる前(0〜9)</h5>
+                <div class="row"><span class="k">1桁目</span><span class="v">10 通り</span></div>
+                <div class="row"><span class="k">2桁目</span><span class="v">9 通り</span></div>
+                <div class="row"><span class="k">3桁目</span><span class="v">8 通り</span></div>
+                <div class="row"><span class="k">4桁目</span><span class="v">7 通り</span></div>
+                <div class="row"><span class="k">合計</span><span class="v"><strong>5040 通り</strong></span></div>
+              </div>
+              <div class="compare-col right">
+                <h5>0 が壊れた後(1〜9)</h5>
+                <div class="row"><span class="k">1桁目</span><span class="v">9 通り</span></div>
+                <div class="row"><span class="k">2桁目</span><span class="v">8 通り</span></div>
+                <div class="row"><span class="k">3桁目</span><span class="v">7 通り</span></div>
+                <div class="row"><span class="k">4桁目</span><span class="v">6 通り</span></div>
+                <div class="row"><span class="k">合計</span><span class="v"><strong>3024 通り(60%)</strong></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== STAGE 4: 練習2 — チェーンメールの正体 ============================== -->
+  <section class="stage" data-stage-name="練習 2" data-prob-id="p2">
+    <div class="problem-meta">
+      <span class="problem-tag practice">PRACTICE 2 / 4</span>
+      <span class="problem-tag match">MATCH × 2</span>
+      <span class="problem-source">ベストフィット 解いて定着 2(語句編 ア・エ) / 2017 センター本試 改題</span>
+    </div>
+    <div class="problem-q-num"><span class="q">Q</span>2</div>
+    <div class="problem-icon-row"><svg class="problem-icon-svg" viewBox="0 0 256 256" aria-hidden="true"><path d="M32,56H224a0,0,0,0,1,0,0V192a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V56A0,0,0,0,1,32,56Z" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="224 56 128 144 32 56" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg><h3 class="problem-title">チェーンメールの正体</h3></div>
+    <div class="problem-card">
+      <p class="problem-q lead">次の父と娘の電子メールに関する会話の空欄 <strong>ア</strong> と <strong>エ</strong> に入れるのに最も適当なものを、後の解答群のうちから一つずつ選べ。</p>
+      <blockquote style="margin: 0.6rem 0 1.1rem; padding: 0.85rem 1rem; background: var(--bg-soft); border-left: 4px solid var(--action-pale2); border-radius: 0 8px 8px 0; font-family: var(--f-jp-display); font-size: 0.95rem; line-height: 1.85; color: var(--ink);">
+        娘:さっき友達から、「拡散希望」っていう件名の電子メールが届いたんだ。テレビ番組の企画で、メールの転送を繰り返してどれだけ広い範囲に伝わるかっていう実験なんだって。…面白そうだから、友達に転送しようかな。<br>
+        父:ちょっと待って。転送してはだめだよ。それは <strong>ア</strong> メールだね。<strong>ア</strong> メールでは、偽情報を拡散させようとしていることが多いんだよ。ほかにも イ とか、ウ ということもあるよ。<br>
+        娘:情報が正しいかどうか確認するためにその番組の公式 <strong>エ</strong> を見てみるね。あれ、「当番組の企画をかたった <strong>ア</strong> メールにご注意ください」って書いてある。転送しないでよかった。
+      </blockquote>
+
+      <div class="option-legend">
+        <div class="option-legend-title">解答群(ア・エ 共通)</div>
+        <div class="option-legend-list">
+          <span class="option-legend-item"><span class="let">⓪</span>アクセスログ</span>
+          <span class="option-legend-item"><span class="let">①</span>Webサイト</span>
+          <span class="option-legend-item"><span class="let">②</span>公開鍵</span>
+          <span class="option-legend-item"><span class="let">③</span>ショート</span>
+          <span class="option-legend-item"><span class="let">④</span>タグ</span>
+          <span class="option-legend-item"><span class="let">⑤</span>チェーン</span>
+          <span class="option-legend-item"><span class="let">⑥</span>データベース</span>
+          <span class="option-legend-item"><span class="let">⑦</span>ワーム</span>
+        </div>
+      </div>
+
+      <div class="match-list" data-input="match" data-options="⓪,①,②,③,④,⑤,⑥,⑦" data-correct="5,1">
+        <div class="match-row" data-sub="0">
+          <span class="match-sub-label">ア</span>
+          <div class="sub-content">
+            <span class="match-text">父:転送してはだめだよ。それは「<strong>ア</strong> メール」だね。<strong>ア</strong> メールでは、偽情報を拡散させようとしていることが多いんだよ。</span>
+            <div class="match-pills"></div>
+          </div>
+        </div>
+        <div class="match-row" data-sub="1">
+          <span class="match-sub-label">エ</span>
+          <div class="sub-content">
+            <span class="match-text">娘:情報が正しいかどうか確認するため、その番組の公式 <strong>エ</strong> を見てみるね。</span>
+            <div class="match-pills"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions-inline">
+        <button class="btn-grade" data-action="grade">採点する <span class="arrow">→</span></button>
+      </div>
+
+      <div class="feedback" data-feedback>
+        <div class="fb-banner ok">
+          <span class="icon">✓</span>
+          <span>正答: ア = <strong>⑤ チェーン</strong> / エ = <strong>① Webサイト</strong></span>
+          <span class="score-tag"></span>
+        </div>
+        <div class="fb-body">
+          <div class="fb-section">
+            <div class="fb-section-title">解説</div>
+            <div class="fb-explain">
+              <ul>
+                <li><strong>ア — チェーン</strong>:チェーンメールは迷惑メールの一種。「チェーンメッセージ」とも呼ばれる。インターネットのトラフィック(回線上のデータ量)を増やし、ほかの必要な情報通信を遅らせる原因になる。</li>
+                <li><strong>エ — Webサイト</strong>:情報の真偽は、報道や行政機関の<strong>公式 Web サイト</strong>など、信頼できる情報源で確認するのが基本。SNS で流れてきた情報を、別の SNS で「正しい」と言っている人がいるからといって信用してはいけない。</li>
+              </ul>
+            </div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">紛らわしい選択肢の整理(参考)</div>
+            <div class="fb-explain">
+              <p>解答群のうち、似た文脈で出てくる用語を整理しておく。</p>
+              <ul>
+                <li><strong>⑦ ワーム</strong>:自身の複製を作り、ネットワーク経由で他のコンピュータへ広がる<strong>マルウェアの一種</strong>。チェーンメールは「人」が転送するが、ワームは「プログラム」が自動的に増殖する点が異なる。</li>
+                <li><strong>③ ショート(メール)</strong>:電話番号を宛先とする短文メッセージ(SMS)。本問の文脈では誤り。</li>
+                <li><strong>⓪ アクセスログ</strong>:Web サーバ等で「いつ・誰が・どこから」アクセスしたかを記録したもの。情報源としては内部監査用。</li>
+              </ul>
+            </div>
+          </div>
+          <div class="viz">
+            <span class="viz-label">CHAIN vs WORM — 同じ「広がる」でも仕組みが違う</span>
+            <div class="viz-caption">人が転送するか、プログラムが勝手に増えるか。</div>
+            <div class="compare">
+              <div class="compare-col left">
+                <h5>チェーンメール(⑤)</h5>
+                <div class="row"><span class="k">伝播</span><span class="v">人が善意/興味で転送</span></div>
+                <div class="row"><span class="k">中身</span><span class="v">扇情的な文章・偽情報</span></div>
+                <div class="row"><span class="k">対策</span><span class="v">転送せず止める</span></div>
+              </div>
+              <div class="compare-col right">
+                <h5>ワーム(⑦)</h5>
+                <div class="row"><span class="k">伝播</span><span class="v">プログラムが自動複製・自動送信</span></div>
+                <div class="row"><span class="k">中身</span><span class="v">マルウェア(悪意あるコード)</span></div>
+                <div class="row"><span class="k">対策</span><span class="v">セキュリティソフト・パッチ適用</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== STAGE 5: 練習3 — チェーンメールの危険性 ============================== -->
+  <section class="stage" data-stage-name="練習 3" data-prob-id="p3">
+    <div class="problem-meta">
+      <span class="problem-tag practice">PRACTICE 3 / 4</span>
+      <span class="problem-tag multi">MULTI(順不同)</span>
+      <span class="problem-source">ベストフィット 解いて定着 2(危険性編 イ・ウ) / 2017 センター本試 改題</span>
+    </div>
+    <div class="problem-q-num"><span class="q">Q</span>3</div>
+    <div class="problem-icon-row"><svg class="problem-icon-svg" viewBox="0 0 256 256" aria-hidden="true"><line x1="128" y1="136" x2="128" y2="96" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><circle cx="128" cy="172" r="12" fill="url(#icoNavy)"/><path d="M216,112V56a8,8,0,0,0-8-8H48a8,8,0,0,0-8,8v56c0,96,88,120,88,120S216,208,216,112Z" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg><h3 class="problem-title">チェーンメールの危険性(順不同で2つ)</h3></div>
+    <div class="problem-card">
+      <p class="problem-q lead">前問(練習 2)と同じ会話の中の空欄 <strong>イ・ウ</strong> に入れるのに最も適当なものを、後の解答群のうちから一つずつ<strong>順不同で 2 つ</strong>選べ。</p>
+      <blockquote style="margin: 0.6rem 0 1.1rem; padding: 0.85rem 1rem; background: var(--bg-soft); border-left: 4px solid var(--action-pale2); border-radius: 0 8px 8px 0; font-family: var(--f-jp-display); font-size: 0.95rem; line-height: 1.85; color: var(--ink);">
+        父:ちょっと待って。転送してはだめだよ。それは ア<span style="font-family: var(--f-mono); font-size: 0.78rem; color: var(--ink-mute);">(前問の正答: チェーン)</span>メールだね。<u>ア</u> メールでは、偽情報を拡散させようとしていることが多いんだよ。ほかにも <strong>イ</strong> とか、<strong>ウ</strong> ということもあるよ。
+      </blockquote>
+
+      <div class="multi-hint">複数選択 — 該当するもの 2 つ(順不同)</div>
+      <div class="opts" data-input="multi" data-correct="0,3">
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">⓪</span>拡散させてしまった情報の削除や訂正は難しい</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">①</span>転送である旨を件名に書かないと不正アクセス禁止法に違反する</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">②</span>CC で送信するとメール内容が暗号化されてしまう</span></label>
+        <label class="opt"><input type="checkbox"><span class="opt-mark checkbox"></span><span class="opt-text"><span class="opt-letter">③</span>宛先欄のメールアドレスを収集して迷惑メールの送信に使おうとしている</span></label>
+      </div>
+
+      <div class="actions-inline">
+        <button class="btn-grade" data-action="grade">採点する <span class="arrow">→</span></button>
+      </div>
+
+      <div class="feedback" data-feedback>
+        <div class="fb-banner ok">
+          <span class="icon">✓</span>
+          <span>正答: イ・ウ = <strong>⓪・③</strong>(順不同)</span>
+          <span class="score-tag"></span>
+        </div>
+        <div class="fb-body">
+          <div class="fb-section">
+            <div class="fb-section-title">正答の理由</div>
+            <div class="fb-explain">
+              <ul>
+                <li><strong>⓪ 拡散させてしまった情報の削除や訂正は難しい</strong> — 情報は他人の手でコピーされて広がる。一度拡散した情報を全て修正・削除することは、現実的に不可能に近い。</li>
+                <li><strong>③ 宛先欄のメールアドレスを収集して迷惑メールの送信に使おうとしている</strong> — 迷惑メールの送信側は、受信メールや Web ページに掲載されたアドレスを<strong>プログラムで自動収集</strong>することが多い。チェーンメールの宛先欄もそうした収集源になりうる。</li>
+              </ul>
+            </div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">誤答の理由</div>
+            <div class="fb-explain">
+              <ul>
+                <li><strong>① 転送である旨を件名に書かないと不正アクセス禁止法に違反 — 誤り</strong>。不正アクセス禁止法は <strong>代表例として、他人の識別符号(ID・パスワード等)を無断で用いる不正ログイン</strong>などを規制する法律で、転送時の件名表示とは関係ない。</li>
+                <li><strong>② CC で送信するとメール内容が暗号化される — 誤り</strong>。CC(カーボンコピー)は単なる宛先指定の一形式で、暗号化機能はない。むしろ全受信者にメールアドレスが見える点が情報漏洩の経路になる。</li>
+              </ul>
+            </div>
+          </div>
+          <div class="viz">
+            <span class="viz-label">PRIVACY RISK — メアド収集の流れ</span>
+            <div class="viz-caption">転送するほど、自分・知人のアドレスが第三者に渡る。</div>
+            <div class="checklist">
+              <div class="cl-item"><span class="cl-num">①</span><span><span class="cl-key">転送される</span>宛先欄に多数のメールアドレスが並ぶ。</span></div>
+              <div class="cl-item"><span class="cl-num">②</span><span><span class="cl-key">悪意ある第三者へ届く</span>転送先の中に、迷惑メール業者やボットが含まれることがある。</span></div>
+              <div class="cl-item"><span class="cl-num">③</span><span><span class="cl-key">収集される</span>プログラムが宛先欄を自動スキャンしてアドレスを収集。</span></div>
+              <div class="cl-item"><span class="cl-num">④</span><span><span class="cl-key">迷惑メールに利用</span>収集されたアドレスへ、フィッシングや広告メールが送られ続ける。</span></div>
+            </div>
+            <div style="margin-top: 0.85rem; padding: 0.7rem 0.95rem; background: var(--ng-pale); border-left: 3px solid var(--ng); border-radius: 0 6px 6px 0; font-size: 0.85rem; color: var(--ng-deep);">
+              <strong>原則:</strong> 大量の宛先を含むメールを転送すると、自分の知人のアドレスを「悪意ある誰か」に手渡すことになる。BCC を使う・転送そのものを止める、の二段階で防ぐ。
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== STAGE 6: 練習4 — チェーンメールの拡散 ============================== -->
+  <section class="stage" data-stage-name="練習 4" data-prob-id="p4">
+    <div class="problem-meta">
+      <span class="problem-tag practice">PRACTICE 4 / 4</span>
+      <span class="problem-tag fill">NUM × 3</span>
+      <span class="problem-source">ベストフィット 解いて定着 2(計算編) / 2017 センター本試 改題</span>
+    </div>
+    <div class="problem-q-num"><span class="q">Q</span>4</div>
+    <div class="problem-icon-row"><svg class="problem-icon-svg" viewBox="0 0 256 256" aria-hidden="true"><line x1="108" y1="148" x2="160" y2="96" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M223.69,42.18a8,8,0,0,0-9.87-9.87l-192,58.22a8,8,0,0,0-1.25,14.93L108,148l42.54,87.42a8,8,0,0,0,14.93-1.25Z" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg><h3 class="problem-title">チェーンメールの拡散</h3></div>
+    <div class="problem-card">
+      <p class="problem-q lead">前問(練習 2・3)と同じ会話の続き。空欄 <strong>オカ・キ・クケコサ</strong> に当てはまる数字を答えよ。</p>
+      <blockquote style="margin: 0.6rem 0 1.1rem; padding: 0.85rem 1rem; background: var(--bg-soft); border-left: 4px solid var(--action-pale2); border-radius: 0 8px 8px 0; font-family: var(--f-jp-display); font-size: 0.95rem; line-height: 1.85; color: var(--ink);">
+        父:それにね、正しい内容だったらいいってわけではないんだよ。どのメールアドレスに対してもそれぞれ 1 人にメールが届くとして、最初にチェーンメールを始めた人が 4 人のアドレスを宛先にしてメールを送ったときを 1 回目とするよ。2 回目に、宛先で受け取った 4 人がそれぞれ 4 人に転送したとすると、担当者を除くと最大 16 人にメールが送られることになるよね。3 回目に、その 16 人がメールを転送したとすると、担当者を除くと最大 <strong>オカ</strong> 人にメールが送られるよ。そうすると <strong>キ</strong> 回目では、担当者を除いても最大 1 万人以上に送られることになるんだ。そして、2 回目から <strong>キ</strong> 回目までに CC にある担当者に送られるメールを合計すると最大 <strong>クケコサ</strong> 通になるよね。
+      </blockquote>
+
+      <div class="numfill-list" data-input="numfill" data-correct="64|7|5460">
+        <div class="numfill-row" data-sub="0">
+          <span class="numfill-sub-label">①</span>
+          <div class="numfill-fields">
+            <span class="numfill-prefix">3 回目に、その 16 人がメールを転送すると、担当者を除いて最大</span>
+            <span class="numfill-slot">
+              <span class="numfill-slot-label">オカ</span>
+              <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" class="numfill-input" autocomplete="off">
+            </span>
+            <span class="numfill-unit">人にメールが送られる。</span>
+          </div>
+        </div>
+        <div class="numfill-row" data-sub="1">
+          <span class="numfill-sub-label">②</span>
+          <div class="numfill-fields">
+            <span class="numfill-prefix">そうすると</span>
+            <span class="numfill-slot">
+              <span class="numfill-slot-label">キ</span>
+              <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" class="numfill-input" autocomplete="off">
+            </span>
+            <span class="numfill-unit">回目では、担当者を除いても最大 1 万人以上に送られることになる。</span>
+          </div>
+        </div>
+        <div class="numfill-row" data-sub="2">
+          <span class="numfill-sub-label">③</span>
+          <div class="numfill-fields">
+            <span class="numfill-prefix">2 回目から キ 回目までに、CC にある担当者に送られるメールを合計すると、最大</span>
+            <span class="numfill-slot">
+              <span class="numfill-slot-label">クケコサ</span>
+              <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" class="numfill-input" autocomplete="off">
+            </span>
+            <span class="numfill-unit">通になる。</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions-inline">
+        <button class="btn-grade" data-action="grade">採点する <span class="arrow">→</span></button>
+      </div>
+
+      <div class="feedback" data-feedback>
+        <div class="fb-banner ok">
+          <span class="icon">✓</span>
+          <span>正答: ① オカ = <strong>64</strong> / ② キ = <strong>7</strong> / ③ クケコサ = <strong>5460</strong></span>
+          <span class="score-tag"></span>
+        </div>
+        <div class="fb-body">
+          <div class="fb-section">
+            <div class="fb-section-title">解説</div>
+            <div class="fb-explain">
+              <ul>
+                <li><strong>① オカ = 64</strong> — 1人が4人に送ると、回数ごとに4倍ずつ受信者が増える。1回目4人 → 2回目16人 → <strong>3回目 16 × 4 = 64人</strong>。</li>
+                <li><strong>② キ = 7</strong> — 受信者の重複がないとして、1万人を超えるのは何回目か。<span style="font-family: var(--f-mono); background: var(--bg-soft); padding: 0.1rem 0.4rem; border-radius: 4px;">4¹=4 / 4²=16 / 4³=64 / 4⁴=256 / 4⁵=1024 / 4⁶=4096 / 4⁷=16384</span> となり、<strong>7 回目</strong>で初めて 1 万人を超える。</li>
+                <li><strong>③ クケコサ = 5460</strong> — 各回で送信者(=その回にメールを出した人)の数だけ、CC 経由で担当者に届く。1回目は 1 人(始めた本人)が出すので 1 通だが、本問は 2 回目以降を合計するので: <span style="font-family: var(--f-mono); background: var(--bg-soft); padding: 0.1rem 0.4rem; border-radius: 4px;">4 + 16 + 64 + 256 + 1024 + 4096 = 5460 通</span>(2〜7回目の合計)。</li>
+              </ul>
+            </div>
+          </div>
+          <div class="fb-section">
+            <div class="fb-section-title">2回目から数える理由(補足)</div>
+            <div class="fb-explain">
+              <p>「<strong>送信者の数 = その回に CC で担当者に届く通数</strong>」。1 回目の送信者は最初の本人 1 人だけなので CC は 1 通だが、本問は <strong>2 回目から 7 回目まで</strong>を合計する設定。各回の送信者数は「前の回の受信者数」と一致する。</p>
+              <p>等比数列の和の公式 <span style="font-family: var(--f-mono);">a(rⁿ−1)/(r−1)</span> でも計算可能。a=4, r=4, n=6 なら 4(4⁶−1)/(4−1) = 4 × 4095/3 = 5460。</p>
+            </div>
+          </div>
+          <div class="viz">
+            <span class="viz-label">EXPONENTIAL GROWTH — 4 倍ずつ増える受信者</span>
+            <div class="viz-caption">数回で「いつの間にか」1 万人を超える。値は線形目盛で実際の比率を表示。</div>
+            <div class="viz-svg-wrap">
+              <svg class="viz-svg wide" viewBox="0 0 600 290" xmlns="http://www.w3.org/2000/svg">
+                <!-- Y axis label -->
+                <text x="14" y="22" font-family="'Fraunces', serif" font-style="italic" font-size="10" fill="#475673">受信者数</text>
+                <text x="14" y="38" font-family="'Zen Kaku Gothic New', sans-serif" font-size="10" fill="#75839B">(線形目盛)</text>
+                <!-- Threshold band at exact 10000 (linear scale, max=16384, 280-px usable height) -->
+                <!-- y(value) = 280 - (value/16384)*230, and 10000 -> 280 - 140.4 = 139.6 -->
+                <line x1="80" y1="280" x2="580" y2="280" stroke="#75839B" stroke-width="1.5"/>
+                <line x1="80" y1="20" x2="80" y2="280" stroke="#75839B" stroke-width="1.5"/>
+                <line x1="80" y1="139.6" x2="580" y2="139.6" stroke="#C84A60" stroke-width="1.2" stroke-dasharray="5,4"/>
+                <text x="582" y="135" font-family="'Zen Kaku Gothic New', sans-serif" font-size="10" font-weight="600" fill="#C84A60">10000 人(1万人ライン)</text>
+                <!-- Bars: linear scale. Bar bottom = 280, top = 280 - (value/16384)*230. -->
+                <!-- 1回目  4: h=0.06, ほぼ0 -->
+                <!-- 2回目  16: h=0.22 -->
+                <!-- 3回目  64: h=0.90 -->
+                <!-- 4回目  256: h=3.6 -->
+                <!-- 5回目  1024: h=14.4 -->
+                <!-- 6回目  4096: h=57.6 -->
+                <!-- 7回目  16384: h=230 -->
+                <g>
+                  <rect x="100" y="279" width="50" height="1" fill="#5688D5"/>
+                  <text x="125" y="270" font-family="'Klee One', serif" font-size="10" font-weight="600" fill="#1A2B47" text-anchor="middle">4</text>
+                  <text x="125" y="296" font-family="'Fraunces', serif" font-style="italic" font-size="9" fill="#475673" text-anchor="middle">1回目</text>
+                </g>
+                <g>
+                  <rect x="170" y="278" width="50" height="2" fill="#5688D5" rx="1"/>
+                  <text x="195" y="270" font-family="'Klee One', serif" font-size="10" font-weight="600" fill="#1A2B47" text-anchor="middle">16</text>
+                  <text x="195" y="296" font-family="'Fraunces', serif" font-style="italic" font-size="9" fill="#475673" text-anchor="middle">2回目</text>
+                </g>
+                <g>
+                  <rect x="240" y="276.5" width="50" height="3.5" fill="#5688D5" rx="1"/>
+                  <text x="265" y="268" font-family="'Klee One', serif" font-size="10" font-weight="600" fill="#1A2B47" text-anchor="middle">64</text>
+                  <text x="265" y="296" font-family="'Fraunces', serif" font-style="italic" font-size="9" fill="#475673" text-anchor="middle">3回目</text>
+                </g>
+                <g>
+                  <rect x="310" y="266" width="50" height="14" fill="#4A78C8" rx="1"/>
+                  <text x="335" y="258" font-family="'Klee One', serif" font-size="10" font-weight="600" fill="#1A2B47" text-anchor="middle">256</text>
+                  <text x="335" y="296" font-family="'Fraunces', serif" font-style="italic" font-size="9" fill="#475673" text-anchor="middle">4回目</text>
+                </g>
+                <g>
+                  <rect x="380" y="222" width="50" height="58" fill="#4A78C8" rx="1"/>
+                  <text x="405" y="214" font-family="'Klee One', serif" font-size="10" font-weight="600" fill="#1A2B47" text-anchor="middle">1024</text>
+                  <text x="405" y="296" font-family="'Fraunces', serif" font-style="italic" font-size="9" fill="#475673" text-anchor="middle">5回目</text>
+                </g>
+                <g>
+                  <rect x="450" y="222" width="50" height="58" fill="#2E5894" rx="1"/>
+                  <text x="475" y="214" font-family="'Klee One', serif" font-size="10" font-weight="600" fill="#1A2B47" text-anchor="middle">4096</text>
+                  <text x="475" y="296" font-family="'Fraunces', serif" font-style="italic" font-size="9" fill="#475673" text-anchor="middle">6回目</text>
+                </g>
+                <g>
+                  <rect x="520" y="50" width="50" height="230" fill="#D4A852" rx="1"/>
+                  <text x="545" y="42" font-family="'Klee One', serif" font-size="10" font-weight="700" fill="#A37A1F" text-anchor="middle">16384</text>
+                  <text x="545" y="296" font-family="'Fraunces', serif" font-style="italic" font-size="9" font-weight="700" fill="#A37A1F" text-anchor="middle">7回目 ★</text>
+                </g>
+              </svg>
+            </div>
+            <p style="margin-top: 0.65rem; font-size: 0.82rem; color: var(--ink-mute); line-height: 1.6;">
+              <strong>視覚の落とし穴:</strong> 1〜4 回目までは棒がほとんど見えない(線形目盛では値が小さすぎる)。<strong>6 回目 (4096) でも 1 万人ラインに届かず</strong>、初めてラインを越えるのは <strong>7 回目 (16384)</strong>。指数増加は「見た目は静か → 急に爆発」する性質を持つことに注意。
+            </p>
+          </div>
+          <div class="viz">
+            <span class="viz-label">CC ACCUMULATION — 担当者に積もる通数</span>
+            <div class="viz-caption">2〜7 回目までの送信者数を合計すると 5460 通。</div>
+            <div class="compare">
+              <div class="compare-col left">
+                <h5>各回の送信者数(=CC通数)</h5>
+                <div class="row"><span class="k">2回目</span><span class="v">4 通</span></div>
+                <div class="row"><span class="k">3回目</span><span class="v">16 通</span></div>
+                <div class="row"><span class="k">4回目</span><span class="v">64 通</span></div>
+                <div class="row"><span class="k">5回目</span><span class="v">256 通</span></div>
+                <div class="row"><span class="k">6回目</span><span class="v">1024 通</span></div>
+                <div class="row"><span class="k">7回目</span><span class="v">4096 通</span></div>
+              </div>
+              <div class="compare-col right">
+                <h5>合計</h5>
+                <div class="row"><span class="k">2〜7回目</span><span class="v"><strong>5460 通</strong></span></div>
+                <div class="row"><span class="k">公式</span><span class="v">a(rⁿ−1)/(r−1)</span></div>
+                <div class="row"><span class="k">代入</span><span class="v">4(4⁶−1)/3 = 5460</span></div>
+                <div class="row"><span class="k">含意</span><span class="v">担当者にも被害が及ぶ。番組企画自体への迷惑にも。</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== STAGE 7: SUMMARY ============================== -->
+  <section class="stage" data-stage-name="RESULT">
+    <div class="section-divider">
+      <span class="num">02</span>
+      <div class="text">
+        <div class="label">Section 2 — Result</div>
+        <div class="name">演習結果</div>
+      </div>
+    </div>
+    <div class="summary-hero">
+      <div class="summary-grade" id="summary-grade">—<span class="denom">/4</span></div>
+      <div class="summary-headline" id="summary-headline">演習結果</div>
+      <div class="summary-subline" id="summary-subline">4問の練習問題のうち、何問完答できたか。</div>
+      <div class="summary-stats">
+        <div class="summary-stat">
+          <div class="summary-stat-label">完答</div>
+          <div class="summary-stat-value" id="stat-full">0<span class="unit">問</span></div>
+        </div>
+        <div class="summary-stat">
+          <div class="summary-stat-label">部分正解</div>
+          <div class="summary-stat-value" id="stat-partial">0<span class="unit">問</span></div>
+        </div>
+        <div class="summary-stat">
+          <div class="summary-stat-label">未着手</div>
+          <div class="summary-stat-value" id="stat-skipped">0<span class="unit">問</span></div>
+        </div>
+        <div class="summary-stat">
+          <div class="summary-stat-label">小問正答率</div>
+          <div class="summary-stat-value" id="stat-rate">—<span class="unit">%</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="summary-list-title">問題別 — タップで該当ページへ</div>
+    <div class="summary-list" id="summary-list"></div>
+    <button class="btn-restart" id="btn-restart-bottom">最初からやり直す</button>
+  </section>
+
+
+</main>
+
+<!-- ==================== FOOT NAV ==================== -->
+<nav class="footnav">
+  <div class="footnav-inner">
+    <button class="footnav-btn" id="btn-prev"><span class="arr">←</span><span>前へ</span></button>
+    <div class="footnav-status" id="footnav-status"></div>
+    <button class="footnav-btn next" id="btn-next"><span>次へ</span><span class="arr">→</span></button>
+  </div>
+</nav>
+
+<script>
+(function () {
+  'use strict';
+
+  // ============================================================
+  // STATE
+  // ============================================================
+  const stages = Array.from(document.querySelectorAll('.stage'));
+  const totalStages = stages.length;
+  let currentStage = 0;
+  // Per-problem state. id -> { type, correct, user, graded, score }
+  const probState = {};
+
+  // ============================================================
+  // PROGRESS / NAV UI
+  // ============================================================
+  const elProgressFill = document.getElementById('progress-fill');
+  const elStageCurrent = document.getElementById('stage-current');
+  const elStageTotal = document.getElementById('stage-total');
+  const elStageName = document.getElementById('stage-name');
+  const elPrev = document.getElementById('btn-prev');
+  const elNext = document.getElementById('btn-next');
+  const elFootStatus = document.getElementById('footnav-status');
+
+  elStageTotal.textContent = totalStages;
+
+  function updateUI() {
+    const pct = (currentStage / (totalStages - 1)) * 100;
+    elProgressFill.style.right = (100 - pct) + '%';
+    elStageCurrent.textContent = currentStage + 1;
+    const stage = stages[currentStage];
+    elStageName.textContent = stage.dataset.stageName || '';
+    elPrev.disabled = currentStage === 0;
+    elNext.disabled = currentStage === totalStages - 1;
+    if (currentStage === totalStages - 1) {
+      elNext.querySelector('span:first-child').textContent = '完了';
+    } else {
+      elNext.querySelector('span:first-child').textContent = '次へ';
+    }
+    elFootStatus.textContent = (currentStage + 1) + ' of ' + totalStages;
+    updateTimeline();
+  }
+
+  // ============================================================
+  // TIMELINE (sidebar)
+  // ============================================================
+  const TIMELINE_ENTRIES = [
+    { idx: 0, group: 'overview', num: '00', label: 'スタート' },
+    { idx: 1, group: 'overview', num: '01', label: 'おさらい' },
+    { idx: 2, group: 'examples', num: '例1', label: 'パターンロック', probId: 'ex1' },
+    { idx: 3, group: 'practice', num: 'Q1', label: 'パスコードの組合せ', probId: 'p1' },
+    { idx: 4, group: 'practice', num: 'Q2', label: 'チェーンメールの正体', probId: 'p2' },
+    { idx: 5, group: 'practice', num: 'Q3', label: 'チェーンメールの危険性', probId: 'p3' },
+    { idx: 6, group: 'practice', num: 'Q4', label: 'チェーンメールの拡散', probId: 'p4' },
+    { idx: 7, group: 'result',   num: '✓',   label: '結果サマリ' }
+  ];
+
+  function buildTimeline() {
+    const groups = { overview: [], examples: [], practice: [], result: [] };
+    TIMELINE_ENTRIES.forEach(e => groups[e.group].push(e));
+    Object.keys(groups).forEach((g) => {
+      const ol = document.getElementById('tl-' + g);
+      if (!ol) return;
+      ol.innerHTML = '';
+      groups[g].forEach((e) => {
+        const li = document.createElement('li');
+        li.className = 'tl-item';
+        li.dataset.target = e.idx;
+        li.dataset.probId = e.probId || '';
+        li.tabIndex = 0;
+        li.setAttribute('role', 'button');
+        li.setAttribute('aria-label', e.num + ' ' + e.label + ' へジャンプ');
+        li.innerHTML =
+          '<span class="tl-dot" aria-hidden="true"></span>' +
+          '<span class="tl-label"><span class="tl-num">' + e.num + '</span>' + e.label + '</span>' +
+          '<span class="tl-stat"></span>';
+        const onActivate = () => {
+          goToStage(e.idx);
+          if (isMobileWidth()) closeSidebar();
+        };
+        li.addEventListener('click', onActivate);
+        li.addEventListener('keydown', (ev) => {
+          if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); onActivate(); }
+        });
+        ol.appendChild(li);
+      });
+    });
+  }
+
+  function updateTimeline() {
+    document.querySelectorAll('.tl-item').forEach((el) => {
+      const idx = parseInt(el.dataset.target, 10);
+      const probId = el.dataset.probId;
+      el.classList.remove('active', 'completed', 'partial', 'wrong');
+      if (idx === currentStage) el.classList.add('active');
+      if (probId && probState[probId] && probState[probId].graded) {
+        const s = probState[probId];
+        const stat = el.querySelector('.tl-stat');
+        if (s.isExample) {
+          el.classList.add('completed');
+          stat.textContent = '✓';
+        } else if (s.score === s.total) {
+          el.classList.add('completed');
+          stat.textContent = s.score + '/' + s.total;
+        } else if (s.score === 0) {
+          el.classList.add('wrong');
+          stat.textContent = s.score + '/' + s.total;
+        } else {
+          el.classList.add('partial');
+          stat.textContent = s.score + '/' + s.total;
+        }
+      } else {
+        const stat = el.querySelector('.tl-stat');
+        if (stat) stat.textContent = '';
+      }
+    });
+    // Update score in footer
+    let full = 0;
+    TIMELINE_ENTRIES.filter(e => e.group === 'practice').forEach((e) => {
+      const s = probState[e.probId];
+      if (s && s.graded && s.score === s.total) full++;
+    });
+    const sbScore = document.getElementById('sb-score');
+    if (sbScore) sbScore.textContent = full + '/4';
+  }
+
+  buildTimeline();
+
+  // ============================================================
+  // SIDEBAR — universal toggle (PC: collapse / Mobile: drawer)
+  // ============================================================
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  const menuBtn = document.getElementById('menu-btn');
+  const isMobileWidth = () => window.innerWidth < 1100;
+
+  function openSidebar() {
+    sidebar.classList.add('open');
+    document.body.classList.add('sb-open');
+    menuBtn.classList.add('is-open');
+    menuBtn.setAttribute('aria-expanded', 'true');
+    if (isMobileWidth()) {
+      backdrop.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+  function closeSidebar() {
+    sidebar.classList.remove('open');
+    document.body.classList.remove('sb-open');
+    menuBtn.classList.remove('is-open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+    backdrop.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  function toggleSidebar() {
+    if (sidebar.classList.contains('open')) closeSidebar();
+    else openSidebar();
+  }
+
+  // Initial state: PC = open by default, Mobile = closed
+  if (!isMobileWidth()) openSidebar();
+
+  // Reflow on resize: clean up overlay state when crossing breakpoint
+  let lastIsMobile = isMobileWidth();
+  window.addEventListener('resize', () => {
+    const nowMobile = isMobileWidth();
+    if (nowMobile !== lastIsMobile) {
+      // Crossing the breakpoint: clean overlay artifacts
+      if (!nowMobile) {
+        backdrop.classList.remove('show');
+        document.body.style.overflow = '';
+      }
+      lastIsMobile = nowMobile;
+    }
+  });
+
+  menuBtn.addEventListener('click', toggleSidebar);
+  document.getElementById('sidebar-close').addEventListener('click', closeSidebar);
+  backdrop.addEventListener('click', closeSidebar);
+  document.getElementById('sb-reset').addEventListener('click', () => {
+    if (confirm('最初からやり直します。回答もリセットされます。よろしいですか?')) {
+      hardReset();
+    }
+  });
+
+  function goToStage(n) {
+    if (n < 0 || n >= totalStages) return;
+    stages[currentStage].classList.remove('active');
+    currentStage = n;
+    stages[currentStage].classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    updateUI();
+    if (typeof haptic === 'function') haptic(6);
+    if (currentStage === totalStages - 1) renderSummary();
+  }
+
+  elPrev.addEventListener('click', () => goToStage(currentStage - 1));
+  elNext.addEventListener('click', () => goToStage(currentStage + 1));
+
+  // Top restart
+  document.getElementById('btn-restart-top').addEventListener('click', () => {
+    if (confirm('最初からやり直します。回答もリセットされます。よろしいですか?')) {
+      hardReset();
+    }
+  });
+  document.getElementById('btn-restart-bottom').addEventListener('click', hardReset);
+
+  // ============================================================
+  // KEYBOARD
+  // ============================================================
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'Escape' && sidebar.classList.contains('open')) { closeSidebar(); return; }
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); goToStage(currentStage + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goToStage(currentStage - 1); }
+    else if (e.key === 'Home') { goToStage(0); }
+    else if (e.key === 'End') { goToStage(totalStages - 1); }
+    else if (e.key === 'm' || e.key === 'M') { toggleSidebar(); }
+  });
+
+  // ============================================================
+  // TOUCH SWIPE
+  // ============================================================
+  let touchStart = null;
+  let touchTime = 0;
+  let touchInScrollable = false;
+
+  // True if the touch began inside (or under) any horizontally-scrollable container —
+  // family-tree-wrap, viz-svg-wrap, or any element with overflow-x:auto/scroll
+  // that has overflowing content. Used to suppress the page-swipe handler so the
+  // user's horizontal pan scrolls the SVG instead of changing pages.
+  function isInsideHorizontalScroll(el) {
+    if (!el) return false;
+    if (el.closest && el.closest('.viz-svg-wrap, .family-tree-wrap')) return true;
+    let node = el;
+    while (node && node !== document.body) {
+      const cs = window.getComputedStyle(node);
+      if ((cs.overflowX === 'auto' || cs.overflowX === 'scroll') && node.scrollWidth > node.clientWidth + 1) {
+        return true;
+      }
+      node = node.parentElement;
+    }
+    return false;
+  }
+
+  document.addEventListener('touchstart', (e) => {
+    touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    touchTime = Date.now();
+    touchInScrollable = isInsideHorizontalScroll(e.target);
+  }, { passive: true });
+  document.addEventListener('touchend', (e) => {
+    if (!touchStart) { touchInScrollable = false; return; }
+    const dx = e.changedTouches[0].clientX - touchStart.x;
+    const dy = e.changedTouches[0].clientY - touchStart.y;
+    const dt = Date.now() - touchTime;
+    const wasInScrollable = touchInScrollable;
+    touchStart = null;
+    touchInScrollable = false;
+    if (wasInScrollable) return;
+    if (dt < 800 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      // Don't trigger if user is interacting with input controls
+      const target = e.target;
+      if (target.closest('button, label, input, .opt, .ox-row, .match-pill, .fill-chip, .fill-blank, .numfill-input')) return;
+      if (dx < 0) goToStage(currentStage + 1);
+      else goToStage(currentStage - 1);
+    }
+  }, { passive: true });
+
+  // ============================================================
+  // MOBILE-RICH UI: haptic + spotlight + carousel hint
+  // ============================================================
+  function haptic(ms) {
+    try { if (navigator.vibrate) navigator.vibrate(ms || 8); } catch (_) { /* iOS no-op */ }
+  }
+
+  // Spotlight v2: dramatic scale + dark backdrop + auto-scroll into center
+  const SPOT_SELECTOR = '.ip-rich, .bd-card, .lk-card, .cc-cat-item';
+
+  // Inject backdrop + hint label once
+  const _spotBackdrop = document.createElement('div');
+  _spotBackdrop.className = 'spotlight-backdrop';
+  document.body.appendChild(_spotBackdrop);
+  const _spotHint = document.createElement('div');
+  _spotHint.className = 'spotlight-hint';
+  _spotHint.textContent = 'タップで解除 ✕';
+  document.body.appendChild(_spotHint);
+
+  function clearSpotlight() {
+    document.querySelectorAll('.spotlight').forEach(el => el.classList.remove('spotlight'));
+    document.querySelectorAll('.has-spotlight').forEach(el => el.classList.remove('has-spotlight'));
+    document.body.classList.remove('has-spotlight-active');
+  }
+
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('button, label, input, .digest-prompt')) return;
+    const card = e.target.closest(SPOT_SELECTOR);
+    if (!card) {
+      clearSpotlight();
+      return;
+    }
+    const grid = card.parentElement;
+    const wasActive = card.classList.contains('spotlight');
+    grid.querySelectorAll('.spotlight').forEach(el => el.classList.remove('spotlight'));
+    if (wasActive) {
+      grid.classList.remove('has-spotlight');
+      document.body.classList.remove('has-spotlight-active');
+    } else {
+      card.classList.add('spotlight');
+      grid.classList.add('has-spotlight');
+      document.body.classList.add('has-spotlight-active');
+      haptic(12);
+      // Scroll the spotlighted card to vertical center for visibility
+      requestAnimationFrame(() => {
+        const rect = card.getBoundingClientRect();
+        const targetY = window.scrollY + rect.top - (window.innerHeight / 2) + (rect.height / 2);
+        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+      });
+    }
+  }, { passive: true });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') clearSpotlight();
+  });
+
+  // Backdrop click also dismisses (catches outside-card taps anywhere on screen)
+  _spotBackdrop.addEventListener('click', () => clearSpotlight());
+
+  // Haptic on key action buttons
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest('[data-action="grade"], [data-action="reveal"], [data-action="retry"], [data-action="goto-next"]');
+    if (t) haptic(10);
+  });
+
+  // Module 3 carousel: hint + dot indicator (mobile only via CSS)
+  document.querySelectorAll('.origin-compare.three-col').forEach((cmp) => {
+    if (!cmp.previousElementSibling || !cmp.previousElementSibling.classList.contains('carousel-hint')) {
+      const hint = document.createElement('div');
+      hint.className = 'carousel-hint';
+      hint.textContent = '← 横にスワイプ →';
+      cmp.parentElement.insertBefore(hint, cmp);
+    }
+    // Dot indicator: one dot per .origin-side child
+    if (!cmp.nextElementSibling || !cmp.nextElementSibling.classList.contains('carousel-dots')) {
+      const sides = Array.from(cmp.children).filter(c => c.classList.contains('origin-side'));
+      const dots = document.createElement('div');
+      dots.className = 'carousel-dots';
+      sides.forEach((s, i) => {
+        const d = document.createElement('span');
+        d.className = 'dot' + (i === 0 ? ' active' : '');
+        dots.appendChild(d);
+      });
+      cmp.parentElement.insertBefore(dots, cmp.nextSibling);
+      // Update active dot via IntersectionObserver on the carousel children
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.55) {
+              const idx = sides.indexOf(entry.target);
+              if (idx >= 0) {
+                dots.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+              }
+            }
+          });
+        }, { root: cmp, threshold: [0.55, 0.9] });
+        sides.forEach(s => io.observe(s));
+      }
+    }
+  });
+
+
+  // ============================================================
+  // DIGEST — Q&A toggle (each card is independent)
+  // ============================================================
+  document.querySelectorAll('.digest-prompt').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      btn.parentElement.classList.toggle('open');
+    });
+    // Note: <button> auto-fires click on Enter/Space — no separate keydown needed.
+  });
+
+  // ============================================================
+  // INPUT TYPE: SINGLE (radio)
+  // ============================================================
+  document.querySelectorAll('[data-input="single"]').forEach((box) => {
+    const opts = box.querySelectorAll('.opt');
+    opts.forEach((opt, idx) => {
+      opt.addEventListener('click', (e) => {
+        if (box.dataset.locked === 'true') { e.preventDefault(); return; }
+        opts.forEach(o => o.classList.remove('picked'));
+        opt.classList.add('picked');
+        const radio = opt.querySelector('input');
+        if (radio) radio.checked = true;
+      });
+    });
+  });
+
+  // ============================================================
+  // INPUT TYPE: MULTI (checkbox)
+  // ============================================================
+  document.querySelectorAll('[data-input="multi"]').forEach((box) => {
+    box.querySelectorAll('.opt').forEach((opt) => {
+      opt.addEventListener('click', (e) => {
+        if (box.dataset.locked === 'true') { e.preventDefault(); return; }
+        const cb = opt.querySelector('input');
+        // toggle
+        setTimeout(() => {
+          opt.classList.toggle('picked', cb.checked);
+        }, 0);
+      });
+    });
+  });
+
+  // ============================================================
+  // INPUT TYPE: MATCH (pills per sub-row)
+  // ============================================================
+  document.querySelectorAll('[data-input="match"]').forEach((box) => {
+    const optsList = box.dataset.options.split(',');
+    box.querySelectorAll('.match-row').forEach((row) => {
+      const pillBox = row.querySelector('.match-pills');
+      pillBox.innerHTML = '';
+      optsList.forEach((opt, i) => {
+        const pill = document.createElement('button');
+        pill.type = 'button';
+        pill.className = 'match-pill';
+        pill.dataset.idx = i;
+        pill.innerHTML = '<span class="let">(' + opt + ')</span>';
+        pill.addEventListener('click', () => {
+          if (box.dataset.locked === 'true') return;
+          pillBox.querySelectorAll('.match-pill').forEach(p => p.classList.remove('picked'));
+          pill.classList.add('picked');
+        });
+        pillBox.appendChild(pill);
+      });
+    });
+  });
+
+  // ============================================================
+  // INPUT TYPE: OX (○ / ×)
+  // ============================================================
+  document.querySelectorAll('[data-input="ox"]').forEach((box) => {
+    box.querySelectorAll('.ox-row').forEach((row) => {
+      row.querySelectorAll('.ox-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          if (box.dataset.locked === 'true') return;
+          row.querySelectorAll('.ox-btn').forEach(b => b.classList.remove('picked'));
+          btn.classList.add('picked');
+        });
+      });
+    });
+  });
+
+  // ============================================================
+  // INPUT TYPE: FILL (語群穴埋め)
+  // ============================================================
+  document.querySelectorAll('[data-input="fill"]').forEach((bullets) => {
+    const card = bullets.closest('.problem-card');
+    const blanks = bullets.querySelectorAll('.fill-blank');
+    const chips = card.querySelectorAll('.fill-chip');
+    let activeBlank = null;
+
+    blanks.forEach((blank) => {
+      blank.addEventListener('click', () => {
+        if (bullets.dataset.locked === 'true') return;
+        // Toggle active or clear filled
+        if (blank.classList.contains('filled')) {
+          // Clear it, return chip
+          const word = blank.dataset.word;
+          if (word) {
+            const chip = Array.from(chips).find(c => c.dataset.word === word && c.classList.contains('used'));
+            if (chip) chip.classList.remove('used');
+          }
+          blank.classList.remove('filled');
+          delete blank.dataset.word;
+          // Reset content (keep label only)
+          const lbl = blank.querySelector('.fill-blank-label');
+          blank.innerHTML = '';
+          blank.appendChild(lbl);
+          return;
+        }
+        blanks.forEach(b => b.classList.remove('active'));
+        blank.classList.add('active');
+        activeBlank = blank;
+      });
+    });
+
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        if (bullets.dataset.locked === 'true') return;
+        if (chip.classList.contains('used')) return;
+        // If no active blank, pick the first unfilled
+        if (!activeBlank || activeBlank.classList.contains('filled')) {
+          activeBlank = Array.from(blanks).find(b => !b.classList.contains('filled'));
+        }
+        if (!activeBlank) return;
+        // Place
+        const word = chip.dataset.word;
+        const lbl = activeBlank.querySelector('.fill-blank-label');
+        activeBlank.innerHTML = '';
+        if (lbl) activeBlank.appendChild(lbl);
+        const txt = document.createTextNode(word);
+        activeBlank.appendChild(txt);
+        activeBlank.dataset.word = word;
+        activeBlank.classList.add('filled');
+        activeBlank.classList.remove('active');
+        chip.classList.add('used');
+        activeBlank = Array.from(blanks).find(b => !b.classList.contains('filled')) || null;
+        if (activeBlank) activeBlank.classList.add('active');
+      });
+    });
+  });
+
+  // ============================================================
+  // INPUT TYPE: MULTI_PER_SUB (CCライセンス等)
+  // ============================================================
+  document.querySelectorAll('[data-input="multi_per_sub"]').forEach((box) => {
+    const optsList = box.dataset.options.split(',');
+    box.querySelectorAll('.mps-row').forEach((row) => {
+      const pillBox = row.querySelector('.match-pills');
+      pillBox.innerHTML = '';
+      optsList.forEach((opt, i) => {
+        const pill = document.createElement('button');
+        pill.type = 'button';
+        pill.className = 'match-pill';
+        pill.dataset.idx = i;
+        pill.innerHTML = '<span class="let">(' + opt + ')</span>';
+        pill.addEventListener('click', () => {
+          if (box.dataset.locked === 'true') return;
+          pill.classList.toggle('picked');
+        });
+        pillBox.appendChild(pill);
+      });
+    });
+  });
+
+  // ============================================================
+  // GRADING
+  // ============================================================
+  function getProblemData(stage) {
+    return {
+      id: stage.dataset.probId,
+      single: stage.querySelector('[data-input="single"]'),
+      multi: stage.querySelector('[data-input="multi"]'),
+      match: stage.querySelector('[data-input="match"]'),
+      ox: stage.querySelector('[data-input="ox"]'),
+      fill: stage.querySelector('[data-input="fill"]'),
+      mps: stage.querySelector('[data-input="multi_per_sub"]')
+    };
+  }
+
+  function showFeedback(stage, score, total, opts) {
+    const fb = stage.querySelector('[data-feedback]');
+    if (!fb) return;
+    const banner = fb.querySelector('.fb-banner');
+    const scoreTag = banner ? banner.querySelector('.score-tag') : null;
+    if (banner) banner.classList.remove('ok', 'partial', 'ng');
+    let icon = '✓';
+    let scoreLabel = '';
+    if (opts && opts.example) {
+      if (banner) banner.classList.add('ok');
+      icon = '✓';
+      scoreLabel = '';
+    } else if (score === total) {
+      if (banner) banner.classList.add('ok');
+      icon = '✓';
+      scoreLabel = '完答 ' + score + ' / ' + total;
+    } else if (score === 0) {
+      if (banner) banner.classList.add('ng');
+      icon = '×';
+      scoreLabel = score + ' / ' + total;
+    } else {
+      if (banner) banner.classList.add('partial');
+      icon = '△';
+      scoreLabel = score + ' / ' + total;
+    }
+    if (scoreTag) scoreTag.textContent = scoreLabel;
+    const iconEl = banner ? banner.querySelector('.icon') : null;
+    if (iconEl) iconEl.textContent = icon;
+
+    // Inject retry / next buttons (idempotent)
+    const fbBody = fb.querySelector('.fb-body');
+    if (fbBody && !fbBody.querySelector('.fb-retry')) {
+      const wrap = document.createElement('div');
+      wrap.className = 'fb-retry';
+      const isExample = !!(opts && opts.example);
+      const retryLabel = isExample ? 'もう一度確認' : 'もう一度解く';
+      wrap.innerHTML =
+        '<button class="btn-retry" data-action="retry"><span class="ico">↻</span>' + retryLabel + '</button>' +
+        '<button class="btn-retry next" data-action="goto-next"><span>次の問題へ</span><span class="ico">→</span></button>';
+      fbBody.appendChild(wrap);
+      wrap.querySelector('[data-action="retry"]').addEventListener('click', () => retryStage(stage));
+      wrap.querySelector('[data-action="goto-next"]').addEventListener('click', () => goToStage(currentStage + 1));
+    }
+
+    fb.classList.add('show');
+    // Mobile-friendly scroll: align the .fb-banner (which holds the 正答 line)
+    // just below the sticky topbar, so the answer is the first thing the user sees.
+    setTimeout(() => {
+      const banner = fb.querySelector('.fb-banner') || fb;
+      const topbar = document.querySelector('.topbar');
+      const topbarH = topbar ? topbar.getBoundingClientRect().height : 0;
+      const rect = banner.getBoundingClientRect();
+      const targetY = window.scrollY + rect.top - topbarH - 12;
+      window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+    }, 100);
+  }
+
+  function retryStage(stage) {
+    const id = stage.dataset.probId;
+    if (!id) return;
+
+    // Hide feedback
+    const fb = stage.querySelector('[data-feedback]');
+    if (fb) fb.classList.remove('show');
+
+    // Reset all input boxes — clear locks, picks, graded states
+    const boxes = ['single', 'multi', 'match', 'ox', 'fill', 'multi_per_sub', 'numfill']
+      .map(t => stage.querySelector('[data-input="' + t + '"]'))
+      .filter(Boolean);
+    boxes.forEach((box) => {
+      delete box.dataset.locked;
+      box.querySelectorAll('.opt').forEach(el => {
+        el.classList.remove('graded', 'correct', 'wrong', 'missed', 'picked');
+        const inp = el.querySelector('input');
+        if (inp) inp.checked = false;
+      });
+      box.querySelectorAll('.match-row, .mps-row').forEach(el => el.classList.remove('graded', 'correct', 'wrong'));
+      box.querySelectorAll('.match-pill').forEach(p => p.classList.remove('picked', 'graded-correct', 'graded-wrong', 'graded-shouldbe'));
+      box.querySelectorAll('.ox-row').forEach(r => r.classList.remove('graded', 'correct', 'wrong'));
+      box.querySelectorAll('.ox-btn').forEach(b => b.classList.remove('picked', 'shouldbe'));
+      // fill blanks
+      box.querySelectorAll('.fill-blank').forEach(blank => {
+        blank.classList.remove('filled', 'active', 'graded-correct', 'graded-wrong');
+        delete blank.dataset.word;
+        const lbl = blank.querySelector('.fill-blank-label');
+        blank.innerHTML = '';
+        if (lbl) blank.appendChild(lbl);
+      });
+      // numfill rows + inputs
+      box.querySelectorAll('.numfill-row').forEach(r => r.classList.remove('graded', 'correct', 'wrong'));
+      box.querySelectorAll('.numfill-input').forEach(inp => {
+        inp.value = '';
+        inp.disabled = false;
+        inp.classList.remove('graded-correct', 'graded-wrong');
+      });
+    });
+    // fill chips
+    stage.querySelectorAll('.fill-chip').forEach(chip => chip.classList.remove('used'));
+
+    // Show grade / reveal button again
+    const gradeBtn = stage.querySelector('[data-action="grade"]');
+    if (gradeBtn) gradeBtn.style.display = '';
+    const revealBtn = stage.querySelector('[data-action="reveal"]');
+    if (revealBtn) revealBtn.style.display = '';
+
+    // Clear state
+    delete probState[id];
+
+    // Update timeline
+    if (typeof updateTimeline === 'function') updateTimeline();
+
+    // Scroll to top of card so user can start fresh — align below the sticky topbar
+    const card = stage.querySelector('.problem-card');
+    if (card) {
+      setTimeout(() => {
+        const topbar = document.querySelector('.topbar');
+        const topbarH = topbar ? topbar.getBoundingClientRect().height : 0;
+        const rect = card.getBoundingClientRect();
+        const targetY = window.scrollY + rect.top - topbarH - 12;
+        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+      }, 100);
+    }
+  }
+
+  function lockBox(box) {
+    if (box) box.dataset.locked = 'true';
+  }
+
+  function gradeStage(stage, isExample) {
+    const id = stage.dataset.probId;
+    if (!id) return;
+    if (probState[id] && probState[id].graded) return;
+
+    const single = stage.querySelector('[data-input="single"]');
+    const multi = stage.querySelector('[data-input="multi"]');
+    const match = stage.querySelector('[data-input="match"]');
+    const ox = stage.querySelector('[data-input="ox"]');
+    const fill = stage.querySelector('[data-input="fill"]');
+    const mps = stage.querySelector('[data-input="multi_per_sub"]');
+    const numfill = stage.querySelector('[data-input="numfill"]');
+
+    let score = 0, total = 0;
+
+    if (single) {
+      total = 1;
+      const correct = parseInt(single.dataset.correct, 10);
+      const opts = single.querySelectorAll('.opt');
+      let userIdx = -1;
+      opts.forEach((o, i) => { if (o.classList.contains('picked')) userIdx = i; });
+      opts.forEach((o, i) => {
+        o.classList.add('graded');
+        if (i === correct && i === userIdx) o.classList.add('correct');
+        else if (i === userIdx && i !== correct) o.classList.add('wrong');
+        else if (i === correct && i !== userIdx) o.classList.add('missed');
+      });
+      if (userIdx === correct) score = 1;
+      lockBox(single);
+    } else if (multi) {
+      const correct = multi.dataset.correct.split(',').map(Number);
+      total = correct.length;
+      const opts = multi.querySelectorAll('.opt');
+      const userPicks = [];
+      opts.forEach((o, i) => { if (o.classList.contains('picked')) userPicks.push(i); });
+      opts.forEach((o, i) => {
+        o.classList.add('graded');
+        const isCorrect = correct.includes(i);
+        const isPicked = userPicks.includes(i);
+        if (isCorrect && isPicked) { o.classList.add('correct'); score++; }
+        else if (!isCorrect && isPicked) o.classList.add('wrong');
+        else if (isCorrect && !isPicked) o.classList.add('missed');
+      });
+      // For multi, count strict overlap
+      // If user picked anything wrong, that's a deduction. We use: score = correct picks - wrong picks (min 0)
+      const wrongPicks = userPicks.filter(i => !correct.includes(i)).length;
+      score = Math.max(0, score - wrongPicks);
+      lockBox(multi);
+    } else if (match) {
+      const correctList = match.dataset.correct.split(',').map(Number);
+      total = correctList.length;
+      const rows = match.querySelectorAll('.match-row');
+      rows.forEach((row, i) => {
+        const correctIdx = correctList[i];
+        const pills = row.querySelectorAll('.match-pill');
+        let userIdx = -1;
+        pills.forEach((p, pi) => { if (p.classList.contains('picked')) userIdx = pi; });
+        if (userIdx === correctIdx) {
+          score++;
+          row.classList.add('graded', 'correct');
+          pills[correctIdx].classList.add('graded-correct');
+          pills[correctIdx].classList.remove('picked');
+        } else {
+          row.classList.add('graded', 'wrong');
+          if (userIdx >= 0) pills[userIdx].classList.add('graded-wrong');
+          pills[correctIdx].classList.add('graded-shouldbe');
+          pills.forEach(p => p.classList.remove('picked'));
+        }
+      });
+      lockBox(match);
+    } else if (ox) {
+      const correctList = ox.dataset.correct.split(',');
+      total = correctList.length;
+      const rows = ox.querySelectorAll('.ox-row');
+      rows.forEach((row, i) => {
+        const want = correctList[i];
+        let userVal = null;
+        row.querySelectorAll('.ox-btn').forEach((b) => {
+          if (b.classList.contains('picked')) userVal = b.dataset.val;
+        });
+        if (userVal === want) {
+          score++;
+          row.classList.add('graded', 'correct');
+        } else {
+          row.classList.add('graded', 'wrong');
+          row.querySelectorAll('.ox-btn').forEach((b) => {
+            if (b.dataset.val === want && !b.classList.contains('picked')) {
+              b.classList.add('shouldbe');
+            }
+          });
+        }
+      });
+      lockBox(ox);
+    } else if (fill) {
+      const btn = stage.querySelector('[data-fill-correct]');
+      const correctList = btn.dataset.fillCorrect.split(',');
+      total = correctList.length;
+      const blanks = fill.querySelectorAll('.fill-blank');
+      blanks.forEach((blank, i) => {
+        const want = correctList[i];
+        const got = blank.dataset.word || '';
+        if (got === want) {
+          blank.classList.add('graded-correct');
+          score++;
+        } else {
+          blank.classList.add('graded-wrong');
+          // Replace with correct on next line maybe? Actually show in feedback section
+        }
+      });
+      lockBox(fill);
+    } else if (numfill) {
+      // numfill: each row has a numeric text input; correct values pipe-separated.
+      // Normalize user input via NFKC + strip whitespace/comma so that 全角数字・カンマ・空白でも判定可能。
+      const correctList = numfill.dataset.correct.split('|').map(s => s.trim());
+      total = correctList.length;
+      const rows = numfill.querySelectorAll('.numfill-row');
+      rows.forEach((row, i) => {
+        const want = correctList[i];
+        const input = row.querySelector('.numfill-input');
+        const raw = input ? input.value : '';
+        const got = raw.normalize('NFKC').replace(/[,\s　]/g, '');
+        if (got === want) {
+          score++;
+          row.classList.add('graded', 'correct');
+          if (input) input.classList.add('graded-correct');
+        } else {
+          row.classList.add('graded', 'wrong');
+          if (input) input.classList.add('graded-wrong');
+        }
+        if (input) input.disabled = true;
+      });
+      lockBox(numfill);
+    } else if (mps) {
+      // multi_per_sub: each sub gets a list of correct indices, counted as 1 point if the user's set matches exactly
+      const correctSubs = mps.dataset.correct.split('|').map(s => s.split(',').map(Number).sort());
+      total = correctSubs.length;
+      const rows = mps.querySelectorAll('.mps-row');
+      rows.forEach((row, i) => {
+        const want = correctSubs[i];
+        const pills = row.querySelectorAll('.match-pill');
+        const userPicks = [];
+        pills.forEach((p, pi) => { if (p.classList.contains('picked')) userPicks.push(pi); });
+        userPicks.sort();
+        const exact = userPicks.length === want.length && userPicks.every((v, j) => v === want[j]);
+        pills.forEach((p, pi) => {
+          const isW = want.includes(pi);
+          const isP = userPicks.includes(pi);
+          p.classList.remove('picked');
+          if (isW && isP) p.classList.add('graded-correct');
+          else if (!isW && isP) p.classList.add('graded-wrong');
+          else if (isW && !isP) p.classList.add('graded-shouldbe');
+        });
+        if (exact) {
+          score++;
+          row.classList.add('graded', 'correct');
+        } else {
+          row.classList.add('graded', 'wrong');
+        }
+      });
+      lockBox(mps);
+    }
+
+    // Hide grade button, show feedback
+    const gradeBtn = stage.querySelector('[data-action="grade"]');
+    if (gradeBtn) gradeBtn.style.display = 'none';
+    const revealBtn = stage.querySelector('[data-action="reveal"]');
+    if (revealBtn) revealBtn.style.display = 'none';
+
+    showFeedback(stage, score, total, { example: isExample });
+
+    probState[id] = { graded: true, score: score, total: total, isExample: !!isExample };
+  }
+
+  // Hook grade buttons
+  document.querySelectorAll('[data-action="grade"]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const stage = btn.closest('.stage');
+      gradeStage(stage, false);
+    });
+  });
+
+  // Hook reveal buttons (例題)
+  document.querySelectorAll('[data-action="reveal"]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const stage = btn.closest('.stage');
+      gradeStage(stage, true);
+    });
+  });
+
+  // ============================================================
+  // SUMMARY
+  // ============================================================
+  // Define mapping for summary list
+  const PROBLEMS = [
+    { id: 'p1', label: 'Q1', name: '〈パスコードの組合せ〉', stageIdx: 3 },
+    { id: 'p2', label: 'Q2', name: '〈チェーンメールの正体〉', stageIdx: 4 },
+    { id: 'p3', label: 'Q3', name: '〈チェーンメールの危険性〉', stageIdx: 5 },
+    { id: 'p4', label: 'Q4', name: '〈チェーンメールの拡散〉', stageIdx: 6 }
+  ];
+
+  function animateCounter(el, from, to, duration, suffix) {
+    const start = performance.now();
+    function step(now) {
+      const t = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - t, 3);
+      const value = Math.round(from + (to - from) * eased);
+      el.innerHTML = value + (suffix || '');
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function renderSummary() {
+    let fullCount = 0, partialCount = 0, skippedCount = 0;
+    let totalSubScore = 0, totalSubMax = 0;
+    PROBLEMS.forEach((p) => {
+      const s = probState[p.id];
+      if (!s || !s.graded) skippedCount++;
+      else {
+        totalSubScore += s.score;
+        totalSubMax += s.total;
+        if (s.score === s.total) fullCount++;
+        else if (s.score === 0) {} // no full, no partial
+        else partialCount++;
+      }
+    });
+    animateCounter(document.getElementById('stat-full'), 0, fullCount, 700, '<span class="unit">問</span>');
+    animateCounter(document.getElementById('stat-partial'), 0, partialCount, 700, '<span class="unit">問</span>');
+    animateCounter(document.getElementById('stat-skipped'), 0, skippedCount, 700, '<span class="unit">問</span>');
+    const rate = totalSubMax > 0 ? Math.round((totalSubScore / totalSubMax) * 100) : 0;
+    if (totalSubMax > 0) animateCounter(document.getElementById('stat-rate'), 0, rate, 900, '<span class="unit">%</span>');
+    else document.getElementById('stat-rate').innerHTML = '—<span class="unit">%</span>';
+
+    const grade = document.getElementById('summary-grade');
+    grade.classList.remove('s-high', 's-mid', 's-low');
+    animateCounter(grade, 0, fullCount, 1100, '<span class="denom">/4</span>');
+    if (fullCount >= 4) grade.classList.add('s-high');
+    else if (fullCount >= 2) grade.classList.add('s-mid');
+    else grade.classList.add('s-low');
+
+    // List
+    const listEl = document.getElementById('summary-list');
+    listEl.innerHTML = '';
+    PROBLEMS.forEach((p) => {
+      const s = probState[p.id];
+      const item = document.createElement('div');
+      item.className = 'summary-item';
+      let stat = '未着手', cls = '';
+      if (s && s.graded) {
+        if (s.score === s.total) { stat = '完答 ' + s.score + ' / ' + s.total; cls = 'correct s-ok'; item.classList.add('correct'); }
+        else if (s.score === 0) { stat = '不正解 0 / ' + s.total; cls = 'wrong s-ng'; item.classList.add('wrong'); }
+        else { stat = '部分正解 ' + s.score + ' / ' + s.total; cls = 'partial s-mid'; item.classList.add('partial'); }
+      }
+      item.innerHTML =
+        '<span class="num">' + p.label + '</span>' +
+        '<span class="nm">' + p.name + '</span>' +
+        '<span class="stat ' + cls + '">' + stat + '</span>';
+      item.addEventListener('click', () => goToStage(p.stageIdx));
+      listEl.appendChild(item);
+    });
+  }
+
+  function hardReset() {
+    location.reload();
+  }
+
+  // ============================================================
+  // INIT
+  // ============================================================
+  updateUI();
+})();
+</script>
+</body>
+</html>
