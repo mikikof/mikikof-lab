@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>コミュニケーションとメディア | 情報Ⅰ 学習ノート対応</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Noto+Serif+JP:wght@400;500;600;700;900&family=Noto+Sans+JP:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy-darkest: #0F2847; --navy-dark: #1B3A5B; --navy: #2C5F8D;
+  --navy-light: #4A7FA8; --navy-pale: #D4E1EF; --navy-bg: #F3F6FB;
+  --accent-red: #C8102E; --accent-red-dark: #8B0A1F; --accent-gold: #C9A961;
+  --text-main: #1A2332; --text-sub: #5A6378; --white: #FFFFFF; --ok-green: #1E824C;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(--text-main); background: var(--navy-darkest); overflow: hidden; -webkit-font-smoothing: antialiased; touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+.slide p, .slide li, .case-content, .practice-text, .def-desc, .quiz-question, .quiz-feedback, .ch-body p, .answer-text { -webkit-user-select: text; user-select: text; }
+.slide-container { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+.slide { position: absolute; top: 47px; bottom: 52px; left: 0; right: 0; padding: 4vh 5vw; opacity: 0; pointer-events: none; transform: translateX(30px); transition: opacity 0.4s ease, transform 0.4s ease; background: var(--white); overflow-y: auto; }
+.slide.active { opacity: 1; pointer-events: all; transform: translateX(0); }
+.topbar { position: fixed; top: 0; left: 0; right: 0; height: 44px; background: linear-gradient(180deg, var(--navy-darkest) 0%, var(--navy-dark) 100%); color: rgba(255,255,255,0.9); display: flex; align-items: center; padding: 0 24px; z-index: 100; font-size: 13px; letter-spacing: 0.05em; box-shadow: 0 2px 12px rgba(0,0,0,0.2); }
+.topbar-title { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 600; margin-right: 20px; }
+.topbar-subtitle { color: rgba(255,255,255,0.6); font-size: 12px; flex: 1; }
+.topbar-chapter { font-family: 'JetBrains Mono', monospace; color: var(--accent-gold); letter-spacing: 0.1em; font-size: 11px; }
+.progress { position: fixed; top: 44px; left: 0; height: 3px; background: linear-gradient(90deg, var(--accent-red) 0%, var(--accent-gold) 100%); z-index: 99; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 8px rgba(201, 169, 97, 0.5); }
+.bottombar { position: fixed; bottom: 0; left: 0; right: 0; height: 52px; background: var(--navy-darkest); color: rgba(255,255,255,0.85); display: flex; align-items: center; padding: 0 24px; z-index: 100; font-size: 13px; }
+.bottombar-nav { display: flex; gap: 12px; align-items: center; }
+.nav-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: white; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-size: 16px; }
+.nav-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.page-indicator { font-family: 'JetBrains Mono', monospace; margin-left: auto; margin-right: 16px; color: rgba(255,255,255,0.7); font-size: 12px; letter-spacing: 0.08em; }
+.slide-title-small { flex: 1; margin-left: 16px; font-size: 12px; color: rgba(255,255,255,0.5); font-family: '游教科書体 横', serif; max-width: 40vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.keyboard-hint { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.4); margin-left: 10px; }
+.eyebrow { font-family: 'JetBrains Mono', monospace; color: var(--accent-red); font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 16px; }
+.slide-title { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; color: var(--navy-darkest); font-size: clamp(32px, 4.4vw, 56px); line-height: 1.15; margin-bottom: 10px; letter-spacing: -0.01em; }
+.slide-subtitle { font-size: clamp(17px, 1.7vw, 22px); color: var(--text-sub); font-weight: 500; margin-bottom: 30px; line-height: 1.7; }
+.section-heading { font-family: '游教科書体 横', serif; font-weight: 700; color: var(--navy-dark); font-size: 28px; margin-bottom: 18px; padding-left: 16px; border-left: 4px solid var(--accent-red); line-height: 1.3; }
+.body-text { font-size: 19px; line-height: 1.85; color: var(--text-main); font-weight: 500; }
+.highlight { background: linear-gradient(180deg, transparent 60%, rgba(201,169,97,0.4) 60%); font-weight: 700; padding: 0 2px; }
+.title-slide { display: flex; flex-direction: column; justify-content: center; background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy-dark) 60%, var(--navy) 100%); color: white; padding: 0 10vw; overflow: hidden; }
+.title-slide::before { content: ''; position: absolute; top: 0; right: 0; width: 45%; height: 100%; background: radial-gradient(circle at 70% 30%, rgba(201,169,97,0.15) 0%, transparent 50%), radial-gradient(circle at 30% 70%, rgba(200,16,46,0.1) 0%, transparent 50%); pointer-events: none; }
+.title-slide::after { content: ''; position: absolute; top: 50%; right: 8vw; width: 300px; height: 300px; border: 1px solid rgba(201,169,97,0.3); border-radius: 50%; transform: translateY(-50%); animation: rotate 40s linear infinite; }
+@keyframes rotate { to { transform: translateY(-50%) rotate(360deg); } }
+.title-label { font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.3em; color: var(--accent-gold); margin-bottom: 24px; }
+.title-main { font-family: '游教科書体 横', serif; font-weight: 900; font-size: clamp(60px, 8vw, 120px); line-height: 1; margin-bottom: 20px; letter-spacing: -0.02em; position: relative; z-index: 2; }
+.title-sub { font-family: '游教科書体 横', serif; font-size: clamp(22px, 2.5vw, 34px); font-weight: 300; color: rgba(255,255,255,0.85); margin-bottom: 60px; letter-spacing: 0.05em; }
+.title-meta { display: flex; gap: 40px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.6); letter-spacing: 0.15em; position: relative; z-index: 2; flex-wrap: wrap; }
+.title-meta-item strong { color: var(--accent-gold); margin-right: 8px; }
+.section-divider { display: flex !important; flex-direction: column; justify-content: center !important; align-items: center !important; background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy) 100%); color: white; position: absolute; padding: 0 5vw !important; overflow: hidden !important; text-align: center; }
+.section-divider > * { position: relative; z-index: 2; }
+.section-divider::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(201,169,97,0.1) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(200,16,46,0.08) 0%, transparent 40%); z-index: 1; }
+.section-number { font-family: 'JetBrains Mono', monospace; font-size: 14px; letter-spacing: 0.3em; color: var(--accent-gold); margin-bottom: 20px; }
+.section-title-big { font-family: '游教科書体 横', serif; font-size: clamp(48px, 7vw, 90px); font-weight: 900; line-height: 1; margin-bottom: 18px; text-align: center; }
+.section-tagline { font-family: '游教科書体 横', serif; font-size: clamp(18px, 2vw, 26px); font-weight: 300; color: rgba(255,255,255,0.75); letter-spacing: 0.05em; }
+
+.def-box { background: var(--navy-bg); border: 1px solid var(--navy-pale); border-radius: 6px; padding: 22px 26px; margin-bottom: 12px; }
+.def-box .def-label { font-family: 'JetBrains Mono', monospace; color: var(--accent-red); font-size: 11px; font-weight: 700; letter-spacing: 0.15em; margin-bottom: 6px; }
+.def-box .def-term { font-family: '游教科書体 横', serif; font-weight: 700; font-size: 22px; color: var(--navy-darkest); margin-bottom: 8px; }
+.def-box .def-desc { font-size: 16px; line-height: 1.8; color: var(--text-main); font-weight: 500; }
+
+.note-blank { display: inline-block; min-width: 96px; padding: 2px 12px; background: var(--navy-pale); border-bottom: 2px solid var(--navy); color: var(--navy-dark); font-weight: 700; border-radius: 4px 4px 0 0; cursor: pointer; transition: all 0.2s; }
+.note-blank:hover { background: #BDD0E6; }
+.note-blank.reveal { background: var(--accent-gold); color: var(--navy-darkest); border-bottom-color: var(--accent-red); animation: reveal 0.5s; }
+@keyframes reveal { 0% { transform: scale(0.9); opacity: 0.5; } 50% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px; }
+@media (max-width: 1100px) { .two-col { grid-template-columns: 1fr; gap: 18px; } }
+.slide::-webkit-scrollbar { width: 6px; }
+.slide::-webkit-scrollbar-track { background: transparent; }
+.slide::-webkit-scrollbar-thumb { background: var(--navy-pale); border-radius: 3px; }
+@media print { .topbar, .bottombar, .progress { display: none; } }
+
+.agenda-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+.agenda-item { padding: 22px 24px; background: var(--navy-bg); border-left: 4px solid var(--navy); border-radius: 4px; transition: all 0.3s; display: flex; gap: 18px; align-items: flex-start; }
+.agenda-item:hover { background: var(--navy-pale); transform: translateX(4px); }
+.agenda-num { font-family: '游教科書体 横', serif; font-size: 32px; font-weight: 700; color: var(--accent-red); line-height: 1; min-width: 50px; }
+.agenda-content h3 { font-family: '游教科書体 横', serif; font-weight: 600; font-size: 18px; color: var(--navy-darkest); margin-bottom: 5px; }
+.agenda-content p { font-size: 13px; color: var(--text-sub); line-height: 1.5; }
+@media (max-width: 1100px) { .agenda-grid { grid-template-columns: 1fr; } }
+
+.icon-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 18px; }
+.icon-cards.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.icon-cards.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.icon-card { background: white; border: 2px solid var(--navy-pale); border-radius: 14px; padding: 14px 8px 16px; text-align: center; cursor: pointer; transition: all 0.25s; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.icon-card:hover { border-color: var(--accent-gold); transform: translateY(-3px); box-shadow: 0 6px 18px rgba(15,40,71,0.1); }
+.icon-card.selected { border-color: var(--accent-red); background: linear-gradient(180deg, rgba(201,169,97,0.10) 0%, white 100%); box-shadow: 0 4px 14px rgba(200,16,46,0.12); }
+.icon-card-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; color: var(--accent-red); font-weight: 900; }
+.icon-card-svg { width: 72px; height: 72px; display: block; margin: 4px 0 2px; }
+.icon-card-name { font-family: '游教科書体 横', serif; font-weight: 900; font-size: 16px; color: var(--navy-darkest); line-height: 1.3; }
+.icon-card-sub { font-family: 'Noto Sans JP', sans-serif; font-size: 11px; color: var(--text-sub); font-weight: 600; line-height: 1.4; }
+.cards-hint { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--text-sub); font-weight: 700; text-align: center; margin-top: 10px; }
+.icon-info-panel { margin-top: 16px; padding: 18px 20px; background: var(--navy-bg); border-left: 4px solid var(--accent-gold); border-radius: 0 4px 4px 0; min-height: 86px; font-size: 14.5px; line-height: 1.75; color: var(--text-main); font-weight: 500; }
+.icon-info-panel .ip-term { font-family: '游教科書体 横', serif; font-weight: 900; color: var(--navy-darkest); font-size: 17px; margin-right: 8px; }
+.icon-info-panel .ip-eng { font-family: 'JetBrains Mono', monospace; color: var(--accent-red); font-size: 11px; letter-spacing: 0.1em; }
+.icon-info-panel .ip-desc { display: block; margin-top: 8px; }
+@media (max-width: 1100px) { .icon-cards { grid-template-columns: repeat(2, 1fr); } .icon-cards.cols-3 { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 720px) { .icon-cards, .icon-cards.cols-3, .icon-cards.cols-2 { grid-template-columns: repeat(2, 1fr); gap: 8px; } .icon-card-svg { width: 60px; height: 60px; } .icon-card-name { font-size: 14px; } }
+
+/* form-table (12分類インタラクティブ) */
+.form-table { margin: 14px auto 0; max-width: 820px; border-collapse: collapse; }
+.form-table th, .form-table td { padding: 10px 8px; border: 1px solid var(--navy-pale); text-align: center; }
+.form-table th { background: var(--navy-darkest); color: white; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; }
+.form-table th.row-header, .form-table td.row-header { background: var(--navy-bg); font-family: '游教科書体 横', serif; font-weight: 900; color: var(--navy-darkest); font-size: 14px; padding: 10px 12px; text-align: center; }
+.form-cell { background: white; cursor: pointer; transition: all 0.2s; min-width: 60px; padding: 10px 6px; }
+.form-cell:hover { background: var(--navy-bg); }
+.form-cell.selected { background: rgba(201,169,97,0.25); border: 2px solid var(--accent-red); }
+.form-cell .fc-letter { font-family: 'JetBrains Mono', monospace; font-weight: 900; color: var(--navy); font-size: 18px; display: block; }
+.form-cell .fc-eg { font-size: 10.5px; color: var(--text-sub); margin-top: 4px; line-height: 1.4; min-height: 26px; display: block; }
+.form-cell.selected .fc-letter { color: var(--accent-red); }
+.form-table-info { margin-top: 12px; padding: 14px 18px; background: var(--navy-bg); border-left: 4px solid var(--accent-gold); border-radius: 0 4px 4px 0; min-height: 70px; font-size: 14px; line-height: 1.7; color: var(--text-main); font-weight: 500; }
+
+/* timeline */
+.timeline-wrap { max-width: 980px; margin: 16px auto 0; padding: 18px; background: var(--navy-bg); border-radius: 8px; }
+.timeline-line { position: relative; height: 4px; background: linear-gradient(90deg, var(--navy-light) 0%, var(--accent-gold) 50%, var(--accent-red) 100%); border-radius: 2px; margin: 60px 16px 80px; }
+.tl-node { position: absolute; top: -40px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; min-width: 70px; }
+.tl-node .tl-dot { width: 16px; height: 16px; border-radius: 50%; background: white; border: 3px solid var(--navy); margin-top: 32px; transition: all 0.2s; }
+.tl-node.fixed .tl-dot { background: var(--navy); }
+.tl-node.blank { cursor: pointer; }
+.tl-node.blank .tl-dot { background: var(--accent-gold); border-color: var(--accent-red); animation: tlPulse 1.6s ease-in-out infinite; }
+@keyframes tlPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(200,16,46,0.4); } 50% { box-shadow: 0 0 0 8px rgba(200,16,46,0); } }
+.tl-node.blank.reveal .tl-dot { background: var(--ok-green); border-color: var(--ok-green); animation: none; }
+.tl-node .tl-label { position: absolute; top: 56px; font-size: 12px; font-weight: 700; color: var(--navy-darkest); white-space: nowrap; line-height: 1.3; text-align: center; }
+.tl-node .tl-blank-mark { position: absolute; top: -32px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent-red); font-weight: 900; }
+.tl-node.fixed .tl-blank-mark { color: var(--text-sub); font-weight: 500; }
+.tl-node.blank .tl-label { color: var(--text-sub); font-style: italic; }
+.tl-node.blank.reveal .tl-label { color: var(--navy-darkest); font-style: normal; }
+.tl-pool { margin-top: 48px; padding: 14px 18px; background: white; border: 1px dashed var(--navy-pale); border-radius: 6px; font-size: 13px; color: var(--text-sub); line-height: 1.85; }
+.tl-pool .sp-label { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.15em; color: var(--accent-red); font-weight: 700; margin-right: 8px; }
+@media (max-width: 1100px) { .timeline-line { margin: 60px 8px 100px; } .tl-node .tl-label { font-size: 10.5px; max-width: 80px; white-space: normal; } }
+
+/* mail diagram (To/CC/BCC) */
+.mail-diagram { max-width: 720px; margin: 14px auto 0; padding: 18px 22px; background: var(--navy-bg); border-radius: 8px; }
+.mail-people { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
+.mail-person { background: white; border: 2px solid var(--navy-pale); border-radius: 8px; padding: 10px 6px; text-align: center; }
+.mail-person .mp-letter { font-family: '游教科書体 横', serif; font-weight: 900; color: var(--navy); font-size: 28px; line-height: 1; }
+.mail-person .mp-name { font-size: 11px; color: var(--text-sub); font-weight: 600; margin-top: 4px; line-height: 1.4; }
+.mail-fields { display: grid; grid-template-columns: 1fr; gap: 8px; }
+.mail-field { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: white; border-radius: 6px; border-left: 4px solid var(--navy); }
+.mail-field .mf-label { font-family: 'JetBrains Mono', monospace; font-weight: 900; color: var(--navy-darkest); min-width: 60px; font-size: 13px; letter-spacing: 0.05em; }
+.mail-field .mf-value { flex: 1; font-family: '游教科書体 横', serif; font-size: 17px; font-weight: 700; color: var(--navy-pale); cursor: pointer; transition: all 0.2s; padding: 4px 10px; border-radius: 4px; background: rgba(212,225,239,0.4); text-align: center; }
+.mail-field .mf-value:hover { background: var(--navy-pale); color: var(--navy-dark); }
+.mail-field .mf-value.reveal { background: var(--accent-gold); color: var(--navy-darkest); animation: reveal 0.5s; }
+
+/* select-grid (語群選択型) */
+.select-grid { display: grid; grid-template-columns: 1fr; gap: 10px; max-width: 760px; margin: 18px auto 0; }
+.select-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; background: var(--white); border: 1px solid var(--navy-pale); border-radius: 6px; }
+.select-row .sr-key { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--accent-red); min-width: 40px; font-size: 14px; }
+.select-row .sr-text { flex: 1; font-size: 14.5px; line-height: 1.7; color: var(--text-main); font-weight: 500; }
+.select-row .sr-blank { display: inline-block; min-width: 96px; padding: 4px 12px; background: var(--navy-pale); border-bottom: 2px solid var(--navy); color: var(--navy-dark); font-weight: 700; border-radius: 4px 4px 0 0; cursor: pointer; transition: all 0.2s; text-align: center; font-size: 14px; }
+.select-row .sr-blank:hover { background: #BDD0E6; }
+.select-row .sr-blank.reveal { background: var(--accent-gold); color: var(--navy-darkest); border-bottom-color: var(--accent-red); }
+.select-pool { margin-top: 10px; padding: 12px 16px; background: var(--navy-bg); border-left: 3px solid var(--navy); border-radius: 0 4px 4px 0; font-size: 13px; line-height: 1.8; color: var(--text-sub); font-weight: 500; }
+.select-pool .sp-label { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.15em; color: var(--accent-red); font-weight: 700; margin-right: 8px; }
+
+/* answers-grid */
+.answers-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 18px; }
+.answer-row { display: flex; align-items: center; padding: 10px 14px; background: var(--navy-bg); border-radius: 4px; gap: 12px; border-left: 3px solid var(--navy); cursor: pointer; transition: all 0.2s; }
+.answer-row:hover { background: var(--navy-pale); }
+.answer-num { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--accent-red); font-size: 13px; min-width: 28px; }
+.answer-text { flex: 1; font-size: 13.5px; font-weight: 600; color: var(--navy-darkest); }
+.answer-reveal { font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 4px 10px; background: var(--navy-dark); color: white; border-radius: 3px; letter-spacing: 0.08em; transition: all 0.3s; }
+.answer-row.revealed .answer-reveal { background: var(--accent-gold); color: var(--navy-darkest); font-weight: 700; }
+.answer-section-head { grid-column: 1 / -1; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; color: var(--accent-red); font-weight: 700; padding: 14px 6px 4px; border-bottom: 1px solid var(--navy-pale); margin-top: 6px; }
+@media (max-width: 1100px) { .answers-grid { grid-template-columns: 1fr; } }
+
+/* summary-tree */
+.summary-tree { display: flex; flex-direction: column; align-items: center; gap: 16px; max-width: 880px; margin: 18px auto 0; }
+.tree-root { background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy) 100%); color: white; padding: 18px 30px; border-radius: 10px; font-family: '游教科書体 横', serif; font-weight: 900; font-size: 22px; box-shadow: 0 6px 18px rgba(15,40,71,0.25); }
+.tree-branches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; width: 100%; }
+.tree-branch { background: var(--navy-bg); border: 2px solid var(--navy-pale); border-radius: 8px; padding: 16px; text-align: center; }
+.tree-branch h4 { font-family: '游教科書体 横', serif; font-weight: 700; color: var(--navy-darkest); font-size: 17px; margin-bottom: 6px; }
+.tree-branch p { font-size: 12.5px; color: var(--text-sub); line-height: 1.6; }
+.tree-branch .tb-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--accent-red); letter-spacing: 0.15em; margin-bottom: 6px; font-weight: 700; }
+@media (max-width: 1100px) { .tree-branches { grid-template-columns: 1fr; } }
+
+/* review */
+.review-container { max-width: 780px; margin: 16px auto 0; text-align: center; }
+.review-intro { font-size: 14.5px; color: var(--text-sub); margin-bottom: 22px; line-height: 1.8; }
+.review-start-btn { background: var(--navy-darkest); color: white; border: none; padding: 14px 38px; font-size: 15px; font-family: '游教科書体 横', serif; font-weight: 600; border-radius: 50px; cursor: pointer; transition: all 0.3s; box-shadow: 0 6px 20px rgba(15,40,71,0.25); }
+.review-start-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(15,40,71,0.35); background: var(--navy); }
+.review-q-area { display: none; margin-top: 22px; }
+.review-q-area.active { display: block; }
+.review-progress { font-family: 'JetBrains Mono', monospace; color: var(--navy); font-size: 12px; letter-spacing: 0.15em; margin-bottom: 12px; }
+.review-result { font-family: '游教科書体 横', serif; font-size: 46px; font-weight: 700; color: var(--accent-red); margin: 18px 0 8px; }
+.review-result-sub { font-size: 14px; color: var(--text-sub); margin-bottom: 20px; }
+.review-retry-btn { background: transparent; border: 2px solid var(--navy); color: var(--navy-darkest); padding: 10px 22px; font-family: '游教科書体 横', serif; font-weight: 600; border-radius: 30px; cursor: pointer; transition: all 0.2s; }
+.review-retry-btn:hover { background: var(--navy-darkest); color: white; }
+.quiz-container { max-width: 900px; margin: 22px auto 0; }
+.quiz-question { background: var(--navy-darkest); color: white; padding: 18px 24px; border-radius: 6px 6px 0 0; font-size: 17px; line-height: 1.6; font-family: '游教科書体 横', serif; font-weight: 500; }
+.quiz-question-num { font-family: 'JetBrains Mono', monospace; color: var(--accent-gold); font-size: 11px; letter-spacing: 0.2em; margin-bottom: 6px; display: block; }
+.quiz-options { background: var(--white); border: 1px solid var(--navy-pale); border-top: none; border-radius: 0 0 6px 6px; padding: 16px; }
+.quiz-option { padding: 13px 16px; margin-bottom: 7px; background: var(--navy-bg); border: 2px solid transparent; border-radius: 4px; cursor: pointer; transition: all 0.2s; display: flex; gap: 12px; align-items: flex-start; font-size: 14.5px; }
+.quiz-option:hover { border-color: var(--navy); background: var(--navy-pale); }
+.quiz-option:last-child { margin-bottom: 0; }
+.quiz-option-letter { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--navy); min-width: 22px; }
+.quiz-option.correct { background: rgba(30,130,76,0.1); border-color: #1E824C; }
+.quiz-option.correct .quiz-option-letter { color: #1E824C; }
+.quiz-option.incorrect { background: rgba(200,16,46,0.08); border-color: var(--accent-red); opacity: 0.6; }
+.quiz-feedback { display: none; margin-top: 12px; padding: 14px 18px; background: var(--navy-bg); border-left: 4px solid var(--accent-gold); font-size: 13.5px; line-height: 1.7; border-radius: 0 4px 4px 0; }
+.quiz-feedback.show { display: block; animation: fadeIn 0.4s; }
+.quiz-feedback strong { color: var(--navy-darkest); }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* MENU */
+.menu-toggle { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: white; padding: 6px 14px 6px 12px; border-radius: 18px; cursor: pointer; font-size: 11px; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.15em; font-weight: 700; margin-left: 14px; transition: all 0.25s; display: flex; align-items: center; gap: 8px; height: 28px; }
+.menu-toggle:hover { background: rgba(201,169,97,0.25); border-color: var(--accent-gold); }
+.menu-toggle-icon { display: inline-flex; flex-direction: column; gap: 3px; width: 14px; justify-content: center; }
+.menu-toggle-icon span { display: block; height: 1.5px; background: white; border-radius: 1px; transition: all 0.2s; }
+.menu-toggle:hover .menu-toggle-icon span { background: var(--accent-gold); }
+.menu-overlay { position: fixed; inset: 0; background: rgba(15,40,71,0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.35s; }
+.menu-overlay.open { opacity: 1; pointer-events: all; }
+.menu-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 400px; max-width: 92vw; background: white; box-shadow: -16px 0 40px rgba(0,0,0,0.2); z-index: 201; transform: translateX(100%); transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
+.menu-panel.open { transform: translateX(0); }
+.menu-head { padding: 24px 26px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; background: linear-gradient(180deg, var(--navy-darkest) 0%, var(--navy-dark) 100%); color: white; flex-shrink: 0; }
+.menu-head-title { font-family: '游教科書体 横', serif; font-weight: 700; font-size: 20px; }
+.menu-head-sub { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--accent-gold); letter-spacing: 0.2em; margin-top: 4px; font-weight: 700; }
+.menu-close { background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.15); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 16px; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+.menu-close:hover { background: rgba(200,16,46,0.3); border-color: var(--accent-red); }
+.menu-reset-btn { margin: 14px 22px 4px; padding: 11px 16px; background: transparent; border: 1.5px dashed var(--accent-red); color: var(--accent-red); border-radius: 6px; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; font-weight: 600; font-size: 13.5px; transition: all 0.25s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.menu-reset-btn:hover { background: var(--accent-red); color: white; border-style: solid; }
+.menu-reset-icon { display: inline-block; font-size: 15px; transition: transform 0.4s; }
+.menu-reset-btn:hover .menu-reset-icon { transform: rotate(-180deg); }
+.menu-list { flex: 1; overflow-y: auto; padding: 8px 14px 28px; }
+.menu-list::-webkit-scrollbar { width: 6px; }
+.menu-list::-webkit-scrollbar-thumb { background: var(--navy-pale); border-radius: 3px; }
+.menu-section { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.2em; color: var(--accent-red); font-weight: 700; padding: 16px 14px 8px; margin-top: 6px; border-top: 1px solid var(--navy-pale); }
+.menu-section:first-of-type { border-top: none; margin-top: 6px; }
+.menu-item { display: flex; gap: 12px; padding: 11px 14px; border-radius: 6px; cursor: pointer; transition: all 0.2s; align-items: center; margin-bottom: 2px; }
+.menu-item:hover { background: var(--navy-bg); transform: translateX(-2px); }
+.menu-item-num { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--text-sub); font-size: 12px; min-width: 26px; }
+.menu-item-title { font-size: 14px; font-weight: 500; color: var(--navy-darkest); flex: 1; line-height: 1.45; }
+.menu-item.active { background: var(--navy-darkest); color: white; box-shadow: 0 4px 14px rgba(15,40,71,0.25); }
+.menu-item.active .menu-item-num { color: var(--accent-gold); }
+.menu-item.active .menu-item-title { color: white; font-weight: 700; }
+.menu-item-tag { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.1em; padding: 3px 7px; border-radius: 3px; font-weight: 700; background: rgba(200,16,46,0.1); color: var(--accent-red); white-space: nowrap; }
+.menu-item-tag.tag-interactive { background: rgba(201,169,97,0.18); color: #8a6d1f; }
+.menu-item-tag.tag-review { background: rgba(44,95,141,0.12); color: var(--navy); }
+.menu-item-tag.tag-section, .menu-item-tag.tag-title, .menu-item-tag.tag-end { background: rgba(15,40,71,0.08); color: var(--navy-dark); }
+.menu-item.active .menu-item-tag { background: rgba(201,169,97,0.3); color: var(--accent-gold); }
+
+@media (max-width: 720px) {
+  .topbar { height: 40px; padding: 0 12px; font-size: 11px; letter-spacing: 0; }
+  .topbar-title { font-size: 13px; margin-right: 8px; }
+  .topbar-subtitle { display: none; }
+  .topbar-chapter { font-size: 10px; letter-spacing: 0.08em; }
+  .menu-toggle { margin-left: 8px; padding: 4px 10px; font-size: 10px; height: 24px; gap: 6px; }
+  .menu-toggle-icon { width: 11px; gap: 2px; }
+  .menu-toggle-icon span { height: 1.3px; }
+  .progress { top: 40px; }
+  .bottombar { height: calc(52px + env(safe-area-inset-bottom, 0px)); padding: 0 14px env(safe-area-inset-bottom, 0px); font-size: 11px; }
+  .bottombar-nav { gap: 8px; }
+  .nav-btn { width: 40px; height: 40px; font-size: 16px; }
+  .slide-title-small { display: none; }
+  .keyboard-hint { display: none; }
+  .page-indicator { font-size: 11px; margin-right: 0; margin-left: auto; }
+  .slide { top: 43px; bottom: calc(52px + env(safe-area-inset-bottom, 0px)); padding: 4vw 5vw 64px; touch-action: pan-y pinch-zoom; }
+  button:active:not([disabled]), [onclick]:active, .nav-btn:active, .menu-toggle:active { transform: scale(0.96); transition: transform 0.08s; }
+  .swipe-hint { position: fixed; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%) translateY(20px); background: rgba(15, 40, 71, 0.92); color: white; padding: 10px 22px; border-radius: 24px; font-size: 13px; letter-spacing: 0.06em; font-weight: 600; z-index: 200; pointer-events: none; opacity: 0; transition: opacity 0.4s ease, transform 0.4s ease; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25); display: flex; align-items: center; gap: 10px; }
+  .swipe-hint::before, .swipe-hint::after { content: ""; width: 14px; height: 14px; border-top: 2px solid var(--accent-gold); border-right: 2px solid var(--accent-gold); }
+  .swipe-hint::before { transform: rotate(-135deg); }
+  .swipe-hint::after { transform: rotate(45deg); }
+  .swipe-hint.show { opacity: 1; transform: translateX(-50%) translateY(0); animation: swipeHintPulse 1.6s ease-in-out 1 0.4s; }
+  @keyframes swipeHintPulse { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-4px); } }
+  .title-slide { padding: 0 6vw; }
+  .title-slide::before, .title-slide::after { display: none; }
+  .title-label { font-size: 10.5px; letter-spacing: 0.2em; margin-bottom: 18px; }
+  .title-main { font-size: clamp(36px, 10vw, 58px); letter-spacing: -0.01em; margin-bottom: 14px; }
+  .title-sub { font-size: clamp(14px, 4vw, 20px); margin-bottom: 32px; }
+  .title-meta { gap: 14px 22px; font-size: 10.5px; flex-direction: column; }
+  .section-number { font-size: 11px; letter-spacing: 0.25em; margin-bottom: 14px; }
+  .section-title-big { font-size: clamp(34px, 9vw, 54px); }
+  .section-tagline { font-size: clamp(14px, 3.8vw, 18px); }
+  .eyebrow { font-size: 10px; letter-spacing: 0.15em; margin-bottom: 12px; }
+  .slide-title { font-size: clamp(24px, 6.2vw, 34px); margin-bottom: 8px; }
+  .slide-subtitle { font-size: clamp(13.5px, 3.8vw, 17px); margin-bottom: 20px; line-height: 1.65; }
+  .section-heading { font-size: 22px; margin-bottom: 14px; padding-left: 12px; border-left-width: 3px; }
+  .body-text { font-size: 15px; }
+  .def-box { padding: 16px 18px; margin-bottom: 10px; }
+  .def-box .def-term { font-size: 18px; margin-bottom: 7px; }
+  .def-box .def-desc { font-size: 14px; line-height: 1.75; }
+  .two-col { grid-template-columns: 1fr; gap: 14px; margin-top: 18px; }
+  .menu-panel { width: 100%; max-width: 100%; box-shadow: none; }
+  .menu-head { padding: 20px 22px 16px; }
+  .menu-head-title { font-size: 18px; }
+  .menu-head-sub { font-size: 9.5px; }
+  .menu-reset-btn { margin: 14px 20px 6px; font-size: 13px; }
+  .menu-list { padding: 6px 12px 22px; }
+  .menu-item { padding: 10px 12px; }
+  .menu-item-title { font-size: 13.5px; }
+  .menu-item-tag { font-size: 8.5px; padding: 2px 6px; }
+  .menu-section { font-size: 10px; padding: 14px 12px 6px; }
+  .agenda-grid { grid-template-columns: 1fr; }
+  .quiz-question { font-size: 15px; padding: 14px 18px; }
+  .quiz-option { font-size: 13.5px; padding: 11px 14px; }
+  .icon-info-panel { padding: 14px 16px; font-size: 13.5px; }
+  .form-table th, .form-table td { padding: 6px 4px; font-size: 11px; }
+  .form-table th.row-header, .form-table td.row-header { font-size: 12px; padding: 6px 8px; }
+  .form-cell { min-width: 0; padding: 6px 2px; }
+  .form-cell .fc-letter { font-size: 14px; }
+  .form-cell .fc-eg { font-size: 9px; min-height: 22px; }
+  .mail-people { gap: 6px; }
+  .mail-person .mp-letter { font-size: 22px; }
+  .mail-person .mp-name { font-size: 9.5px; }
+  .mail-field .mf-label { min-width: 50px; font-size: 11px; }
+  .mail-field .mf-value { font-size: 14px; padding: 4px 8px; }
+}
+@media (max-width: 380px) {
+  .slide { padding: 3vw 4.5vw 40px; }
+  .title-main { font-size: 36px; }
+  .slide-title { font-size: 22px; }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  .title-main { font-size: clamp(30px, 6vw, 50px); }
+  .title-sub { font-size: clamp(13px, 2.5vw, 18px); margin-bottom: 20px; }
+  .section-title-big { font-size: clamp(26px, 6vw, 46px); }
+  .slide-title { font-size: clamp(20px, 4vw, 30px); }
+  .slide-subtitle { margin-bottom: 14px; }
+  .slide { padding: 3vh 5vw; }
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <span class="topbar-title">コミュニケーションとメディア</span>
+  <span class="topbar-subtitle">情報Ⅰ 学習ノート | p.18-19 (POINT 08)</span>
+  <span class="topbar-chapter">CHAPTER · 08</span>
+  <button class="menu-toggle" onclick="openMenu()" title="スライド目次(M)">
+    <span class="menu-toggle-icon"><span></span><span></span><span></span></span>MENU
+  </button>
+</div>
+<div class="progress" id="progressBar"></div>
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+<div class="menu-panel" id="menuPanel">
+  <div class="menu-head">
+    <div><div class="menu-head-title">スライド目次</div><div class="menu-head-sub">CHAPTER · 08</div></div>
+    <button class="menu-close" onclick="closeMenu()" title="閉じる">✕</button>
+  </div>
+  <button class="menu-reset-btn" onclick="resetAllInteractions()"><span class="menu-reset-icon">⟲</span>インタラクションを全リセット</button>
+  <div class="menu-list" id="menuList"></div>
+</div>
+
+<div class="slide-container" id="slideContainer">
+
+<!-- SLIDE 1: TITLE -->
+<div class="slide title-slide active" data-title="タイトル">
+  <div class="title-label">CHAPTER · 08 / COMMUNICATION & MEDIA</div>
+  <h1 class="title-main">コミュニケーション<br>とメディア</h1>
+  <p class="title-sub">― 相互理解という営みは、メディアの変遷とともにどう変わってきたか ―</p>
+  <div class="title-meta">
+    <div class="title-meta-item"><strong>UNIT</strong>第 8 回</div>
+    <div class="title-meta-item"><strong>PAGES</strong>p.18 - 19</div>
+    <div class="title-meta-item"><strong>POINTS</strong>3 sections / 5 practices</div>
+  </div>
+</div>
+
+<!-- SLIDE 2: AGENDA -->
+<div class="slide" data-title="このサイトで扱う内容">
+  <div class="eyebrow">AGENDA / 全体構成</div>
+  <h2 class="slide-title">このサイトで扱う内容</h2>
+  <p class="slide-subtitle">学習ノート POINT 08「コミュニケーションとメディア」を、3 つの節と 5 つの実習問題でたどります。</p>
+  <div class="agenda-grid">
+    <div class="agenda-item">
+      <div class="agenda-num">1</div>
+      <div class="agenda-content"><h3>コミュニケーションとは</h3><p>「相互理解ができている状態」という定義の核心。物理的な通信や伝達との違い。</p></div>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num">2</div>
+      <div class="agenda-content"><h3>形態の分類</h3><p>人数(個別 / マスコミ / 逆マスコミ / 会議)、位置関係(直接 / 間接)、同期性(同期 / 非同期)の 3 軸。</p></div>
+    </div>
+    <div class="agenda-item">
+      <div class="agenda-num">3</div>
+      <div class="agenda-content"><h3>変遷と社会への影響</h3><p>伝播性・即時性・利便性・情報量の 4 つの方向にメディアは進化してきた。</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: SECTION 1 DIVIDER -->
+<div class="slide section-divider" data-title="第1節 コミュニケーションとは">
+  <div class="section-number">SECTION · 01</div>
+  <h2 class="section-title-big">コミュニケーション<br>とは何か</h2>
+  <p class="section-tagline">― 通信・伝達ではなく、「相互理解」が成立する状態 ―</p>
+</div>
+
+<!-- SLIDE 4: 用語アイコン (相互理解 + ツール) -->
+<div class="slide" data-title="POINT 用語(節 1)">
+  <div class="eyebrow">POINT 08 / 学習ノート p.18</div>
+  <h2 class="slide-title">コミュニケーションの定義</h2>
+  <p class="slide-subtitle">「相互理解」という言葉が中心。物理的な伝達と区別して捉える点が大事です。</p>
+  <div class="icon-cards cols-2">
+    <div class="icon-card" data-key="mutual" onclick="selectIcon('p1Info','mutual')">
+      <div class="icon-card-tag">① POINT</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><defs><linearGradient id="g1a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d8eb3"/><stop offset="1" stop-color="#0F2847"/></linearGradient></defs><circle cx="78" cy="128" r="44" fill="none" stroke="url(#g1a)" stroke-width="14"/><circle cx="178" cy="128" r="44" fill="none" stroke="url(#g1a)" stroke-width="14"/><ellipse cx="128" cy="128" rx="38" ry="32" fill="#C9A961" opacity="0.55"/><circle cx="78" cy="86" r="14" fill="#C9A961"/><circle cx="178" cy="86" r="14" fill="#C9A961"/></svg>
+      <div class="icon-card-name">相互理解</div>
+      <div class="icon-card-sub">2 人の理解が重なる</div>
+    </div>
+    <div class="icon-card" data-key="tools" onclick="selectIcon('p1Info','tools')">
+      <div class="icon-card-tag">TOOLS</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><defs><linearGradient id="g1b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d8eb3"/><stop offset="1" stop-color="#0F2847"/></linearGradient></defs><rect x="44" y="62" width="80" height="60" rx="6" fill="none" stroke="url(#g1b)" stroke-width="10"/><polyline points="48,68 84,98 120,68" fill="none" stroke="url(#g1b)" stroke-width="6"/><rect x="132" y="138" width="80" height="60" rx="14" fill="none" stroke="url(#g1b)" stroke-width="10"/><circle cx="156" cy="168" r="6" fill="#C9A961"/><circle cx="172" cy="168" r="6" fill="#C9A961"/><circle cx="188" cy="168" r="6" fill="#C9A961"/></svg>
+      <div class="icon-card-name">コミュニケーションツール</div>
+      <div class="icon-card-sub">手紙・SNS・メッセージアプリ</div>
+    </div>
+  </div>
+  <div class="cards-hint">タップで定義を表示</div>
+  <div class="icon-info-panel" id="p1Info"><span style="color:var(--text-sub);font-style:italic;">▲ 上のアイコンをタップすると、定義と説明が表示されます。</span></div>
+</div>
+
+<!-- SLIDE 5: 練習1 -->
+<div class="slide" data-title="練習 1 コミュニケーションの定義">
+  <div class="eyebrow">PRACTICE 1 / 学習ノート p.18</div>
+  <h2 class="slide-title">「相互理解」までの 5 段階</h2>
+  <p class="slide-subtitle">空欄をタップして、コミュニケーションが成立する条件を順に確認します。物理的な伝達 → 相互理解までの階段です。</p>
+  <div style="background:var(--navy-bg);padding:22px 26px;border-radius:6px;border-left:4px solid var(--navy);font-size:15.5px;line-height:2.15;color:var(--text-main);font-weight:500;max-width:880px;margin:0 auto;">
+    私たちは、日頃、同級生や家族と直接話をしたり、SNS やメッセージアプリなどを利用したりして、<span class="note-blank" data-answer="コミュニケーション">①</span> をはかっている。<br>
+    <span style="color:var(--accent-red);font-weight:700;">①</span> が成立している状態とは、単に物理的な <span class="note-blank" data-answer="通信">②</span> や情報の <span class="note-blank" data-answer="伝達">③</span> ができるだけでなく、情報の <span class="note-blank" data-answer="共有">④</span> を通して、発信者と受信者の間で <span class="note-blank" data-answer="相互理解">⑤</span> ができていることを意味する。
+  </div>
+  <div style="margin-top:14px;padding:14px 18px;background:white;border:1px dashed var(--accent-gold);border-radius:4px;font-size:13.5px;line-height:1.75;color:var(--text-sub);font-weight:500;max-width:880px;margin-left:auto;margin-right:auto;">
+    <strong style="color:var(--navy-darkest);">階段の構造:</strong> 通信(電波が届く) → 伝達(言葉が届く) → 共有(同じ情報を持つ) → 相互理解(意味が重なる)。「届いた」だけではコミュニケーションとは言わない、というのが POINT 08 の核です。
+  </div>
+</div>
+
+<!-- SLIDE 6: SECTION 2 DIVIDER -->
+<div class="slide section-divider" data-title="第2節 形態の分類">
+  <div class="section-number">SECTION · 02</div>
+  <h2 class="section-title-big">3 軸で分類する<br>コミュニケーション</h2>
+  <p class="section-tagline">― 人数 × 位置関係 × 同期性 ―</p>
+</div>
+
+<!-- SLIDE 7: 用語アイコン(3軸) -->
+<div class="slide" data-title="POINT 用語(節 2)">
+  <div class="eyebrow">POINT 08 / 学習ノート p.18</div>
+  <h2 class="slide-title">分類の 3 軸</h2>
+  <p class="slide-subtitle">コミュニケーションは独立した 3 つの軸で分類できます。アイコンをタップで定義表示。</p>
+  <div class="icon-cards cols-3">
+    <div class="icon-card" data-key="num" onclick="selectIcon('p2Info','num')">
+      <div class="icon-card-tag">② POINT</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><defs><linearGradient id="g2a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d8eb3"/><stop offset="1" stop-color="#0F2847"/></linearGradient></defs><circle cx="68" cy="100" r="22" fill="none" stroke="url(#g2a)" stroke-width="10"/><path d="M44,176 a24,22 0 0 1 48,0" fill="none" stroke="url(#g2a)" stroke-width="10" stroke-linecap="round"/><circle cx="128" cy="86" r="20" fill="none" stroke="url(#g2a)" stroke-width="10"/><path d="M106,160 a22,20 0 0 1 44,0" fill="none" stroke="url(#g2a)" stroke-width="10" stroke-linecap="round"/><circle cx="186" cy="100" r="22" fill="#C9A961" opacity="0.55" stroke="url(#g2a)" stroke-width="10"/><path d="M162,176 a24,22 0 0 1 48,0" fill="#C9A961" opacity="0.55" stroke="url(#g2a)" stroke-width="10" stroke-linecap="round"/></svg>
+      <div class="icon-card-name">人数</div>
+      <div class="icon-card-sub">個別 / マスコミ / 逆マス / 会議</div>
+    </div>
+    <div class="icon-card" data-key="pos" onclick="selectIcon('p2Info','pos')">
+      <div class="icon-card-tag">③ POINT</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><defs><linearGradient id="g2b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d8eb3"/><stop offset="1" stop-color="#0F2847"/></linearGradient></defs><circle cx="60" cy="128" r="22" fill="none" stroke="url(#g2b)" stroke-width="10"/><circle cx="196" cy="128" r="22" fill="none" stroke="url(#g2b)" stroke-width="10"/><line x1="86" y1="128" x2="170" y2="128" stroke="#C9A961" stroke-width="10" stroke-dasharray="10 8" stroke-linecap="round"/><polygon points="170,118 184,128 170,138" fill="#C9A961"/><polygon points="86,118 72,128 86,138" fill="#C9A961"/></svg>
+      <div class="icon-card-name">位置関係</div>
+      <div class="icon-card-sub">直接 / 間接</div>
+    </div>
+    <div class="icon-card" data-key="sync" onclick="selectIcon('p2Info','sync')">
+      <div class="icon-card-tag">④ POINT</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><defs><linearGradient id="g2c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d8eb3"/><stop offset="1" stop-color="#0F2847"/></linearGradient></defs><circle cx="128" cy="128" r="74" fill="none" stroke="url(#g2c)" stroke-width="10"/><line x1="128" y1="64" x2="128" y2="128" stroke="url(#g2c)" stroke-width="10" stroke-linecap="round"/><line x1="128" y1="128" x2="180" y2="128" stroke="#C9A961" stroke-width="10" stroke-linecap="round"/><circle cx="128" cy="128" r="8" fill="url(#g2c)"/></svg>
+      <div class="icon-card-name">同期性</div>
+      <div class="icon-card-sub">同期 / 非同期</div>
+    </div>
+  </div>
+  <div class="cards-hint">タップで定義を表示</div>
+  <div class="icon-info-panel" id="p2Info"><span style="color:var(--text-sub);font-style:italic;">▲ 上のアイコンをタップすると、定義と説明が表示されます。</span></div>
+</div>
+
+<!-- SLIDE 8: 練習2 形態マッチング インタラクティブ表 -->
+<div class="slide" data-title="練習 2 形態の分類(12 セルマッチング)">
+  <div class="eyebrow">PRACTICE 2 / 学習ノート p.18</div>
+  <h2 class="slide-title">7 つの伝達手段はどのセルに入るか</h2>
+  <p class="slide-subtitle">表のセル(ア〜シ)をタップすると、教科書の例 (1)〜(7) のどれが該当するかが表示されます。下の問題と対照させながら確認してください。</p>
+  <table class="form-table" id="formTable">
+    <thead><tr><th></th><th>直接コミュニケーション</th><th>間接(同期型)</th><th>間接(非同期型)</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="row-header">個別型</td>
+        <td class="form-cell" data-key="a" onclick="selectFormCell(this,'a')"><span class="fc-letter">ア</span><span class="fc-eg">該当例なし</span></td>
+        <td class="form-cell" data-key="i" onclick="selectFormCell(this,'i')"><span class="fc-letter">イ</span><span class="fc-eg">⑴ 固定電話 1 対 1</span></td>
+        <td class="form-cell" data-key="u" onclick="selectFormCell(this,'u')"><span class="fc-letter">ウ</span><span class="fc-eg">該当例なし</span></td>
+      </tr>
+      <tr>
+        <td class="row-header">マスコミ型</td>
+        <td class="form-cell" data-key="e" onclick="selectFormCell(this,'e')"><span class="fc-letter">エ</span><span class="fc-eg">⑸ 講堂で立候補演説</span></td>
+        <td class="form-cell" data-key="o" onclick="selectFormCell(this,'o')"><span class="fc-letter">オ</span><span class="fc-eg">⑹ 動画リアルタイム配信</span></td>
+        <td class="form-cell" data-key="ka" onclick="selectFormCell(this,'ka')"><span class="fc-letter">カ</span><span class="fc-eg">⑺ 動画サイトの選挙演説</span></td>
+      </tr>
+      <tr>
+        <td class="row-header">逆マスコミ型</td>
+        <td class="form-cell" data-key="ki" onclick="selectFormCell(this,'ki')"><span class="fc-letter">キ</span><span class="fc-eg">該当例なし</span></td>
+        <td class="form-cell" data-key="ku" onclick="selectFormCell(this,'ku')"><span class="fc-letter">ク</span><span class="fc-eg">該当例なし</span></td>
+        <td class="form-cell" data-key="ke" onclick="selectFormCell(this,'ke')"><span class="fc-letter">ケ</span><span class="fc-eg">⑶ Web フォーム意見集約</span></td>
+      </tr>
+      <tr>
+        <td class="row-header">会議型</td>
+        <td class="form-cell" data-key="ko" onclick="selectFormCell(this,'ko')"><span class="fc-letter">コ</span><span class="fc-eg">⑵ 教室クラス協議</span></td>
+        <td class="form-cell" data-key="sa" onclick="selectFormCell(this,'sa')"><span class="fc-letter">サ</span><span class="fc-eg">⑷ テレビ会議</span></td>
+        <td class="form-cell" data-key="si" onclick="selectFormCell(this,'si')"><span class="fc-letter">シ</span><span class="fc-eg">該当例なし</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="form-table-info" id="formInfo"><span style="color:var(--text-sub);font-style:italic;">▲ セルをタップすると、3 軸(人数 × 位置 × 同期性)の組み合わせと、該当する伝達手段が表示されます。</span></div>
+</div>
+
+<!-- SLIDE 9: SECTION 3 DIVIDER -->
+<div class="slide section-divider" data-title="第3節 変遷と社会への影響">
+  <div class="section-number">SECTION · 03</div>
+  <h2 class="section-title-big">メディアの変遷と<br>社会への影響</h2>
+  <p class="section-tagline">― 伝播性・即時性・利便性・情報量、4 つの方向への進化 ―</p>
+</div>
+
+<!-- SLIDE 10: 4特性アイコン -->
+<div class="slide" data-title="POINT 用語(節 3)">
+  <div class="eyebrow">POINT 08 / 学習ノート p.18</div>
+  <h2 class="slide-title">メディアが向上させた 4 つの性質</h2>
+  <p class="slide-subtitle">時間的・空間的な変化と、利便性・情報量の増加。アイコンをタップで定義。</p>
+  <div class="icon-cards">
+    <div class="icon-card" data-key="reach" onclick="selectIcon('p3Info','reach')">
+      <div class="icon-card-tag">⑤ POINT</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><defs><linearGradient id="g3a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d8eb3"/><stop offset="1" stop-color="#0F2847"/></linearGradient></defs><circle cx="128" cy="128" r="22" fill="#C9A961"/><circle cx="128" cy="128" r="50" fill="none" stroke="url(#g3a)" stroke-width="6" opacity="0.7"/><circle cx="128" cy="128" r="80" fill="none" stroke="url(#g3a)" stroke-width="6" opacity="0.4"/><circle cx="128" cy="128" r="110" fill="none" stroke="url(#g3a)" stroke-width="6" opacity="0.2"/></svg>
+      <div class="icon-card-name">伝播性</div>
+      <div class="icon-card-sub">広く伝わる</div>
+    </div>
+    <div class="icon-card" data-key="instant" onclick="selectIcon('p3Info','instant')">
+      <div class="icon-card-tag">⑥ POINT</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><defs><linearGradient id="g3b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d8eb3"/><stop offset="1" stop-color="#0F2847"/></linearGradient></defs><polygon points="120,38 76,150 124,150 100,222 184,108 130,108 152,38" fill="#C9A961" stroke="url(#g3b)" stroke-width="10" stroke-linejoin="round"/></svg>
+      <div class="icon-card-name">即時性</div>
+      <div class="icon-card-sub">瞬時に伝わる</div>
+    </div>
+    <div class="icon-card" data-key="conv" onclick="selectIcon('p3Info','conv')">
+      <div class="icon-card-tag">⑦ POINT</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><defs><linearGradient id="g3c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d8eb3"/><stop offset="1" stop-color="#0F2847"/></linearGradient></defs><rect x="78" y="44" width="100" height="168" rx="14" fill="none" stroke="url(#g3c)" stroke-width="12"/><rect x="92" y="62" width="72" height="116" rx="3" fill="#C9A961" opacity="0.55"/><circle cx="128" cy="196" r="7" fill="url(#g3c)"/></svg>
+      <div class="icon-card-name">利便性</div>
+      <div class="icon-card-sub">統合・小型・無線化</div>
+    </div>
+    <div class="icon-card" data-key="vol" onclick="selectIcon('p3Info','vol')">
+      <div class="icon-card-tag">⑧ POINT</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><defs><linearGradient id="g3d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d8eb3"/><stop offset="1" stop-color="#0F2847"/></linearGradient></defs><rect x="46" y="160" width="36" height="50" rx="3" fill="url(#g3d)" opacity="0.5"/><rect x="92" y="120" width="36" height="90" rx="3" fill="url(#g3d)" opacity="0.7"/><rect x="138" y="80" width="36" height="130" rx="3" fill="url(#g3d)" opacity="0.85"/><rect x="184" y="40" width="36" height="170" rx="3" fill="#C9A961"/><line x1="40" y1="220" x2="226" y2="220" stroke="url(#g3d)" stroke-width="4"/></svg>
+      <div class="icon-card-name">情報量</div>
+      <div class="icon-card-sub">発信者と蓄積の増加</div>
+    </div>
+  </div>
+  <div class="cards-hint">タップで定義を表示</div>
+  <div class="icon-info-panel" id="p3Info"><span style="color:var(--text-sub);font-style:italic;">▲ 上のアイコンをタップすると、定義と説明が表示されます。</span></div>
+</div>
+
+<!-- SLIDE 11: 練習3 -->
+<div class="slide" data-title="練習 3 コミュニケーションの変化">
+  <div class="eyebrow">PRACTICE 3 / 学習ノート p.19</div>
+  <h2 class="slide-title">8 つの事柄が社会に与えた影響</h2>
+  <p class="slide-subtitle">それぞれの事柄が、5 つの性質(ア〜オ)のどれを高めたかを答えます。「クリック」で正解。</p>
+  <div class="answers-grid">
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑴</span><span class="answer-text">テレビ放送の開始により、全国で同じ映像が見られるようになった</span><span class="answer-reveal" data-ans="イ. 伝播性">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑵</span><span class="answer-text">お店からのお知らせが、郵便はがきから電子メールへ移行した</span><span class="answer-reveal" data-ans="ア. 即時性">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑶</span><span class="answer-text">文字に加えて、画像や動画による情報発信が増加した</span><span class="answer-reveal" data-ans="エ. 情報量">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑷</span><span class="answer-text">テレビ会議システムの登場により、テレワークが普及した</span><span class="answer-reveal" data-ans="オ. 双方向性">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑸</span><span class="answer-text">情報端末が小型化して、持ち運びが容易になった</span><span class="answer-reveal" data-ans="ウ. 利便性">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑹</span><span class="answer-text">SNS などの普及によって、情報を隠すことが難しくなった</span><span class="answer-reveal" data-ans="イ. 伝播性">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑺</span><span class="answer-text">さまざまな場面で活用するためにビッグデータが蓄積されてきた</span><span class="answer-reveal" data-ans="エ. 情報量">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑻</span><span class="answer-text">カメラ付き携帯電話の登場以降、デバイスの多機能化が進んだ</span><span class="answer-reveal" data-ans="ウ. 利便性">クリック</span></div>
+  </div>
+  <div class="select-pool" style="max-width:880px;margin:14px auto 0;">
+    <span class="sp-label">語群</span> ア. 情報の即時性の向上 / イ. 情報の伝播性の向上 / ウ. 情報機器の利便性の向上 / エ. 流通する情報量の増加 / オ. コミュニケーションの双方向性の向上
+  </div>
+</div>
+
+<!-- SLIDE 12: 練習4 timeline -->
+<div class="slide" data-title="練習 4 技術や通信サービスの進歩(年表)">
+  <div class="eyebrow">PRACTICE 4 / 学習ノート p.19</div>
+  <h2 class="slide-title">9 つの出来事を古い順に並べる</h2>
+  <p class="slide-subtitle">年表上の <span style="color:var(--accent-red);font-weight:700;">⑴〜⑸</span> の空所をタップで答え合わせ。古い順 (左) → 新しい順 (右)。</p>
+  <div class="timeline-wrap">
+    <div class="timeline-line">
+      <div class="tl-node blank" style="left: 5%;" data-ans="ウ. 電話サービス開始" onclick="revealTl(this)">
+        <span class="tl-blank-mark">⑴</span><div class="tl-dot"></div><div class="tl-label">クリックで答え</div>
+      </div>
+      <div class="tl-node fixed" style="left: 17%;">
+        <span class="tl-blank-mark">イ</span><div class="tl-dot"></div><div class="tl-label">ラジオ放送開始</div>
+      </div>
+      <div class="tl-node fixed" style="left: 29%;">
+        <span class="tl-blank-mark">ア</span><div class="tl-dot"></div><div class="tl-label">テレビ放送開始</div>
+      </div>
+      <div class="tl-node blank" style="left: 41%;" data-ans="ケ. ISP の登場" onclick="revealTl(this)">
+        <span class="tl-blank-mark">⑵</span><div class="tl-dot"></div><div class="tl-label">クリックで答え</div>
+      </div>
+      <div class="tl-node blank" style="left: 53%;" data-ans="エ. 携帯電話の登場" onclick="revealTl(this)">
+        <span class="tl-blank-mark">⑶</span><div class="tl-dot"></div><div class="tl-label">クリックで答え</div>
+      </div>
+      <div class="tl-node fixed" style="left: 65%;">
+        <span class="tl-blank-mark">ク</span><div class="tl-dot"></div><div class="tl-label">検索サイトの登場</div>
+      </div>
+      <div class="tl-node blank" style="left: 77%;" data-ans="カ. SNS サービス開始" onclick="revealTl(this)">
+        <span class="tl-blank-mark">⑷</span><div class="tl-dot"></div><div class="tl-label">クリックで答え</div>
+      </div>
+      <div class="tl-node blank" style="left: 89%;" data-ans="オ. スマートフォンの登場" onclick="revealTl(this)">
+        <span class="tl-blank-mark">⑸</span><div class="tl-dot"></div><div class="tl-label">クリックで答え</div>
+      </div>
+      <div class="tl-node fixed" style="left: 100%;">
+        <span class="tl-blank-mark">キ</span><div class="tl-dot"></div><div class="tl-label">クラウドサービスの登場</div>
+      </div>
+    </div>
+    <div class="tl-pool"><span class="sp-label">語群</span> ア. テレビ放送開始 / イ. ラジオ放送開始 / ウ. 電話サービス開始 / エ. 携帯電話の登場 / オ. スマートフォンの登場 / カ. SNS サービス開始 / キ. クラウドサービスの登場 / ク. 検索サイトの登場 / ケ. インターネットサービスプロバイダ(ISP)の登場</div>
+  </div>
+</div>
+
+<!-- SLIDE 13: 練習5 メール To/CC/BCC -->
+<div class="slide" data-title="練習 5 電子メールの同報">
+  <div class="eyebrow">PRACTICE 5 / 学習ノート p.19</div>
+  <h2 class="slide-title">宛先・CC・BCC の使い分け</h2>
+  <p class="slide-subtitle">A さん(送信者)が B・C・D に同じメールを送るとき、4 人の関係に応じて宛先 / CC / BCC をどう振り分けるか。各欄をタップで答え。</p>
+  <div class="two-col" style="margin-top:6px;gap:24px;">
+    <div>
+      <h3 class="section-heading" style="font-size:20px;margin-bottom:10px;">⑴ プロジェクト会議日程の調整</h3>
+      <p style="font-size:13.5px;color:var(--text-sub);line-height:1.7;margin-bottom:10px;">B と日程調整。C は B の上司で内容把握必要。D は A の同僚でプロジェクトを手伝うが、B・C との直接接点はない。</p>
+      <div class="mail-diagram">
+        <div class="mail-people">
+          <div class="mail-person"><div class="mp-letter">A</div><div class="mp-name">送信者</div></div>
+          <div class="mail-person"><div class="mp-letter">B</div><div class="mp-name">調整相手</div></div>
+          <div class="mail-person"><div class="mp-letter">C</div><div class="mp-name">B の上司</div></div>
+          <div class="mail-person"><div class="mp-letter">D</div><div class="mp-name">A の同僚</div></div>
+        </div>
+        <div class="mail-fields">
+          <div class="mail-field"><span class="mf-label">宛先 (To)</span><span class="mf-value" data-ans="B" onclick="revealMail(this)">クリック</span></div>
+          <div class="mail-field"><span class="mf-label">CC</span><span class="mf-value" data-ans="C" onclick="revealMail(this)">クリック</span></div>
+          <div class="mail-field"><span class="mf-label">BCC</span><span class="mf-value" data-ans="D" onclick="revealMail(this)">クリック</span></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3 class="section-heading" style="font-size:20px;margin-bottom:10px;">⑵ B 社・C 社への見積もり依頼</h3>
+      <p style="font-size:13.5px;color:var(--text-sub);line-height:1.7;margin-bottom:10px;">B 社と C 社に同じ見積もり依頼。<strong style="color:var(--navy-darkest);">どちらに依頼したかは互いに秘密</strong>。D は A の上司で、B・C にも知られて構わない。</p>
+      <div class="mail-diagram">
+        <div class="mail-people">
+          <div class="mail-person"><div class="mp-letter">A</div><div class="mp-name">送信者</div></div>
+          <div class="mail-person"><div class="mp-letter">B</div><div class="mp-name">B 社</div></div>
+          <div class="mail-person"><div class="mp-letter">C</div><div class="mp-name">C 社</div></div>
+          <div class="mail-person"><div class="mp-letter">D</div><div class="mp-name">A の上司</div></div>
+        </div>
+        <div class="mail-fields">
+          <div class="mail-field"><span class="mf-label">宛先 (To)</span><span class="mf-value" data-ans="A(自分)" onclick="revealMail(this)">クリック</span></div>
+          <div class="mail-field"><span class="mf-label">CC</span><span class="mf-value" data-ans="D" onclick="revealMail(this)">クリック</span></div>
+          <div class="mail-field"><span class="mf-label">BCC</span><span class="mf-value" data-ans="B, C" onclick="revealMail(this)">クリック</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:16px;padding:14px 18px;background:var(--navy-bg);border-left:4px solid var(--accent-gold);border-radius:0 4px 4px 0;font-size:13.5px;line-height:1.75;color:var(--text-main);font-weight:500;max-width:880px;margin-left:auto;margin-right:auto;">
+    <strong style="color:var(--navy-darkest);">使い分けの原則:</strong> メールに表示させたくない相手は <strong>BCC</strong>、返信を求めない相手は <strong>CC</strong>。⑵ では「依頼相手を互いに知られない」ため B・C を BCC に、宛先に指定する人がいないので自分(A)を宛先にする。
+  </div>
+</div>
+
+<!-- SLIDE 14: POINT 答え合わせ -->
+<div class="slide" data-title="POINT 8 項目 答え合わせ">
+  <div class="eyebrow">REVIEW / 学習ノート POINT ①〜⑧</div>
+  <h2 class="slide-title">POINT の用語(全 8 項目)</h2>
+  <p class="slide-subtitle">学習を終えたあと、POINT 用語を一括で答え合わせ。各行をタップで個別、ボタンで一括。</p>
+  <div style="text-align:center;margin-bottom:14px;">
+    <button onclick="revealAll()" style="background:var(--navy-darkest);color:white;border:none;padding:9px 22px;font-family:'游教科書体 横',serif;font-weight:600;border-radius:30px;cursor:pointer;font-size:13px;margin:0 4px;">すべて一括表示</button>
+    <button onclick="hideAll()" style="background:transparent;color:var(--navy-darkest);border:2px solid var(--navy);padding:9px 22px;font-family:'游教科書体 横',serif;font-weight:600;border-radius:30px;cursor:pointer;font-size:13px;margin:0 4px;">すべて隠す</button>
+  </div>
+  <div class="answers-grid">
+    <div class="answer-section-head">節 1:コミュニケーションとは</div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">①</span><span class="answer-text">発信者と受信者の間でできている状態</span><span class="answer-reveal" data-ans="相互理解">クリック</span></div>
+    <div class="answer-section-head">節 2:形態の分類(3 軸)</div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">②</span><span class="answer-text">個別型・マスコミ型・逆マスコミ型・会議型</span><span class="answer-reveal" data-ans="人数">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">③</span><span class="answer-text">直接型・間接型</span><span class="answer-reveal" data-ans="位置関係">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">④</span><span class="answer-text">同時 / 時間差で行われるかの違い</span><span class="answer-reveal" data-ans="同期性">クリック</span></div>
+    <div class="answer-section-head">節 3:変遷と社会への影響</div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑤</span><span class="answer-text">広く伝わる性質</span><span class="answer-reveal" data-ans="伝播性">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑥</span><span class="answer-text">瞬時に伝わる性質</span><span class="answer-reveal" data-ans="即時性">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑦</span><span class="answer-text">メディアの統合・小型化・無線化で向上したもの</span><span class="answer-reveal" data-ans="利便性">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑧</span><span class="answer-text">発信者の増加と蓄積で増えるもの</span><span class="answer-reveal" data-ans="情報量">クリック</span></div>
+  </div>
+</div>
+
+<!-- SLIDE 15: まとめツリー -->
+<div class="slide" data-title="まとめ">
+  <div class="eyebrow">SUMMARY / POINT 08 まとめ</div>
+  <h2 class="slide-title">POINT 08 を 1 枚で俯瞰</h2>
+  <p class="slide-subtitle">「相互理解」を中心に、形態の 3 軸と、変遷の 4 方向に整理し直す。</p>
+  <div class="summary-tree">
+    <div class="tree-root">コミュニケーションとメディア</div>
+    <div class="tree-branches">
+      <div class="tree-branch"><div class="tb-tag">節 1</div><h4>定義</h4><p>「相互理解」が成立した状態。通信や伝達だけでは足りない。</p></div>
+      <div class="tree-branch"><div class="tb-tag">節 2</div><h4>形態の 3 軸</h4><p>人数(個別 / マス / 逆マス / 会議)× 位置関係(直接 / 間接)× 同期性(同期 / 非同期)。</p></div>
+      <div class="tree-branch"><div class="tb-tag">節 3</div><h4>変遷の 4 方向</h4><p>伝播性・即時性・利便性・情報量。これらの向上が情報社会を形作る。</p></div>
+    </div>
+  </div>
+  <div style="margin-top:22px;padding:18px 22px;background:var(--navy-bg);border-left:4px solid var(--accent-gold);border-radius:0 4px 4px 0;font-size:14.5px;line-height:1.8;color:var(--text-main);font-weight:500;max-width:880px;margin-left:auto;margin-right:auto;">
+    <strong style="color:var(--navy-darkest);">参考: メディアの定義は「中間にあるもの」</strong><br>
+    メディア(media)はラテン語の medius(中間)に由来する複数形。発信者と受信者の <strong>あいだ</strong> に立って、情報を運ぶものすべてを指す。手紙も電話もテレビも SNS もメディア。技術が変わるたびに「中間にあるもの」の性質(伝播性・即時性・利便性・情報量)が変わり、結果としてコミュニケーションの形態自体が変化していく — これが POINT 08 全体の見取り図です。
+  </div>
+</div>
+
+<!-- SLIDE 16: 復習チャレンジ -->
+<div class="slide" data-title="復習チャレンジ 10 問">
+  <div class="eyebrow">REVIEW CHALLENGE / ランダム 10 問</div>
+  <h2 class="slide-title">理解度チェック</h2>
+  <p class="slide-subtitle">学習ノートと本サイトの内容から 10 問を出題。即時採点で自分の理解度を可視化します。</p>
+  <div class="review-container">
+    <div id="reviewStart">
+      <p class="review-intro">POINT 08 の知識から 4 択を 10 問。<br>テンポよく解いて、最後にスコアと一言コメントが出ます。</p>
+      <button class="review-start-btn" onclick="startReview()">▶ 開始する</button>
+    </div>
+    <div id="reviewQuiz" class="review-q-area">
+      <div class="review-progress" id="reviewProgress">QUESTION 1 / 10</div>
+      <div class="quiz-container" style="margin: 0;">
+        <div class="quiz-question" id="reviewQText"></div>
+        <div class="quiz-options" id="reviewQOpts"></div>
+      </div>
+    </div>
+    <div id="reviewDone" class="review-q-area" style="text-align: center;">
+      <div style="font-family: 'JetBrains Mono', monospace; color: var(--navy); font-size: 12px; letter-spacing: 0.2em; margin-bottom: 14px;">RESULT</div>
+      <div class="review-result" id="reviewScore">0 / 10</div>
+      <div class="review-result-sub" id="reviewComment"></div>
+      <button class="review-retry-btn" onclick="startReview()">もう一度</button>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 17: END CARD -->
+<div class="slide title-slide" data-title="完了">
+  <div class="title-label">END OF CHAPTER · 08</div>
+  <h1 class="title-main" style="font-size: clamp(40px, 6vw, 80px);">お疲れさま<br>でした</h1>
+  <p class="title-sub">コミュニケーションは、メディアという「中間」を通じて成り立つ「相互理解」。</p>
+  <div class="title-meta">
+    <div class="title-meta-item"><strong>COVERED</strong>学習ノート p.18-19 / POINT 08 + 練習 5 問</div>
+  </div>
+</div>
+
+</div>
+
+<div class="bottombar">
+  <div class="bottombar-nav">
+    <button class="nav-btn" id="prevBtn" onclick="goToSlide(currentSlide - 1)" title="前へ">◀</button>
+    <button class="nav-btn" id="nextBtn" onclick="goToSlide(currentSlide + 1)" title="次へ">▶</button>
+  </div>
+  <div class="slide-title-small" id="slideTitleSmall">タイトル</div>
+  <span class="keyboard-hint">← → / SPACE / F / M</span>
+  <div class="page-indicator" id="pageIndicator">01 / XX</div>
+</div>
+
+<script>
+const isMobile = () => window.innerWidth <= 720;
+function haptic(ms) {
+  if (typeof ms !== 'number' && !Array.isArray(ms)) ms = 8;
+  if (navigator.vibrate) { try { navigator.vibrate(ms); } catch (_) {} }
+}
+let lastTouchEndAt = 0;
+document.addEventListener('touchend', (e) => {
+  const now = Date.now();
+  if (now - lastTouchEndAt <= 320) {
+    const t = e.target;
+    if (t && t.tagName && /^(INPUT|TEXTAREA|SELECT|A)$/.test(t.tagName)) return;
+    e.preventDefault();
+  }
+  lastTouchEndAt = now;
+}, { passive: false });
+
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+let currentSlide = 0;
+function goToSlide(n) {
+  if (n < 0 || n >= totalSlides) return;
+  haptic(8);
+  slides[currentSlide].classList.remove('active');
+  currentSlide = n;
+  slides[currentSlide].classList.add('active');
+  slides[currentSlide].scrollTop = 0;
+  updateUI();
+}
+function updateUI() {
+  const pct = ((currentSlide + 1) / totalSlides) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('pageIndicator').textContent =
+    String(currentSlide + 1).padStart(2, '0') + ' / ' + String(totalSlides).padStart(2, '0');
+  document.getElementById('slideTitleSmall').textContent = slides[currentSlide].dataset.title || '';
+  document.getElementById('prevBtn').disabled = currentSlide === 0;
+  document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+  updateMenuActive();
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('menuPanel').classList.contains('open')) { closeMenu(); return; }
+  }
+  if (document.getElementById('menuPanel').classList.contains('open')) return;
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); goToSlide(currentSlide + 1); }
+  else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goToSlide(currentSlide - 1); }
+  else if (e.key === 'Home') { goToSlide(0); }
+  else if (e.key === 'End') { goToSlide(totalSlides - 1); }
+  else if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); }
+  else if (e.key === 'm' || e.key === 'M') { openMenu(); }
+});
+let touchStartX = 0, touchStartY = 0, touchStartT = 0;
+document.addEventListener('touchstart', (e) => {
+  if (e.touches.length !== 1) return;
+  touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; touchStartT = Date.now();
+}, { passive: true });
+document.addEventListener('touchend', (e) => {
+  if (e.changedTouches.length !== 1) return;
+  const menuPanel = document.getElementById('menuPanel');
+  if (menuPanel && menuPanel.classList.contains('open')) return;
+  const target = e.target;
+  if (target && target.closest && target.closest('button, .nav-btn, input, select, a, .icon-card, .form-cell, .answer-row, .quiz-option, .note-blank, .tl-node, .mf-value, .practice-item')) return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  const dt = Date.now() - touchStartT;
+  if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) && dt < 800) {
+    if (dx < 0) goToSlide(currentSlide + 1); else goToSlide(currentSlide - 1);
+  }
+}, { passive: true });
+function toggleFullscreen() {
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+  else document.exitFullscreen().catch(() => {});
+}
+updateUI();
+
+function buildMenu() {
+  const menuList = document.getElementById('menuList'); if (!menuList) return;
+  menuList.innerHTML = '';
+  const sections = [];
+  let currentSection = { label: 'OVERVIEW', items: [] };
+  sections.push(currentSection);
+  slides.forEach((slide, idx) => {
+    const title = slide.dataset.title || '';
+    if (slide.classList.contains('section-divider')) {
+      const label = title.replace(/^第\d節\s*/, '');
+      currentSection = { label: label.toUpperCase(), items: [] };
+      sections.push(currentSection);
+    }
+    let tag = '', tagClass = '';
+    if (slide.classList.contains('title-slide') && idx === 0) { tag = 'TITLE'; tagClass = 'tag-title'; }
+    else if (slide.classList.contains('title-slide')) { tag = 'END'; tagClass = 'tag-end'; }
+    else if (slide.classList.contains('section-divider')) { tag = 'SECTION'; tagClass = 'tag-section'; }
+    else if (/練習/.test(title)) { tag = 'PRACTICE'; tagClass = ''; }
+    else if (/POINT|アイコン|表|年表|電子メール/.test(title)) { tag = 'INTERACTIVE'; tagClass = 'tag-interactive'; }
+    else if (/答え合わせ|まとめ|復習/.test(title)) { tag = 'REVIEW'; tagClass = 'tag-review'; }
+    currentSection.items.push({ idx, title, tag, tagClass });
+  });
+  sections.forEach(sec => {
+    if (sec.items.length === 0) return;
+    const h = document.createElement('div'); h.className = 'menu-section'; h.textContent = sec.label;
+    menuList.appendChild(h);
+    sec.items.forEach(it => {
+      const el = document.createElement('div'); el.className = 'menu-item'; el.dataset.idx = it.idx;
+      el.onclick = () => { goToSlide(it.idx); closeMenu(); };
+      const num = String(it.idx + 1).padStart(2, '0');
+      const tagHtml = it.tag ? '<span class="menu-item-tag ' + it.tagClass + '">' + it.tag + '</span>' : '';
+      el.innerHTML = '<span class="menu-item-num">' + num + '</span><span class="menu-item-title">' + it.title + '</span>' + tagHtml;
+      menuList.appendChild(el);
+    });
+  });
+  updateMenuActive();
+}
+function updateMenuActive() {
+  document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+  const curr = document.querySelector('.menu-item[data-idx="' + currentSlide + '"]');
+  if (curr) {
+    curr.classList.add('active');
+    if (document.getElementById('menuPanel').classList.contains('open')) curr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+function openMenu() { document.getElementById('menuOverlay').classList.add('open'); document.getElementById('menuPanel').classList.add('open'); updateMenuActive(); }
+function closeMenu() { document.getElementById('menuOverlay').classList.remove('open'); document.getElementById('menuPanel').classList.remove('open'); }
+buildMenu();
+
+// note-blank
+function setupNoteBlanks() {
+  document.querySelectorAll('.note-blank').forEach(b => {
+    if (b._initialized) return;
+    b._initialized = true;
+    const initial = b.textContent.trim();
+    if (/^[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳]$/.test(initial)) b.dataset.placeholder = initial;
+    b.addEventListener('click', () => {
+      if (b.classList.contains('reveal')) {
+        b.classList.remove('reveal');
+        b.textContent = b.dataset.placeholder || 'クリックで正解';
+      } else {
+        b.classList.add('reveal');
+        b.textContent = b.dataset.answer;
+      }
+    });
+  });
+}
+setupNoteBlanks();
+
+// answers-grid
+function revealAnswer(row) {
+  const reveal = row.querySelector('.answer-reveal');
+  if (row.classList.contains('revealed')) {
+    row.classList.remove('revealed');
+    reveal.textContent = 'クリック';
+  } else {
+    row.classList.add('revealed');
+    reveal.textContent = reveal.dataset.ans;
+  }
+}
+function revealAll() {
+  document.querySelectorAll('.answer-row').forEach(r => {
+    r.classList.add('revealed');
+    const reveal = r.querySelector('.answer-reveal');
+    reveal.textContent = reveal.dataset.ans;
+  });
+}
+function hideAll() {
+  document.querySelectorAll('.answer-row').forEach(r => {
+    r.classList.remove('revealed');
+    r.querySelector('.answer-reveal').textContent = 'クリック';
+  });
+}
+
+// icon-card
+const iconData = {
+  mutual: { term: '相互理解', eng: 'MUTUAL UNDERSTANDING', desc: 'コミュニケーションが成立している状態 = 発信者と受信者の間で「相互理解」ができている状態。情報が物理的に届くだけでは足りず、意味の共有まで含む。' },
+  tools: { term: 'コミュニケーションツール', eng: 'TOOLS', desc: '手紙、SNS、メッセージアプリなど、コミュニケーションを助ける道具すべて。技術が変わるとツールも変わるが、「相互理解」という目的は変わらない。' },
+  num:   { term: '人数による分類', eng: 'BY NUMBER OF PARTICIPANTS', desc: '個別型(1 対 1)、マスコミ型(1 対多、発信中心)、逆マスコミ型(多対 1、収集中心)、会議型(多対多、相互的)の 4 つ。' },
+  pos:   { term: '位置関係による分類', eng: 'BY SPATIAL RELATION', desc: '直接型(同じ空間で対面)、間接型(離れた空間でメディア経由)。電話・SNS は間接型。' },
+  sync:  { term: '同期性による分類', eng: 'BY SYNCHRONY', desc: '同期型(発信と受信がほぼ同時=会話・電話・テレビ会議)、非同期型(時間差がある=手紙・メール・録画動画)。' },
+  reach: { term: '伝播性', eng: 'REACH', desc: '情報が広く伝わる性質。テレビ放送が始まると、同じ映像が全国で見られるようになった。SNS の普及で「個人発の情報」も世界に届くようになった。' },
+  instant:{ term: '即時性', eng: 'IMMEDIACY', desc: '情報が瞬時に伝わる性質。郵便はがきから電子メール、さらにメッセージアプリへと、伝達にかかる時間がほぼゼロに近づいてきた。' },
+  conv:  { term: '利便性', eng: 'CONVENIENCE', desc: '情報機器が使いやすくなる性質。メディアの統合(電話 + カメラ + Web = スマホ)、情報機器の小型化・高機能化、無線技術の進歩で大きく向上した。' },
+  vol:   { term: '情報量', eng: 'VOLUME', desc: '流通する情報の総量。発信者の増加(誰でも発信できる SNS)と、ビッグデータの蓄積で爆発的に増加し続けている。' }
+};
+function selectIcon(panelId, key) {
+  const panel = document.getElementById(panelId); if (!panel) return;
+  const cards = panel.parentElement.querySelectorAll('.icon-card');
+  cards.forEach(c => c.classList.remove('selected'));
+  const me = panel.parentElement.querySelector('.icon-card[data-key="' + key + '"]');
+  if (me) me.classList.add('selected');
+  const d = iconData[key]; if (!d) return;
+  panel.innerHTML = '<span class="ip-term">' + d.term + '</span><span class="ip-eng">' + d.eng + '</span><span class="ip-desc">' + d.desc + '</span>';
+  haptic(8);
+}
+
+// 12分類表
+const formCellData = {
+  a:  { tag: '個別 × 直接', desc: '1 対 1 で、同じ空間で対面して話す形態。例: 友達と直接おしゃべり。学習ノートの (1)〜(7) には該当例なし。' },
+  i:  { tag: '個別 × 間接 × 同期', desc: '1 対 1 で、離れた場所で同時に交流する形態。⑴ 固定電話による友達と 1 対 1 の会話 が該当。' },
+  u:  { tag: '個別 × 間接 × 非同期', desc: '1 対 1 で、離れた場所で時間差を持って交流する形態。例: 手紙、個人宛メール。学習ノートの (1)〜(7) には該当例なし。' },
+  e:  { tag: 'マスコミ × 直接', desc: '1 人(または少数)から多数へ、同じ空間で発信する形態。⑸ 講堂での生徒会長立候補演説 が該当。' },
+  o:  { tag: 'マスコミ × 間接 × 同期', desc: '1 人から多数へ、離れた場所で同時に届ける形態。⑹ 動画のリアルタイム配信 が該当。' },
+  ka: { tag: 'マスコミ × 間接 × 非同期', desc: '1 人から多数へ、離れた場所で各自のタイミングで届ける形態。⑺ 動画サイトにアップされた選挙演説 が該当。' },
+  ki: { tag: '逆マスコミ × 直接', desc: '多数から 1 人へ、同じ空間で集める形態。例: 公聴会で会場の意見を 1 人に集約。学習ノートには該当例なし。' },
+  ku: { tag: '逆マスコミ × 間接 × 同期', desc: '多数から 1 人へ、離れた場所で同時に集める形態。例: ライブ放送中の電話 / コメント受付。学習ノートには該当例なし。' },
+  ke: { tag: '逆マスコミ × 間接 × 非同期', desc: '多数から 1 人へ、離れた場所で時間差を持って集める形態。⑶ Web フォームを使った意見集約 が該当。' },
+  ko: { tag: '会議 × 直接', desc: '多数同士が同じ空間で交流する形態。⑵ 教室でのクラス協議 が該当。' },
+  sa: { tag: '会議 × 間接 × 同期', desc: '多数同士が離れた場所で同時に交流する形態。⑷ テレビ会議 が該当。' },
+  si: { tag: '会議 × 間接 × 非同期', desc: '多数同士が離れた場所で時間差で交流する形態。例: 掲示板スレッド、グループチャット。学習ノートには該当例なし。' }
+};
+function selectFormCell(cell, key) {
+  document.querySelectorAll('.form-cell').forEach(c => c.classList.remove('selected'));
+  cell.classList.add('selected');
+  const d = formCellData[key]; if (!d) return;
+  document.getElementById('formInfo').innerHTML = '<strong style="color:var(--navy-darkest);font-family:JetBrains Mono;font-size:12px;letter-spacing:0.1em;">' + d.tag.toUpperCase() + '</strong><br>' + d.desc;
+  haptic(8);
+}
+
+// timeline
+function revealTl(node) {
+  if (node.classList.contains('reveal')) {
+    node.classList.remove('reveal');
+    node.querySelector('.tl-label').textContent = 'クリックで答え';
+  } else {
+    node.classList.add('reveal');
+    node.querySelector('.tl-label').textContent = node.dataset.ans;
+  }
+  haptic(8);
+}
+
+// mail
+function revealMail(el) {
+  if (el.classList.contains('reveal')) {
+    el.classList.remove('reveal');
+    el.textContent = 'クリック';
+  } else {
+    el.classList.add('reveal');
+    el.textContent = el.dataset.ans;
+  }
+  haptic(8);
+}
+
+// review
+const reviewPool = [
+  { q: 'コミュニケーションが成立している状態とは、発信者と受信者の間に何ができている状態か?', opts: ['情報の伝達', '物理的な通信', '相互理解', '即時性'], a: 2 },
+  { q: '人数による分類で、1 対 1 のコミュニケーションの形態を何というか?', opts: ['個別型', 'マスコミ型', '逆マスコミ型', '会議型'], a: 0 },
+  { q: '少数の発信者から多数の受信者へ情報が流れる形態を何というか?', opts: ['会議型', '個別型', '逆マスコミ型', 'マスコミ型'], a: 3 },
+  { q: 'Web フォームを使った意見集約は、どの形態に分類されるか?', opts: ['個別型', '逆マスコミ型', 'マスコミ型', '会議型'], a: 1 },
+  { q: '位置関係による分類で、対面ではなくメディア経由のコミュニケーションを何型というか?', opts: ['直接型', '間接型', '同期型', '非同期型'], a: 1 },
+  { q: '同期性による分類で、発信と受信に時間差があるものを何型というか?', opts: ['同期型', '非同期型', '直接型', 'マス型'], a: 1 },
+  { q: '「広く伝わる」性質を表す用語はどれか?', opts: ['即時性', '伝播性', '利便性', '情報量'], a: 1 },
+  { q: '「瞬時に伝わる」性質を表す用語はどれか?', opts: ['即時性', '伝播性', '利便性', '情報量'], a: 0 },
+  { q: 'メディアの統合や情報機器の小型化・無線化で向上したのはどれか?', opts: ['伝播性', '即時性', '利便性', '双方向性'], a: 2 },
+  { q: '発信者の増加とビッグデータの蓄積で増加したのはどれか?', opts: ['即時性', '伝播性', '情報量', '利便性'], a: 2 },
+  { q: 'メールに表示させたくない相手は、どの欄に入れるべきか?', opts: ['宛先 (To)', 'CC', 'BCC', '件名'], a: 2 },
+  { q: '返信を求めない相手は、どの欄に入れるべきか?', opts: ['宛先 (To)', 'CC', 'BCC', '差出人'], a: 1 },
+  { q: '電話サービスとテレビ放送、ラジオ放送を古い順に並べたとき正しいものはどれか?', opts: ['電話 → ラジオ → テレビ', 'ラジオ → 電話 → テレビ', 'テレビ → 電話 → ラジオ', '電話 → テレビ → ラジオ'], a: 0 },
+  { q: 'テレビ会議の登場で広まった働き方を何というか?', opts: ['フリーランス', 'ノマドワーク', 'テレワーク', 'シェアリング'], a: 2 },
+  { q: '「人数」「位置関係」「同期性」の 3 軸はどの POINT の分類軸か?', opts: ['コミュニケーションの形態', 'メディアの分類', '情報の特性', '通信規格'], a: 0 }
+];
+let reviewQuestions = [], reviewIdx = 0, reviewScore = 0;
+function startReview() {
+  reviewQuestions = [...reviewPool].sort(() => Math.random() - 0.5).slice(0, 10);
+  reviewIdx = 0; reviewScore = 0;
+  document.getElementById('reviewStart').style.display = 'none';
+  document.getElementById('reviewDone').classList.remove('active');
+  document.getElementById('reviewQuiz').classList.add('active');
+  showReviewQ();
+}
+function showReviewQ() {
+  const q = reviewQuestions[reviewIdx];
+  document.getElementById('reviewProgress').textContent = 'QUESTION ' + (reviewIdx + 1) + ' / 10';
+  document.getElementById('reviewQText').innerHTML = '<span class="quiz-question-num">Q' + (reviewIdx + 1) + '</span>' + q.q;
+  const opts = document.getElementById('reviewQOpts'); opts.innerHTML = '';
+  const letters = ['ア', 'イ', 'ウ', 'エ'];
+  q.opts.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-option';
+    div.innerHTML = '<span class="quiz-option-letter">' + letters[i] + '</span><span>' + opt + '</span>';
+    div.onclick = () => answerReview(div, i === q.a);
+    opts.appendChild(div);
+  });
+}
+function answerReview(el, isCorrect) {
+  const options = el.parentElement.querySelectorAll('.quiz-option');
+  options.forEach(o => { o.style.pointerEvents = 'none'; });
+  const q = reviewQuestions[reviewIdx];
+  if (isCorrect) { el.classList.add('correct'); reviewScore++; haptic(20); }
+  else { el.classList.add('incorrect'); options[q.a].classList.add('correct'); haptic([40, 30, 40]); }
+  setTimeout(() => {
+    reviewIdx++;
+    if (reviewIdx < 10) showReviewQ(); else showReviewResult();
+  }, 900);
+}
+function showReviewResult() {
+  document.getElementById('reviewQuiz').classList.remove('active');
+  document.getElementById('reviewDone').classList.add('active');
+  document.getElementById('reviewScore').textContent = reviewScore + ' / 10';
+  const comments = { 10:'完璧。共通テスト余裕レベル。', 9:'素晴らしい。あと一歩で満点。', 8:'合格ライン。理解はほぼ十分。', 7:'もう一歩。苦手項目を復習しよう。', 6:'6 割ライン。スライドを見返そう。' };
+  document.getElementById('reviewComment').textContent = comments[reviewScore] || '基礎から見直そう。学習ノートを手元に。';
+}
+
+// reset
+function resetAllInteractions() {
+  haptic([15, 40, 15]);
+  if (!confirm('このページのすべてのインタラクションを初期状態に戻します。よろしいですか?')) return;
+  document.querySelectorAll('.note-blank.reveal').forEach(b => {
+    b.classList.remove('reveal'); b.textContent = b.dataset.placeholder || 'クリックで正解';
+  });
+  document.querySelectorAll('.answer-row.revealed').forEach(r => {
+    r.classList.remove('revealed');
+    const rv = r.querySelector('.answer-reveal'); if (rv) rv.textContent = 'クリック';
+  });
+  document.querySelectorAll('.icon-card.selected').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.icon-info-panel').forEach(p => {
+    p.innerHTML = '<span style="color:var(--text-sub);font-style:italic;">▲ 上のアイコンをタップすると、定義と説明が表示されます。</span>';
+  });
+  document.querySelectorAll('.form-cell.selected').forEach(c => c.classList.remove('selected'));
+  const formInfo = document.getElementById('formInfo');
+  if (formInfo) formInfo.innerHTML = '<span style="color:var(--text-sub);font-style:italic;">▲ セルをタップすると、3 軸(人数 × 位置 × 同期性)の組み合わせと、該当する伝達手段が表示されます。</span>';
+  document.querySelectorAll('.tl-node.reveal').forEach(n => {
+    n.classList.remove('reveal');
+    n.querySelector('.tl-label').textContent = 'クリックで答え';
+  });
+  document.querySelectorAll('.mf-value.reveal').forEach(v => { v.classList.remove('reveal'); v.textContent = 'クリック'; });
+  document.querySelectorAll('.quiz-option').forEach(o => { o.classList.remove('correct', 'incorrect', 'chosen'); o.style.pointerEvents = 'auto'; });
+  document.querySelectorAll('.quiz-feedback.show').forEach(f => f.classList.remove('show'));
+  const reviewStart = document.getElementById('reviewStart');
+  const reviewQuiz = document.getElementById('reviewQuiz');
+  const reviewDone = document.getElementById('reviewDone');
+  if (reviewStart) reviewStart.style.display = 'block';
+  if (reviewQuiz) reviewQuiz.classList.remove('active');
+  if (reviewDone) reviewDone.classList.remove('active');
+  closeMenu();
+  goToSlide(0);
+}
+
+window.addEventListener('load', () => {
+  if (!isMobile()) return;
+  if (window._swipeHintShown) return;
+  window._swipeHintShown = true;
+  setTimeout(() => {
+    const hint = document.createElement('div');
+    hint.className = 'swipe-hint';
+    hint.textContent = 'スワイプで送る';
+    document.body.appendChild(hint);
+    requestAnimationFrame(() => hint.classList.add('show'));
+    setTimeout(() => hint.classList.remove('show'), 3200);
+    setTimeout(() => hint.remove(), 3700);
+  }, 900);
+});
+</script>
+</body>
+</html>
