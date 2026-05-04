@@ -169,10 +169,48 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
 .summary-tree { display: flex; flex-direction: column; align-items: center; gap: 16px; max-width: 880px; margin: 18px auto 0; }
 .tree-root { background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy) 100%); color: white; padding: 18px 30px; border-radius: 10px; font-family: '游教科書体 横', serif; font-weight: 900; font-size: 22px; box-shadow: 0 6px 18px rgba(15,40,71,0.25); }
 .tree-branches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; width: 100%; }
-.tree-branch { background: var(--navy-bg); border: 2px solid var(--navy-pale); border-radius: 8px; padding: 16px; text-align: center; }
-.tree-branch h4 { font-family: '游教科書体 横', serif; font-weight: 700; color: var(--navy-darkest); font-size: 17px; margin-bottom: 6px; }
+.tree-branch { background: var(--navy-bg); border: 2px solid var(--navy-pale); border-radius: 8px; padding: 16px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.tree-branch h4 { font-family: '游教科書体 横', serif; font-weight: 700; color: var(--navy-darkest); font-size: 17px; margin-bottom: 4px; }
 .tree-branch p { font-size: 12.5px; color: var(--text-sub); line-height: 1.6; }
 .tree-branch .tb-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--accent-red); letter-spacing: 0.15em; margin-bottom: 6px; font-weight: 700; }
+.tree-branch .tb-icon { width: 44px; height: 44px; margin: 4px auto 8px; display: block; }
+
+/* case-expander (最新事例) */
+.case-expander { background: white; border: 1px solid var(--navy-pale); border-left: 4px solid var(--accent-red); border-radius: 4px; margin-bottom: 10px; overflow: hidden; transition: all 0.25s; }
+.case-head { padding: 14px 18px; cursor: pointer; display: flex; align-items: center; gap: 14px; }
+.case-head:hover { background: var(--navy-bg); }
+.case-year { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-red); font-weight: 900; letter-spacing: 0.1em; min-width: 56px; }
+.case-title { font-family: '游教科書体 横', serif; font-weight: 700; color: var(--navy-darkest); font-size: 16px; flex: 1; line-height: 1.4; }
+.case-toggle { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--navy); font-weight: 700; transition: transform 0.3s; }
+.case-expander.open .case-toggle { transform: rotate(45deg); color: var(--accent-red); }
+.case-body { display: none; padding: 0 18px 16px 18px; font-size: 14px; line-height: 1.8; color: var(--text-main); font-weight: 500; }
+.case-expander.open .case-body { display: block; animation: fadeIn 0.4s; }
+.case-body strong { color: var(--navy-darkest); }
+.case-meta { margin-top: 10px; padding: 10px 12px; background: var(--navy-bg); border-radius: 4px; font-size: 12.5px; color: var(--text-sub); line-height: 1.7; }
+.case-meta .cm-label { font-family: 'JetBrains Mono', monospace; color: var(--accent-red); font-size: 10.5px; letter-spacing: 0.1em; font-weight: 700; margin-right: 6px; }
+
+/* shannon model */
+.shannon-flow { display: grid; grid-template-columns: repeat(5, 1fr) auto; gap: 8px; align-items: stretch; max-width: 980px; margin: 18px auto 0; }
+.shannon-step { background: var(--white); border: 2px solid var(--navy-pale); border-radius: 10px; padding: 14px 8px; text-align: center; cursor: pointer; transition: all 0.25s; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.shannon-step:hover { border-color: var(--accent-gold); transform: translateY(-3px); }
+.shannon-step.selected { border-color: var(--accent-red); background: linear-gradient(180deg, rgba(201,169,97,0.10) 0%, white 100%); }
+.shannon-step.noise { background: rgba(200,16,46,0.06); border-color: var(--accent-red); border-style: dashed; }
+.shannon-step .ss-tag { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: var(--accent-red); letter-spacing: 0.15em; font-weight: 900; }
+.shannon-step .ss-name { font-family: '游教科書体 横', serif; font-weight: 900; font-size: 14.5px; color: var(--navy-darkest); line-height: 1.3; margin-top: 2px; }
+.shannon-step .ss-eng { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: var(--text-sub); letter-spacing: 0.05em; }
+.shannon-arrow { display: flex; align-items: center; color: var(--accent-gold); font-size: 18px; font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+.shannon-feedback-row { margin-top: 12px; padding: 10px 14px; background: var(--navy-bg); border-left: 4px solid var(--accent-gold); border-radius: 0 4px 4px 0; font-size: 13.5px; line-height: 1.7; color: var(--text-main); font-weight: 500; }
+@media (max-width: 1100px) { .shannon-flow { grid-template-columns: 1fr; } .shannon-arrow { transform: rotate(90deg); justify-content: center; } }
+
+/* literacy 4 axis */
+.literacy-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; max-width: 920px; margin: 16px auto 0; }
+.literacy-card { background: white; border: 2px solid var(--navy-pale); border-left: 5px solid var(--accent-gold); border-radius: 8px; padding: 18px 22px; }
+.literacy-card .lc-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent-red); letter-spacing: 0.15em; font-weight: 900; margin-bottom: 6px; }
+.literacy-card h4 { font-family: '游教科書体 横', serif; font-weight: 900; font-size: 18px; color: var(--navy-darkest); margin-bottom: 8px; }
+.literacy-card p { font-size: 13.5px; color: var(--text-main); line-height: 1.75; font-weight: 500; }
+.literacy-card .lc-eg { margin-top: 10px; padding: 8px 12px; background: var(--navy-bg); border-radius: 4px; font-size: 12.5px; color: var(--text-sub); line-height: 1.6; }
+.literacy-card .lc-eg strong { color: var(--navy-darkest); font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.08em; margin-right: 6px; }
+@media (max-width: 720px) { .literacy-grid { grid-template-columns: 1fr; } }
 @media (max-width: 1100px) { .tree-branches { grid-template-columns: 1fr; } }
 
 /* review */
@@ -188,7 +226,7 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
 .review-retry-btn { background: transparent; border: 2px solid var(--navy); color: var(--navy-darkest); padding: 10px 22px; font-family: '游教科書体 横', serif; font-weight: 600; border-radius: 30px; cursor: pointer; transition: all 0.2s; }
 .review-retry-btn:hover { background: var(--navy-darkest); color: white; }
 .quiz-container { max-width: 900px; margin: 22px auto 0; }
-.quiz-question { background: var(--navy-darkest); color: white; padding: 18px 24px; border-radius: 6px 6px 0 0; font-size: 17px; line-height: 1.6; font-family: '游教科書体 横', serif; font-weight: 500; }
+.quiz-question { background: var(--navy-darkest); color: white; padding: 18px 24px; border-radius: 6px 6px 0 0; font-size: 19px; line-height: 1.6; font-family: '游教科書体 横', serif; font-weight: 600; }
 .quiz-question-num { font-family: 'JetBrains Mono', monospace; color: var(--accent-gold); font-size: 11px; letter-spacing: 0.2em; margin-bottom: 6px; display: block; }
 .quiz-options { background: var(--white); border: 1px solid var(--navy-pale); border-top: none; border-radius: 0 0 6px 6px; padding: 16px; }
 .quiz-option { padding: 13px 16px; margin-bottom: 7px; background: var(--navy-bg); border: 2px solid transparent; border-radius: 4px; cursor: pointer; transition: all 0.2s; display: flex; gap: 12px; align-items: flex-start; font-size: 14.5px; }
@@ -322,6 +360,31 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
 </style>
 </head>
 <body>
+
+<!-- 共通 design tokens (全 SVG が url(#icoNavy) 等で参照) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="icoNavy" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#5d8eb3"/>
+      <stop offset="100%" stop-color="#0F2847"/>
+    </linearGradient>
+    <linearGradient id="icoGold" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f4d995"/>
+      <stop offset="100%" stop-color="#8a6d1f"/>
+    </linearGradient>
+    <linearGradient id="icoRed" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e26375"/>
+      <stop offset="100%" stop-color="#8B0A1F"/>
+    </linearGradient>
+    <filter id="icoSh" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.5"/>
+      <feOffset dx="0.5" dy="2"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+</svg>
+
 <div class="topbar">
   <span class="topbar-title">コミュニケーションとメディア</span>
   <span class="topbar-subtitle">情報Ⅰ 学習ノート | p.18-19 (POINT 08)</span>
@@ -391,13 +454,13 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
   <div class="icon-cards cols-2">
     <div class="icon-card" data-key="mutual" onclick="selectIcon('p1Info','mutual')">
       <div class="icon-card-tag">① POINT</div>
-      <svg class="icon-card-svg" viewBox="0 0 256 256"><defs><linearGradient id="g1a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d8eb3"/><stop offset="1" stop-color="#0F2847"/></linearGradient></defs><circle cx="78" cy="128" r="44" fill="none" stroke="url(#g1a)" stroke-width="14"/><circle cx="178" cy="128" r="44" fill="none" stroke="url(#g1a)" stroke-width="14"/><ellipse cx="128" cy="128" rx="38" ry="32" fill="#C9A961" opacity="0.55"/><circle cx="78" cy="86" r="14" fill="#C9A961"/><circle cx="178" cy="86" r="14" fill="#C9A961"/></svg>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><polyline points="200 152 160 192 96 176 40 136" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" filter="url(#icoSh)"/><polyline points="72.68 70.63 128 56 183.32 70.63" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M34.37,60.42,8.85,111.48a8,8,0,0,0,3.57,10.73L40,136,72.68,70.63,45.11,56.85A8,8,0,0,0,34.37,60.42Z" fill="none" stroke="url(#icoGold)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M216,136l27.58-13.79a8,8,0,0,0,3.57-10.73L221.63,60.42a8,8,0,0,0-10.74-3.57L183.32,70.63Z" fill="none" stroke="url(#icoGold)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M184,72H144L98.34,116.29a8,8,0,0,0,1.38,12.42C117.23,139.9,141,139.13,160,120l40,32,16-16" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="124.06 216 82.34 205.57 56 186.75" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
       <div class="icon-card-name">相互理解</div>
       <div class="icon-card-sub">2 人の理解が重なる</div>
     </div>
     <div class="icon-card" data-key="tools" onclick="selectIcon('p1Info','tools')">
       <div class="icon-card-tag">TOOLS</div>
-      <svg class="icon-card-svg" viewBox="0 0 256 256"><defs><linearGradient id="g1b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d8eb3"/><stop offset="1" stop-color="#0F2847"/></linearGradient></defs><rect x="44" y="62" width="80" height="60" rx="6" fill="none" stroke="url(#g1b)" stroke-width="10"/><polyline points="48,68 84,98 120,68" fill="none" stroke="url(#g1b)" stroke-width="6"/><rect x="132" y="138" width="80" height="60" rx="14" fill="none" stroke="url(#g1b)" stroke-width="10"/><circle cx="156" cy="168" r="6" fill="#C9A961"/><circle cx="172" cy="168" r="6" fill="#C9A961"/><circle cx="188" cy="168" r="6" fill="#C9A961"/></svg>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><line x1="108" y1="148" x2="160" y2="96" fill="none" stroke="url(#icoGold)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M223.69,42.18a8,8,0,0,0-9.87-9.87l-192,58.22a8,8,0,0,0-1.25,14.93L108,148l42.54,87.42a8,8,0,0,0,14.93-1.25Z" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" filter="url(#icoSh)"/></svg>
       <div class="icon-card-name">コミュニケーションツール</div>
       <div class="icon-card-sub">手紙・SNS・メッセージアプリ</div>
     </div>
@@ -435,19 +498,19 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
   <div class="icon-cards cols-3">
     <div class="icon-card" data-key="num" onclick="selectIcon('p2Info','num')">
       <div class="icon-card-tag">② POINT</div>
-      <svg class="icon-card-svg" viewBox="0 0 256 256"><defs><linearGradient id="g2a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d8eb3"/><stop offset="1" stop-color="#0F2847"/></linearGradient></defs><circle cx="68" cy="100" r="22" fill="none" stroke="url(#g2a)" stroke-width="10"/><path d="M44,176 a24,22 0 0 1 48,0" fill="none" stroke="url(#g2a)" stroke-width="10" stroke-linecap="round"/><circle cx="128" cy="86" r="20" fill="none" stroke="url(#g2a)" stroke-width="10"/><path d="M106,160 a22,20 0 0 1 44,0" fill="none" stroke="url(#g2a)" stroke-width="10" stroke-linecap="round"/><circle cx="186" cy="100" r="22" fill="#C9A961" opacity="0.55" stroke="url(#g2a)" stroke-width="10"/><path d="M162,176 a24,22 0 0 1 48,0" fill="#C9A961" opacity="0.55" stroke="url(#g2a)" stroke-width="10" stroke-linecap="round"/></svg>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><path d="M192,120a59.91,59.91,0,0,1,48,24" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" filter="url(#icoSh)"/><path d="M16,144a59.91,59.91,0,0,1,48-24" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><circle cx="128" cy="144" r="40" fill="none" stroke="url(#icoGold)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M72,216a65,65,0,0,1,112,0" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M161,80a32,32,0,1,1,31,40" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M64,120A32,32,0,1,1,95,80" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
       <div class="icon-card-name">人数</div>
       <div class="icon-card-sub">個別 / マスコミ / 逆マス / 会議</div>
     </div>
     <div class="icon-card" data-key="pos" onclick="selectIcon('p2Info','pos')">
       <div class="icon-card-tag">③ POINT</div>
-      <svg class="icon-card-svg" viewBox="0 0 256 256"><defs><linearGradient id="g2b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d8eb3"/><stop offset="1" stop-color="#0F2847"/></linearGradient></defs><circle cx="60" cy="128" r="22" fill="none" stroke="url(#g2b)" stroke-width="10"/><circle cx="196" cy="128" r="22" fill="none" stroke="url(#g2b)" stroke-width="10"/><line x1="86" y1="128" x2="170" y2="128" stroke="#C9A961" stroke-width="10" stroke-dasharray="10 8" stroke-linecap="round"/><polygon points="170,118 184,128 170,138" fill="#C9A961"/><polygon points="86,118 72,128 86,138" fill="#C9A961"/></svg>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><polyline points="176 144 208 176 176 208" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" filter="url(#icoSh)"/><line x1="48" y1="176" x2="208" y2="176" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="80 112 48 80 80 48" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="208" y1="80" x2="48" y2="80" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
       <div class="icon-card-name">位置関係</div>
       <div class="icon-card-sub">直接 / 間接</div>
     </div>
     <div class="icon-card" data-key="sync" onclick="selectIcon('p2Info','sync')">
       <div class="icon-card-tag">④ POINT</div>
-      <svg class="icon-card-svg" viewBox="0 0 256 256"><defs><linearGradient id="g2c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d8eb3"/><stop offset="1" stop-color="#0F2847"/></linearGradient></defs><circle cx="128" cy="128" r="74" fill="none" stroke="url(#g2c)" stroke-width="10"/><line x1="128" y1="64" x2="128" y2="128" stroke="url(#g2c)" stroke-width="10" stroke-linecap="round"/><line x1="128" y1="128" x2="180" y2="128" stroke="#C9A961" stroke-width="10" stroke-linecap="round"/><circle cx="128" cy="128" r="8" fill="url(#g2c)"/></svg>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><polyline points="128 80 128 128 168 152" fill="none" stroke="url(#icoGold)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="184 104 224 104 224 64" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" filter="url(#icoSh)"/><path d="M188.4,192a88,88,0,1,1,1.83-126.23C202,77.69,211.72,88.93,224,104" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
       <div class="icon-card-name">同期性</div>
       <div class="icon-card-sub">同期 / 非同期</div>
     </div>
@@ -508,25 +571,25 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
   <div class="icon-cards">
     <div class="icon-card" data-key="reach" onclick="selectIcon('p3Info','reach')">
       <div class="icon-card-tag">⑤ POINT</div>
-      <svg class="icon-card-svg" viewBox="0 0 256 256"><defs><linearGradient id="g3a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d8eb3"/><stop offset="1" stop-color="#0F2847"/></linearGradient></defs><circle cx="128" cy="128" r="22" fill="#C9A961"/><circle cx="128" cy="128" r="50" fill="none" stroke="url(#g3a)" stroke-width="6" opacity="0.7"/><circle cx="128" cy="128" r="80" fill="none" stroke="url(#g3a)" stroke-width="6" opacity="0.4"/><circle cx="128" cy="128" r="110" fill="none" stroke="url(#g3a)" stroke-width="6" opacity="0.2"/></svg>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><circle cx="128" cy="128" r="32" fill="none" stroke="url(#icoGold)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M181.67,80a71.94,71.94,0,0,1,0,96" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" filter="url(#icoSh)"/><path d="M74.33,176a71.94,71.94,0,0,1,0-96" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M208,49.62a111.88,111.88,0,0,1,0,156.76" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M48,206.38A111.88,111.88,0,0,1,48,49.62" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
       <div class="icon-card-name">伝播性</div>
       <div class="icon-card-sub">広く伝わる</div>
     </div>
     <div class="icon-card" data-key="instant" onclick="selectIcon('p3Info','instant')">
       <div class="icon-card-tag">⑥ POINT</div>
-      <svg class="icon-card-svg" viewBox="0 0 256 256"><defs><linearGradient id="g3b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d8eb3"/><stop offset="1" stop-color="#0F2847"/></linearGradient></defs><polygon points="120,38 76,150 124,150 100,222 184,108 130,108 152,38" fill="#C9A961" stroke="url(#g3b)" stroke-width="10" stroke-linejoin="round"/></svg>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><polygon points="160 16 144 96 208 120 96 240 112 160 48 136 160 16" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" filter="url(#icoSh)"/></svg>
       <div class="icon-card-name">即時性</div>
       <div class="icon-card-sub">瞬時に伝わる</div>
     </div>
     <div class="icon-card" data-key="conv" onclick="selectIcon('p3Info','conv')">
       <div class="icon-card-tag">⑦ POINT</div>
-      <svg class="icon-card-svg" viewBox="0 0 256 256"><defs><linearGradient id="g3c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d8eb3"/><stop offset="1" stop-color="#0F2847"/></linearGradient></defs><rect x="78" y="44" width="100" height="168" rx="14" fill="none" stroke="url(#g3c)" stroke-width="12"/><rect x="92" y="62" width="72" height="116" rx="3" fill="#C9A961" opacity="0.55"/><circle cx="128" cy="196" r="7" fill="url(#g3c)"/></svg>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><rect x="24" y="64" width="208" height="128" rx="16" transform="translate(256) rotate(90)" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" filter="url(#icoSh)"/><circle cx="128" cy="60" r="12" fill="url(#icoGold)"/></svg>
       <div class="icon-card-name">利便性</div>
       <div class="icon-card-sub">統合・小型・無線化</div>
     </div>
     <div class="icon-card" data-key="vol" onclick="selectIcon('p3Info','vol')">
       <div class="icon-card-tag">⑧ POINT</div>
-      <svg class="icon-card-svg" viewBox="0 0 256 256"><defs><linearGradient id="g3d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d8eb3"/><stop offset="1" stop-color="#0F2847"/></linearGradient></defs><rect x="46" y="160" width="36" height="50" rx="3" fill="url(#g3d)" opacity="0.5"/><rect x="92" y="120" width="36" height="90" rx="3" fill="url(#g3d)" opacity="0.7"/><rect x="138" y="80" width="36" height="130" rx="3" fill="url(#g3d)" opacity="0.85"/><rect x="184" y="40" width="36" height="170" rx="3" fill="#C9A961"/><line x1="40" y1="220" x2="226" y2="220" stroke="url(#g3d)" stroke-width="4"/></svg>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><polyline points="48 208 48 136 96 136" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" filter="url(#icoSh)"/><line x1="224" y1="208" x2="32" y2="208" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="96 208 96 88 152 88" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="152 208 152 40 208 40 208 208" fill="none" stroke="url(#icoGold)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
       <div class="icon-card-name">情報量</div>
       <div class="icon-card-sub">発信者と蓄積の増加</div>
     </div>
@@ -535,7 +598,58 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
   <div class="icon-info-panel" id="p3Info"><span style="color:var(--text-sub);font-style:italic;">▲ 上のアイコンをタップすると、定義と説明が表示されます。</span></div>
 </div>
 
-<!-- SLIDE 11: 練習3 -->
+<!-- SLIDE 11: 最新事例 case-expander -->
+<div class="slide" data-title="最新事例 4 性質が現実に現れた瞬間">
+  <div class="eyebrow">CASE STUDY / 過去 5 年の代表事例</div>
+  <h2 class="slide-title">4 つの性質はどこで現れたか</h2>
+  <p class="slide-subtitle">⑤伝播性・⑥即時性・⑦利便性・⑧情報量の向上は、抽象的な話ではありません。タップで詳細を表示。</p>
+  <div style="max-width:880px;margin:18px auto 0;">
+    <div class="case-expander" onclick="toggleCase(this)">
+      <div class="case-head">
+        <span class="case-year">2020</span>
+        <span class="case-title">COVID-19 パンデミック → テレワークの定着</span>
+        <span class="case-toggle">+</span>
+      </div>
+      <div class="case-body">
+        2020 年 4 月の緊急事態宣言を境に、Zoom・Microsoft Teams・Google Meet 等の Web 会議システムが業務インフラ化しました。総務省「令和 5 年版 情報通信白書」によれば、企業のテレワーク導入率は <strong>2019 年 20.2% → 2020 年 47.5%</strong> へ急増、その後も 50% 前後で定着しています。<br>
+        本講の用語で言えば、<strong>テレビ会議システム(間接 × 同期 × 会議型)</strong> の利便性向上が、就業形態そのものを変えた事例です。
+        <div class="case-meta">
+          <span class="cm-label">関係する性質</span>⑦ 利便性(機器の小型化・統合・無線化) / 直接 → 間接型への大規模移行 / 同期型コミュニケーションの遠隔化
+        </div>
+      </div>
+    </div>
+    <div class="case-expander" onclick="toggleCase(this)">
+      <div class="case-head">
+        <span class="case-year">2024</span>
+        <span class="case-title">能登半島地震 → SNS が初動情報源に</span>
+        <span class="case-toggle">+</span>
+      </div>
+      <div class="case-body">
+        2024 年 1 月 1 日 16:10 発生の地震では、X(旧 Twitter)などの SNS で被災状況・安否情報・救助要請がリアルタイムに流通しました。テレビ放送よりも早く現地の写真や動画が届く場面が多数あり、<strong>個人が一次情報の発信源</strong>になる時代を象徴する出来事でした。<br>
+        一方、虚偽の救助要請や AI 生成画像による偽情報も同時に拡散し、<strong>情報量の増加(⑧)が真偽判定の難しさを生む</strong> という負の側面も浮き彫りになりました(後の「メディア・リテラシー」スライド参照)。
+        <div class="case-meta">
+          <span class="cm-label">関係する性質</span>⑤ 伝播性(逆マスコミ型 = 一般人 → 多数) / ⑥ 即時性(マスメディアより速い) / ⑧ 情報量(真偽混在のリスク)
+        </div>
+      </div>
+    </div>
+    <div class="case-expander" onclick="toggleCase(this)">
+      <div class="case-head">
+        <span class="case-year">2022〜</span>
+        <span class="case-title">生成 AI(ChatGPT 等)で発信コストが激減</span>
+        <span class="case-toggle">+</span>
+      </div>
+      <div class="case-body">
+        2022 年 11 月の ChatGPT 公開以降、文章・画像・動画を作る個人コストが劇的に下がりました。SNS や個人ブログに <strong>自動生成された情報</strong> が大量に流入し、流通する情報量(⑧)はかつてない規模で増えています。<br>
+        「真偽の見抜き」「一次ソースに当たる」というメディア・リテラシーの基本動作が、これまで以上に重要になっています。
+        <div class="case-meta">
+          <span class="cm-label">関係する性質</span>⑧ 情報量(発信者が AI を含めて爆増) / ⑦ 利便性(個人の発信コスト低下)
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 12: 練習3 -->
 <div class="slide" data-title="練習 3 コミュニケーションの変化">
   <div class="eyebrow">PRACTICE 3 / 学習ノート p.19</div>
   <h2 class="slide-title">8 つの事柄が社会に与えた影響</h2>
@@ -640,7 +754,87 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
   </div>
 </div>
 
-<!-- SLIDE 14: POINT 答え合わせ -->
+<!-- SLIDE 14: 深掘り副題 ① シャノン=ウィーバーモデル -->
+<div class="slide" data-title="参考 シャノン=ウィーバーモデル">
+  <div class="eyebrow">DEEP DIVE / 1948 年・通信の数学的理論</div>
+  <h2 class="slide-title">「物理的伝達」を 5 段階で解剖する</h2>
+  <p class="slide-subtitle">クロード・シャノン(1948)の通信モデルは、本講の「相互理解」とどう関係するか。各ステップをタップで詳細表示。</p>
+  <div class="shannon-flow">
+    <div class="shannon-step" data-key="src" onclick="selectShannon(this,'src')">
+      <div class="ss-tag">STEP 01</div>
+      <div class="ss-name">発信者</div>
+      <div class="ss-eng">SOURCE</div>
+    </div>
+    <div class="shannon-arrow">→</div>
+    <div class="shannon-step" data-key="enc" onclick="selectShannon(this,'enc')">
+      <div class="ss-tag">STEP 02</div>
+      <div class="ss-name">符号化</div>
+      <div class="ss-eng">ENCODER</div>
+    </div>
+    <div class="shannon-arrow">→</div>
+    <div class="shannon-step noise" data-key="ch" onclick="selectShannon(this,'ch')">
+      <div class="ss-tag">STEP 03</div>
+      <div class="ss-name">媒体 + 雑音</div>
+      <div class="ss-eng">CHANNEL + NOISE</div>
+    </div>
+    <div class="shannon-arrow">→</div>
+    <div class="shannon-step" data-key="dec" onclick="selectShannon(this,'dec')">
+      <div class="ss-tag">STEP 04</div>
+      <div class="ss-name">復号</div>
+      <div class="ss-eng">DECODER</div>
+    </div>
+    <div class="shannon-arrow">→</div>
+    <div class="shannon-step" data-key="dst" onclick="selectShannon(this,'dst')">
+      <div class="ss-tag">STEP 05</div>
+      <div class="ss-name">受信者</div>
+      <div class="ss-eng">DESTINATION</div>
+    </div>
+  </div>
+  <div class="shannon-feedback-row" id="shannonInfo"><strong style="color:var(--navy-darkest);">▲ 各ステップをタップ</strong> すると、シャノンが何を「数学的に扱える」と定義したかが表示されます。</div>
+  <div style="margin-top:14px;padding:14px 18px;background:white;border:1px dashed var(--accent-red);border-radius:4px;font-size:13.5px;line-height:1.75;color:var(--text-main);font-weight:500;max-width:980px;margin-left:auto;margin-right:auto;">
+    <strong style="color:var(--accent-red);">シャノンモデルが扱わないもの = 「意味」「相互理解」</strong><br>
+    シャノンの数学的通信理論は <strong>物理的伝達の効率</strong>(ビット数・符号化・誤り訂正)だけを扱います。「メッセージが伝わったか」≠「意味が共有されたか」。本講 POINT 08 が定義する <strong>相互理解</strong> は、復号後にさらに「受信者の中で意味が組み立たる」段階を要求しており、シャノンモデルの先にある問題です。
+  </div>
+</div>
+
+<!-- SLIDE 15: 深掘り副題 ② メディア・リテラシー -->
+<div class="slide" data-title="参考 メディア・リテラシー 4 観点">
+  <div class="eyebrow">DEEP DIVE / 共通テストでも頻出</div>
+  <h2 class="slide-title">情報量が増える時代の選別力</h2>
+  <p class="slide-subtitle">⑦ 利便性・⑧ 情報量の向上で誰でも発信できる時代になった一方、受け手には <strong>「真偽を見抜く力」</strong> が必要に。判断は次の 4 観点で。</p>
+  <div class="literacy-grid">
+    <div class="literacy-card">
+      <div class="lc-num">OBSERVATION 01</div>
+      <h4>クロスチェック</h4>
+      <p>同じ事実を <strong>複数の独立した情報源</strong> が報じているか。1 つだけのソースなら保留。</p>
+      <div class="lc-eg"><strong>例:</strong> SNS で見た「〇〇に被害」は、報道機関 2 社以上 + 公的機関の発表で裏取り。</div>
+    </div>
+    <div class="literacy-card">
+      <div class="lc-num">OBSERVATION 02</div>
+      <h4>出典確認</h4>
+      <p>その情報は <strong>一次ソース</strong>(原典・当事者・公式発表)か、二次・三次の引用か。引用が増えるほど誤伝のリスク上昇。</p>
+      <div class="lc-eg"><strong>例:</strong> 「研究によると」と書いてあれば論文 URL を確認。元論文に当たる。</div>
+    </div>
+    <div class="literacy-card">
+      <div class="lc-num">OBSERVATION 03</div>
+      <h4>運営主体の確認</h4>
+      <p>サイト・アカウントの <strong>運営者は誰か、何の目的で発信しているか</strong>。広告・宣伝・政治的意図がないか。</p>
+      <div class="lc-eg"><strong>例:</strong> 「ai-news-2025.xyz」のような新規ドメインは「会社概要」を確認、運営実態がなければ警戒。</div>
+    </div>
+    <div class="literacy-card">
+      <div class="lc-num">OBSERVATION 04</div>
+      <h4>最新性</h4>
+      <p>情報の <strong>発信日時</strong> はいつか。法律・制度・技術仕様などは古い情報が今も通用するとは限らない。</p>
+      <div class="lc-eg"><strong>例:</strong> 「個人情報保護法では…」と書かれた 2015 年の記事は、2017・2022 年の改正後では条文番号も内容も違う。</div>
+    </div>
+  </div>
+  <div style="margin-top:18px;padding:14px 18px;background:var(--navy-bg);border-left:4px solid var(--accent-gold);border-radius:0 4px 4px 0;font-size:13.5px;line-height:1.75;color:var(--text-main);font-weight:500;max-width:920px;margin-left:auto;margin-right:auto;">
+    <strong style="color:var(--navy-darkest);">伝播性 + 即時性 × 情報量 = リテラシーの必要性</strong><br>
+    マスメディア時代は「編集者が事前にチェックしてから発信」だったため、受け手は内容に集中すれば十分でした。SNS 時代は誰もが発信者で、編集を経ない情報が <strong>瞬時に・広範に</strong> 流通します。受け手の選別力が情報の質を決める時代になりました。
+  </div>
+</div>
+
+<!-- SLIDE 16: POINT 答え合わせ -->
 <div class="slide" data-title="POINT 8 項目 答え合わせ">
   <div class="eyebrow">REVIEW / 学習ノート POINT ①〜⑧</div>
   <h2 class="slide-title">POINT の用語(全 8 項目)</h2>
@@ -672,9 +866,24 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
   <div class="summary-tree">
     <div class="tree-root">コミュニケーションとメディア</div>
     <div class="tree-branches">
-      <div class="tree-branch"><div class="tb-tag">節 1</div><h4>定義</h4><p>「相互理解」が成立した状態。通信や伝達だけでは足りない。</p></div>
-      <div class="tree-branch"><div class="tb-tag">節 2</div><h4>形態の 3 軸</h4><p>人数(個別 / マス / 逆マス / 会議)× 位置関係(直接 / 間接)× 同期性(同期 / 非同期)。</p></div>
-      <div class="tree-branch"><div class="tb-tag">節 3</div><h4>変遷の 4 方向</h4><p>伝播性・即時性・利便性・情報量。これらの向上が情報社会を形作る。</p></div>
+      <div class="tree-branch">
+        <div class="tb-tag">節 1</div>
+        <svg class="tb-icon" viewBox="0 0 256 256"><path d="M32.5,138A72,72,0,1,1,62,167.5l-27.76,8.16a8,8,0,0,1-9.93-9.93Z" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" filter="url(#icoSh)"/><path d="M163.94,80.11A72,72,0,0,1,223.5,186l8.16,27.76a8,8,0,0,1-9.93,9.93L194,215.5A72.05,72.05,0,0,1,92.06,175.89" fill="none" stroke="url(#icoGold)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
+        <h4>定義</h4>
+        <p>「相互理解」が成立した状態。通信や伝達だけでは足りない。</p>
+      </div>
+      <div class="tree-branch">
+        <div class="tb-tag">節 2</div>
+        <svg class="tb-icon" viewBox="0 0 256 256"><rect x="48" y="48" width="64" height="64" rx="8" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" filter="url(#icoSh)"/><rect x="144" y="48" width="64" height="64" rx="8" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><rect x="48" y="144" width="64" height="64" rx="8" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><rect x="144" y="144" width="64" height="64" rx="8" fill="none" stroke="url(#icoGold)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
+        <h4>形態の 3 軸</h4>
+        <p>人数(個別 / マス / 逆マス / 会議)× 位置関係(直接 / 間接)× 同期性(同期 / 非同期)。</p>
+      </div>
+      <div class="tree-branch">
+        <div class="tb-tag">節 3</div>
+        <svg class="tb-icon" viewBox="0 0 256 256"><circle cx="128" cy="128" r="96" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" filter="url(#icoSh)"/><path d="M168,128c0,64-40,96-40,96s-40-32-40-96,40-96,40-96S168,64,168,128Z" fill="none" stroke="url(#icoGold)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="37.46" y1="96" x2="218.54" y2="96" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="37.46" y1="160" x2="218.54" y2="160" fill="none" stroke="url(#icoNavy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
+        <h4>変遷の 4 方向</h4>
+        <p>伝播性・即時性・利便性・情報量。これらの向上が情報社会を形作る。</p>
+      </div>
     </div>
   </div>
   <div style="margin-top:22px;padding:18px 22px;background:var(--navy-bg);border-left:4px solid var(--accent-gold);border-radius:0 4px 4px 0;font-size:14.5px;line-height:1.8;color:var(--text-main);font-weight:500;max-width:880px;margin-left:auto;margin-right:auto;">
@@ -792,7 +1001,7 @@ document.addEventListener('touchend', (e) => {
   const menuPanel = document.getElementById('menuPanel');
   if (menuPanel && menuPanel.classList.contains('open')) return;
   const target = e.target;
-  if (target && target.closest && target.closest('button, .nav-btn, input, select, a, .icon-card, .form-cell, .answer-row, .quiz-option, .note-blank, .tl-node, .mf-value, .practice-item')) return;
+  if (target && target.closest && target.closest('button, .nav-btn, input, select, a, .icon-card, .form-cell, .answer-row, .quiz-option, .note-blank, .tl-node, .mf-value, .practice-item, .shannon-step, .case-expander, .case-head')) return;
   const dx = e.changedTouches[0].clientX - touchStartX;
   const dy = e.changedTouches[0].clientY - touchStartY;
   const dt = Date.now() - touchStartT;
@@ -970,6 +1179,28 @@ function revealMail(el) {
   haptic(8);
 }
 
+// shannon model
+const shannonData = {
+  src: { term: '発信者 (Source)', desc: '情報を発信したい主体。シャノンの理論では「メッセージの集合からどれを選ぶか」が出発点になります(情報量 = log₂ N の N に対応)。' },
+  enc: { term: '符号化 (Encoder)', desc: 'メッセージを物理的に伝送できる信号(電気・電磁波・音・光)に変換する装置。電話なら音 → 電気信号、SMS なら文字 → 0/1 のビット列。' },
+  ch: { term: '媒体 + 雑音 (Channel + Noise)', desc: '信号が通る経路。雑音(ノイズ)が必ず混入し、信号が劣化します。シャノンはこの「雑音中でも誤りなく伝えられる情報量の上限」を <strong>シャノン限界</strong> として数学的に証明しました(1948)。' },
+  dec: { term: '復号 (Decoder)', desc: '受信した信号を、元のメッセージに復元する装置。誤り訂正符号(リード=ソロモン等)で雑音による誤りを訂正できます。' },
+  dst: { term: '受信者 (Destination)', desc: '復号されたメッセージを受け取る主体。<strong>シャノンモデルではここで終わりますが</strong>、本講の「相互理解」はさらに「受信者の中で意味が組み立たる」段階を要求します。' }
+};
+function selectShannon(step, key) {
+  document.querySelectorAll('.shannon-step').forEach(s => s.classList.remove('selected'));
+  step.classList.add('selected');
+  const d = shannonData[key]; if (!d) return;
+  document.getElementById('shannonInfo').innerHTML = '<strong style="color:var(--navy-darkest);font-family:\'游教科書体 横\',serif;font-size:15px;">' + d.term + '</strong><br>' + d.desc;
+  haptic(8);
+}
+
+// case-expander
+function toggleCase(c) {
+  c.classList.toggle('open');
+  haptic(8);
+}
+
 // review
 const reviewPool = [
   { q: 'コミュニケーションが成立している状態とは、発信者と受信者の間に何ができている状態か?', opts: ['情報の伝達', '物理的な通信', '相互理解', '即時性'], a: 2 },
@@ -986,7 +1217,10 @@ const reviewPool = [
   { q: '返信を求めない相手は、どの欄に入れるべきか?', opts: ['宛先 (To)', 'CC', 'BCC', '差出人'], a: 1 },
   { q: '電話サービスとテレビ放送、ラジオ放送を古い順に並べたとき正しいものはどれか?', opts: ['電話 → ラジオ → テレビ', 'ラジオ → 電話 → テレビ', 'テレビ → 電話 → ラジオ', '電話 → テレビ → ラジオ'], a: 0 },
   { q: 'テレビ会議の登場で広まった働き方を何というか?', opts: ['フリーランス', 'ノマドワーク', 'テレワーク', 'シェアリング'], a: 2 },
-  { q: '「人数」「位置関係」「同期性」の 3 軸はどの POINT の分類軸か?', opts: ['コミュニケーションの形態', 'メディアの分類', '情報の特性', '通信規格'], a: 0 }
+  { q: '「人数」「位置関係」「同期性」の 3 軸はどの POINT の分類軸か?', opts: ['コミュニケーションの形態', 'メディアの分類', '情報の特性', '通信規格'], a: 0 },
+  { q: 'シャノンの通信モデル(1948)が数学的に扱うのは何か?', opts: ['意味の伝達効率', '物理的な伝達効率(雑音中の情報量)', '相互理解の度合い', '受信者の感情変化'], a: 1 },
+  { q: 'メディア・リテラシー 4 観点に含まれないものはどれか?', opts: ['クロスチェック', '出典確認', '運営主体の確認', '文章の長さ'], a: 3 },
+  { q: '2024 年の能登半島地震で SNS が果たした役割の特徴はどれか?', opts: ['マスメディアより遅い情報源', '個人が一次情報の発信源になる', '行政発表の代替', '広告媒体としての活用'], a: 1 }
 ];
 let reviewQuestions = [], reviewIdx = 0, reviewScore = 0;
 function startReview() {
@@ -1053,6 +1287,10 @@ function resetAllInteractions() {
     n.querySelector('.tl-label').textContent = 'クリックで答え';
   });
   document.querySelectorAll('.mf-value.reveal').forEach(v => { v.classList.remove('reveal'); v.textContent = 'クリック'; });
+  document.querySelectorAll('.shannon-step.selected').forEach(s => s.classList.remove('selected'));
+  const shannonInfo = document.getElementById('shannonInfo');
+  if (shannonInfo) shannonInfo.innerHTML = '<strong style="color:var(--navy-darkest);">▲ 各ステップをタップ</strong> すると、シャノンが何を「数学的に扱える」と定義したかが表示されます。';
+  document.querySelectorAll('.case-expander.open').forEach(c => c.classList.remove('open'));
   document.querySelectorAll('.quiz-option').forEach(o => { o.classList.remove('correct', 'incorrect', 'chosen'); o.style.pointerEvents = 'auto'; });
   document.querySelectorAll('.quiz-feedback.show').forEach(f => f.classList.remove('show'));
   const reviewStart = document.getElementById('reviewStart');
