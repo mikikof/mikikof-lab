@@ -596,6 +596,9 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
   </div>
   <div class="cards-hint">タップで定義を表示</div>
   <div class="icon-info-panel" id="p3Info"><span style="color:var(--text-sub);font-style:italic;">▲ 上のアイコンをタップすると、定義と説明が表示されます。</span></div>
+  <div style="margin-top:12px;padding:12px 16px;background:white;border:1px dashed var(--accent-red);border-radius:4px;font-size:13px;line-height:1.7;color:var(--text-sub);font-weight:500;max-width:880px;margin-left:auto;margin-right:auto;">
+    <strong style="color:var(--navy-darkest);">補足:</strong> 教科書では上の 4 項目に加え、<strong>「双方向性」</strong>(発信者と受信者がやり取りできる性質、SNS / テレビ会議で顕著)も練習 3 で扱います。
+  </div>
 </div>
 
 <!-- SLIDE 11: 最新事例 case-expander -->
@@ -629,7 +632,7 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
         一方、虚偽の救助要請や AI 生成画像による偽情報も同時に拡散し、<strong>情報量の増加(⑧)が真偽判定の難しさを生む</strong> という負の側面も浮き彫りになりました(後の「メディア・リテラシー」スライド参照)。<br>
         ⚠️ <strong>緊急時の通報は 119 / 110 / 自治体の公式経路が最優先</strong>。SNS 情報は <strong>位置・時刻・発信者</strong> を確認してから判断します。
         <div class="case-meta">
-          <span class="cm-label">関係する性質</span>⑤ 伝播性(逆マスコミ型 = 一般人 → 多数) / ⑥ 即時性(マスメディアより速い) / ⑧ 情報量(真偽混在のリスク)
+          <span class="cm-label">関係する性質</span>⑤ 伝播性(個人発信が広範に到達 — マスコミ型に近い拡散) / ⑥ 即時性(マスメディアより速い) / ⑧ 情報量(真偽混在のリスク)
         </div>
       </div>
     </div>
@@ -673,8 +676,8 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
 <!-- SLIDE 12: 練習4 timeline -->
 <div class="slide" data-title="練習 4 技術や通信サービスの進歩(年表)">
   <div class="eyebrow">PRACTICE 4 / 学習ノート p.19</div>
-  <h2 class="slide-title">9 つの出来事を古い順に並べる</h2>
-  <p class="slide-subtitle">年表上の <span style="color:var(--accent-red);font-weight:700;">⑴〜⑸</span> の空所をタップで答え合わせ。古い順 (左) → 新しい順 (右)。</p>
+  <h2 class="slide-title">日本における通信サービス 9 つを古い順に並べる</h2>
+  <p class="slide-subtitle">年表上の <span style="color:var(--accent-red);font-weight:700;">⑴〜⑸</span> の空所をタップで答え合わせ。<strong>日本での</strong>サービス開始・普及順で、古い順 (左) → 新しい順 (右)。</p>
   <div class="timeline-wrap">
     <div class="timeline-line">
       <div class="tl-node blank" style="left: 5%;" data-ans="ウ. 電話サービス開始" onclick="revealTl(this)">
@@ -751,7 +754,7 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
     </div>
   </div>
   <div style="margin-top:16px;padding:14px 18px;background:var(--navy-bg);border-left:4px solid var(--accent-gold);border-radius:0 4px 4px 0;font-size:13.5px;line-height:1.75;color:var(--text-main);font-weight:500;max-width:880px;margin-left:auto;margin-right:auto;">
-    <strong style="color:var(--navy-darkest);">使い分けの原則:</strong> メールに表示させたくない相手は <strong>BCC</strong>、返信を求めない相手は <strong>CC</strong>。⑵ では「依頼相手を互いに知られない」ため B・C を BCC に、宛先に指定する人がいないので自分(A)を宛先にする。
+    <strong style="color:var(--navy-darkest);">使い分けの原則:</strong> メールに表示させたくない相手は <strong>BCC</strong>、<strong>情報共有のため</strong>に含める相手は <strong>CC</strong>(返信は通常不要だが、禁止ではない)。⑵ では「依頼相手を互いに知られない」ため B・C を BCC に、宛先に指定する人がいないので自分(A)を宛先にする。
   </div>
 </div>
 
@@ -1228,11 +1231,11 @@ const reviewPool = [
   { q: 'メディアの統合や情報機器の小型化・無線化で向上したのはどれか?', opts: ['伝播性', '即時性', '利便性', '双方向性'], a: 2 },
   { q: '発信者の増加とビッグデータの蓄積で増加したのはどれか?', opts: ['即時性', '伝播性', '情報量', '利便性'], a: 2 },
   { q: 'メールに表示させたくない相手は、どの欄に入れるべきか?', opts: ['宛先 (To)', 'CC', 'BCC', '件名'], a: 2 },
-  { q: '返信を求めない相手は、どの欄に入れるべきか?', opts: ['宛先 (To)', 'CC', 'BCC', '差出人'], a: 1 },
+  { q: '情報共有のために含める(返信は通常求めない)相手は、どの欄に入れるべきか?', opts: ['宛先 (To)', 'CC', 'BCC', '差出人'], a: 1 },
   { q: '電話サービスとテレビ放送、ラジオ放送を古い順に並べたとき正しいものはどれか?', opts: ['電話 → ラジオ → テレビ', 'ラジオ → 電話 → テレビ', 'テレビ → 電話 → ラジオ', '電話 → テレビ → ラジオ'], a: 0 },
   { q: 'テレビ会議の登場で広まった働き方を何というか?', opts: ['フリーランス', 'ノマドワーク', 'テレワーク', 'シェアリング'], a: 2 },
   { q: '「人数」「位置関係」「同期性」の 3 軸はどの POINT の分類軸か?', opts: ['コミュニケーションの形態', 'メディアの分類', '情報の特性', '通信規格'], a: 0 },
-  { q: 'シャノンの通信モデル(1948)が数学的に扱うのは何か?', opts: ['意味の伝達効率', '物理的な伝達効率(雑音中の情報量)', '相互理解の度合い', '受信者の感情変化'], a: 1 },
+  { q: 'シャノンの通信モデル(1948)が数学的に扱うのは何か?', opts: ['意味の伝達効率', '信号(記号列)の符号化と雑音下の信頼性', '相互理解の度合い', '受信者の感情変化'], a: 1 },
   { q: 'メディア・リテラシー 4 観点に含まれないものはどれか?', opts: ['クロスチェック', '出典確認', '運営主体の確認', '文章の長さ'], a: 3 },
   { q: '2024 年の能登半島地震で SNS が果たした役割の特徴はどれか?', opts: ['マスメディアより遅い情報源', '個人が一次情報の発信源になる', '行政発表の代替', '広告媒体としての活用'], a: 1 }
 ];
