@@ -1394,7 +1394,13 @@ function showReviewQ() {
 }
 function answerReview(el, isCorrect) {
   const options = el.parentElement.querySelectorAll('.quiz-option');
-  options.forEach(o => { o.style.pointerEvents = 'none'; });
+  // rev6: 既に回答済みならガード(キーボード Enter/Space 連打での二重加算を防止)
+  if ([...options].some(o => o.dataset.answered === 'true')) return;
+  options.forEach(o => {
+    o.dataset.answered = 'true';
+    o.style.pointerEvents = 'none';
+    o.setAttribute('aria-disabled', 'true');
+  });
   const q = reviewQuestions[reviewIdx];
   if (isCorrect) { el.classList.add('correct'); reviewScore++; haptic(20); }
   else { el.classList.add('incorrect'); options[q.a].classList.add('correct'); haptic([40, 30, 40]); }
