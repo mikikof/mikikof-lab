@@ -110,19 +110,32 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
 .chart-option svg { width: 56px; height: 56px; color: var(--navy); }
 .chart-option .co-letter { font-family: 'JetBrains Mono', monospace; font-weight: 900; color: var(--accent-red); font-size: 16px; line-height: 1; }
 .chart-option .co-name { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 12px; color: var(--navy-darkest); margin-top: 2px; line-height: 1.3; }
-.chart-option.is-target-1 { box-shadow: 0 0 0 3px rgba(200,16,46,0.18); border-color: var(--accent-red); }
-.chart-option.is-target-2 { box-shadow: 0 0 0 3px rgba(201,169,97,0.30); border-color: var(--accent-gold); }
-.chart-option.is-target-3 { box-shadow: 0 0 0 3px rgba(74,127,168,0.25); border-color: var(--navy); }
-.chart-option.is-target-4 { box-shadow: 0 0 0 3px rgba(30,130,76,0.25); border-color: var(--ok-green); }
+.chart-option.highlight { box-shadow: 0 0 0 3px rgba(200,16,46,0.22); border-color: var(--accent-red); transform: translateY(-2px); transition: all 0.25s; }
+.chart-option.highlight .co-letter { color: var(--accent-red); font-size: 18px; }
 .chart-question-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .chart-q { background: var(--navy-bg); border: 1px solid var(--navy-pale); border-radius: 6px; padding: 14px 16px; cursor: pointer; transition: all 0.2s; }
 .chart-q:hover { background: var(--navy-pale); }
 .chart-q .cq-num { font-family: 'JetBrains Mono', monospace; font-weight: 900; color: var(--accent-red); font-size: 13px; letter-spacing: 0.05em; margin-bottom: 4px; }
 .chart-q .cq-text { font-size: 13.5px; line-height: 1.65; color: var(--text-main); font-weight: 500; }
-.chart-q .cq-ans { display: none; margin-top: 10px; padding: 8px 10px; background: white; border-left: 3px solid var(--accent-gold); border-radius: 0 4px 4px 0; font-size: 12.5px; color: var(--navy-darkest); line-height: 1.6; }
-.chart-q.revealed .cq-ans { display: block; animation: fadeIn 0.4s; }
+.chart-q .cq-ans { display: none; margin-top: 10px; padding: 10px 12px; background: white; border-left: 3px solid var(--accent-gold); border-radius: 0 4px 4px 0; font-size: 12.5px; color: var(--navy-darkest); line-height: 1.6; }
+.chart-q.revealed .cq-ans { display: flex; gap: 12px; align-items: flex-start; animation: fadeIn 0.4s; }
 .chart-q.revealed { background: rgba(201,169,97,0.10); border-color: var(--accent-gold); }
 .chart-q .cq-ans-letter { font-family: 'JetBrains Mono', monospace; font-weight: 900; color: var(--accent-red); margin-right: 6px; }
+.chart-q .cq-example { flex-shrink: 0; width: 130px; padding: 8px; background: var(--navy-bg); border-radius: 6px; text-align: center; }
+.chart-q .cq-example svg { width: 100%; height: 80px; display: block; }
+.chart-q .cq-example .cq-cap { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: var(--text-sub); letter-spacing: 0.05em; margin-top: 4px; }
+.chart-q .cq-text-body { flex: 1; }
+@media (max-width: 720px) {
+  .chart-q.revealed .cq-ans { flex-direction: column; }
+  .chart-q .cq-example { width: 100%; }
+}
+
+/* MNEMONIC (語呂合わせ) */
+.mnem-box { max-width: 920px; margin: 14px auto 0; padding: 14px 18px; background: linear-gradient(135deg, rgba(201,169,97,0.10) 0%, white 60%); border: 1px solid var(--accent-gold); border-radius: 8px; }
+.mnem-tag { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.18em; color: #8a6d1f; font-weight: 900; margin-bottom: 8px; }
+.mnem-row { font-size: 13px; line-height: 1.85; color: var(--text-main); margin-bottom: 6px; }
+.mnem-row strong { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; color: var(--navy-darkest); }
+.mnem-letters { font-family: 'JetBrains Mono', monospace; font-weight: 900; color: var(--accent-red); font-size: 16px; letter-spacing: 0.08em; }
 
 /* SELECT-GRID (実習2 空所穴埋め) */
 .select-grid { display: grid; grid-template-columns: 1fr; gap: 8px; max-width: 920px; margin: 14px auto 0; }
@@ -624,33 +637,57 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
   <p class="slide-subtitle">⑴〜⑷ それぞれに最も適切な図を、ア〜カから 1 つずつ選ぶ。下のカードをタップで答えと根拠を表示。</p>
   <div class="chart-picker-wrap">
     <div class="chart-options">
-      <div class="chart-option is-target-3" title="ア:勝ち上がり"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><line x1="40" y1="56" x2="40" y2="200"/><line x1="40" y1="56" x2="96" y2="56"/><line x1="40" y1="200" x2="96" y2="200"/><line x1="96" y1="56" x2="96" y2="200"/><line x1="96" y1="128" x2="160" y2="128"/><line x1="160" y1="80" x2="160" y2="176"/><line x1="160" y1="80" x2="216" y2="80"/><line x1="160" y1="176" x2="216" y2="176"/></svg><div class="co-letter">ア</div><div class="co-name">トーナメント図</div></div>
-      <div class="chart-option is-target-1" title="イ:円グラフ"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><circle cx="128" cy="128" r="88"/><line x1="128" y1="128" x2="128" y2="40"/><line x1="128" y1="128" x2="208" y2="92"/><path d="M128,40A88,88,0,1,1,40,128" stroke-width="0" fill="currentColor" opacity="0.25"/></svg><div class="co-letter">イ</div><div class="co-name">円グラフ</div></div>
-      <div class="chart-option" title="ウ:散布図"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><line x1="40" y1="216" x2="216" y2="216"/><line x1="40" y1="40" x2="40" y2="216"/><circle cx="80" cy="160" r="6" fill="currentColor"/><circle cx="100" cy="120" r="6" fill="currentColor"/><circle cx="130" cy="150" r="6" fill="currentColor"/><circle cx="160" cy="100" r="6" fill="currentColor"/><circle cx="190" cy="80" r="6" fill="currentColor"/><circle cx="120" cy="80" r="6" fill="currentColor"/></svg><div class="co-letter">ウ</div><div class="co-name">散布図</div></div>
-      <div class="chart-option" title="エ:折れ線"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><line x1="40" y1="216" x2="216" y2="216"/><line x1="40" y1="40" x2="40" y2="216"/><polyline points="56 168 96 120 144 144 192 64"/><circle cx="56" cy="168" r="6" fill="currentColor"/><circle cx="96" cy="120" r="6" fill="currentColor"/><circle cx="144" cy="144" r="6" fill="currentColor"/><circle cx="192" cy="64" r="6" fill="currentColor"/></svg><div class="co-letter">エ</div><div class="co-name">折れ線グラフ</div></div>
-      <div class="chart-option" title="オ:棒グラフ"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><line x1="40" y1="216" x2="216" y2="216"/><rect x="56" y="120" width="32" height="96"/><rect x="104" y="64" width="32" height="152"/><rect x="152" y="152" width="32" height="64"/></svg><div class="co-letter">オ</div><div class="co-name">棒グラフ</div></div>
-      <div class="chart-option is-target-2" title="カ:循環フロー"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><circle cx="128" cy="128" r="80"/><polyline points="180 90 200 76 196 100"/><polyline points="76 166 56 180 60 156"/><polyline points="166 180 180 200 156 196"/><polyline points="90 76 76 56 100 60"/></svg><div class="co-letter">カ</div><div class="co-name">循環フロー</div></div>
+      <div class="chart-option" data-letter="ア" title="ア:トーナメント図"><svg aria-hidden="true" focusable="false" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><line x1="40" y1="56" x2="40" y2="200"/><line x1="40" y1="56" x2="96" y2="56"/><line x1="40" y1="200" x2="96" y2="200"/><line x1="96" y1="56" x2="96" y2="200"/><line x1="96" y1="128" x2="160" y2="128"/><line x1="160" y1="80" x2="160" y2="176"/><line x1="160" y1="80" x2="216" y2="80"/><line x1="160" y1="176" x2="216" y2="176"/></svg><div class="co-letter">ア</div><div class="co-name">トーナメント図</div></div>
+      <div class="chart-option" data-letter="イ" title="イ:円グラフ"><svg aria-hidden="true" focusable="false" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><circle cx="128" cy="128" r="88"/><line x1="128" y1="128" x2="128" y2="40"/><line x1="128" y1="128" x2="208" y2="92"/><path d="M128,40A88,88,0,1,1,40,128" stroke-width="0" fill="currentColor" opacity="0.25"/></svg><div class="co-letter">イ</div><div class="co-name">円グラフ</div></div>
+      <div class="chart-option" data-letter="ウ" title="ウ:散布図"><svg aria-hidden="true" focusable="false" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><line x1="40" y1="216" x2="216" y2="216"/><line x1="40" y1="40" x2="40" y2="216"/><circle cx="80" cy="160" r="6" fill="currentColor"/><circle cx="100" cy="120" r="6" fill="currentColor"/><circle cx="130" cy="150" r="6" fill="currentColor"/><circle cx="160" cy="100" r="6" fill="currentColor"/><circle cx="190" cy="80" r="6" fill="currentColor"/><circle cx="120" cy="80" r="6" fill="currentColor"/></svg><div class="co-letter">ウ</div><div class="co-name">散布図</div></div>
+      <div class="chart-option" data-letter="エ" title="エ:折れ線"><svg aria-hidden="true" focusable="false" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><line x1="40" y1="216" x2="216" y2="216"/><line x1="40" y1="40" x2="40" y2="216"/><polyline points="56 168 96 120 144 144 192 64"/><circle cx="56" cy="168" r="6" fill="currentColor"/><circle cx="96" cy="120" r="6" fill="currentColor"/><circle cx="144" cy="144" r="6" fill="currentColor"/><circle cx="192" cy="64" r="6" fill="currentColor"/></svg><div class="co-letter">エ</div><div class="co-name">折れ線グラフ</div></div>
+      <div class="chart-option" data-letter="オ" title="オ:棒グラフ"><svg aria-hidden="true" focusable="false" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><line x1="40" y1="216" x2="216" y2="216"/><rect x="56" y="120" width="32" height="96"/><rect x="104" y="64" width="32" height="152"/><rect x="152" y="152" width="32" height="64"/></svg><div class="co-letter">オ</div><div class="co-name">棒グラフ</div></div>
+      <div class="chart-option" data-letter="カ" title="カ:循環フロー"><svg aria-hidden="true" focusable="false" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><circle cx="128" cy="128" r="80"/><polyline points="180 90 200 76 196 100"/><polyline points="76 166 56 180 60 156"/><polyline points="166 180 180 200 156 196"/><polyline points="90 76 76 56 100 60"/></svg><div class="co-letter">カ</div><div class="co-name">循環フロー</div></div>
     </div>
     <div class="chart-question-list">
-      <div class="chart-q" onclick="toggleChartQ(this)">
+      <div class="chart-q" data-ans="イ" onclick="toggleChartQ(this)">
         <div class="cq-num">⑴</div>
         <div class="cq-text">クラスの生徒全員の通学手段について、<strong>「全体」を「電車」「バス」「自転車」で分類</strong>して表現したい。</div>
-        <div class="cq-ans"><span class="cq-ans-letter">答 イ</span> 全体に対する各カテゴリの割合(構成比)を見せるなら円グラフ。「全体を 100% としてその内訳」を一目で示せる。棒グラフは絶対量比較に向き、構成比の表現には円グラフが最適。</div>
+        <div class="cq-ans">
+          <div class="cq-text-body"><span class="cq-ans-letter">答 イ</span> 全体に対する各カテゴリの割合(構成比)を見せるなら円グラフ。「全体を 100% としてその内訳」を一目で示せる。棒グラフは絶対量比較に向き、構成比の表現には円グラフが最適。</div>
+          <div class="cq-example">
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 100 80"><circle cx="40" cy="40" r="30" fill="white" stroke="#D4E1EF" stroke-width="1"/><path d="M 40 10 A 30 30 0 0 1 65.98 55 L 40 40 Z" fill="#2C5F8D"/><path d="M 65.98 55 A 30 30 0 0 1 14.02 55 L 40 40 Z" fill="#C9A961"/><path d="M 14.02 55 A 30 30 0 0 1 40 10 L 40 40 Z" fill="#C8102E" opacity="0.55"/><rect x="74" y="14" width="5" height="5" fill="#2C5F8D"/><text x="82" y="19" font-size="6.5" fill="#0F2847" font-family="Noto Sans JP, sans-serif">電車 50%</text><rect x="74" y="34" width="5" height="5" fill="#C9A961"/><text x="82" y="39" font-size="6.5" fill="#0F2847" font-family="Noto Sans JP, sans-serif">バス 25%</text><rect x="74" y="54" width="5" height="5" fill="#C8102E" opacity="0.55"/><text x="82" y="59" font-size="6.5" fill="#0F2847" font-family="Noto Sans JP, sans-serif">自転車 25%</text></svg>
+            <div class="cq-cap">通学手段(例)</div>
+          </div>
+        </div>
       </div>
-      <div class="chart-q" onclick="toggleChartQ(this)">
+      <div class="chart-q" data-ans="カ" onclick="toggleChartQ(this)">
         <div class="cq-num">⑵</div>
         <div class="cq-text">よりよい作品を作るために、<strong>「Plan」「Do」「Check」「Action」の流れで継続的に改善</strong>することを表現したい。</div>
-        <div class="cq-ans"><span class="cq-ans-letter">答 カ</span> PDCA は順序があり、最後の Action から再び Plan に戻る循環構造。循環フロー(矢印付きの円形ダイアグラム)が最も適切。</div>
+        <div class="cq-ans">
+          <div class="cq-text-body"><span class="cq-ans-letter">答 カ</span> PDCA は順序があり、最後の Action から再び Plan に戻る循環構造。循環フロー(矢印付きの円形ダイアグラム)が最も適切。</div>
+          <div class="cq-example">
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 100 80"><circle cx="50" cy="40" r="28" fill="none" stroke="#2C5F8D" stroke-width="1.6"/><circle cx="50" cy="14" r="9" fill="#2C5F8D"/><text x="50" y="17" font-size="7" fill="white" text-anchor="middle" font-weight="700" font-family="Noto Sans JP, sans-serif">P</text><circle cx="76" cy="40" r="9" fill="#C9A961"/><text x="76" y="43" font-size="7" fill="#0F2847" text-anchor="middle" font-weight="700" font-family="Noto Sans JP, sans-serif">D</text><circle cx="50" cy="66" r="9" fill="#2C5F8D"/><text x="50" y="69" font-size="7" fill="white" text-anchor="middle" font-weight="700" font-family="Noto Sans JP, sans-serif">C</text><circle cx="24" cy="40" r="9" fill="#C9A961"/><text x="24" y="43" font-size="7" fill="#0F2847" text-anchor="middle" font-weight="700" font-family="Noto Sans JP, sans-serif">A</text><polyline points="68 24 72 21 70 26" fill="none" stroke="#C8102E" stroke-width="1.5" stroke-linecap="round"/><polyline points="68 56 72 59 70 54" fill="none" stroke="#C8102E" stroke-width="1.5" stroke-linecap="round"/><polyline points="32 56 28 59 30 54" fill="none" stroke="#C8102E" stroke-width="1.5" stroke-linecap="round"/><polyline points="32 24 28 21 30 26" fill="none" stroke="#C8102E" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <div class="cq-cap">PDCA サイクル</div>
+          </div>
+        </div>
       </div>
-      <div class="chart-q" onclick="toggleChartQ(this)">
+      <div class="chart-q" data-ans="ア" onclick="toggleChartQ(this)">
         <div class="cq-num">⑶</div>
         <div class="cq-text">参加する大会が、<strong>地区大会 → 都道府県大会 → 全国大会 → 世界大会と勝ち上がっていく</strong>ことを表現したい。</div>
-        <div class="cq-ans"><span class="cq-ans-letter">答 ア</span> 段階的な勝ち抜きはトーナメント図(階層的に統合される枝分かれダイアグラム)で表す。直線的な「順序」だけなら折れ線でも表せるが、各段階での「複数候補からの絞り込み」を表現できるのはトーナメント。</div>
+        <div class="cq-ans">
+          <div class="cq-text-body"><span class="cq-ans-letter">答 ア</span> 段階的な勝ち抜きはトーナメント図(階層的に統合される枝分かれダイアグラム)で表す。直線的な「順序」だけなら折れ線でも表せるが、各段階での「複数候補からの絞り込み」を表現できるのはトーナメント。</div>
+          <div class="cq-example">
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 100 80"><line x1="6" y1="14" x2="22" y2="14" stroke="#2C5F8D" stroke-width="1.4"/><line x1="6" y1="26" x2="22" y2="26" stroke="#2C5F8D" stroke-width="1.4"/><line x1="22" y1="14" x2="22" y2="26" stroke="#2C5F8D" stroke-width="1.4"/><line x1="22" y1="20" x2="42" y2="20" stroke="#2C5F8D" stroke-width="1.4"/><line x1="6" y1="42" x2="22" y2="42" stroke="#2C5F8D" stroke-width="1.4"/><line x1="6" y1="54" x2="22" y2="54" stroke="#2C5F8D" stroke-width="1.4"/><line x1="22" y1="42" x2="22" y2="54" stroke="#2C5F8D" stroke-width="1.4"/><line x1="22" y1="48" x2="42" y2="48" stroke="#2C5F8D" stroke-width="1.4"/><line x1="42" y1="20" x2="42" y2="48" stroke="#2C5F8D" stroke-width="1.4"/><line x1="42" y1="34" x2="62" y2="34" stroke="#C8102E" stroke-width="1.6"/><circle cx="62" cy="34" r="3.5" fill="#C9A961"/><text x="80" y="36" font-size="6" fill="#0F2847" text-anchor="middle" font-family="Noto Sans JP, sans-serif">優勝</text><text x="0" y="11" font-size="5" fill="#5A6378" font-family="Noto Sans JP, sans-serif">地区</text><text x="0" y="58" font-size="5" fill="#5A6378" font-family="Noto Sans JP, sans-serif">地区</text><text x="35" y="11" font-size="5" fill="#5A6378" font-family="Noto Sans JP, sans-serif">県</text><text x="55" y="11" font-size="5" fill="#5A6378" font-family="Noto Sans JP, sans-serif">全国</text></svg>
+            <div class="cq-cap">勝ち上がり(例)</div>
+          </div>
+        </div>
       </div>
-      <div class="chart-q" onclick="toggleChartQ(this)">
+      <div class="chart-q" data-ans="ウ" onclick="toggleChartQ(this)">
         <div class="cq-num">⑷</div>
         <div class="cq-text">優先的に実行する改善策を決めるため、<strong>「かかる費用」と「得られる効果」の関係</strong>を表現したい。</div>
-        <div class="cq-ans"><span class="cq-ans-letter">答 ウ</span> 2 つの量(費用 × 効果)の対応を見たいので散布図。各改善策を 1 つの点として平面に置けば、「低費用・高効果」の象限が視覚的に判別できる。</div>
+        <div class="cq-ans">
+          <div class="cq-text-body"><span class="cq-ans-letter">答 ウ</span> 2 つの量(費用 × 効果)の対応を見たいので散布図。各改善策を 1 つの点として平面に置けば、「低費用・高効果」の象限が視覚的に判別できる。</div>
+          <div class="cq-example">
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 100 80"><line x1="14" y1="68" x2="86" y2="68" stroke="#2C5F8D" stroke-width="1.2"/><line x1="14" y1="68" x2="14" y2="10" stroke="#2C5F8D" stroke-width="1.2"/><line x1="14" y1="40" x2="86" y2="40" stroke="#D4E1EF" stroke-width="0.6" stroke-dasharray="2 2"/><line x1="50" y1="68" x2="50" y2="10" stroke="#D4E1EF" stroke-width="0.6" stroke-dasharray="2 2"/><circle cx="26" cy="20" r="3.4" fill="#C9A961" stroke="#8a6d1f" stroke-width="0.5"/><text x="32" y="22" font-size="5" fill="#0F2847" font-family="Noto Sans JP, sans-serif">案A 推奨</text><circle cx="34" cy="50" r="2.8" fill="#2C5F8D"/><circle cx="62" cy="32" r="2.8" fill="#2C5F8D"/><circle cx="70" cy="58" r="2.8" fill="#C8102E" opacity="0.6"/><text x="40" y="76" font-size="5.5" fill="#5A6378" text-anchor="middle" font-family="Noto Sans JP, sans-serif">費用 →</text><text x="6" y="40" font-size="5.5" fill="#5A6378" text-anchor="middle" font-family="Noto Sans JP, sans-serif" transform="rotate(-90 6 40)">効果 →</text></svg>
+            <div class="cq-cap">費用×効果(例)</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -711,14 +748,21 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
   <h2 class="slide-title">空所 ①〜⑥ に入る整理軸</h2>
   <p class="slide-subtitle">下の文章を読み、空所に当てはまる語句を語群から選ぶ。各空所をタップで正解を表示。</p>
   <div class="select-grid" id="selGrid2">
-    <div class="select-row"><div class="sr-key">①</div><div class="sr-text">日誌は <span class="sr-blank" data-answer="オ. 時間" onclick="toggleSelBlank(this)">クリック</span>(時間)ごとに整理されていることが多い。</div></div>
-    <div class="select-row"><div class="sr-key">②</div><div class="sr-text">地域の特産品は <span class="sr-blank" data-answer="カ. 位置" onclick="toggleSelBlank(this)">クリック</span>(位置)ごとに整理されていることが多い。</div></div>
-    <div class="select-row"><div class="sr-key">③</div><div class="sr-text">図書館では、収集した図書を <span class="sr-blank" data-answer="キ. 分野" onclick="toggleSelBlank(this)">クリック</span>(分野)別に整理している。</div></div>
-    <div class="select-row"><div class="sr-key">④</div><div class="sr-text">分野には、400 自然科学 - 410 数学 - 411 代数学 のように <span class="sr-blank" data-answer="ウ. 階層" onclick="toggleSelBlank(this)">クリック</span>(階層)の上下関係に従って 3 桁の番号が振られる。</div></div>
-    <div class="select-row"><div class="sr-key">⑤</div><div class="sr-text">同じ番号内の図書は <span class="sr-blank" data-answer="ア. 五十音" onclick="toggleSelBlank(this)">クリック</span>(アルファベットまたは五十音)順に配架されている。</div></div>
-    <div class="select-row"><div class="sr-key">⑥</div><div class="sr-text">これは収集した情報を <span class="sr-blank" data-answer="エ. 構造" onclick="toggleSelBlank(this)">クリック</span>(構造)化する一例である。</div></div>
+    <div class="select-row"><div class="sr-key">①</div><div class="sr-text">日誌は <span class="sr-blank" data-answer="オ. 時間" onclick="toggleSelBlank(this)">クリック</span> ごとに整理されていることが多い。</div></div>
+    <div class="select-row"><div class="sr-key">②</div><div class="sr-text">地域の特産品は <span class="sr-blank" data-answer="カ. 位置" onclick="toggleSelBlank(this)">クリック</span> ごとに整理されていることが多い。</div></div>
+    <div class="select-row"><div class="sr-key">③</div><div class="sr-text">図書館では、収集した図書を <span class="sr-blank" data-answer="キ. 分野" onclick="toggleSelBlank(this)">クリック</span> 別に整理している。</div></div>
+    <div class="select-row"><div class="sr-key">④</div><div class="sr-text">分野には、400 自然科学 - 410 数学 - 411 代数学 のように <span class="sr-blank" data-answer="ウ. 階層" onclick="toggleSelBlank(this)">クリック</span> の上下関係に従って 3 桁の番号が振られる。</div></div>
+    <div class="select-row"><div class="sr-key">⑤</div><div class="sr-text">同じ番号内の図書は <span class="sr-blank" data-answer="ア. 五十音" onclick="toggleSelBlank(this)">クリック</span> 順(あいうえお順、洋書はアルファベット順)に配架されている。</div></div>
+    <div class="select-row"><div class="sr-key">⑥</div><div class="sr-text">これは収集した情報を <span class="sr-blank" data-answer="エ. 構造" onclick="toggleSelBlank(this)">クリック</span> 化する一例である。</div></div>
   </div>
   <div class="select-pool"><span class="sp-label">語群</span><span class="sp-item">ア. アルファベット/五十音</span><span class="sp-item">イ. 因果</span><span class="sp-item">ウ. 階層</span><span class="sp-item">エ. 構造</span><span class="sp-item">オ. 時間</span><span class="sp-item">カ. 位置</span><span class="sp-item">キ. 分野</span><span class="sp-item">ク. 分岐</span></div>
+
+  <div class="mnem-box">
+    <div class="mnem-tag">MNEMONIC · 5 軸の覚え方</div>
+    <div class="mnem-row"><strong>英語(国際標準)</strong>: <span class="mnem-letters">L A T C H</span> = <strong>ラッチ</strong>(掛け金の意)。<strong>L</strong>ocation 位置 / <strong>A</strong>lphabet 五十音 / <strong>T</strong>ime 時間 / <strong>C</strong>ategory 分野 / <strong>H</strong>ierarchy 階層。提唱者は情報建築家 R. S. Wurman(1989)。</div>
+    <div class="mnem-row"><strong>日本語</strong>: 「<span class="mnem-letters">時 ・ 位 ・ 分 ・ 階 ・ 五</span>」 = <strong>「じ・い・ぶ・かい・ご」</strong>(時間→位置→分野→階層→五十音)。実習 2 の出題順に並べると暗記しやすい。</div>
+    <div class="mnem-row"><strong>「五十音」とは</strong>: 日本語を「あいうえお…わをん」の順に並べる方式。図書館では同じ分野・同じ階層の本を著者名の <strong>あいうえお順</strong>(洋書は <strong>アルファベット順</strong>)で並べる。電話帳・出席簿・辞書も同じ仕組み。</div>
+  </div>
 </div>
 
 <!-- SLIDE 11: SECTION 4 DIVIDER -->
@@ -1270,7 +1314,21 @@ function selectIcon(panelId, key) {
 }
 
 // 実習1 chart-picker
-function toggleChartQ(el) { el.classList.toggle('revealed'); haptic(8); }
+function toggleChartQ(el) {
+  const wasRevealed = el.classList.contains('revealed');
+  // 全リセット(他の設問が同時に開かないように)
+  document.querySelectorAll('.chart-q').forEach(q => q.classList.remove('revealed'));
+  document.querySelectorAll('.chart-option').forEach(o => o.classList.remove('highlight'));
+  if (!wasRevealed) {
+    el.classList.add('revealed');
+    const ans = el.dataset.ans;
+    if (ans) {
+      const target = document.querySelector('.chart-option[data-letter="' + ans + '"]');
+      if (target) target.classList.add('highlight');
+    }
+  }
+  haptic(8);
+}
 
 // 実習2 select-grid
 function toggleSelBlank(b) {
@@ -1420,6 +1478,7 @@ function resetAllInteractions() {
   document.querySelectorAll('.icon-card.selected').forEach(c => c.classList.remove('selected'));
   document.querySelectorAll('.icon-info-panel').forEach(p => { p.innerHTML = '<span style="color:var(--text-sub);font-style:italic;">▲ 上のアイコンをタップすると、定義と説明が表示されます。</span>'; });
   document.querySelectorAll('.chart-q.revealed').forEach(q => q.classList.remove('revealed'));
+  document.querySelectorAll('.chart-option.highlight').forEach(o => o.classList.remove('highlight'));
   document.querySelectorAll('.sr-blank.reveal').forEach(b => { b.classList.remove('reveal'); b.textContent = 'クリック'; });
   document.querySelectorAll('.j-chip').forEach(c => c.classList.remove('judged-correct', 'judged-wrong'));
   document.querySelectorAll('.j-fb.show').forEach(f => f.classList.remove('show'));
