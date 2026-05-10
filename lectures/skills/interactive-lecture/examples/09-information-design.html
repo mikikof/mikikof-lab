@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>情報デザイン | 情報Ⅰ 学習ノート対応</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Noto+Serif+JP:wght@400;500;600;700;900&family=Noto+Sans+JP:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy-darkest: #0F2847; --navy-dark: #1B3A5B; --navy: #2C5F8D;
+  --navy-light: #4A7FA8; --navy-pale: #D4E1EF; --navy-bg: #F3F6FB;
+  --accent-red: #C8102E; --accent-red-dark: #8B0A1F; --accent-gold: #C9A961;
+  --text-main: #1A2332; --text-sub: #5A6378; --white: #FFFFFF; --ok-green: #1E824C;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(--text-main); background: var(--navy-darkest); overflow: hidden; -webkit-font-smoothing: antialiased; touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+.slide p, .slide li, .case-content, .practice-text, .def-desc, .quiz-question, .quiz-feedback, .ch-body p, .answer-text, .lat-row, .ud-quad-cell .udq-eg, .deep-card p { -webkit-user-select: text; user-select: text; }
+.slide-container { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+.slide { position: absolute; top: 47px; bottom: 52px; left: 0; right: 0; padding: 4vh 5vw; opacity: 0; pointer-events: none; transform: translateX(30px); transition: opacity 0.4s ease, transform 0.4s ease; background: var(--white); overflow-y: auto; }
+.slide.active { opacity: 1; pointer-events: all; transform: translateX(0); }
+.topbar { position: fixed; top: 0; left: 0; right: 0; height: 44px; background: linear-gradient(180deg, var(--navy-darkest) 0%, var(--navy-dark) 100%); color: rgba(255,255,255,0.9); display: flex; align-items: center; padding: 0 24px; z-index: 100; font-size: 13px; letter-spacing: 0.05em; box-shadow: 0 2px 12px rgba(0,0,0,0.2); }
+.topbar-title { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 600; margin-right: 20px; }
+.topbar-subtitle { color: rgba(255,255,255,0.6); font-size: 12px; flex: 1; }
+.topbar-chapter { font-family: 'JetBrains Mono', monospace; color: var(--accent-gold); letter-spacing: 0.1em; font-size: 11px; }
+.progress { position: fixed; top: 44px; left: 0; height: 3px; background: linear-gradient(90deg, var(--accent-red) 0%, var(--accent-gold) 100%); z-index: 99; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 8px rgba(201, 169, 97, 0.5); }
+.bottombar { position: fixed; bottom: 0; left: 0; right: 0; height: 52px; background: var(--navy-darkest); color: rgba(255,255,255,0.85); display: flex; align-items: center; padding: 0 24px; z-index: 100; font-size: 13px; }
+.bottombar-nav { display: flex; gap: 12px; align-items: center; }
+.nav-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: white; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-size: 16px; }
+.nav-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.page-indicator { font-family: 'JetBrains Mono', monospace; margin-left: auto; margin-right: 16px; color: rgba(255,255,255,0.7); font-size: 12px; letter-spacing: 0.08em; }
+.slide-title-small { flex: 1; margin-left: 16px; font-size: 12px; color: rgba(255,255,255,0.5); font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; max-width: 40vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.keyboard-hint { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.4); margin-left: 10px; }
+.eyebrow { font-family: 'JetBrains Mono', monospace; color: var(--accent-red); font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 16px; }
+.slide-title { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; color: var(--navy-darkest); font-size: clamp(32px, 4.4vw, 56px); line-height: 1.15; margin-bottom: 10px; letter-spacing: -0.01em; }
+.slide-subtitle { font-size: clamp(17px, 1.7vw, 22px); color: var(--text-sub); font-weight: 500; margin-bottom: 30px; line-height: 1.7; }
+.section-heading { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; color: var(--navy-dark); font-size: 28px; margin-bottom: 18px; padding-left: 16px; border-left: 4px solid var(--accent-red); line-height: 1.3; }
+.body-text { font-size: 19px; line-height: 1.85; color: var(--text-main); font-weight: 500; }
+.highlight { background: linear-gradient(180deg, transparent 60%, rgba(201,169,97,0.4) 60%); font-weight: 700; padding: 0 2px; }
+.title-slide { display: flex; flex-direction: column; justify-content: center; background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy-dark) 60%, var(--navy) 100%); color: white; padding: 0 10vw; overflow: hidden; }
+.title-slide::before { content: ''; position: absolute; top: 0; right: 0; width: 45%; height: 100%; background: radial-gradient(circle at 70% 30%, rgba(201,169,97,0.15) 0%, transparent 50%), radial-gradient(circle at 30% 70%, rgba(200,16,46,0.1) 0%, transparent 50%); pointer-events: none; }
+.title-slide::after { content: ''; position: absolute; top: 50%; right: 8vw; width: 300px; height: 300px; border: 1px solid rgba(201,169,97,0.3); border-radius: 50%; transform: translateY(-50%); animation: rotate 40s linear infinite; }
+@keyframes rotate { to { transform: translateY(-50%) rotate(360deg); } }
+.title-label { font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.3em; color: var(--accent-gold); margin-bottom: 24px; }
+.title-main { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; font-size: clamp(60px, 8vw, 120px); line-height: 1; margin-bottom: 20px; letter-spacing: -0.02em; position: relative; z-index: 2; }
+.title-sub { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: clamp(22px, 2.5vw, 34px); font-weight: 300; color: rgba(255,255,255,0.85); margin-bottom: 60px; letter-spacing: 0.05em; }
+.title-meta { display: flex; gap: 40px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.6); letter-spacing: 0.15em; position: relative; z-index: 2; flex-wrap: wrap; }
+.title-meta-item strong { color: var(--accent-gold); margin-right: 8px; }
+.title-deco { position: absolute; bottom: 8vh; left: 10vw; width: 60px; height: 60px; opacity: 0.4; color: var(--accent-gold); z-index: 3; pointer-events: none; }
+.title-deco-2 { position: absolute; top: 12vh; right: 8vw; width: 44px; height: 44px; opacity: 0.3; color: var(--accent-gold); z-index: 3; pointer-events: none; }
+.section-divider { display: flex !important; flex-direction: column; justify-content: center !important; align-items: center !important; background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy) 100%); color: white; position: absolute; padding: 0 5vw !important; overflow: hidden !important; text-align: center; }
+.section-divider > * { position: relative; z-index: 2; }
+.section-divider::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(201,169,97,0.1) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(200,16,46,0.08) 0%, transparent 40%); z-index: 1; }
+.section-divider .section-icon { width: 84px; height: 84px; margin: 0 auto 22px; display: block; opacity: 0.95; color: var(--accent-gold); }
+.section-number { font-family: 'JetBrains Mono', monospace; font-size: 14px; letter-spacing: 0.3em; color: var(--accent-gold); margin-bottom: 20px; }
+.section-title-big { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: clamp(48px, 7vw, 90px); font-weight: 900; line-height: 1; margin-bottom: 18px; text-align: center; }
+.section-tagline { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: clamp(18px, 2vw, 26px); font-weight: 300; color: rgba(255,255,255,0.75); letter-spacing: 0.05em; }
+.def-box { background: var(--navy-bg); border: 1px solid var(--navy-pale); border-radius: 6px; padding: 22px 26px; margin-bottom: 12px; }
+.def-box .def-label { font-family: 'JetBrains Mono', monospace; color: var(--accent-red); font-size: 11px; font-weight: 700; letter-spacing: 0.15em; margin-bottom: 6px; }
+.def-box .def-term { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 22px; color: var(--navy-darkest); margin-bottom: 8px; }
+.def-box .def-desc { font-size: 16px; line-height: 1.8; color: var(--text-main); font-weight: 500; }
+.note-blank { display: inline-block; min-width: 96px; padding: 2px 12px; background: var(--navy-pale); border-bottom: 2px solid var(--navy); color: var(--navy-dark); font-weight: 700; border-radius: 4px 4px 0 0; cursor: pointer; transition: all 0.2s; }
+.note-blank:hover { background: #BDD0E6; }
+.note-blank.reveal { background: var(--accent-gold); color: var(--navy-darkest); border-bottom-color: var(--accent-red); animation: reveal 0.5s; }
+@keyframes reveal { 0% { transform: scale(0.9); opacity: 0.5; } 50% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px; }
+.slide::-webkit-scrollbar { width: 6px; }
+.slide::-webkit-scrollbar-track { background: transparent; }
+.slide::-webkit-scrollbar-thumb { background: var(--navy-pale); border-radius: 3px; }
+@media print { .topbar, .bottombar, .progress { display: none; } }
+
+/* AGENDA */
+.agenda-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 22px; }
+.agenda-item { padding: 18px 20px; background: var(--navy-bg); border-left: 4px solid var(--navy); border-radius: 4px; transition: all 0.3s; display: flex; gap: 14px; align-items: flex-start; }
+.agenda-item:hover { background: var(--navy-pale); transform: translateX(4px); }
+.agenda-item.appendix { border-left-color: var(--accent-gold); background: linear-gradient(180deg, rgba(201,169,97,0.08) 0%, var(--navy-bg) 100%); }
+.agenda-item.appendix .agenda-num { color: var(--accent-gold); }
+.agenda-num { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: 26px; font-weight: 700; color: var(--accent-red); line-height: 1; min-width: 40px; }
+.agenda-content h3 { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 600; font-size: 16px; color: var(--navy-darkest); margin-bottom: 4px; }
+.agenda-content .a-tag { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.18em; color: var(--accent-gold); font-weight: 700; display: block; margin-bottom: 4px; }
+.agenda-content p { font-size: 12px; color: var(--text-sub); line-height: 1.55; }
+.agenda-item .ai-icon { width: 26px; height: 26px; flex-shrink: 0; color: var(--accent-red); margin-top: 2px; }
+.agenda-item.appendix .ai-icon { color: var(--accent-gold); }
+
+/* ICON-CARDS (lec01 pattern) */
+.icon-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 14px; }
+.icon-cards.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.icon-cards.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.icon-cards.cols-2 { grid-template-columns: repeat(2, 1fr); max-width: 720px; margin-left: auto; margin-right: auto; }
+.icon-card { background: white; border: 2px solid var(--navy-pale); border-radius: 14px; padding: 14px 8px 16px; text-align: center; cursor: pointer; transition: all 0.25s; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.icon-card:hover { border-color: var(--accent-gold); transform: translateY(-3px); box-shadow: 0 6px 18px rgba(15,40,71,0.1); }
+.icon-card.selected { border-color: var(--accent-red); background: linear-gradient(180deg, rgba(201,169,97,0.10) 0%, white 100%); box-shadow: 0 4px 14px rgba(200,16,46,0.12); }
+.icon-card-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; color: var(--accent-red); font-weight: 900; }
+.icon-card-svg { width: 64px; height: 64px; display: block; margin: 4px 0 2px; color: var(--navy-darkest); }
+.icon-card-name { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; font-size: 15px; color: var(--navy-darkest); line-height: 1.3; }
+.icon-card-sub { font-family: 'Noto Sans JP', sans-serif; font-size: 11px; color: var(--text-sub); font-weight: 600; line-height: 1.4; }
+.cards-hint { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--text-sub); font-weight: 700; text-align: center; margin-top: 10px; }
+.icon-info-panel { margin-top: 16px; padding: 18px 20px; background: var(--navy-bg); border-left: 4px solid var(--accent-gold); border-radius: 0 4px 4px 0; min-height: 76px; font-size: 14.5px; line-height: 1.75; color: var(--text-main); font-weight: 500; }
+.icon-info-panel .ip-term { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; color: var(--navy-darkest); font-size: 17px; margin-right: 8px; }
+.icon-info-panel .ip-eng { font-family: 'JetBrains Mono', monospace; color: var(--accent-red); font-size: 11px; letter-spacing: 0.1em; }
+.icon-info-panel .ip-desc { display: block; margin-top: 8px; }
+
+/* CHART-PICKER (実習1 図の選び方) */
+.chart-picker-wrap { max-width: 980px; margin: 14px auto 0; }
+.chart-options { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 16px; }
+.chart-option { background: white; border: 2px solid var(--navy-pale); border-radius: 8px; padding: 10px 4px 12px; text-align: center; transition: all 0.25s; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.chart-option:hover { border-color: var(--accent-gold); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(15,40,71,0.08); }
+.chart-option svg { width: 56px; height: 56px; color: var(--navy); }
+.chart-option .co-letter { font-family: 'JetBrains Mono', monospace; font-weight: 900; color: var(--accent-red); font-size: 16px; line-height: 1; }
+.chart-option .co-name { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 12px; color: var(--navy-darkest); margin-top: 2px; line-height: 1.3; }
+.chart-option.is-target-1 { box-shadow: 0 0 0 3px rgba(200,16,46,0.18); border-color: var(--accent-red); }
+.chart-option.is-target-2 { box-shadow: 0 0 0 3px rgba(201,169,97,0.30); border-color: var(--accent-gold); }
+.chart-option.is-target-3 { box-shadow: 0 0 0 3px rgba(74,127,168,0.25); border-color: var(--navy); }
+.chart-option.is-target-4 { box-shadow: 0 0 0 3px rgba(30,130,76,0.25); border-color: var(--ok-green); }
+.chart-question-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.chart-q { background: var(--navy-bg); border: 1px solid var(--navy-pale); border-radius: 6px; padding: 14px 16px; cursor: pointer; transition: all 0.2s; }
+.chart-q:hover { background: var(--navy-pale); }
+.chart-q .cq-num { font-family: 'JetBrains Mono', monospace; font-weight: 900; color: var(--accent-red); font-size: 13px; letter-spacing: 0.05em; margin-bottom: 4px; }
+.chart-q .cq-text { font-size: 13.5px; line-height: 1.65; color: var(--text-main); font-weight: 500; }
+.chart-q .cq-ans { display: none; margin-top: 10px; padding: 8px 10px; background: white; border-left: 3px solid var(--accent-gold); border-radius: 0 4px 4px 0; font-size: 12.5px; color: var(--navy-darkest); line-height: 1.6; }
+.chart-q.revealed .cq-ans { display: block; animation: fadeIn 0.4s; }
+.chart-q.revealed { background: rgba(201,169,97,0.10); border-color: var(--accent-gold); }
+.chart-q .cq-ans-letter { font-family: 'JetBrains Mono', monospace; font-weight: 900; color: var(--accent-red); margin-right: 6px; }
+
+/* SELECT-GRID (実習2 空所穴埋め) */
+.select-grid { display: grid; grid-template-columns: 1fr; gap: 8px; max-width: 920px; margin: 14px auto 0; }
+.select-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 14px; background: var(--white); border: 1px solid var(--navy-pale); border-radius: 6px; }
+.select-row .sr-key { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--accent-red); min-width: 32px; font-size: 13px; padding-top: 2px; }
+.select-row .sr-text { flex: 1; font-size: 13.5px; line-height: 1.7; color: var(--text-main); font-weight: 500; }
+.select-row .sr-blank { display: inline-block; min-width: 76px; padding: 2px 10px; background: var(--navy-pale); border-bottom: 2px solid var(--navy); color: var(--navy-dark); font-weight: 700; border-radius: 4px 4px 0 0; cursor: pointer; transition: all 0.2s; text-align: center; font-size: 13px; }
+.select-row .sr-blank:hover { background: #BDD0E6; }
+.select-row .sr-blank.reveal { background: var(--accent-gold); color: var(--navy-darkest); border-bottom-color: var(--accent-red); }
+.select-pool { margin-top: 10px; padding: 12px 16px; background: var(--navy-bg); border-left: 3px solid var(--navy); border-radius: 0 4px 4px 0; font-size: 13px; line-height: 1.85; color: var(--text-sub); font-weight: 600; }
+.select-pool .sp-label { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.15em; color: var(--accent-red); font-weight: 700; margin-right: 8px; }
+.select-pool .sp-item { display: inline-block; margin-right: 14px; color: var(--navy-darkest); font-weight: 700; }
+
+/* JUDGMENT-CHIP (実習3 ○×) */
+.judgment-list { display: flex; flex-direction: column; gap: 10px; max-width: 880px; margin: 14px auto 0; }
+.j-item { background: white; border: 2px solid var(--navy-pale); border-radius: 10px; padding: 14px 18px; display: flex; gap: 14px; align-items: flex-start; }
+.j-item .j-num { font-family: 'JetBrains Mono', monospace; font-weight: 900; color: var(--accent-red); font-size: 15px; min-width: 32px; padding-top: 2px; }
+.j-item .j-body { flex: 1; }
+.j-item .j-text { font-size: 14.5px; line-height: 1.7; color: var(--text-main); font-weight: 500; }
+.j-item .j-chips { display: flex; gap: 8px; margin-top: 10px; }
+.j-chip { padding: 6px 18px; background: var(--navy-bg); border: 2px solid var(--navy-pale); border-radius: 50px; cursor: pointer; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; font-size: 18px; color: var(--navy-dark); transition: all 0.2s; min-width: 60px; text-align: center; }
+.j-chip:hover { background: var(--navy-pale); }
+.j-chip.judged-correct { background: rgba(30,130,76,0.18); border-color: var(--ok-green); color: var(--ok-green); }
+.j-chip.judged-wrong { background: rgba(200,16,46,0.10); border-color: var(--accent-red); color: var(--accent-red); opacity: 0.65; }
+.j-fb { display: none; margin-top: 10px; padding: 10px 12px; background: var(--navy-bg); border-left: 3px solid var(--accent-gold); border-radius: 0 4px 4px 0; font-size: 12.5px; line-height: 1.7; color: var(--text-main); font-weight: 500; }
+.j-fb.show { display: block; animation: fadeIn 0.3s; }
+.j-fb strong { color: var(--navy-darkest); }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* UD-QUADRANT (実習4 2x2分類) */
+.ud-quad { display: grid; grid-template-columns: 200px repeat(2, 1fr); grid-template-rows: 60px repeat(2, 1fr); gap: 6px; max-width: 920px; margin: 12px auto 14px; }
+.ud-quad .udq-corner { background: transparent; }
+.ud-quad .udq-col-h { background: var(--navy-darkest); color: white; padding: 10px 14px; border-radius: 4px; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; font-size: 14px; display: flex; align-items: center; justify-content: center; text-align: center; line-height: 1.4; }
+.ud-quad .udq-row-h { background: var(--navy-bg); color: var(--navy-darkest); padding: 10px 14px; border-radius: 4px; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; font-size: 14px; display: flex; align-items: center; justify-content: center; text-align: center; line-height: 1.4; border-left: 4px solid var(--accent-red); }
+.ud-quad-cell { background: white; border: 2px solid var(--navy-pale); border-radius: 8px; padding: 12px 14px; min-height: 110px; display: flex; flex-direction: column; gap: 6px; transition: all 0.25s; }
+.ud-quad-cell .udq-letter { font-family: 'JetBrains Mono', monospace; font-weight: 900; color: var(--accent-red); font-size: 18px; letter-spacing: 0.05em; }
+.ud-quad-cell .udq-name { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; color: var(--navy-darkest); font-size: 13px; line-height: 1.4; }
+.ud-quad-cell .udq-eg { margin-top: 4px; font-size: 11.5px; color: var(--text-sub); line-height: 1.55; min-height: 36px; }
+.ud-quad-cell .udq-eg .udq-eg-item { display: block; padding: 4px 8px; margin-top: 4px; background: var(--navy-bg); border-radius: 3px; color: var(--navy-darkest); font-weight: 600; }
+.ud-q-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-width: 920px; margin: 0 auto; }
+.udq-item { background: white; border: 1px solid var(--navy-pale); border-radius: 6px; padding: 10px 14px; cursor: pointer; transition: all 0.2s; display: flex; gap: 10px; align-items: flex-start; }
+.udq-item:hover { background: var(--navy-bg); }
+.udq-item .ui-num { font-family: 'JetBrains Mono', monospace; font-weight: 900; color: var(--accent-red); font-size: 13px; min-width: 28px; }
+.udq-item .ui-text { flex: 1; font-size: 12.5px; line-height: 1.6; color: var(--text-main); font-weight: 500; }
+.udq-item .ui-ans { font-family: 'JetBrains Mono', monospace; font-weight: 900; padding: 3px 9px; background: var(--navy-pale); color: var(--navy-dark); border-radius: 3px; font-size: 13px; min-width: 28px; text-align: center; transition: all 0.25s; }
+.udq-item.revealed .ui-ans { background: var(--accent-gold); color: var(--navy-darkest); }
+.udq-item.revealed { background: rgba(201,169,97,0.08); border-color: var(--accent-gold); }
+.udq-help { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--text-sub); text-align: center; margin: 6px 0 14px; font-weight: 700; }
+
+/* COMPARISON-VISUAL (バリアフリー vs UD) */
+.comp-visual { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 12px; align-items: stretch; max-width: 880px; margin: 14px auto 0; }
+.comp-side { background: linear-gradient(160deg, white 0%, var(--navy-bg) 100%); border: 2px solid var(--navy-pale); border-radius: 12px; padding: 18px 22px; display: flex; flex-direction: column; gap: 8px; }
+.comp-side.left { border-color: rgba(74,127,168,0.5); }
+.comp-side.right { border-color: rgba(201,169,97,0.55); background: linear-gradient(160deg, white 0%, rgba(201,169,97,0.08) 100%); }
+.comp-side .cs-tag { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.18em; font-weight: 900; }
+.comp-side.left .cs-tag { color: var(--navy); }
+.comp-side.right .cs-tag { color: #8a6d1f; }
+.comp-side .cs-name { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; font-size: 22px; color: var(--navy-darkest); }
+.comp-side .cs-svg { width: 64px; height: 64px; align-self: center; margin: 4px 0; }
+.comp-side.left .cs-svg { color: var(--navy); }
+.comp-side.right .cs-svg { color: #8a6d1f; }
+.comp-side .cs-desc { font-size: 13.5px; line-height: 1.7; color: var(--text-main); font-weight: 500; }
+.comp-side .cs-eg { margin-top: 6px; padding: 8px 12px; background: rgba(255,255,255,0.7); border-radius: 4px; font-size: 12px; color: var(--text-sub); line-height: 1.55; }
+.comp-arrow { display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 900; color: var(--accent-gold); }
+.comp-arrow .ca-text { writing-mode: vertical-rl; font-size: 10px; letter-spacing: 0.2em; margin-top: 8px; color: var(--text-sub); }
+
+/* ANSWERS-GRID (POINT用語答え合わせ) */
+.answers-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 16px; max-width: 920px; margin-left: auto; margin-right: auto; }
+.answer-row { display: flex; align-items: center; padding: 8px 12px; background: var(--navy-bg); border-radius: 4px; gap: 10px; border-left: 3px solid var(--navy); cursor: pointer; transition: all 0.2s; }
+.answer-row:hover { background: var(--navy-pale); }
+.answer-num { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--accent-red); font-size: 12.5px; min-width: 28px; }
+.answer-text { flex: 1; font-size: 12.5px; font-weight: 600; color: var(--navy-darkest); }
+.answer-reveal { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; padding: 3px 9px; background: var(--navy-dark); color: white; border-radius: 3px; letter-spacing: 0.05em; transition: all 0.3s; min-width: 56px; text-align: center; }
+.answer-row.revealed .answer-reveal { background: var(--accent-gold); color: var(--navy-darkest); font-weight: 700; }
+.answers-actions { display: flex; gap: 10px; justify-content: center; margin-top: 14px; }
+.answers-actions button { background: transparent; border: 1.5px solid var(--navy-dark); color: var(--navy-darkest); padding: 8px 18px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.15em; font-weight: 700; border-radius: 4px; cursor: pointer; transition: all 0.2s; }
+.answers-actions button:hover { background: var(--navy-darkest); color: white; }
+
+/* SUMMARY-TREE */
+.summary-tree { display: flex; flex-direction: column; align-items: center; gap: 14px; max-width: 880px; margin: 14px auto 0; }
+.tree-root { background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy) 100%); color: white; padding: 16px 28px; border-radius: 10px; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; font-size: 22px; box-shadow: 0 6px 18px rgba(15,40,71,0.25); display: flex; align-items: center; gap: 12px; }
+.tree-root svg { width: 28px; height: 28px; color: var(--accent-gold); }
+.tree-branches { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; width: 100%; }
+.tree-branch { background: var(--navy-bg); border: 2px solid var(--navy-pale); border-radius: 8px; padding: 14px 10px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.tree-branch h4 { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; color: var(--navy-darkest); font-size: 14px; margin-bottom: 4px; line-height: 1.3; }
+.tree-branch p { font-size: 11px; color: var(--text-sub); line-height: 1.55; }
+.tree-branch .tb-tag { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: var(--accent-red); letter-spacing: 0.1em; margin-bottom: 6px; font-weight: 700; }
+.tree-branch .tb-icon { width: 36px; height: 36px; margin: 4px auto 6px; display: block; color: var(--navy); }
+.tree-branch.accent { border-color: var(--accent-gold); background: rgba(201,169,97,0.08); }
+.tree-branch.accent .tb-icon { color: #8a6d1f; }
+
+/* QUIZ */
+.quiz-container { max-width: 900px; margin: 16px auto 0; }
+.quiz-question { background: var(--navy-darkest); color: white; padding: 16px 22px; border-radius: 6px 6px 0 0; font-size: 18px; line-height: 1.6; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 600; }
+.quiz-question-num { font-family: 'JetBrains Mono', monospace; color: var(--accent-gold); font-size: 11px; letter-spacing: 0.2em; margin-bottom: 6px; display: block; }
+.quiz-options { background: var(--white); border: 1px solid var(--navy-pale); border-top: none; border-radius: 0 0 6px 6px; padding: 14px; }
+.quiz-option { padding: 12px 14px; margin-bottom: 6px; background: var(--navy-bg); border: 2px solid transparent; border-radius: 4px; cursor: pointer; transition: all 0.2s; display: flex; gap: 12px; align-items: flex-start; font-size: 14.5px; }
+.quiz-option:hover { border-color: var(--navy); background: var(--navy-pale); }
+.quiz-option:last-child { margin-bottom: 0; }
+.quiz-option-letter { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--navy); min-width: 22px; }
+.quiz-option.correct { background: rgba(30,130,76,0.1); border-color: #1E824C; }
+.quiz-option.correct .quiz-option-letter { color: #1E824C; }
+.quiz-option.incorrect { background: rgba(200,16,46,0.08); border-color: var(--accent-red); opacity: 0.6; }
+.quiz-feedback { display: none; margin-top: 12px; padding: 14px 18px; background: var(--navy-bg); border-left: 4px solid var(--accent-gold); font-size: 13.5px; line-height: 1.7; border-radius: 0 4px 4px 0; }
+.quiz-feedback.show { display: block; animation: fadeIn 0.4s; }
+.quiz-feedback strong { color: var(--navy-darkest); }
+
+/* REVIEW */
+.review-container { max-width: 780px; margin: 14px auto 0; text-align: center; }
+.review-intro { font-size: 14.5px; color: var(--text-sub); margin-bottom: 22px; line-height: 1.8; }
+.review-start-btn { background: var(--navy-darkest); color: white; border: none; padding: 14px 38px; font-size: 15px; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 600; border-radius: 50px; cursor: pointer; transition: all 0.3s; box-shadow: 0 6px 20px rgba(15,40,71,0.25); }
+.review-start-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(15,40,71,0.35); background: var(--navy); }
+.review-q-area { display: none; margin-top: 22px; }
+.review-q-area.active { display: block; }
+.review-progress { font-family: 'JetBrains Mono', monospace; color: var(--navy); font-size: 12px; letter-spacing: 0.15em; margin-bottom: 12px; }
+.review-result { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: 46px; font-weight: 700; color: var(--accent-red); margin: 18px 0 8px; }
+.review-result-sub { font-size: 14px; color: var(--text-sub); margin-bottom: 20px; }
+.review-retry-btn { background: transparent; border: 2px solid var(--navy); color: var(--navy-darkest); padding: 10px 22px; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 600; border-radius: 30px; cursor: pointer; transition: all 0.2s; }
+.review-retry-btn:hover { background: var(--navy-darkest); color: white; }
+
+/* DEEP-DIVE */
+.deep-card { background: white; border: 1px solid var(--navy-pale); border-left: 5px solid var(--accent-gold); border-radius: 8px; padding: 18px 24px; margin-bottom: 12px; }
+.deep-card h4 { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; color: var(--navy-darkest); font-size: 18px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+.deep-card h4 svg { width: 22px; height: 22px; color: var(--accent-gold); }
+.deep-card p { font-size: 13.5px; line-height: 1.8; color: var(--text-main); font-weight: 500; }
+.deep-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--accent-red); font-weight: 700; margin-bottom: 6px; display: block; }
+
+/* LATCH (深掘りA) */
+.latch-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; max-width: 980px; margin: 12px auto 14px; }
+.latch-cell { background: linear-gradient(160deg, white 0%, var(--navy-bg) 100%); border: 2px solid var(--navy-pale); border-radius: 10px; padding: 12px 8px 14px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; transition: all 0.25s; }
+.latch-cell:hover { border-color: var(--accent-gold); transform: translateY(-2px); }
+.latch-cell.selected { border-color: var(--accent-red); background: linear-gradient(160deg, white 0%, rgba(201,169,97,0.10) 100%); }
+.latch-cell svg { width: 36px; height: 36px; color: var(--navy); margin-bottom: 4px; }
+.latch-cell .lc-letter { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; color: var(--accent-red); font-size: 22px; line-height: 1; }
+.latch-cell .lc-name { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 12px; color: var(--navy-darkest); margin-top: 2px; }
+.latch-cell .lc-axis { font-size: 10px; color: var(--text-sub); line-height: 1.4; margin-top: 2px; }
+.latch-info-panel { margin-top: 10px; padding: 14px 18px; background: var(--navy-bg); border-left: 4px solid var(--accent-gold); border-radius: 0 4px 4px 0; min-height: 64px; font-size: 13.5px; line-height: 1.75; color: var(--text-main); font-weight: 500; max-width: 980px; margin-left: auto; margin-right: auto; }
+.latch-info-panel .li-term { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; color: var(--navy-darkest); font-size: 16px; margin-right: 10px; }
+
+/* CHART-MAP (深掘りB) */
+.chart-map { max-width: 920px; margin: 10px auto 0; }
+.chart-map .cm-row { display: grid; grid-template-columns: 110px repeat(4, 1fr); gap: 6px; margin-bottom: 6px; }
+.chart-map .cm-h { background: var(--navy-darkest); color: white; padding: 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.1em; font-weight: 700; text-align: center; display: flex; align-items: center; justify-content: center; line-height: 1.4; }
+.chart-map .cm-rh { background: var(--navy-bg); border-left: 3px solid var(--accent-red); padding: 8px 10px; border-radius: 4px; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; font-size: 12px; color: var(--navy-darkest); display: flex; align-items: center; }
+.chart-map .cm-c { background: white; border: 1px solid var(--navy-pale); border-radius: 4px; padding: 8px; text-align: center; font-size: 11px; line-height: 1.4; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.chart-map .cm-c svg { width: 22px; height: 22px; color: var(--navy); }
+.chart-map .cm-c .cmc-name { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; color: var(--navy-darkest); font-size: 11px; }
+.bias-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; max-width: 920px; margin: 12px auto 0; }
+.bias-item { background: rgba(200,16,46,0.05); border-left: 3px solid var(--accent-red); padding: 8px 12px; border-radius: 0 4px 4px 0; font-size: 12px; line-height: 1.65; color: var(--text-main); }
+.bias-item strong { color: var(--accent-red-dark); display: block; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: 13px; margin-bottom: 2px; }
+
+/* WCAG (深掘りC) */
+.wcag-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; max-width: 920px; margin: 10px auto; }
+.wcag-card { background: white; border: 2px solid var(--navy-pale); border-radius: 10px; padding: 14px 18px; }
+.wcag-card.fail { border-color: var(--accent-red); background: rgba(200,16,46,0.04); }
+.wcag-card.pass { border-color: var(--ok-green); background: rgba(30,130,76,0.05); }
+.wcag-card h5 { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.15em; font-weight: 900; margin-bottom: 8px; }
+.wcag-card.fail h5 { color: var(--accent-red); }
+.wcag-card.pass h5 { color: var(--ok-green); }
+.wcag-card .ratio { font-family: 'JetBrains Mono', monospace; font-weight: 900; font-size: 22px; color: var(--navy-darkest); margin-bottom: 6px; }
+.wcag-sample { padding: 10px 14px; border-radius: 4px; font-size: 14px; font-weight: 600; line-height: 1.6; }
+.wcag-sample.s1 { background: #BEC5CD; color: #C0CCDD; }
+.wcag-sample.s2 { background: #0F2847; color: #FFFFFF; }
+.wcag-card p { font-size: 12px; color: var(--text-main); line-height: 1.65; margin-top: 6px; }
+.color-vision { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 920px; margin: 10px auto 6px; }
+.cv-item { background: var(--navy-bg); padding: 10px 14px; border-radius: 6px; border-left: 3px solid var(--navy); }
+.cv-item .cv-tag { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.15em; color: var(--accent-red); font-weight: 700; margin-bottom: 4px; }
+.cv-item .cv-name { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; font-size: 14px; color: var(--navy-darkest); }
+.cv-item p { font-size: 11.5px; line-height: 1.6; color: var(--text-sub); margin-top: 4px; }
+
+/* UD7 (深掘りD) */
+.ud7-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; max-width: 980px; margin: 10px auto; }
+.ud7-cell { background: white; border: 2px solid var(--navy-pale); border-left: 4px solid var(--accent-gold); border-radius: 8px; padding: 12px 14px; position: relative; }
+.ud7-cell .ud7-icon { position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; color: var(--accent-gold); opacity: 0.85; }
+.ud7-cell .ud7-num { font-family: 'JetBrains Mono', monospace; font-weight: 900; color: var(--accent-red); font-size: 12px; letter-spacing: 0.05em; margin-bottom: 4px; padding-right: 32px; }
+.ud7-cell .ud7-name { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; font-size: 14px; color: var(--navy-darkest); margin-bottom: 4px; padding-right: 32px; }
+.ud7-cell .ud7-desc { font-size: 11.5px; line-height: 1.6; color: var(--text-sub); }
+.ud7-cell:last-child .ud7-icon { color: var(--accent-red); opacity: 0.75; }
+.answer-section-head { display: flex !important; align-items: center; gap: 10px; }
+.answer-section-head svg.ash-icon { width: 18px; height: 18px; flex-shrink: 0; color: var(--accent-red); opacity: 0.85; }
+
+/* A11Y (rev4 メタレビューで追加) */
+:focus { outline: none; }
+[onclick]:focus-visible, button:focus-visible, [tabindex]:focus-visible, .nav-btn:focus-visible, .menu-toggle:focus-visible, .menu-close:focus-visible, .menu-item:focus-visible, .icon-card:focus-visible, .chart-q:focus-visible, .sr-blank:focus-visible, .j-chip:focus-visible, .udq-item:focus-visible, .latch-cell:focus-visible, .answer-row:focus-visible, .quiz-option:focus-visible, .answer-reveal:focus-visible, .case-head:focus-visible, .form-cell:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(201, 169, 97, 0.18);
+}
+.title-slide [tabindex]:focus-visible { outline-color: var(--accent-gold); box-shadow: 0 0 0 4px rgba(255,255,255,0.25); }
+
+/* iPhone 横向き / ノッチ画面の上部・左右 safe-area */
+.topbar { padding-top: env(safe-area-inset-top, 0px); padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); }
+.slide { padding-left: max(5vw, env(safe-area-inset-left, 0px)); padding-right: max(5vw, env(safe-area-inset-right, 0px)); }
+.menu-panel { padding-top: env(safe-area-inset-top, 0px); padding-right: env(safe-area-inset-right, 0px); }
+
+/* MENU (drawer) */
+.menu-toggle { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: white; padding: 6px 14px 6px 12px; border-radius: 18px; cursor: pointer; font-size: 11px; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.15em; font-weight: 700; margin-left: 14px; transition: all 0.25s; display: flex; align-items: center; gap: 8px; height: 28px; }
+.menu-toggle:hover { background: rgba(201,169,97,0.25); border-color: var(--accent-gold); }
+.menu-toggle-icon { display: inline-flex; flex-direction: column; gap: 3px; width: 14px; justify-content: center; }
+.menu-toggle-icon span { display: block; height: 1.5px; background: white; border-radius: 1px; transition: all 0.2s; }
+.menu-toggle:hover .menu-toggle-icon span { background: var(--accent-gold); }
+.menu-overlay { position: fixed; inset: 0; background: rgba(15,40,71,0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.35s; }
+.menu-overlay.open { opacity: 1; pointer-events: all; }
+.menu-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 400px; max-width: 92vw; background: white; box-shadow: -16px 0 40px rgba(0,0,0,0.2); z-index: 201; transform: translateX(100%); transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
+.menu-panel.open { transform: translateX(0); }
+.menu-head { padding: 24px 26px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; background: linear-gradient(180deg, var(--navy-darkest) 0%, var(--navy-dark) 100%); color: white; flex-shrink: 0; }
+.menu-head-title { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 20px; }
+.menu-head-sub { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--accent-gold); letter-spacing: 0.2em; margin-top: 4px; font-weight: 700; }
+.menu-close { background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.15); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 16px; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+.menu-close:hover { background: rgba(200,16,46,0.3); border-color: var(--accent-red); }
+.menu-reset-btn { margin: 14px 22px 4px; padding: 11px 16px; background: transparent; border: 1.5px dashed var(--accent-red); color: var(--accent-red); border-radius: 6px; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; font-weight: 600; font-size: 13.5px; transition: all 0.25s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.menu-reset-btn:hover { background: var(--accent-red); color: white; border-style: solid; }
+.menu-reset-icon { display: inline-block; font-size: 15px; transition: transform 0.4s; }
+.menu-reset-btn:hover .menu-reset-icon { transform: rotate(-180deg); }
+.menu-list { flex: 1; overflow-y: auto; padding: 8px 14px 28px; }
+.menu-list::-webkit-scrollbar { width: 6px; }
+.menu-list::-webkit-scrollbar-thumb { background: var(--navy-pale); border-radius: 3px; }
+.menu-section { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.2em; color: var(--accent-red); font-weight: 700; padding: 16px 14px 8px; margin-top: 6px; border-top: 1px solid var(--navy-pale); }
+.menu-section:first-of-type { border-top: none; margin-top: 6px; }
+.menu-item { display: flex; gap: 12px; padding: 11px 14px; border-radius: 6px; cursor: pointer; transition: all 0.2s; align-items: center; margin-bottom: 2px; }
+.menu-item:hover { background: var(--navy-bg); transform: translateX(-2px); }
+.menu-item-num { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--text-sub); font-size: 12px; min-width: 26px; }
+.menu-item-title { font-size: 14px; font-weight: 500; color: var(--navy-darkest); flex: 1; line-height: 1.45; }
+.menu-item.active { background: var(--navy-darkest); color: white; box-shadow: 0 4px 14px rgba(15,40,71,0.25); }
+.menu-item.active .menu-item-num { color: var(--accent-gold); }
+.menu-item.active .menu-item-title { color: white; font-weight: 700; }
+.menu-item-tag { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.1em; padding: 3px 7px; border-radius: 3px; font-weight: 700; background: rgba(200,16,46,0.1); color: var(--accent-red); white-space: nowrap; }
+.menu-item-tag.tag-interactive { background: rgba(201,169,97,0.18); color: #8a6d1f; }
+.menu-item-tag.tag-review { background: rgba(44,95,141,0.12); color: var(--navy); }
+.menu-item-tag.tag-section, .menu-item-tag.tag-title, .menu-item-tag.tag-end { background: rgba(15,40,71,0.08); color: var(--navy-dark); }
+.menu-item.active .menu-item-tag { background: rgba(201,169,97,0.3); color: var(--accent-gold); }
+
+/* MEDIA QUERIES */
+@media (max-width: 1100px) {
+  .icon-cards, .icon-cards.cols-4, .icon-cards.cols-3 { grid-template-columns: repeat(2, 1fr); }
+  .icon-cards.cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .chart-options { grid-template-columns: repeat(3, 1fr); }
+  .answers-grid { grid-template-columns: 1fr; }
+  .tree-branches { grid-template-columns: repeat(2, 1fr); }
+  .latch-grid { grid-template-columns: repeat(5, 1fr); }
+  .ud7-grid { grid-template-columns: repeat(2, 1fr); }
+  .two-col { grid-template-columns: 1fr; gap: 18px; }
+  .ud-quad { grid-template-columns: 140px repeat(2, 1fr); grid-template-rows: 50px repeat(2, 1fr); }
+  .chart-map .cm-row { grid-template-columns: 90px repeat(4, 1fr); }
+}
+@media (max-width: 720px) {
+  .topbar { height: 40px; padding: 0 12px; font-size: 11px; letter-spacing: 0; }
+  .topbar-title { font-size: 13px; margin-right: 8px; }
+  .topbar-subtitle { display: none; }
+  .topbar-chapter { font-size: 10px; letter-spacing: 0.08em; }
+  .menu-toggle { margin-left: 8px; padding: 4px 10px; font-size: 10px; height: 24px; gap: 6px; }
+  .progress { top: 40px; }
+  .bottombar { height: calc(52px + env(safe-area-inset-bottom, 0px)); padding: 0 14px env(safe-area-inset-bottom, 0px); font-size: 11px; }
+  .bottombar-nav { gap: 8px; }
+  .nav-btn { width: 40px; height: 40px; font-size: 16px; }
+  .slide-title-small { display: none; }
+  .keyboard-hint { display: none; }
+  .page-indicator { font-size: 11px; margin-right: 0; margin-left: auto; }
+  .slide { top: 43px; bottom: calc(52px + env(safe-area-inset-bottom, 0px)); padding: 4vw 5vw 64px; touch-action: pan-y pinch-zoom; }
+  button:active:not([disabled]), [onclick]:active, .nav-btn:active, .menu-toggle:active { transform: scale(0.96); transition: transform 0.08s; }
+  .swipe-hint { position: fixed; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%) translateY(20px); background: rgba(15, 40, 71, 0.92); color: white; padding: 10px 22px; border-radius: 24px; font-size: 13px; letter-spacing: 0.06em; font-weight: 600; z-index: 200; pointer-events: none; opacity: 0; transition: opacity 0.4s ease, transform 0.4s ease; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25); display: flex; align-items: center; gap: 10px; }
+  .swipe-hint::before, .swipe-hint::after { content: ""; width: 14px; height: 14px; border-top: 2px solid var(--accent-gold); border-right: 2px solid var(--accent-gold); }
+  .swipe-hint::before { transform: rotate(-135deg); }
+  .swipe-hint::after { transform: rotate(45deg); }
+  .swipe-hint.show { opacity: 1; transform: translateX(-50%) translateY(0); animation: swipeHintPulse 1.6s ease-in-out 1 0.4s; }
+  @keyframes swipeHintPulse { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-4px); } }
+  .title-slide { padding: 0 6vw; }
+  .title-slide::before, .title-slide::after { display: none; }
+  .title-label { font-size: 10.5px; letter-spacing: 0.2em; margin-bottom: 18px; }
+  .title-main { font-size: clamp(36px, 10vw, 58px); letter-spacing: -0.01em; margin-bottom: 14px; }
+  .title-sub { font-size: clamp(14px, 4vw, 20px); margin-bottom: 32px; }
+  .title-meta { gap: 14px 22px; font-size: 10.5px; flex-direction: column; }
+  .section-divider .section-icon { width: 60px; height: 60px; margin-bottom: 16px; }
+  .section-number { font-size: 11px; letter-spacing: 0.25em; margin-bottom: 14px; }
+  .section-title-big { font-size: clamp(34px, 9vw, 54px); }
+  .section-tagline { font-size: clamp(14px, 3.8vw, 18px); }
+  .eyebrow { font-size: 10px; letter-spacing: 0.15em; margin-bottom: 12px; }
+  .slide-title { font-size: clamp(24px, 6.2vw, 34px); margin-bottom: 8px; }
+  .slide-subtitle { font-size: clamp(13.5px, 3.8vw, 17px); margin-bottom: 20px; line-height: 1.65; }
+  .section-heading { font-size: 22px; margin-bottom: 14px; padding-left: 12px; border-left-width: 3px; }
+  .body-text { font-size: 15px; }
+  .def-box { padding: 16px 18px; margin-bottom: 10px; }
+  .def-box .def-term { font-size: 18px; margin-bottom: 7px; }
+  .def-box .def-desc { font-size: 14px; line-height: 1.75; }
+  .menu-panel { width: 100%; max-width: 100%; box-shadow: none; }
+  .menu-head { padding: 20px 22px 16px; }
+  .menu-head-title { font-size: 18px; }
+  .menu-head-sub { font-size: 9.5px; }
+  .agenda-grid { grid-template-columns: 1fr; }
+  .icon-cards, .icon-cards.cols-4, .icon-cards.cols-3, .icon-cards.cols-2 { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .icon-card-svg { width: 50px; height: 50px; }
+  .icon-card-name { font-size: 13px; }
+  .quiz-question { font-size: 15px; padding: 14px 18px; }
+  .quiz-option { font-size: 13.5px; padding: 11px 14px; }
+  .icon-info-panel { padding: 14px 16px; font-size: 13.5px; }
+  .chart-options { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .chart-option svg { width: 40px; height: 40px; }
+  .chart-option .co-name { font-size: 10.5px; }
+  .chart-question-list { grid-template-columns: 1fr; }
+  .judgment-list .j-text { font-size: 13.5px; }
+  .ud-quad { grid-template-columns: 100px repeat(2, 1fr); grid-template-rows: 44px repeat(2, 1fr); gap: 4px; }
+  .ud-quad .udq-col-h, .ud-quad .udq-row-h { font-size: 11px; padding: 6px 8px; }
+  .ud-quad-cell { padding: 8px 10px; min-height: 90px; }
+  .ud-quad-cell .udq-letter { font-size: 16px; }
+  .ud-quad-cell .udq-name { font-size: 11.5px; }
+  .ud-quad-cell .udq-eg { font-size: 10.5px; }
+  .ud-q-list { grid-template-columns: 1fr; }
+  .udq-item .ui-text { font-size: 12px; }
+  .comp-visual { grid-template-columns: 1fr; }
+  .comp-arrow .ca-text { writing-mode: horizontal-tb; }
+  .tree-branches { grid-template-columns: repeat(2, 1fr); }
+  .latch-grid { grid-template-columns: repeat(5, 1fr); gap: 4px; }
+  .latch-cell { padding: 8px 4px 10px; }
+  .latch-cell svg { width: 24px; height: 24px; }
+  .latch-cell .lc-letter { font-size: 16px; }
+  .latch-cell .lc-name { font-size: 10px; }
+  .latch-cell .lc-axis { font-size: 9px; }
+  .ud7-grid { grid-template-columns: 1fr; }
+  .chart-map .cm-row { grid-template-columns: 70px repeat(4, 1fr); }
+  .chart-map .cm-c { padding: 4px; font-size: 9.5px; }
+  .chart-map .cm-c svg { width: 18px; height: 18px; }
+  .bias-list { grid-template-columns: 1fr; }
+  .wcag-row { grid-template-columns: 1fr; }
+  .color-vision { grid-template-columns: 1fr; }
+  .menu-list { padding: 6px 12px 22px; }
+  .menu-item { padding: 10px 12px; }
+  .menu-item-title { font-size: 13.5px; }
+}
+@media (max-width: 380px) {
+  .slide { padding: 3vw 4.5vw 40px; }
+  .title-main { font-size: 36px; }
+  .slide-title { font-size: 22px; }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  .title-main { font-size: clamp(30px, 6vw, 50px); }
+  .title-sub { font-size: clamp(13px, 2.5vw, 18px); margin-bottom: 20px; }
+  .section-title-big { font-size: clamp(26px, 6vw, 46px); }
+  .slide-title { font-size: clamp(20px, 4vw, 30px); }
+  .slide-subtitle { margin-bottom: 14px; }
+  .slide { padding: 3vh 5vw; }
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="icoNavy" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient>
+    <linearGradient id="icoGold" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient>
+    <linearGradient id="icoRed" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#e26375"/><stop offset="100%" stop-color="#8B0A1F"/></linearGradient>
+    <filter id="icoSh" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="1.5"/><feOffset dx="0.5" dy="2"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+</svg>
+
+<div class="topbar">
+  <span class="topbar-title">情報デザイン</span>
+  <span class="topbar-subtitle">情報Ⅰ 学習ノート | p.20-21 (POINT 09)</span>
+  <span class="topbar-chapter">CHAPTER · 09</span>
+  <button class="menu-toggle" onclick="openMenu()" title="スライド目次(M)"><span class="menu-toggle-icon"><span></span><span></span><span></span></span>MENU</button>
+</div>
+<div class="progress" id="progressBar"></div>
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+<div class="menu-panel" id="menuPanel">
+  <div class="menu-head">
+    <div><div class="menu-head-title">スライド目次</div><div class="menu-head-sub">CHAPTER · 09</div></div>
+    <button class="menu-close" onclick="closeMenu()" title="閉じる">✕</button>
+  </div>
+  <button class="menu-reset-btn" onclick="resetAllInteractions()"><span class="menu-reset-icon">⟲</span>インタラクションを全リセット</button>
+  <div class="menu-list" id="menuList"></div>
+</div>
+
+<div class="slide-container" id="slideContainer">
+<!-- SLIDE 1: TITLE -->
+<div class="slide title-slide active" data-title="タイトル">
+  <svg class="title-deco" viewBox="0 0 256 256"><circle cx="128" cy="128" r="96" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><circle cx="128" cy="128" r="56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><circle cx="128" cy="128" r="20" fill="currentColor"/></svg>
+  <svg class="title-deco-2" viewBox="0 0 256 256"><polyline points="40 200 100 140 144 180 216 96" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><circle cx="100" cy="140" r="10" fill="currentColor"/><circle cx="144" cy="180" r="10" fill="currentColor"/><circle cx="216" cy="96" r="10" fill="currentColor"/></svg>
+  <div class="title-label">CHAPTER · 09 / POINT 09 / 学習ノート p.20-21</div>
+  <h1 class="title-main">情報デザイン</h1>
+  <div class="title-sub">伝達と操作性 ― 受け手が読み・使えるかたちにする</div>
+  <div class="title-meta">
+    <div class="title-meta-item"><strong>POINT</strong>09</div>
+    <div class="title-meta-item"><strong>SLIDES</strong>26</div>
+    <div class="title-meta-item"><strong>UNIT</strong>第2章</div>
+    <div class="title-meta-item"><strong>NOTE</strong>p.20-21</div>
+  </div>
+</div>
+
+<!-- SLIDE 2: AGENDA -->
+<div class="slide" data-title="このサイトで扱う内容">
+  <div class="eyebrow">AGENDA · このサイトで扱う内容</div>
+  <h2 class="slide-title">このサイトで扱う内容</h2>
+  <p class="slide-subtitle">学習ノート POINT 09 の用語 18 個と実習 4 題を、5 つの観点に再編して扱う。後半は共通テスト・実生活で必要な深掘り 4 題を追加する。</p>
+  <div class="agenda-grid">
+    <div class="agenda-item">
+      <svg class="ai-icon" viewBox="0 0 256 256"><path d="M222.32,140.4l-50.34,28.79a8,8,0,0,1-12-7V124.4l-50.34,28.79a8,8,0,0,1-12-7V112" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M97.66,178.18,33.68,141.4a8,8,0,0,1,0-13.85L222.32,18.81a8,8,0,0,1,12,6.93V128" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
+      <div class="agenda-num">01</div>
+      <div class="agenda-content"><span class="a-tag">①② / 2 用語</span><h3>情報デザインの 2 軸</h3><p>伝達(届ける)と操作性(使える)― 設計の出発点</p></div>
+    </div>
+    <div class="agenda-item">
+      <svg class="ai-icon" viewBox="0 0 256 256"><line x1="32" y1="216" x2="224" y2="216" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><rect x="56" y="120" width="40" height="80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><rect x="112" y="56" width="40" height="144" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><rect x="168" y="160" width="40" height="40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
+      <div class="agenda-num">02</div>
+      <div class="agenda-content"><span class="a-tag">③④⑤ / 3 用語 + 実習1</span><h3>情報の可視化</h3><p>可視化・グラフ・ダイアグラム ― 図の選び方</p></div>
+    </div>
+    <div class="agenda-item">
+      <svg class="ai-icon" viewBox="0 0 256 256"><circle cx="128" cy="40" r="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><circle cx="40" cy="216" r="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><circle cx="216" cy="216" r="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><circle cx="128" cy="128" r="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="128" y1="56" x2="128" y2="112" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="115" y1="139" x2="51" y2="205" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="141" y1="139" x2="205" y2="205" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
+      <div class="agenda-num">03</div>
+      <div class="agenda-content"><span class="a-tag">⑥-⑩ / 5 用語 + 実習2</span><h3>整理と構造化</h3><p>5 つの整理軸(時間・位置・分野・階層・五十音)</p></div>
+    </div>
+    <div class="agenda-item">
+      <svg class="ai-icon" viewBox="0 0 256 256"><polygon points="48 56 208 56 144 152 144 224 112 224 112 152 48 56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
+      <div class="agenda-num">04</div>
+      <div class="agenda-content"><span class="a-tag">⑪⑫ / 2 用語 + 実習3</span><h3>抽象化とピクトグラム</h3><p>絞り込んで「目的を明確にする」方法</p></div>
+    </div>
+    <div class="agenda-item">
+      <svg class="ai-icon" viewBox="0 0 256 256"><circle cx="128" cy="128" r="96" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><circle cx="128" cy="128" r="40" fill="currentColor"/></svg>
+      <div class="agenda-num">05</div>
+      <div class="agenda-content"><span class="a-tag">⑬-⑱ / 6 用語 + 実習4</span><h3>UD とアクセシビリティ</h3><p>バリアフリー・UD・ユーザビリティ・アフォーダンス</p></div>
+    </div>
+    <div class="agenda-item appendix">
+      <svg class="ai-icon" viewBox="0 0 256 256"><path d="M222.14,58.87A8,8,0,0,0,216,56H160V48A24,24,0,0,0,136,24H112A24,24,0,0,0,88,48v8H32A8,8,0,0,0,24,64V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V64A8,8,0,0,0,222.14,58.87ZM104,48a8,8,0,0,1,8-8h24a8,8,0,0,1,8,8v8H104Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
+      <div class="agenda-num">06</div>
+      <div class="agenda-content"><span class="a-tag">APPENDIX / 4 副題</span><h3>参考: 深掘り副題</h3><p>LATCH / 図選び方マップ / WCAG / UD 7 原則</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: SECTION 1 DIVIDER -->
+<div class="slide section-divider" data-title="第1節 情報デザインの2軸">
+  <svg class="section-icon" viewBox="0 0 256 256"><path d="M40,176H216a0,0,0,0,1,0,0v24a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V176A0,0,0,0,1,40,176Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><path d="M40,80H216a0,0,0,0,1,0,0v24a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V80A0,0,0,0,1,40,80Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><line x1="128" y1="48" x2="128" y2="80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="14"/><line x1="128" y1="144" x2="128" y2="176" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="14"/></svg>
+  <div class="section-number">SECTION · 01</div>
+  <h2 class="section-title-big">情報デザインの 2 軸</h2>
+  <p class="section-tagline">「届くか」と「使えるか」を分けて考える</p>
+</div>
+
+<!-- SLIDE 4: 用語 ①② -->
+<div class="slide" data-title="①② 伝達 と 操作性 (interactive)">
+  <div class="eyebrow">POINT 1-2 / 学習ノート ①②</div>
+  <h2 class="slide-title">情報デザインの 2 つの目的</h2>
+  <p class="slide-subtitle">情報デザインは、見せる側の都合ではなく <strong>受け手が読み・使えるかたちにする</strong> 設計。下の 2 つのアイコンをタップすると、定義が下のパネルに表示される。</p>
+  <div class="icon-cards cols-2">
+    <div class="icon-card" data-key="dentatsu" onclick="selectIcon('termPanel1', 'dentatsu')">
+      <div class="icon-card-tag">① POINT</div>
+      <svg class="icon-card-svg" aria-hidden="true" focusable="false" viewBox="0 0 256 256"><defs><linearGradient id="iN1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><filter id="iS1" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><path d="M223.94,33.91A8,8,0,0,0,214,30L34,90.34a8,8,0,0,0-1.13,14.84L99,135.34a8,8,0,0,1,4,4L132.7,205.41A8,8,0,0,0,140,210h.4a8,8,0,0,0,7.27-5.94l51.66-176A8,8,0,0,0,223.94,33.91Z" fill="none" stroke="url(#iN1)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18" filter="url(#iS1)"/><line x1="103" y1="153" x2="139" y2="117" fill="none" stroke="url(#iN1)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/></svg>
+      <div class="icon-card-name">伝達</div>
+      <div class="icon-card-sub">届けるための工夫</div>
+    </div>
+    <div class="icon-card" data-key="sosa" onclick="selectIcon('termPanel1', 'sosa')">
+      <div class="icon-card-tag">② POINT</div>
+      <svg class="icon-card-svg" aria-hidden="true" focusable="false" viewBox="0 0 256 256"><defs><linearGradient id="iN2" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><filter id="iS2" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><path d="M168,160V128a8,8,0,0,1,16,0v32" fill="none" stroke="url(#iN2)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/><path d="M152,160v-8a8,8,0,0,1,16,0v8" fill="none" stroke="url(#iN2)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/><path d="M136,160v-8a8,8,0,0,1,16,0" fill="none" stroke="url(#iN2)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/><path d="M184,144a8,8,0,0,1,16,0v24a72,72,0,0,1-72,72h-8a72,72,0,0,1-72-72,8,8,0,0,1,16,0" fill="none" stroke="url(#iN2)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18" filter="url(#iS2)"/><path d="M64,160V40a16,16,0,0,1,32,0V128" fill="none" stroke="url(#iN2)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/></svg>
+      <div class="icon-card-name">操作性</div>
+      <div class="icon-card-sub">使うための工夫</div>
+    </div>
+  </div>
+  <div class="cards-hint">タップして詳細を表示</div>
+  <div class="icon-info-panel" id="termPanel1"><span style="color:var(--text-sub);font-style:italic;">▲ 上の 2 つのアイコンをタップすると、定義と典型例が表示されます。</span></div>
+</div>
+
+<!-- SLIDE 5: SECTION 2 DIVIDER -->
+<div class="slide section-divider" data-title="第2節 情報の可視化">
+  <svg class="section-icon" viewBox="0 0 256 256"><line x1="40" y1="200" x2="216" y2="200" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="14"/><rect x="56" y="120" width="32" height="80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><rect x="112" y="56" width="32" height="144" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><rect x="168" y="152" width="32" height="48" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/></svg>
+  <div class="section-number">SECTION · 02</div>
+  <h2 class="section-title-big">情報の可視化</h2>
+  <p class="section-tagline">数や関係を、見える形にする</p>
+</div>
+
+<!-- SLIDE 6: 用語 ③④⑤ -->
+<div class="slide" data-title="③④⑤ 可視化 / グラフ / ダイアグラム (interactive)">
+  <div class="eyebrow">POINT 3-5 / 学習ノート ③④⑤</div>
+  <h2 class="slide-title">可視化のための 3 用語</h2>
+  <p class="slide-subtitle">数値・量・構造を「目で読み取れる形」にする 3 用語。タップで定義と典型例を表示。</p>
+  <div class="icon-cards cols-3">
+    <div class="icon-card" data-key="kashika" onclick="selectIcon('termPanel2', 'kashika')">
+      <div class="icon-card-tag">③ POINT</div>
+      <svg class="icon-card-svg" aria-hidden="true" focusable="false" viewBox="0 0 256 256"><defs><linearGradient id="iN3" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><linearGradient id="iG3" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient><filter id="iS3" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="128" cy="128" r="40" fill="url(#iG3)" opacity="0.5"/><circle cx="128" cy="128" r="40" fill="none" stroke="url(#iN3)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18" filter="url(#iS3)"/><path d="M16,128c14.55-25.6,53.51-72,112-72s97.45,46.4,112,72c-14.55,25.6-53.51,72-112,72S30.55,153.6,16,128Z" fill="none" stroke="url(#iN3)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/></svg>
+      <div class="icon-card-name">可視化</div>
+      <div class="icon-card-sub">数値→図形に</div>
+    </div>
+    <div class="icon-card" data-key="graph" onclick="selectIcon('termPanel2', 'graph')">
+      <div class="icon-card-tag">④ POINT</div>
+      <svg class="icon-card-svg" aria-hidden="true" focusable="false" viewBox="0 0 256 256"><defs><linearGradient id="iN4" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><linearGradient id="iG4" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient><filter id="iS4" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><line x1="40" y1="200" x2="216" y2="200" fill="none" stroke="url(#iN4)" stroke-linecap="round" stroke-width="18"/><rect x="56" y="120" width="32" height="80" fill="url(#iG4)" opacity="0.55"/><rect x="56" y="120" width="32" height="80" fill="none" stroke="url(#iN4)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18" filter="url(#iS4)"/><rect x="112" y="64" width="32" height="136" fill="none" stroke="url(#iN4)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/><rect x="168" y="152" width="32" height="48" fill="none" stroke="url(#iN4)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/></svg>
+      <div class="icon-card-name">グラフ</div>
+      <div class="icon-card-sub">量・推移・構成比</div>
+    </div>
+    <div class="icon-card" data-key="diagram" onclick="selectIcon('termPanel2', 'diagram')">
+      <div class="icon-card-tag">⑤ POINT</div>
+      <svg class="icon-card-svg" aria-hidden="true" focusable="false" viewBox="0 0 256 256"><defs><linearGradient id="iN5" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><linearGradient id="iG5" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient><filter id="iS5" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="60" cy="60" r="22" fill="url(#iG5)" opacity="0.55"/><circle cx="60" cy="60" r="22" fill="none" stroke="url(#iN5)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14" filter="url(#iS5)"/><circle cx="196" cy="60" r="22" fill="none" stroke="url(#iN5)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><circle cx="128" cy="140" r="22" fill="none" stroke="url(#iN5)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><circle cx="60" cy="200" r="22" fill="none" stroke="url(#iN5)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><circle cx="196" cy="200" r="22" fill="none" stroke="url(#iN5)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><line x1="78" y1="76" x2="114" y2="124" fill="none" stroke="url(#iN5)" stroke-linecap="round" stroke-width="12"/><line x1="178" y1="76" x2="142" y2="124" fill="none" stroke="url(#iN5)" stroke-linecap="round" stroke-width="12"/><line x1="114" y1="156" x2="78" y2="184" fill="none" stroke="url(#iN5)" stroke-linecap="round" stroke-width="12"/><line x1="142" y1="156" x2="178" y2="184" fill="none" stroke="url(#iN5)" stroke-linecap="round" stroke-width="12"/></svg>
+      <div class="icon-card-name">ダイアグラム</div>
+      <div class="icon-card-sub">関係・流れ・構造</div>
+    </div>
+  </div>
+  <div class="cards-hint">タップして詳細を表示</div>
+  <div class="icon-info-panel" id="termPanel2"><span style="color:var(--text-sub);font-style:italic;">▲ 3 つの用語をタップすると、それぞれの定義と典型例が表示されます。</span></div>
+</div>
+
+<!-- SLIDE 7: 実習1 図の選び方 -->
+<div class="slide" data-title="実習1 ― 用途別の図の選び方">
+  <div class="eyebrow">PRACTICE 1 / 学習ノート 実習1</div>
+  <h2 class="slide-title">表したい内容ごとに「最適な図」は違う</h2>
+  <p class="slide-subtitle">⑴〜⑷ それぞれに最も適切な図を、ア〜カから 1 つずつ選ぶ。下のカードをタップで答えと根拠を表示。</p>
+  <div class="chart-picker-wrap">
+    <div class="chart-options">
+      <div class="chart-option is-target-3" title="ア:勝ち上がり"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><line x1="40" y1="56" x2="40" y2="200"/><line x1="40" y1="56" x2="96" y2="56"/><line x1="40" y1="200" x2="96" y2="200"/><line x1="96" y1="56" x2="96" y2="200"/><line x1="96" y1="128" x2="160" y2="128"/><line x1="160" y1="80" x2="160" y2="176"/><line x1="160" y1="80" x2="216" y2="80"/><line x1="160" y1="176" x2="216" y2="176"/></svg><div class="co-letter">ア</div><div class="co-name">トーナメント図</div></div>
+      <div class="chart-option is-target-1" title="イ:円グラフ"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><circle cx="128" cy="128" r="88"/><line x1="128" y1="128" x2="128" y2="40"/><line x1="128" y1="128" x2="208" y2="92"/><path d="M128,40A88,88,0,1,1,40,128" stroke-width="0" fill="currentColor" opacity="0.25"/></svg><div class="co-letter">イ</div><div class="co-name">円グラフ</div></div>
+      <div class="chart-option" title="ウ:散布図"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><line x1="40" y1="216" x2="216" y2="216"/><line x1="40" y1="40" x2="40" y2="216"/><circle cx="80" cy="160" r="6" fill="currentColor"/><circle cx="100" cy="120" r="6" fill="currentColor"/><circle cx="130" cy="150" r="6" fill="currentColor"/><circle cx="160" cy="100" r="6" fill="currentColor"/><circle cx="190" cy="80" r="6" fill="currentColor"/><circle cx="120" cy="80" r="6" fill="currentColor"/></svg><div class="co-letter">ウ</div><div class="co-name">散布図</div></div>
+      <div class="chart-option" title="エ:折れ線"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><line x1="40" y1="216" x2="216" y2="216"/><line x1="40" y1="40" x2="40" y2="216"/><polyline points="56 168 96 120 144 144 192 64"/><circle cx="56" cy="168" r="6" fill="currentColor"/><circle cx="96" cy="120" r="6" fill="currentColor"/><circle cx="144" cy="144" r="6" fill="currentColor"/><circle cx="192" cy="64" r="6" fill="currentColor"/></svg><div class="co-letter">エ</div><div class="co-name">折れ線グラフ</div></div>
+      <div class="chart-option" title="オ:棒グラフ"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><line x1="40" y1="216" x2="216" y2="216"/><rect x="56" y="120" width="32" height="96"/><rect x="104" y="64" width="32" height="152"/><rect x="152" y="152" width="32" height="64"/></svg><div class="co-letter">オ</div><div class="co-name">棒グラフ</div></div>
+      <div class="chart-option is-target-2" title="カ:循環フロー"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><circle cx="128" cy="128" r="80"/><polyline points="180 90 200 76 196 100"/><polyline points="76 166 56 180 60 156"/><polyline points="166 180 180 200 156 196"/><polyline points="90 76 76 56 100 60"/></svg><div class="co-letter">カ</div><div class="co-name">循環フロー</div></div>
+    </div>
+    <div class="chart-question-list">
+      <div class="chart-q" onclick="toggleChartQ(this)">
+        <div class="cq-num">⑴</div>
+        <div class="cq-text">クラスの生徒全員の通学手段について、<strong>「全体」を「電車」「バス」「自転車」で分類</strong>して表現したい。</div>
+        <div class="cq-ans"><span class="cq-ans-letter">答 イ</span> 全体に対する各カテゴリの割合(構成比)を見せるなら円グラフ。「全体を 100% としてその内訳」を一目で示せる。棒グラフは絶対量比較に向き、構成比の表現には円グラフが最適。</div>
+      </div>
+      <div class="chart-q" onclick="toggleChartQ(this)">
+        <div class="cq-num">⑵</div>
+        <div class="cq-text">よりよい作品を作るために、<strong>「Plan」「Do」「Check」「Action」の流れで継続的に改善</strong>することを表現したい。</div>
+        <div class="cq-ans"><span class="cq-ans-letter">答 カ</span> PDCA は順序があり、最後の Action から再び Plan に戻る循環構造。循環フロー(矢印付きの円形ダイアグラム)が最も適切。</div>
+      </div>
+      <div class="chart-q" onclick="toggleChartQ(this)">
+        <div class="cq-num">⑶</div>
+        <div class="cq-text">参加する大会が、<strong>地区大会 → 都道府県大会 → 全国大会 → 世界大会と勝ち上がっていく</strong>ことを表現したい。</div>
+        <div class="cq-ans"><span class="cq-ans-letter">答 ア</span> 段階的な勝ち抜きはトーナメント図(階層的に統合される枝分かれダイアグラム)で表す。直線的な「順序」だけなら折れ線でも表せるが、各段階での「複数候補からの絞り込み」を表現できるのはトーナメント。</div>
+      </div>
+      <div class="chart-q" onclick="toggleChartQ(this)">
+        <div class="cq-num">⑷</div>
+        <div class="cq-text">優先的に実行する改善策を決めるため、<strong>「かかる費用」と「得られる効果」の関係</strong>を表現したい。</div>
+        <div class="cq-ans"><span class="cq-ans-letter">答 ウ</span> 2 つの量(費用 × 効果)の対応を見たいので散布図。各改善策を 1 つの点として平面に置けば、「低費用・高効果」の象限が視覚的に判別できる。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 8: SECTION 3 DIVIDER -->
+<div class="slide section-divider" data-title="第3節 整理と構造化">
+  <svg class="section-icon" viewBox="0 0 256 256"><rect x="40" y="40" width="176" height="48" rx="6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><rect x="64" y="104" width="128" height="40" rx="6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><rect x="88" y="160" width="80" height="40" rx="6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/></svg>
+  <div class="section-number">SECTION · 03</div>
+  <h2 class="section-title-big">整理と構造化</h2>
+  <p class="section-tagline">情報を「観点」で並べ直す 5 つの軸</p>
+</div>
+
+<!-- SLIDE 9: 用語 ⑥-⑩ -->
+<div class="slide" data-title="⑥-⑩ 構造化と整理軸 (interactive)">
+  <div class="eyebrow">POINT 6-10 / 学習ノート ⑥⑦⑧⑨⑩</div>
+  <h2 class="slide-title">構造化と整理軸</h2>
+  <p class="slide-subtitle">⑥ <strong>構造化</strong> = ある観点で並べ直す行為そのもの。⑦ <strong>属性</strong> = 並べる観点(時間・位置・分野・階層・五十音 など)。学習ノートが特に挙げる 4 軸 + 五十音 で計 5 軸。</p>
+  <div class="icon-cards">
+    <div class="icon-card" data-key="kozoka" onclick="selectIcon('termPanel3', 'kozoka')">
+      <div class="icon-card-tag">⑥ POINT</div>
+      <svg class="icon-card-svg" aria-hidden="true" focusable="false" viewBox="0 0 256 256"><defs><linearGradient id="iN6" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><linearGradient id="iG6" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient><filter id="iS6" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><rect x="48" y="40" width="160" height="40" rx="6" fill="url(#iG6)" opacity="0.55"/><rect x="48" y="40" width="160" height="40" rx="6" fill="none" stroke="url(#iN6)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14" filter="url(#iS6)"/><rect x="72" y="104" width="112" height="40" rx="6" fill="none" stroke="url(#iN6)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><rect x="96" y="168" width="64" height="40" rx="6" fill="none" stroke="url(#iN6)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/></svg>
+      <div class="icon-card-name">構造化</div>
+      <div class="icon-card-sub">並べ直す</div>
+    </div>
+    <div class="icon-card" data-key="zokusei" onclick="selectIcon('termPanel3', 'zokusei')">
+      <div class="icon-card-tag">⑦ POINT</div>
+      <svg class="icon-card-svg" aria-hidden="true" focusable="false" viewBox="0 0 256 256"><defs><linearGradient id="iN7" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><filter id="iS7" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><path d="M243.31,136,144,36.69A15.86,15.86,0,0,0,132.69,32H40a8,8,0,0,0-8,8v92.69A15.86,15.86,0,0,0,36.69,144L136,243.31a16,16,0,0,0,22.63,0L243.31,158.63a16,16,0,0,0,0-22.62Z" fill="none" stroke="url(#iN7)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18" filter="url(#iS7)"/><circle cx="84" cy="84" r="12" fill="url(#iN7)"/></svg>
+      <div class="icon-card-name">属性</div>
+      <div class="icon-card-sub">観点・キー</div>
+    </div>
+    <div class="icon-card" data-key="ichi" onclick="selectIcon('termPanel3', 'ichi')">
+      <div class="icon-card-tag">⑧ POINT</div>
+      <svg class="icon-card-svg" aria-hidden="true" focusable="false" viewBox="0 0 256 256"><defs><linearGradient id="iN8" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><filter id="iS8" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><path d="M128,16a88.1,88.1,0,0,0-88,88c0,75.3,80,132.17,83.41,134.55a8,8,0,0,0,9.18,0C136,236.17,216,179.3,216,104A88.1,88.1,0,0,0,128,16Z" fill="none" stroke="url(#iN8)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18" filter="url(#iS8)"/><circle cx="128" cy="104" r="32" fill="none" stroke="url(#iN8)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/></svg>
+      <div class="icon-card-name">位置</div>
+      <div class="icon-card-sub">場所軸</div>
+    </div>
+    <div class="icon-card" data-key="jikan" onclick="selectIcon('termPanel3', 'jikan')">
+      <div class="icon-card-tag">⑨ POINT</div>
+      <svg class="icon-card-svg" aria-hidden="true" focusable="false" viewBox="0 0 256 256"><defs><linearGradient id="iN9" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><filter id="iS9" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="128" cy="128" r="96" fill="none" stroke="url(#iN9)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18" filter="url(#iS9)"/><polyline points="128 72 128 128 168 152" fill="none" stroke="url(#iN9)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/></svg>
+      <div class="icon-card-name">時間</div>
+      <div class="icon-card-sub">時系列軸</div>
+    </div>
+    <div class="icon-card" data-key="kaisou" onclick="selectIcon('termPanel3', 'kaisou')">
+      <div class="icon-card-tag">⑩ POINT</div>
+      <svg class="icon-card-svg" aria-hidden="true" focusable="false" viewBox="0 0 256 256"><defs><linearGradient id="iN10" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><linearGradient id="iG10" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient><filter id="iS10" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="128" cy="40" r="20" fill="url(#iG10)" opacity="0.55"/><circle cx="128" cy="40" r="20" fill="none" stroke="url(#iN10)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14" filter="url(#iS10)"/><circle cx="60" cy="128" r="20" fill="none" stroke="url(#iN10)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><circle cx="196" cy="128" r="20" fill="none" stroke="url(#iN10)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><circle cx="40" cy="216" r="14" fill="none" stroke="url(#iN10)" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/><circle cx="80" cy="216" r="14" fill="none" stroke="url(#iN10)" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/><circle cx="176" cy="216" r="14" fill="none" stroke="url(#iN10)" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/><circle cx="216" cy="216" r="14" fill="none" stroke="url(#iN10)" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/><line x1="128" y1="60" x2="60" y2="108" fill="none" stroke="url(#iN10)" stroke-width="10"/><line x1="128" y1="60" x2="196" y2="108" fill="none" stroke="url(#iN10)" stroke-width="10"/><line x1="60" y1="148" x2="40" y2="202" fill="none" stroke="url(#iN10)" stroke-width="10"/><line x1="60" y1="148" x2="80" y2="202" fill="none" stroke="url(#iN10)" stroke-width="10"/><line x1="196" y1="148" x2="176" y2="202" fill="none" stroke="url(#iN10)" stroke-width="10"/><line x1="196" y1="148" x2="216" y2="202" fill="none" stroke="url(#iN10)" stroke-width="10"/></svg>
+      <div class="icon-card-name">階層</div>
+      <div class="icon-card-sub">上下関係</div>
+    </div>
+  </div>
+  <div class="cards-hint">タップして詳細を表示</div>
+  <div class="icon-info-panel" id="termPanel3"><span style="color:var(--text-sub);font-style:italic;">▲ 5 つの用語をタップすると、定義と典型例(日誌・図書館分類・五十音 など)が表示されます。</span><br><span style="color:var(--navy-darkest);font-size:13px;font-weight:600;display:block;margin-top:8px;padding-top:8px;border-top:1px dashed var(--navy-pale);">※ 実習 2 で使う整理軸: <strong>時間 / 位置 / 分野 / 階層 / 五十音</strong> の 5 軸(LATCH = Location/Alphabet/Time/Category/Hierarchy と対応)</span></div>
+</div>
+
+<!-- SLIDE 10: 実習2 空所穴埋め -->
+<div class="slide" data-title="実習2 ― 情報の整理と構造化">
+  <div class="eyebrow">PRACTICE 2 / 学習ノート 実習2</div>
+  <h2 class="slide-title">空所 ①〜⑥ に入る整理軸</h2>
+  <p class="slide-subtitle">下の文章を読み、空所に当てはまる語句を語群から選ぶ。各空所をタップで正解を表示。</p>
+  <div class="select-grid" id="selGrid2">
+    <div class="select-row"><div class="sr-key">①</div><div class="sr-text">日誌は <span class="sr-blank" data-answer="オ. 時間" onclick="toggleSelBlank(this)">クリック</span>(時間)ごとに整理されていることが多い。</div></div>
+    <div class="select-row"><div class="sr-key">②</div><div class="sr-text">地域の特産品は <span class="sr-blank" data-answer="カ. 位置" onclick="toggleSelBlank(this)">クリック</span>(位置)ごとに整理されていることが多い。</div></div>
+    <div class="select-row"><div class="sr-key">③</div><div class="sr-text">図書館では、収集した図書を <span class="sr-blank" data-answer="キ. 分野" onclick="toggleSelBlank(this)">クリック</span>(分野)別に整理している。</div></div>
+    <div class="select-row"><div class="sr-key">④</div><div class="sr-text">分野には、400 自然科学 - 410 数学 - 411 代数学 のように <span class="sr-blank" data-answer="ウ. 階層" onclick="toggleSelBlank(this)">クリック</span>(階層)の上下関係に従って 3 桁の番号が振られる。</div></div>
+    <div class="select-row"><div class="sr-key">⑤</div><div class="sr-text">同じ番号内の図書は <span class="sr-blank" data-answer="ア. 五十音" onclick="toggleSelBlank(this)">クリック</span>(アルファベットまたは五十音)順に配架されている。</div></div>
+    <div class="select-row"><div class="sr-key">⑥</div><div class="sr-text">これは収集した情報を <span class="sr-blank" data-answer="エ. 構造" onclick="toggleSelBlank(this)">クリック</span>(構造)化する一例である。</div></div>
+  </div>
+  <div class="select-pool"><span class="sp-label">語群</span><span class="sp-item">ア. アルファベット/五十音</span><span class="sp-item">イ. 因果</span><span class="sp-item">ウ. 階層</span><span class="sp-item">エ. 構造</span><span class="sp-item">オ. 時間</span><span class="sp-item">カ. 位置</span><span class="sp-item">キ. 分野</span><span class="sp-item">ク. 分岐</span></div>
+</div>
+
+<!-- SLIDE 11: SECTION 4 DIVIDER -->
+<div class="slide section-divider" data-title="第4節 抽象化とピクトグラム">
+  <svg class="section-icon" viewBox="0 0 256 256"><polygon points="40 56 216 56 152 152 152 224 104 224 104 152 40 56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/></svg>
+  <div class="section-number">SECTION · 04</div>
+  <h2 class="section-title-big">抽象化とピクトグラム</h2>
+  <p class="section-tagline">余分を捨てて「目的を明確にする」</p>
+</div>
+
+<!-- SLIDE 12: 用語 ⑪⑫ -->
+<div class="slide" data-title="⑪⑫ 抽象化 と ピクトグラム (interactive)">
+  <div class="eyebrow">POINT 11-12 / 学習ノート ⑪⑫</div>
+  <h2 class="slide-title">抽象化とピクトグラム</h2>
+  <p class="slide-subtitle">⑪ <strong>抽象化</strong> = 伝えたい情報に絞って目的を明確にする。⑫ <strong>ピクトグラム</strong> = 抽象化の代表例(言語に依らず一目で意味が伝わる図記号)。</p>
+  <div class="icon-cards cols-2">
+    <div class="icon-card" data-key="chusho" onclick="selectIcon('termPanel4', 'chusho')">
+      <div class="icon-card-tag">⑪ POINT</div>
+      <svg class="icon-card-svg" aria-hidden="true" focusable="false" viewBox="0 0 256 256"><defs><linearGradient id="iN11" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><linearGradient id="iG11" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient><filter id="iS11" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><polygon points="40 40 216 40 152 144 152 224 104 224 104 144 40 40" fill="url(#iG11)" opacity="0.5"/><polygon points="40 40 216 40 152 144 152 224 104 224 104 144 40 40" fill="none" stroke="url(#iN11)" stroke-linecap="round" stroke-linejoin="round" stroke-width="18" filter="url(#iS11)"/></svg>
+      <div class="icon-card-name">抽象化</div>
+      <div class="icon-card-sub">絞り込み</div>
+    </div>
+    <div class="icon-card" data-key="picto" onclick="selectIcon('termPanel4', 'picto')">
+      <div class="icon-card-tag">⑫ POINT</div>
+      <svg class="icon-card-svg" aria-hidden="true" focusable="false" viewBox="0 0 256 256"><defs><linearGradient id="iN12" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><filter id="iS12" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="128" cy="56" r="22" fill="url(#iN12)" filter="url(#iS12)"/><path d="M104,228V152H80V108a16,16,0,0,1,16-16h64a16,16,0,0,1,16,16v44H152v76Z" fill="url(#iN12)"/></svg>
+      <div class="icon-card-name">ピクトグラム</div>
+      <div class="icon-card-sub">言語非依存の図記号</div>
+    </div>
+  </div>
+  <div class="cards-hint">タップして詳細を表示</div>
+  <div class="icon-info-panel" id="termPanel4"><span style="color:var(--text-sub);font-style:italic;">▲ 2 つのアイコンをタップすると、定義と典型例(地下鉄路線図・トイレ表示 など)が表示されます。</span></div>
+</div>
+
+<!-- SLIDE 13: 実習3 ○×判定 -->
+<div class="slide" data-title="実習3 ― 抽象化の○×判定">
+  <div class="eyebrow">PRACTICE 3 / 学習ノート 実習3</div>
+  <h2 class="slide-title">抽象化に関する 5 つの記述</h2>
+  <p class="slide-subtitle">⑴〜⑸ について、正しいものは ○、誤りを含むものは × を選ぶ。判定後に解説が表示される。</p>
+  <div class="judgment-list" id="judgList3">
+    <div class="j-item"><div class="j-num">⑴</div><div class="j-body">
+      <div class="j-text">情報伝達の目的を <strong>曖昧に表現する</strong> ことを情報の抽象化という。</div>
+      <div class="j-chips"><span class="j-chip" data-correct="false" onclick="judgeJ(this, '⑴')">○</span><span class="j-chip" data-correct="true" onclick="judgeJ(this, '⑴')">×</span></div>
+      <div class="j-fb"><strong>正解 : ×</strong>。抽象化は「目的を明確にするために、伝えたい情報に絞り込む」行為。曖昧化ではなく、むしろその逆。</div>
+    </div></div>
+    <div class="j-item"><div class="j-num">⑵</div><div class="j-body">
+      <div class="j-text">ダイアグラムは <strong>情報の可視化の一例</strong> である。</div>
+      <div class="j-chips"><span class="j-chip" data-correct="true" onclick="judgeJ(this, '⑵')">○</span><span class="j-chip" data-correct="false" onclick="judgeJ(this, '⑵')">×</span></div>
+      <div class="j-fb"><strong>正解 : ○</strong>。ダイアグラム(構造や関係を図化したもの)はグラフ・地図と並ぶ可視化の主要手段の 1 つ。</div>
+    </div></div>
+    <div class="j-item"><div class="j-num">⑶</div><div class="j-body">
+      <div class="j-text">単純な構図と <strong>多彩な色</strong> で表現された図形をピクトグラムという。</div>
+      <div class="j-chips"><span class="j-chip" data-correct="false" onclick="judgeJ(this, '⑶')">○</span><span class="j-chip" data-correct="true" onclick="judgeJ(this, '⑶')">×</span></div>
+      <div class="j-fb"><strong>正解 : ×</strong>。ピクトグラムは <strong>見分けやすい二色程度の色</strong> で表現するのが原則(色覚多様性・遠目視認性のため)。「多彩な色」が誤り。</div>
+    </div></div>
+    <div class="j-item"><div class="j-num">⑷</div><div class="j-body">
+      <div class="j-text">バス路線図からは <strong>バス停間の距離が分からない</strong> 場合がある。</div>
+      <div class="j-chips"><span class="j-chip" data-correct="true" onclick="judgeJ(this, '⑷')">○</span><span class="j-chip" data-correct="false" onclick="judgeJ(this, '⑷')">×</span></div>
+      <div class="j-fb"><strong>正解 : ○</strong>。バス路線図は「停留所の順序」を見やすくするため、距離情報を捨てている(抽象化の典型)。</div>
+    </div></div>
+    <div class="j-item"><div class="j-num">⑸</div><div class="j-body">
+      <div class="j-text">情報を図形や色で表現する場合は、<strong>国によって図形や色のもつ意味に違いがある</strong> ことに注意が必要である。</div>
+      <div class="j-chips"><span class="j-chip" data-correct="true" onclick="judgeJ(this, '⑸')">○</span><span class="j-chip" data-correct="false" onclick="judgeJ(this, '⑸')">×</span></div>
+      <div class="j-fb"><strong>正解 : ○</strong>。例: 白は東洋では弔事、西洋では純潔。十字マークは医療(欧米)/墓地(日本)など意味が異なる。</div>
+    </div></div>
+  </div>
+</div>
+
+<!-- SLIDE 14: SECTION 5 DIVIDER -->
+<div class="slide section-divider" data-title="第5節 UD と アクセシビリティ">
+  <svg class="section-icon" viewBox="0 0 256 256"><circle cx="128" cy="128" r="96" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><circle cx="128" cy="76" r="14" fill="currentColor"/><line x1="128" y1="100" x2="128" y2="176" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="14"/><line x1="86" y1="124" x2="170" y2="124" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="14"/></svg>
+  <div class="section-number">SECTION · 05</div>
+  <h2 class="section-title-big">UD と アクセシビリティ</h2>
+  <p class="section-tagline">「障壁の除去」から「最初から皆のため」へ</p>
+</div>
+
+<!-- SLIDE 15: 用語 ⑬⑭ + comparison -->
+<div class="slide" data-title="⑬⑭ バリアフリー vs UD (compare)">
+  <div class="eyebrow">POINT 13-14 / 学習ノート ⑬⑭</div>
+  <h2 class="slide-title">バリアフリーとユニバーサルデザイン</h2>
+  <p class="slide-subtitle">どちらも「使いにくさ」を減らすが、対象の取り方が違う。バリアフリーは <strong>困っている人の障壁を取り除く(後付け)</strong>、UD は <strong>最初から皆が使えるように設計する</strong>。</p>
+  <div class="comp-visual">
+    <div class="comp-side left">
+      <div class="cs-tag">⑬ POINT</div>
+      <div class="cs-name">バリアフリー</div>
+      <svg class="cs-svg" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><circle cx="160" cy="48" r="20"/><path d="M104,196H192a8,8,0,0,0,8-8V148a44,44,0,0,0-44-44H148"/><line x1="40" y1="220" x2="120" y2="220"/><line x1="40" y1="220" x2="80" y2="160"/><line x1="120" y1="220" x2="80" y2="160"/></svg>
+      <div class="cs-desc"><strong>障壁(barrier)を取り除く・補う</strong>。特定の不便を抱えた人(車椅子利用者・高齢者 等)にとっての障害物を、<strong>対症療法的に</strong> 取り除く・避ける考え方。</div>
+      <div class="cs-eg">例: 段差にスロープを設置、点字ブロックを敷設、エレベーターを増設(後付けが多いが、新築でも可)</div>
+    </div>
+    <div class="comp-arrow">⇄<span class="ca-text">対象の広さ</span></div>
+    <div class="comp-side right">
+      <div class="cs-tag">⑭ POINT</div>
+      <div class="cs-name">ユニバーサルデザイン</div>
+      <svg class="cs-svg" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><circle cx="128" cy="128" r="96"/><circle cx="128" cy="80" r="20"/><path d="M88,180c0-22 18-40 40-40s40 18 40 40"/><line x1="64" y1="128" x2="192" y2="128"/><line x1="128" y1="64" x2="128" y2="192"/></svg>
+      <div class="cs-desc"><strong>最初から皆のために設計する</strong>。年齢・障がい・言語・国籍に関わらず、可能な限り多くの人が使える「設計の出発点」。後付けではなく初期設計に組み込む。</div>
+      <div class="cs-eg">例: 段差を <strong>そもそも作らない</strong>、自動ドア、ピクトグラム表示、レバー式蛇口</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 16: 用語 ⑮⑯⑰⑱ -->
+<div class="slide" data-title="⑮⑯⑰⑱ UD 拡張 4 用語 (interactive)">
+  <div class="eyebrow">POINT 15-18 / 学習ノート ⑮⑯⑰⑱</div>
+  <h2 class="slide-title">UD を支える 4 つの概念</h2>
+  <p class="slide-subtitle">UD の理念を、実際の設計に落とすための 4 用語。タップで定義と具体例が表示される。</p>
+  <div class="icon-cards cols-4">
+    <div class="icon-card" data-key="usability" onclick="selectIcon('termPanel5', 'usability')">
+      <div class="icon-card-tag">⑮ POINT</div>
+      <svg class="icon-card-svg" aria-hidden="true" focusable="false" viewBox="0 0 256 256"><defs><linearGradient id="iN15" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><linearGradient id="iG15" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient><filter id="iS15" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><path d="M232,104v40a32,32,0,0,1-32,32H136l-50.34,40.27A8,8,0,0,1,72,210V176H56a32,32,0,0,1-32-32V104a32,32,0,0,1,32-32H200A32,32,0,0,1,232,104Z" fill="url(#iG15)" opacity="0.4"/><path d="M232,104v40a32,32,0,0,1-32,32H136l-50.34,40.27A8,8,0,0,1,72,210V176H56a32,32,0,0,1-32-32V104a32,32,0,0,1,32-32H200A32,32,0,0,1,232,104Z" fill="none" stroke="url(#iN15)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14" filter="url(#iS15)"/><circle cx="100" cy="124" r="10" fill="url(#iN15)"/><circle cx="156" cy="124" r="10" fill="url(#iN15)"/></svg>
+      <div class="icon-card-name">ユーザビリティ</div>
+      <div class="icon-card-sub">使いやすさ</div>
+    </div>
+    <div class="icon-card" data-key="accessibility" onclick="selectIcon('termPanel5', 'accessibility')">
+      <div class="icon-card-tag">⑯ POINT</div>
+      <svg class="icon-card-svg" aria-hidden="true" focusable="false" viewBox="0 0 256 256"><defs><linearGradient id="iN16" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><filter id="iS16" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="128" cy="128" r="96" fill="none" stroke="url(#iN16)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14" filter="url(#iS16)"/><circle cx="128" cy="68" r="14" fill="url(#iN16)"/><line x1="64" y1="112" x2="192" y2="112" fill="none" stroke="url(#iN16)" stroke-linecap="round" stroke-width="14"/><polyline points="100 120 100 160 80 200" fill="none" stroke="url(#iN16)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><polyline points="156 120 156 160 176 200" fill="none" stroke="url(#iN16)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/></svg>
+      <div class="icon-card-name">アクセシビリティ</div>
+      <div class="icon-card-sub">利用可能性</div>
+    </div>
+    <div class="icon-card" data-key="affordance" onclick="selectIcon('termPanel5', 'affordance')">
+      <div class="icon-card-tag">⑰ POINT</div>
+      <svg class="icon-card-svg" aria-hidden="true" focusable="false" viewBox="0 0 256 256"><defs><linearGradient id="iN17" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><filter id="iS17" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><path d="M88,128V40a16,16,0,0,1,32,0V112" fill="none" stroke="url(#iN17)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14" filter="url(#iS17)"/><path d="M120,112V96a16,16,0,0,1,32,0v32" fill="none" stroke="url(#iN17)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><path d="M152,128V112a16,16,0,0,1,32,0v36" fill="none" stroke="url(#iN17)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><path d="M184,144V128a16,16,0,0,1,32,0v40a72,72,0,0,1-72,72H120a72,72,0,0,1-72-72A8,8,0,0,1,56,160l32,8" fill="none" stroke="url(#iN17)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/></svg>
+      <div class="icon-card-name">アフォーダンス</div>
+      <div class="icon-card-sub">行為の可能性</div>
+    </div>
+    <div class="icon-card" data-key="signifier" onclick="selectIcon('termPanel5', 'signifier')">
+      <div class="icon-card-tag">⑱ POINT</div>
+      <svg class="icon-card-svg" aria-hidden="true" focusable="false" viewBox="0 0 256 256"><defs><linearGradient id="iN18" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient><linearGradient id="iG18" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient><filter id="iS18" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><polygon points="48 56 152 56 184 96 152 136 48 136" fill="url(#iG18)" opacity="0.55"/><polygon points="48 56 152 56 184 96 152 136 48 136" fill="none" stroke="url(#iN18)" stroke-linecap="round" stroke-linejoin="round" stroke-width="14" filter="url(#iS18)"/><line x1="80" y1="136" x2="80" y2="216" fill="none" stroke="url(#iN18)" stroke-linecap="round" stroke-width="14"/></svg>
+      <div class="icon-card-name">シグニファイア</div>
+      <div class="icon-card-sub">行為の手がかり</div>
+    </div>
+  </div>
+  <div class="cards-hint">タップして詳細を表示</div>
+  <div class="icon-info-panel" id="termPanel5"><span style="color:var(--text-sub);font-style:italic;">▲ 4 つの用語をタップすると、定義と具体例(押す扉・赤色のボタン など)が表示されます。</span></div>
+</div>
+
+<!-- SLIDE 17: 実習4 UD分類 2x2 -->
+<div class="slide" data-title="実習4 ― UD の 2x2 分類">
+  <div class="eyebrow">PRACTICE 4 / 学習ノート 実習4</div>
+  <h2 class="slide-title">対象 × 目的の 2 軸で分類する 7 例</h2>
+  <p class="slide-subtitle"><strong>対象軸:</strong>すべての人(UD) ⇄ 特定の障がいのある人(バリアフリー)/ <strong>目的軸:</strong>情報を得やすくする ⇄ 動作・操作を補助する。下のカードがマトリクス、その下が判定したい 7 文。タップで答えを表示。</p>
+  <div class="ud-quad">
+    <div class="udq-corner"></div>
+    <div class="udq-col-h">情報を<br>得やすくする</div>
+    <div class="udq-col-h">動作・操作を<br>補助する</div>
+    <div class="udq-row-h">特定の障がい<br>のある人<br>(バリアフリー的)</div>
+    <div class="ud-quad-cell"><div class="udq-letter">ア</div><div class="udq-name">特定 × 情報</div><div class="udq-eg">⑶ alt 文字情報<br>⑸ インターホン光点滅</div></div>
+    <div class="ud-quad-cell"><div class="udq-letter">ウ</div><div class="udq-name">特定 × 動作</div><div class="udq-eg">⑹ 手だけで運転できる車</div></div>
+    <div class="udq-row-h">すべての人<br>(UD 的)</div>
+    <div class="ud-quad-cell"><div class="udq-letter">イ</div><div class="udq-name">すべての人 × 情報</div><div class="udq-eg">⑴ 文字サイズ拡大縮小<br>⑷ シャンプー突起</div></div>
+    <div class="ud-quad-cell"><div class="udq-letter">エ</div><div class="udq-name">すべての人 × 動作</div><div class="udq-eg">⑵ 顔認証ロック解除<br>⑺ レバー式取っ手</div></div>
+  </div>
+  <div class="udq-help">▼ 7 つの工夫について、ア/イ/ウ/エ の 4 領域に分類 ― タップで答え</div>
+  <div class="ud-q-list" id="udQList">
+    <div class="udq-item" onclick="toggleUdq(this)"><span class="ui-num">⑴</span><span class="ui-text">ディスプレイ上の文字や画像のサイズを簡単に拡大・縮小できる機能を付ける。</span><span class="ui-ans" data-ans="イ">?</span></div>
+    <div class="udq-item" onclick="toggleUdq(this)"><span class="ui-num">⑵</span><span class="ui-text">パソコン画面のロックの解除に顔認証を使用する。</span><span class="ui-ans" data-ans="エ">?</span></div>
+    <div class="udq-item" onclick="toggleUdq(this)"><span class="ui-num">⑶</span><span class="ui-text">Web ページの画像ファイルに、画像の内容を示す文字情報を付ける。</span><span class="ui-ans" data-ans="ア">?</span></div>
+    <div class="udq-item" onclick="toggleUdq(this)"><span class="ui-num">⑷</span><span class="ui-text">シャンプーの容器に他と区別するための突起を付ける。</span><span class="ui-ans" data-ans="イ">?</span></div>
+    <div class="udq-item" onclick="toggleUdq(this)"><span class="ui-num">⑸</span><span class="ui-text">インターホンが押されると、チャイムとともに光の点滅で知らせる。</span><span class="ui-ans" data-ans="ア">?</span></div>
+    <div class="udq-item" onclick="toggleUdq(this)"><span class="ui-num">⑹</span><span class="ui-text">足を使わず、手だけで運転ができる車を作る。</span><span class="ui-ans" data-ans="ウ">?</span></div>
+    <div class="udq-item" onclick="toggleUdq(this)"><span class="ui-num">⑺</span><span class="ui-text">扉の取っ手をノブから握力が少なくて済むレバーに変更する。</span><span class="ui-ans" data-ans="エ">?</span></div>
+  </div>
+</div>
+
+<!-- SLIDE 18: SECTION 6 DIVIDER (DEEP DIVE) -->
+<div class="slide section-divider" data-title="第6節 参考: 深掘り副題">
+  <svg class="section-icon" viewBox="0 0 256 256"><circle cx="128" cy="128" r="96" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><path d="M88,128a40,40,0,0,1,80,0c0,28-40,32-40,56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><circle cx="128" cy="196" r="8" fill="currentColor"/></svg>
+  <div class="section-number">SECTION · 06 / APPENDIX</div>
+  <h2 class="section-title-big">参考: 深掘り副題</h2>
+  <p class="section-tagline">学習ノートを越えて、共通テスト・実生活へ</p>
+</div>
+
+<!-- SLIDE 19: 深掘りA LATCH -->
+<div class="slide" data-title="参考A LATCH ― 情報整理の 5 軸">
+  <div class="eyebrow">DEEP DIVE A · WURMAN 1989</div>
+  <h2 class="slide-title">LATCH ― 整理は 5 軸に集約される</h2>
+  <p class="slide-subtitle">情報建築家 Richard Saul Wurman は、人間が情報を整理する方法は <strong>5 通りしかない</strong> と整理した(LATCH)。学習ノートの 5 軸とほぼ <strong>直接対応</strong> する(H = 階層は順位・重要度を含む点だけ広い)。</p>
+  <div class="latch-grid" id="latchGrid">
+    <div class="latch-cell" data-key="L" onclick="selectLatch('L')">
+      <svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><path d="M128,16a88.1,88.1,0,0,0-88,88c0,75.3,80,132.17,83.41,134.55a8,8,0,0,0,9.18,0C136,236.17,216,179.3,216,104A88.1,88.1,0,0,0,128,16Z"/><circle cx="128" cy="104" r="32"/></svg>
+      <div class="lc-letter">L</div>
+      <div class="lc-name">Location</div>
+      <div class="lc-axis">⑧ 位置</div>
+    </div>
+    <div class="latch-cell" data-key="A" onclick="selectLatch('A')">
+      <svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><line x1="40" y1="208" x2="216" y2="208"/><line x1="44" y1="216" x2="100" y2="56"/><line x1="100" y1="56" x2="156" y2="216"/><line x1="64" y1="160" x2="136" y2="160"/><line x1="180" y1="216" x2="180" y2="56"/><circle cx="180" cy="92" r="12"/></svg>
+      <div class="lc-letter">A</div>
+      <div class="lc-name">Alphabet</div>
+      <div class="lc-axis">五十音</div>
+    </div>
+    <div class="latch-cell" data-key="T" onclick="selectLatch('T')">
+      <svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><circle cx="128" cy="128" r="96"/><polyline points="128 72 128 128 168 152"/></svg>
+      <div class="lc-letter">T</div>
+      <div class="lc-name">Time</div>
+      <div class="lc-axis">⑨ 時間</div>
+    </div>
+    <div class="latch-cell" data-key="C" onclick="selectLatch('C')">
+      <svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="40" y="60" width="80" height="60" rx="6"/><rect x="136" y="60" width="80" height="60" rx="6"/><rect x="40" y="136" width="80" height="60" rx="6"/><rect x="136" y="136" width="80" height="60" rx="6"/></svg>
+      <div class="lc-letter">C</div>
+      <div class="lc-name">Category</div>
+      <div class="lc-axis">分野</div>
+    </div>
+    <div class="latch-cell" data-key="H" onclick="selectLatch('H')">
+      <svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><polygon points="128 32 224 192 32 192 128 32"/><line x1="128" y1="92" x2="190" y2="192"/><line x1="128" y1="92" x2="66" y2="192"/></svg>
+      <div class="lc-letter">H</div>
+      <div class="lc-name">Hierarchy</div>
+      <div class="lc-axis">⑩ 階層・順位</div>
+    </div>
+  </div>
+  <div class="latch-info-panel" id="latchInfo"><span style="color:var(--text-sub);font-style:italic;">▲ 各文字をタップすると、軸の特徴と典型例(地図/辞書/年表/書店ジャンル/組織図)が表示されます。LATCH は出典:Richard Saul Wurman <em>Information Anxiety</em> (1989)。</span></div>
+</div>
+
+<!-- SLIDE 20: 深掘りB 図選び方マップ + 印象操作 -->
+<div class="slide" data-title="参考B 図の選び方マップ + 印象操作">
+  <div class="eyebrow">DEEP DIVE B · 共通テスト射程</div>
+  <h2 class="slide-title">「目的 × データの種類」で図は決まる</h2>
+  <p class="slide-subtitle">下のマトリクスは <strong>表したい目的(行)</strong> と <strong>データの数(列)</strong> から最適な図を選ぶマップ。下段は印象操作 6 型(共通テストで頻出)。</p>
+  <div class="chart-map">
+    <div class="cm-row">
+      <div class="cm-rh" style="background:transparent;border:none;"></div>
+      <div class="cm-h">1 変数</div>
+      <div class="cm-h">2 変数</div>
+      <div class="cm-h">時系列</div>
+      <div class="cm-h">構成比</div>
+    </div>
+    <div class="cm-row">
+      <div class="cm-rh">量を比較</div>
+      <div class="cm-c"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"><line x1="40" y1="216" x2="216" y2="216"/><rect x="56" y="120" width="32" height="96"/><rect x="104" y="64" width="32" height="152"/><rect x="152" y="152" width="32" height="64"/></svg><div class="cmc-name">棒グラフ</div></div>
+      <div class="cm-c"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"><line x1="40" y1="216" x2="216" y2="216"/><rect x="50" y="120" width="22" height="96" fill="currentColor" opacity="0.4"/><rect x="74" y="80" width="22" height="136"/><rect x="120" y="100" width="22" height="116"/><rect x="144" y="60" width="22" height="156" fill="currentColor" opacity="0.4"/></svg><div class="cmc-name">並列棒</div></div>
+      <div class="cm-c"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"><line x1="40" y1="216" x2="216" y2="216"/><polyline points="56 168 96 120 144 144 192 64"/></svg><div class="cmc-name">折れ線</div></div>
+      <div class="cm-c"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"><circle cx="128" cy="128" r="80"/><line x1="128" y1="128" x2="128" y2="48"/><line x1="128" y1="128" x2="200" y2="100"/></svg><div class="cmc-name">円グラフ</div></div>
+    </div>
+    <div class="cm-row">
+      <div class="cm-rh">関係を見る</div>
+      <div class="cm-c" style="opacity:0.4;">―</div>
+      <div class="cm-c"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"><line x1="40" y1="216" x2="216" y2="216"/><line x1="40" y1="40" x2="40" y2="216"/><circle cx="80" cy="160" r="6" fill="currentColor"/><circle cx="120" cy="120" r="6" fill="currentColor"/><circle cx="160" cy="100" r="6" fill="currentColor"/><circle cx="190" cy="70" r="6" fill="currentColor"/></svg><div class="cmc-name">散布図</div></div>
+      <div class="cm-c"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"><rect x="40" y="40" width="50" height="50"/><rect x="100" y="40" width="50" height="50" fill="currentColor" opacity="0.6"/><rect x="160" y="40" width="50" height="50" fill="currentColor"/><rect x="40" y="100" width="50" height="50" fill="currentColor" opacity="0.6"/><rect x="100" y="100" width="50" height="50"/><rect x="160" y="100" width="50" height="50" fill="currentColor" opacity="0.4"/></svg><div class="cmc-name">ヒートマップ</div></div>
+      <div class="cm-c" style="opacity:0.4;">―</div>
+    </div>
+    <div class="cm-row">
+      <div class="cm-rh">構造を示す</div>
+      <div class="cm-c"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"><circle cx="128" cy="56" r="20"/><circle cx="60" cy="172" r="20"/><circle cx="196" cy="172" r="20"/><line x1="118" y1="74" x2="74" y2="156"/><line x1="138" y1="74" x2="180" y2="156"/></svg><div class="cmc-name">ツリー図</div></div>
+      <div class="cm-c"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"><circle cx="80" cy="128" r="48"/><circle cx="176" cy="128" r="48"/></svg><div class="cmc-name">ベン図</div></div>
+      <div class="cm-c"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"><circle cx="60" cy="128" r="20"/><circle cx="128" cy="128" r="20"/><circle cx="196" cy="128" r="20"/><line x1="80" y1="128" x2="108" y2="128"/><line x1="148" y1="128" x2="176" y2="128"/></svg><div class="cmc-name">フロー図</div></div>
+      <div class="cm-c" style="opacity:0.4;">―</div>
+    </div>
+  </div>
+  <h3 class="section-heading" style="margin-top:18px;font-size:20px;">印象操作 6 型 ― グラフを「読まされる」前に気づく</h3>
+  <div class="bias-list">
+    <div class="bias-item"><strong>① 目盛り省略 / 起点ずらし</strong>縦軸が 0 から始まらない。差を実際より大きく見せる古典手法。</div>
+    <div class="bias-item"><strong>② 3D 効果(立体グラフ)</strong>奥行きの錯覚で、手前のスライスが大きく、奥が小さく見える。</div>
+    <div class="bias-item"><strong>③ アスペクト操作</strong>横長 / 縦長で同じデータが「平坦」「急変」のように違って見える。</div>
+    <div class="bias-item"><strong>④ 二重 Y 軸</strong>2 系列を別々の軸で重ねて、相関しているように錯覚させる。</div>
+    <div class="bias-item"><strong>⑤ 累積比較の罠</strong>累積値と単月値を混ぜ、増加が止まらないように見せる。</div>
+    <div class="bias-item"><strong>⑥ 母集団操作</strong>パーセントで提示し、母数(分母)が極端に小さいことを隠す。</div>
+  </div>
+</div>
+
+<!-- SLIDE 21: 深掘りC 配色アクセシビリティ + WCAG -->
+<div class="slide" data-title="参考C 配色アクセシビリティ + WCAG">
+  <div class="eyebrow">DEEP DIVE C · WCAG 2.1 AA</div>
+  <h2 class="slide-title">色だけで情報を伝えない ― WCAG コントラスト基準</h2>
+  <p class="slide-subtitle">UD の中核は「<strong>色覚の多様性</strong>に対応すること」と「<strong>背景と文字の十分なコントラスト比</strong>」。Web Content Accessibility Guidelines (W3C) 2.1 AA の基準を確認する。</p>
+  <div class="wcag-row">
+    <div class="wcag-card fail">
+      <h5>FAIL · CONTRAST 1.07:1</h5>
+      <div class="ratio">1.07 : 1</div>
+      <div class="wcag-sample s1">この文字は読めますか?</div>
+      <p>背景 <code>#BEC5CD</code> に文字 <code>#C0CCDD</code>。輝度差(コントラスト比)が決定的に不足。色覚タイプに関わらず読みにくく、低視力・明るい屋外・小さい文字では特に判読困難。</p>
+    </div>
+    <div class="wcag-card pass">
+      <h5>PASS · CONTRAST 14.84:1</h5>
+      <div class="ratio">14.84 : 1</div>
+      <div class="wcag-sample s2">この文字ははっきり読める</div>
+      <p>背景 <code>#0F2847</code>(濃紺)に文字 <code>#FFFFFF</code>(白)。WCAG AA(4.5:1)・AAA(7:1)を大きく上回る。本サイトの section-divider はこの基準で配色。</p>
+    </div>
+  </div>
+  <h3 class="section-heading" style="font-size:20px;margin-top:14px;">色覚多様性 ― 日本人男性の約 5% が「赤緑が近く見える」</h3>
+  <div class="color-vision">
+    <div class="cv-item"><div class="cv-tag">P 型 / 1 型</div><div class="cv-name">L 錐体欠損</div><p>赤の感度が低い。日本人男性の約 1.5%。「赤」と「黒」、「緑」と「茶」が混同しやすい。</p></div>
+    <div class="cv-item"><div class="cv-tag">D 型 / 2 型</div><div class="cv-name">M 錐体欠損</div><p>緑の感度が低い。日本人男性の約 3.5%。「緑」と「赤」、「青緑」と「灰」が混同しやすい。</p></div>
+    <div class="cv-item"><div class="cv-tag">T 型 / 3 型</div><div class="cv-name">S 錐体欠損</div><p>青の感度が低い。極めて稀(0.001% 程度)。「青」と「緑」、「黄」と「白」が混同しやすい。</p></div>
+  </div>
+  <p style="font-size:12.5px;color:var(--text-sub);line-height:1.7;margin-top:10px;text-align:center;">※ 設計時の鉄則: <strong>色 + 形 + 文字</strong> の二重符号化。色だけで「正解」「警告」を表さない。グラフは <strong>カラーユニバーサルデザイン推奨配色</strong>(青・橙・黄)を優先。</p>
+</div>
+
+<!-- SLIDE 22: 深掘りD UD 7原則 -->
+<div class="slide" data-title="参考D UD 7 原則 (Mace 1985 / CUD 1997)">
+  <div class="eyebrow">DEEP DIVE D · MACE 1985 → CUD 1997</div>
+  <h2 class="slide-title">ユニバーサルデザインの 7 原則</h2>
+  <p class="slide-subtitle">建築家 Ronald Mace(米ノースカロライナ州立大)は <strong>1985 年に UD の概念を提唱</strong>。<strong>1997 年</strong>には同大の Center for Universal Design がこの考えを <strong>7 原則として整理</strong> した。学習ノートは「対象 × 目的」の 2 軸どまりだが、本来は 7 つの軸で評価される。</p>
+  <div class="ud7-grid">
+    <div class="ud7-cell"><svg class="ud7-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><circle cx="84" cy="108" r="32"/><circle cx="172" cy="108" r="32"/><circle cx="128" cy="64" r="32"/><path d="M180,156c12,12 22,32 22,52H54c0-20 10-40 22-52"/></svg><div class="ud7-num">PRINCIPLE 1</div><div class="ud7-name">公平性 (Equitable Use)</div><div class="ud7-desc">どんな人でも同じ方法で使える。例: 自動ドア(車椅子・荷物を持つ人・健常者すべてが同じ動作)</div></div>
+    <div class="ud7-cell"><svg class="ud7-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><polyline points="200 64 232 64 232 96"/><polyline points="56 192 24 192 24 160"/><polyline points="200 192 232 192 232 160"/><polyline points="56 64 24 64 24 96"/><line x1="232" y1="64" x2="160" y2="136"/><line x1="24" y1="192" x2="96" y2="120"/><line x1="232" y1="192" x2="160" y2="120"/><line x1="24" y1="64" x2="96" y2="136"/></svg><div class="ud7-num">PRINCIPLE 2</div><div class="ud7-name">自由度 (Flexibility)</div><div class="ud7-desc">使い方を選べる。例: 左右どちらの手でも使えるハサミ、文字サイズの拡大縮小</div></div>
+    <div class="ud7-cell"><svg class="ud7-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><path d="M88,176a48,48,0,1,1,80-35.36V160a16,16,0,0,1-16,16H104A16,16,0,0,1,88,160Z"/><line x1="104" y1="208" x2="152" y2="208"/><line x1="112" y1="232" x2="144" y2="232"/></svg><div class="ud7-num">PRINCIPLE 3</div><div class="ud7-name">単純さ (Simple & Intuitive)</div><div class="ud7-desc">説明書がなくても直感的に使える。例: 押せば光るボタン、ピクトグラム表示</div></div>
+    <div class="ud7-cell"><svg class="ud7-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><path d="M128,56c-78,0-112,72-112,72s34,72 112,72 112-72 112-72S206,56 128,56Z"/><circle cx="128" cy="128" r="36"/></svg><div class="ud7-num">PRINCIPLE 4</div><div class="ud7-name">認知性 (Perceptible Info.)</div><div class="ud7-desc">複数の感覚で情報を伝える。例: チャイム + 光の点滅、点字 + 文字、字幕 + 音声</div></div>
+    <div class="ud7-cell"><svg class="ud7-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><path d="M40,114V56a8,8,0,0,1,8-8H208a8,8,0,0,1,8,8v58c0,84-72,112-88,112S40,198 40,114Z"/><polyline points="92 124 116 148 168 100"/></svg><div class="ud7-num">PRINCIPLE 5</div><div class="ud7-name">安全性 (Tolerance for Error)</div><div class="ud7-desc">操作ミスが事故にならない。例: 倒れにくい給湯ポット、ゴミ箱への自動復帰機能</div></div>
+    <div class="ud7-cell"><svg class="ud7-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><polygon points="160 16 144 112 208 112 96 240 112 144 48 144 160 16"/></svg><div class="ud7-num">PRINCIPLE 6</div><div class="ud7-name">省体力 (Low Physical Effort)</div><div class="ud7-desc">疲れずに使える。例: レバー式取っ手、軽い力で開く扉、自動水栓</div></div>
+    <div class="ud7-cell"><svg class="ud7-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><polyline points="64 24 24 24 24 64"/><polyline points="192 24 232 24 232 64"/><polyline points="64 232 24 232 24 192"/><polyline points="192 232 232 232 232 192"/><rect x="72" y="72" width="112" height="112" rx="8"/></svg><div class="ud7-num">PRINCIPLE 7</div><div class="ud7-name">空間性 (Size & Space)</div><div class="ud7-desc">姿勢・体格に合わせて使える広さ。例: 多目的トイレ、可動式の机、車椅子で通れる通路幅</div></div>
+    <div class="ud7-cell" style="border-left-color:var(--accent-red);background:rgba(200,16,46,0.03);"><svg class="ud7-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><circle cx="128" cy="128" r="96"/><line x1="128" y1="32" x2="128" y2="224"/><path d="M128,32c-26,32-26,160 0,192"/><path d="M128,32c26,32 26,160 0,192"/></svg><div class="ud7-num" style="color:var(--accent-red);">バリアフリーとの違い</div><div class="ud7-name">「対症療法的に取り除く」vs「最初から設計」</div><div class="ud7-desc">バリアフリーは<strong>困っている人の障壁を取り除く・補う</strong>(reactive)。UD は<strong>最初から多くの人が使えるように設計する</strong>(proactive)。Mace 自身が 9 歳から車椅子利用者で、バリアフリーの限界(対症療法的)を超えるためにこの概念を提唱した。</div></div>
+  </div>
+</div>
+
+<!-- SLIDE 23: POINT 答え合わせ -->
+<div class="slide" data-title="POINT 答え合わせ(全 18 用語)">
+  <div class="eyebrow">REVIEW · 学習ノート POINT 09 解答</div>
+  <h2 class="slide-title">学習ノート POINT の 18 用語</h2>
+  <p class="slide-subtitle">各行をタップで答えを表示。「全表示」で一括展開、「全非表示」で初期化。</p>
+  <div class="answers-actions"><button onclick="revealAll()">全表示</button><button onclick="hideAll()">全非表示</button></div>
+  <div class="answers-grid" id="pointAnswersGrid">
+    <div class="answer-section-head" style="grid-column: 1 / -1; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; color: var(--accent-red); font-weight: 700; padding: 12px 6px 4px; border-bottom: 1px solid var(--navy-pale); margin-top: 6px;"><svg class="ash-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><line x1="128" y1="40" x2="128" y2="216"/><line x1="40" y1="128" x2="216" y2="128"/></svg>SECTION 1 — 情報デザインの 2 軸</div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">①</span><span class="answer-text">届けるための工夫</span><span class="answer-reveal" data-ans="伝達">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">②</span><span class="answer-text">使うための工夫</span><span class="answer-reveal" data-ans="操作性">クリック</span></div>
+    <div class="answer-section-head" style="grid-column: 1 / -1; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; color: var(--accent-red); font-weight: 700; padding: 12px 6px 4px; border-bottom: 1px solid var(--navy-pale); margin-top: 6px;"><svg class="ash-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><line x1="40" y1="216" x2="216" y2="216"/><rect x="56" y="120" width="32" height="96"/><rect x="112" y="64" width="32" height="152"/><rect x="168" y="152" width="32" height="64"/></svg>SECTION 2 — 情報の可視化</div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">③</span><span class="answer-text">数値や量を図形に</span><span class="answer-reveal" data-ans="可視化">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">④</span><span class="answer-text">数値の比較・推移・構成比</span><span class="answer-reveal" data-ans="グラフ">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑤</span><span class="answer-text">関係や流れを図化</span><span class="answer-reveal" data-ans="ダイアグラム">クリック</span></div>
+    <div class="answer-section-head" style="grid-column: 1 / -1; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; color: var(--accent-red); font-weight: 700; padding: 12px 6px 4px; border-bottom: 1px solid var(--navy-pale); margin-top: 6px;"><svg class="ash-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="40" y="40" width="80" height="60" rx="6"/><rect x="136" y="40" width="80" height="60" rx="6"/><rect x="40" y="156" width="80" height="60" rx="6"/><rect x="136" y="156" width="80" height="60" rx="6"/></svg>SECTION 3 — 整理と構造化</div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑥</span><span class="answer-text">情報を観点で並べ直す</span><span class="answer-reveal" data-ans="構造化">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑦</span><span class="answer-text">並べる観点(キー)</span><span class="answer-reveal" data-ans="属性">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑧</span><span class="answer-text">場所軸での整理(地域別 など)</span><span class="answer-reveal" data-ans="位置">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑨</span><span class="answer-text">時系列軸での整理(日誌 など)</span><span class="answer-reveal" data-ans="時間">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑩</span><span class="answer-text">上下関係での整理(図書館分類)</span><span class="answer-reveal" data-ans="階層">クリック</span></div>
+    <div class="answer-section-head" style="grid-column: 1 / -1; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; color: var(--accent-red); font-weight: 700; padding: 12px 6px 4px; border-bottom: 1px solid var(--navy-pale); margin-top: 6px;"><svg class="ash-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><polygon points="40 56 216 56 152 152 152 224 104 224 104 152 40 56"/></svg>SECTION 4 — 抽象化とピクトグラム</div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑪</span><span class="answer-text">伝えたい情報に絞り目的を明確に</span><span class="answer-reveal" data-ans="抽象化">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑫</span><span class="answer-text">言語によらない図記号</span><span class="answer-reveal" data-ans="ピクトグラム">クリック</span></div>
+    <div class="answer-section-head" style="grid-column: 1 / -1; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; color: var(--accent-red); font-weight: 700; padding: 12px 6px 4px; border-bottom: 1px solid var(--navy-pale); margin-top: 6px;"><svg class="ash-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><circle cx="128" cy="128" r="96"/><circle cx="128" cy="76" r="14" fill="currentColor"/><line x1="128" y1="100" x2="128" y2="176"/><line x1="86" y1="124" x2="170" y2="124"/></svg>SECTION 5 — UD とアクセシビリティ</div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑬</span><span class="answer-text">障壁を取り除く設計(後付け)</span><span class="answer-reveal" data-ans="バリアフリー">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑭</span><span class="answer-text">最初から皆が使えるよう設計</span><span class="answer-reveal" data-ans="ユニバーサルデザイン">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑮</span><span class="answer-text">使いやすさの程度</span><span class="answer-reveal" data-ans="ユーザビリティ">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑯</span><span class="answer-text">利用可能性(誰がどこまで使えるか)</span><span class="answer-reveal" data-ans="アクセシビリティ">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑰</span><span class="answer-text">物が提供する行為の可能性そのもの</span><span class="answer-reveal" data-ans="アフォーダンス">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑱</span><span class="answer-text">行為の手がかり(ボタンの色 など)</span><span class="answer-reveal" data-ans="シグニファイア">クリック</span></div>
+  </div>
+</div>
+
+<!-- SLIDE 24: まとめツリー -->
+<div class="slide" data-title="POINT 09 まとめツリー">
+  <div class="eyebrow">SUMMARY · POINT 09 を 1 枚で俯瞰</div>
+  <h2 class="slide-title">情報デザインを 1 枚で見る</h2>
+  <p class="slide-subtitle">伝達(届く)と操作性(使える)の 2 軸を頂点に、<strong>可視化・整理・抽象化・UD</strong> の 4 + 1 つの実装手段が枝分かれする。</p>
+  <div class="summary-tree">
+    <div class="tree-root"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><circle cx="128" cy="128" r="96"/><circle cx="128" cy="128" r="40" fill="currentColor"/></svg>情報デザイン (① 伝達 + ② 操作性)</div>
+    <div class="tree-branches">
+      <div class="tree-branch"><svg class="tb-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><line x1="40" y1="208" x2="216" y2="208"/><rect x="56" y="120" width="32" height="88"/><rect x="112" y="56" width="32" height="152"/><rect x="168" y="152" width="32" height="56"/></svg><div class="tb-tag">SECTION 2</div><h4>可視化</h4><p>③ 可視化 ④ グラフ ⑤ ダイアグラム</p></div>
+      <div class="tree-branch"><svg class="tb-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="40" y="40" width="80" height="60" rx="4"/><rect x="136" y="40" width="80" height="60" rx="4"/><rect x="40" y="156" width="80" height="60" rx="4"/><rect x="136" y="156" width="80" height="60" rx="4"/></svg><div class="tb-tag">SECTION 3</div><h4>整理と構造化</h4><p>⑥ 構造化 ⑦ 属性 ⑧ 位置 ⑨ 時間 ⑩ 階層</p></div>
+      <div class="tree-branch"><svg class="tb-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><polygon points="40 56 216 56 152 152 152 224 104 224 104 152 40 56"/></svg><div class="tb-tag">SECTION 4</div><h4>抽象化</h4><p>⑪ 抽象化 ⑫ ピクトグラム</p></div>
+      <div class="tree-branch accent"><svg class="tb-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><circle cx="128" cy="128" r="96"/><circle cx="128" cy="76" r="14" fill="currentColor"/><line x1="128" y1="100" x2="128" y2="176"/><line x1="86" y1="124" x2="170" y2="124"/></svg><div class="tb-tag">SECTION 5</div><h4>UD と関連</h4><p>⑬ バリアフリー ⑭ UD ⑮ ユーザビリティ ⑯ アクセシビリティ ⑰ アフォーダンス ⑱ シグニファイア</p></div>
+      <div class="tree-branch accent"><svg class="tb-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><path d="M40,128a88,88,0,0,1,88-88"/><path d="M216,128a88,88,0,0,1-88,88"/><circle cx="128" cy="128" r="32" fill="currentColor"/></svg><div class="tb-tag">APPENDIX</div><h4>深掘り副題</h4><p>LATCH / 図選び方マップ / WCAG / UD 7 原則(Mace)</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 25: 復習チャレンジ -->
+<div class="slide" data-title="復習チャレンジ(10問ランダム)">
+  <div class="eyebrow">REVIEW · 10 QUESTIONS · RANDOM</div>
+  <h2 class="slide-title">理解度チェック</h2>
+  <p class="slide-subtitle">POINT 09 の重要事項から 10 問をランダム出題。即時採点で結果を表示。</p>
+  <div class="review-container">
+    <div id="reviewStart">
+      <div class="review-intro">POINT 09 の <strong>本編 + 深掘り副題</strong> から計 18 問のプールを用意。10 問をランダムに出題し、即時採点する。</div>
+      <button class="review-start-btn" onclick="startReview()">スタート</button>
+    </div>
+    <div class="review-q-area" id="reviewQuiz">
+      <div class="review-progress" id="reviewProgress">QUESTION 1 / 10</div>
+      <div class="quiz-question" id="reviewQText"></div>
+      <div class="quiz-options" id="reviewQOpts"></div>
+    </div>
+    <div class="review-q-area" id="reviewDone">
+      <div class="review-progress">RESULT</div>
+      <div class="review-result" id="reviewScore">0 / 10</div>
+      <div class="review-result-sub" id="reviewComment"></div>
+      <button class="review-retry-btn" onclick="startReview()">もう一度</button>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 26: END CARD -->
+<div class="slide title-slide" data-title="完了">
+  <svg class="title-deco" viewBox="0 0 256 256"><polyline points="40 144 96 200 224 72" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
+  <svg class="title-deco-2" viewBox="0 0 256 256"><circle cx="128" cy="128" r="96" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/><circle cx="128" cy="128" r="40" fill="currentColor"/></svg>
+  <div class="title-label">CHAPTER · 09 / COMPLETE</div>
+  <h1 class="title-main">情報デザイン</h1>
+  <div class="title-sub">届けて、使える ― 設計の 2 軸を超えて</div>
+  <div class="title-meta">
+    <div class="title-meta-item"><strong>POINT</strong>09 / 18 用語</div>
+    <div class="title-meta-item"><strong>PRACTICE</strong>4 題完走</div>
+    <div class="title-meta-item"><strong>NEXT</strong>POINT 10 Web サイトの設計</div>
+  </div>
+</div>
+</div>
+
+<div class="bottombar">
+  <div class="bottombar-nav">
+    <button class="nav-btn" id="prevBtn" onclick="goToSlide(currentSlide - 1)" title="前へ">◀</button>
+    <button class="nav-btn" id="nextBtn" onclick="goToSlide(currentSlide + 1)" title="次へ">▶</button>
+  </div>
+  <div class="slide-title-small" id="slideTitleSmall">タイトル</div>
+  <span class="keyboard-hint">← → / SPACE / F / M</span>
+  <div class="page-indicator" id="pageIndicator">01 / XX</div>
+</div>
+
+<script>
+const isMobile = () => window.innerWidth <= 720;
+function haptic(ms) { if (typeof ms !== 'number' && !Array.isArray(ms)) ms = 8; if (navigator.vibrate) { try { navigator.vibrate(ms); } catch (_) {} } }
+let lastTouchEndAt = 0;
+document.addEventListener('touchend', (e) => {
+  const now = Date.now();
+  if (now - lastTouchEndAt <= 320) {
+    const t = e.target;
+    if (t && t.tagName && /^(INPUT|TEXTAREA|SELECT|A)$/.test(t.tagName)) return;
+    e.preventDefault();
+  }
+  lastTouchEndAt = now;
+}, { passive: false });
+
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+let currentSlide = 0;
+function goToSlide(n) {
+  if (n < 0 || n >= totalSlides) return;
+  haptic(8);
+  slides[currentSlide].classList.remove('active');
+  currentSlide = n;
+  slides[currentSlide].classList.add('active');
+  slides[currentSlide].scrollTop = 0;
+  updateUI();
+}
+function updateUI() {
+  const pct = ((currentSlide + 1) / totalSlides) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('pageIndicator').textContent = String(currentSlide + 1).padStart(2, '0') + ' / ' + String(totalSlides).padStart(2, '0');
+  document.getElementById('slideTitleSmall').textContent = slides[currentSlide].dataset.title || '';
+  document.getElementById('prevBtn').disabled = currentSlide === 0;
+  document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+  updateMenuActive();
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { if (document.getElementById('menuPanel').classList.contains('open')) { closeMenu(); return; } }
+  if (document.getElementById('menuPanel').classList.contains('open')) return;
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); goToSlide(currentSlide + 1); }
+  else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goToSlide(currentSlide - 1); }
+  else if (e.key === 'Home') { goToSlide(0); }
+  else if (e.key === 'End') { goToSlide(totalSlides - 1); }
+  else if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); }
+  else if (e.key === 'm' || e.key === 'M') { openMenu(); }
+});
+let touchStartX = 0, touchStartY = 0, touchStartT = 0;
+document.addEventListener('touchstart', (e) => { if (e.touches.length !== 1) return; touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; touchStartT = Date.now(); }, { passive: true });
+document.addEventListener('touchend', (e) => {
+  if (e.changedTouches.length !== 1) return;
+  const menuPanel = document.getElementById('menuPanel');
+  if (menuPanel && menuPanel.classList.contains('open')) return;
+  const target = e.target;
+  if (target && target.closest && target.closest('button, .nav-btn, input, select, a, .icon-card, .chart-q, .sr-blank, .j-chip, .udq-item, .latch-cell, .answer-row, .quiz-option')) return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  const dt = Date.now() - touchStartT;
+  if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) && dt < 800) {
+    if (dx < 0) goToSlide(currentSlide + 1); else goToSlide(currentSlide - 1);
+  }
+}, { passive: true });
+function toggleFullscreen() { if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {}); else document.exitFullscreen().catch(() => {}); }
+updateUI();
+
+function buildMenu() {
+  const menuList = document.getElementById('menuList'); if (!menuList) return;
+  menuList.innerHTML = '';
+  const sections = [];
+  let currentSection = { label: 'OVERVIEW', items: [] };
+  sections.push(currentSection);
+  slides.forEach((slide, idx) => {
+    const title = slide.dataset.title || '';
+    if (slide.classList.contains('section-divider')) {
+      const label = title.replace(/^第\d節\s*/, '');
+      currentSection = { label: label.toUpperCase(), items: [] };
+      sections.push(currentSection);
+    }
+    let tag = '', tagClass = '';
+    if (slide.classList.contains('title-slide') && idx === 0) { tag = 'TITLE'; tagClass = 'tag-title'; }
+    else if (slide.classList.contains('title-slide')) { tag = 'END'; tagClass = 'tag-end'; }
+    else if (slide.classList.contains('section-divider')) { tag = 'SECTION'; tagClass = 'tag-section'; }
+    else if (/実習|PRACTICE/i.test(title)) { tag = 'PRACTICE'; tagClass = ''; }
+    else if (/POINT|interactive|アイコン|compare|2x2|分類/i.test(title)) { tag = 'INTERACTIVE'; tagClass = 'tag-interactive'; }
+    else if (/答え合わせ|まとめ|復習|参考/.test(title)) { tag = 'REVIEW'; tagClass = 'tag-review'; }
+    currentSection.items.push({ idx, title, tag, tagClass });
+  });
+  sections.forEach(sec => {
+    if (sec.items.length === 0) return;
+    const h = document.createElement('div'); h.className = 'menu-section'; h.textContent = sec.label;
+    menuList.appendChild(h);
+    sec.items.forEach(it => {
+      const el = document.createElement('div'); el.className = 'menu-item'; el.dataset.idx = it.idx;
+      el.onclick = () => { goToSlide(it.idx); closeMenu(); };
+      const num = String(it.idx + 1).padStart(2, '0');
+      const tagHtml = it.tag ? '<span class="menu-item-tag ' + it.tagClass + '">' + it.tag + '</span>' : '';
+      el.innerHTML = '<span class="menu-item-num">' + num + '</span><span class="menu-item-title">' + it.title + '</span>' + tagHtml;
+      menuList.appendChild(el);
+    });
+  });
+  updateMenuActive();
+}
+function updateMenuActive() {
+  document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+  const curr = document.querySelector('.menu-item[data-idx="' + currentSlide + '"]');
+  if (curr) {
+    curr.classList.add('active');
+    if (document.getElementById('menuPanel').classList.contains('open')) curr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+function openMenu() { document.getElementById('menuOverlay').classList.add('open'); document.getElementById('menuPanel').classList.add('open'); updateMenuActive(); }
+function closeMenu() { document.getElementById('menuOverlay').classList.remove('open'); document.getElementById('menuPanel').classList.remove('open'); }
+buildMenu();
+
+// 用語データ(18 用語、5 パネル)
+const iconData = {
+  // ① ②
+  dentatsu: { term: '伝達', eng: 'TRANSMISSION', desc: '受け手に情報を <strong>届けるための工夫</strong>。可視化(グラフ・ダイアグラム)、構造化(整理軸の選択)、抽象化(ピクトグラム)が主な手段。「届かない情報」は存在しないのと同じ。' },
+  sosa:     { term: '操作性', eng: 'OPERABILITY', desc: '受け手が情報を <strong>使うための工夫</strong>(画面の操作・物の取り扱いやすさ)。バリアフリー・ユニバーサルデザイン・ユーザビリティ・アフォーダンス はすべて操作性を支える概念。' },
+  // ③ ④ ⑤
+  kashika:  { term: '可視化', eng: 'VISUALIZATION', desc: '抽象的な情報を <strong>目に見える形に変換</strong> する。数値や量を図形に置き換えるのが基本。グラフ・ダイアグラム・地図・インフォグラフィックなどが具体形。' },
+  graph:    { term: 'グラフ', eng: 'GRAPH / CHART', desc: '<strong>数値の比較・推移・構成比</strong> を表す可視化。棒(比較)・折れ線(推移)・円(構成比)・散布図(関係)など、目的によって型を選び分ける。' },
+  diagram:  { term: 'ダイアグラム', eng: 'DIAGRAM', desc: '<strong>関係・流れ・構造</strong> を表す可視化。フロー図・組織図・ER 図・ベン図など。グラフが「数」を扱うのに対し、ダイアグラムは「つながり」を扱う。' },
+  // ⑥-⑩
+  kozoka:   { term: '構造化', eng: 'STRUCTURING', desc: '情報を <strong>ある観点で並べ直す</strong> 行為。観点(属性)を選び、グループに分け、必要なら階層化する。図書館の本も、自分の机の上の整理も、構造化の例。' },
+  zokusei:  { term: '属性', eng: 'ATTRIBUTE', desc: '構造化のときに <strong>並べる観点(キー)</strong>。例: 図書館の本なら「分野」「著者の五十音」「出版年」が属性。1 つの情報には複数の属性があり、目的によって使い分ける。' },
+  ichi:     { term: '位置', eng: 'LOCATION', desc: '<strong>場所軸</strong> での整理。例: 都道府県別の特産品、ホテルの世界地図表示、商品の店舗別在庫。LATCH の L に対応。' },
+  jikan:    { term: '時間', eng: 'TIME', desc: '<strong>時系列軸</strong> での整理。例: 日誌、写真の撮影日順、年表、ニュースサイトの「新着順」。LATCH の T に対応。' },
+  kaisou:   { term: '階層', eng: 'HIERARCHY', desc: '<strong>上下関係</strong> での整理。例: 図書館の日本十進分類法(400 自然科学 → 410 数学 → 411 代数学)、組織図、ファイルのフォルダ構造。LATCH の H に対応。' },
+  // ⑪ ⑫
+  chusho:   { term: '抽象化', eng: 'ABSTRACTION', desc: '<strong>伝えたい情報に絞り、目的を明確にする</strong> 行為。例: 路線図(駅の順序だけ残し、距離・地形は捨てる)、ピクトグラム(人の形だけ残し、性別・年齢は捨てる)。「曖昧化」とは正反対。' },
+  picto:    { term: 'ピクトグラム', eng: 'PICTOGRAM', desc: '言語によらず <strong>一目で意味が伝わる図記号</strong>。抽象化の代表例。<strong>見分けやすい二色程度の色</strong> で表現するのが原則(色覚多様性・遠目視認性)。例: トイレ表示・非常口・WiFi マーク。<br><br><strong>歴史:</strong> 1964 年東京五輪で、勝見勝(勝見委員長)+ 山下芳郎・田中一光らのチームが、競技 20 種 + 案内記号 39 種をまとめて整備。「言語に依らない図」で多言語対応問題を解決した先駆例として、後の <strong>ISO 7001(国際標準)や JIS Z8210(国内標準)</strong> など、公共案内図記号の標準化に大きな影響を与えた。2020 年東京五輪では廣村正彰が 50 種のスポーツピクトグラムを刷新。' },
+  // ⑬ ⑭
+  barrier:  { term: 'バリアフリー', eng: 'BARRIER-FREE', desc: '特定の不便を抱えた人(車椅子利用者・高齢者 等)に対する <strong>障壁を、後から取り除く</strong> 設計。スロープの増設、点字ブロック敷設、エレベーター追加など、対症療法的なアプローチ。' },
+  ud:       { term: 'ユニバーサルデザイン (UD)', eng: 'UNIVERSAL DESIGN', desc: '年齢・障がい・国籍に関わらず <strong>最初から皆が使える</strong> 設計(Mace, 1985)。バリアフリーとの違いは「後付けでなく初期設計に組み込む」こと。本質的に proactive。' },
+  // ⑮ ⑯ ⑰ ⑱
+  usability:     { term: 'ユーザビリティ', eng: 'USABILITY', desc: '<strong>使いやすさ</strong> の程度。ISO 9241-11 では「特定のユーザが特定の利用状況で、効果・効率・満足を持って目標を達成できる度合い」と定義。UD・アクセシビリティを <strong>具体的に測る</strong> 物差し。' },
+  accessibility: { term: 'アクセシビリティ', eng: 'ACCESSIBILITY', desc: '<strong>誰がどこまで利用可能か</strong>。Web では W3C の WCAG(Web Content Accessibility Guidelines)が標準。色覚少数派・視覚障がい者・聴覚障がい者・運動機能障がい者などへの対応度合い。' },
+  affordance:    { term: 'アフォーダンス', eng: 'AFFORDANCE', desc: '物や環境が <strong>使い手に提供する「行為の可能性」そのもの</strong>(Gibson 1979 / Norman 1988, 2013)。例: 取っ手の形は「握って引く」という行為の可能性を、平らな板は「押す」という可能性を持つ。<br><br><strong>古典反例:</strong> Jacques Carelman の <em>『マゾヒスト用のコーヒーポット』</em>(1969、『見つからない物のカタログ』所収)は、注ぎ口と取っ手が同じ側に付いた茶器。Norman は <strong>1988 年の原著初版 <em>The Psychology of Everyday Things</em></strong>(後年改題: <em>The Design of Everyday Things</em>、邦題『誰のためのデザイン?』)の表紙にこれを採用し、「<strong>使い方の手がかりと実際の操作結果が矛盾する物</strong>」の象徴として引用した。<br><strong>「気づかせる手がかり」はシグニファイア</strong>(⑱)であり、混同しないこと。' },
+  signifier:     { term: 'シグニファイア', eng: 'SIGNIFIER', desc: 'アフォーダンスを <strong>具体的に「見える」形にした手がかり</strong>(Norman 2013)。例: ドアの「PUSH」表示、エレベーターボタンの色変化、フォームの矢印アイコン。アフォーダンスは「行為の可能性」、シグニファイアは「それを示す合図」。' }
+};
+function selectIcon(panelId, key) {
+  const panel = document.getElementById(panelId); if (!panel) return;
+  const cards = panel.parentElement.querySelectorAll('.icon-card');
+  cards.forEach(c => c.classList.remove('selected'));
+  const me = panel.parentElement.querySelector('.icon-card[data-key="' + key + '"]');
+  if (me) me.classList.add('selected');
+  const d = iconData[key]; if (!d) return;
+  panel.innerHTML = '<span class="ip-term">' + d.term + '</span><span class="ip-eng">' + d.eng + '</span><span class="ip-desc">' + d.desc + '</span>';
+  haptic(8);
+}
+
+// 実習1 chart-picker
+function toggleChartQ(el) { el.classList.toggle('revealed'); haptic(8); }
+
+// 実習2 select-grid
+function toggleSelBlank(b) {
+  if (b.classList.contains('reveal')) { b.classList.remove('reveal'); b.textContent = 'クリック'; }
+  else { b.classList.add('reveal'); b.textContent = b.dataset.answer; }
+  haptic(8);
+}
+
+// 実習3 judgment-chip
+function judgeJ(chip, qid) {
+  const item = chip.closest('.j-item');
+  const chips = item.querySelectorAll('.j-chip');
+  const fb = item.querySelector('.j-fb');
+  if (chip.classList.contains('judged-correct') || chip.classList.contains('judged-wrong')) {
+    chips.forEach(c => c.classList.remove('judged-correct', 'judged-wrong'));
+    fb.classList.remove('show');
+    haptic(8);
+    return;
+  }
+  chips.forEach(c => c.classList.remove('judged-correct', 'judged-wrong'));
+  if (chip.dataset.correct === 'true') { chip.classList.add('judged-correct'); haptic(20); }
+  else { chip.classList.add('judged-wrong'); haptic([40, 30, 40]); }
+  fb.classList.add('show');
+}
+
+// 実習4 UD分類
+function toggleUdq(item) {
+  const ans = item.querySelector('.ui-ans');
+  if (item.classList.contains('revealed')) { item.classList.remove('revealed'); ans.textContent = '?'; }
+  else { item.classList.add('revealed'); ans.textContent = ans.dataset.ans; }
+  haptic(8);
+}
+
+// LATCH (深掘りA)
+const latchData = {
+  L: { term: 'L · Location · 位置', desc: '<strong>場所軸</strong> での整理。例: 世界地図上のホテル分布、駅の路線図、地域別の特産品。<strong>地理的な配置そのものに意味</strong> がある場合に強い。学習ノートの ⑧ 位置 と直接対応。' },
+  A: { term: 'A · Alphabet · 五十音(アルファベット)', desc: '<strong>名前の並び</strong> による整理。例: 辞書、電話帳、出席名簿。<strong>順序に意味を持たせない</strong>(=どの順で出ても文句が出ない)場面で公平な並べ方になる。学習ノート 図書館の同分野内配架 と対応。' },
+  T: { term: 'T · Time · 時間', desc: '<strong>時系列軸</strong>。例: 日誌、年表、写真フォルダの撮影日順、ニュースサイトの「新着順」。<strong>変化や順序を強調したい</strong> 場合に。学習ノートの ⑨ 時間 と直接対応。' },
+  C: { term: 'C · Category · 分野(分類)', desc: '<strong>カテゴリ別</strong>。例: 書店のジャンル棚、家計簿の費目分類、メールのラベル。<strong>同じ性質のものをまとめる</strong> 自然な整理だが、カテゴリの選択次第で見え方が変わる。学習ノート 図書館の分野別 と対応。' },
+  H: { term: 'H · Hierarchy · 階層', desc: '<strong>大小・上下関係(順位・重要度を含む)</strong>。例: 売上順位、人口順、十進分類法、組織図。<strong>「優先度」「重要度」を可視化</strong> したい場合に。学習ノートの ⑩ 階層に直接対応(LATCH の H は順位・重要度も含むため、より広い)。' }
+};
+function selectLatch(key) {
+  document.querySelectorAll('.latch-cell').forEach(c => c.classList.remove('selected'));
+  const me = document.querySelector('.latch-cell[data-key="' + key + '"]');
+  if (me) me.classList.add('selected');
+  const d = latchData[key]; if (!d) return;
+  document.getElementById('latchInfo').innerHTML = '<span class="li-term">' + d.term + '</span><span style="display:block;margin-top:6px;">' + d.desc + '</span>';
+  haptic(8);
+}
+
+// answers-grid (POINT 18 用語)
+function revealAnswer(row) {
+  const reveal = row.querySelector('.answer-reveal');
+  if (row.classList.contains('revealed')) { row.classList.remove('revealed'); reveal.textContent = 'クリック'; }
+  else { row.classList.add('revealed'); reveal.textContent = reveal.dataset.ans; }
+}
+function revealAll() {
+  document.querySelectorAll('#pointAnswersGrid .answer-row').forEach(r => {
+    r.classList.add('revealed');
+    const reveal = r.querySelector('.answer-reveal'); reveal.textContent = reveal.dataset.ans;
+  });
+}
+function hideAll() {
+  document.querySelectorAll('#pointAnswersGrid .answer-row').forEach(r => {
+    r.classList.remove('revealed');
+    r.querySelector('.answer-reveal').textContent = 'クリック';
+  });
+}
+
+// review pool (10問ランダム / プール 18問)
+const reviewPool = [
+  { q: '情報デザインの 2 つの主目的(2 軸)はどれか?', opts: ['抽象化と可視化', '伝達と操作性', '構造化と階層', '色彩と形状'], a: 1 },
+  { q: '「全体に対する各カテゴリの割合」を見せたいときに最も適切な図はどれか?', opts: ['折れ線グラフ', '散布図', '円グラフ', '棒グラフ'], a: 2 },
+  { q: '「2 つの量の対応関係」を見たいときに最も適切な図はどれか?', opts: ['散布図', '円グラフ', 'ピクトグラム', 'トーナメント図'], a: 0 },
+  { q: '日誌の整理の主軸として最も適切なものはどれか?', opts: ['位置', '階層', '時間', '分野'], a: 2 },
+  { q: '図書館の十進分類法は何の整理軸の例か?', opts: ['時間', '位置', '五十音', '階層'], a: 3 },
+  { q: '情報の抽象化の説明として正しいものはどれか?', opts: ['情報を曖昧に表現すること', '伝えたい情報に絞り目的を明確にすること', 'すべての情報を網羅的に表示すること', '色彩を多くすること'], a: 1 },
+  { q: 'ピクトグラムの色彩設計の原則はどれか?', opts: ['多彩な色を使う', '見分けやすい二色程度', 'グラデーションを多用', '無色のみ'], a: 1 },
+  { q: 'バリアフリーとユニバーサルデザインの違いとして適切なものはどれか?', opts: ['後者は段差を後付けでなくす', '前者は障壁を後から取り除き、後者は最初から皆が使える設計', '前者は新しく後者は古い概念', '前者は政府主導で後者は民間主導'], a: 1 },
+  { q: 'ユニバーサルデザイン (UD) の概念を 1985 年に提唱したのは誰か?', opts: ['アラン・チューリング', 'ロナルド・メイス(Mace)', 'クロード・シャノン', 'ティム・バーナーズ=リー'], a: 1 },
+  { q: 'WCAG 2.1 AA で要求される本文テキストのコントラスト比の最低値はどれか?', opts: ['1.5 : 1', '3 : 1', '4.5 : 1', '21 : 1'], a: 2 },
+  { q: '色覚少数派(P 型・D 型)が混同しやすい色の組み合わせはどれか?', opts: ['黒と白', '赤と緑', '青と黄', '紺と灰'], a: 1 },
+  { q: 'シャンプーの容器に他と区別するための突起を付けるのはどの分類か?', opts: ['特定の障がい者×情報', 'すべての人×情報', '特定の障がい者×動作', 'すべての人×動作'], a: 1 },
+  { q: 'Web ページの画像に内容を示す文字情報(alt)を付けるのはどの分類か?', opts: ['特定の障がい者×情報', 'すべての人×情報', '特定の障がい者×動作', 'すべての人×動作'], a: 0 },
+  { q: 'ダイアグラムの主な用途として最も適切なものはどれか?', opts: ['量の比較', '関係や流れの可視化', '時系列の推移', '構成比の表示'], a: 1 },
+  { q: 'PDCA サイクルを表現する図として最も適切なものはどれか?', opts: ['折れ線グラフ', '散布図', '循環フロー', 'トーナメント図'], a: 2 },
+  { q: 'LATCH の 5 つの整理軸に <strong>含まれない</strong> ものはどれか?', opts: ['Location', 'Time', 'Hierarchy', 'Color'], a: 3 },
+  { q: 'アフォーダンスとシグニファイアの関係として適切なものはどれか?', opts: ['同じ意味', 'アフォーダンスは行為の可能性、シグニファイアはそれを示す合図', '前者は機能、後者は装飾', '前者は新しく後者は古い'], a: 1 },
+  { q: '「印象操作 6 型」に含まれないものはどれか?', opts: ['目盛り省略', '3D 効果', 'アスペクト操作', '配色多様化'], a: 3 }
+];
+let reviewQuestions = [], reviewIdx = 0, reviewScore = 0;
+function startReview() {
+  reviewQuestions = [...reviewPool].sort(() => Math.random() - 0.5).slice(0, 10);
+  reviewIdx = 0; reviewScore = 0;
+  document.getElementById('reviewStart').style.display = 'none';
+  document.getElementById('reviewDone').classList.remove('active');
+  document.getElementById('reviewQuiz').classList.add('active');
+  showReviewQ();
+}
+function showReviewQ() {
+  const q = reviewQuestions[reviewIdx];
+  document.getElementById('reviewProgress').textContent = 'QUESTION ' + (reviewIdx + 1) + ' / 10';
+  document.getElementById('reviewQText').innerHTML = '<span class="quiz-question-num">Q' + (reviewIdx + 1) + '</span>' + q.q;
+  const opts = document.getElementById('reviewQOpts'); opts.innerHTML = '';
+  const letters = ['ア', 'イ', 'ウ', 'エ'];
+  q.opts.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-option';
+    div.innerHTML = '<span class="quiz-option-letter">' + letters[i] + '</span><span>' + opt + '</span>';
+    div.onclick = () => answerReview(div, i === q.a);
+    // rev5: 動的生成要素にも a11y 属性を付与
+    div.setAttribute('tabindex', '0');
+    div.setAttribute('role', 'button');
+    div.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault(); e.stopPropagation(); div.click();
+      }
+    });
+    opts.appendChild(div);
+  });
+}
+function answerReview(el, isCorrect) {
+  const options = el.parentElement.querySelectorAll('.quiz-option');
+  options.forEach(o => { o.style.pointerEvents = 'none'; });
+  const q = reviewQuestions[reviewIdx];
+  if (isCorrect) { el.classList.add('correct'); reviewScore++; haptic(20); }
+  else { el.classList.add('incorrect'); options[q.a].classList.add('correct'); haptic([40, 30, 40]); }
+  setTimeout(() => { reviewIdx++; if (reviewIdx < 10) showReviewQ(); else showReviewResult(); }, 900);
+}
+function showReviewResult() {
+  document.getElementById('reviewQuiz').classList.remove('active');
+  document.getElementById('reviewDone').classList.add('active');
+  document.getElementById('reviewScore').textContent = reviewScore + ' / 10';
+  const comments = { 10:'基本事項は十分に定着しています。', 9:'もう一歩で満点。理解はほぼ十分。', 8:'合格ライン。残りの項目を見直しましょう。', 7:'もう一歩。苦手項目を復習しよう。', 6:'6 割ライン。スライドを見返そう。' };
+  document.getElementById('reviewComment').textContent = comments[reviewScore] || '基礎から見直そう。学習ノートを手元に。';
+}
+
+function resetAllInteractions() {
+  haptic([15, 40, 15]);
+  if (!confirm('このページのすべてのインタラクションを初期状態に戻します。よろしいですか?')) return;
+  document.querySelectorAll('.icon-card.selected').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.icon-info-panel').forEach(p => { p.innerHTML = '<span style="color:var(--text-sub);font-style:italic;">▲ 上のアイコンをタップすると、定義と説明が表示されます。</span>'; });
+  document.querySelectorAll('.chart-q.revealed').forEach(q => q.classList.remove('revealed'));
+  document.querySelectorAll('.sr-blank.reveal').forEach(b => { b.classList.remove('reveal'); b.textContent = 'クリック'; });
+  document.querySelectorAll('.j-chip').forEach(c => c.classList.remove('judged-correct', 'judged-wrong'));
+  document.querySelectorAll('.j-fb.show').forEach(f => f.classList.remove('show'));
+  document.querySelectorAll('.udq-item.revealed').forEach(it => { it.classList.remove('revealed'); it.querySelector('.ui-ans').textContent = '?'; });
+  document.querySelectorAll('.latch-cell.selected').forEach(c => c.classList.remove('selected'));
+  const latchInfo = document.getElementById('latchInfo');
+  if (latchInfo) latchInfo.innerHTML = '<span style="color:var(--text-sub);font-style:italic;">▲ 各文字をタップすると、軸の特徴と典型例(地図/辞書/年表/書店ジャンル/組織図)が表示されます。LATCH は出典:Richard Saul Wurman <em>Information Anxiety</em> (1989)。</span>';
+  document.querySelectorAll('#pointAnswersGrid .answer-row.revealed').forEach(r => { r.classList.remove('revealed'); r.querySelector('.answer-reveal').textContent = 'クリック'; });
+  document.querySelectorAll('.quiz-option').forEach(o => { o.classList.remove('correct', 'incorrect', 'chosen'); o.style.pointerEvents = 'auto'; });
+  document.querySelectorAll('.quiz-feedback.show').forEach(f => f.classList.remove('show'));
+  const reviewStart = document.getElementById('reviewStart');
+  const reviewQuiz = document.getElementById('reviewQuiz');
+  const reviewDone = document.getElementById('reviewDone');
+  if (reviewStart) reviewStart.style.display = 'block';
+  if (reviewQuiz) reviewQuiz.classList.remove('active');
+  if (reviewDone) reviewDone.classList.remove('active');
+  closeMenu();
+  goToSlide(0);
+}
+
+// a11y 初期化(rev4 メタレビュー対応): tabindex + keydown + aria-hidden を一括付与
+function initA11y() {
+  // 1) 装飾 SVG に aria-hidden + focusable=false 一括付与(idempotent)
+  document.querySelectorAll('svg').forEach(svg => {
+    if (svg.hasAttribute('aria-label') || svg.getAttribute('role') === 'img') return;
+    if (!svg.hasAttribute('aria-hidden')) svg.setAttribute('aria-hidden', 'true');
+    if (!svg.hasAttribute('focusable')) svg.setAttribute('focusable', 'false');
+  });
+  // 2) onclick 属性を持つ非 button 要素に tabindex="0" + role="button" + keydown handler を一括付与
+  // .answer-reveal は親 .answer-row でカバーされるので除外(rev5: 重複 focus 解消)
+  const clickableSel = '.icon-card, .chart-q, .sr-blank, .j-chip, .udq-item, .latch-cell, .answer-row, .quiz-option, .menu-item, .form-cell, .case-head';
+  const handleKeyAsClick = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      e.stopPropagation();  // rev5: グローバル Space ナビとの連続発火を防止
+      e.currentTarget.click();
+    }
+  };
+  document.querySelectorAll(clickableSel).forEach(el => {
+    if (el.tagName === 'BUTTON' || el.tagName === 'A') return;
+    if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
+    if (!el.hasAttribute('role')) el.setAttribute('role', 'button');
+    el.addEventListener('keydown', handleKeyAsClick);
+  });
+  // 3) menu の aria-expanded 動的同期
+  const menuToggle = document.querySelector('.menu-toggle');
+  const menuPanel = document.getElementById('menuPanel');
+  if (menuToggle && menuPanel) {
+    menuToggle.setAttribute('aria-expanded', menuPanel.classList.contains('open') ? 'true' : 'false');
+    menuToggle.setAttribute('aria-controls', 'menuPanel');
+    const observer = new MutationObserver(() => {
+      menuToggle.setAttribute('aria-expanded', menuPanel.classList.contains('open') ? 'true' : 'false');
+    });
+    observer.observe(menuPanel, { attributes: true, attributeFilter: ['class'] });
+  }
+}
+initA11y();
+
+// icon-card / answer-row 等の選択状態 → aria-pressed 動的反映(MutationObserver で一括)
+const ariaStateObserver = new MutationObserver((mutations) => {
+  mutations.forEach(m => {
+    if (m.type === 'attributes' && m.attributeName === 'class') {
+      const t = m.target;
+      if (t.matches && t.matches('.icon-card, .latch-cell, .form-cell')) {
+        t.setAttribute('aria-pressed', t.classList.contains('selected') ? 'true' : 'false');
+      } else if (t.matches && t.matches('.answer-row, .udq-item, .chart-q, .sr-blank')) {
+        t.setAttribute('aria-pressed', (t.classList.contains('revealed') || t.classList.contains('reveal')) ? 'true' : 'false');
+      }
+    }
+  });
+});
+document.querySelectorAll('.icon-card, .latch-cell, .form-cell, .answer-row, .udq-item, .chart-q, .sr-blank').forEach(el => {
+  el.setAttribute('aria-pressed', 'false');
+  ariaStateObserver.observe(el, { attributes: true, attributeFilter: ['class'] });
+});
+
+window.addEventListener('load', () => {
+  if (!isMobile()) return;
+  if (window._swipeHintShown) return;
+  window._swipeHintShown = true;
+  setTimeout(() => {
+    const hint = document.createElement('div');
+    hint.className = 'swipe-hint'; hint.textContent = 'スワイプで送る';
+    document.body.appendChild(hint);
+    requestAnimationFrame(() => hint.classList.add('show'));
+    setTimeout(() => hint.classList.remove('show'), 3200);
+    setTimeout(() => hint.remove(), 3700);
+  }, 900);
+});
+</script>
+</body>
+</html>
