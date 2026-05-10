@@ -1428,7 +1428,12 @@ function resetAllInteractions() {
   const latchInfo = document.getElementById('latchInfo');
   if (latchInfo) latchInfo.innerHTML = '<span style="color:var(--text-sub);font-style:italic;">▲ 各文字をタップすると、軸の特徴と典型例(地図/辞書/年表/書店ジャンル/組織図)が表示されます。LATCH は出典:Richard Saul Wurman <em>Information Anxiety</em> (1989)。</span>';
   document.querySelectorAll('#pointAnswersGrid .answer-row.revealed').forEach(r => { r.classList.remove('revealed'); r.querySelector('.answer-reveal').textContent = 'クリック'; });
-  document.querySelectorAll('.quiz-option').forEach(o => { o.classList.remove('correct', 'incorrect', 'chosen'); o.style.pointerEvents = 'auto'; });
+  document.querySelectorAll('.quiz-option').forEach(o => {
+    o.classList.remove('correct', 'incorrect', 'chosen');
+    o.style.pointerEvents = 'auto';
+    delete o.dataset.answered;  // rev7: rev6 で追加した属性の後始末
+    o.removeAttribute('aria-disabled');
+  });
   document.querySelectorAll('.quiz-feedback.show').forEach(f => f.classList.remove('show'));
   const reviewStart = document.getElementById('reviewStart');
   const reviewQuiz = document.getElementById('reviewQuiz');
