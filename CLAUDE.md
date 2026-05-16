@@ -15,6 +15,7 @@
 | **Interactive Lecture Lab**(授業用HTMLスライド) | `lectures/` | `/lectures/` | [lectures/CLAUDE.md](lectures/CLAUDE.md) |
 | **Interactive Practice Lab**(演習用HTML教材) | `practices/` | `/practices/` | [practices/CLAUDE.md](practices/CLAUDE.md) |
 | **Quiz Form Kit**(Google フォーム小テスト作成キット / GAS) | `quiz/` | `/quiz/` | [quiz/CLAUDE.md](quiz/CLAUDE.md) |
+| **Flashcards**(HTML 単一ファイルの一問一答 / 単語帳) | `flashcards/` | `/flashcards/` | [flashcards/CLAUDE.md](flashcards/CLAUDE.md) |
 | (将来) その他ツール | — | — | — |
 
 ---
@@ -81,7 +82,15 @@
 
 → [`quiz/CLAUDE.md`](quiz/CLAUDE.md) を読み、以降はその指示に従う
 
-> 注: 旧「一問一答(HTML 単一ファイルのフラッシュカード)」は本ツールとは別物。`quiz/` 枠は 2026-05 から **GAS による Google フォーム小テスト作成キット** で確定運用。HTML 単一ファイルの一問一答が必要になった場合は別フォルダ(例: `flashcards/`)で新設する。
+> 注: 「一問一答」「フラッシュカード」(HTML 単一ファイルで生徒が自習する用途)は **`flashcards/`** が担当。`quiz/` 枠は 2026-05 から **GAS による Google フォーム小テスト作成キット** で確定運用。
+
+### ▶ 一問一答 / 単語帳(flashcards)に行くキーワード
+
+- 「一問一答」「フラッシュカード」「単語帳」「用語確認」
+- 「HTML 単一ファイルで」「自習用に」「端末に進捗を保存」
+- 採点機能なしで生徒が自分で進捗チェックする教材
+
+→ [`flashcards/CLAUDE.md`](flashcards/CLAUDE.md) を読み、以降はその指示に従う
 
 ### ▶ ツールが判別できない場合
 
@@ -161,6 +170,7 @@ GitHub Pages で公開される際のURL:
 - 演習教材トップ: `https://mikikof.github.io/mikikof-lab/practices/`
 - 演習教材単元: `https://mikikof.github.io/mikikof-lab/practices/articles/{番号}-{slug}/`
 - (将来)クイズ: `https://mikikof.github.io/mikikof-lab/quiz/`
+- 一問一答 / 単語帳: `https://mikikof.github.io/mikikof-lab/flashcards/`
 
 各ツール内のリンク構造は、この階層を前提に組むこと。
 
@@ -181,6 +191,7 @@ GitHub Pages で公開される際のURL:
 - [x] Interactive Lecture Lab(授業用HTMLスライド) — 稼働中
 - [x] Interactive Practice Lab(演習用HTML教材) — 稼働中(1単元: 1章03 知的財産権の扱い)
 - [x] Quiz Form Kit(Google フォーム小テスト作成キット / GAS) — 稼働中(Phase 2 完了: 25 問構成 / 04 知財 6 + 05 個人情報 6 + 06 情報法 6 + 07 セキュリティ 7)
+- [x] Flashcards(HTML 単一ファイルの一問一答 / 単語帳) — 稼働中(2026-05 新設。情報社会 45 問 / 7 カテゴリ・list / 単語帳の二モード・localStorage で進捗保存)
 - [ ] その他のツール — 未定
 
 統合予定のツールがあれば、ユーザーに「今のタイミングで統合しますか?」と確認してから着手。

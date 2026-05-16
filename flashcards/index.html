@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="ja">
+<!--
+  ============================================================
+   Google サイト 埋め込みガイド
+  ============================================================
+   1. Google サイト「挿入」→「埋め込む」→「埋め込みコード」
+   2. このファイルの中身を全部コピペ
+   3. 推奨の高さ: 1400px / 幅は「幅広」
+  ============================================================
+-->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>情報社会 一問一答</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Base — soft cool neutrals */
+  --bg: #fafbfc;
+  --bg-2: #f4f5f7;
+  --bg-3: #eceef1;
+  --surface: #ffffff;
+  --surface-glass: rgba(255, 255, 255, 0.7);
+
+  --line: #e8eaed;
+  --line-2: #dfe2e6;
+  --line-strong: #c5c9cf;
+
+  --text: #1a1d23;
+  --text-soft: #474c55;
+  --text-muted: #8a909a;
+  --text-faint: #b8bcc3;
+
+  /* Blue — primary accent */
+  --blue-50: #eff5ff;
+  --blue-100: #dbe8fe;
+  --blue-200: #bfd5fd;
+  --blue-400: #60a5fa;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --blue-700: #1d4ed8;
+  --blue-900: #1e3a8a;
+
+  /* Subtle supporting hues */
+  --purple-500: #8b5cf6;
+  --indigo-500: #6366f1;
+  --slate-900: #0f172a;
+  --slate-800: #1e293b;
+
+  /* Elevation */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.03);
+  --shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.06), 0 2px 4px -1px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 20px 40px -12px rgba(15, 23, 42, 0.12), 0 8px 16px -4px rgba(15, 23, 42, 0.06);
+  --shadow-glow: 0 0 0 1px rgba(59, 130, 246, 0.1), 0 4px 24px -4px rgba(59, 130, 246, 0.25);
+
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+}
+
+*{ -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+html, body{ background: var(--bg); color: var(--text); margin: 0; padding: 0; }
+
+body{
+  font-family: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-feature-settings: "palt" 1, "ss01" 1, "cv11" 1;
+  letter-spacing: -0.011em;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* === Ambient background: aurora gradient mesh === */
+body::before{
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 0%, rgba(99, 102, 241, 0.08), transparent 55%),
+    radial-gradient(ellipse 60% 50% at 85% 15%, rgba(59, 130, 246, 0.07), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 50% 100%, rgba(139, 92, 246, 0.04), transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+body::after{
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.12 0 0 0 0 0.15 0 0 0 0.02 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.6;
+}
+
+#main-ui, #flashcard-view{ position: relative; z-index: 1; }
+
+.mono{ font-family: 'JetBrains Mono', monospace; letter-spacing: 0; }
+.display{ font-family: 'Fraunces', 'Shippori Mincho B1', serif; letter-spacing: -0.02em; font-optical-sizing: auto; }
+.eyebrow{
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+/* === Glass / surface === */
+.glass{
+  background: var(--surface-glass);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: var(--shadow-sm);
+}
+
+.card{
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  transition: all 0.2s ease;
+}
+
+.card-gradient{
+  background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+}
+.card-gradient::before{
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.4), transparent);
+}
+
+/* === Progress === */
+.progress-track{
+  height: 6px;
+  background: var(--bg-3);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+}
+.progress-fill{
+  height: 100%;
+  background: linear-gradient(90deg, var(--blue-500), var(--indigo-500));
+  border-radius: var(--radius-full);
+  transition: width 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+}
+.progress-fill::after{
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+  animation: shimmer 2.2s ease-in-out infinite;
+}
+@keyframes shimmer{
+  0%, 100%{ transform: translateX(-100%); }
+  50%{ transform: translateX(100%); }
+}
+
+/* Ring progress */
+.ring-prog{
+  --p: 0;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: conic-gradient(var(--blue-500) calc(var(--p)*1%), var(--line-2) 0);
+  position: relative;
+  flex-shrink: 0;
+}
+.ring-prog::after{
+  content:'';
+  position: absolute; inset: 2.5px;
+  background: var(--surface);
+  border-radius: 50%;
+}
+.ring-prog.done{
+  background: linear-gradient(135deg, var(--blue-500), var(--indigo-500));
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+.ring-prog.done::after{ background: transparent; }
+.ring-prog.done::before{
+  content:'✓';
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  z-index: 1;
+}
+
+/* === Toggle === */
+.j-switch{
+  position: relative;
+  width: 40px; height: 22px;
+  background: var(--line-strong);
+  border-radius: var(--radius-full);
+  transition: background 0.25s ease;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.j-switch::after{
+  content:'';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 18px; height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.15), 0 0 0 0.5px rgba(15, 23, 42, 0.04);
+}
+input:checked + .j-switch{
+  background: linear-gradient(135deg, var(--blue-500), var(--indigo-500));
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2), 0 4px 12px -2px rgba(59, 130, 246, 0.35);
+}
+input:checked + .j-switch::after{ transform: translateX(18px); }
+
+/* === Tabs === */
+.tab-btn{
+  white-space: nowrap;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-soft);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  transition: all 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.tab-btn:hover{
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--line);
+}
+.tab-btn.active{
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(99, 102, 241, 0.06));
+  color: var(--blue-700);
+  font-weight: 600;
+  border-color: rgba(59, 130, 246, 0.18);
+  box-shadow: var(--shadow-xs), 0 0 0 1px rgba(59, 130, 246, 0.06);
+}
+
+/* === Search === */
+.search-wrap{
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: all 0.2s;
+  box-shadow: var(--shadow-xs);
+}
+.search-wrap:focus-within{
+  border-color: var(--blue-500);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), var(--shadow-sm);
+}
+.search-wrap input{
+  width: 100%;
+  background: transparent;
+  padding: 11px 12px 11px 42px;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  border: none;
+  font-family: inherit;
+}
+.search-wrap input::placeholder{ color: var(--text-muted); }
+.search-wrap .ico{
+  position: absolute; left: 14px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+.search-wrap .kbd-hint{
+  position: absolute; right: 10px; top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* === Question item === */
+.q-item{
+  padding: 14px 14px;
+  border-radius: var(--radius);
+  transition: all 0.18s ease;
+  cursor: pointer;
+  border: 1px solid transparent;
+  position: relative;
+}
+.q-item:hover{
+  background: var(--surface);
+  border-color: var(--line);
+  box-shadow: var(--shadow-xs);
+}
+.q-item.open{
+  background: var(--surface);
+  border-color: var(--line);
+  box-shadow: var(--shadow-sm);
+}
+.q-item.mastered{ opacity: 0.52; }
+.q-item.mastered .q-text{ color: var(--text-muted); }
+
+.q-num{
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.q-chip{
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  background: var(--bg-2);
+  border-radius: var(--radius-full);
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+.q-chip.chip-cat{
+  background: linear-gradient(135deg, var(--blue-50), #f0f4ff);
+  color: var(--blue-700);
+  border: 1px solid var(--blue-100);
+}
+.q-chip.chip-hot{
+  background: linear-gradient(135deg, #fef2f2, #fef3f3);
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.q-text{
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.stars{ display: inline-flex; gap: 1px; color: var(--blue-500); font-size: 10px; }
+.star-empty{ color: var(--line-2); }
+
+.answer-reveal{
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.q-item.open .answer-reveal{ max-height: 300px; }
+
+.answer-box{
+  margin-top: 14px;
+  padding: 16px 18px;
+  background: linear-gradient(135deg, var(--blue-50), #f5f8ff);
+  border: 1px solid var(--blue-100);
+  border-radius: var(--radius);
+  position: relative;
+  overflow: hidden;
+}
+.answer-box::before{
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--blue-500), var(--indigo-500));
+}
+.answer-label{
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--blue-600);
+  font-weight: 600;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.answer-label::before{
+  content: '';
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--blue-500);
+  box-shadow: 0 0 6px var(--blue-500);
+}
+.answer-text{
+  font-family: 'Fraunces', 'Inter', serif;
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+/* === Checkbox === */
+.check-box{
+  width: 20px; height: 20px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--surface);
+  flex-shrink: 0;
+  position: relative;
+}
+.check-box:hover{
+  border-color: var(--blue-500);
+  background: var(--blue-50);
+  transform: scale(1.05);
+}
+.check-box.checked{
+  background: linear-gradient(135deg, var(--blue-500), var(--indigo-500));
+  border-color: transparent;
+  box-shadow: 0 4px 12px -2px rgba(59, 130, 246, 0.4);
+}
+.check-box.checked::after{
+  content: '';
+  width: 11px; height: 11px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>") center/contain no-repeat;
+}
+
+/* === Buttons === */
+.btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: var(--radius);
+  transition: all 0.18s ease;
+  cursor: pointer;
+  box-shadow: var(--shadow-xs);
+}
+.btn:hover{
+  background: var(--bg-2);
+  border-color: var(--line-strong);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+.btn:active{ transform: translateY(0); }
+
+.btn.primary{
+  background: linear-gradient(135deg, var(--blue-600), var(--indigo-500));
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.1), 0 4px 12px -2px rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  font-weight: 600;
+}
+.btn.primary:hover{
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.1), 0 8px 20px -4px rgba(59, 130, 246, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.btn.icon-only{ padding: 8px; }
+
+.icon-btn{
+  width: 34px; height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  background: transparent;
+  border: none;
+}
+.icon-btn:hover{
+  background: var(--bg-2);
+  color: var(--text);
+}
+
+/* === Flashcard === */
+#flashcard-view{ background: var(--bg); }
+.fc-nav{ border-bottom: 1px solid var(--line); }
+
+.fc-chip{
+  flex-shrink: 0;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-soft);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.18s;
+  cursor: pointer;
+  box-shadow: var(--shadow-xs);
+}
+.fc-chip:hover{
+  border-color: var(--line-strong);
+  background: var(--bg-2);
+}
+.fc-chip.active{
+  background: linear-gradient(135deg, var(--blue-600), var(--indigo-500));
+  color: #fff;
+  border-color: transparent;
+  font-weight: 600;
+  box-shadow: 0 4px 12px -2px rgba(59, 130, 246, 0.4);
+}
+
+#flashcard-container{
+  perspective: 2200px;
+  width: 100%;
+  max-width: 520px;
+  height: 440px;
+  margin: 0 auto;
+  position: relative;
+}
+.fc-card{
+  width: 100%; height: 100%;
+  position: absolute;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.34, 1.35, 0.6, 1), opacity 0.2s;
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
+}
+.fc-face{
+  position: absolute;
+  width: 100%; height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  padding: 36px 32px 28px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  overflow: hidden;
+  position: relative;
+}
+.fc-face::after{
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 20%, rgba(59, 130, 246, 0.5), transparent 80%);
+}
+.fc-back{
+  transform: rotateY(180deg);
+  background:
+    radial-gradient(ellipse 100% 80% at 0% 0%, rgba(99, 102, 241, 0.18), transparent 60%),
+    radial-gradient(ellipse 80% 60% at 100% 100%, rgba(139, 92, 246, 0.12), transparent 60%),
+    linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+  color: #f8fafc;
+  border-color: #1e293b;
+  box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.fc-back::after{
+  background: linear-gradient(90deg, transparent 20%, rgba(147, 197, 253, 0.5), transparent 80%);
+}
+.fc-card.flipped{ transform: rotateY(180deg); }
+
+.fc-meta-top{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.fc-back .fc-meta-top{ color: rgba(248, 250, 252, 0.45); }
+
+.fc-q-text{
+  font-family: 'Fraunces', 'Inter', serif;
+  font-size: 20px;
+  line-height: 1.55;
+  font-weight: 500;
+  color: var(--text);
+  margin: 18px 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.015em;
+}
+
+.fc-a-label{
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  color: #93c5fd;
+  margin: 16px 0 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.fc-a-label::before{
+  content: '';
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #60a5fa;
+  box-shadow: 0 0 10px #60a5fa;
+}
+.fc-a-text{
+  font-family: 'Fraunces', 'Inter', serif;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #f8fafc;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.02em;
+}
+
+.fc-hint{
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+  font-weight: 500;
+}
+.fc-back .fc-hint{ color: rgba(248, 250, 252, 0.4); }
+
+.slide-left{ transform: translateX(-160%) rotate(-6deg) !important; opacity: 0 !important; }
+.slide-right{ transform: translateX(160%) rotate(6deg) !important; opacity: 0 !important; }
+
+.fc-nav-btn{
+  width: 44px; height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: var(--radius-full);
+  color: var(--text);
+  transition: all 0.18s ease;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+}
+.fc-nav-btn:hover{
+  background: var(--bg-2);
+  border-color: var(--line-strong);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+.fc-nav-btn:active{ transform: translateY(0) scale(0.96); }
+
+.fc-master-btn{
+  padding: 12px 30px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  min-width: 200px;
+  box-shadow: var(--shadow-sm);
+}
+.fc-master-btn:hover{
+  background: var(--bg-2);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+.fc-master-btn.is-mastered{
+  background: linear-gradient(135deg, var(--blue-600), var(--indigo-500));
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 16px -2px rgba(59, 130, 246, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.fc-master-btn.is-mastered::before{ content:'✓ '; margin-right: 2px; }
+
+/* === Complete banner === */
+.complete-banner{
+  background:
+    radial-gradient(ellipse 80% 100% at 0% 0%, rgba(99, 102, 241, 0.08), transparent 60%),
+    linear-gradient(135deg, var(--blue-50), #f0f4ff);
+  border: 1px solid var(--blue-100);
+  color: var(--text);
+  padding: 24px 28px;
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.complete-icon{
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue-500), var(--indigo-500));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 8px 20px -4px rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* === kbd === */
+kbd{
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-bottom-width: 2px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: var(--text-soft);
+  margin: 0 2px;
+  font-weight: 500;
+  box-shadow: var(--shadow-xs);
+}
+
+.no-scrollbar::-webkit-scrollbar{ display: none; }
+.no-scrollbar{ scrollbar-width: none; }
+
+/* Dot — for section marker */
+.dot-accent{
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue-500), var(--indigo-500));
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+  display: inline-block;
+}
+
+@media (max-width: 640px){
+  .q-text{ font-size: 14px; }
+  .answer-text{ font-size: 16px; }
+  #flashcard-container{ height: 400px; max-width: 100%; }
+  .fc-face{ padding: 28px 24px 24px; }
+  .fc-q-text{ font-size: 17px; }
+  .fc-a-text{ font-size: 24px; }
+  .fc-master-btn{ min-width: 140px; padding: 10px 18px; font-size: 12px; }
+}
+
+@keyframes fadeIn{
+  from{ opacity: 0; transform: translateY(6px); }
+  to{ opacity: 1; transform: translateY(0); }
+}
+.fade-in{ animation: fadeIn 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+@keyframes pulse-dot{
+  0%, 100%{ opacity: 1; transform: scale(1); }
+  50%{ opacity: 0.6; transform: scale(0.85); }
+}
+.live-dot{ animation: pulse-dot 2s ease-in-out infinite; }
+</style>
+</head>
+<body>
+
+<div id="main-ui">
+  <div class="max-w-4xl mx-auto px-5 md:px-8 py-8 md:py-12">
+
+    <!-- ============ HEADER ============ -->
+    <header class="mb-10">
+      <div class="flex items-center justify-between gap-3 mb-8">
+        <div class="flex items-center gap-2.5">
+          <span class="dot-accent live-dot"></span>
+          <div class="eyebrow">Society 5.0 · 一問一答</div>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="toggleViewMode()" class="btn primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg>
+            単語帳
+          </button>
+          <button onclick="shuffleQuiz()" class="btn icon-only" title="シャッフル (S)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+          </button>
+          <button onclick="resetOrder()" class="btn icon-only" title="元の順番に戻す (R)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="mb-9">
+        <h1 class="display text-[30px] md:text-[38px] font-semibold leading-[1.1] tracking-tight" style="color:var(--text)">
+          情報社会 一問一答
+        </h1>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div class="card-gradient p-5 md:col-span-2" style="box-shadow: var(--shadow-sm)">
+          <div class="flex items-baseline justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-muted)"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 6-6"/></svg>
+              <div class="text-[12.5px] font-medium" style="color:var(--text-soft)">学習の進捗</div>
+            </div>
+            <div class="flex items-baseline gap-1.5">
+              <span id="progress-text" class="display text-[24px] font-semibold leading-none tracking-tight" style="color:var(--text)">0</span>
+              <span class="mono text-[12px]" style="color:var(--text-muted)">/ 45</span>
+              <span id="progress-pct" class="mono text-[12px] ml-2 font-semibold" style="background:linear-gradient(135deg,var(--blue-600),var(--indigo-500));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">0%</span>
+            </div>
+          </div>
+          <div class="progress-track">
+            <div id="progress-fill" class="progress-fill" style="width:0%"></div>
+          </div>
+        </div>
+
+        <label class="card-gradient p-5 flex items-center justify-between cursor-pointer" style="box-shadow: var(--shadow-sm)">
+          <div>
+            <div class="flex items-center gap-2 mb-0.5">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-muted)"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+              <div class="text-[12.5px] font-medium" style="color:var(--text-soft)">重要問題のみ</div>
+            </div>
+            <div class="text-[11px] mt-0.5" style="color:var(--text-muted)">★★以上を表示</div>
+          </div>
+          <input type="checkbox" class="diff-toggle" onchange="syncDifficulty(this)" style="position:absolute;opacity:0;pointer-events:none">
+          <span class="j-switch"></span>
+        </label>
+      </div>
+    </header>
+
+    <!-- SEARCH -->
+    <div class="search-wrap mb-6">
+      <span class="ico">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+      <input type="text" id="search-input" oninput="handleSearch()" placeholder="用語・問題を検索...">
+      <span class="kbd-hint"><kbd>/</kbd></span>
+    </div>
+
+    <!-- TABS -->
+    <nav id="tabs-nav" class="flex overflow-x-auto gap-1.5 no-scrollbar mb-6 pb-1"></nav>
+
+    <!-- COMPLETE BANNER -->
+    <div id="complete-banner" class="hidden complete-banner mb-6"></div>
+
+    <!-- LIST -->
+    <div id="quiz-container" class="flex flex-col gap-0.5"></div>
+
+    <!-- EMPTY -->
+    <div id="empty-state" class="hidden text-center py-20">
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-full mb-4" style="background:var(--bg-2); border: 1px solid var(--line)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted)"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
+      <p class="text-[14px]" style="color:var(--text-muted)">該当する問題はありません</p>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="mt-16 pt-6" style="border-top:1px solid var(--line)">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="flex flex-wrap gap-4 text-[12px]" style="color:var(--text-soft)">
+          <span><kbd>/</kbd> 検索</span>
+          <span><kbd>S</kbd> シャッフル</span>
+          <span><kbd>R</kbd> リセット</span>
+          <span><kbd>F</kbd> 単語帳</span>
+        </div>
+        <div class="text-[11.5px] flex items-center gap-1.5" style="color:var(--text-muted)">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          進捗はブラウザに保存されます
+        </div>
+      </div>
+    </footer>
+
+  </div>
+</div>
+
+
+<!-- ============ FLASHCARD VIEW ============ -->
+<div id="flashcard-view" class="hidden">
+  <div class="max-w-3xl mx-auto px-5 md:px-8 py-6 md:py-8">
+
+    <div class="fc-nav pb-4 mb-8">
+      <div class="flex items-center justify-between mb-4">
+        <button onclick="toggleViewMode()" class="icon-btn" title="戻る (Esc)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="flex items-center gap-2">
+          <span class="dot-accent live-dot" style="width:6px;height:6px"></span>
+          <div class="text-[13px] font-semibold">単語帳モード</div>
+        </div>
+        <div class="flex items-center gap-1">
+          <label class="flex items-center gap-2 cursor-pointer px-2">
+            <span class="text-[11px] font-medium" style="color:var(--text-soft)">重要のみ</span>
+            <input type="checkbox" class="diff-toggle" onchange="syncDifficulty(this)" style="position:absolute;opacity:0;pointer-events:none">
+            <span class="j-switch" style="width:32px;height:18px"></span>
+          </label>
+          <button onclick="shuffleQuiz()" class="icon-btn" title="シャッフル (S)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+          </button>
+          <button onclick="resetOrder()" class="icon-btn" title="リセット (R)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+          </button>
+        </div>
+      </div>
+      <div id="fc-category-scroll" class="flex overflow-x-auto gap-1.5 pb-1 no-scrollbar"></div>
+    </div>
+
+    <div class="flex flex-col items-center">
+      <div class="self-end mono text-[11px] mb-3 flex items-center gap-1.5" style="color:var(--text-muted)" id="fc-counter-wrap">
+        <span class="dot-accent" style="width:4px;height:4px"></span>
+        <span id="fc-counter-display">—</span>
+      </div>
+      <div id="flashcard-container"></div>
+    </div>
+
+    <div class="pt-6 mt-8 flex flex-col items-center gap-4" style="border-top:1px solid var(--line)">
+      <div class="flex items-center gap-4">
+        <button onclick="prevFlashcard()" class="fc-nav-btn" title="前へ (←)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button id="fc-master-btn" onclick="toggleMasterInFlashcard()" class="fc-master-btn">習得済みにする</button>
+        <button onclick="nextFlashcard()" class="fc-nav-btn" title="次へ (→)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+      <div class="hidden md:flex gap-4 text-[11px]" style="color:var(--text-soft)">
+        <span><kbd>←</kbd><kbd>→</kbd> 移動</span>
+        <span><kbd>Space</kbd> 裏返す</span>
+        <span><kbd>M</kbd> 習得</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+const categories = [
+  { id: 'all', label: 'すべて' },
+  { id: 'A', label: '情報と社会' },
+  { id: 'B', label: 'ビッグデータ' },
+  { id: 'C', label: '変遷する社会' },
+  { id: 'D', label: '特性' },
+  { id: 'E', label: 'モラル' },
+  { id: 'F', label: '問題' },
+  { id: 'G', label: '法律' }
+];
+
+const rawData = [
+  { id: 1, cat: 'A', diff: 3, q: '実験や観測を通じて得られた事実や事柄を、数字や文字、記号で表現したものを何と呼ぶか。', a: 'データ' },
+  { id: 2, cat: 'A', diff: 3, q: 'データを目的に応じて整理し、意味や価値を付加したものを何と呼ぶか。', a: '情報' },
+  { id: 3, cat: 'A', diff: 1, q: '情報を分析し、問題解決に役立つように蓄積したものを何と呼ぶか。', a: '知識' },
+  { id: 4, cat: 'A', diff: 1, q: '知識をもとに価値を創造する力を何と呼ぶか。', a: '知恵' },
+  { id: 5, cat: 'A', diff: 2, q: '情報の本質を「生命情報」「社会情報」「機械情報」の3つの概念で示し、人間社会の側面からも情報をとらえ直す学問を何と呼ぶか。', a: '基礎情報学' },
+  { id: 6, cat: 'A', diff: 2, q: '客観的に認知することはできないが、その情報をもって何かの命令となる情報を何と呼ぶか。', a: '生命情報' },
+  { id: 7, cat: 'A', diff: 1, q: 'コミュニケーションをするときに意味を成す情報を何と呼ぶか。', a: '社会情報' },
+  { id: 8, cat: 'A', diff: 1, q: '人が読み解けなくても、なんらかの形で意味を成す情報を何と呼ぶか。', a: '機械情報' },
+  { id: 9, cat: 'A', diff: 1, q: 'データ、情報、知識、知恵は、どの順で整理されるか。', a: 'データ → 情報 → 知識 → 知恵' },
+  { id: 10, cat: 'B', diff: 2, q: '膨大な量のデータを指し、解析することで新しい知識や傾向を見つけることができるものを何と呼ぶか。', a: 'ビッグデータ' },
+  { id: 11, cat: 'B', diff: 2, q: 'ビッグデータを特徴付ける3つの要素である Volume・Velocity・Variety の頭文字をまとめて何と呼ぶか。', a: '3V' },
+  { id: 12, cat: 'B', diff: 1, q: 'ビッグデータの特性の一つであり、データ量が膨大であることを何というか。', a: 'Volume' },
+  { id: 13, cat: 'B', diff: 1, q: 'データの形式や種類が多様であることを何というか。', a: 'Variety' },
+  { id: 14, cat: 'B', diff: 1, q: '処理が高速であることを何というか。', a: 'Velocity' },
+  { id: 15, cat: 'C', diff: 1, q: '主に狩猟や採集を通じて食料を得ていた社会を何と呼ぶか。', a: '狩猟社会(Society 1.0)' },
+  { id: 16, cat: 'C', diff: 1, q: '人類が土地に定住し、穀物を栽培して生活を送るようになった社会を何と呼ぶか。', a: '農耕社会(Society 2.0)' },
+  { id: 17, cat: 'C', diff: 2, q: '18世紀から19世紀にかけて、産業や生産方法に起きた大きな変革を何と呼ぶか。', a: '産業革命' },
+  { id: 18, cat: 'C', diff: 1, q: '蒸気機関の発明による産業革命で形成され、工業技術が基盤となった社会を何と呼ぶか。', a: '工業社会(Society 3.0)' },
+  { id: 19, cat: 'C', diff: 2, q: '情報技術が発展し、情報が社会全体に広く行き渡る社会を何と呼ぶか。', a: '情報社会(Society 4.0)' },
+  { id: 20, cat: 'C', diff: 2, q: 'サイバー空間とフィジカル空間を高度に融合させ、社会のさまざまなニーズにきめ細かく対応できる新しい情報社会を何と呼ぶか。', a: 'Society 5.0(超スマート社会)' },
+  { id: 21, cat: 'C', diff: 1, q: '社会の変遷を古い順に並べるとどうなるか。', a: '狩猟社会 → 農耕社会 → 工業社会 → 情報社会 → 超スマート社会' },
+  { id: 22, cat: 'D', diff: 1, q: '情報が、使ったり他者に与えたりしてもなくならない性質を何というか。', a: '残存性' },
+  { id: 23, cat: 'D', diff: 1, q: '情報が、短時間で簡単に複製できる性質を何というか。', a: '複製性' },
+  { id: 24, cat: 'D', diff: 1, q: '情報が、短時間に広く伝えられる性質を何というか。', a: '伝達性' },
+  { id: 25, cat: 'E', diff: 1, q: '正しい行動や価値観に関する規範、道徳的な考え方や態度を何というか。', a: 'モラル' },
+  { id: 26, cat: 'E', diff: 2, q: '情報社会で適切な行動をするための考え方や態度を何というか。', a: '情報モラル' },
+  { id: 27, cat: 'E', diff: 1, q: '社会や人間関係における良い行動、また情報を取り扱う際の好ましい行動や作法を何というか。', a: 'マナー' },
+  { id: 28, cat: 'E', diff: 1, q: '自分の名前や個人情報を隠すことを何というか。', a: '匿名' },
+  { id: 29, cat: 'F', diff: 1, q: 'SNSや電子掲示板などで、激しい議論や非難が広がる状態を何というか。', a: '炎上' },
+  { id: 30, cat: 'F', diff: 2, q: 'インターネット上に公開された書き込みや個人情報が、一度拡散すると半永久的に残り、完全に消すことが難しい状態を何というか。', a: 'デジタルタトゥー' },
+  { id: 31, cat: 'F', diff: 1, q: 'インターネットの利用が過度になり、日常生活で必要以上に頼ってしまう状態を何というか。', a: 'インターネット依存' },
+  { id: 32, cat: 'F', diff: 1, q: '情報技術に適応できず、新しい技術やデバイスに対する不安や心配が原因で生じる症状を何というか。', a: 'テクノ不安症' },
+  { id: 33, cat: 'F', diff: 1, q: '技術やデバイスに依存しすぎることで生じる問題を何というか。', a: 'テクノ依存症' },
+  { id: 34, cat: 'F', diff: 2, q: 'コンピュータ等を使うことによって生じるストレスや不快感を何というか。', a: 'テクノストレス' },
+  { id: 35, cat: 'F', diff: 2, q: 'ビデオディスプレイターミナル(VDT)を使うことが原因で起こる健康問題を何というか。', a: 'VDT障害' },
+  { id: 36, cat: 'F', diff: 2, q: 'ゲームに熱中しすぎて日常生活に支障が出る病気を何というか。', a: 'ゲーム障害' },
+  { id: 37, cat: 'F', diff: 1, q: 'インターネット上で悪口や嫌がらせを行ういじめを何というか。', a: 'ネットいじめ' },
+  { id: 38, cat: 'F', diff: 2, q: '情報通信技術を使える人と使えない人の間に生まれる差を何というか。', a: 'デジタルデバイド(情報格差)' },
+  { id: 39, cat: 'G', diff: 2, q: '商品やサービスの提供者と消費者の間の契約に関する法律を何というか。', a: '特定商取引に関する法律' },
+  { id: 40, cat: 'G', diff: 3, q: '通信サービスを提供する会社に対して、ユーザーが投稿した情報やコンテンツに関する一定の法的責任を制限する法律を何というか。', a: 'プロバイダ責任制限法' },
+  { id: 41, cat: 'G', diff: 2, q: '子どもたちが安全にインターネットを利用できるようにするための法律を何というか。', a: '青少年インターネット環境整備法' },
+  { id: 42, cat: 'G', diff: 2, q: 'インターネット異性紹介事業で児童を誘引する行為に対する法的な規制を設けるための法律を何というか。', a: '出会い系サイト規制法' },
+  { id: 43, cat: 'G', diff: 2, q: 'デジタルデータの取り扱いや電子取引のルールなど、デジタル環境での法的な取り決めを定める法律を何というか。', a: 'デジタル手続法' },
+  { id: 44, cat: 'G', diff: 2, q: 'デジタル社会を構築するための基本的な法律や指針を示した法令を何というか。', a: 'デジタル社会形成基本法' },
+  { id: 45, cat: 'G', diff: 2, q: '電子文書における電子署名のセキュリティを強化し、その文書が本人によって作成されたことを証明できるようにする法律を何というか。', a: '電子署名法' }
+];
+
+let quizList = [...rawData];
+let masteredIds = new Set();
+let currentFilter = 'all';
+let isFocusMode = false;
+let viewMode = 'list';
+let fcIndex = 0;
+let searchQuery = '';
+let isFlipped = false;
+const STORAGE_KEY = 'info-society-quiz:v3:mastered';
+
+function loadProgress(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){ masteredIds = new Set(JSON.parse(raw)); }
+  }catch(e){}
+}
+function saveProgress(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify([...masteredIds])); }
+  catch(e){ console.warn('localStorage unavailable:', e); }
+}
+
+function getFilteredData(){
+  return quizList.filter(item => {
+    const c = currentFilter === 'all' || item.cat === currentFilter;
+    const d = !isFocusMode || item.diff >= 2;
+    const s = !searchQuery || item.q.toLowerCase().includes(searchQuery.toLowerCase()) || item.a.toLowerCase().includes(searchQuery.toLowerCase());
+    return c && d && s;
+  });
+}
+
+function categoryStats(catId){
+  const list = rawData.filter(x => catId === 'all' || x.cat === catId);
+  const mastered = list.filter(x => masteredIds.has(x.id)).length;
+  return { total: list.length, mastered, pct: list.length ? Math.round(mastered / list.length * 100) : 0 };
+}
+
+function starsHTML(diff){
+  let s = '';
+  for(let i = 0; i < 3; i++){
+    s += `<span class="${i < diff ? '' : 'star-empty'}">★</span>`;
+  }
+  return `<span class="stars">${s}</span>`;
+}
+
+function render(){
+  const filtered = getFilteredData();
+  const mainUi = document.getElementById('main-ui');
+  const fcView = document.getElementById('flashcard-view');
+  const container = document.getElementById('quiz-container');
+  const emptyState = document.getElementById('empty-state');
+  const banner = document.getElementById('complete-banner');
+
+  renderTabs();
+
+  if(viewMode === 'list'){
+    mainUi.classList.remove('hidden');
+    fcView.classList.add('hidden');
+    container.innerHTML = '';
+
+    const st = categoryStats(currentFilter);
+    if(st.mastered > 0 && st.mastered === st.total && !searchQuery){
+      banner.classList.remove('hidden');
+      const catLabel = categories.find(c => c.id === currentFilter)?.label || '';
+      banner.innerHTML = `
+        <div class="complete-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="flex-1">
+          <div class="text-[15.5px] font-semibold mb-0.5" style="color:var(--text)">${currentFilter === 'all' ? '全問題を習得しました' : catLabel + 'のセクションを習得しました'}</div>
+          <div class="text-[12px]" style="color:var(--text-soft)">${st.mastered} / ${st.total} 完了</div>
+        </div>
+      `;
+    } else {
+      banner.classList.add('hidden');
+    }
+
+    if(filtered.length === 0){
+      emptyState.classList.remove('hidden');
+    } else {
+      emptyState.classList.add('hidden');
+      filtered.forEach((item, idx) => {
+        const isM = masteredIds.has(item.id);
+        const num = String(item.id).padStart(3, '0');
+        const el = document.createElement('div');
+        el.className = `q-item fade-in ${isM ? 'mastered' : ''}`;
+        el.id = `card-${item.id}`;
+        el.style.animationDelay = Math.min(idx * 20, 200) + 'ms';
+        el.innerHTML = `
+          <div class="flex items-start gap-3">
+            <div class="shrink-0 pt-0.5" onclick="event.stopPropagation(); window.toggleMastered(${item.id})">
+              <div class="check-box ${isM ? 'checked' : ''}"></div>
+            </div>
+            <div class="flex-1 min-w-0" onclick="window.toggleAnswer(${item.id})">
+              <div class="flex items-center gap-2 mb-2 flex-wrap">
+                <span class="q-num">#${num}</span>
+                <span class="q-chip chip-cat">${item.cat}</span>
+                ${starsHTML(item.diff)}
+                ${item.diff >= 3 ? '<span class="q-chip chip-hot">最重要</span>' : ''}
+              </div>
+              <p class="q-text">${item.q}</p>
+              <div class="answer-reveal">
+                <div class="answer-box">
+                  <div class="answer-label">Answer</div>
+                  <div class="answer-text">${item.a}</div>
+                </div>
+              </div>
+            </div>
+            <div class="shrink-0 pt-1.5" style="color:var(--text-muted)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.25s ease" class="chevron-${item.id}"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+        `;
+        container.appendChild(el);
+      });
+    }
+  } else {
+    mainUi.classList.add('hidden');
+    fcView.classList.remove('hidden');
+    renderFlashcard(filtered);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  updateProgressUI();
+  syncToggleUI();
+}
+
+function renderTabs(){
+  const main = document.getElementById('tabs-nav');
+  const mini = document.getElementById('fc-category-scroll');
+  if(!main || !mini) return;
+
+  const tabHtml = categories.map(cat => {
+    const st = categoryStats(cat.id);
+    const ringClass = (st.mastered === st.total && st.total > 0) ? 'done' : '';
+    return `
+      <button onclick="filterCategory('${cat.id}')" class="tab-btn ${currentFilter === cat.id ? 'active' : ''}">
+        <span class="ring-prog ${ringClass}" style="--p:${st.pct}"></span>
+        <span>${cat.label}</span>
+        <span class="mono text-[10.5px] font-normal" style="color:var(--text-muted)">${st.mastered}/${st.total}</span>
+      </button>
+    `;
+  }).join('');
+
+  const miniHtml = categories.map(cat => {
+    const st = categoryStats(cat.id);
+    return `
+      <button onclick="filterCategory('${cat.id}')" class="fc-chip ${currentFilter === cat.id ? 'active' : ''}">
+        ${cat.label} <span class="mono text-[10px] ${currentFilter === cat.id ? 'opacity-80' : ''}" style="${currentFilter !== cat.id ? 'color:var(--text-muted)' : ''}">${st.mastered}/${st.total}</span>
+      </button>
+    `;
+  }).join('');
+
+  main.innerHTML = tabHtml;
+  mini.innerHTML = miniHtml;
+}
+
+let touchStartX = 0, touchEndX = 0;
+
+function renderFlashcard(data){
+  const cont = document.getElementById('flashcard-container');
+  const counter = document.getElementById('fc-counter-display');
+  const masterBtn = document.getElementById('fc-master-btn');
+
+  cont.innerHTML = '';
+  if(data.length === 0){
+    counter.innerText = '0 / 0';
+    cont.innerHTML = `<div style="text-align:center; padding:80px 0;"><p class="text-[14px]" style="color:var(--text-muted)">該当する問題はありません</p></div>`;
+    return;
+  }
+
+  if(fcIndex >= data.length) fcIndex = data.length - 1;
+  if(fcIndex < 0) fcIndex = 0;
+
+  const item = data[fcIndex];
+  counter.innerText = `${String(fcIndex + 1).padStart(2, '0')} / ${String(data.length).padStart(2, '0')}`;
+
+  const isM = masteredIds.has(item.id);
+  masterBtn.innerText = isM ? '習得済み' : '習得済みにする';
+  masterBtn.classList.toggle('is-mastered', isM);
+
+  const num = String(item.id).padStart(3, '0');
+
+  const card = document.createElement('div');
+  card.className = `fc-card ${isFlipped ? 'flipped' : ''}`;
+  card.innerHTML = `
+    <div class="fc-face">
+      <div class="fc-meta-top">
+        <span>#${num} · ${item.cat}</span>
+        <span>${'★'.repeat(item.diff)}</span>
+      </div>
+      <div class="fc-q-text">${item.q}</div>
+      <div class="fc-hint">タップ / Space で答えを表示</div>
+    </div>
+    <div class="fc-face fc-back">
+      <div class="fc-meta-top">
+        <span>#${num} · ${item.cat}</span>
+        <span>${'★'.repeat(item.diff)}</span>
+      </div>
+      <div class="fc-a-label">Answer</div>
+      <div class="fc-a-text">${item.a}</div>
+      <div class="fc-hint">← Prev · Next → · M: Master</div>
+    </div>
+  `;
+
+  card.onclick = () => {
+    if(Math.abs(touchEndX - touchStartX) < 10){
+      isFlipped = !isFlipped;
+      card.classList.toggle('flipped');
+    }
+  };
+
+  card.ontouchstart = e => { touchStartX = e.changedTouches[0].screenX; touchEndX = touchStartX; };
+  card.ontouchmove = e => {
+    const mv = e.changedTouches[0].screenX - touchStartX;
+    touchEndX = e.changedTouches[0].screenX;
+    if(Math.abs(mv) > 6 && !isFlipped){
+      card.style.transform = `translateX(${mv}px) rotate(${mv * 0.025}deg)`;
+    }
+  };
+  card.ontouchend = e => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe(card);
+  };
+
+  cont.appendChild(card);
+}
+
+function handleSwipe(el){
+  const threshold = 70;
+  const diff = touchEndX - touchStartX;
+  if(isFlipped){ el.style.transform=''; return; }
+  if(diff < -threshold){
+    el.classList.add('slide-left');
+    setTimeout(() => { fcIndex++; isFlipped = false; render(); }, 200);
+  } else if(diff > threshold){
+    el.classList.add('slide-right');
+    setTimeout(() => { fcIndex--; isFlipped = false; render(); }, 200);
+  } else {
+    el.style.transform = '';
+  }
+}
+
+window.toggleAnswer = (id) => {
+  const el = document.getElementById(`card-${id}`);
+  if(!el) return;
+  el.classList.toggle('open');
+  const chev = el.querySelector(`.chevron-${id}`);
+  if(chev){
+    chev.style.transform = el.classList.contains('open') ? 'rotate(180deg)' : '';
+  }
+};
+window.toggleMastered = (id) => {
+  if(masteredIds.has(id)) masteredIds.delete(id);
+  else masteredIds.add(id);
+  saveProgress();
+  render();
+};
+window.toggleMasterInFlashcard = () => {
+  const d = getFilteredData();
+  if(d.length > 0){ window.toggleMastered(d[fcIndex].id); }
+};
+window.filterCategory = (cat) => { currentFilter = cat; fcIndex = 0; isFlipped = false; render(); };
+window.syncDifficulty = (el) => { isFocusMode = el.checked; fcIndex = 0; render(); };
+window.handleSearch = () => {
+  const i = document.getElementById('search-input');
+  searchQuery = i ? i.value : '';
+  fcIndex = 0;
+  render();
+};
+window.toggleViewMode = () => { viewMode = viewMode === 'list' ? 'card' : 'list'; isFlipped = false; render(); };
+window.shuffleQuiz = () => { quizList = [...quizList].sort(() => Math.random() - 0.5); fcIndex = 0; isFlipped = false; render(); };
+window.resetOrder = () => { quizList = [...rawData]; fcIndex = 0; isFlipped = false; render(); };
+window.nextFlashcard = () => {
+  const d = getFilteredData();
+  if(fcIndex < d.length - 1){ fcIndex++; isFlipped = false; render(); }
+};
+window.prevFlashcard = () => {
+  if(fcIndex > 0){ fcIndex--; isFlipped = false; render(); }
+};
+
+function updateProgressUI(){
+  const total = rawData.length;
+  const count = masteredIds.size;
+  const pct = Math.round((count / total) * 100);
+  const pt = document.getElementById('progress-text');
+  const pp = document.getElementById('progress-pct');
+  const pf = document.getElementById('progress-fill');
+  if(pt) pt.innerText = count;
+  if(pp) pp.innerText = pct + '%';
+  if(pf) pf.style.width = pct + '%';
+}
+function syncToggleUI(){
+  document.querySelectorAll('.diff-toggle').forEach(t => { t.checked = isFocusMode; });
+}
+
+document.addEventListener('keydown', e => {
+  if(e.target.tagName === 'INPUT') return;
+  if(viewMode === 'card'){
+    if(e.key === 'ArrowLeft'){ prevFlashcard(); }
+    else if(e.key === 'ArrowRight'){ nextFlashcard(); }
+    else if(e.key === ' '){ e.preventDefault(); isFlipped = !isFlipped; render(); }
+    else if(e.key === 'm' || e.key === 'M'){ toggleMasterInFlashcard(); }
+    else if(e.key === 'r' || e.key === 'R'){ resetOrder(); }
+    else if(e.key === 'Escape'){ toggleViewMode(); }
+  } else {
+    if(e.key === '/'){ e.preventDefault(); document.getElementById('search-input').focus(); }
+    else if(e.key === 's' || e.key === 'S'){ shuffleQuiz(); }
+    else if(e.key === 'r' || e.key === 'R'){ resetOrder(); }
+    else if(e.key === 'f' || e.key === 'F'){ toggleViewMode(); }
+  }
+});
+
+loadProgress();
+render();
+</script>
+</body>
+</html>
