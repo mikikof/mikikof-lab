@@ -1,0 +1,2251 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>アナログとデジタル | 情報Ⅰ 学習ノート対応</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Noto+Serif+JP:wght@400;500;600;700;900&family=Noto+Sans+JP:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;700&family=Yusei+Magic&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy-darkest: #0F2847; --navy-dark: #1B3A5B; --navy: #2C5F8D;
+  --navy-light: #4A7FA8; --navy-pale: #D4E1EF; --navy-bg: #F3F6FB;
+  --accent-red: #C8102E; --accent-red-dark: #8B0A1F; --accent-gold: #C9A961;
+  --text-main: #1A2332; --text-sub: #5A6378; --white: #FFFFFF; --ok-green: #1E824C;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(--text-main); background: var(--navy-darkest); overflow: hidden; -webkit-font-smoothing: antialiased; touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+.slide p, .slide li, .case-content, .practice-text, .def-desc, .quiz-question, .quiz-feedback, .answer-text, .deep-card p, .webdemo-legend, .src-note { -webkit-user-select: text; user-select: text; }
+.slide-container { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+.slide { position: absolute; top: 47px; bottom: 52px; left: 0; right: 0; padding: 4vh 5vw; opacity: 0; pointer-events: none; transform: translateX(30px); transition: opacity 0.4s ease, transform 0.4s ease; background: var(--white); overflow-y: auto; }
+.slide.active { opacity: 1; pointer-events: all; transform: translateX(0); }
+.topbar { position: fixed; top: 0; left: 0; right: 0; height: 44px; background: linear-gradient(180deg, var(--navy-darkest) 0%, var(--navy-dark) 100%); color: rgba(255,255,255,0.9); display: flex; align-items: center; padding: 0 24px; z-index: 100; font-size: 13px; letter-spacing: 0.05em; box-shadow: 0 2px 12px rgba(0,0,0,0.2); }
+.topbar-title { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 600; margin-right: 20px; }
+.topbar-subtitle { color: rgba(255,255,255,0.6); font-size: 12px; flex: 1; }
+.topbar-chapter { font-family: 'JetBrains Mono', monospace; color: var(--accent-gold); letter-spacing: 0.1em; font-size: 11px; }
+.progress { position: fixed; top: 44px; left: 0; height: 3px; background: linear-gradient(90deg, var(--accent-red) 0%, var(--accent-gold) 100%); z-index: 99; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 8px rgba(201, 169, 97, 0.5); }
+.bottombar { position: fixed; bottom: 0; left: 0; right: 0; height: 52px; background: var(--navy-darkest); color: rgba(255,255,255,0.85); display: flex; align-items: center; padding: 0 24px; z-index: 100; font-size: 13px; }
+.bottombar-nav { display: flex; gap: 12px; align-items: center; }
+.nav-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: white; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-size: 16px; }
+.nav-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.page-indicator { font-family: 'JetBrains Mono', monospace; margin-left: auto; margin-right: 16px; color: rgba(255,255,255,0.7); font-size: 12px; letter-spacing: 0.08em; }
+.slide-title-small { flex: 1; margin-left: 16px; font-size: 12px; color: rgba(255,255,255,0.5); font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; max-width: 40vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.keyboard-hint { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.4); margin-left: 10px; }
+.eyebrow { font-family: 'JetBrains Mono', monospace; color: var(--accent-red); font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 16px; }
+.slide-title { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; color: var(--navy-darkest); font-size: clamp(32px, 4.4vw, 56px); line-height: 1.15; margin-bottom: 10px; letter-spacing: -0.01em; }
+.slide-subtitle { font-size: clamp(17px, 1.7vw, 22px); color: var(--text-sub); font-weight: 500; margin-bottom: 30px; line-height: 1.7; }
+.section-heading { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; color: var(--navy-dark); font-size: 28px; margin-bottom: 18px; padding-left: 16px; border-left: 4px solid var(--accent-red); line-height: 1.3; }
+.body-text { font-size: 19px; line-height: 1.85; color: var(--text-main); font-weight: 500; }
+.highlight { background: linear-gradient(180deg, transparent 60%, rgba(201,169,97,0.4) 60%); font-weight: 700; padding: 0 2px; }
+.title-slide { display: flex; flex-direction: column; justify-content: center; background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy-dark) 60%, var(--navy) 100%); color: white; padding: 0 10vw; overflow: hidden; }
+.title-slide::before { content: ''; position: absolute; top: 0; right: 0; width: 45%; height: 100%; background: radial-gradient(circle at 70% 30%, rgba(201,169,97,0.15) 0%, transparent 50%), radial-gradient(circle at 30% 70%, rgba(200,16,46,0.1) 0%, transparent 50%); pointer-events: none; }
+.title-slide::after { content: ''; position: absolute; top: 50%; right: 8vw; width: 300px; height: 300px; border: 1px solid rgba(201,169,97,0.3); border-radius: 50%; transform: translateY(-50%); animation: rotate 40s linear infinite; }
+@keyframes rotate { to { transform: translateY(-50%) rotate(360deg); } }
+.title-label { font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.3em; color: var(--accent-gold); margin-bottom: 24px; }
+.title-main { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; font-size: clamp(60px, 8vw, 120px); line-height: 1; margin-bottom: 20px; letter-spacing: -0.02em; position: relative; z-index: 2; }
+.title-sub { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: clamp(20px, 2.3vw, 32px); font-weight: 300; color: rgba(255,255,255,0.85); margin-bottom: 60px; letter-spacing: 0.05em; }
+.title-meta { display: flex; gap: 40px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.6); letter-spacing: 0.15em; position: relative; z-index: 2; flex-wrap: wrap; }
+.title-meta-item strong { color: var(--accent-gold); margin-right: 8px; }
+.title-deco { position: absolute; bottom: 8vh; left: 10vw; width: 60px; height: 60px; opacity: 0.4; color: var(--accent-gold); z-index: 3; pointer-events: none; }
+.title-deco-2 { position: absolute; top: 12vh; right: 8vw; width: 44px; height: 44px; opacity: 0.3; color: var(--accent-gold); z-index: 3; pointer-events: none; }
+.section-divider { display: flex !important; flex-direction: column; justify-content: center !important; align-items: center !important; background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy) 100%); color: white; position: absolute; padding: 0 5vw !important; overflow: hidden !important; text-align: center; }
+.section-divider > * { position: relative; z-index: 2; }
+.section-divider::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 30%, rgba(201,169,97,0.1) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(200,16,46,0.08) 0%, transparent 40%); z-index: 1; }
+.section-divider .section-icon { width: 84px; height: 84px; margin: 0 auto 22px; display: block; opacity: 0.95; color: var(--accent-gold); }
+.section-number { font-family: 'JetBrains Mono', monospace; font-size: 14px; letter-spacing: 0.3em; color: var(--accent-gold); margin-bottom: 20px; }
+.section-title-big { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: clamp(44px, 6.4vw, 84px); font-weight: 900; line-height: 1.05; margin-bottom: 18px; text-align: center; }
+.section-tagline { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: clamp(18px, 2vw, 26px); font-weight: 300; color: rgba(255,255,255,0.75); letter-spacing: 0.05em; }
+.def-box { background: var(--navy-bg); border: 1px solid var(--navy-pale); border-radius: 6px; padding: 22px 26px; margin-bottom: 12px; }
+.def-box .def-label { font-family: 'JetBrains Mono', monospace; color: var(--accent-red); font-size: 11px; font-weight: 700; letter-spacing: 0.15em; margin-bottom: 6px; }
+.def-box .def-term { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 22px; color: var(--navy-darkest); margin-bottom: 8px; }
+.def-box .def-desc { font-size: 16px; line-height: 1.8; color: var(--text-main); font-weight: 500; }
+.note-blank { display: inline-block; min-width: 96px; padding: 2px 12px; background: var(--navy-pale); border-bottom: 2px solid var(--navy); color: var(--navy-dark); font-weight: 700; border-radius: 4px 4px 0 0; cursor: pointer; transition: all 0.2s; }
+.note-blank:hover { background: #BDD0E6; }
+.note-blank.reveal { background: var(--accent-gold); color: var(--navy-darkest); border-bottom-color: var(--accent-red); animation: reveal 0.5s; }
+@keyframes reveal { 0% { transform: scale(0.9); opacity: 0.5; } 50% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px; }
+.slide::-webkit-scrollbar { width: 6px; }
+.slide::-webkit-scrollbar-track { background: transparent; }
+.slide::-webkit-scrollbar-thumb { background: var(--navy-pale); border-radius: 3px; }
+@media print { .topbar, .bottombar, .progress { display: none; } }
+
+/* AGENDA */
+.agenda-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 22px; }
+.agenda-item { padding: 18px 20px; background: var(--navy-bg); border-left: 4px solid var(--navy); border-radius: 4px; transition: all 0.3s; display: flex; gap: 14px; align-items: flex-start; }
+.agenda-item:hover { background: var(--navy-pale); transform: translateX(4px); }
+.agenda-item.appendix { border-left-color: var(--accent-gold); background: linear-gradient(180deg, rgba(201,169,97,0.08) 0%, var(--navy-bg) 100%); }
+.agenda-item.appendix .agenda-num { color: var(--accent-gold); }
+.agenda-num { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: 26px; font-weight: 700; color: var(--accent-red); line-height: 1; min-width: 40px; }
+.agenda-content h3 { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 600; font-size: 16px; color: var(--navy-darkest); margin-bottom: 4px; }
+.agenda-content .a-tag { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.18em; color: var(--accent-gold); font-weight: 700; display: block; margin-bottom: 4px; }
+.agenda-content p { font-size: 12px; color: var(--text-sub); line-height: 1.55; }
+.agenda-item .ai-icon { width: 26px; height: 26px; flex-shrink: 0; color: var(--accent-red); margin-top: 2px; }
+.agenda-item.appendix .ai-icon { color: var(--accent-gold); }
+
+/* ICON-CARDS */
+.icon-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
+.icon-cards.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.icon-cards.cols-2 { grid-template-columns: repeat(2, 1fr); max-width: 720px; margin-left: auto; margin-right: auto; }
+.icon-card { background: white; border: 2px solid var(--navy-pale); border-radius: 14px; padding: 14px 8px 16px; text-align: center; cursor: pointer; transition: all 0.25s; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.icon-card:hover { border-color: var(--accent-gold); transform: translateY(-3px); box-shadow: 0 6px 18px rgba(15,40,71,0.1); }
+.icon-card.selected { border-color: var(--accent-red); background: linear-gradient(180deg, rgba(201,169,97,0.10) 0%, white 100%); box-shadow: 0 4px 14px rgba(200,16,46,0.12); }
+.icon-card-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; color: var(--accent-red); font-weight: 900; }
+.icon-card-svg { width: 60px; height: 60px; display: block; margin: 4px 0 2px; color: var(--navy-darkest); }
+.icon-card-name { font-family: 'Zen Maru Gothic', '游教科書体 横', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Sans JP', sans-serif; font-weight: 700; font-size: 17px; color: var(--navy-darkest); line-height: 1.4; letter-spacing: 0.01em; text-decoration: underline; text-decoration-color: rgba(201,169,97,0.85); text-decoration-thickness: 3.5px; text-underline-offset: 1px; text-decoration-skip-ink: none; }
+.icon-card-sub { font-family: 'Noto Sans JP', sans-serif; font-size: 11px; color: var(--text-sub); font-weight: 600; line-height: 1.4; }
+.cards-hint { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--text-sub); font-weight: 700; text-align: center; margin-top: 10px; }
+.icon-info-panel { margin-top: 16px; padding: 18px 20px; background: var(--navy-bg); border-left: 4px solid var(--accent-gold); border-radius: 0 4px 4px 0; min-height: 76px; font-size: 14.5px; line-height: 1.75; color: var(--text-main); font-weight: 500; }
+.icon-info-panel .ip-term { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; color: var(--navy-darkest); font-size: 17px; margin-right: 8px; }
+.icon-info-panel .ip-eng { font-family: 'JetBrains Mono', monospace; color: var(--accent-red); font-size: 11px; letter-spacing: 0.1em; }
+.icon-info-panel .ip-desc { display: block; margin-top: 8px; }
+
+/* CHART-PICKER (実習1・実習2 共用) */
+.chart-picker-wrap { max-width: 980px; margin: 14px auto 0; }
+.chart-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+.chart-options.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.chart-option { background: white; border: 2px solid var(--navy-pale); border-radius: 8px; padding: 10px 6px 12px; text-align: center; transition: all 0.25s; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.chart-option:hover { border-color: var(--accent-gold); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(15,40,71,0.08); }
+.chart-option svg { width: 72px; height: 56px; color: var(--navy); }
+.chart-option .co-letter { font-family: 'JetBrains Mono', monospace; font-weight: 900; color: var(--accent-red); font-size: 16px; line-height: 1; }
+.chart-option .co-name { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 12px; color: var(--navy-darkest); margin-top: 2px; line-height: 1.3; }
+.chart-option.highlight { box-shadow: 0 0 0 3px rgba(200,16,46,0.22); border-color: var(--accent-red); transform: translateY(-2px); }
+.chart-option.highlight .co-letter { color: var(--accent-red); font-size: 18px; }
+.chart-question-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.chart-q { background: var(--navy-bg); border: 1px solid var(--navy-pale); border-radius: 6px; padding: 14px 16px; cursor: pointer; transition: all 0.2s; }
+.chart-q:hover { background: var(--navy-pale); }
+.chart-q .cq-num { font-family: 'JetBrains Mono', monospace; font-weight: 900; color: var(--accent-red); font-size: 13px; letter-spacing: 0.05em; margin-bottom: 4px; }
+.chart-q .cq-text { font-size: 13.5px; line-height: 1.65; color: var(--text-main); font-weight: 500; }
+.chart-q .cq-ans { display: none; margin-top: 10px; padding: 10px 12px; background: white; border-left: 3px solid var(--accent-gold); border-radius: 0 4px 4px 0; font-size: 12.5px; color: var(--navy-darkest); line-height: 1.6; }
+.chart-q.revealed .cq-ans { display: block; animation: fadeIn 0.4s; }
+.chart-q.revealed { background: rgba(201,169,97,0.10); border-color: var(--accent-gold); }
+.chart-q .cq-ans-letter { font-family: 'JetBrains Mono', monospace; font-weight: 900; color: var(--accent-red); margin-right: 6px; }
+
+/* JUDGMENT-CHIP (実習3) */
+.judgment-list { display: flex; flex-direction: column; gap: 10px; max-width: 900px; margin: 14px auto 0; }
+.j-item { background: white; border: 2px solid var(--navy-pale); border-radius: 10px; padding: 14px 18px; display: flex; gap: 14px; align-items: flex-start; }
+.j-item .j-num { font-family: 'JetBrains Mono', monospace; font-weight: 900; color: var(--accent-red); font-size: 15px; min-width: 32px; padding-top: 2px; }
+.j-item .j-body { flex: 1; }
+.j-item .j-text { font-size: 14.5px; line-height: 1.7; color: var(--text-main); font-weight: 500; }
+.j-item .j-chips { display: flex; gap: 8px; margin-top: 10px; }
+.j-chip { padding: 6px 18px; background: var(--navy-bg); border: 2px solid var(--navy-pale); border-radius: 50px; cursor: pointer; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; font-size: 18px; color: var(--navy-dark); transition: all 0.2s; min-width: 60px; text-align: center; }
+.j-chip:hover { background: var(--navy-pale); }
+.j-chip.judged-correct { background: rgba(30,130,76,0.18); border-color: var(--ok-green); color: var(--ok-green); }
+.j-chip.judged-wrong { background: rgba(200,16,46,0.10); border-color: var(--accent-red); color: var(--accent-red); opacity: 0.65; }
+.j-fb { display: none; margin-top: 10px; padding: 10px 12px; background: var(--navy-bg); border-left: 3px solid var(--accent-gold); border-radius: 0 4px 4px 0; font-size: 12.5px; line-height: 1.7; color: var(--text-main); font-weight: 500; }
+.j-fb.show { display: block; animation: fadeIn 0.3s; }
+.j-fb strong { color: var(--navy-darkest); }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* FILL-PROSE (実習4) */
+.fill-prose { max-width: 920px; margin: 14px auto 0; font-size: 15px; line-height: 2.5; color: var(--text-main); font-weight: 500; background: var(--navy-bg); border: 1px solid var(--navy-pale); border-radius: 8px; padding: 20px 26px; }
+.sr-blank { display: inline-block; min-width: 84px; padding: 2px 12px; background: var(--navy-pale); border-bottom: 2px solid var(--navy); color: var(--navy-dark); font-weight: 700; border-radius: 4px 4px 0 0; cursor: pointer; transition: all 0.2s; text-align: center; font-size: 14px; }
+.sr-blank:hover { background: #BDD0E6; }
+.sr-blank.reveal { background: var(--accent-gold); color: var(--navy-darkest); border-bottom-color: var(--accent-red); }
+.select-pool { margin: 12px auto 0; max-width: 920px; padding: 12px 16px; background: white; border: 1px dashed var(--navy-pale); border-radius: 6px; font-size: 13px; line-height: 1.85; color: var(--text-sub); font-weight: 600; }
+.select-pool .sp-label { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.15em; color: var(--accent-red); font-weight: 700; margin-right: 8px; }
+.select-pool .sp-item { display: inline-block; margin-right: 14px; color: var(--navy-darkest); font-weight: 700; }
+
+/* COMPARISON-VISUAL (参考B) */
+.comp-visual { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 12px; align-items: stretch; max-width: 900px; margin: 14px auto 0; }
+.comp-side { background: linear-gradient(160deg, white 0%, var(--navy-bg) 100%); border: 2px solid var(--navy-pale); border-radius: 12px; padding: 18px 22px; display: flex; flex-direction: column; gap: 8px; }
+.comp-side.left { border-color: rgba(200,16,46,0.4); background: linear-gradient(160deg, white 0%, rgba(200,16,46,0.05) 100%); }
+.comp-side.right { border-color: rgba(30,130,76,0.5); background: linear-gradient(160deg, white 0%, rgba(30,130,76,0.06) 100%); }
+.comp-side .cs-tag { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.18em; font-weight: 900; }
+.comp-side.left .cs-tag { color: var(--accent-red); }
+.comp-side.right .cs-tag { color: var(--ok-green); }
+.comp-side .cs-name { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; font-size: 20px; color: var(--navy-darkest); }
+.comp-side .cs-code { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; background: var(--navy-darkest); color: #cdd9e8; padding: 8px 10px; border-radius: 4px; word-break: break-all; }
+.comp-side .cs-code .at { color: var(--accent-gold); }
+.comp-side .cs-desc { font-size: 13px; line-height: 1.7; color: var(--text-main); font-weight: 500; }
+.comp-arrow { display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 900; color: var(--accent-gold); }
+
+/* DEEP-CARD (参考) */
+.deep-card { background: white; border: 1px solid var(--navy-pale); border-left: 5px solid var(--accent-gold); border-radius: 8px; padding: 18px 24px; margin-bottom: 12px; }
+.deep-card h4 { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; color: var(--navy-darkest); font-size: 18px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+.deep-card h4 svg { width: 22px; height: 22px; color: var(--accent-gold); }
+.deep-card p { font-size: 13.5px; line-height: 1.8; color: var(--text-main); font-weight: 500; }
+.deep-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--accent-red); font-weight: 700; margin-bottom: 6px; display: block; }
+
+/* SRC-CODE (注釈つき HTML) */
+.src-code { background: #0F2847; color: #cdd9e8; border-radius: 8px; padding: 18px 22px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.9; overflow-x: auto; max-width: 760px; margin: 12px auto 0; }
+.src-code .tg { color: #7fb2da; }
+.src-code .at { color: #C9A961; }
+.src-code .cm { color: #6b7a8d; }
+.src-code .tx { color: #f3f6fb; }
+.src-code .ln { display: block; white-space: pre; }
+.src-note { max-width: 760px; margin: 10px auto 0; font-size: 12.5px; color: var(--text-sub); line-height: 1.7; }
+.src-note strong { color: var(--navy-darkest); }
+
+/* WEBDEMO (動く HTML / CSS) */
+.webdemo { max-width: 980px; margin: 10px auto 0; }
+.webdemo-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
+.wd-btn { background: var(--navy-bg); border: 2px solid var(--navy-pale); color: var(--navy-darkest); padding: 9px 16px; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.2s; }
+.wd-btn:hover { border-color: var(--accent-gold); }
+.wd-btn.on { background: var(--navy-darkest); color: white; border-color: var(--navy-darkest); }
+.wd-width { display: flex; align-items: center; gap: 8px; margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-sub); font-weight: 700; }
+.wd-width input[type=range] { width: 120px; accent-color: var(--navy); }
+.webdemo-stage { background: repeating-linear-gradient(45deg, #eef2f8, #eef2f8 10px, #e6ecf5 10px, #e6ecf5 20px); border: 1px solid var(--navy-pale); border-radius: 10px; padding: 16px; display: flex; justify-content: center; }
+.webdemo-doc { width: 100%; max-width: 640px; background: white; border: 1px solid #c4ccd6; transition: max-width 0.35s; overflow: hidden; font-family: 'Times New Roman', 'Noto Serif JP', serif; color: #000; text-align: left; }
+.wd-header { font-size: 25px; font-weight: 700; padding: 4px 10px; }
+.wd-nav { padding: 2px 10px; }
+.wd-nav span { color: #0000ee; text-decoration: underline; margin-right: 14px; }
+.wd-main { padding: 2px 10px 8px; }
+.wd-h1 { font-size: 21px; font-weight: 700; margin: 8px 0; }
+.wd-p { font-size: 15px; margin: 6px 0; line-height: 1.5; }
+.wd-a { color: #0000ee; text-decoration: underline; display: inline-block; margin: 8px 0; }
+.wd-img { margin: 8px 0; }
+.wd-img svg { width: 190px; height: 116px; display: block; }
+.wd-broken { display: none; width: 190px; height: 116px; border: 2px dashed #b00020; color: #b00020; font-family: 'Noto Sans JP', sans-serif; font-size: 12px; align-items: center; justify-content: center; text-align: center; padding: 8px; background: #fbeaea; box-sizing: border-box; }
+.webdemo-doc.no-img .wd-img svg { display: none; }
+.webdemo-doc.no-img .wd-broken { display: flex; }
+.wd-footer { font-size: 12px; padding: 6px 10px; color: #333; }
+.webdemo-doc.styled { font-family: 'Noto Sans JP', sans-serif; color: var(--text-main); border-radius: 8px; }
+.webdemo-doc.styled .wd-header { background: var(--navy-darkest); color: white; font-size: 18px; padding: 14px 18px; font-family: 'Noto Sans JP', sans-serif; font-weight: 700; }
+.webdemo-doc.styled .wd-nav { background: var(--navy-bg); padding: 10px 18px; display: flex; gap: 8px; flex-wrap: wrap; border-bottom: 1px solid var(--navy-pale); }
+.webdemo-doc.styled .wd-nav span { color: var(--navy); background: white; border: 1px solid var(--navy-pale); border-radius: 50px; padding: 4px 14px; text-decoration: none; font-size: 13px; font-weight: 600; }
+.webdemo-doc.styled .wd-main { padding: 18px; }
+.webdemo-doc.styled .wd-h1 { color: var(--navy-darkest); font-size: 20px; border-left: 4px solid var(--accent-red); padding-left: 12px; }
+.webdemo-doc.styled .wd-p { color: var(--text-main); font-size: 14px; }
+.webdemo-doc.styled .wd-a { background: var(--navy); color: white; text-decoration: none; padding: 8px 18px; border-radius: 6px; font-size: 13px; font-weight: 600; }
+.webdemo-doc.styled .wd-img svg { border-radius: 8px; }
+.webdemo-doc.styled .wd-footer { background: var(--navy-bg); color: var(--text-sub); padding: 12px 18px; text-align: center; font-size: 12px; }
+.webdemo-doc.styled.narrow .wd-nav { flex-direction: column; gap: 4px; }
+.webdemo-doc.styled.narrow .wd-nav span { text-align: center; }
+.webdemo-legend { margin-top: 12px; padding: 12px 16px; background: var(--navy-bg); border-left: 4px solid var(--accent-gold); border-radius: 0 4px 4px 0; font-size: 13px; line-height: 1.75; color: var(--text-main); font-weight: 500; }
+.webdemo-legend strong { color: var(--navy-darkest); }
+
+/* RELATION FIGURE (visual: Web サイトの全体像) */
+.relate-fig { max-width: 720px; margin: 8px auto 0; }
+.relate-fig svg { width: 100%; height: auto; display: block; }
+.relate-crumb { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: center; margin: 12px auto 0; font-size: 13px; }
+.relate-crumb .rc-pill { background: var(--navy-bg); border: 1px solid var(--navy-pale); border-radius: 50px; padding: 4px 14px; font-weight: 600; color: var(--navy-dark); }
+.relate-crumb .rc-pill.here { background: var(--accent-gold); color: var(--navy-darkest); border-color: var(--accent-gold); font-weight: 700; }
+.relate-crumb .rc-sep { color: var(--text-sub); font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+.relate-legend { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; max-width: 760px; margin: 14px auto 0; }
+.rl-item { display: flex; align-items: baseline; gap: 8px; background: var(--navy-bg); border-left: 3px solid var(--navy); border-radius: 0 4px 4px 0; padding: 8px 12px; font-size: 13px; font-weight: 500; color: var(--text-main); line-height: 1.55; }
+.rl-item .rl-key { font-family: 'JetBrains Mono', monospace; font-weight: 900; color: var(--accent-red); min-width: 18px; }
+.rl-item .rl-name { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; color: var(--navy-darkest); }
+
+/* ROLE-SPLIT (visual: HTML + CSS = 完成ページ) */
+.role-split { display: grid; grid-template-columns: 1fr 36px 1fr 36px 1fr; align-items: center; gap: 6px; max-width: 900px; margin: 18px auto 0; }
+.role-panel { background: white; border: 2px solid var(--navy-pale); border-radius: 12px; padding: 14px 12px 16px; text-align: center; }
+.role-panel.css { border-color: rgba(201,169,97,0.6); background: linear-gradient(180deg, rgba(201,169,97,0.06) 0%, white 100%); }
+.role-panel.result { border-color: var(--navy); box-shadow: 0 6px 18px rgba(15,40,71,0.1); }
+.role-panel .rp-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.16em; font-weight: 900; color: var(--accent-red); }
+.role-panel.css .rp-tag { color: #8a6d1f; }
+.role-panel .rp-name { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; font-size: 16px; color: var(--navy-darkest); margin: 2px 0 8px; }
+.role-panel svg { width: 100%; max-width: 200px; height: 116px; }
+.role-panel .rp-note { font-size: 11.5px; color: var(--text-sub); margin-top: 8px; line-height: 1.5; }
+.role-op { font-family: 'JetBrains Mono', monospace; font-size: 28px; font-weight: 900; color: var(--navy); text-align: center; }
+.role-foot { max-width: 760px; margin: 14px auto 0; text-align: center; font-size: 13.5px; color: var(--text-main); font-weight: 500; line-height: 1.7; }
+.role-foot strong { color: var(--navy-darkest); }
+
+/* 動くアイコン / 動く図(控えめ) */
+@keyframes iconPop { 0% { transform: scale(0.86); } 60% { transform: scale(1.06); } 100% { transform: scale(1); } }
+.icon-card.selected .icon-card-svg { animation: iconPop 0.4s ease; }
+@keyframes linkFlow { to { stroke-dashoffset: -28; } }
+.relate-fig .flow { stroke-dasharray: 7 7; animation: linkFlow 1.3s linear infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .relate-fig .flow { animation: none; stroke-dasharray: none; }
+  .icon-card.selected .icon-card-svg { animation: none; }
+  .title-slide::after { animation: none; }
+}
+@media (max-width: 720px) {
+  .role-split { grid-template-columns: 1fr; gap: 4px; }
+  .role-op { transform: rotate(90deg); font-size: 22px; }
+  .relate-legend { grid-template-columns: 1fr; }
+}
+
+/* ANSWERS-GRID */
+.answers-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 16px; max-width: 920px; margin-left: auto; margin-right: auto; }
+.answer-row { display: flex; align-items: center; padding: 8px 12px; background: var(--navy-bg); border-radius: 4px; gap: 10px; border-left: 3px solid var(--navy); cursor: pointer; transition: all 0.2s; }
+.answer-row:hover { background: var(--navy-pale); }
+.answer-num { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--accent-red); font-size: 12.5px; min-width: 28px; }
+.answer-text { flex: 1; font-size: 12.5px; font-weight: 600; color: var(--navy-darkest); }
+.answer-reveal { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; padding: 3px 9px; background: var(--navy-dark); color: white; border-radius: 3px; letter-spacing: 0.05em; transition: all 0.3s; min-width: 56px; text-align: center; }
+.answer-row.revealed .answer-reveal { background: var(--accent-gold); color: var(--navy-darkest); font-weight: 700; }
+.answers-actions { display: flex; gap: 10px; justify-content: center; margin-top: 14px; }
+.answers-actions button { background: transparent; border: 1.5px solid var(--navy-dark); color: var(--navy-darkest); padding: 8px 18px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.15em; font-weight: 700; border-radius: 4px; cursor: pointer; transition: all 0.2s; }
+.answers-actions button:hover { background: var(--navy-darkest); color: white; }
+.answer-section-head { grid-column: 1 / -1; display: flex !important; align-items: center; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; color: var(--accent-red); font-weight: 700; padding: 12px 6px 4px; border-bottom: 1px solid var(--navy-pale); margin-top: 6px; }
+.answer-section-head svg { width: 18px; height: 18px; flex-shrink: 0; color: var(--accent-red); opacity: 0.85; }
+
+/* SUMMARY-TREE */
+.summary-tree { display: flex; flex-direction: column; align-items: center; gap: 14px; max-width: 900px; margin: 14px auto 0; }
+.tree-root { background: linear-gradient(135deg, var(--navy-darkest) 0%, var(--navy) 100%); color: white; padding: 16px 28px; border-radius: 10px; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; font-size: 21px; box-shadow: 0 6px 18px rgba(15,40,71,0.25); display: flex; align-items: center; gap: 12px; text-align: center; }
+.tree-root svg { width: 28px; height: 28px; color: var(--accent-gold); flex-shrink: 0; }
+.tree-branches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; }
+.tree-branch { background: var(--navy-bg); border: 2px solid var(--navy-pale); border-radius: 8px; padding: 14px 10px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.tree-branch h4 { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; color: var(--navy-darkest); font-size: 14px; margin-bottom: 4px; line-height: 1.3; }
+.tree-branch p { font-size: 11px; color: var(--text-sub); line-height: 1.55; }
+.tree-branch .tb-tag { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: var(--accent-red); letter-spacing: 0.1em; margin-bottom: 6px; font-weight: 700; }
+.tree-branch .tb-icon { width: 36px; height: 36px; margin: 4px auto 6px; display: block; color: var(--navy); }
+.tree-branch.accent { border-color: var(--accent-gold); background: rgba(201,169,97,0.08); }
+.tree-branch.accent .tb-icon { color: #8a6d1f; }
+
+/* QUIZ / REVIEW */
+.quiz-question { background: var(--navy-darkest); color: white; padding: 16px 22px; border-radius: 6px 6px 0 0; font-size: 18px; line-height: 1.6; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 600; }
+.quiz-question-num { font-family: 'JetBrains Mono', monospace; color: var(--accent-gold); font-size: 11px; letter-spacing: 0.2em; margin-bottom: 6px; display: block; }
+.quiz-options { background: var(--white); border: 1px solid var(--navy-pale); border-top: none; border-radius: 0 0 6px 6px; padding: 14px; }
+.quiz-option { padding: 12px 14px; margin-bottom: 6px; background: var(--navy-bg); border: 2px solid transparent; border-radius: 4px; cursor: pointer; transition: all 0.2s; display: flex; gap: 12px; align-items: flex-start; font-size: 14.5px; }
+.quiz-option:hover { border-color: var(--navy); background: var(--navy-pale); }
+.quiz-option:last-child { margin-bottom: 0; }
+.quiz-option-letter { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--navy); min-width: 22px; }
+.quiz-option.correct { background: rgba(30,130,76,0.1); border-color: #1E824C; }
+.quiz-option.correct .quiz-option-letter { color: #1E824C; }
+.quiz-option.incorrect { background: rgba(200,16,46,0.08); border-color: var(--accent-red); opacity: 0.6; }
+.review-container { max-width: 780px; margin: 14px auto 0; text-align: center; }
+.review-intro { font-size: 14.5px; color: var(--text-sub); margin-bottom: 22px; line-height: 1.8; }
+.review-start-btn { background: var(--navy-darkest); color: white; border: none; padding: 14px 38px; font-size: 15px; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 600; border-radius: 50px; cursor: pointer; transition: all 0.3s; box-shadow: 0 6px 20px rgba(15,40,71,0.25); }
+.review-start-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(15,40,71,0.35); background: var(--navy); }
+.review-q-area { display: none; margin-top: 22px; }
+.review-q-area.active { display: block; }
+.review-progress { font-family: 'JetBrains Mono', monospace; color: var(--navy); font-size: 12px; letter-spacing: 0.15em; margin-bottom: 12px; }
+.review-result { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-size: 46px; font-weight: 700; color: var(--accent-red); margin: 18px 0 8px; }
+.review-result-sub { font-size: 14px; color: var(--text-sub); margin-bottom: 20px; }
+.review-retry-btn { background: transparent; border: 2px solid var(--navy); color: var(--navy-darkest); padding: 10px 22px; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 600; border-radius: 30px; cursor: pointer; transition: all 0.2s; }
+.review-retry-btn:hover { background: var(--navy-darkest); color: white; }
+
+/* MIKI.COM コード実演ステッパー(手描きポップ / hosoku と同じ世界観) */
+.miki-demo { max-width: 980px; margin: 10px auto 0; font-family: "Zen Maru Gothic","Klee One",sans-serif; }
+.md-stage { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.md-pane { border: 2.5px solid #3b3a42; border-radius: 22px 8px 24px 9px/9px 24px 8px 22px; box-shadow: 3px 4px 0 rgba(59,58,66,.12); overflow: hidden; }
+.md-pane-tag { font-family: "Yusei Magic",cursive; font-size: 11px; letter-spacing: .12em; padding: 7px 16px; }
+.md-code { background: #0F2847; }
+.md-code .md-pane-tag { color: #9db8de; border-bottom: 1px dashed rgba(255,255,255,.18); }
+.md-codelines { padding: 12px 16px; font-family: "JetBrains Mono",monospace; font-size: 13px; line-height: 1.9; min-height: 196px; }
+.mdc-line { color: #cdd9e8; white-space: pre-wrap; opacity: 0; max-height: 0; overflow: hidden; transition: opacity .3s ease, max-height .35s ease; }
+.mdc-line.on { opacity: 1; max-height: 64px; }
+.md-code .tg { color: #7fb2da; } .md-code .at { color: #C9A961; } .md-code .tx { color: #f3f6fb; } .md-code .cm { color: #6b7a8d; }
+.md-prev { background: #fff; }
+.md-prev .md-pane-tag { color: #2c5a99; border-bottom: 1px dashed #c7d6ea; }
+.md-doc { padding: 14px 16px; min-height: 196px; font-family: 'Times New Roman','Noto Serif JP',serif; color: #000; }
+.mdp-line { opacity: 0; max-height: 0; overflow: hidden; transition: opacity .3s ease, max-height .4s ease; }
+.mdp-line.on { opacity: 1; max-height: 220px; margin-bottom: 8px; }
+.mdp-h1 { font-size: 22px; font-weight: 700; }
+.mdp-p { font-size: 14px; line-height: 1.5; }
+.mdp-img svg { width: 150px; height: 90px; display: block; }
+.mdp-a { color: #0000ee; text-decoration: underline; display: inline-block; }
+.md-doc.styled { font-family: 'Noto Sans JP',sans-serif; color: var(--text-main); }
+.md-doc.styled .mdp-h1 { color: #0F2847; border-left: 5px solid #C8102E; padding-left: 10px; font-size: 20px; }
+.md-doc.styled .mdp-p { font-size: 14px; }
+.md-doc.styled .mdp-a { background: #2C5F8D; color: #fff; text-decoration: none; padding: 6px 14px; border-radius: 6px; font-size: 13px; }
+.md-doc.styled .mdp-img svg { border-radius: 8px; }
+.md-miki { display: flex; gap: 14px; align-items: stretch; background: #fff; border: 2.5px solid #3b3a42; border-radius: 20px 8px 22px 9px/9px 22px 8px 20px; box-shadow: 3px 4px 0 rgba(59,58,66,.12); padding: 13px 18px; margin-top: 14px; min-height: 74px; }
+.md-ava { width: 54px; height: 54px; border-radius: 14px; background: #e9f0fb; display: grid; place-items: center; flex: 0 0 auto; align-self: center; }
+.md-ava svg { width: 34px; height: 34px; fill: none; stroke: #2c5a99; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.md-bubble { flex: 1; align-self: center; }
+.md-name { font-family: "Yusei Magic",cursive; font-size: 12.5px; color: #2c5a99; display: flex; align-items: center; gap: 9px; margin-bottom: 5px; }
+.md-tag { background: #e0584f; color: #fff; border-radius: 7px 4px 8px 5px/5px 8px 4px 7px; padding: 2px 9px; font-size: 10.5px; letter-spacing: .04em; }
+.md-say { font-family: "Zen Maru Gothic","Klee One",sans-serif; font-weight: 500; font-size: 15.5px; line-height: 1.62; color: #2f2e36; }
+.md-say b { color: #bb453d; font-weight: 700; }
+.md-ctrl { display: flex; align-items: center; gap: 12px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
+.md-btn { font-family: "Yusei Magic",cursive; font-size: 14px; color: #2c5a99; background: #fff; border: 2.5px solid #2c5a99; padding: 8px 18px; border-radius: 120px 9px 110px 11px/9px 110px 11px 120px; cursor: pointer; box-shadow: 2.5px 3px 0 rgba(44,90,153,.16); transition: transform .14s ease, box-shadow .15s ease; }
+.md-btn:hover { transform: translate(-1px,-1px); box-shadow: 4px 5px 0 rgba(44,90,153,.22); }
+.md-btn:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 rgba(44,90,153,.22); }
+.md-btn:disabled { opacity: .4; cursor: not-allowed; box-shadow: none; transform: none; }
+.md-btn-main { background: #2c5a99; color: #fff; }
+.md-reset { border-color: #e0584f; color: #e0584f; box-shadow: 2.5px 3px 0 rgba(224,88,79,.16); }
+.md-dots { display: flex; gap: 7px; }
+.md-dot { width: 11px; height: 11px; border-radius: 50%; background: #fff; border: 2px solid #c7d6ea; transition: all .2s ease; }
+.md-dot.done { background: #9db8de; border-color: #3f78c4; }
+.md-dot.cur { background: #e0584f; border-color: #bb453d; transform: scale(1.25); }
+@media (max-width: 720px) {
+  .md-stage { grid-template-columns: 1fr; }
+  .md-codelines, .md-doc { min-height: auto; }
+  .md-say { font-size: 14px; }
+  .md-btn { font-size: 13px; padding: 7px 15px; }
+}
+
+/* P コマンド = 文字ポップ波(左→右に 1 文字ずつ跳ねて強調) / H = miki.com 表示切替 */
+@keyframes charPop {
+  0%   { transform: translate3d(0,0,0) scale(1); color: inherit; text-shadow: 0 0 0 rgba(200,16,46,0); }
+  40%  { transform: translate3d(0,-0.22em,0) scale(1.5); color: var(--accent-red); text-shadow: 0 0.18em 0.7em rgba(200,16,46,0.4); }
+  100% { transform: translate3d(0,0,0) scale(1); color: inherit; text-shadow: 0 0 0 rgba(200,16,46,0); }
+}
+.char { display: inline-block; will-change: transform; }
+.char.popping { animation: charPop 0.72s cubic-bezier(0.22,1,0.36,1); animation-fill-mode: both; backface-visibility: hidden; }
+body.miki-hidden #mikibar, body.miki-hidden .md-miki { display: none !important; }
+.miki-back { display: none; margin: 12px auto 0; font-family: "Yusei Magic","Klee One",cursive; font-size: 12px; color: #2c5a99; background: #fff; border: 2.5px dashed #2c5a99; padding: 6px 16px; border-radius: 120px 9px 110px 11px/9px 110px 11px 120px; cursor: pointer; }
+body.miki-hidden .miki-back { display: inline-block; }
+
+/* miki.com ゲームウィンドウ(タイトルバー + 本体 + 四隅リサイズ / 手描きポップ) */
+#mikibar { position: fixed; left: 50%; bottom: 56px; transform: translateX(-50%); width: min(560px, 92vw); min-width: 280px; max-width: 96vw; min-height: 104px; max-height: 70vh; display: flex; flex-direction: column; background: #fff; border: 3px solid #3b3a42; border-radius: 18px 8px 18px 8px/8px 18px 8px 18px; box-shadow: 5px 7px 0 rgba(59,58,66,.2); z-index: 150; overflow: visible; touch-action: none; }
+#mikibar[hidden] { display: none; }
+#mikibar.dragging { box-shadow: 8px 11px 0 rgba(59,58,66,.24); }
+#mikibar .mb-titlebar { display: flex; align-items: center; gap: 8px; padding: 6px 8px 6px 12px; background: linear-gradient(180deg,#2c5a99 0%,#234a82 100%); border-radius: 15px 5px 0 0/5px 15px 0 0; color: #fff; cursor: grab; flex: 0 0 auto; border-bottom: 2.5px solid #1f3f6b; }
+#mikibar.dragging .mb-titlebar { cursor: grabbing; }
+#mikibar .mb-grip { font-family: monospace; font-size: 11px; letter-spacing: -1px; color: rgba(255,255,255,.55); }
+#mikibar .mb-name { flex: 1; font-family: "Yusei Magic",cursive; font-size: 12.5px; color: #fff; display: flex; align-items: center; gap: 9px; }
+#mikibar .mb-tag { background: #ffe27a; color: #7a5a00; border-radius: 6px 4px 7px 5px/5px 7px 4px 6px; padding: 1px 9px; font-size: 10px; letter-spacing: .04em; }
+#mikibar .mb-tag:empty { display: none; }
+#mikibar .mb-min { width: 26px; height: 22px; border-radius: 7px; border: 2px solid rgba(255,255,255,.5); background: rgba(255,255,255,.14); color: #fff; cursor: pointer; font-family: "Yusei Magic",cursive; font-size: 12px; line-height: 1; flex: 0 0 auto; }
+#mikibar .mb-min:hover { background: rgba(255,255,255,.3); }
+#mikibar .mb-body { flex: 1 1 auto; display: flex; align-items: stretch; gap: 13px; padding: 12px 14px 6px; min-height: 0; }
+#mikibar .mb-ava { width: 50px; height: 50px; border-radius: 13px; background: #e9f0fb; display: grid; place-items: center; flex: 0 0 auto; align-self: flex-start; cursor: pointer; animation: mbSway 2.8s ease-in-out infinite; }
+#mikibar.dragging .mb-ava { animation: none; }
+#mikibar .mb-ava svg { width: 32px; height: 32px; fill: none; stroke: #2c5a99; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+#mikibar .mb-screen { flex: 1; min-width: 0; position: relative; overflow-y: auto; background-color: #f4f8fd; background-image: radial-gradient(circle,#d3e0f0 1.1px,transparent 1.2px); background-size: 17px 17px; border: 2px solid #c7d6ea; border-radius: 12px 5px 13px 6px/6px 13px 5px 12px; padding: 9px 28px 10px 14px; }
+#mikibar .mb-say { font-family: "Zen Maru Gothic","Klee One",sans-serif; font-weight: 500; font-size: 15px; line-height: 1.6; color: #2f2e36; }
+#mikibar .mb-say b { color: #bb453d; font-weight: 700; }
+#mikibar .mb-cont { position: absolute; right: 9px; bottom: 5px; color: #e0584f; font-size: 13px; display: none; }
+#mikibar.more .mb-cont { display: block; animation: mbContB .85s ease-in-out infinite; }
+@keyframes mbContB { 0%,100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
+@keyframes mbSway { 0%,100% { transform: translateX(-1.6px) rotate(-2.6deg); } 50% { transform: translateX(1.6px) rotate(2.6deg); } }
+#mikibar .mb-screen::before { content: ""; position: absolute; left: -9px; top: 16px; width: 0; height: 0; border: 7px solid transparent; border-right-color: #c7d6ea; }
+#mikibar .mb-screen::after { content: ""; position: absolute; left: -6px; top: 17px; width: 0; height: 0; border: 6px solid transparent; border-right-color: #f4f8fd; }
+#mikibar .mb-foot { flex: 0 0 auto; display: flex; justify-content: flex-end; padding: 0 14px 10px; }
+#mikibar .mb-next { font-family: "Yusei Magic",cursive; font-size: 11.5px; color: #fff; background: #2c5a99; border: 2px solid #1f3f6b; border-radius: 60px 7px 60px 7px/7px 60px 7px 60px; padding: 5px 14px; cursor: pointer; white-space: nowrap; box-shadow: 2px 2.5px 0 rgba(31,63,107,.2); transition: transform .12s; }
+#mikibar .mb-next:hover { transform: translate(-1px,-1px); }
+#mikibar .mb-rz { position: absolute; width: 16px; height: 16px; z-index: 2; }
+#mikibar .mb-rz.nw { left: -5px; top: -5px; cursor: nwse-resize; }
+#mikibar .mb-rz.ne { right: -5px; top: -5px; cursor: nesw-resize; }
+#mikibar .mb-rz.sw { left: -5px; bottom: -5px; cursor: nesw-resize; }
+#mikibar .mb-rz.se { right: -5px; bottom: -5px; cursor: nwse-resize; }
+#mikibar .mb-rz.se::after { content: ""; position: absolute; right: 4px; bottom: 4px; width: 8px; height: 8px; border-right: 2.5px solid #9db8de; border-bottom: 2.5px solid #9db8de; border-radius: 0 0 3px 0; }
+/* 最小化 = miki.com アイコンだけ(顔)。タップで復帰。 */
+#mikibar.collapsed { min-height: 0; min-width: 0; width: auto !important; max-width: none; height: auto !important; padding: 0; border: 2.5px solid #3b3a42; border-radius: 16px 7px 16px 7px/7px 16px 7px 16px; box-shadow: 4px 5px 0 rgba(59,58,66,.2); overflow: visible; }
+#mikibar.collapsed .mb-titlebar, #mikibar.collapsed .mb-screen, #mikibar.collapsed .mb-foot, #mikibar.collapsed .mb-rz { display: none; }
+#mikibar.collapsed .mb-body { padding: 6px; min-height: 0; }
+#mikibar.collapsed .mb-ava { width: 48px; height: 48px; cursor: pointer; }
+#mikibar.collapsed .mb-ava::after { content: "miki.com"; position: absolute; left: 50%; bottom: -16px; transform: translateX(-50%); font-family: "Yusei Magic",cursive; font-size: 8.5px; color: #2c5a99; white-space: nowrap; background: #fff; padding: 0 4px; border-radius: 5px; }
+#mikibar.collapsed .mb-ava { position: relative; }
+@media (prefers-reduced-motion: reduce) { #mikibar .mb-ava { animation: none; } #mikibar.more .mb-cont { animation: none; } }
+@media (max-width: 720px) {
+  #mikibar { left: 3vw; right: 3vw; width: auto; max-width: none; min-width: 0; transform: none; bottom: calc(54px + env(safe-area-inset-bottom,0px)); max-height: 42vh; min-height: 0; }
+  #mikibar .mb-rz { display: none; }
+  #mikibar .mb-body { padding: 9px 11px 5px; gap: 10px; }
+  #mikibar .mb-ava { width: 40px; height: 40px; }
+  #mikibar .mb-ava svg { width: 26px; height: 26px; }
+  #mikibar .mb-say { font-size: 12.5px; line-height: 1.5; }
+  #mikibar .mb-name { font-size: 11px; }
+  #mikibar .mb-next { font-size: 10px; padding: 4px 10px; }
+  #mikibar .mb-foot { padding: 0 11px 8px; }
+  body:not(.miki-hidden) .slide { padding-bottom: 168px; }
+}
+@media (prefers-reduced-motion: reduce) { .char.popping { animation: none; } }
+
+/* A11Y */
+:focus { outline: none; }
+[onclick]:focus-visible, button:focus-visible, [tabindex]:focus-visible, .nav-btn:focus-visible, .menu-toggle:focus-visible, .menu-close:focus-visible, .menu-item:focus-visible, .icon-card:focus-visible, .chart-q:focus-visible, .sr-blank:focus-visible, .j-chip:focus-visible, .answer-row:focus-visible, .quiz-option:focus-visible, .wd-btn:focus-visible {
+  outline: 2px solid var(--accent-gold); outline-offset: 2px; box-shadow: 0 0 0 4px rgba(201, 169, 97, 0.18);
+}
+.title-slide [tabindex]:focus-visible { outline-color: var(--accent-gold); box-shadow: 0 0 0 4px rgba(255,255,255,0.25); }
+
+/* safe-area */
+.topbar { padding-top: env(safe-area-inset-top, 0px); padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); }
+.slide { padding-left: max(5vw, env(safe-area-inset-left, 0px)); padding-right: max(5vw, env(safe-area-inset-right, 0px)); }
+.menu-panel { padding-top: env(safe-area-inset-top, 0px); padding-right: env(safe-area-inset-right, 0px); }
+
+/* MENU */
+.menu-toggle { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: white; padding: 6px 14px 6px 12px; border-radius: 18px; cursor: pointer; font-size: 11px; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.15em; font-weight: 700; margin-left: 14px; transition: all 0.25s; display: flex; align-items: center; gap: 8px; height: 28px; }
+.menu-toggle:hover { background: rgba(201,169,97,0.25); border-color: var(--accent-gold); }
+.menu-toggle-icon { display: inline-flex; flex-direction: column; gap: 3px; width: 14px; justify-content: center; }
+.menu-toggle-icon span { display: block; height: 1.5px; background: white; border-radius: 1px; transition: all 0.2s; }
+.menu-toggle:hover .menu-toggle-icon span { background: var(--accent-gold); }
+.menu-overlay { position: fixed; inset: 0; background: rgba(15,40,71,0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.35s; }
+.menu-overlay.open { opacity: 1; pointer-events: all; }
+.menu-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 400px; max-width: 92vw; background: white; box-shadow: -16px 0 40px rgba(0,0,0,0.2); z-index: 201; transform: translateX(100%); transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
+.menu-panel.open { transform: translateX(0); }
+.menu-head { padding: 24px 26px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; background: linear-gradient(180deg, var(--navy-darkest) 0%, var(--navy-dark) 100%); color: white; flex-shrink: 0; }
+.menu-head-title { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 700; font-size: 20px; }
+.menu-head-sub { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--accent-gold); letter-spacing: 0.2em; margin-top: 4px; font-weight: 700; }
+.menu-close { background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.15); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 16px; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+.menu-close:hover { background: rgba(200,16,46,0.3); border-color: var(--accent-red); }
+.menu-reset-btn { margin: 14px 22px 4px; padding: 11px 16px; background: transparent; border: 1.5px dashed var(--accent-red); color: var(--accent-red); border-radius: 6px; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; font-weight: 600; font-size: 13.5px; transition: all 0.25s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.menu-reset-btn:hover { background: var(--accent-red); color: white; border-style: solid; }
+.menu-reset-icon { display: inline-block; font-size: 15px; transition: transform 0.4s; }
+.menu-reset-btn:hover .menu-reset-icon { transform: rotate(-180deg); }
+.menu-list { flex: 1; overflow-y: auto; padding: 8px 14px 28px; }
+.menu-list::-webkit-scrollbar { width: 6px; }
+.menu-list::-webkit-scrollbar-thumb { background: var(--navy-pale); border-radius: 3px; }
+.menu-section { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.2em; color: var(--accent-red); font-weight: 700; padding: 16px 14px 8px; margin-top: 6px; border-top: 1px solid var(--navy-pale); }
+.menu-section:first-of-type { border-top: none; margin-top: 6px; }
+.menu-item { display: flex; gap: 12px; padding: 11px 14px; border-radius: 6px; cursor: pointer; transition: all 0.2s; align-items: center; margin-bottom: 2px; }
+.menu-item:hover { background: var(--navy-bg); transform: translateX(-2px); }
+.menu-item-num { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--text-sub); font-size: 12px; min-width: 26px; }
+.menu-item-title { font-size: 14px; font-weight: 500; color: var(--navy-darkest); flex: 1; line-height: 1.45; }
+.menu-item.active { background: var(--navy-darkest); color: white; box-shadow: 0 4px 14px rgba(15,40,71,0.25); }
+.menu-item.active .menu-item-num { color: var(--accent-gold); }
+.menu-item.active .menu-item-title { color: white; font-weight: 700; }
+.menu-item-tag { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.1em; padding: 3px 7px; border-radius: 3px; font-weight: 700; background: rgba(200,16,46,0.1); color: var(--accent-red); white-space: nowrap; }
+.menu-item-tag.tag-interactive { background: rgba(201,169,97,0.18); color: #8a6d1f; }
+.menu-item-tag.tag-review { background: rgba(44,95,141,0.12); color: var(--navy); }
+.menu-item-tag.tag-section, .menu-item-tag.tag-title, .menu-item-tag.tag-end { background: rgba(15,40,71,0.08); color: var(--navy-dark); }
+.menu-item.active .menu-item-tag { background: rgba(201,169,97,0.3); color: var(--accent-gold); }
+
+/* MEDIA */
+@media (max-width: 1100px) {
+  .icon-cards, .icon-cards.cols-4 { grid-template-columns: repeat(2, 1fr); }
+  .chart-options { grid-template-columns: repeat(4, 1fr); }
+  .chart-options.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .answers-grid { grid-template-columns: 1fr; }
+  .tree-branches { grid-template-columns: repeat(2, 1fr); }
+  .two-col { grid-template-columns: 1fr; gap: 18px; }
+}
+@media (max-width: 720px) {
+  .topbar { height: 40px; padding: 0 12px; font-size: 11px; letter-spacing: 0; }
+  .topbar-title { font-size: 13px; margin-right: 8px; }
+  .topbar-subtitle { display: none; }
+  .topbar-chapter { font-size: 10px; letter-spacing: 0.08em; }
+  .menu-toggle { margin-left: 8px; padding: 4px 10px; font-size: 10px; height: 24px; gap: 6px; }
+  .progress { top: 40px; }
+  .bottombar { height: calc(52px + env(safe-area-inset-bottom, 0px)); padding: 0 14px env(safe-area-inset-bottom, 0px); font-size: 11px; }
+  .bottombar-nav { gap: 8px; }
+  .nav-btn { width: 40px; height: 40px; font-size: 16px; }
+  .slide-title-small { display: none; }
+  .keyboard-hint { display: none; }
+  .page-indicator { font-size: 11px; margin-right: 0; margin-left: auto; }
+  .slide { top: 43px; bottom: calc(52px + env(safe-area-inset-bottom, 0px)); padding: 4vw 5vw 64px; touch-action: pan-y pinch-zoom; }
+  button:active:not([disabled]), [onclick]:active, .nav-btn:active, .menu-toggle:active { transform: scale(0.96); transition: transform 0.08s; }
+  .swipe-hint { position: fixed; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%) translateY(20px); background: rgba(15, 40, 71, 0.92); color: white; padding: 10px 22px; border-radius: 24px; font-size: 13px; letter-spacing: 0.06em; font-weight: 600; z-index: 200; pointer-events: none; opacity: 0; transition: opacity 0.4s ease, transform 0.4s ease; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25); display: flex; align-items: center; gap: 10px; }
+  .swipe-hint::before, .swipe-hint::after { content: ""; width: 14px; height: 14px; border-top: 2px solid var(--accent-gold); border-right: 2px solid var(--accent-gold); }
+  .swipe-hint::before { transform: rotate(-135deg); }
+  .swipe-hint::after { transform: rotate(45deg); }
+  .swipe-hint.show { opacity: 1; transform: translateX(-50%) translateY(0); animation: swipeHintPulse 1.6s ease-in-out 1 0.4s; }
+  @keyframes swipeHintPulse { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-4px); } }
+  .title-slide { padding: 0 6vw; }
+  .title-slide::before, .title-slide::after { display: none; }
+  .title-label { font-size: 10.5px; letter-spacing: 0.2em; margin-bottom: 18px; }
+  .title-main { font-size: clamp(40px, 12vw, 64px); letter-spacing: -0.01em; margin-bottom: 14px; }
+  .title-sub { font-size: clamp(14px, 4vw, 20px); margin-bottom: 32px; }
+  .title-meta { gap: 14px 22px; font-size: 10.5px; flex-direction: column; }
+  .section-divider .section-icon { width: 60px; height: 60px; margin-bottom: 16px; }
+  .section-number { font-size: 11px; letter-spacing: 0.25em; margin-bottom: 14px; }
+  .section-title-big { font-size: clamp(30px, 8.4vw, 50px); }
+  .section-tagline { font-size: clamp(14px, 3.8vw, 18px); }
+  .eyebrow { font-size: 10px; letter-spacing: 0.15em; margin-bottom: 12px; }
+  .slide-title { font-size: clamp(24px, 6.2vw, 34px); margin-bottom: 8px; }
+  .slide-subtitle { font-size: clamp(13.5px, 3.8vw, 17px); margin-bottom: 20px; line-height: 1.65; }
+  .body-text { font-size: 15px; }
+  .menu-panel { width: 100%; max-width: 100%; box-shadow: none; }
+  .menu-head { padding: 20px 22px 16px; }
+  .agenda-grid { grid-template-columns: 1fr; }
+  .icon-cards, .icon-cards.cols-2, .icon-cards.cols-4 { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .icon-card-svg { width: 50px; height: 50px; }
+  .icon-card-name { font-size: 13px; }
+  .icon-info-panel { padding: 14px 16px; font-size: 13.5px; }
+  .chart-options, .chart-options.cols-3 { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .chart-option svg { width: 56px; height: 44px; }
+  .chart-option .co-name { font-size: 10.5px; }
+  .chart-question-list { grid-template-columns: 1fr; }
+  .judgment-list .j-text { font-size: 13.5px; }
+  .comp-visual { grid-template-columns: 1fr; }
+  .comp-arrow { transform: rotate(90deg); }
+  .tree-branches { grid-template-columns: repeat(2, 1fr); }
+  .quiz-question { font-size: 15px; padding: 14px 18px; }
+  .quiz-option { font-size: 13.5px; padding: 11px 14px; }
+  .fill-prose { font-size: 14px; line-height: 2.4; padding: 16px 18px; }
+  .src-code { font-size: 11px; padding: 14px 16px; }
+  .wd-width { margin-left: 0; width: 100%; }
+  .wd-width input[type=range] { flex: 1; }
+  .webdemo-doc { max-width: 100% !important; }
+  .menu-list { padding: 6px 12px 22px; }
+  .menu-item { padding: 10px 12px; }
+  .menu-item-title { font-size: 13.5px; }
+}
+@media (max-width: 380px) {
+  .slide { padding: 3vw 4.5vw 40px; }
+  .title-main { font-size: 40px; }
+  .slide-title { font-size: 22px; }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  .title-main { font-size: clamp(30px, 6vw, 50px); }
+  .title-sub { font-size: clamp(13px, 2.5vw, 18px); margin-bottom: 20px; }
+  .section-title-big { font-size: clamp(26px, 6vw, 46px); }
+  .slide-title { font-size: clamp(20px, 4vw, 30px); }
+  .slide-subtitle { margin-bottom: 14px; }
+  .slide { padding: 3vh 5vw; }
+}
+
+/* ===== HOSOKU 補足エンジン CSS(drop-in / 手描きポップ) ===== */
+/* ============================================================
+   HOSOKU 補足エンジン CSS(ドロップイン)― 手描き・ポップ
+   参考: superelite _source/r3-predict.html
+   フォント前提: Yusei Magic / Klee One / Zen Maru Gothic(Google Fonts)
+   デッキの <style> 内に丸ごと貼る(または splice で注入)。
+   ============================================================ */
+
+  /* --- 起動チップ --- */
+  .supp-chip {
+    display:inline-flex; align-items:center; gap:7px; margin-top:2px; cursor:pointer;
+    font-family:"Yusei Magic","Klee One",cursive; font-size:13.5px; color:#2c5a99;
+    background:#fff; border:2.5px solid #2c5a99; padding:7px 15px;
+    border-radius:130px 9px 120px 11px/9px 120px 11px 130px;
+    box-shadow:2.5px 3px 0 rgba(44,90,153,.16);
+    transition:transform .14s ease, box-shadow .15s ease; }
+  .supp-chip:hover { transform:translate(-1px,-1px) rotate(-.7deg); box-shadow:4px 5px 0 rgba(44,90,153,.22); }
+  .supp-chip:active { transform:translate(1px,1px); box-shadow:1px 1px 0 rgba(44,90,153,.22); }
+  .supp-chip .sc-ic { width:18px; height:18px; flex:none; }
+  .supp-chip .sc-ic svg { width:100%; height:100%; fill:none; stroke:#e0584f; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
+  .supp-chip .sc-tag { font-family:"Yusei Magic",cursive; font-size:10px; color:#7a5a00;
+    background:#ffe27a; border-radius:7px 4px 8px 5px/5px 8px 4px 7px; padding:2px 7px; }
+
+  /* --- モーダル(紙方眼 + いびつ枠 + オフセット影) --- */
+  #suppModal { position:fixed; inset:0; z-index:200; display:none; align-items:center; justify-content:center; padding:34px;
+    font-family:"Zen Maru Gothic","Klee One",sans-serif; }
+  #suppModal.on { display:flex; }
+  #suppModal .supp-scrim { position:absolute; inset:0; background:rgba(40,46,58,.46);
+    backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); animation:supp-fade .3s ease both; }
+  @keyframes supp-fade { from{ opacity:0;} to{ opacity:1;} }
+  .supp-card { position:relative; width:min(880px,95vw); max-height:90vh; overflow-y:auto;
+    background:#f2f7fd; background-image:radial-gradient(circle,#cfdef0 1.2px,transparent 1.3px); background-size:24px 24px;
+    border:3px solid #3b3a42; border-radius:42px 14px 44px 16px/16px 44px 14px 42px;
+    box-shadow:6px 8px 0 rgba(59,58,66,.16); animation:supp-pop .42s cubic-bezier(.22,1,.36,1) both; }
+  @keyframes supp-pop { from{ opacity:0; transform:translateY(16px) scale(.97) rotate(-.4deg);} to{ opacity:1; transform:none;} }
+  .supp-head { position:relative; padding:24px 30px 18px; color:#3b3a42; border-bottom:2.5px dashed #c7d6ea; }
+  .supp-head .sh-tag { display:inline-flex; align-items:center; gap:6px; font-family:"Yusei Magic",cursive; font-size:10.5px; letter-spacing:.08em; color:#e0584f; }
+  .supp-head .sh-tag::before { content:"✲"; font-size:13px; }
+  .supp-head .sh-title { font-family:"Yusei Magic","Klee One",cursive; font-weight:400; font-size:28px; line-height:1.5; margin-top:9px; color:#3b3a42; }
+  .supp-head .sh-sub { font-family:"Zen Maru Gothic","Klee One",sans-serif; font-weight:600; font-size:14.5px; line-height:1.72; margin-top:9px; max-width:560px; color:#55545d; }
+  .supp-close { position:absolute; top:18px; right:20px; width:38px; height:38px; cursor:pointer;
+    background:#fff; border:2.5px solid #e0584f; color:#e0584f; font-size:19px; line-height:1;
+    border-radius:60% 40% 55% 45%/45% 55% 40% 60%; display:flex; align-items:center; justify-content:center;
+    box-shadow:2px 2.5px 0 rgba(224,88,79,.2); transition:transform .14s ease; }
+  .supp-close:hover { transform:rotate(9deg) scale(1.06); }
+  .supp-body { padding:10px 36px 30px; }
+
+  /* --- 節(番号バッジ + 見出し + 本文 + マーカー強調 + 数式チップ) --- */
+  .supp-sec { display:flex; gap:17px; padding:20px 0; border-top:2.5px dashed #c7d6ea; }
+  .supp-sec:first-child { border-top:none; padding-top:14px; }
+  .supp-sec .sec-no { flex:none; width:34px; height:34px; color:#fff; background:#3f78c4;
+    border:2.5px solid #3b3a42; border-radius:60% 40% 55% 45%/50% 60% 40% 50%;
+    font-family:"Yusei Magic",cursive; font-size:16px; display:flex; align-items:center; justify-content:center;
+    box-shadow:1.5px 2px 0 rgba(59,58,66,.18); }
+  .supp-sec .sec-main { flex:1; min-width:0; }
+  .supp-sec .sec-h { font-family:"Yusei Magic","Klee One",cursive; font-weight:400; font-size:19.5px; line-height:1.42; color:#2c5a99; margin-bottom:8px; }
+  .supp-sec .sec-p { font-family:"Zen Maru Gothic","Klee One",sans-serif; font-weight:500; font-size:16px; line-height:1.95; color:#2f2e36; }
+  .supp-head .sh-title b, .supp-sec .sec-p b {
+    font-weight:700; color:#2f2e36;
+    background-image:linear-gradient(104deg,transparent .5%,#ffe27a .5%,#ffe27a 96%,transparent 96%);
+    background-repeat:no-repeat; background-position:0 .14em; background-size:100% 80%; padding:.02em .12em; border-radius:2px; }
+  @keyframes supp-sweep { from{ background-size:0% 80%; } to{ background-size:100% 80%; } }
+  .supp-card .supp-pop { animation:supp-sweep .5s cubic-bezier(.22,1,.36,1) forwards; }  /* P コマンドで順にマーカーが走る */
+  .supp-sec .sec-p .mq { font-family:"Zen Maru Gothic","Klee One",sans-serif; font-style:normal; font-weight:700; background:#fff; border:2px solid #c7d6ea;
+    border-radius:40px 6px 40px 6px/6px 40px 6px 40px; padding:1px 9px; color:#2c5a99; }
+  .supp-sec .sec-fig { margin-top:13px; }
+
+  /* --- 図の枠 + 中で動くアニメ(suppFig が使う) --- */
+  .supp-card .sf-box { background:#fff; border:2.5px solid #3b3a42;
+    border-radius:26px 9px 28px 10px/10px 28px 9px 26px; box-shadow:3px 4px 0 rgba(59,58,66,.1);
+    padding:14px 16px; margin-top:4px; }
+  .supp-card .sf-box svg { width:100%; height:auto; display:block; max-height:200px; }
+  .supp-card .sf-pulse { transform-box:fill-box; transform-origin:center; animation:sf-pulse 1.8s ease-in-out infinite; }
+  @keyframes sf-pulse { 0%,100%{ transform:scale(1);} 50%{ transform:scale(1.13);} }
+  .supp-card .sf-flow { stroke-dasharray:5 6; animation:sf-flow 1.1s linear infinite; }
+  @keyframes sf-flow { to{ stroke-dashoffset:-22;} }
+  .supp-card .sf-grow { transform-box:fill-box; transform-origin:bottom; animation:sf-grow 2s ease-in-out infinite; }
+  @keyframes sf-grow { 0%,100%{ transform:scaleY(.6);} 50%{ transform:scaleY(1);} }
+  .supp-card .sf-float { transform-box:fill-box; transform-origin:center; animation:sf-float 2.6s ease-in-out infinite; }
+  @keyframes sf-float { 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-4px);} }
+
+  /* --- 図パーツの汎用スタイル(2進数グリッド/時計/数値表/座席/数式ピル) --- */
+  .bit-grid { display:grid; grid-template-columns:auto repeat(3,44px); gap:6px; align-items:center; font-family:"Yusei Magic",cursive; }
+  .bit-grid .bg-h { font-size:10px; color:#6f6e78; text-align:center; line-height:1.25; }
+  .bit-grid .bg-pos { font-size:12px; color:#6f6e78; text-align:right; padding-right:8px; }
+  .bit-grid .bg-cell { width:44px; height:26px; display:flex; align-items:center; justify-content:center; font-size:12px;
+    border:2px solid #3b3a42; border-radius:55px 7px 55px 7px/7px 55px 7px 55px; }
+  .bit-grid .bg-1 { background:#3f78c4; color:#fff; }
+  .bit-grid .bg-0 { background:#fff; color:#aaa7ad; }
+  .bit-cap { display:flex; gap:14px; margin-top:10px; font-size:11.5px; font-weight:600; color:#55545d; font-family:"Zen Maru Gothic","Klee One",sans-serif; flex-wrap:wrap; }
+  .bit-cap b { color:#bb453d; font-weight:700; }
+  .supp-clock { display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+  .supp-clock svg { width:124px; height:124px; flex:none; filter:drop-shadow(3px 4px 0 rgba(59,58,66,.12)); }
+  .clock-leg { font-family:"Zen Maru Gothic","Klee One",sans-serif; font-weight:600; font-size:13.5px; line-height:1.8; color:#2f2e36; }
+  .clock-leg b { color:#bb453d; font-weight:700; }
+  .supp-tbl { width:100%; border-collapse:separate; border-spacing:0 6px; font-size:13.5px; font-weight:600; font-family:"Zen Maru Gothic","Klee One",sans-serif; }
+  .supp-tbl th { font-family:"Yusei Magic",cursive; font-size:11px; color:#6f6e78; padding:0 6px 3px; text-align:center; }
+  .supp-tbl td { background:#fff; padding:8px 6px; text-align:center; border-top:2px solid #3b3a42; border-bottom:2px solid #3b3a42; }
+  .supp-tbl td:first-child { border-left:2px solid #3b3a42; border-radius:45px 6px 45px 6px/6px 45px 6px 45px; color:#2c5a99; }
+  .supp-tbl td:last-child { border-right:2px solid #3b3a42; border-radius:6px 45px 6px 45px/45px 6px 45px 6px; }
+  .supp-tbl .mq { color:#3b3a42; font-style:normal; }
+  .seat-row { display:flex; gap:10px; align-items:flex-end; margin-top:4px; }
+  .seat { flex:1; text-align:center; }
+  .seat .stamp { font-family:"Yusei Magic",cursive; font-size:11px; color:#2c5a99; background:#ffe27a;
+    border:2px solid #3b3a42; border-radius:40px 7px 40px 7px/7px 40px 7px 40px; padding:4px 0; margin-bottom:6px; }
+  .seat .stamp .wv { color:#bb453d; font-size:13px; }
+  .seat .chair { height:50px; border:2.5px dashed #c7d6ea; border-top:none; border-radius:0 0 14px 14px;
+    display:flex; align-items:center; justify-content:center; background:#fff; }
+  .seat.sit .chair { border-style:solid; border-color:#3f78c4; }
+  .seat .who { font-family:"Yusei Magic",cursive; font-size:14px; color:#3b3a42; background:#e9f0fb;
+    border:2px solid #3f78c4; border-radius:50px 8px 50px 8px/8px 50px 8px 50px; padding:6px 10px; }
+  .seat .slab { font-family:"Zen Maru Gothic","Klee One",sans-serif; font-size:10px; color:#aaa7ad; margin-top:5px; }
+  .field-eq { display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-family:"Yusei Magic",cursive; font-size:14px; margin:9px 0; }
+  .field-eq .fe-p { border:2px solid #3b3a42; border-radius:50px 8px 50px 8px/8px 50px 8px 50px; padding:6px 11px; }
+  .field-eq .fe-w { background:#fff; color:#3b3a42; }
+  .field-eq .fe-s { background:#e9f0fb; color:#2c5a99; }
+  .field-eq .fe-s.alt { background:#fbe8e4; color:#bb453d; border-color:#bb453d; }
+  .field-eq .fe-op { color:#6f6e78; }
+  .field-eq .fe-ne { color:#e0584f; font-size:17px; }
+  .field-eq .fe-r { color:#6f6e78; font-family:"Zen Maru Gothic","Klee One",sans-serif; font-weight:600; }
+
+/* ===== lec11 固有: 8ビット変換機 ===== */
+.bit-conv { max-width: 900px; margin: 12px auto 0; }
+.bc-bits { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
+.bc-bit { background: white; border: 2.5px solid var(--navy-pale); border-radius: 12px; padding: 8px 4px 10px; text-align: center; cursor: pointer; transition: all 0.18s; }
+.bc-bit:hover { border-color: var(--accent-gold); transform: translateY(-2px); }
+.bc-bit .bc-weight { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-sub); font-weight: 700; }
+.bc-bit .bc-val { font-family: 'JetBrains Mono', monospace; font-size: 30px; font-weight: 700; color: #c0c7d2; line-height: 1.25; }
+.bc-bit.on { background: linear-gradient(180deg, var(--navy) 0%, var(--navy-dark) 100%); border-color: var(--navy-darkest); box-shadow: 0 4px 12px rgba(15,40,71,0.18); }
+.bc-bit.on .bc-weight { color: var(--accent-gold); }
+.bc-bit.on .bc-val { color: white; }
+.bc-sum { margin-top: 12px; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--text-main); font-weight: 600; background: white; border: 1px dashed var(--navy-pale); border-radius: 8px; padding: 10px 14px; }
+.bc-sum b { color: var(--accent-red); }
+.bc-readout { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
+.bc-out { background: var(--navy-bg); border: 1px solid var(--navy-pale); border-radius: 8px; padding: 12px 14px; text-align: center; }
+.bc-out .bo-label { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.1em; color: var(--accent-red); font-weight: 700; }
+.bc-out .bo-num { font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 700; color: var(--navy-darkest); margin-top: 4px; word-break: break-all; }
+.bc-out.hex .bo-num { color: #8a6d1f; }
+.bc-presets { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 14px; }
+.bc-preset { background: white; border: 2px solid var(--navy-pale); color: var(--navy-darkest); padding: 8px 16px; border-radius: 8px; font-family: 'Noto Sans JP', sans-serif; font-weight: 700; font-size: 12.5px; cursor: pointer; transition: all 0.2s; }
+.bc-preset:hover { border-color: var(--accent-gold); background: var(--navy-bg); }
+
+/* ===== lec11 固有: 2のn乗スライダー ===== */
+.pow-wrap { max-width: 820px; margin: 14px auto 0; }
+.pow-control { display: flex; align-items: center; gap: 14px; background: var(--navy-bg); border: 1px solid var(--navy-pale); border-radius: 10px; padding: 14px 20px; }
+.pow-control label { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; color: var(--navy-dark); white-space: nowrap; }
+.pow-control input[type=range] { flex: 1; accent-color: var(--navy); }
+.pow-nbox { font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700; color: var(--accent-red); min-width: 50px; text-align: center; }
+.pow-result { display: flex; align-items: baseline; justify-content: center; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+.pow-eq { font-family: 'JetBrains Mono', monospace; font-size: clamp(24px, 4vw, 38px); font-weight: 700; color: var(--navy-darkest); }
+.pow-count { font-family: '游教科書体 横', 'Klee One', serif; font-size: clamp(28px, 5vw, 46px); font-weight: 900; color: var(--navy); }
+.pow-bar { display: flex; gap: 3px; flex-wrap: wrap; max-width: 740px; margin: 16px auto 0; max-height: 86px; overflow: hidden; justify-content: center; }
+.pow-dot { width: 10px; height: 10px; border-radius: 3px; background: var(--navy-light); }
+.pow-examples { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 760px; margin: 16px auto 0; }
+.pow-ex { background: white; border: 1px solid var(--navy-pale); border-left: 4px solid var(--accent-gold); border-radius: 0 6px 6px 0; padding: 10px 14px; font-size: 13px; line-height: 1.65; color: var(--text-main); font-weight: 500; cursor: pointer; transition: all 0.2s; }
+.pow-ex:hover { background: var(--navy-bg); transform: translateX(3px); }
+.pow-ex strong { color: var(--navy-darkest); }
+
+/* ===== lec11 固有: 数値変換表 ===== */
+.conv-table { max-width: 880px; margin: 14px auto 0; }
+.conv-table table { width: 100%; border-collapse: separate; border-spacing: 0 7px; }
+.conv-table th { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; letter-spacing: 0.08em; color: var(--accent-red); font-weight: 700; padding: 0 10px 4px; text-align: center; }
+.conv-table td { background: var(--navy-bg); padding: 11px 10px; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 700; color: var(--navy-darkest); border-top: 1px solid var(--navy-pale); border-bottom: 1px solid var(--navy-pale); }
+.conv-table td:first-child { border-left: 1px solid var(--navy-pale); border-radius: 6px 0 0 6px; color: var(--text-sub); font-size: 12px; }
+.conv-table td:last-child { border-right: 1px solid var(--navy-pale); border-radius: 0 6px 6px 0; }
+.conv-table td.given { background: white; }
+.cv-blank { display: inline-block; min-width: 60px; padding: 3px 10px; background: var(--navy-pale); border-bottom: 2px solid var(--navy); color: var(--navy-dark); border-radius: 4px 4px 0 0; cursor: pointer; transition: all 0.2s; }
+.cv-blank:hover { background: #BDD0E6; }
+.cv-blank.reveal { background: var(--accent-gold); color: var(--navy-darkest); border-bottom-color: var(--accent-red); }
+.conv-note { max-width: 880px; margin: 12px auto 0; font-size: 12.5px; color: var(--text-sub); line-height: 1.75; text-align: center; }
+.conv-note strong { color: var(--navy-darkest); }
+
+/* ===== lec11 固有: ニブル分割図(2進4桁↔16進1桁) ===== */
+.nibble-fig { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; max-width: 880px; margin: 16px auto 0; padding: 14px 16px; background: var(--navy-bg); border: 1px solid var(--navy-pale); border-radius: 10px; }
+.nb-step { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.nb-row { display: flex; gap: 8px; }
+.nb-nib { display: flex; gap: 3px; padding: 5px; border: 2px dashed var(--navy-light); border-radius: 7px; }
+.nb-cell { width: 24px; height: 30px; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 15px; border-radius: 4px; }
+.nb-cell.b1 { background: var(--navy); color: #fff; }
+.nb-cell.b0 { background: #fff; color: #aab3c0; border: 1px solid var(--navy-pale); }
+.nb-cell.pad { opacity: 0.45; }
+.nb-hex { font-family: 'JetBrains Mono', monospace; font-size: 30px; font-weight: 900; color: #8a6d1f; min-width: 30px; text-align: center; line-height: 1.25; }
+.nb-arrow { font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 900; color: var(--accent-gold); align-self: center; }
+.nb-cap { font-size: 11px; color: var(--text-sub); font-weight: 600; }
+@media (max-width: 720px) { .nibble-fig { gap: 6px; padding: 10px; } .nb-cell { width: 18px; height: 24px; font-size: 12px; } .nb-hex { font-size: 22px; } .nb-arrow { font-size: 18px; } }
+
+@media (max-width: 720px) {
+  .bc-bit { padding: 6px 2px 8px; border-radius: 9px; }
+  .bc-bit .bc-val { font-size: 19px; }
+  .bc-bit .bc-weight { font-size: 9px; }
+  .bc-bits { gap: 4px; }
+  .bc-readout { gap: 6px; }
+  .bc-out { padding: 10px 8px; }
+  .bc-out .bo-num { font-size: 16px; }
+  .pow-examples { grid-template-columns: 1fr; }
+  .conv-table td { font-size: 13px; padding: 9px 5px; }
+  .conv-table td:first-child { font-size: 10px; }
+  .cv-blank { min-width: 46px; padding: 2px 6px; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- 共有 SVG defs(全アイコンで使い回す design system) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <linearGradient id="icoNavy" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#5d8eb3"/><stop offset="100%" stop-color="#0F2847"/></linearGradient>
+  <linearGradient id="icoGold" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f4d995"/><stop offset="100%" stop-color="#8a6d1f"/></linearGradient>
+  <filter id="icoSh" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="1" dy="3"/><feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs></svg>
+
+<div class="topbar">
+  <span class="topbar-title">アナログとデジタル</span>
+  <span class="topbar-subtitle">情報Ⅰ / 学習ノート POINT 11 | p.24</span>
+  <span class="topbar-chapter">CHAPTER · 11</span>
+  <button class="menu-toggle" onclick="openMenu()" title="スライド目次(M)" aria-label="スライド目次を開く">
+    <span class="menu-toggle-icon"><span></span><span></span><span></span></span>
+    MENU
+  </button>
+</div>
+<div class="progress" id="progressBar"></div>
+
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+<div class="menu-panel" id="menuPanel">
+  <div class="menu-head">
+    <div>
+      <div class="menu-head-title">スライド目次</div>
+      <div class="menu-head-sub">CHAPTER · 11</div>
+    </div>
+    <button class="menu-close" onclick="closeMenu()" title="閉じる">✕</button>
+  </div>
+  <button class="menu-reset-btn" onclick="resetAllInteractions()">
+    <span class="menu-reset-icon">⟲</span>
+    インタラクションを全リセット
+  </button>
+  <div class="menu-list" id="menuList"></div>
+</div>
+
+<div class="slide-container" id="slideContainer">
+
+<!-- SLIDE 1: TITLE -->
+<div class="slide title-slide active" data-title="タイトル">
+  <svg class="title-deco" viewBox="0 0 256 256"><path d="M20 150 C56 60 92 60 128 150 S200 240 236 150" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/></svg>
+  <svg class="title-deco-2" viewBox="0 0 256 256"><polyline points="28 200 28 150 80 150 80 100 132 100 132 56 200 56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/></svg>
+  <div class="title-label">CHAPTER · 11 / POINT 11 / 学習ノート p.24</div>
+  <h1 class="title-main">アナログとデジタル</h1>
+  <div class="title-sub">連続した量を、0 と 1 のとびとびの数へ ― コンピュータが世界を測りなおすしくみ</div>
+  <div class="title-meta">
+    <div class="title-meta-item"><strong>POINT</strong>11</div>
+    <div class="title-meta-item"><strong>TERMS</strong>12 用語</div>
+    <div class="title-meta-item"><strong>PRACTICE</strong>5 題</div>
+    <div class="title-meta-item"><strong>UNIT</strong>第2章</div>
+  </div>
+</div>
+
+<!-- SLIDE 2: AGENDA -->
+<div class="slide" data-title="このサイトで扱う内容">
+  <div class="eyebrow">AGENDA · このサイトで扱う内容</div>
+  <h2 class="slide-title">このサイトで扱う内容</h2>
+  <p class="slide-subtitle">学習ノート POINT 11 の用語 12 個と実習 5 題を、3 つの観点に再編して扱う。途中に手を動かす変換の実演を入れ、後半は共通テスト・実生活で必要な発展 3 題を追加する。</p>
+  <div class="agenda-grid">
+    <div class="agenda-item">
+      <svg class="ai-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><path d="M24 150 C56 70 88 70 120 150"/><polyline points="136 196 136 152 176 152 176 108 216 108"/></svg>
+      <div class="agenda-num">01</div>
+      <div class="agenda-content"><span class="a-tag">①② / 2 用語 + 実習1</span><h3>アナログとデジタル</h3><p>連続した量と、とびとび(離散)の量。両者の違いを見分ける</p></div>
+    </div>
+    <div class="agenda-item">
+      <svg class="ai-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><text x="40" y="170" font-family="'JetBrains Mono',monospace" font-size="120" font-weight="700" fill="currentColor" stroke="none">01</text></svg>
+      <div class="agenda-num">02</div>
+      <div class="agenda-content"><span class="a-tag">③④⑤⑥⑨⑩⑪ / 4 用語 + 実習2・3</span><h3>数を 0 と 1 で表す</h3><p>2 進法と 16 進法。変換機で 10 進・2 進・16 進を行き来する</p></div>
+    </div>
+    <div class="agenda-item">
+      <svg class="ai-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="40" y="48" width="176" height="48" rx="10"/><rect x="40" y="104" width="176" height="48" rx="10"/><rect x="40" y="160" width="176" height="48" rx="10"/></svg>
+      <div class="agenda-num">03</div>
+      <div class="agenda-content"><span class="a-tag">⑦⑧⑫ / 2 用語 + 実習4・5</span><h3>情報量とその単位</h3><p>ビットとバイト。n ビットで表せる数を確かめる</p></div>
+    </div>
+    <div class="agenda-item appendix">
+      <svg class="ai-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><path d="M32,200V64a8,8,0,0,1,8-8H96l32,32h88a8,8,0,0,1,8,8V200a8,8,0,0,1-8,8H40A8,8,0,0,1,32,200Z"/></svg>
+      <div class="agenda-num">04</div>
+      <div class="agenda-content"><span class="a-tag">APPENDIX / 3 副題</span><h3>参考: 発展副題</h3><p>なぜ 2 進数か / 情報量の階段 / 補数で負の数を表す</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: SECTION 1 DIVIDER -->
+<div class="slide section-divider" data-title="第1節 アナログとデジタル">
+  <svg class="section-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><path d="M20 150 C52 70 84 70 116 150"/><polyline points="140 200 140 156 180 156 180 112 220 112 220 72"/></svg>
+  <div class="section-number">SECTION · 01</div>
+  <h2 class="section-title-big">アナログとデジタル</h2>
+  <p class="section-tagline">なめらかな量を、とびとびの段階に置きかえる</p>
+</div>
+
+<!-- SLIDE 4: 用語 ①② -->
+<div class="slide" data-title="①② アナログとデジタル (interactive)">
+  <div class="eyebrow">POINT 1 / 学習ノート ①②</div>
+  <h2 class="slide-title">2 つの「量の表し方」</h2>
+  <p class="slide-subtitle"><strong>アナログ</strong>は、量を <strong>連続</strong>した量のまま表す。<strong>デジタル</strong>は、量を <strong>離散</strong>した(とびとびの)段階に置きかえて表す。下のカードをタップすると定義が表示される。</p>
+  <div class="icon-cards cols-2">
+    <div class="icon-card" data-key="analog" onclick="selectIcon('termPanel1', 'analog')">
+      <div class="icon-card-tag">① POINT</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><path d="M24 156 C56 56 92 56 124 156 S196 256 228 156" fill="none" stroke="url(#icoNavy)" stroke-width="16" stroke-linecap="round" filter="url(#icoSh)"/><circle cx="76" cy="92" r="9" fill="url(#icoGold)"/></svg>
+      <div class="icon-card-name">アナログ</div>
+      <div class="icon-card-sub">連続した量</div>
+    </div>
+    <div class="icon-card" data-key="digital" onclick="selectIcon('termPanel1', 'digital')">
+      <div class="icon-card-tag">② POINT</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><polyline points="28 196 28 156 76 156 76 116 124 116 124 80 172 80 172 48 220 48" fill="none" stroke="url(#icoNavy)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" filter="url(#icoSh)"/><circle cx="76" cy="156" r="8" fill="url(#icoGold)"/><circle cx="124" cy="116" r="8" fill="url(#icoGold)"/><circle cx="172" cy="80" r="8" fill="url(#icoGold)"/></svg>
+      <div class="icon-card-name">デジタル</div>
+      <div class="icon-card-sub">離散した(とびとびの)量</div>
+    </div>
+  </div>
+  <div class="cards-hint">タップして定義を表示</div>
+  <div class="icon-info-panel" id="termPanel1"><span style="color:var(--text-sub);font-style:italic;">▲ 上の 2 つのカードをタップすると、定義と身近な例が表示されます。</span></div>
+</div>
+
+<!-- SLIDE 5: 図解 連続 vs 離散 -->
+<div class="slide" data-title="図解 連続量と離散量">
+  <div class="eyebrow">FIGURE · 連続 と 離散</div>
+  <h2 class="slide-title">なめらかな波を、階段に置きかえる</h2>
+  <p class="slide-subtitle">同じ「音の大きさ」でも、<strong>アナログ</strong>はなめらかな波(連続量)。<strong>デジタル</strong>は一定間隔で測って、とびとびの段階(離散量)に置きかえる。だから、アナログ量をデジタルに直すときは細部がわずかに失われるが、数として正確に扱える。</p>
+  <div class="relate-fig">
+    <svg viewBox="0 0 660 250" role="img" aria-label="アナログのなめらかな波と、それを一定間隔で測って段階に置きかえたデジタルの階段を重ねた図。">
+      <line x1="40" y1="210" x2="640" y2="210" stroke="#D4E1EF" stroke-width="3"/>
+      <line x1="40" y1="30" x2="40" y2="210" stroke="#D4E1EF" stroke-width="3"/>
+      <text x="48" y="26" font-size="14" fill="#4A7FA8" font-family="'JetBrains Mono',monospace" font-weight="700">量(音の大きさ)</text>
+      <text x="600" y="234" font-size="13" fill="#4A7FA8" font-family="'JetBrains Mono',monospace" font-weight="700">時間 →</text>
+      <path class="flow" d="M40 150 C120 40 180 40 260 140 S400 250 480 150 S600 70 640 110" fill="none" stroke="url(#icoNavy)" stroke-width="4.5" stroke-linecap="round"/>
+      <text x="150" y="60" font-size="14" fill="#2C5F8D" font-family="'Noto Sans JP',sans-serif" font-weight="700">アナログ(連続)</text>
+      <g fill="#C8102E" opacity="0.85">
+        <rect x="70" y="118" width="46" height="92"/><rect x="130" y="92" width="46" height="118"/><rect x="190" y="120" width="46" height="90"/><rect x="250" y="150" width="46" height="60"/><rect x="310" y="186" width="46" height="24"/><rect x="370" y="158" width="46" height="52"/><rect x="430" y="138" width="46" height="72"/><rect x="490" y="116" width="46" height="94"/><rect x="550" y="100" width="46" height="110"/>
+      </g>
+      <text x="470" y="200" font-size="14" fill="#8B0A1F" font-family="'Noto Sans JP',sans-serif" font-weight="700">デジタル(離散の段階)</text>
+    </svg>
+  </div>
+  <div class="relate-legend">
+    <div class="rl-item"><span class="rl-key">①</span><span><span class="rl-name">アナログ</span>= なめらかな波。途中のどんな値もとり得る(連続)</span></div>
+    <div class="rl-item"><span class="rl-key">②</span><span><span class="rl-name">デジタル</span>= 一定間隔で測った棒。段階の間の値はとれない(離散)</span></div>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center;">
+    <button class="supp-chip" data-supp="DEGRADE"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>デジタルはなぜ劣化しにくい?</button>
+  </div>
+</div>
+
+<!-- SLIDE 6: 実習1 アナログ/デジタル判定 -->
+<div class="slide" data-title="実習1 ― アナログ・デジタル判定">
+  <div class="eyebrow">PRACTICE 1 / 学習ノート 実習1</div>
+  <h2 class="slide-title">アナログか、デジタルか</h2>
+  <p class="slide-subtitle">⑴〜⑹の文は、アナログとデジタルのどちらの説明か。<strong>A(アナログ)</strong> か <strong>D(デジタル)</strong> をタップ。判定後に根拠が表示される。もう一度タップで戻せる。</p>
+  <div class="judgment-list">
+    <div class="j-item">
+      <div class="j-num">⑴</div>
+      <div class="j-body">
+        <div class="j-text">温度を測定するときに、温度を <strong>液柱の長さ</strong> などで表現する。</div>
+        <div class="j-chips"><span class="j-chip" data-correct="true" onclick="judgeJ(this)">A</span><span class="j-chip" data-correct="false" onclick="judgeJ(this)">D</span></div>
+        <div class="j-fb"><strong>A(アナログ)</strong> 液柱の長さは、目盛りの間も含めてなめらかに変わる <strong>連続量</strong>。水銀・アルコール温度計が典型。</div>
+      </div>
+    </div>
+    <div class="j-item">
+      <div class="j-num">⑵</div>
+      <div class="j-body">
+        <div class="j-text"><strong>最小単位</strong> があり、それより細かな段階を表せない。</div>
+        <div class="j-chips"><span class="j-chip" data-correct="false" onclick="judgeJ(this)">A</span><span class="j-chip" data-correct="true" onclick="judgeJ(this)">D</span></div>
+        <div class="j-fb"><strong>D(デジタル)</strong> とびとびの段階で表すのがデジタル。1 段階(最小単位)より細かい値は表せない ― これが「離散」の核心。</div>
+      </div>
+    </div>
+    <div class="j-item">
+      <div class="j-num">⑶</div>
+      <div class="j-body">
+        <div class="j-text">状態を <strong>電圧の大きさ</strong> などの連続量で表現する。</div>
+        <div class="j-chips"><span class="j-chip" data-correct="true" onclick="judgeJ(this)">A</span><span class="j-chip" data-correct="false" onclick="judgeJ(this)">D</span></div>
+        <div class="j-fb"><strong>A(アナログ)</strong> 電圧の大きさそのもので量を表せば連続量=アナログ。なお「電圧が高いか低いか の 2 段階」にすると、それはデジタル(→ 参考A)。</div>
+      </div>
+    </div>
+    <div class="j-item">
+      <div class="j-num">⑷</div>
+      <div class="j-body">
+        <div class="j-text">測定結果を <strong>0 と 1 の 2 進数</strong> で表現する。</div>
+        <div class="j-chips"><span class="j-chip" data-correct="false" onclick="judgeJ(this)">A</span><span class="j-chip" data-correct="true" onclick="judgeJ(this)">D</span></div>
+        <div class="j-fb"><strong>D(デジタル)</strong> 0 と 1 という決まった段階で表すのでデジタル。コンピュータ内部の表し方そのもの。</div>
+      </div>
+    </div>
+    <div class="j-item">
+      <div class="j-num">⑸</div>
+      <div class="j-body">
+        <div class="j-text">生演奏の楽器の音の大きさは、<strong>空気の振動の大きさ</strong> である。</div>
+        <div class="j-chips"><span class="j-chip" data-correct="true" onclick="judgeJ(this)">A</span><span class="j-chip" data-correct="false" onclick="judgeJ(this)">D</span></div>
+        <div class="j-fb"><strong>A(アナログ)</strong> 空気の振動はなめらかに強弱が変わる連続量。これを録音で段階に置きかえると(標本化・量子化)デジタルになる(→ POINT 12)。</div>
+      </div>
+    </div>
+    <div class="j-item">
+      <div class="j-num">⑹</div>
+      <div class="j-body">
+        <div class="j-text"><strong>年齢</strong> は、生まれてから経過した年数で表す。</div>
+        <div class="j-chips"><span class="j-chip" data-correct="false" onclick="judgeJ(this)">A</span><span class="j-chip" data-correct="true" onclick="judgeJ(this)">D</span></div>
+        <div class="j-fb"><strong>D(デジタル)</strong> 「○歳」は整数でとびとび。20 歳と 21 歳の間の「20.5 歳」を年齢としては言わない ― 段階で数える離散量。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 7: SECTION 2 DIVIDER -->
+<div class="slide section-divider" data-title="第2節 数を 0 と 1 で表す">
+  <svg class="section-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><text x="44" y="170" font-family="'JetBrains Mono',monospace" font-size="128" font-weight="700" fill="currentColor" stroke="none">01</text></svg>
+  <div class="section-number">SECTION · 02</div>
+  <h2 class="section-title-big">数を 0 と 1 で表す</h2>
+  <p class="section-tagline">2 進法と 16 進法、そして 10 進法との行き来</p>
+</div>
+
+<!-- SLIDE 8: 用語 ③④⑤⑥ -->
+<div class="slide" data-title="③④⑤⑥ 2進法と16進法 (interactive)">
+  <div class="eyebrow">POINT 2 / 学習ノート ③④⑤⑥</div>
+  <h2 class="slide-title">2 進法・16 進法の 4 用語</h2>
+  <p class="slide-subtitle">コンピュータ内部はすべて 0 と 1。0 と 1 だけで数を表す方法が <strong>2 進法</strong>、それで表した数が <strong>2 進数</strong>。桁が多くなりすぎるので、0〜F で表す <strong>16 進法</strong>(その数が <strong>16 進数</strong>)もよく使う。タップで定義を表示。</p>
+  <div class="icon-cards cols-4">
+    <div class="icon-card" data-key="binary" onclick="selectIcon('termPanel2', 'binary')">
+      <div class="icon-card-tag">③ POINT</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><rect x="28" y="76" width="92" height="104" rx="18" fill="none" stroke="url(#icoNavy)" stroke-width="14" filter="url(#icoSh)"/><text x="74" y="152" font-size="74" font-weight="900" fill="url(#icoNavy)" text-anchor="middle" font-family="'JetBrains Mono',monospace">0</text><rect x="136" y="76" width="92" height="104" rx="18" fill="url(#icoGold)" opacity="0.16"/><rect x="136" y="76" width="92" height="104" rx="18" fill="none" stroke="url(#icoNavy)" stroke-width="14"/><text x="182" y="152" font-size="74" font-weight="900" fill="url(#icoNavy)" text-anchor="middle" font-family="'JetBrains Mono',monospace">1</text></svg>
+      <div class="icon-card-name">2 進法</div>
+      <div class="icon-card-sub">0 と 1 で表す</div>
+    </div>
+    <div class="icon-card" data-key="binarynum" onclick="selectIcon('termPanel2', 'binarynum')">
+      <div class="icon-card-tag">④ POINT</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><rect x="36" y="92" width="44" height="72" rx="9" fill="none" stroke="url(#icoNavy)" stroke-width="11" filter="url(#icoSh)"/><rect x="88" y="92" width="44" height="72" rx="9" fill="url(#icoNavy)"/><rect x="140" y="92" width="44" height="72" rx="9" fill="url(#icoNavy)"/><rect x="192" y="92" width="44" height="72" rx="9" fill="none" stroke="url(#icoNavy)" stroke-width="11"/><text x="58" y="146" font-size="34" font-weight="900" fill="url(#icoNavy)" text-anchor="middle" font-family="'JetBrains Mono',monospace">1</text><text x="110" y="146" font-size="34" font-weight="900" fill="#fff" text-anchor="middle" font-family="'JetBrains Mono',monospace">0</text><text x="162" y="146" font-size="34" font-weight="900" fill="#fff" text-anchor="middle" font-family="'JetBrains Mono',monospace">1</text><text x="214" y="146" font-size="34" font-weight="900" fill="url(#icoNavy)" text-anchor="middle" font-family="'JetBrains Mono',monospace">1</text></svg>
+      <div class="icon-card-name">2 進数</div>
+      <div class="icon-card-sub">2 進法で表した数</div>
+    </div>
+    <div class="icon-card" data-key="hexsys" onclick="selectIcon('termPanel2', 'hexsys')">
+      <div class="icon-card-tag">⑤ POINT</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><polygon points="128 36 206 80 206 168 128 212 50 168 50 80" fill="none" stroke="url(#icoNavy)" stroke-width="14" stroke-linejoin="round" filter="url(#icoSh)"/><text x="128" y="142" font-size="46" font-weight="900" fill="url(#icoNavy)" text-anchor="middle" font-family="'JetBrains Mono',monospace">0-F</text></svg>
+      <div class="icon-card-name">16 進法</div>
+      <div class="icon-card-sub">0〜9 と A〜F で表す</div>
+    </div>
+    <div class="icon-card" data-key="hexnum" onclick="selectIcon('termPanel2', 'hexnum')">
+      <div class="icon-card-tag">⑥ POINT</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><polygon points="128 36 206 80 206 168 128 212 50 168 50 80" fill="url(#icoGold)" opacity="0.16"/><polygon points="128 36 206 80 206 168 128 212 50 168 50 80" fill="none" stroke="url(#icoNavy)" stroke-width="14" stroke-linejoin="round" filter="url(#icoSh)"/><text x="128" y="142" font-size="50" font-weight="900" fill="url(#icoNavy)" text-anchor="middle" font-family="'JetBrains Mono',monospace">1B</text></svg>
+      <div class="icon-card-name">16 進数</div>
+      <div class="icon-card-sub">16 進法で表した数</div>
+    </div>
+  </div>
+  <div class="cards-hint">タップして定義を表示</div>
+  <div class="icon-info-panel" id="termPanel2"><span style="color:var(--text-sub);font-style:italic;">▲ 4 つの用語をタップすると、それぞれの定義と例が表示されます。</span></div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center;">
+    <button class="supp-chip" data-supp="VOLTAGE"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>なぜ電圧の高低が 0 と 1 になる?</button>
+  </div>
+</div>
+
+<!-- SLIDE 9: 8ビット変換機 -->
+<div class="slide" data-title="8ビット変換機 (interactive)">
+  <div class="eyebrow">CONVERTER · 8 ビットで 10 進・16 進を作る</div>
+  <h2 class="slide-title">ビットを立てて、数を作ってみる</h2>
+  <p class="slide-subtitle">8 つのビットをタップで <strong>0 ⇄ 1</strong> に切り替えると、その下の <strong>10 進数・2 進数・16 進数</strong> がリアルタイムに変わる。各ビットの重み(128・64…1)を足すと 10 進数になる。</p>
+  <div class="bit-conv">
+    <div class="bc-bits" id="bcBits"></div>
+    <div class="bc-sum" id="bcSum"></div>
+    <div class="bc-readout">
+      <div class="bc-out"><div class="bo-label">10 進数</div><div class="bo-num" id="bcDec">0</div></div>
+      <div class="bc-out"><div class="bo-label">2 進数(④)</div><div class="bo-num" id="bcBin">00000000</div></div>
+      <div class="bc-out hex"><div class="bo-label">16 進数(⑥)</div><div class="bo-num" id="bcHex">00</div></div>
+    </div>
+    <div class="bc-presets">
+      <button class="bc-preset" onclick="bcSet(27)">27 を作る</button>
+      <button class="bc-preset" onclick="bcSet(65)">65(=「A」の文字コード)</button>
+      <button class="bc-preset" onclick="bcSet(255)">255(最大)</button>
+      <button class="bc-preset" onclick="bcSet(0)">クリア</button>
+    </div>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;justify-content:center;">
+    <button class="supp-chip" data-supp="HEX4"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>なぜ 2 進数 4 桁が 16 進数 1 桁?</button>
+  </div>
+</div>
+
+<!-- SLIDE 10: miki.com 10進→2進ステッパー -->
+<div class="slide" data-title="miki.com と 10進→2進 (interactive)">
+  <div class="eyebrow">CODE · miki.com と変換する</div>
+  <h2 class="slide-title">10 進数を 2 進数に直す手順</h2>
+  <p class="slide-subtitle">「次へ」を押すたびに miki.com が 1 段ずつ計算する。<strong>2 で割って、余りを記録</strong> ― これを商が 0 になるまでくり返し、最後に <strong>余りを下から上へ</strong> 読む。例として 27 を直す。</p>
+  <div class="miki-demo">
+    <div class="md-stage">
+      <div class="md-pane md-code">
+        <div class="md-pane-tag">2 で割っていく</div>
+        <div class="md-codelines">
+          <div class="mdc-line" data-i="1">27 ÷ 2 = 13 … 余り <b style="color:#C9A961">1</b></div>
+          <div class="mdc-line" data-i="2">13 ÷ 2 = &nbsp;6 … 余り <b style="color:#C9A961">1</b></div>
+          <div class="mdc-line" data-i="3">&nbsp;6 ÷ 2 = &nbsp;3 … 余り <b style="color:#C9A961">0</b></div>
+          <div class="mdc-line" data-i="4">&nbsp;3 ÷ 2 = &nbsp;1 … 余り <b style="color:#C9A961">1</b></div>
+          <div class="mdc-line" data-i="5">&nbsp;1 ÷ 2 = &nbsp;0 … 余り <b style="color:#C9A961">1</b></div>
+          <div class="mdc-line" data-i="6"><span class="cm">/* 商が 0 → 終了。余りを下から上へ */</span></div>
+        </div>
+      </div>
+      <div class="md-pane md-prev">
+        <div class="md-pane-tag">余りを並べる</div>
+        <div class="md-doc" id="mdDoc" style="font-family:'JetBrains Mono',monospace;">
+          <div class="mdp-line" data-i="1" style="display:flex;align-items:center;gap:8px;"><span style="color:#6f6e78;font-size:12px;">1 回目</span><span style="background:#0F2847;color:#fff;border-radius:6px;padding:2px 12px;font-weight:700;">1</span></div>
+          <div class="mdp-line" data-i="2" style="display:flex;align-items:center;gap:8px;"><span style="color:#6f6e78;font-size:12px;">2 回目</span><span style="background:#0F2847;color:#fff;border-radius:6px;padding:2px 12px;font-weight:700;">1</span></div>
+          <div class="mdp-line" data-i="3" style="display:flex;align-items:center;gap:8px;"><span style="color:#6f6e78;font-size:12px;">3 回目</span><span style="background:#0F2847;color:#fff;border-radius:6px;padding:2px 12px;font-weight:700;">0</span></div>
+          <div class="mdp-line" data-i="4" style="display:flex;align-items:center;gap:8px;"><span style="color:#6f6e78;font-size:12px;">4 回目</span><span style="background:#0F2847;color:#fff;border-radius:6px;padding:2px 12px;font-weight:700;">1</span></div>
+          <div class="mdp-line" data-i="5" style="display:flex;align-items:center;gap:8px;"><span style="color:#6f6e78;font-size:12px;">5 回目</span><span style="background:#0F2847;color:#fff;border-radius:6px;padding:2px 12px;font-weight:700;">1</span></div>
+          <div class="mdp-line" data-i="6" style="margin-top:8px;padding-top:10px;border-top:2px dashed #c7d6ea;"><span style="color:#bb453d;font-weight:700;">↑ 下から上へ = </span><span style="font-size:22px;font-weight:900;color:#0F2847;">11011</span><span style="color:#6f6e78;">(2)</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="md-miki" id="mdMiki">
+      <div class="md-ava"><svg viewBox="0 0 48 48"><rect x="9" y="9" width="30" height="27" rx="8"/><circle cx="19" cy="21" r="2.4" fill="#2c5a99" stroke="none"/><circle cx="29" cy="21" r="2.4" fill="#2c5a99" stroke="none"/><path d="M25 26 q 4 1.6 0 3.1 q 4 1.6 0 3.1"/><line x1="24" y1="9" x2="24" y2="4"/><circle cx="24" cy="3" r="2" fill="#e0584f" stroke="none"/></svg></div>
+      <div class="md-bubble"><div class="md-name">miki.com <span class="md-tag" id="mdTag">27÷2</span></div><div class="md-say" id="mdSay">10 進数の 27 を 2 で割ります。商は 13、余りは 1。この余りを記録します。</div></div>
+    </div>
+    <button class="miki-back" onclick="toggleMiki()">▲ miki.com を表示 (H)</button>
+    <div class="md-ctrl">
+      <button class="md-btn" id="mdPrev" onclick="mdPrev()">◀ 戻る</button>
+      <div class="md-dots" id="mdDots"></div>
+      <button class="md-btn md-btn-main" id="mdNext" onclick="mdNext()">次へ ▶</button>
+      <button class="md-btn md-reset" onclick="mdReset()">最初から</button>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 11: 実習2 コンピュータのデジタル表現 -->
+<div class="slide" data-title="実習2 ― コンピュータのデジタル表現">
+  <div class="eyebrow">PRACTICE 2 / 学習ノート 実習2</div>
+  <h2 class="slide-title">なぜ 16 進法も使うのか</h2>
+  <p class="slide-subtitle">空欄①〜⑥をタップで正解を表示。2 進数は桁が多くなりやすく、人には読みにくい ― そこを補うのが 16 進法。もう一度タップで戻せる。</p>
+  <div class="fill-prose">
+    デジタルでは、文字・数値・画像などの情報をすべて 0 と 1 の組み合わせで表現できる。0 と 1 の組み合わせで数を表現する方法を（<span class="sr-blank" data-ph="①" data-answer="2進法" onclick="toggleSelBlank(this)">①</span>）といい、（①）で表した数値を（<span class="sr-blank" data-ph="②" data-answer="2進数" onclick="toggleSelBlank(this)">②</span>）と呼ぶ。コンピュータを構成する内部装置は電圧の高低で動作するため、高い方を 1、低い方を 0 とする（②）は、コンピュータの動作を扱うのに向いている。<br>
+    しかし、（①）では桁数が多くなり、通常（<span class="sr-blank" data-ph="③" data-answer="10進法" onclick="toggleSelBlank(this)">③</span>）で表現している人間には扱いにくい。そのため、（②）の（<span class="sr-blank" data-ph="④" data-answer="4" onclick="toggleSelBlank(this)">④</span>）桁を 1 桁で表現するために、0 から（<span class="sr-blank" data-ph="⑤" data-answer="F" onclick="toggleSelBlank(this)">⑤</span>）までの数字と文字を用いた（<span class="sr-blank" data-ph="⑥" data-answer="16進法" onclick="toggleSelBlank(this)">⑥</span>）で表現することもある。
+  </div>
+  <div class="select-pool"><span class="sp-label">語群</span><span class="sp-item">2進法</span><span class="sp-item">2進数</span><span class="sp-item">10進法</span><span class="sp-item">16進法</span><span class="sp-item">4</span><span class="sp-item">F</span></div>
+</div>
+
+<!-- SLIDE 12: 実習3 数値表現の変換 -->
+<div class="slide" data-title="実習3 ― 数値表現の変換">
+  <div class="eyebrow">PRACTICE 3 / 学習ノート 実習3</div>
+  <h2 class="slide-title">10 進・2 進・16 進を行き来する</h2>
+  <p class="slide-subtitle">同じ数を 3 つの表し方で書いた表。<strong>白いマスが与えられた値</strong>、青いマスをタップすると答えが出る。変換機(前のスライド)や下の手順で確かめながら埋めよう。</p>
+  <div class="conv-table">
+    <table>
+      <thead><tr><th></th><th>10 進法</th><th>2 進法</th><th>16 進法</th></tr></thead>
+      <tbody>
+        <tr><td>⑴</td><td class="given">27</td><td><span class="cv-blank" data-ph="①" data-answer="11011" onclick="toggleSelBlank(this)">①</span></td><td><span class="cv-blank" data-ph="②" data-answer="1B" onclick="toggleSelBlank(this)">②</span></td></tr>
+        <tr><td>⑵</td><td class="given">53</td><td><span class="cv-blank" data-ph="③" data-answer="110101" onclick="toggleSelBlank(this)">③</span></td><td><span class="cv-blank" data-ph="④" data-answer="35" onclick="toggleSelBlank(this)">④</span></td></tr>
+        <tr><td>⑶</td><td class="given">207</td><td><span class="cv-blank" data-ph="⑤" data-answer="11001111" onclick="toggleSelBlank(this)">⑤</span></td><td><span class="cv-blank" data-ph="⑥" data-answer="CF" onclick="toggleSelBlank(this)">⑥</span></td></tr>
+        <tr><td>⑷</td><td><span class="cv-blank" data-ph="⑦" data-answer="30" onclick="toggleSelBlank(this)">⑦</span></td><td class="given">11110</td><td><span class="cv-blank" data-ph="⑧" data-answer="1E" onclick="toggleSelBlank(this)">⑧</span></td></tr>
+        <tr><td>⑸</td><td><span class="cv-blank" data-ph="⑨" data-answer="45" onclick="toggleSelBlank(this)">⑨</span></td><td class="given">101101</td><td><span class="cv-blank" data-ph="⑩" data-answer="2D" onclick="toggleSelBlank(this)">⑩</span></td></tr>
+        <tr><td>⑹</td><td><span class="cv-blank" data-ph="⑪" data-answer="21" onclick="toggleSelBlank(this)">⑪</span></td><td><span class="cv-blank" data-ph="⑫" data-answer="10101" onclick="toggleSelBlank(this)">⑫</span></td><td class="given">15</td></tr>
+        <tr><td>⑺</td><td><span class="cv-blank" data-ph="⑬" data-answer="93" onclick="toggleSelBlank(this)">⑬</span></td><td><span class="cv-blank" data-ph="⑭" data-answer="1011101" onclick="toggleSelBlank(this)">⑭</span></td><td class="given">5D</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="nibble-fig" aria-label="2進数 11011 を 4 桁ずつ区切って 16 進数 1B に変換する図解">
+    <div class="nb-step"><div class="nb-row"><span class="nb-cell b1">1</span><span class="nb-cell b1">1</span><span class="nb-cell b0">0</span><span class="nb-cell b1">1</span><span class="nb-cell b1">1</span></div><span class="nb-cap">2 進数 11011(⑴)</span></div>
+    <span class="nb-arrow" aria-hidden="true">→</span>
+    <div class="nb-step"><div class="nb-row"><span class="nb-nib"><span class="nb-cell b0 pad">0</span><span class="nb-cell b0 pad">0</span><span class="nb-cell b0 pad">0</span><span class="nb-cell b1">1</span></span><span class="nb-nib"><span class="nb-cell b1">1</span><span class="nb-cell b0">0</span><span class="nb-cell b1">1</span><span class="nb-cell b1">1</span></span></div><span class="nb-cap">右から 4 桁ずつ(左は 0 で補う)</span></div>
+    <span class="nb-arrow" aria-hidden="true">→</span>
+    <div class="nb-step"><div class="nb-row"><span class="nb-hex">1</span><span class="nb-hex">B</span></div><span class="nb-cap">各組を 16 進に = 1B</span></div>
+  </div>
+  <p class="conv-note"><strong>2 進 → 16 進のコツ</strong>:2 進数を右から <strong>4 桁ずつ</strong> 区切り、各かたまりを 16 進 1 桁に(上図)。逆に 16 進 → 2 進は、各桁を 4 桁の 2 進に開く。</p>
+</div>
+
+<!-- SLIDE 13: SECTION 3 DIVIDER -->
+<div class="slide section-divider" data-title="第3節 情報量とその単位">
+  <svg class="section-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><rect x="40" y="52" width="176" height="44" rx="10"/><rect x="40" y="106" width="176" height="44" rx="10"/><rect x="40" y="160" width="176" height="44" rx="10"/></svg>
+  <div class="section-number">SECTION · 03</div>
+  <h2 class="section-title-big">情報量とその単位</h2>
+  <p class="section-tagline">ビットとバイト、そして n ビットで表せる数</p>
+</div>
+
+<!-- SLIDE 14: 用語 ⑦⑧ -->
+<div class="slide" data-title="⑦⑧ ビットとバイト (interactive)">
+  <div class="eyebrow">POINT 3 / 学習ノート ⑦⑧</div>
+  <h2 class="slide-title">情報量の単位 ― ビットとバイト</h2>
+  <p class="slide-subtitle"><strong>ビット</strong>は情報量の最小単位で、2 進数 1 桁(0 か 1 = 2 通り)にあたる。それを <strong>8 つ</strong> まとめたものが <strong>1 バイト</strong>。1 バイトで 2⁸ = 256 通りを表せる。タップで定義を表示。</p>
+  <div class="icon-cards cols-2">
+    <div class="icon-card" data-key="bit" onclick="selectIcon('termPanel3', 'bit')">
+      <div class="icon-card-tag">⑦ POINT</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><rect x="44" y="92" width="168" height="72" rx="36" fill="none" stroke="url(#icoNavy)" stroke-width="14" filter="url(#icoSh)"/><circle cx="172" cy="128" r="26" fill="url(#icoNavy)"/><text x="92" y="138" font-size="30" font-weight="900" fill="url(#icoNavy)" text-anchor="middle" font-family="'JetBrains Mono',monospace">0/1</text></svg>
+      <div class="icon-card-name">ビット</div>
+      <div class="icon-card-sub">最小単位 = 2 進数 1 桁</div>
+    </div>
+    <div class="icon-card" data-key="byte" onclick="selectIcon('termPanel3', 'byte')">
+      <div class="icon-card-tag">⑧ POINT</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><g fill="none" stroke="url(#icoNavy)" stroke-width="9" filter="url(#icoSh)"><rect x="36" y="96" width="40" height="64" rx="8"/><rect x="84" y="96" width="40" height="64" rx="8"/><rect x="132" y="96" width="40" height="64" rx="8"/><rect x="180" y="96" width="40" height="64" rx="8"/></g><g fill="none" stroke="url(#icoNavy)" stroke-width="9"><rect x="36" y="96" width="40" height="64" rx="8" fill="url(#icoGold)" opacity="0.2"/></g><text x="128" y="194" font-size="26" font-weight="900" fill="url(#icoNavy)" text-anchor="middle" font-family="'JetBrains Mono',monospace">×8</text></svg>
+      <div class="icon-card-name">バイト</div>
+      <div class="icon-card-sub">8 ビット = 1 バイト</div>
+    </div>
+  </div>
+  <div class="cards-hint">タップして定義を表示</div>
+  <div class="icon-info-panel" id="termPanel3"><span style="color:var(--text-sub);font-style:italic;">▲ 2 つの用語をタップすると、定義と例が表示されます。</span></div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center;">
+    <button class="supp-chip" data-supp="BIT2"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>1 ビットで「2 通り」って?</button>
+  </div>
+</div>
+
+<!-- SLIDE 15: 2^n スライダー -->
+<div class="slide" data-title="2のn乗スライダー (interactive)">
+  <div class="eyebrow">CALCULATOR · n ビットで何通り?</div>
+  <h2 class="slide-title">ビットを増やすと、表せる数は倍々で増える</h2>
+  <p class="slide-subtitle">スライダーで <strong>ビット数 n</strong> を変えると、表せる情報の数 <strong>2ⁿ 通り</strong> が変わる。1 ビット増えるごとに 2 倍。下の例をタップすると、必要なビット数を確かめられる。</p>
+  <div class="pow-wrap">
+    <div class="pow-control">
+      <label>ビット数 n</label>
+      <input type="range" min="1" max="16" value="3" id="powRange" oninput="powUpdate(this.value)" aria-label="ビット数を変える">
+      <span class="pow-nbox" id="powN">3</span>
+    </div>
+    <div class="pow-result">
+      <span class="pow-eq">2<sup id="powExp">3</sup> =</span>
+      <span class="pow-count" id="powCount">8</span>
+      <span class="pow-eq" style="font-size:22px;color:var(--text-sub);">通り</span>
+    </div>
+    <div class="pow-bar" id="powBar"></div>
+    <div class="pow-examples">
+      <div class="pow-ex" onclick="powSet(3)"><strong>サイコロの目(1〜6)</strong>:6 通りを表すには 2² = 4 では足りず、2³ = 8 ≥ 6 で <strong>3 ビット</strong>。</div>
+      <div class="pow-ex" onclick="powSet(8)"><strong>1 バイト(8 ビット)</strong>:2⁸ = <strong>256 通り</strong>。文字コードで英数字 1 文字分。</div>
+      <div class="pow-ex" onclick="powSet(9)"><strong>デジタル温度計</strong>:0.0〜50.0℃ を 0.1℃ 刻み = 501 段階。2⁹ = 512 ≥ 501 で <strong>9 ビット</strong>。</div>
+      <div class="pow-ex" onclick="powSet(16)"><strong>2 バイト(16 ビット)</strong>:2¹⁶ = <strong>65536 通り</strong>。漢字を含む文字を表すのに使われる。</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 16: 実習4 情報量とその単位 -->
+<div class="slide" data-title="実習4 ― 情報量とその単位">
+  <div class="eyebrow">PRACTICE 4 / 学習ノート 実習4</div>
+  <h2 class="slide-title">ビット・バイトの単位を使う</h2>
+  <p class="slide-subtitle">空欄①〜⑧をタップで正解を表示。語群の記号も併記する。1024 倍ごとに KB・MB… と変わるのは、コンピュータが 2 進数を基本にしているから。</p>
+  <div class="fill-prose">
+    情報量の最小単位を（<span class="sr-blank" data-ph="①" data-answer="ビット(ア)" onclick="toggleSelBlank(this)">①</span>）といい、2 進数の（<span class="sr-blank" data-ph="②" data-answer="1(カ)" onclick="toggleSelBlank(this)">②</span>）桁に相当する。これで 2 通りの情報を表現できる。これを（<span class="sr-blank" data-ph="③" data-answer="8(キ)" onclick="toggleSelBlank(this)">③</span>）桁まとめて 1（<span class="sr-blank" data-ph="④" data-answer="バイト(イ)" onclick="toggleSelBlank(this)">④</span>）といい、1B と記述する。つまり、3B は（①)単位で（<span class="sr-blank" data-ph="⑤" data-answer="24(ク)" onclick="toggleSelBlank(this)">⑤</span>）桁になり、（<span class="sr-blank" data-ph="⑥" data-answer="2²⁴(ケ)" onclick="toggleSelBlank(this)">⑥</span>）通りの情報を表現できる。<br>
+    また、慣例的に 1024B を 1KB、1024KB を 1（<span class="sr-blank" data-ph="⑦" data-answer="MB(エ)" onclick="toggleSelBlank(this)">⑦</span>）と表現する。例えば、24KB が（①)単位の何桁になるかを計算するためには、（<span class="sr-blank" data-ph="⑧" data-answer="24×1024×8(ス)" onclick="toggleSelBlank(this)">⑧</span>）の式を計算すればよい。
+  </div>
+  <div class="select-pool"><span class="sp-label">語群</span><span class="sp-item">ア.ビット</span><span class="sp-item">イ.バイト</span><span class="sp-item">ウ.GB</span><span class="sp-item">エ.MB</span><span class="sp-item">オ.TB</span><span class="sp-item">カ.1</span><span class="sp-item">キ.8</span><span class="sp-item">ク.24</span><span class="sp-item">ケ.2²⁴</span><span class="sp-item">ス.24×1024×8</span></div>
+</div>
+
+<!-- SLIDE 17: 実習5 表現できる情報の数 -->
+<div class="slide" data-title="実習5 ― 表現できる情報の数">
+  <div class="eyebrow">PRACTICE 5 / 学習ノート 実習5</div>
+  <h2 class="slide-title">何ビットあれば足りるか</h2>
+  <p class="slide-subtitle">空欄①〜⑪をタップで正解を表示。「2ⁿ ≥ 表したい段階数」となる最小の n を探すのがコツ。前のスライドのスライダーで確かめながら。</p>
+  <div class="fill-prose">
+    3 桁の 2 進数は 000、001、010、011、（<span class="sr-blank" data-ph="①" data-answer="100" onclick="toggleSelBlank(this)">①</span>）、101、110、111 の（<span class="sr-blank" data-ph="②" data-answer="8" onclick="toggleSelBlank(this)">②</span>）通りであり、3 ビットで表現できる情報の数は（②)通り。これは 2 の（<span class="sr-blank" data-ph="③" data-answer="3" onclick="toggleSelBlank(this)">③</span>）乗で求められる。<br>
+    6 ビットで表現できる情報の数は（<span class="sr-blank" data-ph="④" data-answer="64" onclick="toggleSelBlank(this)">④</span>）通り。1B と 2B を比べると、1B は（<span class="sr-blank" data-ph="⑤" data-answer="8" onclick="toggleSelBlank(this)">⑤</span>）ビットだから（<span class="sr-blank" data-ph="⑥" data-answer="256" onclick="toggleSelBlank(this)">⑥</span>）通り、2B は（<span class="sr-blank" data-ph="⑦" data-answer="16" onclick="toggleSelBlank(this)">⑦</span>）ビットだから（<span class="sr-blank" data-ph="⑧" data-answer="65536" onclick="toggleSelBlank(this)">⑧</span>）通りとなり、2 倍ではなく（<span class="sr-blank" data-ph="⑨" data-answer="256" onclick="toggleSelBlank(this)">⑨</span>）倍になる。<br>
+    サイコロの目は 1〜6 の整数だから、表すには少なくとも（<span class="sr-blank" data-ph="⑩" data-answer="3" onclick="toggleSelBlank(this)">⑩</span>）ビットあればよい。また、0.0℃から 50.0℃まで 0.1℃単位で測れるデジタル温度計の温度を表すには、少なくとも（<span class="sr-blank" data-ph="⑪" data-answer="9" onclick="toggleSelBlank(this)">⑪</span>）ビットが必要になる。
+  </div>
+  <p class="conv-note"><strong>⑪ の考え方</strong>:0.0℃から 50.0℃を 0.1℃刻みで測ると <strong>501 段階</strong>(0.0, 0.1, …, 50.0)。2⁸ = 256 では足りず、<strong>2⁹ = 512 ≥ 501</strong> なので 9 ビット。</p>
+</div>
+
+<!-- SLIDE 18: SECTION 4 DIVIDER (APPENDIX) -->
+<div class="slide section-divider" data-title="第4節 参考: 発展副題">
+  <svg class="section-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><path d="M32,200V64a8,8,0,0,1,8-8H96l32,32h88a8,8,0,0,1,8,8V200a8,8,0,0,1-8,8H40A8,8,0,0,1,32,200Z"/></svg>
+  <div class="section-number">APPENDIX</div>
+  <h2 class="section-title-big">参考: 発展副題</h2>
+  <p class="section-tagline">共通テスト・実生活で必要な射程まで</p>
+</div>
+
+<!-- SLIDE 19: 参考A なぜ2進数か -->
+<div class="slide" data-title="参考A なぜコンピュータは2進数か">
+  <div class="eyebrow">APPENDIX A / 0 と 1 を選んだ理由</div>
+  <h2 class="slide-title">なぜ 10 進法でなく 2 進法なのか</h2>
+  <p class="slide-subtitle">人は指が 10 本だから 10 進法を使う。ではコンピュータはなぜ 2 進法か。鍵は「電気で動く機械にとって、何段階なら間違えにくいか」にある。</p>
+  <div class="deep-card">
+    <h4><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="44" y="96" width="168" height="64" rx="32"/><circle cx="168" cy="128" r="22" fill="currentColor" stroke="none"/></svg>2 段階なら、電気のオン・オフで作れる</h4>
+    <span class="deep-tag">電圧の高い / 低い</span>
+    <p>電気回路は「電圧が高い / 低い」「電流が流れる / 流れない」という <strong>2 つの状態</strong> を、スイッチ 1 つで確実に作れる。これを 0 と 1 に対応させれば、数も文字も画像もすべて表せる。<strong>2 進法は、2 状態の電気そのままで表せる</strong> から相性がよい。</p>
+  </div>
+  <div class="deep-card">
+    <h4><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><polyline points="32 180 96 180 128 80 160 180 224 180"/><line x1="40" y1="128" x2="216" y2="128" stroke-dasharray="10 12"/></svg>段階が多いほど、ノイズで読み間違える</h4>
+    <span class="deep-tag">2 値 vs 10 値</span>
+    <p>もし 10 段階の電圧で 0〜9 を表すと、段階の幅が狭く、わずかな電気的な乱れ(ノイズ)で隣の値に化けやすい。<strong>2 段階なら、高い・低いの差が大きく、多少乱れても読み違えない</strong>。速さ・正確さ・作りやすさのすべてで、2 値が有利になる。</p>
+  </div>
+  <p class="src-note">つまり 2 進法は「桁が増える」短所より、<strong>確実さ・作りやすさ</strong> の長所が大きい。桁が増えて読みにくい分は、16 進法(⑤⑥)で補う。</p>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center;">
+    <button class="supp-chip" data-supp="TERNARY"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>3 進数のコンピュータはないの?</button>
+  </div>
+</div>
+
+<!-- SLIDE 20: 参考B 情報量の階段 -->
+<div class="slide" data-title="参考B 情報量の階段(1024倍)">
+  <div class="eyebrow">APPENDIX B / 単位の階段</div>
+  <h2 class="slide-title">ビットから、KB・MB・GB の階段へ</h2>
+  <p class="slide-subtitle">情報量は <strong>8 ビット = 1 バイト</strong> から始まり、バイトより上の単位は慣例的に <strong>1024 倍</strong> ごとに名前が変わっていく。スマホの容量「64GB」も、写真 1 枚の「3MB」も、すべてこの階段の上にある。</p>
+  <div class="deep-card">
+    <h4><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><polyline points="28 212 28 172 84 172 84 124 140 124 140 76 196 76 196 36 228 36"/></svg>下から積み上がる単位</h4>
+    <span class="deep-tag">bit → B → KB → MB → GB → TB</span>
+    <p><strong>8 ビット = 1 バイト(B)</strong>。そこから <strong>1024 倍</strong> ごとに <strong>KB → MB → GB → TB</strong> と上がる。1KB ≒ 千 B、1MB ≒ 百万 B、1GB ≒ 十億 B、1TB ≒ 一兆 B。例:文字 1 字 ≒ 1〜3B、写真 1 枚 ≒ 数 MB、映画 1 本 ≒ 数 GB。</p>
+  </div>
+  <div class="deep-card">
+    <h4><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><circle cx="128" cy="128" r="92"/><polyline points="128 74 128 128 168 152"/></svg>なぜ 1000 でなく 1024 なのか</h4>
+    <span class="deep-tag">2¹⁰ = 1024</span>
+    <p>コンピュータは 2 進数が基本なので、区切りも 2 の累乗が自然。<strong>2¹⁰ = 1024</strong> がちょうど 1000 に近いため、これを 1 段の倍率に使う。実習4 で「1024 倍ごと」と出たのはこのため。</p>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center;">
+    <button class="supp-chip" data-supp="STAIR"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>1KB は 1000B? 1024B?</button>
+  </div>
+</div>
+
+<!-- SLIDE 21: 参考C 補数で負の数 -->
+<div class="slide" data-title="参考C 補数で負の数を表す">
+  <div class="eyebrow">APPENDIX C / 引き算を足し算に変える</div>
+  <h2 class="slide-title">0 と 1 だけで、マイナスを表す</h2>
+  <p class="slide-subtitle">コンピュータ内部の固定長ビット列には、ふつう「−」の記号を別に持たない。そこで <strong>補数</strong> という考え方で負の数を表す。これは POINT 11 の射程をやや超え、第 3 章(2 進数の計算)につながる発展。</p>
+  <div class="deep-card">
+    <h4><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="36" y="92" width="60" height="60" rx="10"/><line x1="120" y1="122" x2="160" y2="122"/><rect x="180" y="92" width="40" height="60" rx="10"/></svg>反転して、1 を足す</h4>
+    <span class="deep-tag">2 の補数</span>
+    <p>ある数の <strong>0 と 1 をすべて反転</strong> させ、<strong>1 を足す</strong> と「2 の補数」になり、これを負の数として使う。例(4 ビット)で 3 = <strong>0011</strong> → 反転 <strong>1100</strong> → +1 で <strong>1101</strong>。この 1101 が −3 を表す。</p>
+  </div>
+  <div class="deep-card">
+    <h4><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><circle cx="128" cy="128" r="92"/><line x1="84" y1="128" x2="172" y2="128"/><polyline points="148 104 172 128 148 152"/></svg>引き算が、足し算になる</h4>
+    <span class="deep-tag">5 − 3 = 5 + (−3)</span>
+    <p>負の数を補数で表すと、<strong>引き算を足し算の回路だけで計算できる</strong>。5 − 3 を 5 + (−3) として、0101 + 1101 = (1)0010 = 2(あふれた最上位は捨てる)。引き算用の回路を別に作らずに済むのが補数の利点。</p>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center;">
+    <button class="supp-chip" data-supp="COMPLEMENT"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>なぜ反転して 1 を足すと負になる?</button>
+  </div>
+</div>
+
+<!-- SLIDE 22: 答え合わせ -->
+<div class="slide" data-title="POINT 答え合わせ(全 12 用語)">
+  <div class="eyebrow">REVIEW · 学習ノート POINT 11 解答</div>
+  <h2 class="slide-title">学習ノート POINT の 12 用語</h2>
+  <p class="slide-subtitle">各行をタップで答えを表示。「全表示」で一括展開、「全非表示」で初期化。</p>
+  <div class="answers-actions"><button onclick="revealAll()">全表示</button><button onclick="hideAll()">全非表示</button></div>
+  <div class="answers-grid" id="pointAnswersGrid">
+    <div class="answer-section-head"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><path d="M28 150 C60 70 92 70 124 150"/><polyline points="148 196 148 156 188 156 188 116 224 116"/></svg>SECTION 1 — アナログとデジタル</div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">①</span><span class="answer-text">アナログ … 量を◯◯的な量で表現</span><span class="answer-reveal" data-ans="連続">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">②</span><span class="answer-text">デジタル … 量を◯◯的な量で表現</span><span class="answer-reveal" data-ans="離散">クリック</span></div>
+    <div class="answer-section-head"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="40" y="80" width="80" height="96" rx="12"/><rect x="136" y="80" width="80" height="96" rx="12"/></svg>SECTION 2 — 数を 0 と 1 で表す</div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">③</span><span class="answer-text">0 と 1 で数を表現する方法</span><span class="answer-reveal" data-ans="2進法">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">④</span><span class="answer-text">2 進法で表した数値</span><span class="answer-reveal" data-ans="2進数">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑤</span><span class="answer-text">0〜9 と A〜F で数を表す方法</span><span class="answer-reveal" data-ans="16進法">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑥</span><span class="answer-text">16 進法で表した数値</span><span class="answer-reveal" data-ans="16進数">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑨</span><span class="answer-text">10 進数を 2 進数にするとき、この数で割る</span><span class="answer-reveal" data-ans="2">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑩</span><span class="answer-text">10 進数を 16 進数にするとき、この数で割る</span><span class="answer-reveal" data-ans="16">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑪</span><span class="answer-text">2 進数◯桁が 16 進数 1 桁に対応</span><span class="answer-reveal" data-ans="4">クリック</span></div>
+    <div class="answer-section-head"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="40" y="60" width="176" height="40" rx="9"/><rect x="40" y="110" width="176" height="40" rx="9"/><rect x="40" y="160" width="176" height="40" rx="9"/></svg>SECTION 3 — 情報量とその単位</div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑦</span><span class="answer-text">情報量の最小単位(2 進数 1 桁)</span><span class="answer-reveal" data-ans="ビット">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑧</span><span class="answer-text">8 ビットをまとめた単位</span><span class="answer-reveal" data-ans="バイト">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑫</span><span class="answer-text">n ビットで表せる情報の数</span><span class="answer-reveal" data-ans="2ⁿ">クリック</span></div>
+  </div>
+</div>
+
+<!-- SLIDE 23: まとめツリー -->
+<div class="slide" data-title="POINT 11 まとめツリー">
+  <div class="eyebrow">SUMMARY · POINT 11 を 1 枚で見渡す</div>
+  <h2 class="slide-title">アナログとデジタルを 1 枚で見る</h2>
+  <p class="slide-subtitle">連続した <strong>アナログ</strong> を、とびとびの <strong>デジタル</strong>(0 と 1)へ。それを「表し方・進法の関係・情報量」に分けて整理する。</p>
+  <div class="summary-tree">
+    <div class="tree-root"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><path d="M28 150 C60 70 92 70 124 150"/><polyline points="140 196 140 156 184 156 184 112 224 112"/></svg>アナログ → デジタル(0 と 1)</div>
+    <div class="tree-branches">
+      <div class="tree-branch"><svg class="tb-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><path d="M24 160 C56 80 88 80 120 160"/><polyline points="140 200 140 160 180 160 180 116 220 116"/></svg><div class="tb-tag">SECTION 1</div><h4>2 つの表し方</h4><p>① 連続(アナログ) ② 離散(デジタル)</p></div>
+      <div class="tree-branch"><svg class="tb-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="48" y="88" width="68" height="80" rx="10"/><rect x="140" y="88" width="68" height="80" rx="10"/></svg><div class="tb-tag">SECTION 2 · 進法</div><h4>2 進法・16 進法</h4><p>③ 2 進法 ④ 2 進数 ⑤ 16 進法 ⑥ 16 進数</p></div>
+      <div class="tree-branch accent"><svg class="tb-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><line x1="64" y1="128" x2="192" y2="128"/><polyline points="160 96 192 128 160 160"/><polyline points="96 96 64 128 96 160"/></svg><div class="tb-tag">SECTION 2 · 関係</div><h4>進法の行き来</h4><p>⑨ 2 で割る ⑩ 16 で割る ⑪ 4 桁 = 1 桁</p></div>
+      <div class="tree-branch accent"><svg class="tb-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="40" y="72" width="176" height="36" rx="8"/><rect x="40" y="148" width="176" height="36" rx="8"/></svg><div class="tb-tag">SECTION 3</div><h4>情報量</h4><p>⑦ ビット ⑧ バイト ⑫ 2ⁿ 通り</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 24: 復習チャレンジ -->
+<div class="slide" data-title="復習チャレンジ(10問ランダム)">
+  <div class="eyebrow">REVIEW · 10 QUESTIONS · RANDOM</div>
+  <h2 class="slide-title">理解度チェック</h2>
+  <p class="slide-subtitle">POINT 11 の重要事項からランダムに 10 問出題。即時採点で結果を表示する。</p>
+  <div class="review-container">
+    <div id="reviewStart">
+      <div class="review-intro">POINT 11 の <strong>本編 + 発展副題</strong> から計 16 問のプールを用意。10 問をランダムに出題し、即時採点する。</div>
+      <button class="review-start-btn" onclick="startReview()">スタート</button>
+    </div>
+    <div class="review-q-area" id="reviewQuiz">
+      <div class="review-progress" id="reviewProgress">QUESTION 1 / 10</div>
+      <div class="quiz-question" id="reviewQText"></div>
+      <div class="quiz-options" id="reviewQOpts"></div>
+    </div>
+    <div class="review-q-area" id="reviewDone">
+      <div class="review-progress">RESULT</div>
+      <div class="review-result" id="reviewScore">0 / 10</div>
+      <div class="review-result-sub" id="reviewComment"></div>
+      <button class="review-retry-btn" onclick="startReview()">もう一度</button>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 25: END CARD -->
+<div class="slide title-slide" data-title="完了">
+  <svg class="title-deco" viewBox="0 0 256 256"><polyline points="40 144 96 200 224 72" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
+  <svg class="title-deco-2" viewBox="0 0 256 256"><polyline points="28 200 28 150 80 150 80 100 132 100 132 56 200 56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/></svg>
+  <div class="title-label">CHAPTER · 11 / COMPLETE</div>
+  <h1 class="title-main">アナログとデジタル</h1>
+  <div class="title-sub">連続を、0 と 1 のとびとびへ ― 数で世界を扱う第一歩</div>
+  <div class="title-meta">
+    <div class="title-meta-item"><strong>POINT</strong>11 / 12 用語</div>
+    <div class="title-meta-item"><strong>PRACTICE</strong>5 題完走</div>
+    <div class="title-meta-item"><strong>NEXT</strong>POINT 12 情報のデジタル化</div>
+  </div>
+</div>
+</div>
+
+<div id="mikibar" hidden>
+  <div class="mb-titlebar">
+    <span class="mb-grip" aria-hidden="true">⣿</span>
+    <span class="mb-name">miki.com <span class="mb-tag" id="mbTag"></span></span>
+    <button class="mb-min" onclick="mikiMin()" title="最小化 / 復帰" aria-label="miki.com を最小化">▢</button>
+  </div>
+  <div class="mb-body">
+    <div class="mb-ava" title="顔をタップで開閉 / バーをドラッグで移動"><svg viewBox="0 0 48 48"><rect x="9" y="9" width="30" height="27" rx="8"/><circle cx="19" cy="21" r="2.4" fill="#2c5a99" stroke="none"/><circle cx="29" cy="21" r="2.4" fill="#2c5a99" stroke="none"/><path d="M25 26 q 4 1.6 0 3.1 q 4 1.6 0 3.1"/><line x1="24" y1="9" x2="24" y2="4"/><circle cx="24" cy="3" r="2" fill="#e0584f" stroke="none"/></svg></div>
+    <div class="mb-screen">
+      <div class="mb-say" id="mbSay"></div>
+      <span class="mb-cont" aria-hidden="true">▼</span>
+    </div>
+  </div>
+  <div class="mb-foot">
+    <button class="mb-next" id="mbNext" onclick="mikiAdvance()" style="display:none">▶ つづき</button>
+  </div>
+  <span class="mb-rz nw" data-c="nw"></span><span class="mb-rz ne" data-c="ne"></span><span class="mb-rz sw" data-c="sw"></span><span class="mb-rz se" data-c="se"></span>
+</div>
+
+<div class="bottombar">
+  <div class="bottombar-nav">
+    <button class="nav-btn" id="prevBtn" onclick="goToSlide(currentSlide - 1)" title="前へ">◀</button>
+    <button class="nav-btn" id="nextBtn" onclick="goToSlide(currentSlide + 1)" title="次へ">▶</button>
+  </div>
+  <div class="slide-title-small" id="slideTitleSmall">タイトル</div>
+  <span class="keyboard-hint">← → / SPACE / F / M / P波 / H miki</span>
+  <div class="page-indicator" id="pageIndicator">01 / XX</div>
+</div>
+
+<script>
+/* ===== HOSOKU 補足エンジン JS(drop-in) ===== */
+// ============================================================
+// HOSOKU 補足エンジン JS(ドロップイン)
+//   - suppFig(type): 手描き + アニメの図ライブラリ(window.suppFig として公開)
+//   - 補足モーダル: チップ click で開く / Esc・背景・×で閉じる / 表示中は P でマーカーが順に走る
+//   - 内容は window.HOSOKU_SUPP = { key: { tag, title, sub, body } } をデッキ側で定義する
+//     (body 内で ${window.suppFig('decay')} のように図を埋め込める)
+// 読み込み順: この supp.js → デッキの HOSOKU_SUPP 定義ブロック(suppFig を使うため)
+// ============================================================
+(function () {
+  function suppFig(type) {
+    const F = {
+      decay: `<svg viewBox="0 0 340 124">
+        ${[0,1,2,3,4].map(k=>{const h=Math.round(80*Math.pow(0.8,k));const x=22+k*60;return `<rect class="${k===0?'sf-pulse':''}" x="${x}" y="${100-h}" width="40" height="${h}" rx="5" fill="#3f78c4" opacity="${(1-k*0.16).toFixed(2)}"/><text x="${x+20}" y="${94-h}" font-size="11" fill="#2c5a99" text-anchor="middle" font-family="Yusei Magic,cursive">${Math.pow(0.8,k).toFixed(2)}</text>`;}).join('')}
+        ${[0,1,2,3].map(k=>`<text x="${62+k*60+10}" y="114" font-size="10" fill="#bb453d" text-anchor="middle">×0.8</text>`).join('')}
+        <text x="312" y="60" font-size="14" fill="#9db8de" text-anchor="middle">…</text></svg>`,
+      weights1: `<svg viewBox="0 0 340 124">
+        ${[['語1',52,'#3f78c4'],['語2',26,'#7ea3d6'],['語3',14,'#a9c2e4'],['語4',8,'#c9d8ee']].map((d,k)=>{const h=Math.round(d[1]*1.4);const x=34+k*70;return `<rect class="sf-grow" style="animation-delay:${(k*0.12).toFixed(2)}s" x="${x}" y="${96-h}" width="46" height="${h}" rx="5" fill="${d[2]}"/><text x="${x+23}" y="${90-h}" font-size="12" fill="#2c5a99" text-anchor="middle" font-family="Yusei Magic,cursive">${d[1]}%</text><text x="${x+23}" y="114" font-size="11" fill="#6f6e78" text-anchor="middle">${d[0]}</text>`;}).join('')}
+        <text x="316" y="34" font-size="13" fill="#bb453d" text-anchor="middle" font-family="Yusei Magic,cursive">Σ=100%</text></svg>`,
+      vecarith: `<svg viewBox="0 0 340 130">
+        <defs><marker id="vaA" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#3f78c4"/></marker><marker id="vaB" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#e0584f"/></marker></defs>
+        <line x1="60" y1="98" x2="180" y2="106" stroke="#c7d6ea" stroke-width="1.6" stroke-dasharray="4 4"/>
+        <line x1="150" y1="50" x2="270" y2="58" stroke="#c7d6ea" stroke-width="1.6" stroke-dasharray="4 4"/>
+        <line class="sf-flow" x1="60" y1="98" x2="150" y2="52" stroke="#3f78c4" stroke-width="2.6" marker-end="url(#vaA)"/>
+        <line class="sf-flow" x1="180" y1="106" x2="270" y2="60" stroke="#e0584f" stroke-width="2.6" marker-end="url(#vaB)"/>
+        ${[['man',60,98],['king',150,50],['woman',180,106],['queen',270,58]].map(d=>`<circle cx="${d[1]}" cy="${d[2]}" r="5" fill="#3b3a42"/><text x="${d[1]}" y="${d[2]-9}" font-size="12" fill="#3b3a42" text-anchor="middle" font-family="Yusei Magic,cursive">${d[0]}</text>`).join('')}
+        <text x="95" y="42" font-size="11" fill="#3f78c4">＋王の差</text><text x="222" y="52" font-size="11" fill="#e0584f">同じ差</text></svg>`,
+      proj3: `<svg viewBox="0 0 340 124">
+        <defs><marker id="p3A" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#9db8de"/></marker></defs>
+        <rect x="14" y="46" width="56" height="34" rx="8" fill="#fff" stroke="#3b3a42" stroke-width="2.4"/><text x="42" y="69" font-size="16" fill="#3b3a42" text-anchor="middle" font-family="Yusei Magic,cursive">x</text>
+        ${[['Q','#3f78c4','#e9f0fb',20],['K','#5B8C72','#e2eee7',60],['V','#bb453d','#fbe8e4',100]].map(d=>`<line class="sf-flow" x1="72" y1="63" x2="206" y2="${d[3]+15}" stroke="#9db8de" stroke-width="2" marker-end="url(#p3A)"/><rect x="210" y="${d[3]}" width="52" height="30" rx="8" fill="${d[2]}" stroke="${d[1]}" stroke-width="2.2"/><text x="236" y="${d[3]+20}" font-size="14" fill="${d[1]}" text-anchor="middle" font-family="Yusei Magic,cursive">${d[0]}</text>`).join('')}
+        <text x="140" y="20" font-size="11" fill="#6f6e78" text-anchor="middle">×WQ ×WK ×WV(別々)</text></svg>`,
+      splitconcat: `<svg viewBox="0 0 340 128">
+        <rect x="40" y="8" width="262" height="20" rx="5" fill="#e9f0fb" stroke="#3f78c4" stroke-width="2"/><text x="171" y="23" font-size="11" fill="#2c5a99" text-anchor="middle" font-family="Yusei Magic,cursive">512次元</text>
+        ${[0,1,2,3].map(k=>{const x=40+k*66;const cols=['#3f78c4','#7261A5','#5B8C72','#bb453d'];return `<line x1="${x+30}" y1="30" x2="${x+30}" y2="48" stroke="#9db8de" stroke-width="1.6"/><rect class="sf-pulse" style="animation-delay:${(k*0.15).toFixed(2)}s" x="${x}" y="50" width="56" height="26" rx="6" fill="${cols[k]}" opacity=".85"/><text x="${x+28}" y="67" font-size="11" fill="#fff" text-anchor="middle" font-family="Yusei Magic,cursive">64</text><line x1="${x+30}" y1="78" x2="${x+30}" y2="94" stroke="#9db8de" stroke-width="1.6"/>`;}).join('')}
+        <rect x="40" y="96" width="262" height="22" rx="5" fill="#fff" stroke="#3b3a42" stroke-width="2"/><text x="171" y="112" font-size="11" fill="#3b3a42" text-anchor="middle" font-family="Yusei Magic,cursive">つなげて → WO</text>
+        <text x="320" y="66" font-size="12" fill="#6f6e78" text-anchor="middle">×8</text></svg>`,
+      variance: `<svg viewBox="0 0 340 122">
+        <text x="82" y="16" font-size="11" fill="#2c5a99" text-anchor="middle" font-family="Yusei Magic,cursive">dₖ 小 → 狭い</text>
+        <text x="252" y="16" font-size="11" fill="#bb453d" text-anchor="middle" font-family="Yusei Magic,cursive">dₖ 大 → 広い</text>
+        <line x1="24" y1="86" x2="152" y2="86" stroke="#c7d6ea" stroke-width="1.5"/><line x1="190" y1="86" x2="318" y2="86" stroke="#c7d6ea" stroke-width="1.5"/>
+        ${[82,88,76,92,80].map((x,k)=>`<circle class="sf-float" style="animation-delay:${(k*0.1).toFixed(1)}s" cx="${x}" cy="${74-(k%2)*6}" r="4.5" fill="#3f78c4"/>`).join('')}
+        ${[210,250,292,228,272,310].map((x,k)=>`<circle class="sf-float" style="animation-delay:${(k*0.1).toFixed(1)}s" cx="${x}" cy="${72-(k%3)*8}" r="4.5" fill="#e0584f"/>`).join('')}
+        <text x="170" y="112" font-size="12" fill="#3b3a42" text-anchor="middle" font-family="Yusei Magic,cursive">だから √dₖ で割って 1 に戻す</text></svg>`,
+      sparsegrid: `<svg viewBox="0 0 340 132">
+        <text x="78" y="16" font-size="11" fill="#bb453d" text-anchor="middle" font-family="Yusei Magic,cursive">全部 O(N²)</text>
+        <text x="262" y="16" font-size="11" fill="#2c5a99" text-anchor="middle" font-family="Yusei Magic,cursive">疎/近似 → 軽い</text>
+        ${(()=>{let s='';for(let r=0;r<6;r++)for(let c=0;c<6;c++)s+=`<rect x="${30+c*16}" y="${26+r*16}" width="13" height="13" rx="2" fill="#3f78c4" opacity=".8"/>`;return s;})()}
+        ${(()=>{let s='';for(let r=0;r<6;r++)for(let c=0;c<6;c++){const near=Math.abs(r-c)<=1;s+=`<rect x="${214+c*16}" y="${26+r*16}" width="13" height="13" rx="2" fill="${near?'#3f78c4':'#eef2f8'}" stroke="${near?'none':'#e3e9f1'}"/>`;}return s;})()}</svg>`,
+      patches: `<svg viewBox="0 0 340 132">
+        <defs><marker id="pcA" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#6f6e78"/></marker></defs>
+        <rect x="36" y="18" width="96" height="96" rx="6" fill="#eaf3fb" stroke="#3b3a42" stroke-width="2.4"/>
+        <circle cx="62" cy="42" r="10" fill="#ffe27a" stroke="#bb453d" stroke-width="1.6"/>
+        <path d="M40 102 L74 66 L100 92 L124 72 L128 114 L40 114 Z" fill="#9db8de" stroke="#3b3a42" stroke-width="1.4"/>
+        ${(()=>{let s='';for(let i=1;i<4;i++)s+=`<line x1="${36+i*24}" y1="18" x2="${36+i*24}" y2="114" stroke="#3b3a42" stroke-width="1" opacity=".45"/><line x1="36" y1="${18+i*24}" x2="132" y2="${18+i*24}" stroke="#3b3a42" stroke-width="1" opacity=".45"/>`;return s;})()}
+        <rect class="sf-pulse" x="60" y="42" width="24" height="24" fill="none" stroke="#e0584f" stroke-width="2.6"/>
+        <line x1="138" y1="66" x2="206" y2="66" stroke="#6f6e78" stroke-width="2" marker-end="url(#pcA)"/>
+        <text x="214" y="58" font-size="13" fill="#3b3a42" font-family="Yusei Magic,cursive">パッチ=</text><text x="214" y="82" font-size="13" fill="#2c5a99" font-family="Yusei Magic,cursive">「単語」196個</text></svg>`,
+      hmm: `<svg viewBox="0 0 340 142">
+        <defs><marker id="hmA" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#6f6e78"/></marker></defs>
+        <circle cx="92" cy="46" r="28" fill="#fff7d6" stroke="#bb453d" stroke-width="2.4"/><text x="92" y="53" font-size="22" text-anchor="middle">☀</text><text x="92" y="84" font-size="12" fill="#3b3a42" text-anchor="middle" font-family="Yusei Magic,cursive">晴</text>
+        <circle cx="248" cy="46" r="28" fill="#e9f0fb" stroke="#3f78c4" stroke-width="2.4"/><text x="248" y="53" font-size="22" text-anchor="middle">☁</text><text x="248" y="84" font-size="12" fill="#3b3a42" text-anchor="middle" font-family="Yusei Magic,cursive">雨</text>
+        <path class="sf-flow" d="M120 38 Q170 16 220 38" fill="none" stroke="#6f6e78" stroke-width="2" marker-end="url(#hmA)"/><text x="170" y="18" font-size="10" fill="#6f6e78" text-anchor="middle">0.2</text>
+        <path class="sf-flow" d="M220 56 Q170 78 120 56" fill="none" stroke="#6f6e78" stroke-width="2" marker-end="url(#hmA)"/><text x="170" y="80" font-size="10" fill="#6f6e78" text-anchor="middle">0.3</text>
+        <line x1="92" y1="94" x2="92" y2="112" stroke="#e0584f" stroke-width="2" marker-end="url(#hmA)"/><text x="92" y="128" font-size="11" fill="#3b3a42" text-anchor="middle">傘なし</text>
+        <line x1="248" y1="94" x2="248" y2="112" stroke="#e0584f" stroke-width="2" marker-end="url(#hmA)"/><text x="248" y="128" font-size="11" fill="#3b3a42" text-anchor="middle">傘あり</text></svg>`
+    };
+    return '<div class="sf-box">' + (F[type] || '') + '</div>';
+  }
+  window.suppFig = suppFig;
+
+  let modal = null;
+  function build() {
+    modal = document.createElement('div'); modal.id = 'suppModal';
+    modal.innerHTML = '<div class="supp-scrim"></div><div class="supp-card"><div class="supp-head"><button class="supp-close" aria-label="閉じる">×</button><div class="sh-tag"></div><div class="sh-title"></div><div class="sh-sub"></div></div><div class="supp-body"></div></div>';
+    document.body.appendChild(modal);
+    modal.querySelector('.supp-scrim').addEventListener('click', close);
+    modal.querySelector('.supp-close').addEventListener('click', close);
+  }
+  function open(key) {
+    const SUPP = window.HOSOKU_SUPP || {};
+    const d = SUPP[key]; if (!d) return;
+    if (!modal) build();
+    modal.querySelector('.sh-tag').textContent = d.tag || 'SUPPLEMENT';
+    modal.querySelector('.sh-title').textContent = d.title || '';
+    modal.querySelector('.sh-sub').textContent = d.sub || '';
+    modal.querySelector('.supp-body').innerHTML = d.body || '';
+    modal.classList.add('on');
+    modal.querySelector('.supp-card').scrollTop = 0;
+  }
+  function close() { if (modal) modal.classList.remove('on'); }
+  document.addEventListener('click', e => { const c = e.target.closest('.supp-chip'); if (!c) return; e.stopPropagation(); open(c.dataset.supp); });
+  document.addEventListener('keydown', e => {
+    if (!modal || !modal.classList.contains('on')) return;
+    if (e.key === 'Escape') { close(); e.stopPropagation(); e.preventDefault(); return; }
+    if (e.key === 'p' || e.key === 'P') {  // 表示中は P で本文マーカーが順にスイープ
+      e.stopPropagation(); e.preventDefault();
+      const bs = modal.querySelectorAll('.supp-card .sec-p b, .supp-card .sh-title b');
+      bs.forEach(b => { b.classList.remove('supp-pop'); b.style.animationDelay = ''; });
+      void modal.offsetWidth;
+      bs.forEach((b, k) => { b.style.animationDelay = (k * 0.07) + 's'; b.classList.add('supp-pop'); });
+      return;
+    }
+    if (['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' ', 'Enter'].includes(e.key)) { e.stopPropagation(); e.preventDefault(); }
+  }, true);
+})();
+
+
+// ============================================================
+// HOSOKU_SUPP ― lec10「Web ページ」用の補足コンテンツ(Web 向け自作図)
+//   読み込み順: 上の supp.js(window.suppFig + モーダル)→ この定義 → lec10 本体 JS
+// ============================================================
+// ============================================================
+// HOSOKU_SUPP ― lec11「アナログとデジタル」用の補足コンテンツ(自作図)
+//   読み込み順: 上の supp.js(window.suppFig + モーダル)→ この定義 → lec11 本体 JS
+// ============================================================
+window.HOSOKU_SUPP = {
+  'DEGRADE': {
+    tag: 'SUPPLEMENT · 劣化',
+    title: 'デジタルはなぜ<b>劣化しにくい</b>?',
+    sub: '「0 か 1 か」だけを読めばいいので、多少の乱れは元に戻せる。',
+    body: `
+    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
+      <div class="sec-h">少し乱れても、近い方へ「読み直す」</div>
+      <div class="sec-p">伝送やコピーの途中で、信号には必ず小さな乱れ(<b>ノイズ</b>)が乗る。アナログはその乱れがそのまま値のずれになる。デジタルは <b>0 か 1 か の 2 つしかない</b> ので、「真ん中より上なら 1、下なら 0」と判断して<b>きれいな 0・1 に読み直せる</b>。だから乱れが小さいうちは消せる。</div>
+      <div class="sec-fig"><div class="sf-box"><svg viewBox="0 0 340 130">
+        <line x1="16" y1="64" x2="324" y2="64" stroke="#c7d6ea" stroke-width="1.6" stroke-dasharray="5 5"/><text x="328" y="60" font-size="9" fill="#6f6e78" text-anchor="end">しきい値</text>
+        <path class="sf-flow" d="M16 96 L40 94 L52 40 L78 44 L92 92 L116 90 L130 38 L156 46 L170 94 L196 36 L210 42 L236 96 L262 40 L286 44 L300 92 L324 90" fill="none" stroke="#bb453d" stroke-width="2" opacity="0.8"/>
+        <text x="60" y="22" font-size="10" fill="#bb453d" text-anchor="middle" font-family="Yusei Magic,cursive">ノイズ入りの信号</text>
+        ${''}
+        <g font-family="Yusei Magic,cursive" font-size="13" text-anchor="middle">
+          <rect x="24" y="104" width="36" height="20" rx="5" fill="#fff" stroke="#3b3a42" stroke-width="1.8"/><text x="42" y="118" fill="#3b3a42">0</text>
+          <rect x="68" y="104" width="36" height="20" rx="5" fill="#3f78c4" stroke="#3b3a42" stroke-width="1.8"/><text x="86" y="118" fill="#fff">1</text>
+          <rect x="112" y="104" width="36" height="20" rx="5" fill="#fff" stroke="#3b3a42" stroke-width="1.8"/><text x="130" y="118" fill="#3b3a42">0</text>
+          <rect x="156" y="104" width="36" height="20" rx="5" fill="#3f78c4" stroke="#3b3a42" stroke-width="1.8"/><text x="174" y="118" fill="#fff">1</text>
+          <rect x="200" y="104" width="36" height="20" rx="5" fill="#fff" stroke="#3b3a42" stroke-width="1.8"/><text x="218" y="118" fill="#3b3a42">0</text>
+          <rect x="244" y="104" width="36" height="20" rx="5" fill="#3f78c4" stroke="#3b3a42" stroke-width="1.8"/><text x="262" y="118" fill="#fff">1</text>
+        </g>
+        <text x="300" y="118" font-size="11" fill="#5B8C72" text-anchor="middle" font-family="Yusei Magic,cursive">→ きれい</text>
+      </svg></div></div>
+    </div></div>
+    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
+      <div class="sec-h">だから何度コピーしても落ちない</div>
+      <div class="sec-p">アナログのテープはダビングのたびに音がこもる(<b>世代劣化</b>)。デジタルは毎回 0・1 に読み直せるので、<b>ノイズが小さく 0・1 を正しく読み直せる範囲なら、コピーを重ねても元と同じ</b>に保てる。音楽配信や写真の複製が品質を保てるのはこのため(ただし、ノイズが大きすぎたり、保存時に非可逆圧縮をかけたりすると失われる)。<br>鋭く言えば、デジタルの強さは「<b>とびとびだから、間違いを 0・1 のどちらかに丸め直せる</b>」点にある ― 離散(②)の長所そのもの。</div>
+    </div></div>`
+  },
+  'VOLTAGE': {
+    tag: 'SUPPLEMENT · 0 と 1',
+    title: '電圧の<b>高い・低い</b>を 0 と 1 にする',
+    sub: 'スイッチ 1 つで作れる 2 つの状態が、1 ビット。',
+    body: `
+    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
+      <div class="sec-h">電気の 2 状態 = 0 と 1</div>
+      <div class="sec-p">コンピュータの中身は、無数の小さなスイッチ(トランジスタ)でできている。スイッチが <b>オン(電圧が高い)</b> なら 1、<b>オフ(電圧が低い)</b> なら 0。たとえば高い方を 5V、低い方を 0V と決めて対応させる。この 1 個のスイッチが <b>1 ビット</b>(⑦)。</div>
+      <div class="sec-fig"><div class="sf-box"><svg viewBox="0 0 340 116">
+        <rect x="20" y="40" width="120" height="40" rx="20" fill="#fff" stroke="#3b3a42" stroke-width="2.4"/><circle cx="120" cy="60" r="15" fill="#3f78c4"/><text x="62" y="65" font-size="13" fill="#3b3a42" text-anchor="middle" font-family="Yusei Magic,cursive">ON</text><text x="80" y="98" font-size="12" fill="#2c5a99" text-anchor="middle" font-family="Yusei Magic,cursive">高い電圧 → 1</text>
+        <rect x="200" y="40" width="120" height="40" rx="20" fill="#fff" stroke="#3b3a42" stroke-width="2.4"/><circle cx="220" cy="60" r="15" fill="#c7d6ea"/><text x="282" y="65" font-size="13" fill="#aaa7ad" text-anchor="middle" font-family="Yusei Magic,cursive">OFF</text><text x="260" y="98" font-size="12" fill="#6f6e78" text-anchor="middle" font-family="Yusei Magic,cursive">低い電圧 → 0</text>
+        <text x="170" y="28" font-size="11" fill="#bb453d" text-anchor="middle" font-family="Yusei Magic,cursive">1 個のスイッチ = 1 ビット</text>
+      </svg></div></div>
+    </div></div>
+    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
+      <div class="sec-h">線を増やせば、大きな数も表せる</div>
+      <div class="sec-p">スイッチを <b>8 個</b> 並べれば 8 ビット = <b>1 バイト</b>(⑧)で、0〜255 の 256 通りを表せる。文字も数も画像も、結局はこの 0・1 の列。<br>鋭く言えば、2 進数が選ばれたのは「<b>電気で確実に作れる状態が 2 つだから</b>」 ― なぜ 2 値が有利かは参考A で詳しく見る。</div>
+    </div></div>`
+  },
+  'HEX4': {
+    tag: 'SUPPLEMENT · 4 桁 = 1 桁',
+    title: 'なぜ 2 進数 <b>4 桁</b> が 16 進数 <b>1 桁</b>?',
+    sub: '4 桁で表せる数(16 通り)と、16 進 1 桁(16 通り)がちょうど同じ。',
+    body: `
+    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
+      <div class="sec-h">2⁴ = 16 だから、ぴったり対応する</div>
+      <div class="sec-p">2 進数 4 桁で表せる数は <span class="mq">2⁴ = 16 通り</span>(0000〜1111 = 0〜15)。16 進数 1 桁も 0〜F の <span class="mq">16 通り</span>。<b>表せる数の個数が同じ</b>なので、4 桁のかたまりを 16 進 1 桁にそのまま置きかえられる。</div>
+      <div class="sec-fig"><div class="sf-box">
+        <table class="supp-tbl"><tr><th>2 進(4 桁)</th><th>10 進</th><th>16 進</th></tr>
+        <tr><td>1011</td><td>11</td><td><span class="mq">B</span></td></tr>
+        <tr><td>1111</td><td>15</td><td><span class="mq">F</span></td></tr>
+        <tr><td>0001</td><td>1</td><td><span class="mq">1</span></td></tr></table>
+      </div></div>
+    </div></div>
+    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
+      <div class="sec-h">右から 4 桁ずつ区切るだけ</div>
+      <div class="sec-p">だから長い 2 進数も、<b>右から 4 桁ずつ</b> 区切れば一瞬で 16 進になる。例:<span class="mq">11011</span> → 4 桁に足りない左を 0 で埋めて <span class="mq">0001 1011</span> → <b>1</b> と <b>B</b> → <b>1B</b>(実習3 ⑴)。逆に 16 進 → 2 進は、各桁を 4 桁の 2 進に開く。<br>鋭く言えば、16 進は「<b>2 進数を 4 桁ずつ束ねて読みやすくした、人間用の表記</b>」。中身は同じ 0・1。</div>
+    </div></div>`
+  },
+  'BIT2': {
+    tag: 'SUPPLEMENT · 2 通り',
+    title: '1 ビットで「<b>2 通り</b>」とは?',
+    sub: '1 桁増えるごとに、表せる数は 2 倍になる。',
+    body: `
+    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
+      <div class="sec-h">0 か 1 か、で 2 通り</div>
+      <div class="sec-p">1 ビットは 0 と 1 の <b>2 通り</b>。2 ビットなら 00・01・10・11 の <b>4 通り</b>、3 ビットなら <b>8 通り</b>。<b>1 桁増えるごとに、場合の数が 2 倍</b> になっていく。</div>
+      <div class="sec-fig"><div class="sf-box"><svg viewBox="0 0 340 124">
+        <defs><marker id="b2A" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#9db8de"/></marker></defs>
+        <circle cx="40" cy="62" r="13" fill="#e9f0fb" stroke="#3f78c4" stroke-width="2"/><text x="40" y="67" font-size="11" fill="#2c5a99" text-anchor="middle" font-family="Yusei Magic,cursive">1</text>
+        <line x1="54" y1="56" x2="96" y2="34" stroke="#9db8de" stroke-width="1.8" marker-end="url(#b2A)"/><line x1="54" y1="68" x2="96" y2="90" stroke="#9db8de" stroke-width="1.8" marker-end="url(#b2A)"/>
+        <circle cx="112" cy="30" r="12" fill="#fff" stroke="#3b3a42" stroke-width="1.8"/><circle cx="112" cy="94" r="12" fill="#fff" stroke="#3b3a42" stroke-width="1.8"/>
+        ${''}
+        <g stroke="#9db8de" stroke-width="1.6" marker-end="url(#b2A)"><line x1="124" y1="26" x2="160" y2="16"/><line x1="124" y1="36" x2="160" y2="46"/><line x1="124" y1="90" x2="160" y2="80"/><line x1="124" y1="98" x2="160" y2="110"/></g>
+        <g fill="#fff" stroke="#3b3a42" stroke-width="1.6"><circle cx="174" cy="14" r="10"/><circle cx="174" cy="48" r="10"/><circle cx="174" cy="80" r="10"/><circle cx="174" cy="112" r="10"/></g>
+        <text x="40" y="98" font-size="11" fill="#3b3a42" text-anchor="middle" font-family="Yusei Magic,cursive">1bit=2</text>
+        <text x="112" y="120" font-size="11" fill="#3b3a42" text-anchor="middle" font-family="Yusei Magic,cursive">2bit=4</text>
+        <text x="230" y="66" font-size="13" fill="#bb453d" font-family="Yusei Magic,cursive">3bit = 8 通り</text>
+      </svg></div></div>
+    </div></div>
+    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
+      <div class="sec-h">n ビットなら 2ⁿ 通り(⑫)</div>
+      <div class="sec-p">この「2 倍を n 回」が <span class="mq">2ⁿ</span>。だから 8 ビット(1 バイト)は <span class="mq">2⁸ = 256 通り</span>、16 ビットは <span class="mq">2¹⁶ = 65536 通り</span>。<b>2ⁿ が表したい段階の数以上になる最小の n</b> が、必要なビット数(実習5)。たとえば 256 段階なら 2⁸ = 256 でちょうど足りる。<br>鋭く言えば、ビットは「<b>はい / いいえ の質問 1 回分</b>」。n 回質問すれば 2ⁿ 通りを区別できる。</div>
+    </div></div>`
+  },
+  'TERNARY': {
+    tag: 'SUPPLEMENT · 3 進数',
+    title: '3 進数のコンピュータは<b>ないの</b>?',
+    sub: '理論上は可能。実際に作られたが、2 進に勝てなかった。',
+    body: `
+    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
+      <div class="sec-h">実際に作られたことはある</div>
+      <div class="sec-p">0・1・2 の 3 つの状態を使う <b>3 進法のコンピュータ</b>は理論上ありえるし、過去に試作もされた(旧ソ連の「Setun」など)。3 進は同じ桁数でより多くの数を表せるという利点もあった。</div>
+    </div></div>
+    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
+      <div class="sec-h">それでも 2 進が世界標準になった</div>
+      <div class="sec-p">理由は <b>作りやすさと確実さ</b>。電気のオン / オフという 2 状態は、スイッチ 1 つで安定して作れる。3 状態にすると「中くらいの電圧」を正確に区別する必要があり、ノイズに弱く、回路も複雑になる。<b>安く・速く・間違えにくい</b> 2 値が、量産と高速化で圧勝した。<br>鋭く言えば、進法の「数学的な得」より、<b>物理的な作りやすさ</b>が勝負を決めた ― だから参考A の「2 状態は安定」が効いてくる。</div>
+    </div></div>`
+  },
+  'STAIR': {
+    tag: 'SUPPLEMENT · 1024',
+    title: '1KB は <b>1000B</b>? それとも <b>1024B</b>?',
+    sub: '伝統的には 1024B。だから紛らわしさも生まれた。',
+    body: `
+    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
+      <div class="sec-h">コンピュータでは 1KB = 1024B</div>
+      <div class="sec-p">2 進数が基本のコンピュータでは、区切りも 2 の累乗が自然。<span class="mq">2¹⁰ = 1024</span> がちょうど 1000 に近いので、これを 1 段の倍率にしてきた。だから <b>1KB = 1024B、1MB = 1024KB…</b>(実習4 の「1024 倍ごと」)。</div>
+      <div class="sec-fig"><div class="sf-box">
+        <table class="supp-tbl"><tr><th>単位</th><th>下の単位の何倍</th><th>バイト数</th></tr>
+        <tr><td>1 KB</td><td>1024 B</td><td><span class="mq">2¹⁰</span></td></tr>
+        <tr><td>1 MB</td><td>1024 KB</td><td><span class="mq">2²⁰</span></td></tr>
+        <tr><td>1 GB</td><td>1024 MB</td><td><span class="mq">2³⁰</span></td></tr></table>
+      </div></div>
+    </div></div>
+    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
+      <div class="sec-h">でも「1000 倍」で数える場面もある</div>
+      <div class="sec-p">ハードディスクの容量表示などでは <b>1KB = 1000B</b> として数えることがあり、表示容量と実際の差が生まれる。この紛れを避けるため、1024 倍の方を <b>1KiB(キビバイト)</b> と別名で呼ぶ決まりもある。学習ノートでは伝統的な <b>1024 倍</b> で扱う。<br>鋭く言えば、同じ「KB」でも文脈で 1000 か 1024 か変わる ― 計算問題では <b>どちらの定義か</b>を最初に確認する。</div>
+    </div></div>`
+  },
+  'COMPLEMENT': {
+    tag: 'SUPPLEMENT · 補数',
+    title: 'なぜ<b>反転して 1 を足す</b>と負になる?',
+    sub: '決めた桁数で「一周」して 0 に戻る ― 時計と同じしくみ。',
+    body: `
+    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
+      <div class="sec-h">桁数を決めると、数は「輪」になる</div>
+      <div class="sec-p">4 ビットでは 0000〜1111(0〜15)までしか表せず、1111 の次は <b>あふれて 0000 に戻る</b>(時計が 12 の次に 1 に戻るのと同じ)。この「一周 = <span class="mq">2⁴ = 16</span>」を使う。ある数 A に対し、<b>足すと 16(= あふれて 0)になる相手</b> を −A とみなすのが 2 の補数。</div>
+      <div class="sec-fig"><div class="sf-box"><svg viewBox="0 0 340 134">
+        <circle cx="100" cy="67" r="50" fill="none" stroke="#3b3a42" stroke-width="2.4"/>
+        <text x="100" y="26" font-size="11" fill="#3b3a42" text-anchor="middle" font-family="Yusei Magic,cursive">0</text>
+        <text x="151" y="71" font-size="11" fill="#3b3a42" text-anchor="middle" font-family="Yusei Magic,cursive">4</text>
+        <text x="100" y="118" font-size="11" fill="#3b3a42" text-anchor="middle" font-family="Yusei Magic,cursive">8</text>
+        <text x="49" y="71" font-size="11" fill="#3b3a42" text-anchor="middle" font-family="Yusei Magic,cursive">12</text>
+        <circle cx="135" cy="50" r="6" fill="#3f78c4"/><text x="135" y="42" font-size="9" fill="#2c5a99" text-anchor="middle">3</text>
+        <circle cx="58" cy="92" r="6" fill="#e0584f"/><text x="50" y="102" font-size="9" fill="#bb453d" text-anchor="middle">13=−3</text>
+        <path class="sf-flow" d="M132 56 A50 50 0 0 1 64 90" fill="none" stroke="#9db8de" stroke-width="2"/>
+        <text x="250" y="50" font-size="13" fill="#3b3a42" font-family="Yusei Magic,cursive">3 + 13 = 16</text>
+        <text x="250" y="76" font-size="13" fill="#bb453d" font-family="Yusei Magic,cursive">= 一周 = 0</text>
+        <text x="250" y="102" font-size="11" fill="#6f6e78" font-family="Yusei Magic,cursive">だから 13 は −3</text>
+      </svg></div></div>
+    </div></div>
+    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
+      <div class="sec-h">「反転 + 1」がその相手を作る</div>
+      <div class="sec-p">A を全ビット反転すると <span class="mq">(2ⁿ−1) − A</span>(1111 から A を引いた形)。これに <b>1 を足す</b> と <span class="mq">2ⁿ − A</span> ― これがちょうど「足すと一周して 0 になる相手」、つまり −A。例:3 = 0011 → 反転 1100 → +1 で <b>1101</b> = 13、そして 3 + 13 = 16 で一周。<br>鋭く言えば、補数のおかげで <b>引き算を足し算の回路だけで実行できる</b> ― これは第 3 章(2 進数の計算)で本格的に扱う。</div>
+    </div></div>`
+  },
+
+};
+
+
+const isMobile = () => window.innerWidth <= 720;
+function haptic(ms) { if (typeof ms !== 'number' && !Array.isArray(ms)) ms = 8; if (navigator.vibrate) { try { navigator.vibrate(ms); } catch (_) {} } }
+let lastTouchEndAt = 0;
+document.addEventListener('touchend', (e) => {
+  const now = Date.now();
+  if (now - lastTouchEndAt <= 320) {
+    const t = e.target;
+    if (t && t.tagName && /^(INPUT|TEXTAREA|SELECT|A)$/.test(t.tagName)) return;
+    e.preventDefault();
+  }
+  lastTouchEndAt = now;
+}, { passive: false });
+
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+let currentSlide = 0;
+function goToSlide(n) {
+  if (n < 0 || n >= totalSlides) return;
+  haptic(8);
+  slides[currentSlide].classList.remove('active');
+  currentSlide = n;
+  slides[currentSlide].classList.add('active');
+  slides[currentSlide].scrollTop = 0;
+  updateUI();
+}
+function updateUI() {
+  const pct = ((currentSlide + 1) / totalSlides) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('pageIndicator').textContent = String(currentSlide + 1).padStart(2, '0') + ' / ' + String(totalSlides).padStart(2, '0');
+  document.getElementById('slideTitleSmall').textContent = slides[currentSlide].dataset.title || '';
+  document.getElementById('prevBtn').disabled = currentSlide === 0;
+  document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+  updateMenuActive();
+  if (typeof mikiUpdate === 'function') mikiUpdate();
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { if (document.getElementById('menuPanel').classList.contains('open')) { closeMenu(); return; } }
+  if (document.getElementById('menuPanel').classList.contains('open')) return;
+  const tag = (e.target && e.target.tagName) || '';
+  if (/^(INPUT|TEXTAREA|SELECT)$/.test(tag)) return;
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); goToSlide(currentSlide + 1); }
+  else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goToSlide(currentSlide - 1); }
+  else if (e.key === 'Home') { goToSlide(0); }
+  else if (e.key === 'End') { goToSlide(totalSlides - 1); }
+  else if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); }
+  else if (e.key === 'm' || e.key === 'M') { openMenu(); }
+  else if (e.key === 'p' || e.key === 'P') { e.preventDefault(); kbSweep(); }
+  else if (e.key === 'h' || e.key === 'H') { e.preventDefault(); toggleMiki(); }
+});
+let touchStartX = 0, touchStartY = 0, touchStartT = 0;
+document.addEventListener('touchstart', (e) => { if (e.touches.length !== 1) return; touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; touchStartT = Date.now(); }, { passive: true });
+document.addEventListener('touchend', (e) => {
+  if (e.changedTouches.length !== 1) return;
+  const menuPanel = document.getElementById('menuPanel');
+  if (menuPanel && menuPanel.classList.contains('open')) return;
+  const target = e.target;
+  if (target && target.closest && target.closest('button, .nav-btn, input, select, a, .icon-card, .chart-q, .sr-blank, .j-chip, .answer-row, .quiz-option, .wd-btn, #mikibar')) return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  const dt = Date.now() - touchStartT;
+  if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) && dt < 800) {
+    if (dx < 0) goToSlide(currentSlide + 1); else goToSlide(currentSlide - 1);
+  }
+}, { passive: true });
+function toggleFullscreen() { if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {}); else document.exitFullscreen().catch(() => {}); }
+// ===== miki.com NPC エンジン(対話キュー + オブジェクト連動 + タイプ表示 + ドラッグ) =====
+// 口調は講義トーン(です・ます、落ち着いた自然語)。say は文字列/配列(複数=「つづき」)両対応。
+const MIKI_GUIDE = {
+  'タイトル': { tag: 'はじめに', say: ['今回は、アナログとデジタルの違いを見ていきます。', '要点は「連続した量を、0 と 1 のとびとびの数に置きかえる」ことです。', '画面下のこの欄で、各場面の見どころをお伝えします。'] },
+  'このサイトで扱う内容': { tag: '全体図', say: ['全体は、3 つの観点と発展 3 題、それに手を動かす変換の実演で構成されています。', '見たい箇所へは、右上の MENU からも移動できます。'] },
+  '第1節 アナログとデジタル': { tag: '第1節', say: 'まず、アナログ(連続)とデジタル(離散)の違いから見ていきます。' },
+  '①② アナログとデジタル (interactive)': { tag: '①②', say: ['下の 2 つのカードを選ぶと、その用語の説明をこの欄に表示します。', 'なめらかな量がアナログ、とびとびの段階がデジタルです。'] },
+  '図解 連続量と離散量': { tag: '図解', say: ['なめらかな波がアナログ、一定間隔で測った棒がデジタルです。', '段階に置きかえる分、細部はわずかに失われます。'] },
+  '実習1 ― アナログ・デジタル判定': { tag: '実習1', say: '連続量ならアナログ、とびとびの段階ならデジタル。A か D を選ぶと根拠が出ます。' },
+  '第2節 数を 0 と 1 で表す': { tag: '第2節', say: 'ここからは、数を 0 と 1 で表す方法です。2 進法と 16 進法を扱います。' },
+  '③④⑤⑥ 2進法と16進法 (interactive)': { tag: '③〜⑥', say: ['4 つの用語を選ぶと、それぞれの説明を表示します。', '「進法」は表し方、「進数」はその数 ― この対応に注目してください。'] },
+  '8ビット変換機 (interactive)': { tag: '変換機', say: ['8 つのビットをタップして、0 と 1 を切り替えてみましょう。', '立てたビットの重み(128・64…)を足すと、下の 10 進数になります。'] },
+  '実習2 ― コンピュータのデジタル表現': { tag: '実習2', say: '2 進数は桁が多くなりがち。それを補うのが 16 進法です。空欄を選ぶと答えが出ます。' },
+  '実習3 ― 数値表現の変換': { tag: '実習3', say: '白いマスが与えられた値、青いマスが答えです。変換機で確かめながら埋めましょう。' },
+  '第3節 情報量とその単位': { tag: '第3節', say: '次は情報量の単位です。ビットとバイト、そして n ビットで表せる数を扱います。' },
+  '⑦⑧ ビットとバイト (interactive)': { tag: '⑦⑧', say: ['2 つの用語を選ぶと、定義と例を表示します。', 'ビットが最小単位、それを 8 つまとめたものが 1 バイトです。'] },
+  '2のn乗スライダー (interactive)': { tag: '計算', say: ['スライダーでビット数を変えると、表せる数が 2 倍ずつ増えます。', '下の例を選ぶと、必要なビット数を確かめられます。'] },
+  '実習4 ― 情報量とその単位': { tag: '実習4', say: 'ビットとバイトの単位を使う問題です。空欄を選ぶと答えと記号が出ます。' },
+  '実習5 ― 表現できる情報の数': { tag: '実習5', say: '「2 の n 乗 ≧ 表したい段階数」となる最小の n を探すのがコツです。' },
+  '第4節 参考: 発展副題': { tag: '発展', say: 'ここからは発展です。共通テストや実生活で必要になる範囲まで広げます。' },
+  '参考A なぜコンピュータは2進数か': { tag: '参考A', say: ['なぜ 10 進法でなく 2 進法なのか、を見ます。', '鍵は「電気で動く機械にとって、何段階なら間違えにくいか」です。'] },
+  '参考B 情報量の階段(1024倍)': { tag: '参考B', say: 'ビットから KB・MB・GB へ。1024 倍ごとに名前が変わる階段を見ます。' },
+  '参考C 補数で負の数を表す': { tag: '参考C', say: '0 と 1 だけで、どうマイナスを表すか。やや発展で、第 3 章につながります。' },
+  'POINT 答え合わせ(全 12 用語)': { tag: 'まとめ', say: '学習ノートの 12 用語を確認します。タップで 1 つずつ、全表示も使えます。' },
+  'POINT 11 まとめツリー': { tag: '一望', say: 'アナログとデジタルを「表し方・進法の関係・情報量」の 3 つにまとめました。' },
+  '復習チャレンジ(10問ランダム)': { tag: '腕試し', say: '10 問のランダム出題で、理解度を確認します。' },
+  '完了': { tag: 'おわりに', say: ['これで一通りです。', '連続した量を、0 と 1 のとびとびの数に置きかえる ― この点を覚えておいてください。', '次回は POINT 12、情報のデジタル化です。'] }
+};
+const MIKI_TERM = {
+  analog:     ['アナログは、量を連続した量のまま表す方法です。', '水銀温度計の液柱や、針時計の針のように、なめらかに変わります。'],
+  digital:    ['デジタルは、量を離散した(とびとびの)段階に置きかえて表す方法です。', '最小単位より細かい値は表せません。'],
+  binary:     ['2 進法は、0 と 1 だけで数を表す方法です。', 'コンピュータ内部の表し方そのものです。'],
+  binarynum:  ['2 進数は、2 進法で表した数値です。', '例えば 11011 は、10 進数の 27 にあたります。'],
+  hexsys:     ['16 進法は、0〜9 と A〜F の 16 種類で数を表す方法です。', '2 進数の桁が多くなりすぎるのを補います。'],
+  hexnum:     ['16 進数は、16 進法で表した数値です。', '例えば 1B は、10 進数の 27 にあたります。'],
+  bit:        ['ビットは、情報量の最小単位です。', '2 進数の 1 桁(0 か 1 = 2 通り)に相当します。'],
+  byte:       ['バイトは、8 ビットをまとめた単位です。', '1 バイトで 2 の 8 乗 = 256 通りを表せます。']
+};
+const MIKI_REACT = {
+  correct: ['正解です。', 'その通りです。', 'よく見ています。正解です。'],
+  wrong:   ['惜しいです。もう一度考えてみましょう。', '少し違うようです。本文にヒントがあります。', 'もう一度、確かめてみましょう。']
+};
+let mbQueue = [], mbIdx = 0, mbTagCur = '', mbCurKey = '', mbFull = '', mbTyping = false, mbTimer = null;
+function mikiSetDialogue(tag, lines, key) {
+  mbQueue = Array.isArray(lines) ? lines.slice() : [lines];
+  mbIdx = 0; mbTagCur = tag || ''; mbCurKey = key || '';
+  mikiRenderLine();
+}
+function mikiRenderLine() {
+  const bar = document.getElementById('mikibar'); if (!bar) return;
+  bar.hidden = false;
+  const t = document.getElementById('mbTag'); if (t) t.textContent = mbTagCur;
+  const more = mbIdx < mbQueue.length - 1;
+  const nx = document.getElementById('mbNext');
+  if (nx) { nx.style.display = more ? 'inline-flex' : 'none'; nx.textContent = '▶ つづき ' + (mbIdx + 1) + '/' + mbQueue.length; }
+  bar.classList.toggle('more', more);
+  mikiType(mbQueue[mbIdx] || '');
+}
+function mikiType(html) {
+  const say = document.getElementById('mbSay'); if (!say) return;
+  if (mbTimer) { clearInterval(mbTimer); mbTimer = null; }
+  mbFull = html; mbTyping = true;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { say.innerHTML = html; mbTyping = false; return; }
+  let i = 0; const n = html.length;
+  mbTimer = setInterval(function () {
+    i += 2;
+    if (i >= n) { say.innerHTML = html; clearInterval(mbTimer); mbTimer = null; mbTyping = false; return; }
+    let s = html.slice(0, i);
+    const lt = s.lastIndexOf('<'), gt = s.lastIndexOf('>'); if (lt > gt) s = s.slice(0, lt);
+    const amp = s.lastIndexOf('&'), semi = s.lastIndexOf(';'); if (amp > semi) s = s.slice(0, amp);
+    const opens = (s.match(/<b>/g) || []).length, closes = (s.match(/<\/b>/g) || []).length; if (opens > closes) s += '</b>';
+    say.innerHTML = s;
+  }, 24);
+}
+function mikiFinishType() { if (mbTimer) { clearInterval(mbTimer); mbTimer = null; } const say = document.getElementById('mbSay'); if (say) say.innerHTML = mbFull; mbTyping = false; }
+function mikiAdvance() { if (mbTyping) { mikiFinishType(); return; } if (mbIdx < mbQueue.length - 1) { mbIdx++; mikiRenderLine(); haptic(8); } }
+function mikiUpdate() {
+  const bar = document.getElementById('mikibar'); if (!bar) return;
+  const d = MIKI_GUIDE[slides[currentSlide].dataset.title];
+  if (!d) { bar.hidden = true; return; }
+  mikiSetDialogue(d.tag, d.say, 'slide:' + currentSlide);
+}
+// 同じ用語を連続クリック → 会話が進む。別の用語なら頭から。
+function mikiTermTalk(key) {
+  const l = MIKI_TERM[key]; if (!l) return;
+  const id = 'term:' + key;
+  if (mbCurKey === id) { mikiAdvance(); }
+  else { mikiSetDialogue('用語', l, id); }
+}
+function mikiQuizReact(ok) { const a = ok ? MIKI_REACT.correct : MIKI_REACT.wrong; mikiSetDialogue(ok ? 'はんてい' : 'はんてい', [a[Math.floor(Math.random() * a.length)]], 'react'); }
+function mikiObjTalk(tag, lines) { if (typeof mikiSetDialogue === 'function') mikiSetDialogue(tag, lines, 'obj'); }
+// 移動(タイトルバー/顔ドラッグ)+ 四隅リサイズ(PC)+ 顔タップで開閉。
+(function () {
+  const bar = document.getElementById('mikibar'); if (!bar) return;
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  let m = null; // {mode:'drag'|'resize', ...}
+  bar.addEventListener('pointerdown', function (e) {
+    if (e.target.closest('button')) return;
+    const rz = e.target.closest('.mb-rz');
+    const onTitle = e.target.closest('.mb-titlebar');
+    const onAva = e.target.closest('.mb-ava');
+    const r = bar.getBoundingClientRect();
+    if (rz && window.innerWidth > 720) {
+      m = { mode: 'resize', c: rz.dataset.c, sx: e.clientX, sy: e.clientY, L: r.left, T: r.top, W: r.width, H: r.height };
+    } else if (onTitle || onAva) {
+      m = { mode: 'drag', dx: e.clientX - r.left, dy: e.clientY - r.top, sx: e.clientX, sy: e.clientY, moved: false, onAva: !!onAva };
+    } else { return; }
+    bar.classList.add('dragging');
+    try { bar.setPointerCapture(e.pointerId); } catch (_) {}
+  });
+  bar.addEventListener('pointermove', function (e) {
+    if (!m) return;
+    if (m.mode === 'drag') {
+      if (Math.abs(e.clientX - m.sx) > 4 || Math.abs(e.clientY - m.sy) > 4) m.moved = true;
+      const x = clamp(e.clientX - m.dx, 4, window.innerWidth - bar.offsetWidth - 4);
+      const y = clamp(e.clientY - m.dy, 48, window.innerHeight - bar.offsetHeight - 4);
+      bar.style.left = x + 'px'; bar.style.top = y + 'px'; bar.style.right = 'auto'; bar.style.bottom = 'auto'; bar.style.transform = 'none';
+    } else {
+      const ddx = e.clientX - m.sx, ddy = e.clientY - m.sy;
+      const minW = 280, minH = 104, maxW = window.innerWidth * 0.96, maxH = window.innerHeight * 0.7;
+      let L = m.L, T = m.T, W = m.W, H = m.H;
+      if (m.c.indexOf('e') >= 0) W = m.W + ddx;
+      if (m.c.indexOf('w') >= 0) { W = m.W - ddx; L = m.L + ddx; }
+      if (m.c.indexOf('s') >= 0) H = m.H + ddy;
+      if (m.c.indexOf('n') >= 0) { H = m.H - ddy; T = m.T + ddy; }
+      if (W < minW) { if (m.c.indexOf('w') >= 0) L = m.L + (m.W - minW); W = minW; }
+      if (W > maxW) W = maxW;
+      if (H < minH) { if (m.c.indexOf('n') >= 0) T = m.T + (m.H - minH); H = minH; }
+      if (H > maxH) H = maxH;
+      bar.style.left = L + 'px'; bar.style.top = T + 'px'; bar.style.right = 'auto'; bar.style.bottom = 'auto'; bar.style.transform = 'none';
+      bar.style.width = W + 'px'; bar.style.height = H + 'px';
+    }
+  });
+  function end() {
+    if (!m) return;
+    if (m.mode === 'drag' && !m.moved && m.onAva && typeof mikiMin === 'function') mikiMin();
+    bar.classList.remove('dragging'); m = null;
+  }
+  bar.addEventListener('pointerup', end);
+  bar.addEventListener('pointercancel', end);
+})();
+updateUI();
+
+function buildMenu() {
+  const menuList = document.getElementById('menuList'); if (!menuList) return;
+  menuList.innerHTML = '';
+  const sections = [];
+  let currentSection = { label: 'OVERVIEW', items: [] };
+  sections.push(currentSection);
+  slides.forEach((slide, idx) => {
+    const title = slide.dataset.title || '';
+    if (slide.classList.contains('section-divider')) {
+      const label = title.replace(/^第\d節\s*/, '');
+      currentSection = { label: label.toUpperCase(), items: [] };
+      sections.push(currentSection);
+    }
+    let tag = '', tagClass = '';
+    if (slide.classList.contains('title-slide') && idx === 0) { tag = 'TITLE'; tagClass = 'tag-title'; }
+    else if (slide.classList.contains('title-slide')) { tag = 'END'; tagClass = 'tag-end'; }
+    else if (slide.classList.contains('section-divider')) { tag = 'SECTION'; tagClass = 'tag-section'; }
+    else if (/実習|PRACTICE/i.test(title)) { tag = 'PRACTICE'; tagClass = ''; }
+    else if (/interactive|実演|DEMO/i.test(title)) { tag = 'INTERACTIVE'; tagClass = 'tag-interactive'; }
+    else if (/答え合わせ|まとめ|復習|参考/.test(title)) { tag = 'REVIEW'; tagClass = 'tag-review'; }
+    currentSection.items.push({ idx, title, tag, tagClass });
+  });
+  sections.forEach(sec => {
+    if (sec.items.length === 0) return;
+    const h = document.createElement('div'); h.className = 'menu-section'; h.textContent = sec.label;
+    menuList.appendChild(h);
+    sec.items.forEach(it => {
+      const el = document.createElement('div'); el.className = 'menu-item'; el.dataset.idx = it.idx;
+      el.onclick = () => { goToSlide(it.idx); closeMenu(); };
+      const num = String(it.idx + 1).padStart(2, '0');
+      const tagHtml = it.tag ? '<span class="menu-item-tag ' + it.tagClass + '">' + it.tag + '</span>' : '';
+      el.innerHTML = '<span class="menu-item-num">' + num + '</span><span class="menu-item-title">' + it.title + '</span>' + tagHtml;
+      menuList.appendChild(el);
+    });
+  });
+  updateMenuActive();
+}
+function updateMenuActive() {
+  document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+  const curr = document.querySelector('.menu-item[data-idx="' + currentSlide + '"]');
+  if (curr) {
+    curr.classList.add('active');
+    if (document.getElementById('menuPanel').classList.contains('open')) curr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+function openMenu() { document.getElementById('menuOverlay').classList.add('open'); document.getElementById('menuPanel').classList.add('open'); updateMenuActive(); }
+function closeMenu() { document.getElementById('menuOverlay').classList.remove('open'); document.getElementById('menuPanel').classList.remove('open'); }
+buildMenu();
+
+// 用語データ(12 用語、3 パネル) — 学習ノートの定義フレームに準拠
+const iconData = {
+  analog:     { term: 'アナログ', eng: 'ANALOG', desc: '<strong>量を、連続した量として表現すること</strong>。値はなめらかに変化し、途中のどんな値もとり得る。例: 水銀温度計の液柱の長さ、針時計の針の角度、レコードの溝。' },
+  digital:    { term: 'デジタル', eng: 'DIGITAL', desc: '<strong>量を、離散した(とびとびの)量として表現すること</strong>。決まった段階でしか値をとらず、最小単位より細かい値は表せない。例: デジタル時計の数字表示、0 と 1 の信号。' },
+  binary:     { term: '2 進法', eng: 'BINARY SYSTEM', desc: '<strong>0 と 1 の 2 種類の数字だけで数を表現する方法</strong>。位が 1 つ上がるごとに重みが 2 倍(…8・4・2・1)になる。コンピュータ内部の表し方そのもの。' },
+  binarynum:  { term: '2 進数', eng: 'BINARY NUMBER', desc: '<strong>2 進法で表した数値</strong>。例: 11011(2) は、16+8+0+2+1 = 27(10)。桁ごとの重みを足すと 10 進数になる。' },
+  hexsys:     { term: '16 進法', eng: 'HEXADECIMAL SYSTEM', desc: '<strong>0〜9 の数字と A〜F の文字、計 16 種類で数を表現する方法</strong>。A=10, B=11, …, F=15。2 進数 4 桁をちょうど 1 桁で表せるため、2 進数を読みやすくまとめるのに使う。' },
+  hexnum:     { term: '16 進数', eng: 'HEXADECIMAL NUMBER', desc: '<strong>16 進法で表した数値</strong>。例: 1B(16) は、1×16 + 11 = 27(10)。2 進数 11011 を 4 桁ずつ区切った 0001・1011 が、1・B に対応する。' },
+  bit:        { term: 'ビット', eng: 'BIT', desc: '<strong>情報量の最小単位。2 進数の 1 桁(0 か 1)に相当する</strong>。1 ビットで 2 通りの情報を表せる。n ビットなら 2 の n 乗通り(⑫)。bit は binary digit(2 進数字)の略。' },
+  byte:       { term: 'バイト', eng: 'BYTE', desc: '<strong>8 ビットをまとめた単位。1B と書く</strong>。1 バイトで 2 の 8 乗 = 256 通りを表せ、英数字 1 文字分にあたる。1024B = 1KB、1024KB = 1MB と、1024 倍ごとに単位が変わる。' }
+};
+function selectIcon(panelId, key) {
+  const panel = document.getElementById(panelId); if (!panel) return;
+  const cards = panel.parentElement.querySelectorAll('.icon-card');
+  cards.forEach(c => c.classList.remove('selected'));
+  const me = panel.parentElement.querySelector('.icon-card[data-key="' + key + '"]');
+  if (me) me.classList.add('selected');
+  const d = iconData[key]; if (!d) return;
+  panel.innerHTML = '<span class="ip-term">' + d.term + '</span><span class="ip-eng">' + d.eng + '</span><span class="ip-desc">' + d.desc + '</span>';
+  if (typeof mikiTermTalk === 'function') mikiTermTalk(key);
+  haptic(8);
+}
+
+// 実習1・実習2 共用(wrap 内にスコープ)
+function toggleChartQ(el) {
+  const wrap = el.closest('.chart-picker-wrap') || document;
+  const wasRevealed = el.classList.contains('revealed');
+  wrap.querySelectorAll('.chart-q').forEach(q => q.classList.remove('revealed'));
+  wrap.querySelectorAll('.chart-option').forEach(o => o.classList.remove('highlight'));
+  if (!wasRevealed) {
+    el.classList.add('revealed');
+    const ans = el.dataset.ans;
+    if (ans) { const t = wrap.querySelector('.chart-option[data-letter="' + ans + '"]'); if (t) t.classList.add('highlight'); }
+    if (typeof mikiObjTalk === 'function') mikiObjTalk('実習', ['答えと根拠が出たね。なるほど、と思えたら次の設問へ。']);
+  }
+  haptic(8);
+}
+
+// 実習3 ○×判定
+function judgeJ(chip) {
+  const item = chip.closest('.j-item');
+  const chips = item.querySelectorAll('.j-chip');
+  const fb = item.querySelector('.j-fb');
+  if (chip.classList.contains('judged-correct') || chip.classList.contains('judged-wrong')) {
+    chips.forEach(c => c.classList.remove('judged-correct', 'judged-wrong'));
+    fb.classList.remove('show'); haptic(8); return;
+  }
+  chips.forEach(c => c.classList.remove('judged-correct', 'judged-wrong'));
+  if (chip.dataset.correct === 'true') { chip.classList.add('judged-correct'); haptic(20); }
+  else { chip.classList.add('judged-wrong'); haptic([40, 30, 40]); }
+  fb.classList.add('show');
+  if (typeof mikiQuizReact === 'function') mikiQuizReact(chip.dataset.correct === 'true');
+}
+
+// 実習4 穴埋め
+function toggleSelBlank(b) {
+  if (b.classList.contains('reveal')) { b.classList.remove('reveal'); b.textContent = b.dataset.ph || 'クリック'; }
+  else { b.classList.add('reveal'); b.textContent = b.dataset.answer; }
+  haptic(8);
+}
+
+// 8ビット変換機(タップで 0/1 を切替 → 10進・2進・16進をリアルタイム更新)
+const BC_WEIGHTS = [128, 64, 32, 16, 8, 4, 2, 1];
+let bcState = [0, 0, 0, 0, 0, 0, 0, 0];
+function bcBuild() {
+  const wrap = document.getElementById('bcBits'); if (!wrap) return;
+  wrap.innerHTML = '';
+  BC_WEIGHTS.forEach((w, i) => {
+    const cell = document.createElement('div');
+    cell.className = 'bc-bit' + (bcState[i] ? ' on' : '');
+    cell.setAttribute('tabindex', '0'); cell.setAttribute('role', 'button');
+    cell.setAttribute('aria-label', '重み ' + w + ' のビット');
+    cell.innerHTML = '<div class="bc-weight">' + w + '</div><div class="bc-val">' + bcState[i] + '</div>';
+    cell.onclick = () => { bcState[i] ^= 1; bcRender(); haptic(8); };
+    cell.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); cell.click(); } });
+    wrap.appendChild(cell);
+  });
+}
+function bcRender() {
+  const cells = document.querySelectorAll('#bcBits .bc-bit');
+  cells.forEach((c, i) => { c.classList.toggle('on', !!bcState[i]); const v = c.querySelector('.bc-val'); if (v) v.textContent = bcState[i]; });
+  const dec = bcState.reduce((s, b, i) => s + b * BC_WEIGHTS[i], 0);
+  const bin = bcState.join('');
+  const hex = dec.toString(16).toUpperCase().padStart(2, '0');
+  const d = document.getElementById('bcDec'); if (d) d.textContent = dec;
+  const b = document.getElementById('bcBin'); if (b) b.textContent = bin;
+  const h = document.getElementById('bcHex'); if (h) h.textContent = hex;
+  const sum = document.getElementById('bcSum');
+  if (sum) {
+    const on = BC_WEIGHTS.filter((w, i) => bcState[i]);
+    sum.innerHTML = on.length ? ('立っているビットの重みの合計 = ' + on.join(' + ') + ' = <b>' + dec + '</b>') : 'ビットをタップして 1 を立ててみよう(すべて 0 = <b>0</b>)';
+  }
+}
+function bcSet(n) {
+  for (let i = 0; i < 8; i++) bcState[i] = (n >> (7 - i)) & 1;
+  bcRender(); haptic([15, 40, 15]);
+}
+// 2のn乗スライダー
+function powUpdate(v) {
+  const n = +v;
+  const count = Math.pow(2, n);
+  const ne = document.getElementById('powN'); if (ne) ne.textContent = n;
+  const ex = document.getElementById('powExp'); if (ex) ex.textContent = n;
+  const c = document.getElementById('powCount'); if (c) c.textContent = count.toLocaleString();
+  const bar = document.getElementById('powBar');
+  if (bar) {
+    const show = Math.min(count, 256);
+    let s = '';
+    for (let i = 0; i < show; i++) s += '<span class="pow-dot"></span>';
+    if (count > show) s += '<span style="font-family:\'JetBrains Mono\',monospace;font-size:12px;color:var(--text-sub);font-weight:700;align-self:center;margin-left:6px;">… 全 ' + count.toLocaleString() + ' 通り</span>';
+    bar.innerHTML = s;
+  }
+}
+function powSet(n) {
+  const r = document.getElementById('powRange'); if (r) r.value = n;
+  powUpdate(n); haptic([15, 40, 15]);
+}
+// (旧 webdemo は廃止。初期化呼び出しを無害化)
+function wdUpdateLegend() {}
+
+// answers-grid(12 用語)
+function revealAnswer(row) {
+  const reveal = row.querySelector('.answer-reveal');
+  if (row.classList.contains('revealed')) { row.classList.remove('revealed'); reveal.textContent = 'クリック'; }
+  else { row.classList.add('revealed'); reveal.textContent = reveal.dataset.ans; }
+}
+function revealAll() {
+  document.querySelectorAll('#pointAnswersGrid .answer-row').forEach(r => {
+    r.classList.add('revealed'); const reveal = r.querySelector('.answer-reveal'); reveal.textContent = reveal.dataset.ans;
+  });
+}
+function hideAll() {
+  document.querySelectorAll('#pointAnswersGrid .answer-row').forEach(r => {
+    r.classList.remove('revealed'); r.querySelector('.answer-reveal').textContent = 'クリック';
+  });
+}
+
+// 復習チャレンジ(プール 16 問)
+const reviewPool = [
+  { q: 'アナログの説明として正しいものはどれか?', opts: ['とびとびの段階で量を表す', '量を連続した量として表す', '必ず 0 と 1 で表す', '最小単位がある'], a: 1 },
+  { q: 'デジタルの説明として正しいものはどれか?', opts: ['なめらかに連続して変化する', 'とびとびの(離散した)段階で量を表す', '針時計の針で量を表す', '段階の間の値も表せる'], a: 1 },
+  { q: '「アナログ」と最も関係が深い語はどれか?', opts: ['離散', '連続', 'ビット', '2 進数'], a: 1 },
+  { q: '0 と 1 の 2 種類だけで数を表す方法はどれか?', opts: ['10 進法', '2 進法', '16 進法', '60 進法'], a: 1 },
+  { q: '2 進数 11011 を 10 進数にするといくつか?', opts: ['25', '27', '29', '54'], a: 1 },
+  { q: '10 進数 27 を 16 進数にすると?', opts: ['1A', '1B', '1C', '27'], a: 1 },
+  { q: '16 進法で使う文字の組み合わせはどれか?', opts: ['0〜9 と A〜F', '0〜9 のみ', '0 と 1 のみ', 'A〜Z'], a: 0 },
+  { q: '情報量の最小単位で、2 進数 1 桁にあたるものはどれか?', opts: ['バイト', 'ビット', 'ヘルツ', '画素'], a: 1 },
+  { q: '1 バイトは何ビットか?', opts: ['4 ビット', '8 ビット', '16 ビット', '1024 ビット'], a: 1 },
+  { q: '1 バイトで表せる情報は何通りか?', opts: ['16 通り', '128 通り', '256 通り', '1024 通り'], a: 2 },
+  { q: 'n ビットで表せる情報の数はどれか?', opts: ['n 通り', '2 × n 通り', '2 の n 乗通り', 'n の 2 乗通り'], a: 2 },
+  { q: '2 進数を 16 進数に直すとき、右から何桁ずつ区切るか?', opts: ['2 桁', '3 桁', '4 桁', '8 桁'], a: 2 },
+  { q: 'コンピュータが 2 進法を使う主な理由はどれか?', opts: ['人間の指が 2 本だから', '電気のオン・オフの 2 状態で確実に作れるから', '2 進数は必ず桁が少ないから', '16 進法が存在しないから'], a: 1 },
+  { q: '2 進数を基準にすると、1KB は何バイトとして扱われることが多いか?', opts: ['100B', '1000B', '1024B', '2048B'], a: 2 },
+  { q: 'サイコロの目(1〜6)を 2 進数で表すには、最低何ビット必要か?', opts: ['2 ビット', '3 ビット', '6 ビット', '8 ビット'], a: 1 },
+  { q: '0.0〜50.0℃ を 0.1℃ 刻み(501 段階)で表すには、最低何ビット必要か?', opts: ['8 ビット', '9 ビット', '10 ビット', '50 ビット'], a: 1 }
+];
+let reviewQuestions = [], reviewIdx = 0, reviewScore = 0;
+function startReview() {
+  reviewQuestions = [...reviewPool].sort(() => Math.random() - 0.5).slice(0, 10);
+  reviewIdx = 0; reviewScore = 0;
+  document.getElementById('reviewStart').style.display = 'none';
+  document.getElementById('reviewDone').classList.remove('active');
+  document.getElementById('reviewQuiz').classList.add('active');
+  showReviewQ();
+}
+function showReviewQ() {
+  const q = reviewQuestions[reviewIdx];
+  document.getElementById('reviewProgress').textContent = 'QUESTION ' + (reviewIdx + 1) + ' / 10';
+  document.getElementById('reviewQText').innerHTML = '<span class="quiz-question-num">Q' + (reviewIdx + 1) + '</span>' + q.q;
+  const opts = document.getElementById('reviewQOpts'); opts.innerHTML = '';
+  const letters = ['ア', 'イ', 'ウ', 'エ'];
+  q.opts.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-option';
+    div.innerHTML = '<span class="quiz-option-letter">' + letters[i] + '</span><span>' + opt + '</span>';
+    div.onclick = () => answerReview(div, i === q.a);
+    div.setAttribute('tabindex', '0'); div.setAttribute('role', 'button');
+    div.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); div.click(); } });
+    opts.appendChild(div);
+  });
+}
+function answerReview(el, isCorrect) {
+  const options = el.parentElement.querySelectorAll('.quiz-option');
+  if ([...options].some(o => o.dataset.answered === 'true')) return;
+  options.forEach(o => { o.dataset.answered = 'true'; o.style.pointerEvents = 'none'; o.setAttribute('aria-disabled', 'true'); });
+  const q = reviewQuestions[reviewIdx];
+  if (isCorrect) { el.classList.add('correct'); reviewScore++; haptic(20); }
+  else { el.classList.add('incorrect'); options[q.a].classList.add('correct'); haptic([40, 30, 40]); }
+  if (typeof mikiQuizReact === 'function') mikiQuizReact(isCorrect);
+  setTimeout(() => { reviewIdx++; if (reviewIdx < 10) showReviewQ(); else showReviewResult(); }, 900);
+}
+function showReviewResult() {
+  document.getElementById('reviewQuiz').classList.remove('active');
+  document.getElementById('reviewDone').classList.add('active');
+  document.getElementById('reviewScore').textContent = reviewScore + ' / 10';
+  const comments = { 10:'基本事項は十分に定着しています。', 9:'もう一歩で満点。理解はほぼ十分。', 8:'合格ライン。残りの項目を見直しましょう。', 7:'もう一歩。苦手項目を復習しよう。', 6:'6 割ライン。スライドを見返そう。' };
+  document.getElementById('reviewComment').textContent = comments[reviewScore] || '基礎から見直そう。学習ノートを手元に。';
+}
+
+// miki.com 10進→2進ステッパー(ボタン主導・スライド送りと非競合)
+const MD_STEPS = [
+  { code: 1, prev: 1, tag: '27÷2', say: '10 進数の 27 を 2 で割ります。商は 13、余りは <b>1</b>。この余りを記録します。' },
+  { code: 2, prev: 2, tag: '13÷2', say: '商の 13 をまた 2 で割ります。商 6、余り <b>1</b>。同じことをくり返します。' },
+  { code: 3, prev: 3, tag: '6÷2',  say: '6 ÷ 2 は商 3、余り <b>0</b>。割り切れたときの余りは 0 です。' },
+  { code: 4, prev: 4, tag: '3÷2',  say: '3 ÷ 2 は商 1、余り <b>1</b>。' },
+  { code: 5, prev: 5, tag: '1÷2',  say: '1 ÷ 2 は商 <b>0</b>、余り 1。商が 0 になったので、割り算はここで終わりです。' },
+  { code: 6, prev: 6, tag: '完成',  say: '余りを <b>下から上へ</b> 並べると <b>11011</b>。これが 27 の 2 進数表現です(実習3 ⑴ と同じ)。' }
+];
+let mdI = 0;
+function mdRender() {
+  const st = MD_STEPS[mdI];
+  document.querySelectorAll('.mdc-line').forEach(l => l.classList.toggle('on', (+l.dataset.i) <= st.code));
+  document.querySelectorAll('.mdp-line').forEach(l => l.classList.toggle('on', (+l.dataset.i) <= st.prev));
+  const doc = document.getElementById('mdDoc'); if (doc) doc.classList.toggle('styled', st.styled);
+  const tag = document.getElementById('mdTag'); if (tag) tag.textContent = st.tag;
+  const say = document.getElementById('mdSay'); if (say) say.innerHTML = st.say;
+  const dots = document.getElementById('mdDots');
+  if (dots) { dots.innerHTML = ''; MD_STEPS.forEach((_, k) => { const d = document.createElement('span'); d.className = 'md-dot' + (k < mdI ? ' done' : '') + (k === mdI ? ' cur' : ''); dots.appendChild(d); }); }
+  const pb = document.getElementById('mdPrev'); if (pb) pb.disabled = mdI === 0;
+  const nb = document.getElementById('mdNext'); if (nb) nb.disabled = mdI === MD_STEPS.length - 1;
+}
+function mdNext() { if (mdI < MD_STEPS.length - 1) { mdI++; mdRender(); haptic(8); } }
+function mdPrev() { if (mdI > 0) { mdI--; mdRender(); haptic(8); } }
+function mdReset() { mdI = 0; mdRender(); haptic([15, 40, 15]); }
+
+// 文字を 1 文字ずつ <span class="char"> に分割(P コマンドの文字ポップ用)
+function mikiWrapChars(el) {
+  if (!el || el.dataset.charWrapped) return;
+  el.dataset.charWrapped = '1';
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
+  const textNodes = [];
+  let node;
+  while ((node = walker.nextNode())) { if (node.textContent.replace(/\s/g, '').length > 0) textNodes.push(node); }
+  textNodes.forEach(tn => {
+    const frag = document.createDocumentFragment();
+    for (const ch of tn.textContent) {
+      if (ch === ' ' || ch === '\n' || ch === '\t' || ch === '　') { frag.appendChild(document.createTextNode(ch)); }
+      else { const s = document.createElement('span'); s.className = 'char'; s.textContent = ch; frag.appendChild(s); }
+    }
+    tn.parentNode.replaceChild(frag, tn);
+  });
+}
+function initCharWrap() {
+  document.querySelectorAll('.icon-card-name').forEach(mikiWrapChars);
+}
+// P コマンド = アクティブスライドの POINT 用語を、左から 1 文字ずつポップ
+function kbSweep() {
+  const cur = document.querySelector('.slide.active'); if (!cur) return;
+  const targets = cur.querySelectorAll('.icon-card-name');
+  if (!targets.length) return;
+  const chars = [];
+  targets.forEach(t => { mikiWrapChars(t); t.querySelectorAll('.char').forEach(c => chars.push(c)); });
+  if (!chars.length) return;
+  chars.forEach(c => { c.classList.remove('popping'); c.style.animationDelay = ''; });
+  void cur.offsetWidth;
+  const stepMs = 80, popDur = 720;
+  chars.forEach((c, k) => { c.style.animationDelay = (k * stepMs) + 'ms'; c.classList.add('popping'); });
+  setTimeout(() => { chars.forEach(c => { c.classList.remove('popping'); c.style.animationDelay = ''; }); }, chars.length * stepMs + popDur + 120);
+  haptic(8);
+}
+// H コマンド = miki.com(常駐バー + ステッパー内ガイド)の表示/非表示
+function toggleMiki() { document.body.classList.toggle('miki-hidden'); haptic(8); }
+function mikiMin() { const b = document.getElementById('mikibar'); if (b) b.classList.toggle('collapsed'); haptic(8); }
+
+function resetAllInteractions() {
+  haptic([15, 40, 15]);
+  if (!confirm('このページのすべてのインタラクションを初期状態に戻します。よろしいですか?')) return;
+  document.querySelectorAll('.icon-card.selected').forEach(c => c.classList.remove('selected'));
+  const p1 = document.getElementById('termPanel1'); if (p1) p1.innerHTML = '<span style="color:var(--text-sub);font-style:italic;">▲ 上の 2 つのカードをタップすると、定義と身近な例が表示されます。</span>';
+  const p2 = document.getElementById('termPanel2'); if (p2) p2.innerHTML = '<span style="color:var(--text-sub);font-style:italic;">▲ 4 つの用語をタップすると、それぞれの定義と例が表示されます。</span>';
+  const p3 = document.getElementById('termPanel3'); if (p3) p3.innerHTML = '<span style="color:var(--text-sub);font-style:italic;">▲ 2 つの用語をタップすると、定義と例が表示されます。</span>';
+  document.querySelectorAll('.j-chip').forEach(c => c.classList.remove('judged-correct', 'judged-wrong'));
+  document.querySelectorAll('.j-fb.show').forEach(f => f.classList.remove('show'));
+  document.querySelectorAll('.sr-blank.reveal, .cv-blank.reveal').forEach(b => { b.classList.remove('reveal'); b.textContent = b.dataset.ph || 'クリック'; });
+  if (typeof bcSet === 'function') bcSet(0);
+  if (typeof powSet === 'function') powSet(3);
+  document.querySelectorAll('#pointAnswersGrid .answer-row.revealed').forEach(r => { r.classList.remove('revealed'); r.querySelector('.answer-reveal').textContent = 'クリック'; });
+  document.querySelectorAll('.quiz-option').forEach(o => { o.classList.remove('correct', 'incorrect'); o.style.pointerEvents = 'auto'; delete o.dataset.answered; o.removeAttribute('aria-disabled'); });
+  const reviewStart = document.getElementById('reviewStart');
+  const reviewQuiz = document.getElementById('reviewQuiz');
+  const reviewDone = document.getElementById('reviewDone');
+  if (reviewStart) reviewStart.style.display = 'block';
+  if (reviewQuiz) reviewQuiz.classList.remove('active');
+  if (reviewDone) reviewDone.classList.remove('active');
+  if (typeof mdReset === 'function') mdReset();
+  closeMenu();
+  goToSlide(0);
+}
+
+// a11y 初期化
+function initA11y() {
+  document.querySelectorAll('svg').forEach(svg => {
+    if (svg.hasAttribute('aria-label') || svg.getAttribute('role') === 'img') return;
+    if (!svg.hasAttribute('aria-hidden')) svg.setAttribute('aria-hidden', 'true');
+    if (!svg.hasAttribute('focusable')) svg.setAttribute('focusable', 'false');
+  });
+  const clickableSel = '.icon-card, .sr-blank, .cv-blank, .pow-ex, .j-chip, .answer-row, .quiz-option, .menu-item';
+  const handleKeyAsClick = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); e.currentTarget.click(); } };
+  document.querySelectorAll(clickableSel).forEach(el => {
+    if (el.tagName === 'BUTTON' || el.tagName === 'A') return;
+    if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
+    if (!el.hasAttribute('role')) el.setAttribute('role', 'button');
+    el.addEventListener('keydown', handleKeyAsClick);
+  });
+  const menuToggle = document.querySelector('.menu-toggle');
+  const menuPanel = document.getElementById('menuPanel');
+  if (menuToggle && menuPanel) {
+    menuToggle.setAttribute('aria-expanded', menuPanel.classList.contains('open') ? 'true' : 'false');
+    menuToggle.setAttribute('aria-controls', 'menuPanel');
+    const observer = new MutationObserver(() => { menuToggle.setAttribute('aria-expanded', menuPanel.classList.contains('open') ? 'true' : 'false'); });
+    observer.observe(menuPanel, { attributes: true, attributeFilter: ['class'] });
+  }
+}
+bcBuild();
+bcRender();
+powUpdate(3);
+initA11y();
+mdRender();
+initCharWrap();
+
+window.addEventListener('load', () => {
+  if (!isMobile()) return;
+  if (window._swipeHintShown) return;
+  window._swipeHintShown = true;
+  setTimeout(() => {
+    const hint = document.createElement('div');
+    hint.className = 'swipe-hint'; hint.textContent = 'スワイプで送る';
+    document.body.appendChild(hint);
+    requestAnimationFrame(() => hint.classList.add('show'));
+    setTimeout(() => hint.classList.remove('show'), 3200);
+    setTimeout(() => hint.remove(), 3700);
+  }, 900);
+});
+</script>
+</body>
+</html>
