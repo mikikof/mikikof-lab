@@ -980,6 +980,9 @@ body.miki-hidden .miki-back { display: inline-block; }
     </div>
     <div class="cc-note">英数字・記号 1 文字 = <strong>1 バイト</strong>。漢字やかなは種類が多いので、<strong>2 バイト(16 進数 4 桁)以上</strong>の番号が必要になる。</div>
   </div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center;">
+    <button class="supp-chip" data-supp="ASCII"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>なぜ「A」が 65 番なの?</button>
+  </div>
 </div>
 
 <!-- SLIDE 6: 実習1 文字の表現 -->
@@ -1030,6 +1033,9 @@ body.miki-hidden .miki-back { display: inline-block; }
   </div>
   <div class="cards-hint">タップして定義を表示</div>
   <div class="icon-info-panel" id="termPanel2"><span style="color:var(--text-sub);font-style:italic;">▲ 3 つの用語をタップすると、定義と例が表示されます。</span></div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center;">
+    <button class="supp-chip" data-supp="WAVEHZ"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>高い音と低い音、何が違う?</button>
+  </div>
 </div>
 
 <!-- SLIDE 9: 実習2 波の性質 -->
@@ -1363,6 +1369,9 @@ body.miki-hidden .miki-back { display: inline-block; }
     </div>
     <div class="fps-note" id="fpsNote">5 fps:1 秒間に 5 枚の静止画。動きが飛んで見える。アニメは 24fps、なめらかな映像は 60fps が使われる。</div>
   </div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center;">
+    <button class="supp-chip" data-supp="FPSEYE"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>静止画がなぜ「動いて」見える?</button>
+  </div>
 </div>
 
 <!-- SLIDE 26: 実習4 動画の作成 -->
@@ -1388,6 +1397,9 @@ body.miki-hidden .miki-back { display: inline-block; }
     <div class="vr-def"><span class="vr-tag">⑱</span><b>VR</b><span>仮想現実。視界全体を CG 映像で覆い、その場にいるような感覚を作る</span></div>
     <div class="vr-def"><span class="vr-tag">⑲</span><b>AR</b><span>拡張現実。現実の風景に CG の情報を重ねて表示する</span></div>
     <div class="vr-def"><span class="vr-tag">⑳</span><b>MR</b><span>複合現実。現実と CG を融合させ、CG 物体を現実に置いたように扱う</span></div>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 14px;justify-content:center;">
+    <button class="supp-chip" data-supp="XR"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>3DCG・VR・AR・MR を 1 本の軸で</button>
   </div>
   <div class="judgment-list">
     <div class="j-item">
@@ -1679,8 +1691,8 @@ body.miki-hidden .miki-back { display: inline-block; }
     const d = SUPP[key]; if (!d) return;
     if (!modal) build();
     modal.querySelector('.sh-tag').textContent = d.tag || 'SUPPLEMENT';
-    modal.querySelector('.sh-title').textContent = d.title || '';
-    modal.querySelector('.sh-sub').textContent = d.sub || '';
+    modal.querySelector('.sh-title').innerHTML = d.title || '';
+    modal.querySelector('.sh-sub').innerHTML = d.sub || '';
     modal.querySelector('.supp-body').innerHTML = d.body || '';
     modal.classList.add('on');
     modal.querySelector('.supp-card').scrollTop = 0;
@@ -1833,6 +1845,113 @@ window.HOSOKU_SUPP = {
     <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
       <div class="sec-h">同じ画素数でも、dpi で大きさが変わる</div>
       <div class="sec-p">画素数が同じでも、<b>dpi を上げると小さく精細に、下げると大きく粗く</b> 印刷される。画面表示はだいたい 72〜96dpi、写真印刷は 300dpi 程度がよく使われる。<br>つまり、解像度は「<b>画素をどれだけ詰めて並べるか</b>」。詰めるほどきめ細かいが、同じ画素数なら印刷は小さくなる。</div>
+    </div></div>`
+  },
+  'ASCII': {
+    tag: 'SUPPLEMENT · 文字コード',
+    title: 'なぜ「A」が <b>65 番</b>なの?',
+    sub: '文字コードはでたらめな番号ではなく、規則的に並べてある。',
+    body: `
+    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
+      <div class="sec-h">大文字と小文字は、たった 1 ビット違い</div>
+      <div class="sec-p">「A」の文字コードは <b>65</b>(2 進数で 01000001)、「a」は <b>97</b>(01100001)。差は <b>97 − 65 = 32</b>。2 進数で見ると、<b>32 ＝ 2⁵ の桁が 1 つ違うだけ</b>。つまり大文字と小文字は、ビットを 1 個変えるだけで行き来できる。</div>
+      <div class="sec-fig"><div class="sf-box"><svg viewBox="0 0 340 134">
+        <rect class="sf-pulse" x="95" y="22" width="32" height="80" rx="5" fill="none" stroke="#e0584f" stroke-width="3"/>
+        <text x="14" y="46" font-size="15" fill="#2c5a99" font-weight="900" font-family="JetBrains Mono,monospace">A</text>
+        <g font-family="JetBrains Mono,monospace" font-size="15" font-weight="900" text-anchor="middle">
+          <rect x="28" y="26" width="30" height="28" rx="4" fill="#fff" stroke="#3b3a42" stroke-width="1.6"/><text x="43" y="46" fill="#aab3c0">0</text>
+          <rect x="62" y="26" width="30" height="28" rx="4" fill="#3f78c4" stroke="#3b3a42" stroke-width="1.6"/><text x="77" y="46" fill="#fff">1</text>
+          <rect x="96" y="26" width="30" height="28" rx="4" fill="#fff" stroke="#3b3a42" stroke-width="1.6"/><text x="111" y="46" fill="#aab3c0">0</text>
+          <rect x="130" y="26" width="30" height="28" rx="4" fill="#fff" stroke="#3b3a42" stroke-width="1.6"/><text x="145" y="46" fill="#aab3c0">0</text>
+          <rect x="164" y="26" width="30" height="28" rx="4" fill="#fff" stroke="#3b3a42" stroke-width="1.6"/><text x="179" y="46" fill="#aab3c0">0</text>
+          <rect x="198" y="26" width="30" height="28" rx="4" fill="#fff" stroke="#3b3a42" stroke-width="1.6"/><text x="213" y="46" fill="#aab3c0">0</text>
+          <rect x="232" y="26" width="30" height="28" rx="4" fill="#fff" stroke="#3b3a42" stroke-width="1.6"/><text x="247" y="46" fill="#aab3c0">0</text>
+          <rect x="266" y="26" width="30" height="28" rx="4" fill="#3f78c4" stroke="#3b3a42" stroke-width="1.6"/><text x="281" y="46" fill="#fff">1</text>
+        </g>
+        <text x="14" y="90" font-size="15" fill="#bb453d" font-weight="900" font-family="JetBrains Mono,monospace">a</text>
+        <g font-family="JetBrains Mono,monospace" font-size="15" font-weight="900" text-anchor="middle">
+          <rect x="28" y="70" width="30" height="28" rx="4" fill="#fff" stroke="#3b3a42" stroke-width="1.6"/><text x="43" y="90" fill="#aab3c0">0</text>
+          <rect x="62" y="70" width="30" height="28" rx="4" fill="#3f78c4" stroke="#3b3a42" stroke-width="1.6"/><text x="77" y="90" fill="#fff">1</text>
+          <rect x="96" y="70" width="30" height="28" rx="4" fill="#3f78c4" stroke="#3b3a42" stroke-width="1.6"/><text x="111" y="90" fill="#fff">1</text>
+          <rect x="130" y="70" width="30" height="28" rx="4" fill="#fff" stroke="#3b3a42" stroke-width="1.6"/><text x="145" y="90" fill="#aab3c0">0</text>
+          <rect x="164" y="70" width="30" height="28" rx="4" fill="#fff" stroke="#3b3a42" stroke-width="1.6"/><text x="179" y="90" fill="#aab3c0">0</text>
+          <rect x="198" y="70" width="30" height="28" rx="4" fill="#fff" stroke="#3b3a42" stroke-width="1.6"/><text x="213" y="90" fill="#aab3c0">0</text>
+          <rect x="232" y="70" width="30" height="28" rx="4" fill="#fff" stroke="#3b3a42" stroke-width="1.6"/><text x="247" y="90" fill="#aab3c0">0</text>
+          <rect x="266" y="70" width="30" height="28" rx="4" fill="#3f78c4" stroke="#3b3a42" stroke-width="1.6"/><text x="281" y="90" fill="#fff">1</text>
+        </g>
+        <text x="111" y="120" font-size="11" fill="#e0584f" text-anchor="middle" font-family="Yusei Magic,cursive">ここだけ違う = 32 (2⁵)</text>
+      </svg></div></div>
+    </div></div>
+    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
+      <div class="sec-h">番号は意味のある順序で並ぶ</div>
+      <div class="sec-p">数字「0」〜「9」も <b>48〜57</b> と連続して並ぶ。記号・数字・大文字・小文字がまとまるよう設計されている(ASCII)。だから「大文字 → 小文字」は 32 を足すだけ、「数字の文字 → 数値」は 48 を引くだけ、と機械的に処理できる。<br>つまり、文字コードは <b>でたらめな番号ではなく、計算しやすいように順序づけられた番号表</b>。</div>
+    </div></div>`
+  },
+  'WAVEHZ': {
+    tag: 'SUPPLEMENT · 周期と周波数',
+    title: '高い音と低い音は、<b>何が違う</b>?',
+    sub: '波が密なら高い音、まばらなら低い音。周期は周波数の逆数。',
+    body: `
+    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
+      <div class="sec-h">波が密なほど、高い音</div>
+      <div class="sec-p">周波数は <b>1 秒間に通過する波の数</b>。同じ 1 秒でも、波がたくさん詰まっている(密)ほど周波数が大きく、<b>高い音</b>に聞こえる。波がまばらなら周波数が小さく、<b>低い音</b>。図の上が高い音、下が低い音。</div>
+      <div class="sec-fig"><div class="sf-box"><svg viewBox="0 0 340 124">
+        <text x="20" y="18" font-size="11" fill="#bb453d" font-family="Yusei Magic,cursive">高い音(周波数 大・波が密)</text>
+        <path class="sf-flow" d="M20 44 C32 30 44 30 56 44 S80 58 92 44 S116 30 128 44 S152 58 164 44 S188 30 200 44 S224 58 236 44 S260 30 272 44 S296 58 308 44" fill="none" stroke="#bb453d" stroke-width="3"/>
+        <text x="20" y="80" font-size="11" fill="#2c5a99" font-family="Yusei Magic,cursive">低い音(周波数 小・波がまばら)</text>
+        <path class="sf-flow" d="M20 102 C56 76 92 76 128 102 S200 128 236 102 S308 76 344 102" fill="none" stroke="#3f78c4" stroke-width="3"/>
+      </svg></div></div>
+    </div></div>
+    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
+      <div class="sec-h">周期と周波数は逆数</div>
+      <div class="sec-p">周期は波 1 つ分の時間で、<b>周期 ＝ 1 ÷ 周波数</b>。例:ピアノの「ラ」は <b>440Hz</b> なので、波 1 つは <span class="mq">1 ÷ 440 ≈ 0.0023 秒</span>。1 オクターブ上がると <b>周波数は 2 倍</b>、周期は半分になる。<br>つまり、音の高さの正体は「<b>1 秒間に何回振動するか</b>」という数。</div>
+    </div></div>`
+  },
+  'FPSEYE': {
+    tag: 'SUPPLEMENT · フレームレート',
+    title: '静止画がなぜ「<b>動いて</b>」見える?',
+    sub: '速くめくると、目の残像が間をつないで動きに見える。',
+    body: `
+    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
+      <div class="sec-h">目には、見たものが少し残る</div>
+      <div class="sec-p">人の目は、見たものが消えても <b>一瞬(およそ 1/16 秒ほど)残って見える</b>(残像)。静止画を素早く次々に見せると、脳が前のコマと次のコマの間をつないで、<b>連続した動き</b>に感じる。パラパラ漫画やアニメと同じしくみ。</div>
+      <div class="sec-fig"><div class="sf-box"><svg viewBox="0 0 340 120">
+        <text x="170" y="18" font-size="11" fill="#2c5a99" text-anchor="middle" font-family="Yusei Magic,cursive">静止画を素早く + 目の残像</text>
+        <circle cx="50" cy="58" r="12" fill="#3f78c4" opacity="0.18"/>
+        <circle cx="110" cy="58" r="12" fill="#3f78c4" opacity="0.34"/>
+        <circle cx="170" cy="58" r="12" fill="#3f78c4" opacity="0.55"/>
+        <circle cx="230" cy="58" r="12" fill="#3f78c4" opacity="0.78"/>
+        <circle class="sf-pulse" cx="290" cy="58" r="13" fill="#e0584f"/>
+        <text x="170" y="104" font-size="12" fill="#bb453d" text-anchor="middle" font-family="Yusei Magic,cursive">残像がつないで「動き」に見える</text>
+      </svg></div></div>
+    </div></div>
+    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
+      <div class="sec-h">fps が大きいほど、コマの間隔が短い</div>
+      <div class="sec-p">1 枚あたりの表示時間は、<span class="mq">24fps → 1 ÷ 24 ≈ 0.042 秒</span>、<span class="mq">60fps → 1 ÷ 60 ≈ 0.017 秒</span>。fps が大きいほどコマの間隔が短く、動きがなめらか。映画は <b>24fps</b>、ゲームや滑らかな映像は <b>60fps</b> が多い。<br>つまり、動画は「<b>静止画の高速めくり</b>」と「<b>目の残像</b>」の合わせ技。</div>
+    </div></div>`
+  },
+  'XR': {
+    tag: 'SUPPLEMENT · 立体表現',
+    title: '3DCG・VR・AR・MR を <b>1 本の軸</b>で',
+    sub: '「現実とCGの混ざり具合」で並べると、違いが一望できる。',
+    body: `
+    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
+      <div class="sec-h">どれだけ現実が残るか、で並べる</div>
+      <div class="sec-p">4 つの言葉は、<b>どれだけ現実が残るか</b>で一列に並ぶ。<b>AR</b>(現実が主で CG を少し重ねる)→ <b>MR</b>(現実と CG が対等に混ざり、CG を現実の位置で操作できる)→ <b>VR</b>(視界が全部 CG で現実は見えない)。<b>3DCG</b> はこれらの土台で、画面の中に立体物を計算して描く技術。</div>
+      <div class="sec-fig"><div class="sf-box"><svg viewBox="0 0 340 122">
+        <defs><marker id="xrA" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#3b3a42"/></marker></defs>
+        <line x1="28" y1="62" x2="312" y2="62" stroke="#3b3a42" stroke-width="2.5" marker-end="url(#xrA)"/>
+        <text x="28" y="92" font-size="11" fill="#5B8C72" font-family="Yusei Magic,cursive">現実 100%</text>
+        <text x="312" y="92" font-size="11" fill="#bb453d" text-anchor="end" font-family="Yusei Magic,cursive">CG 100%</text>
+        <circle cx="92" cy="62" r="7" fill="#5B8C72"/><text x="92" y="44" font-size="12" fill="#5B8C72" text-anchor="middle" font-family="Yusei Magic,cursive">AR</text>
+        <circle cx="178" cy="62" r="7" fill="#3f78c4"/><text x="178" y="44" font-size="12" fill="#2c5a99" text-anchor="middle" font-family="Yusei Magic,cursive">MR</text>
+        <circle class="sf-pulse" cx="290" cy="62" r="8" fill="#e0584f"/><text x="290" y="44" font-size="12" fill="#bb453d" text-anchor="middle" font-family="Yusei Magic,cursive">VR</text>
+        <text x="170" y="114" font-size="10.5" fill="#6f6e78" text-anchor="middle" font-family="Yusei Magic,cursive">3DCG = 画面の中に立体を描く土台技術</text>
+      </svg></div></div>
+    </div></div>
+    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
+      <div class="sec-h">見分ける 2 つの問い</div>
+      <div class="sec-p">①「<b>現実が見えるか?</b>」VR は見えない、AR・MR は見える。②「<b>CG を現実の場所で扱えるか?</b>」MR はできる、AR は重ねて見せるだけ。<br>つまり、違いは演出ではなく「<b>現実がどれだけ残り、CG とどう混ざるか</b>」で決まる。</div>
     </div></div>`
   },
 
