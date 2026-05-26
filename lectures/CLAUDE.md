@@ -61,13 +61,14 @@ lectures/
 
 新しい単元を作る・既存を修正するときは、**以下の順で必ず読んでから**コードに触る:
 
-1. 本ファイル(このCLAUDE.md)— 制作哲学とチェックリスト
-2. `skills/interactive-lecture/SKILL.md` — 技術仕様と落とし穴
-3. `skills/interactive-lecture/components.md` — 部品カタログ
-4. `skills/interactive-lecture/examples/` の最新完成品 — 生きた参照
-5. **`_source/` の該当章 Word + 解答PDF の対応ページ** — 問題と答えの正本。これを読まずに書くと、答えの誤りや原本と異なる根拠フレームを書く事故が起きる(§4.8 参照)
+1. **`skills/interactive-lecture/NEW-LECTURE-PLAYBOOK.md`** — 🥇 一発制作のオーケストレーション(最上位)。新規単元は「lec11 をコピーして中身だけ差し替える」。**まずこれ**
+2. 本ファイル(このCLAUDE.md)— 制作哲学とチェックリスト
+3. `skills/interactive-lecture/SKILL.md` — 技術仕様と落とし穴(特に §14 icon-card / §15 標準インタラクション層)
+4. `skills/interactive-lecture/components.md` — 部品カタログ
+5. **`skills/interactive-lecture/examples/11-analog-and-digital.html`** — canonical(最新完成形)。新規単元の出発点。lec06/07 は旧リファレンス
+6. **`_source/` の該当章 Word + 解答PDF の対応ページ** — 問題と答えの正本。これを読まずに書くと、答えの誤りや原本と異なる根拠フレームを書く事故が起きる(§4.8 参照)
 
-これを読まずに書き始めると、毎回デザイン規約が揺れて量産の意味がなくなる。**skill と原本を読むのは念のためではなく必須**。
+これを読まずに書き始めると、毎回デザイン規約が揺れて量産の意味がなくなる。**プレイブックと原本を読むのは念のためではなく必須**。
 
 ---
 
@@ -247,6 +248,9 @@ lectures/
 
 ## 6. 標準ワークフロー(新規単元1本)
 
+> **2026-05 改訂:詳細・最新版は `skills/interactive-lecture/NEW-LECTURE-PLAYBOOK.md` を最上位に従う。**
+> 要点:**空テンプレからではなく lec11(canonical)をコピー**し、標準インタラクション層(miki.com / hosoku / スポットライト / P 文字ポップ / Space+もどす)はそのまま継承、コンテンツ層だけ差し替える。実装後は **/hosoku → /brushup → /visual → /audit-review ×2** のパイプラインで仕上げる。以下は骨子。
+
 新しい授業単元の依頼を受けたら、以下の順で進める:
 
 ### [1] 素材の確認
@@ -264,11 +268,16 @@ lectures/
 - web_search で該当トピックの最新事件を確認
 - 3〜5件の事例候補をピックアップして組み込む
 
-### [4] 実装
-- `skills/interactive-lecture/template.html` をコピーして `articles/{番号}-{スラッグ}/index.html` に配置
-- `components.md` から必要パーツをコピーして中身を組む
+### [4] 実装(scaffold + コンテンツ差替)
+- **`cp skills/interactive-lecture/examples/11-analog-and-digital.html articles/{番号}-{スラッグ}/index.html`**(canonical をコピー)
+- **標準インタラクション層(エンジン)は 1 文字も変えない**(SKILL.md §15)
+- 差し替えるのは**コンテンツ層だけ**:topbar / スライド本体 / `HOSOKU_SUPP` / `MIKI_GUIDE`(キー=data-title) / `MIKI_TERM` / `iconData` / `POINT_ILLUST` / `reviewPool` / `MD_STEPS` / 単元固有 CSS·JS / `resetAllInteractions` の固有部(プレイブック §2 のインベントリ)
+- データ可視化が要る単元は、**手を動かす HTML インタラクション**(lec11 の 8ビット変換機・2ⁿスライダー・変換表・ニブル分割図が手本)を「単元の目玉」として 1〜2 個入れる
 - デザイントークン(`SKILL.md` 参照)は絶対に変えない
 - 問題の選択肢・正答・解説を書く時は、必ず [1] で開いた**解答PDFを傍に置きながら**書く(後でまとめて照合、ではなく書きながら照合)
+
+### [4.5] /hosoku で難所に補足を入れる(適宜・必須)
+- `/hosoku` で難所スライド 5〜8 か所に手描きポップな補足モーダルを実装(`HOSOKU_SUPP` + チップ)。「なぜそうなるか」「つまずく計算」「実生活への接続」を、動く図+鋭い具体数値で(プレイブック §5)
 
 ### [5] 答えの照合(原本との突き合わせ) ★ 飛ばすと事故る
 - lecture 内のすべての問題について、`_source/高校情1学習ノート-解答PDF.pdf` の対応箇所と以下を1問ずつ照合:

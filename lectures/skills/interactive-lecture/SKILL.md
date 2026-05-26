@@ -379,6 +379,9 @@ law-illust など `viewBox="0 0 100 100"`(表示 92×92 px、モバイル 80×80
 
 ## 7. 標準作業フロー
 
+> **2026-05 改訂:一発制作は `NEW-LECTURE-PLAYBOOK.md` を最上位に従う。**
+> 新規単元は **空の `template.html` ではなく、canonical の `examples/11-analog-and-digital.html` をコピー**して、コンテンツ層だけを差し替える(miki.com / hosoku / スポットライト / P 文字ポップ / Space+もどす の標準インタラクション層をそのまま継承するため)。下記は基本骨子。詳細手順・差し替えインベントリ・パイプラインはプレイブック参照。
+
 ```
 [1] 要件把握
    └ ユーザーから学習ノート画像/PDF受領
@@ -394,10 +397,15 @@ law-illust など `viewBox="0 0 100 100"`(表示 92×92 px、モバイル 80×80
    └ web_search で最新事件を確認
    └ 3〜5件の事例候補をピックアップ
 
-[4] 実装
-   └ template.html をコピーして articles/<番号>-<スラッグ>/index.html に
-   └ components.md から必要パーツをコピーして中身を入れる
+[4] 実装(scaffold + コンテンツ差替)
+   └ cp examples/11-analog-and-digital.html articles/<番号>-<スラッグ>/index.html
+   └ 標準インタラクション層(エンジン)は 1 文字も変えない(§14)
+   └ コンテンツ層だけ差し替え(プレイブック §2 のインベントリ:
+      HOSOKU_SUPP / MIKI_GUIDE / MIKI_TERM / iconData / POINT_ILLUST /
+      reviewPool / MD_STEPS / スライド本体 / 単元固有 CSS·JS / topbar)
    └ デザイントークンは絶対に変えない
+   └ /hosoku → /brushup → /visual → /audit-review ×2(プレイブック §4)
+   ※ template.html は「最小構成の参考」。実制作の出発点は lec11 とする
 
 [5] 構文チェック
    └ 中括弧バランス、<script>タグ、<div>タグの対応
@@ -626,8 +634,10 @@ law-illust など `viewBox="0 0 100 100"`(表示 92×92 px、モバイル 80×80
 
 | ファイル | 内容 |
 |---|---|
-| `template.html` | 空の骨組みHTML(メニュー・リセット・スマホ対応を含む完成済み基盤。コピーして articles/ に配置) |
-| `components.md` | 再利用可能パーツカタログ(標準 17 種 + 2026-04 追加 6 種) |
+| **`NEW-LECTURE-PLAYBOOK.md`** | **🥇 最上位。一発制作のオーケストレーション**(scaffold = lec11 / コンテンツ差替インベントリ / パイプライン / トーン)。新規単元はまずこれ |
+| **`examples/11-analog-and-digital.html`** | **🥇 canonical(最新完成形)。新規単元はこれをコピーして中身だけ差し替える**。miki.com NPC / hosoku / POINT スポットライト+リッチ解説 / P 文字ポップ(くすみ色ランダム・フォーカス連動)/ Space+もどす / 手を動かす目玉インタラクション(8ビット変換機・2ⁿスライダー・変換表・ニブル分割図)を全実装 |
+| `template.html` | 最小構成の骨組み(標準インタラクション層は未搭載)。**実制作の出発点にはしない**。構造理解の参考用 |
+| `components.md` | 再利用可能パーツカタログ(標準 17 種 + 2026-04 追加 6 種 + 2026-05 lec10/11 追加) |
 | `examples/06-information-law.html` | **最新リファレンス**(情報に関する法規)。メニュー・リセット・スマホ対応・リッチインタラクション + ビジュアル必須6パターン全実装 |
 | `examples/07-information-security.html` | **同等リファレンス**(情報セキュリティ)。CIA三角・ログインフロー・マルウェア家系・フィルタ比較を実装 |
 | `articles/03-problem-solving/index.html` | **2026-04-30 SVG ビジュアル標準のリファレンス**(問題の発見と解決)。5 つの law-illust 全てに gradient + drop-shadow + 上端ハイライトを実装、テキストは SVG 外(law-illust-tag)に逃がし、main 天秤と演繹/帰納 cmp-svg にも同じ流儀。`§9.17` 参照 |
@@ -893,3 +903,45 @@ function selectProp(key) {
 
 - `articles/01-information-and-media/index.html` SLIDE 5 (prop-card / 情報の3特性)
 - `articles/01-information-and-media/index.html` SLIDE 12 (med-card / メディア3分類)
+
+---
+
+## 15. 標準インタラクション層(2026-05 lec10/lec11 で確立・新規単元は継承)
+
+lec10/lec11 で「miki.com NPC + hosoku 補足 + POINT スポットライト + P 文字ポップ + Space/もどす」という一式が確立した。**これらは部品ではなくエンジン**であり、新規単元は `examples/11-analog-and-digital.html` をコピーして **1 文字も変えず継承**する(`NEW-LECTURE-PLAYBOOK.md`)。本節はその動作と落とし穴の索引。
+
+### 15.1 miki.com NPC バー(`#mikibar`)
+- スライド送りで `MIKI_GUIDE[data-title]` を**タイプライター表示**。`say` は文字列/配列(配列=「つづき」送り)。
+- 用語カードタップ→`mikiTermTalk(key)`(同キー連打で会話前進)、○×/判定→`mikiQuizReact(ok)`。
+- **Space で会話「つづき」**(`mikiCanAdvance()` が true の間)。会話が尽きたら `goToSlide` でスライド送り。スポットライト中(`ppOpen`)は Space でスライドを飛ばさない。
+- **もどすボタン**(`mikiBack`):1 行戻る。`mbIdx>0` のとき表示。スマホは**吹き出しタップ**でも進む。
+- ドラッグ移動(タイトルバー/顔)/ 四隅リサイズ(PC)/ 顔タップで最小化(アイコンのみ)/ **H で表示切替**。
+- 口調は**講義トーン(です・ます)死守**(`feedback_natural_spoken_japanese_for_lectures`)。
+- コード/計算実演(`MD_STEPS` + `.md-miki`)を使うスライドは、その `data-title` を **MIKI_GUIDE に登録しない**(下部バーを消してスライド内 miki を主役に)。
+
+### 15.2 hosoku 補足(`/hosoku` のエンジン drop-in)
+- `<style>` に supp CSS、`<script>` に supp.js(`window.suppFig` + モーダル)、`window.HOSOKU_SUPP = { KEY:{tag,title,sub,body} }` をデッキ側で定義。
+- チップ `.supp-chip[data-supp="KEY"]` クリックで手描きポップなモーダル。表示中 **P で本文 `<b>` マーカーが順にスイープ**。
+- 図は `.sf-box` 内の動く SVG(`sf-flow`/`sf-pulse`/`sf-float`/`sf-grow` の 4 keyframe)。`bit-grid`/`supp-tbl`/`supp-clock`/`field-eq` など汎用図パーツ同梱。
+- 詳細は memory `reference_hosoku_command`。**1 単元 5〜8 件**を難所に置く。
+
+### 15.3 POINT スポットライト + リッチ解説ポップ(miki 表示時のみ)
+- `#pointSpot`:`box-shadow: 0 0 0 9999px rgba(...)` で周囲暗転 + 金パルスリング。対象カードの rect に追従(`positionPointSpot`)。
+- `#pointPop`:`POINT_ILLUST[key]` の動く図 + 説明を手描きカードで表示。**miki バー(z150)は暗転(z140)の上に残す**=ナビ役。
+- 発火は `selectIcon` 内で `!body.miki-hidden` のときだけ `openPointSpot(card,key)`。miki 非表示なら出さない。
+- **拡大ポップのタップ/×/Esc = `closePointSpot()`(縮小のみ・選択は保持)**、資料の他所タップ = `deselectPoints()`(選択解除)。`goToSlide`/`toggleMiki(hide)`/`resetAllInteractions` でも閉じる。
+- 落とし穴:`pp-name` は使い回すので、`openPointSpot` で `delete nameEl.dataset.charWrapped` しないと用語切替後に P で再波打ちしない。
+
+### 15.4 P 文字ポップ(`kbSweep` + `charPop`)
+- 配色は **`POP_PALETTE`(くすんだ 8 色)から毎回ランダム**。`--pop-color`/`--pop-shadow` を char に注入し `@keyframes charPop` が参照。
+- 対象は**フォーカス連動の 3 段階**:① `ppOpen` → `#pointPop .pp-name, .pp-desc b`(ポップ内の強調語)/ ② 選択中(縮小済み) → その `.icon-card.selected .icon-card-name` / ③ 未選択 → `.slide-title, .section-title-big, .title-main` + `.slide-subtitle strong, .section-tagline`(タイトル+見出し重要語)。
+- 文字分割は `mikiWrapChars`(text node を `<span class="char">` 化、`dataset.charWrapped` で冪等)。**SVG `<text>` は対象にしない**(spans が SVG を壊す)。
+
+### 15.5 共通の落とし穴
+- `const`(`MIKI_GUIDE`/`POP_PALETTE`/`POINT_ILLUST` 等)は**呼び出し箇所より前**に置く。後置すると TDZ でスクリプト全停止。
+- 旧 webdemo 等、使わなくなった init 関数(`wdUpdateLegend()` 呼び出し)は **null ガードで無害化**(`function wdUpdateLegend(){}`)。除去漏れで init が落ちると全機能停止。
+- 視覚バグ/JS 停止は **headless Chrome の screenshot + `--dump-dom` で `document.title` にフラグを書く**手法で特定(timing 依存のアニメは `goToSlide(n)` を inject して撮る)。
+
+### 15.6 canonical 参照
+- `examples/11-analog-and-digital.html`(全部入り)。新規単元はこれが出発点。
+- 経緯:memory `reference_miki_npc_hosoku_lec10`。

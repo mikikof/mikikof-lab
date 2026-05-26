@@ -2498,3 +2498,20 @@ function onResetHook() {
   // 各 info パネルは初期メッセージへ復帰(個別 ID で対応)
 }
 ```
+
+---
+
+# 2026-05 追加: 標準インタラクション層(lec10/lec11)
+
+> これらは「コピペして組む部品」ではなく **エンジン**。実コードは canonical `examples/11-analog-and-digital.html` に verbatim で入っている。新規単元は **lec11 をコピーして継承**し、本節は索引として使う。詳細動作・落とし穴は `SKILL.md §15`、段取りは `NEW-LECTURE-PLAYBOOK.md`。
+
+| パターン | 役割 | 差し替えるデータ | canonical の場所 |
+|---|---|---|---|
+| **miki.com NPC バー** | スライド毎ナレーション・用語反応・会話操作 | `MIKI_GUIDE`(キー=data-title) / `MIKI_TERM` | `#mikibar` + miki エンジン |
+| **会話操作(Space/もどす/吹き出しタップ)** | Space で「つづき」(尽きたら送り) / もどすで1行戻る / スマホは吹き出しタップ | — | `kbSweep` 周辺 + `mikiBack`/`mikiCanAdvance` |
+| **hosoku 補足** | 難所の手描きポップ補足モーダル(P でマーカー走査) | `window.HOSOKU_SUPP`(チップ `data-supp` と1:1、5〜8件) | supp CSS/JS + `suppFig` |
+| **POINT スポットライト + リッチ解説** | 用語タップで強調+暗転+動く図ポップ(miki 表示時のみ) | `POINT_ILLUST`(キー=data-key) | `#pointSpot`/`#pointPop` + `openPointSpot` |
+| **P 文字ポップ** | くすみ色ランダムでフォーカス対象を波打たせる | — (色は `POP_PALETTE`) | `@keyframes charPop` + `kbSweep` |
+| **手を動かす目玉インタラクション** | 単元の核を体で掴ませる(変換機・スライダー・変換表・手順図) | 単元ごとに新規 CSS/JS(`/* lecNN 固有 */`) | 8ビット変換機 / 2ⁿスライダー / 変換表 / ニブル分割図 |
+
+**鉄則**:エンジン部は触らない。差し替えるのは上表「差し替えるデータ」列 + スライド本体 + topbar のみ(`NEW-LECTURE-PLAYBOOK.md §2`)。
