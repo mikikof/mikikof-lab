@@ -1456,8 +1456,8 @@ body.miki-hidden .miki-back { display: inline-block; }
     const d = SUPP[key]; if (!d) return;
     if (!modal) build();
     modal.querySelector('.sh-tag').textContent = d.tag || 'SUPPLEMENT';
-    modal.querySelector('.sh-title').textContent = d.title || '';
-    modal.querySelector('.sh-sub').textContent = d.sub || '';
+    modal.querySelector('.sh-title').innerHTML = d.title || '';
+    modal.querySelector('.sh-sub').innerHTML = d.sub || '';
     modal.querySelector('.supp-body').innerHTML = d.body || '';
     modal.classList.add('on');
     modal.querySelector('.supp-card').scrollTop = 0;
