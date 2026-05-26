@@ -361,9 +361,9 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
 
 /* P コマンド = 文字ポップ波(左→右に 1 文字ずつ跳ねて強調) / H = miki.com 表示切替 */
 @keyframes charPop {
-  0%   { transform: translate3d(0,0,0) scale(1); color: inherit; text-shadow: 0 0 0 rgba(200,16,46,0); }
-  40%  { transform: translate3d(0,-0.22em,0) scale(1.5); color: var(--accent-red); text-shadow: 0 0.18em 0.7em rgba(200,16,46,0.4); }
-  100% { transform: translate3d(0,0,0) scale(1); color: inherit; text-shadow: 0 0 0 rgba(200,16,46,0); }
+  0%   { transform: translate3d(0,0,0) scale(1); color: inherit; text-shadow: 0 0 0 transparent; }
+  40%  { transform: translate3d(0,-0.22em,0) scale(1.5); color: var(--pop-color, #8E7CA3); text-shadow: 0 0.18em 0.7em var(--pop-shadow, rgba(142,124,163,0.42)); }
+  100% { transform: translate3d(0,0,0) scale(1); color: inherit; text-shadow: 0 0 0 transparent; }
 }
 .char { display: inline-block; will-change: transform; }
 .char.popping { animation: charPop 0.72s cubic-bezier(0.22,1,0.36,1); animation-fill-mode: both; backface-visibility: hidden; }
@@ -396,9 +396,12 @@ body.miki-hidden .miki-back { display: inline-block; }
 @keyframes mbSway { 0%,100% { transform: translateX(-1.6px) rotate(-2.6deg); } 50% { transform: translateX(1.6px) rotate(2.6deg); } }
 #mikibar .mb-screen::before { content: ""; position: absolute; left: -9px; top: 16px; width: 0; height: 0; border: 7px solid transparent; border-right-color: #c7d6ea; }
 #mikibar .mb-screen::after { content: ""; position: absolute; left: -6px; top: 17px; width: 0; height: 0; border: 6px solid transparent; border-right-color: #f4f8fd; }
-#mikibar .mb-foot { flex: 0 0 auto; display: flex; justify-content: flex-end; padding: 0 14px 10px; }
+#mikibar .mb-foot { flex: 0 0 auto; display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding: 0 14px 10px; }
 #mikibar .mb-next { font-family: "Yusei Magic",cursive; font-size: 11.5px; color: #fff; background: #2c5a99; border: 2px solid #1f3f6b; border-radius: 60px 7px 60px 7px/7px 60px 7px 60px; padding: 5px 14px; cursor: pointer; white-space: nowrap; box-shadow: 2px 2.5px 0 rgba(31,63,107,.2); transition: transform .12s; }
 #mikibar .mb-next:hover { transform: translate(-1px,-1px); }
+#mikibar .mb-back { font-family: "Yusei Magic",cursive; font-size: 11.5px; color: #2c5a99; background: #fff; border: 2px solid #9db8de; border-radius: 7px 60px 7px 60px/60px 7px 60px 7px; padding: 5px 13px; cursor: pointer; white-space: nowrap; box-shadow: 2px 2.5px 0 rgba(157,184,222,.28); transition: transform .12s; }
+#mikibar .mb-back:hover { transform: translate(-1px,-1px); }
+#mikibar .mb-back:active, #mikibar .mb-next:active { transform: translate(1px,1px); }
 #mikibar .mb-rz { position: absolute; width: 16px; height: 16px; z-index: 2; }
 #mikibar .mb-rz.nw { left: -5px; top: -5px; cursor: nwse-resize; }
 #mikibar .mb-rz.ne { right: -5px; top: -5px; cursor: nesw-resize; }
@@ -421,8 +424,8 @@ body.miki-hidden .miki-back { display: inline-block; }
   #mikibar .mb-ava svg { width: 26px; height: 26px; }
   #mikibar .mb-say { font-size: 12.5px; line-height: 1.5; }
   #mikibar .mb-name { font-size: 11px; }
-  #mikibar .mb-next { font-size: 10px; padding: 4px 10px; }
-  #mikibar .mb-foot { padding: 0 11px 8px; }
+  #mikibar .mb-next, #mikibar .mb-back { font-size: 11px; padding: 7px 14px; }
+  #mikibar .mb-foot { padding: 0 11px 9px; gap: 7px; }
   body:not(.miki-hidden) .slide { padding-bottom: 168px; }
 }
 @media (prefers-reduced-motion: reduce) { .char.popping { animation: none; } }
@@ -745,6 +748,44 @@ body.miki-hidden .miki-back { display: inline-block; }
 .nb-arrow { font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 900; color: var(--accent-gold); align-self: center; }
 .nb-cap { font-size: 11px; color: var(--text-sub); font-weight: 600; }
 @media (max-width: 720px) { .nibble-fig { gap: 6px; padding: 10px; } .nb-cell { width: 18px; height: 24px; font-size: 12px; } .nb-hex { font-size: 22px; } .nb-arrow { font-size: 18px; } }
+
+/* ===== lec11 固有: POINT スポットライト + リッチ解説ポップ(miki.com 表示時のみ・ナビ役) ===== */
+/* スポットライト: 周囲を薄暗く(box-shadow 9999px)+ 金色パルスリング。miki バー(z150)は veil の上に残る */
+#pointSpot { position: fixed; left: 0; top: 0; width: 0; height: 0; z-index: 140; border-radius: 16px; pointer-events: none; opacity: 0;
+  box-shadow: 0 0 0 9999px rgba(15, 40, 71, 0.60);
+  transition: left .34s cubic-bezier(.4,0,.2,1), top .34s cubic-bezier(.4,0,.2,1), width .34s cubic-bezier(.4,0,.2,1), height .34s cubic-bezier(.4,0,.2,1), opacity .3s ease; }
+#pointSpot.on { opacity: 1; }
+#pointSpot::after { content: ""; position: absolute; inset: -5px; border-radius: 20px; border: 3px solid var(--accent-gold);
+  box-shadow: 0 0 0 2px rgba(255,255,255,.85), 0 0 22px 5px rgba(201,169,97,.5); }
+#pointSpot.on::after { animation: spotPulse 1.9s ease-in-out infinite; }
+@keyframes spotPulse {
+  0%,100% { box-shadow: 0 0 0 2px rgba(255,255,255,.85), 0 0 14px 3px rgba(201,169,97,.45); }
+  50%     { box-shadow: 0 0 0 2px rgba(255,255,255,.92), 0 0 28px 9px rgba(244,217,149,.6); }
+}
+/* リッチ解説ポップ(手描き紙方眼・hosoku と同じ世界観) */
+#pointPop { position: fixed; z-index: 145; width: min(520px, 92vw); max-height: 50vh; overflow-y: auto; opacity: 0; pointer-events: none;
+  transform: translateY(12px) scale(.97); transition: opacity .3s ease, transform .34s cubic-bezier(.22,1,.36,1);
+  background: #f2f7fd; background-image: radial-gradient(circle,#cfdef0 1.2px,transparent 1.3px); background-size: 22px 22px;
+  border: 3px solid #3b3a42; border-radius: 30px 10px 32px 11px/11px 32px 10px 30px; box-shadow: 6px 8px 0 rgba(59,58,66,.18);
+  font-family: "Zen Maru Gothic","Klee One",sans-serif; padding: 16px 20px 16px; }
+#pointPop.on { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
+#pointPop .pp-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+#pointPop .pp-tag { font-family: "Yusei Magic",cursive; font-size: 10.5px; color: #7a5a00; background: #ffe27a; border-radius: 7px 4px 8px 5px/5px 8px 4px 7px; padding: 2px 9px; }
+#pointPop .pp-name { font-family: "Yusei Magic","Klee One",cursive; font-size: 21px; color: #2c5a99; font-weight: 400; }
+#pointPop .pp-fig { background: #fff; border: 2.5px solid #3b3a42; border-radius: 24px 9px 26px 10px/10px 26px 9px 24px; box-shadow: 3px 4px 0 rgba(59,58,66,.1); padding: 12px; margin: 6px 0 10px; }
+#pointPop .pp-fig svg { width: 100%; height: auto; display: block; max-height: 168px; }
+#pointPop .pp-desc { font-size: 14.5px; line-height: 1.78; color: #2f2e36; font-weight: 500; }
+#pointPop .pp-desc b { color: #bb453d; font-weight: 700; }
+#pointPop .pp-close { position: absolute; top: 10px; right: 12px; width: 32px; height: 32px; cursor: pointer; background: #fff; border: 2.5px solid #e0584f; color: #e0584f; font-size: 16px; line-height: 1; border-radius: 60% 40% 55% 45%/45% 55% 40% 60%; display: flex; align-items: center; justify-content: center; box-shadow: 2px 2.5px 0 rgba(224,88,79,.2); }
+#pointPop .pp-close:hover { transform: rotate(9deg) scale(1.06); }
+#pointPop .pp-hint { font-family: "Yusei Magic",cursive; font-size: 10.5px; color: #9aa6b6; text-align: right; margin-top: 8px; }
+/* スポットライト中の図アニメ(hosoku の sf-* を流用) */
+#pointPop .sf-flow { stroke-dasharray: 5 6; animation: sf-flow 1.1s linear infinite; }
+#pointPop .sf-pulse { transform-box: fill-box; transform-origin: center; animation: sf-pulse 1.8s ease-in-out infinite; }
+#pointPop .sf-float { transform-box: fill-box; transform-origin: center; animation: sf-float 2.6s ease-in-out infinite; }
+#pointPop .sf-grow { transform-box: fill-box; transform-origin: bottom; animation: sf-grow 2s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { #pointSpot.on::after { animation: none; } #pointPop .sf-flow, #pointPop .sf-pulse, #pointPop .sf-float, #pointPop .sf-grow { animation: none; } }
+@media (max-width: 720px) { #pointPop { width: 92vw; max-height: 52vh; padding: 13px 15px; } #pointPop .pp-name { font-size: 18px; } #pointPop .pp-desc { font-size: 13.5px; } }
 
 @media (max-width: 720px) {
   .bc-bit { padding: 6px 2px 8px; border-radius: 9px; }
@@ -1350,6 +1391,15 @@ body.miki-hidden .miki-back { display: inline-block; }
 </div>
 </div>
 
+<div id="pointSpot" aria-hidden="true"></div>
+<div id="pointPop" role="dialog" aria-label="POINT 用語のリッチ解説">
+  <button class="pp-close" onclick="closePointSpot()" aria-label="縮小">×</button>
+  <div class="pp-head"><span class="pp-tag" id="ppTag">POINT</span><span class="pp-name" id="ppName"></span></div>
+  <div class="pp-fig" id="ppFig"></div>
+  <div class="pp-desc" id="ppDesc"></div>
+  <div class="pp-hint">タップ / Esc で縮小(選択は保持)</div>
+</div>
+
 <div id="mikibar" hidden>
   <div class="mb-titlebar">
     <span class="mb-grip" aria-hidden="true">⣿</span>
@@ -1358,12 +1408,13 @@ body.miki-hidden .miki-back { display: inline-block; }
   </div>
   <div class="mb-body">
     <div class="mb-ava" title="顔をタップで開閉 / バーをドラッグで移動"><svg viewBox="0 0 48 48"><rect x="9" y="9" width="30" height="27" rx="8"/><circle cx="19" cy="21" r="2.4" fill="#2c5a99" stroke="none"/><circle cx="29" cy="21" r="2.4" fill="#2c5a99" stroke="none"/><path d="M25 26 q 4 1.6 0 3.1 q 4 1.6 0 3.1"/><line x1="24" y1="9" x2="24" y2="4"/><circle cx="24" cy="3" r="2" fill="#e0584f" stroke="none"/></svg></div>
-    <div class="mb-screen">
+    <div class="mb-screen" onclick="if(typeof mikiAdvance==='function')mikiAdvance()" title="タップでつづき">
       <div class="mb-say" id="mbSay"></div>
       <span class="mb-cont" aria-hidden="true">▼</span>
     </div>
   </div>
   <div class="mb-foot">
+    <button class="mb-back" id="mbBack" onclick="mikiBack()" style="display:none">◀ もどす</button>
     <button class="mb-next" id="mbNext" onclick="mikiAdvance()" style="display:none">▶ つづき</button>
   </div>
   <span class="mb-rz nw" data-c="nw"></span><span class="mb-rz ne" data-c="ne"></span><span class="mb-rz sw" data-c="sw"></span><span class="mb-rz se" data-c="se"></span>
@@ -1679,6 +1730,7 @@ function goToSlide(n) {
   currentSlide = n;
   slides[currentSlide].classList.add('active');
   slides[currentSlide].scrollTop = 0;
+  if (typeof closePointSpot === 'function') closePointSpot();   // スライド送りでスポットライト解除
   updateUI();
 }
 function updateUI() {
@@ -1696,7 +1748,13 @@ document.addEventListener('keydown', (e) => {
   if (document.getElementById('menuPanel').classList.contains('open')) return;
   const tag = (e.target && e.target.tagName) || '';
   if (/^(INPUT|TEXTAREA|SELECT)$/.test(tag)) return;
-  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); goToSlide(currentSlide + 1); }
+  if (e.key === ' ') {
+    // Space: miki.com の会話(つづき)を優先して進める。会話が尽きたらスライド送り。
+    e.preventDefault();
+    if (typeof mikiCanAdvance === 'function' && mikiCanAdvance()) { mikiAdvance(); }
+    else if (!ppOpen) { goToSlide(currentSlide + 1); }
+  }
+  else if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); goToSlide(currentSlide + 1); }
   else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goToSlide(currentSlide - 1); }
   else if (e.key === 'Home') { goToSlide(0); }
   else if (e.key === 'End') { goToSlide(totalSlides - 1); }
@@ -1776,8 +1834,21 @@ function mikiRenderLine() {
   const more = mbIdx < mbQueue.length - 1;
   const nx = document.getElementById('mbNext');
   if (nx) { nx.style.display = more ? 'inline-flex' : 'none'; nx.textContent = '▶ つづき ' + (mbIdx + 1) + '/' + mbQueue.length; }
+  const bk = document.getElementById('mbBack');
+  if (bk) { bk.style.display = (mbIdx > 0) ? 'inline-flex' : 'none'; }
   bar.classList.toggle('more', more);
   mikiType(mbQueue[mbIdx] || '');
+}
+// 会話をもどす(1 行前へ)。タイプ中なら全文表示してからもどす。
+function mikiBack() {
+  if (mbTyping) mikiFinishType();
+  if (mbIdx > 0) { mbIdx--; mikiRenderLine(); haptic(8); }
+}
+// Space で進めてよい状況か(miki 表示中 + タイプ中 or つづきが残っている)
+function mikiCanAdvance() {
+  const bar = document.getElementById('mikibar');
+  if (!bar || bar.hidden || document.body.classList.contains('miki-hidden')) return false;
+  return mbTyping || (mbIdx < mbQueue.length - 1);
 }
 function mikiType(html) {
   const say = document.getElementById('mbSay'); if (!say) return;
@@ -1933,6 +2004,11 @@ function selectIcon(panelId, key) {
   const d = iconData[key]; if (!d) return;
   panel.innerHTML = '<span class="ip-term">' + d.term + '</span><span class="ip-eng">' + d.eng + '</span><span class="ip-desc">' + d.desc + '</span>';
   if (typeof mikiTermTalk === 'function') mikiTermTalk(key);
+  // miki.com が表示中(ナビ役)のときだけ、スポットライト + リッチ解説を出す
+  if (me && typeof openPointSpot === 'function') {
+    if (document.body.classList.contains('miki-hidden')) closePointSpot();
+    else openPointSpot(me, key);
+  }
   haptic(8);
 }
 
@@ -2158,15 +2234,43 @@ function mikiWrapChars(el) {
 function initCharWrap() {
   document.querySelectorAll('.icon-card-name').forEach(mikiWrapChars);
 }
-// P コマンド = アクティブスライドの POINT 用語を、左から 1 文字ずつポップ
+// P コマンド = 選択中の POINT 用語(なければスライド内の全用語)を、左から 1 文字ずつポップ
+// 色は「くすんだ上品なパレット」から毎回ランダムに 1 色選ぶ(オシャレ + 飽きさせない)
+const POP_PALETTE = [
+  ['#8E7CA3', 'rgba(142,124,163,.45)'],  // プラム
+  ['#5E8B7E', 'rgba(94,139,126,.45)'],   // ティール
+  ['#B5838D', 'rgba(181,131,141,.45)'],  // ダスティローズ
+  ['#6B8CAE', 'rgba(107,140,174,.45)'],  // スレートブルー
+  ['#C08552', 'rgba(192,133,82,.45)'],   // テラコッタ
+  ['#7E9B6E', 'rgba(126,155,110,.45)'],  // セージ
+  ['#9D8189', 'rgba(157,129,137,.45)'],  // モーブ
+  ['#B89150', 'rgba(184,145,80,.45)']    // マスタード
+];
 function kbSweep() {
   const cur = document.querySelector('.slide.active'); if (!cur) return;
-  const targets = cur.querySelectorAll('.icon-card-name');
+  // 選択中の用語があればそれだけを強調(= ここに注目)。
+  // 何も選択していなければ、タイトル + 見出しの重要語(subtitle の強調語)を波打たせる。
+  let targets;
+  if (ppOpen) {
+    // 拡大ポップ表示中 → そのポップ内の強調ワード(用語名 + 本文の太字)を波打たせる
+    targets = Array.from(document.querySelectorAll('#pointPop .pp-name, #pointPop .pp-desc b'));
+  } else {
+    const sel = cur.querySelector('.icon-card.selected .icon-card-name');
+    if (sel) {
+      targets = [sel];                              // 縮小済みだが選択中 → その用語名
+    } else {
+      targets = [];                                 // 何も選択なし → タイトル + 見出しの重要語
+      cur.querySelectorAll('.slide-title, .section-title-big, .title-main').forEach(e => targets.push(e));
+      cur.querySelectorAll('.slide-subtitle strong, .section-tagline').forEach(e => targets.push(e));
+      if (!targets.length) targets = Array.from(cur.querySelectorAll('.icon-card-name'));
+    }
+  }
   if (!targets.length) return;
+  const pick = POP_PALETTE[Math.floor(Math.random() * POP_PALETTE.length)];
   const chars = [];
   targets.forEach(t => { mikiWrapChars(t); t.querySelectorAll('.char').forEach(c => chars.push(c)); });
   if (!chars.length) return;
-  chars.forEach(c => { c.classList.remove('popping'); c.style.animationDelay = ''; });
+  chars.forEach(c => { c.classList.remove('popping'); c.style.animationDelay = ''; c.style.setProperty('--pop-color', pick[0]); c.style.setProperty('--pop-shadow', pick[1]); });
   void cur.offsetWidth;
   const stepMs = 80, popDur = 720;
   chars.forEach((c, k) => { c.style.animationDelay = (k * stepMs) + 'ms'; c.classList.add('popping'); });
@@ -2174,13 +2278,106 @@ function kbSweep() {
   haptic(8);
 }
 // H コマンド = miki.com(常駐バー + ステッパー内ガイド)の表示/非表示
-function toggleMiki() { document.body.classList.toggle('miki-hidden'); haptic(8); }
+function toggleMiki() { document.body.classList.toggle('miki-hidden'); if (document.body.classList.contains('miki-hidden') && typeof closePointSpot === 'function') closePointSpot(); haptic(8); }
 function mikiMin() { const b = document.getElementById('mikibar'); if (b) b.classList.toggle('collapsed'); haptic(8); }
+
+// ===== POINT スポットライト + リッチ解説ポップ(miki.com 表示時のみ・ナビ役) =====
+// 用語ごとの「動くイラスト + 平易な説明」。sf-flow/pulse/float/grow は hosoku と共通の動き。
+const POINT_ILLUST = {
+  analog: { tag: '① POINT', name: 'アナログ',
+    fig: `<svg viewBox="0 0 360 150"><line x1="20" y1="120" x2="344" y2="120" stroke="#c7d6ea" stroke-width="2"/><path class="sf-flow" d="M20 80 C70 22 110 22 150 80 S232 138 272 80 S330 42 350 70" fill="none" stroke="#3f78c4" stroke-width="4" stroke-linecap="round"/><circle class="sf-float" cx="95" cy="46" r="7" fill="#e0584f"/><text x="182" y="142" font-size="12" fill="#2c5a99" text-anchor="middle" font-family="Yusei Magic,cursive">なめらかに連続して変化する</text></svg>`,
+    desc: '量を <b>連続した量</b> のまま表す方法。針時計の針や水銀温度計の液柱のように、途中のどんな値もとれます。' },
+  digital: { tag: '② POINT', name: 'デジタル',
+    fig: `<svg viewBox="0 0 360 150">${[60,95,75,45,70,100,90].map((h,k)=>`<rect class="sf-grow" style="animation-delay:${(k*0.12).toFixed(2)}s" x="${26+k*46}" y="${120-h}" width="36" height="${h}" rx="4" fill="#3f78c4" opacity="0.9"/>`).join('')}<line x1="20" y1="120" x2="344" y2="120" stroke="#c7d6ea" stroke-width="2"/><text x="184" y="142" font-size="12" fill="#bb453d" text-anchor="middle" font-family="Yusei Magic,cursive">とびとびの段階で表す(離散)</text></svg>`,
+    desc: '量を <b>とびとびの段階</b> に置きかえて表す方法。最小単位より細かい値は表せません。0 と 1 はその代表です。' },
+  binary: { tag: '③ POINT', name: '2 進法',
+    fig: `<svg viewBox="0 0 360 150"><rect x="68" y="40" width="90" height="80" rx="14" fill="#fff" stroke="#3b3a42" stroke-width="3"/><text x="113" y="98" font-size="46" font-weight="900" fill="#aab3c0" text-anchor="middle" font-family="JetBrains Mono,monospace">0</text><rect class="sf-pulse" x="202" y="40" width="90" height="80" rx="14" fill="#3f78c4" stroke="#3b3a42" stroke-width="3"/><text x="247" y="98" font-size="46" font-weight="900" fill="#fff" text-anchor="middle" font-family="JetBrains Mono,monospace">1</text><text x="180" y="140" font-size="11.5" fill="#2c5a99" text-anchor="middle" font-family="Yusei Magic,cursive">電気の OFF=0 / ON=1 の 2 種類だけ</text></svg>`,
+    desc: '<b>0 と 1 の 2 種類</b> だけで数を表す方法。電気のオン・オフでそのまま作れるので、コンピュータ内部の表し方です。' },
+  binarynum: { tag: '④ POINT', name: '2 進数',
+    fig: `<svg viewBox="0 0 360 150">${['1','0','1','1'].map((b,k)=>`<rect x="${44+k*70}" y="34" width="54" height="60" rx="9" fill="${b==='1'?'#3f78c4':'#fff'}" stroke="#3b3a42" stroke-width="2.5"/><text x="${71+k*70}" y="76" font-size="30" font-weight="900" fill="${b==='1'?'#fff':'#aab3c0'}" text-anchor="middle" font-family="JetBrains Mono,monospace">${b}</text><text x="${71+k*70}" y="114" font-size="12" fill="#6f6e78" text-anchor="middle" font-family="JetBrains Mono,monospace">${[8,4,2,1][k]}</text>`).join('')}<text x="180" y="140" font-size="12.5" fill="#bb453d" text-anchor="middle" font-family="Yusei Magic,cursive">1011 = 8+2+1 = 11(10)</text></svg>`,
+    desc: '2 進法で表した <b>数値そのもの</b>。各桁の重み(…8・4・2・1)を足すと 10 進数になります。例:11011 = 27。' },
+  hexsys: { tag: '⑤ POINT', name: '16 進法',
+    fig: `<svg viewBox="0 0 360 150"><polygon class="sf-pulse" points="180 26 232 56 232 116 180 146 128 116 128 56" fill="#e9f0fb" stroke="#3b3a42" stroke-width="3"/><text x="180" y="97" font-size="34" font-weight="900" fill="#2c5a99" text-anchor="middle" font-family="JetBrains Mono,monospace">0-F</text><text x="180" y="140" font-size="11.5" fill="#2c5a99" text-anchor="middle" font-family="Yusei Magic,cursive">0〜9 と A〜F の 16 種類</text></svg>`,
+    desc: '<b>0〜9 と A〜F</b> の 16 種類で数を表す方法。2 進数 4 桁をちょうど 1 桁にまとめられ、長い 2 進数を読みやすくできます。' },
+  hexnum: { tag: '⑥ POINT', name: '16 進数',
+    fig: `<svg viewBox="0 0 360 150"><polygon points="118 28 166 54 166 108 118 134 70 108 70 54" fill="#fff7d6" stroke="#3b3a42" stroke-width="3"/><text x="118" y="94" font-size="32" font-weight="900" fill="#8a6d1f" text-anchor="middle" font-family="JetBrains Mono,monospace">1B</text><text class="sf-float" x="258" y="92" font-size="26" font-weight="900" fill="#bb453d" text-anchor="middle" font-family="Yusei Magic,cursive">= 27</text><text x="195" y="138" font-size="11.5" fill="#6f6e78" text-anchor="middle" font-family="Yusei Magic,cursive">1×16 + 11(=B) = 27(10)</text></svg>`,
+    desc: '16 進法で表した <b>数値そのもの</b>。例:1B は 1×16 + 11 = 27。2 進数 11011 を 4 桁ずつ区切った 1・B に対応します。' },
+  bit: { tag: '⑦ POINT', name: 'ビット',
+    fig: `<svg viewBox="0 0 360 150"><rect x="118" y="52" width="124" height="50" rx="25" fill="#fff" stroke="#3b3a42" stroke-width="3"/><text x="150" y="85" font-size="18" fill="#aab3c0" text-anchor="middle" font-family="JetBrains Mono,monospace">0</text><circle class="sf-pulse" cx="216" cy="77" r="19" fill="#3f78c4"/><text x="216" y="84" font-size="17" fill="#fff" text-anchor="middle" font-family="JetBrains Mono,monospace">1</text><text x="180" y="130" font-size="13" fill="#bb453d" text-anchor="middle" font-family="Yusei Magic,cursive">0 か 1 か = 2 通り</text></svg>`,
+    desc: '情報量の <b>最小単位</b>。2 進数 1 桁(0 か 1)で <b>2 通り</b> を表せます。n ビットなら 2 の n 乗通り。' },
+  byte: { tag: '⑧ POINT', name: 'バイト',
+    fig: `<svg viewBox="0 0 360 150">${[1,0,1,1,0,0,1,0].map((b,k)=>`<rect x="${26+k*40}" y="46" width="32" height="44" rx="6" fill="${b?'#3f78c4':'#fff'}" stroke="#3b3a42" stroke-width="2"/>`).join('')}<line class="sf-flow" x1="26" y1="104" x2="342" y2="104" stroke="#3f78c4" stroke-width="3"/><text x="184" y="132" font-size="12.5" fill="#bb453d" text-anchor="middle" font-family="Yusei Magic,cursive">8 ビット = 1 バイト = 2⁸ = 256 通り</text></svg>`,
+    desc: '<b>8 ビットをまとめた単位</b>。1 バイトで 2 の 8 乗 = 256 通りを表せ、英数字 1 文字分にあたります。' }
+};
+let ppOpen = false, ppCard = null;
+function openPointSpot(card, key) {
+  const ill = POINT_ILLUST[key]; if (!ill || !card) return;
+  ppCard = card; ppOpen = true;
+  document.getElementById('ppTag').textContent = ill.tag || 'POINT';
+  const nameEl = document.getElementById('ppName');
+  nameEl.textContent = ill.name || ''; delete nameEl.dataset.charWrapped;   // 用語が変わったら再ラップ可能に
+  document.getElementById('ppFig').innerHTML = ill.fig || '';
+  document.getElementById('ppDesc').innerHTML = ill.desc || '';
+  document.getElementById('pointPop').classList.add('on');   // 先に表示してサイズ確定
+  document.getElementById('pointSpot').classList.add('on');
+  requestAnimationFrame(positionPointSpot);
+  setTimeout(positionPointSpot, 70);
+}
+function positionPointSpot() {
+  if (!ppOpen || !ppCard) return;
+  const r = ppCard.getBoundingClientRect(); const pad = 8;
+  const spot = document.getElementById('pointSpot');
+  spot.style.left = (r.left - pad) + 'px'; spot.style.top = (r.top - pad) + 'px';
+  spot.style.width = (r.width + pad * 2) + 'px'; spot.style.height = (r.height + pad * 2) + 'px';
+  const pop = document.getElementById('pointPop');
+  pop.style.maxHeight = '';                                   // 一旦リセットして自然高さを測る
+  const pw = pop.offsetWidth || Math.min(520, window.innerWidth * 0.92);
+  const ph = pop.offsetHeight || 280;
+  // miki.com バーの上端(表示中なら)を避ける
+  const mb = document.getElementById('mikibar');
+  const mbOn = mb && !mb.hidden && !document.body.classList.contains('miki-hidden');
+  const floor = mbOn ? mb.getBoundingClientRect().top - 12 : window.innerHeight - 14;
+  const topMin = 56;
+  let left = r.left + r.width / 2 - pw / 2;
+  left = Math.max(10, Math.min(left, window.innerWidth - pw - 10));
+  let top;
+  if (r.bottom + 14 + ph <= floor) { top = r.bottom + 14; }            // ① カードの下に収まる
+  else if (r.top - 14 - ph >= topMin) { top = r.top - 14 - ph; }       // ② カードの上に収まる
+  else {                                                               // ③ どちらも狭い → miki の上にぴったり載せる
+    top = Math.max(topMin, floor - ph);
+    if (floor - topMin < ph) pop.style.maxHeight = (floor - topMin) + 'px';   // それでも溢れるなら高さを制限
+  }
+  pop.style.left = left + 'px'; pop.style.top = top + 'px';
+}
+function closePointSpot() {
+  ppOpen = false; ppCard = null;
+  const s = document.getElementById('pointSpot'); if (s) s.classList.remove('on');
+  const p = document.getElementById('pointPop'); if (p) p.classList.remove('on');
+}
+// 選択解除: カードの強調を外し、スポットライトも閉じる(= 何も選択していない状態へ)
+function deselectPoints() {
+  document.querySelectorAll('.icon-card.selected').forEach(c => c.classList.remove('selected'));
+  closePointSpot();
+}
+document.addEventListener('click', (e) => {
+  const t = e.target;
+  if (t.closest && t.closest('.icon-card, #mikibar')) return;            // カード(選択操作)/ miki は対象外
+  if (t.closest && t.closest('#pointPop')) { closePointSpot(); return; } // 拡大表示をタップ → 縮小のみ(選択は維持 → P で波打つ)
+  deselectPoints();                                                      // 資料のどこか → 完全に選択解除
+});
+document.addEventListener('keydown', (e) => {
+  if (ppOpen && e.key === 'Escape') { closePointSpot(); e.stopPropagation(); e.preventDefault(); }
+}, true);
+let ppRaf = null;
+const ppReposition = () => { if (ppRaf || !ppOpen) return; ppRaf = requestAnimationFrame(() => { ppRaf = null; positionPointSpot(); }); };
+window.addEventListener('resize', ppReposition);
+window.addEventListener('scroll', ppReposition, true);
 
 function resetAllInteractions() {
   haptic([15, 40, 15]);
   if (!confirm('このページのすべてのインタラクションを初期状態に戻します。よろしいですか?')) return;
   document.querySelectorAll('.icon-card.selected').forEach(c => c.classList.remove('selected'));
+  if (typeof closePointSpot === 'function') closePointSpot();
   const p1 = document.getElementById('termPanel1'); if (p1) p1.innerHTML = '<span style="color:var(--text-sub);font-style:italic;">▲ 上の 2 つのカードをタップすると、定義と身近な例が表示されます。</span>';
   const p2 = document.getElementById('termPanel2'); if (p2) p2.innerHTML = '<span style="color:var(--text-sub);font-style:italic;">▲ 4 つの用語をタップすると、それぞれの定義と例が表示されます。</span>';
   const p3 = document.getElementById('termPanel3'); if (p3) p3.innerHTML = '<span style="color:var(--text-sub);font-style:italic;">▲ 2 つの用語をタップすると、定義と例が表示されます。</span>';
