@@ -1365,11 +1365,91 @@ body.miki-hidden .miki-back { display: inline-block; }
   </div>
 </div>
 
-<!-- SLIDE 21: 参考C 補数で負の数 -->
-<div class="slide" data-title="参考C 補数で負の数を表す">
-  <div class="eyebrow">APPENDIX C / 引き算を足し算に変える</div>
-  <h2 class="slide-title">0 と 1 だけで、マイナスを表す</h2>
-  <p class="slide-subtitle">コンピュータ内部の固定長ビット列には、ふつう「−」の記号を別に持たない。そこで <strong>補数</strong> という考え方で負の数を表す。これは POINT 11 の射程をやや超え、第 3 章(2 進数の計算)につながる発展。</p>
+<!-- SLIDE: 参考C 先頭ビットは符号の目印 -->
+<div class="slide" data-title="参考C 先頭ビットは符号の目印">
+  <div class="eyebrow">APPENDIX C / 先頭ビット = 符号</div>
+  <h2 class="slide-title">先頭のビットで、正か負かを見分ける</h2>
+  <p class="slide-subtitle">固定長のビット列では、いちばん左(先頭＝最上位)のビットを「符号」の目印に使う。2 の補数では <strong>先頭が 0 なら正、1 なら負</strong>。残りのビットで大きさを表す。</p>
+  <div class="appx">
+    <div class="appx-figbox">
+      <svg viewBox="0 0 660 150" role="img" aria-label="4ビットの先頭ビットが符号。0011 は先頭0で +3、1101 は先頭1で −3。">
+        <text x="30" y="48" font-size="13" font-weight="900" fill="#2f7a46" font-family="Yusei Magic,cursive">正</text>
+        <g font-family="JetBrains Mono,monospace" font-size="17" font-weight="900" text-anchor="middle">
+          <rect x="64" y="26" width="30" height="38" rx="6" fill="#f4d995" stroke="#8a6d1f" stroke-width="2.4"/><text x="79" y="52" fill="#7a5a00">0</text>
+          <rect x="98" y="26" width="30" height="38" rx="6" fill="#fff" stroke="#3b3a42" stroke-width="1.8"/><text x="113" y="52" fill="#aab3c0">0</text>
+          <rect x="132" y="26" width="30" height="38" rx="6" fill="#3f78c4" stroke="#3b3a42" stroke-width="1.8"/><text x="147" y="52" fill="#fff">1</text>
+          <rect x="166" y="26" width="30" height="38" rx="6" fill="#3f78c4" stroke="#3b3a42" stroke-width="1.8"/><text x="181" y="52" fill="#fff">1</text>
+        </g>
+        <text x="232" y="50" font-size="16" font-weight="900" fill="#2f7a46" font-family="Yusei Magic,cursive">= +3</text>
+        <text x="30" y="116" font-size="13" font-weight="900" fill="#b3433a" font-family="Yusei Magic,cursive">負</text>
+        <g font-family="JetBrains Mono,monospace" font-size="17" font-weight="900" text-anchor="middle">
+          <rect class="sf-pulse" x="64" y="94" width="30" height="38" rx="6" fill="#e0584f" stroke="#8a2018" stroke-width="2.4"/><text x="79" y="120" fill="#fff">1</text>
+          <rect x="98" y="94" width="30" height="38" rx="6" fill="#3f78c4" stroke="#3b3a42" stroke-width="1.8"/><text x="113" y="120" fill="#fff">1</text>
+          <rect x="132" y="94" width="30" height="38" rx="6" fill="#fff" stroke="#3b3a42" stroke-width="1.8"/><text x="147" y="120" fill="#aab3c0">0</text>
+          <rect x="166" y="94" width="30" height="38" rx="6" fill="#3f78c4" stroke="#3b3a42" stroke-width="1.8"/><text x="181" y="120" fill="#fff">1</text>
+        </g>
+        <text x="232" y="118" font-size="16" font-weight="900" fill="#b3433a" font-family="Yusei Magic,cursive">= −3</text>
+        <line x1="79" y1="74" x2="79" y2="86" stroke="#8a6d1f" stroke-width="2"/>
+        <text x="430" y="40" font-size="13" fill="#3b3a42" font-family="Yusei Magic,cursive">先頭(最上位)ビット = 符号ビット</text>
+        <text x="430" y="66" font-size="12.5" fill="#8a6d1f" font-family="Yusei Magic,cursive">0 → 正 / 1 → 負</text>
+        <rect x="372" y="84" width="252" height="48" rx="10" fill="#fff" stroke="#c7d6ea" stroke-width="1.5"/>
+        <text x="498" y="104" font-size="12" fill="#2c5a99" text-anchor="middle" font-family="Yusei Magic,cursive">4 ビットで表せるのは</text>
+        <text x="498" y="124" font-size="14" font-weight="900" fill="#bb453d" text-anchor="middle" font-family="Yusei Magic,cursive">−8 〜 +7</text>
+      </svg>
+      <div class="appx-cap">残りのビットで大きさを表し、<b>先頭ビットが正負を決める</b></div>
+    </div>
+    <div class="appx-points">
+      <div class="appx-pt"><div class="pt-tag">素朴な方法</div><h4>符号付き絶対値の弱点</h4><p>「先頭=符号、残り=大きさ」とする素朴な方法もあるが、<b>+0 と −0 の 2 つ</b>ができたり、計算のたびに符号を場合分けする必要があり面倒。</p></div>
+      <div class="appx-pt"><div class="pt-tag">2 の補数</div><h4>補数なら自然に符号になる</h4><p>2 の補数では、先頭ビットがそのまま符号になり <b>0 は 1 つだけ</b>。足し算の回路がそのまま使える。4 ビットなら <b>−8〜+7</b> を表せる。</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE: 参考D 補数とは何か(概念) -->
+<div class="slide" data-title="参考D 補数とは何か(一周して0)">
+  <div class="eyebrow">APPENDIX D / 補数 = 一周して 0 になる相手</div>
+  <h2 class="slide-title">「足すと 0 に戻る相手」を負の数にする</h2>
+  <p class="slide-subtitle">桁数を決めると、数は時計のように <strong>一周して 0 に戻る</strong>。ある数 A に「足すとちょうど一周して 0 になる相手」を、−A の代わりに使う ― これが <strong>補数</strong> の考え方。</p>
+  <div class="appx">
+    <div class="appx-hero">
+      <div class="appx-panel">
+        <div class="ap-h"><svg viewBox="0 0 22 22" fill="none" stroke="#2c5a99" stroke-width="2.2" stroke-linecap="round" style="width:20px;height:20px;flex:none"><circle cx="11" cy="11" r="8"/><path d="M11 6v5l3 2"/></svg>桁が決まると「輪」になる</div>
+        <svg viewBox="0 0 300 150" role="img" aria-label="4ビットは1111の次があふれて0000に戻る。時計と同じ一周。">
+          <g font-family="JetBrains Mono,monospace" font-size="15" font-weight="900" text-anchor="middle">
+            <rect x="44" y="58" width="86" height="34" rx="6" fill="#3f78c4"/><text x="87" y="81" fill="#fff">1111</text>
+            <rect class="sf-pulse" x="172" y="58" width="86" height="34" rx="6" fill="#e0584f"/><text x="215" y="81" fill="#fff">0000</text>
+          </g>
+          <text x="87" y="46" font-size="12" fill="#2c5a99" text-anchor="middle" font-family="Yusei Magic,cursive">15</text>
+          <text x="215" y="46" font-size="12" fill="#bb453d" text-anchor="middle" font-family="Yusei Magic,cursive">あふれて 0</text>
+          <path class="sf-flow" d="M134 75 L168 75" stroke="#6f6e78" stroke-width="2.4"/>
+          <text x="151" y="68" font-size="11" fill="#bb453d" text-anchor="middle" font-family="Yusei Magic,cursive">+1</text>
+          <text x="150" y="124" font-size="12" fill="#3b3a42" text-anchor="middle" font-family="Yusei Magic,cursive">12 時の次に 1 時へ戻る時計と同じ</text>
+        </svg>
+      </div>
+      <div class="appx-vs">→</div>
+      <div class="appx-panel">
+        <div class="ap-h"><svg viewBox="0 0 22 22" fill="none" stroke="#2c5a99" stroke-width="2.2" stroke-linecap="round" style="width:20px;height:20px;flex:none"><path d="M3 11h16M14 6l5 5-5 5"/></svg>足すと一周する相手 = 負</div>
+        <svg viewBox="0 0 300 150" role="img" aria-label="A に足すと2のn乗(一周=0)になる相手を−Aとみなす。4ビットで3の相手は13。">
+          <text x="150" y="34" font-size="14" fill="#3b3a42" text-anchor="middle" font-family="Yusei Magic,cursive">A + (2ⁿ − A) = 2ⁿ</text>
+          <text x="150" y="62" font-size="13" fill="#bb453d" text-anchor="middle" font-family="Yusei Magic,cursive">= 一周 = 0(あふれる)</text>
+          <line x1="40" y1="80" x2="260" y2="80" stroke="#c7d6ea" stroke-width="1.5"/>
+          <text x="150" y="108" font-size="13" fill="#2c5a99" text-anchor="middle" font-family="Yusei Magic,cursive">だから (2ⁿ − A) を −A とみなす</text>
+          <text x="150" y="134" font-size="12.5" fill="#3b3a42" text-anchor="middle" font-family="Yusei Magic,cursive">4 ビット例:3 の相手 = 16 − 3 = <tspan fill="#bb453d" font-weight="900">13</tspan></text>
+        </svg>
+      </div>
+    </div>
+    <div class="appx-points">
+      <div class="appx-pt"><div class="pt-tag">時計と同じ</div><h4>一周して 0 に戻る</h4><p>4 ビットは 0〜15 で、<b>1111 の次はあふれて 0000</b>。12 時の次に 1 時へ戻る時計と同じで、決めた桁の中で数は輪になる。</p></div>
+      <div class="appx-pt"><div class="pt-tag">−A = 2ⁿ − A</div><h4>足すと一周する相手を負に</h4><p>A に足すと <b>2ⁿ(=一周=0)</b> になる相手 <b>2ⁿ − A</b> を、−A とみなす。次ページの「反転して 1 を足す」は、この相手を作る手順。</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE: 参考E 補数の作り方(反転して1を足す) -->
+<div class="slide" data-title="参考E 補数の作り方(反転して1を足す)">
+  <div class="eyebrow">APPENDIX E / 補数の作り方</div>
+  <h2 class="slide-title">反転して 1 を足す ― 補数の作り方</h2>
+  <p class="slide-subtitle">負の数(補数)の作り方はとても簡単で、<strong>全ビットを反転して 1 を足す</strong>だけ。これで引き算まで足し算の回路でこなせる。前ページの「一周して 0 になる相手」を、実際に作る手順がこれ。</p>
   <div class="appx">
     <div class="appx-figbox">
       <svg viewBox="0 0 660 120" role="img" aria-label="3=0011 を全ビット反転して 1100、1 を足して 1101。これが −3 を表す流れ。">
@@ -1409,6 +1489,48 @@ body.miki-hidden .miki-back { display: inline-block; }
   </div>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center;">
     <button class="supp-chip" data-supp="COMPLEMENT"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>なぜ反転して 1 を足すと負になる?</button>
+  </div>
+</div>
+
+<!-- SLIDE: 参考F 小数(実数)を2進数で表す -->
+<div class="slide" data-title="参考F 小数(実数)を2進数で表す">
+  <div class="eyebrow">APPENDIX F / 実数のデジタル化</div>
+  <h2 class="slide-title">小数(実数)を 2 進数で表す</h2>
+  <p class="slide-subtitle">整数だけでなく、小数も 2 進数で表せる。小数点以下の桁の重みは <strong>1/2・1/4・1/8…</strong> と 2 で割られていく。大きさの幅が広い実数は、符号部・指数部・仮数部に分ける <strong>浮動小数点数</strong> で表すことが多い。</p>
+  <div class="appx">
+    <div class="appx-figbox">
+      <svg viewBox="0 0 660 178" role="img" aria-label="2進小数 0.101 は 0.5+0.125=0.625。実数は符号部S・指数部E・仮数部Mの浮動小数点数で表す。">
+        <text x="30" y="48" font-size="12" fill="#6f6e78" font-family="Yusei Magic,cursive">2 進小数</text>
+        <g font-family="JetBrains Mono,monospace" font-size="20" font-weight="900" text-anchor="middle">
+          <rect x="116" y="22" width="34" height="42" rx="6" fill="#fff" stroke="#3b3a42" stroke-width="1.8"/><text x="133" y="52" fill="#aab3c0">0</text>
+          <text x="166" y="54" font-size="22" fill="#3b3a42">.</text>
+          <rect x="182" y="22" width="34" height="42" rx="6" fill="#3f78c4" stroke="#3b3a42" stroke-width="1.8"/><text x="199" y="52" fill="#fff">1</text>
+          <rect x="222" y="22" width="34" height="42" rx="6" fill="#fff" stroke="#3b3a42" stroke-width="1.8"/><text x="239" y="52" fill="#aab3c0">0</text>
+          <rect x="262" y="22" width="34" height="42" rx="6" fill="#3f78c4" stroke="#3b3a42" stroke-width="1.8"/><text x="279" y="52" fill="#fff">1</text>
+        </g>
+        <g font-family="Yusei Magic,cursive" font-size="11" fill="#8a6d1f" text-anchor="middle">
+          <text x="199" y="80">1/2</text><text x="239" y="80">1/4</text><text x="279" y="80">1/8</text>
+        </g>
+        <text x="430" y="48" font-size="16" font-weight="900" fill="#bb453d" font-family="Yusei Magic,cursive">= 0.5 + 0.125 = 0.625</text>
+        <text x="430" y="74" font-size="11" fill="#6f6e78" font-family="Yusei Magic,cursive">小数点の右は重みが 2 で割られていく</text>
+        <line x1="24" y1="100" x2="636" y2="100" stroke="#c7d6ea" stroke-width="1.2" stroke-dasharray="5 5"/>
+        <text x="30" y="124" font-size="12" fill="#6f6e78" font-family="Yusei Magic,cursive">浮動小数点数</text>
+        <g font-family="Noto Sans JP,sans-serif" font-size="12" font-weight="800" text-anchor="middle">
+          <rect x="150" y="116" width="70" height="40" rx="7" fill="#e0584f" opacity="0.85"/><text x="185" y="141" fill="#fff">符号 S</text>
+          <rect x="226" y="116" width="150" height="40" rx="7" fill="#3f78c4" opacity="0.85"/><text x="301" y="141" fill="#fff">指数部 E</text>
+          <rect x="382" y="116" width="210" height="40" rx="7" fill="#2f63a8" opacity="0.9"/><text x="487" y="141" fill="#fff">仮数部 M</text>
+        </g>
+        <text x="430" y="174" font-size="10.5" fill="#6f6e78" text-anchor="middle" font-family="Yusei Magic,cursive">符号・大きさ(指数)・中身(仮数)に分けて、広い範囲の実数を表す</text>
+      </svg>
+      <div class="appx-cap">小数点以下は <b>1/2・1/4・1/8…</b> の重み。実数は <b>符号部・指数部・仮数部</b>に分けて表す</div>
+    </div>
+    <div class="appx-points">
+      <div class="appx-pt"><div class="pt-tag">0.101₂ = 0.625</div><h4>小数点以下は 1/2・1/4・1/8…</h4><p>整数部と同じく桁の重みを足すが、<b>小数点の右では重みが 2 で割られていく</b>。0.101₂ = 1/2 + 0 + 1/8 = 0.625。</p></div>
+      <div class="appx-pt"><div class="pt-tag">FLOATING POINT</div><h4>実数 = 符号部・指数部・仮数部</h4><p>とても大きい数も小さい数も表せるよう、実数は <b>符号(S)・指数(E)・仮数(M)</b> に分ける(浮動小数点数)。ただし、表しきれない小数では誤差が出る。</p></div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:center;">
+      <button class="supp-chip" data-supp="DECIMAL"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>なぜ 0.1 はぴったり表せない?</button>
+    </div>
   </div>
 </div>
 
@@ -1847,6 +1969,27 @@ window.HOSOKU_SUPP = {
       </svg></div></div>
     </div></div>`
   },
+  'DECIMAL': {
+    tag: 'SUPPLEMENT · 誤差',
+    title: 'なぜ <b>0.1</b> はぴったり表せない?',
+    sub: '10 進の 0.1 は 2 進では割り切れず、無限に続く ― だから誤差が出る。',
+    body: `
+    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
+      <div class="sec-h">割り切れる小数と、割り切れない小数</div>
+      <div class="sec-p">分母が 2 の累乗の小数は、2 進できれいに表せる:<span class="mq">0.5 = 0.1₂</span>、<span class="mq">0.25 = 0.01₂</span>、<span class="mq">0.625 = 0.101₂</span>。ところが <b>0.1(10 進)</b>は 2 進にすると <b>同じ並びが無限にくり返す(循環小数)</b>。決まったビット数で打ち切るしかなく、わずかな <b>丸め誤差</b> が残る。</div>
+      <div class="sec-fig"><div class="sf-box"><svg viewBox="0 0 340 110">
+        <text x="20" y="34" font-size="13" fill="#3b3a42" font-family="Yusei Magic,cursive">0.1(10 進)</text>
+        <text x="20" y="62" font-size="14" font-weight="900" fill="#2c5a99" font-family="JetBrains Mono,monospace">= 0.00011001100110011…</text>
+        <line class="sf-flow" x1="232" y1="50" x2="232" y2="72" stroke="#e0584f" stroke-width="2.4"/>
+        <text x="270" y="62" font-size="11" fill="#bb453d" font-family="Yusei Magic,cursive">↑ここで打ち切り</text>
+        <text x="20" y="92" font-size="11.5" fill="#bb453d" font-family="Yusei Magic,cursive">無限にくり返す → 打ち切る → 丸め誤差が残る</text>
+      </svg></div></div>
+    </div></div>
+    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
+      <div class="sec-h">誤差は計算で広がる ― 桁あふれ・情報落ち</div>
+      <div class="sec-p">小さな丸め誤差も積み重なると、<b>0.1 + 0.2 が 0.3 にぴったりならない</b>といったずれになる。ほかにも、扱える最大を超える <b>桁あふれ(オーバーフロー)</b>、大きい数に極小の数を足すと小さい方が消える <b>情報落ち</b> がある。<br>つまり、コンピュータの実数は「<b>有限のビットに収めた近似値</b>」。だからお金の計算などは、小数を避けて <b>整数(最小単位 = 1 円)</b> で扱うことが多い。</div>
+    </div></div>`
+  },
 
 };
 
@@ -1945,7 +2088,10 @@ const MIKI_GUIDE = {
   '第4節 参考: 発展副題': { tag: '発展', say: 'ここからは発展です。共通テストや実生活で必要になる範囲まで広げます。' },
   '参考A なぜコンピュータは2進数か': { tag: '参考A', say: ['なぜ 10 進法でなく 2 進法なのか、を見ます。', '鍵は「電気で動く機械にとって、何段階なら間違えにくいか」です。'] },
   '参考B 情報量の階段(1024倍)': { tag: '参考B', say: 'ビットから KB・MB・GB へ。1024 倍ごとに名前が変わる階段を見ます。' },
-  '参考C 補数で負の数を表す': { tag: '参考C', say: '0 と 1 だけで、どうマイナスを表すか。やや発展で、第 3 章につながります。' },
+  '参考C 先頭ビットは符号の目印': { tag: '参考C', say: ['固定長では、いちばん左(先頭)のビットを符号の目印に使います。', '2 の補数では 0 なら正、1 なら負です。'] },
+  '参考D 補数とは何か(一周して0)': { tag: '参考D', say: ['桁を決めると、数は時計のように一周して 0 に戻ります。', '足すと一周して 0 になる相手を、−A とみなすのが補数です。'] },
+  '参考E 補数の作り方(反転して1を足す)': { tag: '参考E', say: ['負の数の作り方は、全ビットを反転して 1 を足すだけ。', 'これで引き算まで足し算の回路でこなせます。'] },
+  '参考F 小数(実数)を2進数で表す': { tag: '参考F', say: ['小数も 2 進数で表せます。小数点以下は 1/2・1/4・1/8… の重み。', '幅広い実数は、符号部・指数部・仮数部の浮動小数点数で表します。'] },
   'POINT 答え合わせ(全 12 用語)': { tag: 'まとめ', say: '学習ノートの 12 用語を確認します。タップで 1 つずつ、全表示も使えます。' },
   'POINT 11 まとめツリー': { tag: '一望', say: 'アナログとデジタルを「表し方・進法の関係・情報量」の 3 つにまとめました。' },
   '復習チャレンジ(10問ランダム)': { tag: '腕試し', say: '10 問のランダム出題で、理解度を確認します。' },
