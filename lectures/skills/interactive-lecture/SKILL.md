@@ -923,7 +923,11 @@ lec10/lec11 で「miki.com NPC + hosoku 補足 + POINT スポットライト + P
 - `<style>` に supp CSS、`<script>` に supp.js(`window.suppFig` + モーダル)、`window.HOSOKU_SUPP = { KEY:{tag,title,sub,body} }` をデッキ側で定義。
 - チップ `.supp-chip[data-supp="KEY"]` クリックで手描きポップなモーダル。表示中 **P で本文 `<b>` マーカーが順にスイープ**。
 - 図は `.sf-box` 内の動く SVG(`sf-flow`/`sf-pulse`/`sf-float`/`sf-grow` の 4 keyframe)。`bit-grid`/`supp-tbl`/`supp-clock`/`field-eq` など汎用図パーツ同梱。
-- 詳細は memory `reference_hosoku_command`。**1 単元 5〜8 件**を難所に置く。
+- 詳細は memory `reference_hosoku_command`。**1 単元 5〜10 件**を難所に置く。本文は 2〜3 節、各節に検算済み数値 + 図。**図は意味があるときだけ動かす**(装飾アニメは静止に)。締めの言い回しは反復させない(「鋭く言えば」を全件に貼らない)。
+- **エンジンの事実(2026-05 修正・踏むと事故る)**:
+  - 補足モーダルの **タイトル/サブは innerHTML 描画**(`open()` 内 `sh-title`/`sh-sub` に `.innerHTML`)。CSS `.sh-title b` と P スイープ(`.sh-title b`)が `<b>` を前提にしているため。`textContent` にすると **`<b>` が literal 表示される既知バグ**。canonical(lec10/lec11/lec12)は innerHTML 済み。
+  - `data-supp`(チップ)と `HOSOKU_SUPP` キーは **1:1**(漏れゼロ)。
+  - スライド本体(モーダル外)で `sf-*` を使うなら、これらのクラスは `.supp-card`/`#pointPop` にスコープされているので **`.appx` 等の自前スコープで再定義**する(`@keyframes` はグローバル)。発展スライドの `.appx*` 部品は `components.md`「APPENDIX リッチ図解」参照。
 
 ### 15.3 POINT スポットライト + リッチ解説ポップ(miki 表示時のみ)
 - `#pointSpot`:`box-shadow: 0 0 0 9999px rgba(...)` で周囲暗転 + 金パルスリング。対象カードの rect に追従(`positionPointSpot`)。
