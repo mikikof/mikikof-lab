@@ -13,17 +13,29 @@
   --navy-light: #4A7FA8; --navy-pale: #D4E1EF; --navy-bg: #F3F6FB;
   --accent-red: #C8102E; --accent-red-dark: #8B0A1F; --accent-gold: #C9A961;
   --text-main: #1A2332; --text-sub: #5A6378; --white: #FFFFFF; --ok-green: #1E824C;
+  --fs: 1;        /* miki.con のセリフ専用(mb-say / md-say) */
+  --fs-site: 1;   /* サイト本体テキスト(タイトル/本文/見出し/カード) */
 }
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(--text-main); background: var(--navy-darkest); overflow: hidden; -webkit-font-smoothing: antialiased; touch-action: manipulation; -webkit-user-select: none; user-select: none; }
 .slide p, .slide li, .case-content, .practice-text, .def-desc, .quiz-question, .quiz-feedback, .answer-text, .deep-card p, .webdemo-legend, .src-note { -webkit-user-select: text; user-select: text; }
-.slide-container { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+.slide-container { width: 100vw; height: 100vh; position: relative; overflow: hidden; transform: scale(var(--fs-site, 1)); transform-origin: center center; transition: transform 0.18s ease; }
 .slide { position: absolute; top: 47px; bottom: 52px; left: 0; right: 0; padding: 4vh 5vw; opacity: 0; pointer-events: none; transform: translateX(30px); transition: opacity 0.4s ease, transform 0.4s ease; background: var(--white); overflow-y: auto; }
 .slide.active { opacity: 1; pointer-events: all; transform: translateX(0); }
 .topbar { position: fixed; top: 0; left: 0; right: 0; height: 44px; background: linear-gradient(180deg, var(--navy-darkest) 0%, var(--navy-dark) 100%); color: rgba(255,255,255,0.9); display: flex; align-items: center; padding: 0 24px; z-index: 100; font-size: 13px; letter-spacing: 0.05em; box-shadow: 0 2px 12px rgba(0,0,0,0.2); }
 .topbar-title { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 600; margin-right: 20px; }
 .topbar-subtitle { color: rgba(255,255,255,0.6); font-size: 12px; flex: 1; }
 .topbar-chapter { font-family: 'JetBrains Mono', monospace; color: var(--accent-gold); letter-spacing: 0.1em; font-size: 11px; }
+/* サイト本体 文字サイズ 5段階(90/100/110/125/150 %)— topbar 配置・ポップ */
+.tb-fs { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; margin-left: 18px; background: rgba(255,255,255,0.06); border: 1px solid rgba(201,169,97,0.45); border-radius: 14px 4px 14px 4px/4px 14px 4px 14px; box-shadow: inset 0 1px 0 rgba(255,255,255,.08); }
+.tb-fs::before { content: 'TEXT'; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: rgba(201,169,97,0.85); letter-spacing: 0.16em; margin-right: 4px; }
+.tb-fs-btn { width: 22px; height: 21px; padding: 0; border-radius: 7px 4px 7px 4px/4px 7px 4px 7px; background: linear-gradient(180deg, var(--accent-gold) 0%, #a8884a 100%); color: var(--navy-darkest); border: 1px solid rgba(255,255,255,0.5); font-family: 'Yusei Magic', cursive; font-weight: 700; line-height: 1; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 1px 1.5px 0 rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.4); transition: transform .12s, box-shadow .12s, filter .12s; }
+.tb-fs-btn { font-size: 10px; }
+.tb-fs-up { font-size: 13.5px; }
+.tb-fs-btn:hover { transform: translate(-1px,-1px); box-shadow: 2px 2.5px 0 rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.4); filter: brightness(1.08); }
+.tb-fs-btn:active:not(:disabled) { transform: translate(1px,1px); box-shadow: 0 0 0 rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.4); }
+.tb-fs-btn:disabled { opacity: 0.38; cursor: not-allowed; filter: grayscale(0.5); transform: none; }
+.tb-fs-lab { font-family: 'Yusei Magic', cursive; font-size: 11px; color: rgba(255,255,255,0.94); min-width: 22px; text-align: center; letter-spacing: 0.02em; text-shadow: 0 1px 0 rgba(0,0,0,0.4); user-select: none; }
 .progress { position: fixed; top: 44px; left: 0; height: 3px; background: linear-gradient(90deg, var(--accent-red) 0%, var(--accent-gold) 100%); z-index: 99; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 8px rgba(201, 169, 97, 0.5); }
 .bottombar { position: fixed; bottom: 0; left: 0; right: 0; height: 52px; background: var(--navy-darkest); color: rgba(255,255,255,0.85); display: flex; align-items: center; padding: 0 24px; z-index: 100; font-size: 13px; }
 .bottombar-nav { display: flex; gap: 12px; align-items: center; }
@@ -339,7 +351,8 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
 .md-bubble { flex: 1; align-self: center; }
 .md-name { font-family: "Yusei Magic",cursive; font-size: 12.5px; color: #2c5a99; display: flex; align-items: center; gap: 9px; margin-bottom: 5px; }
 .md-tag { background: #e0584f; color: #fff; border-radius: 7px 4px 8px 5px/5px 8px 4px 7px; padding: 2px 9px; font-size: 10.5px; letter-spacing: .04em; }
-.md-say { font-family: "Zen Maru Gothic","Klee One",sans-serif; font-weight: 500; font-size: 15.5px; line-height: 1.62; color: #2f2e36; }
+.md-say { font-family: "Zen Maru Gothic","Klee One",sans-serif; font-weight: 500; font-size: calc(15.5px * var(--fs)); line-height: 1.62; color: #2f2e36; }
+/* (md-say は miki.con セリフのため scale 維持) */
 .md-say b { color: #bb453d; font-weight: 700; }
 .md-ctrl { display: flex; align-items: center; gap: 12px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
 .md-btn { font-family: "Yusei Magic",cursive; font-size: 14px; color: #2c5a99; background: #fff; border: 2.5px solid #2c5a99; padding: 8px 18px; border-radius: 120px 9px 110px 11px/9px 110px 11px 120px; cursor: pointer; box-shadow: 2.5px 3px 0 rgba(44,90,153,.16); transition: transform .14s ease, box-shadow .15s ease; }
@@ -355,11 +368,11 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; color: var(-
 @media (max-width: 720px) {
   .md-stage { grid-template-columns: 1fr; }
   .md-codelines, .md-doc { min-height: auto; }
-  .md-say { font-size: 14px; }
+  .md-say { font-size: calc(14px * var(--fs)); }
   .md-btn { font-size: 13px; padding: 7px 15px; }
 }
 
-/* P コマンド = 文字ポップ波(左→右に 1 文字ずつ跳ねて強調) / H = miki.com 表示切替 */
+/* P コマンド = 文字ポップ波(左→右に 1 文字ずつ跳ねて強調) / H = miki.con 表示切替 */
 @keyframes charPop {
   0%   { transform: translate3d(0,0,0) scale(1); color: inherit; text-shadow: 0 0 0 transparent; }
   40%  { transform: translate3d(0,-0.22em,0) scale(1.5); color: var(--pop-color, #8E7CA3); text-shadow: 0 0.18em 0.7em var(--pop-shadow, rgba(142,124,163,0.42)); }
@@ -371,7 +384,7 @@ body.miki-hidden #mikibar, body.miki-hidden .md-miki { display: none !important;
 .miki-back { display: none; margin: 12px auto 0; font-family: "Yusei Magic","Klee One",cursive; font-size: 12px; color: #2c5a99; background: #fff; border: 2.5px dashed #2c5a99; padding: 6px 16px; border-radius: 120px 9px 110px 11px/9px 110px 11px 120px; cursor: pointer; }
 body.miki-hidden .miki-back { display: inline-block; }
 
-/* miki.com ゲームウィンドウ(タイトルバー + 本体 + 四隅リサイズ / 手描きポップ) */
+/* miki.con ゲームウィンドウ(タイトルバー + 本体 + 四隅リサイズ / 手描きポップ) */
 #mikibar { position: fixed; left: 50%; bottom: 56px; transform: translateX(-50%); width: min(560px, 92vw); min-width: 280px; max-width: 96vw; min-height: 104px; max-height: 70vh; display: flex; flex-direction: column; background: #fff; border: 3px solid #3b3a42; border-radius: 18px 8px 18px 8px/8px 18px 8px 18px; box-shadow: 5px 7px 0 rgba(59,58,66,.2); z-index: 150; overflow: visible; touch-action: none; }
 #mikibar[hidden] { display: none; }
 #mikibar.dragging { box-shadow: 8px 11px 0 rgba(59,58,66,.24); }
@@ -381,6 +394,15 @@ body.miki-hidden .miki-back { display: inline-block; }
 #mikibar .mb-name { flex: 1; font-family: "Yusei Magic",cursive; font-size: 12.5px; color: #fff; display: flex; align-items: center; gap: 9px; }
 #mikibar .mb-tag { background: #ffe27a; color: #7a5a00; border-radius: 6px 4px 7px 5px/5px 7px 4px 6px; padding: 1px 9px; font-size: 10px; letter-spacing: .04em; }
 #mikibar .mb-tag:empty { display: none; }
+/* セリフ文字サイズ 5段階(90/100/110/125/150 %)— 手描きポップ design */
+#mikibar .mb-fs { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; background: rgba(255,255,255,.10); border: 1.4px solid rgba(255,255,255,.32); border-radius: 16px 5px 14px 7px/6px 13px 7px 15px; box-shadow: inset 0 1px 0 rgba(255,255,255,.18); margin: 0 2px 0 0; }
+#mikibar .mb-fs-btn { width: 22px; height: 20px; padding: 0; border-radius: 7px 5px 8px 6px/5px 8px 6px 7px; background: linear-gradient(180deg, #fff3b8 0%, #ffe27a 100%); color: #6b4f0a; border: 1.4px solid rgba(255,255,255,.85); font-family: "Yusei Magic", cursive; font-weight: 700; line-height: 1; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 1.5px 2px 0 rgba(31,63,107,.22), inset 0 1px 0 rgba(255,255,255,.55); transition: transform .12s, box-shadow .12s, filter .12s; }
+#mikibar .mb-fs-btn { font-size: 10px; }
+#mikibar .mb-fs-up { font-size: 13.5px; }
+#mikibar .mb-fs-btn:hover { transform: translate(-1px,-1px); box-shadow: 2.5px 3px 0 rgba(31,63,107,.26), inset 0 1px 0 rgba(255,255,255,.55); filter: brightness(1.04); }
+#mikibar .mb-fs-btn:active:not(:disabled) { transform: translate(1px,1px); box-shadow: 0 0 0 rgba(31,63,107,.22), inset 0 1px 0 rgba(255,255,255,.55); }
+#mikibar .mb-fs-btn:disabled { opacity: 0.42; cursor: not-allowed; filter: grayscale(0.4); transform: none; }
+#mikibar .mb-fs-lab { font-family: "Yusei Magic", cursive; font-size: 10.5px; color: rgba(255,255,255,.95); min-width: 22px; text-align: center; letter-spacing: 0.02em; text-shadow: 0 1px 0 rgba(31,63,107,.5); user-select: none; }
 #mikibar .mb-min { width: 26px; height: 22px; border-radius: 7px; border: 2px solid rgba(255,255,255,.5); background: rgba(255,255,255,.14); color: #fff; cursor: pointer; font-family: "Yusei Magic",cursive; font-size: 12px; line-height: 1; flex: 0 0 auto; }
 #mikibar .mb-min:hover { background: rgba(255,255,255,.3); }
 #mikibar .mb-body { flex: 1 1 auto; display: flex; align-items: stretch; gap: 13px; padding: 12px 14px 6px; min-height: 0; }
@@ -388,7 +410,7 @@ body.miki-hidden .miki-back { display: inline-block; }
 #mikibar.dragging .mb-ava { animation: none; }
 #mikibar .mb-ava svg { width: 32px; height: 32px; fill: none; stroke: #2c5a99; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 #mikibar .mb-screen { flex: 1; min-width: 0; position: relative; overflow-y: auto; background-color: #f4f8fd; background-image: radial-gradient(circle,#d3e0f0 1.1px,transparent 1.2px); background-size: 17px 17px; border: 2px solid #c7d6ea; border-radius: 12px 5px 13px 6px/6px 13px 5px 12px; padding: 9px 28px 10px 14px; }
-#mikibar .mb-say { font-family: "Zen Maru Gothic","Klee One",sans-serif; font-weight: 500; font-size: 15px; line-height: 1.6; color: #2f2e36; }
+#mikibar .mb-say { font-family: "Zen Maru Gothic","Klee One",sans-serif; font-weight: 500; font-size: calc(15px * var(--fs)); line-height: 1.6; color: #2f2e36; }
 #mikibar .mb-say b { color: #bb453d; font-weight: 700; }
 #mikibar .mb-cont { position: absolute; right: 9px; bottom: 5px; color: #e0584f; font-size: 13px; display: none; }
 #mikibar.more .mb-cont { display: block; animation: mbContB .85s ease-in-out infinite; }
@@ -408,12 +430,12 @@ body.miki-hidden .miki-back { display: inline-block; }
 #mikibar .mb-rz.sw { left: -5px; bottom: -5px; cursor: nesw-resize; }
 #mikibar .mb-rz.se { right: -5px; bottom: -5px; cursor: nwse-resize; }
 #mikibar .mb-rz.se::after { content: ""; position: absolute; right: 4px; bottom: 4px; width: 8px; height: 8px; border-right: 2.5px solid #9db8de; border-bottom: 2.5px solid #9db8de; border-radius: 0 0 3px 0; }
-/* 最小化 = miki.com アイコンだけ(顔)。タップで復帰。 */
+/* 最小化 = miki.con アイコンだけ(顔)。タップで復帰。 */
 #mikibar.collapsed { min-height: 0; min-width: 0; width: auto !important; max-width: none; height: auto !important; padding: 0; border: 2.5px solid #3b3a42; border-radius: 16px 7px 16px 7px/7px 16px 7px 16px; box-shadow: 4px 5px 0 rgba(59,58,66,.2); overflow: visible; }
 #mikibar.collapsed .mb-titlebar, #mikibar.collapsed .mb-screen, #mikibar.collapsed .mb-foot, #mikibar.collapsed .mb-rz { display: none; }
 #mikibar.collapsed .mb-body { padding: 6px; min-height: 0; }
 #mikibar.collapsed .mb-ava { width: 48px; height: 48px; cursor: pointer; }
-#mikibar.collapsed .mb-ava::after { content: "miki.com"; position: absolute; left: 50%; bottom: -16px; transform: translateX(-50%); font-family: "Yusei Magic",cursive; font-size: 8.5px; color: #2c5a99; white-space: nowrap; background: #fff; padding: 0 4px; border-radius: 5px; }
+#mikibar.collapsed .mb-ava::after { content: "miki.con"; position: absolute; left: 50%; bottom: -16px; transform: translateX(-50%); font-family: "Yusei Magic",cursive; font-size: 8.5px; color: #2c5a99; white-space: nowrap; background: #fff; padding: 0 4px; border-radius: 5px; }
 #mikibar.collapsed .mb-ava { position: relative; }
 @media (prefers-reduced-motion: reduce) { #mikibar .mb-ava { animation: none; } #mikibar.more .mb-cont { animation: none; } }
 @media (max-width: 720px) {
@@ -422,8 +444,12 @@ body.miki-hidden .miki-back { display: inline-block; }
   #mikibar .mb-body { padding: 9px 11px 5px; gap: 10px; }
   #mikibar .mb-ava { width: 40px; height: 40px; }
   #mikibar .mb-ava svg { width: 26px; height: 26px; }
-  #mikibar .mb-say { font-size: 12.5px; line-height: 1.5; }
+  #mikibar .mb-say { font-size: calc(12.5px * var(--fs)); line-height: 1.5; }
   #mikibar .mb-name { font-size: 11px; }
+  #mikibar .mb-fs { padding: 1px 6px; gap: 4px; }
+  #mikibar .mb-fs-btn { width: 19px; height: 18px; font-size: 9px; }
+  #mikibar .mb-fs-up { font-size: 12px; }
+  #mikibar .mb-fs-lab { font-size: 9.5px; min-width: 18px; }
   #mikibar .mb-next, #mikibar .mb-back { font-size: 11px; padding: 7px 14px; }
   #mikibar .mb-foot { padding: 0 11px 9px; gap: 7px; }
   body:not(.miki-hidden) .slide { padding-bottom: 168px; }
@@ -493,6 +519,11 @@ body.miki-hidden .miki-back { display: inline-block; }
   .topbar-title { font-size: 13px; margin-right: 8px; }
   .topbar-subtitle { display: none; }
   .topbar-chapter { font-size: 10px; letter-spacing: 0.08em; }
+  .tb-fs { margin-left: 8px; padding: 1px 6px; gap: 3px; }
+  .tb-fs::before { font-size: 8px; margin-right: 2px; letter-spacing: 0.12em; }
+  .tb-fs-btn { width: 19px; height: 18px; font-size: 9px; }
+  .tb-fs-up { font-size: 12px; }
+  .tb-fs-lab { font-size: 10px; min-width: 18px; }
   .menu-toggle { margin-left: 8px; padding: 4px 10px; font-size: 10px; height: 24px; gap: 6px; }
   .progress { top: 40px; }
   .bottombar { height: calc(52px + env(safe-area-inset-bottom, 0px)); padding: 0 14px env(safe-area-inset-bottom, 0px); font-size: 11px; }
@@ -786,7 +817,7 @@ body.miki-hidden .miki-back { display: inline-block; }
   .vr-defs { grid-template-columns: 1fr; }
 }
 
-/* ===== lec11 固有: POINT スポットライト + リッチ解説ポップ(miki.com 表示時のみ・ナビ役) ===== */
+/* ===== lec11 固有: POINT スポットライト + リッチ解説ポップ(miki.con 表示時のみ・ナビ役) ===== */
 /* スポットライト: 周囲を薄暗く(box-shadow 9999px)+ 金色パルスリング。miki バー(z150)は veil の上に残る */
 #pointSpot { position: fixed; left: 0; top: 0; width: 0; height: 0; z-index: 140; border-radius: 16px; pointer-events: none; opacity: 0;
   box-shadow: 0 0 0 9999px rgba(15, 40, 71, 0.60);
@@ -853,6 +884,11 @@ body.miki-hidden .miki-back { display: inline-block; }
   <span class="topbar-title">情報のデジタル化</span>
   <span class="topbar-subtitle">情報Ⅰ / 学習ノート POINT 12 | p.26–28</span>
   <span class="topbar-chapter">CHAPTER · 12</span>
+  <span class="tb-fs" role="group" aria-label="サイト本体の文字サイズ">
+    <button class="tb-fs-btn" id="sfsDown" onclick="siteFsStep(-1)" title="文字を小さく" aria-label="サイト本体の文字を小さく">a</button>
+    <span class="tb-fs-lab" id="sfsLabel">100</span>
+    <button class="tb-fs-btn tb-fs-up" id="sfsUp" onclick="siteFsStep(1)" title="文字を大きく" aria-label="サイト本体の文字を大きく">A</button>
+  </span>
   <button class="menu-toggle" onclick="openMenu()" title="スライド目次(M)" aria-label="スライド目次を開く">
     <span class="menu-toggle-icon"><span></span><span></span><span></span></span>
     MENU
@@ -884,7 +920,7 @@ body.miki-hidden .miki-back { display: inline-block; }
   <svg class="title-deco-2" viewBox="0 0 256 256"><rect x="40" y="40" width="56" height="56" rx="8" fill="none" stroke="currentColor" stroke-width="12"/><rect x="120" y="40" width="56" height="56" rx="8" fill="currentColor"/><rect x="40" y="120" width="56" height="56" rx="8" fill="currentColor"/><rect x="120" y="120" width="56" height="56" rx="8" fill="none" stroke="currentColor" stroke-width="12"/></svg>
   <div class="title-label">CHAPTER · 12 / POINT 12 / 学習ノート p.26–28</div>
   <h1 class="title-main">情報のデジタル化</h1>
-  <div class="title-sub">文字・音・色・画像・動画を 0 と 1 で表す ― 標本化・量子化・符号化の三段階で、世界をデータにする手順</div>
+  <div class="title-sub">文字・音・色・画像・動画を 0 と 1 で表す ― 文字は文字コードで番号に対応させ、音や画像は標本化・量子化・符号化で 0 と 1 の列にする</div>
   <div class="title-meta">
     <div class="title-meta-item"><strong>POINT</strong>12</div>
     <div class="title-meta-item"><strong>TERMS</strong>主要 18 語</div>
@@ -897,7 +933,7 @@ body.miki-hidden .miki-back { display: inline-block; }
 <div class="slide" data-title="このサイトで扱う内容">
   <div class="eyebrow">AGENDA · このサイトで扱う内容</div>
   <h2 class="slide-title">このサイトで扱う内容</h2>
-  <p class="slide-subtitle">学習ノート POINT 12 の用語と実習 9 題を、4 つの観点に再編して扱う。文字・音・色・画像・動画のそれぞれが、どう 0 と 1 に置きかえられるかを、手を動かす実演で確かめる。共通の手順は <strong>標本化 → 量子化 → 符号化</strong> の三段階。</p>
+  <p class="slide-subtitle">学習ノート POINT 12 の用語と実習 9 題を、4 つの観点に再編して扱う。文字・音・色・画像・動画のそれぞれが、どう 0 と 1 に置きかえられるかを、手を動かす実演で確かめる。<strong>文字は文字コード</strong>で番号に対応させ、<strong>音・画像はアナログ量を 標本化 → 量子化 → 符号化</strong> の三段階で 0 と 1 にする。</p>
   <div class="agenda-grid">
     <div class="agenda-item">
       <svg class="ai-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><path d="M72 64h112M72 192h112M96 64l-16 128M160 64l-16 128"/></svg>
@@ -1054,7 +1090,7 @@ body.miki-hidden .miki-back { display: inline-block; }
 <div class="slide" data-title="標本化・量子化・符号化 (interactive)">
   <div class="eyebrow">POINT 3 / 学習ノート ⑴-3</div>
   <h2 class="slide-title">デジタル化の三段階</h2>
-  <p class="slide-subtitle">なめらかな波を数の列にする手順は、どんな情報でも共通。まず一定間隔で値を取り出す <strong>標本化</strong>、次に値を決まった段階にそろえる <strong>量子化</strong>、最後に段階を 2 進数で表す <strong>符号化</strong> ― この 3 段階で進む。タップで定義を表示。</p>
+  <p class="slide-subtitle">音や画像のようなアナログ量を 0 と 1 の列にする手順は、標本化 → 量子化 → 符号化の三段階で整理できる。まず一定間隔で値を取り出す <strong>標本化</strong>、次に値を決まった段階にそろえる <strong>量子化</strong>、最後に段階を 2 進数で表す <strong>符号化</strong> ― この 3 段階で進む。タップで定義を表示。</p>
   <div class="icon-cards cols-3">
     <div class="icon-card" data-key="sampling" onclick="selectIcon('termPanel3', 'sampling')">
       <div class="icon-card-tag">③ POINT</div>
@@ -1234,7 +1270,7 @@ body.miki-hidden .miki-back { display: inline-block; }
 <div class="slide" data-title="画像の用語 ― 解像度と階調 (interactive)">
   <div class="eyebrow">POINT 5 / 学習ノート ⑵-2,3</div>
   <h2 class="slide-title">画像のきめ細かさを決める 2 つ</h2>
-  <p class="slide-subtitle">画像のデジタル化も <strong>標本化 → 量子化 → 符号化</strong>。横の細かさ(画素の密度)が <strong>解像度</strong>、明るさの段階数が <strong>階調</strong>。RGB 各 8 ビット(256 階調)で表すと、2²⁴ 通りの色 ＝ <strong>24 ビットフルカラー</strong>。タップで定義を表示。</p>
+  <p class="slide-subtitle">画像のデジタル化も <strong>標本化 → 量子化 → 符号化</strong>。画像の細かさ ― つまり画素の密度が <strong>解像度</strong>、明るさの段階数が <strong>階調</strong>。RGB 各 8 ビット(256 階調)で表すと、2²⁴ 通りの色 ＝ <strong>24 ビットフルカラー</strong>。タップで定義を表示。</p>
   <div class="icon-cards cols-3">
     <div class="icon-card" data-key="resolution" onclick="selectIcon('termPanel5', 'resolution')">
       <div class="icon-card-tag">⑨ POINT</div>
@@ -1367,7 +1403,7 @@ body.miki-hidden .miki-back { display: inline-block; }
       <input type="range" min="2" max="30" value="5" id="fpsRange" oninput="fpsUpdate(this.value)" aria-label="フレームレートを変える">
       <span class="fps-nbox"><span id="fpsVal">5</span> fps</span>
     </div>
-    <div class="fps-note" id="fpsNote">5 fps:1 秒間に 5 枚の静止画。動きが飛んで見える。アニメは 24fps、なめらかな映像は 60fps が使われる。</div>
+    <div class="fps-note" id="fpsNote">5 fps:1 秒間に 5 枚の静止画。動きが飛んで見える。映画やアニメーションの基準としては 24fps、なめらかな映像では 60fps がよく使われる。</div>
   </div>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center;">
     <button class="supp-chip" data-supp="FPSEYE"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>静止画がなぜ「動いて」見える?</button>
@@ -1382,7 +1418,7 @@ body.miki-hidden .miki-back { display: inline-block; }
   <div class="fill-prose">
     動画は、複数の静止画を一定の時間間隔で次々に表示することで実現している。このそれぞれの静止画を（<span class="sr-blank" data-ph="①" data-answer="フレーム" onclick="toggleSelBlank(this)">①</span>）という。<br>
     1 秒間に表示される（①）の数を（<span class="sr-blank" data-ph="②" data-answer="フレームレート" onclick="toggleSelBlank(this)">②</span>）といい、単位に fps を用いる。（②）が（<span class="sr-blank" data-ph="③" data-answer="大き" onclick="toggleSelBlank(this)">③</span>）いほど滑らかな動画になる。<br>
-    アニメーションなどは一般に 24fps が使われる。この場合、90 分のアニメーションを作るには（<span class="sr-blank" data-ph="④" data-answer="129600" onclick="toggleSelBlank(this)">④</span>）枚の（①）が必要になる。
+    映画やアニメーションの基準として 24fps がよく使われる。これに合わせると、90 分のアニメーションを作るには（<span class="sr-blank" data-ph="④" data-answer="129600" onclick="toggleSelBlank(this)">④</span>）枚の（①）が必要になる。
   </div>
   <p class="conv-note"><strong>④ の計算</strong>:90 分 ＝ 90 × 60 ＝ 5400 秒。24fps × 5400 秒 ＝ <strong>129600 枚</strong>。</p>
 </div>
@@ -1449,7 +1485,7 @@ body.miki-hidden .miki-back { display: inline-block; }
 <div class="slide" data-title="参考A 標本化周波数はどれだけ必要か">
   <div class="eyebrow">APPENDIX A / 標本化定理</div>
   <h2 class="slide-title">標本化周波数は、どれだけ必要か</h2>
-  <p class="slide-subtitle">標本化の間隔が粗すぎると、もとの波を正しく復元できない。では、どれだけ細かく測ればよいのか。その目安を与えるのが <strong>標本化定理</strong> で、音楽 CD の 44.1kHz もここから決まっている。</p>
+  <p class="slide-subtitle">標本化の間隔が粗すぎると、もとの波を正しく復元できない。では、どれだけ細かく測ればよいのか。その目安を与えるのが <strong>標本化定理</strong>。音楽 CD の 44.1kHz は、人の可聴域と標本化定理をふまえた値である。</p>
   <div class="deep-card">
     <h4><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><path d="M24 128 C56 64 88 64 120 128 S184 192 216 128"/><circle cx="60" cy="92" r="9" fill="currentColor" stroke="none"/><circle cx="156" cy="160" r="9" fill="currentColor" stroke="none"/></svg>もとの波の「2 倍より高く」測る</h4>
     <span class="deep-tag">標本化定理</span>
@@ -1458,7 +1494,7 @@ body.miki-hidden .miki-back { display: inline-block; }
   <div class="deep-card">
     <h4><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><circle cx="128" cy="128" r="92"/><polyline points="128 74 128 128 168 152"/></svg>だから CD は 44.1kHz</h4>
     <span class="deep-tag">人の可聴域 ≒ 20kHz</span>
-    <p>人が聞こえる音はおよそ <strong>20kHz</strong> まで。その 2 倍より高くするため、音楽 CD は <strong>44.1kHz</strong> で標本化している。実習4 の 40kHz も、可聴域をほぼ覆える値として選ばれている。</p>
+    <p>人が聞こえる音はおよそ <strong>20kHz</strong> まで。その 2 倍より高い周波数で標本化すれば波形を復元できる(標本化定理)。実用上は余裕を持って 音楽 CD では <strong>44.1kHz</strong> が使われる。実習4 の 40kHz は、可聴域の上限 20kHz 付近を考えるための学習用の値である。</p>
   </div>
 </div>
 
@@ -1516,9 +1552,9 @@ body.miki-hidden .miki-back { display: inline-block; }
 <div class="slide" data-title="POINT 12 まとめツリー">
   <div class="eyebrow">SUMMARY · POINT 12 を 1 枚で見渡す</div>
   <h2 class="slide-title">情報のデジタル化を 1 枚で見る</h2>
-  <p class="slide-subtitle">文字・音・色と画像・動画と立体。どれも <strong>標本化 → 量子化 → 符号化</strong> で 0 と 1 に置きかえ、データ量は「細かさ × 段階の細かさ」で決まる、という共通の見方で整理する。</p>
+  <p class="slide-subtitle">文字は <strong>文字コード</strong> で番号に対応させ、音や画像などのアナログ量は <strong>標本化 → 量子化 → 符号化</strong> で 0 と 1 に置きかえる。動画は静止画の連続として表し、立体表現では <strong>3DCG・VR・AR・MR</strong> などの技術を使う。データ量は「細かさ × 段階の細かさ」で決まる、という共通の見方で整理する。</p>
   <div class="summary-tree">
-    <div class="tree-root"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><path d="M24 150 C56 80 88 80 120 150"/><rect x="140" y="120" width="26" height="40" rx="3"/><rect x="176" y="100" width="26" height="60" rx="3"/></svg>情報のデジタル化(標本化 → 量子化 → 符号化)</div>
+    <div class="tree-root"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><path d="M24 150 C56 80 88 80 120 150"/><rect x="140" y="120" width="26" height="40" rx="3"/><rect x="176" y="100" width="26" height="60" rx="3"/></svg>情報のデジタル化</div>
     <div class="tree-branches">
       <div class="tree-branch"><svg class="tb-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><path d="M72 72h112M104 72l-16 112M152 72l-16 112"/></svg><div class="tb-tag">SECTION 1</div><h4>文字</h4><p>文字コード / JIS / Unicode・UTF-8 / 1B・2B</p></div>
       <div class="tree-branch"><svg class="tb-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><path d="M24 128 C56 72 88 72 120 128 S176 184 208 128"/></svg><div class="tb-tag">SECTION 2</div><h4>音</h4><p>標本化・量子化・符号化 / 周波数 / データ量</p></div>
@@ -1558,7 +1594,7 @@ body.miki-hidden .miki-back { display: inline-block; }
   <svg class="title-deco-2" viewBox="0 0 256 256"><rect x="40" y="40" width="56" height="56" rx="8" fill="none" stroke="currentColor" stroke-width="12"/><rect x="120" y="40" width="56" height="56" rx="8" fill="currentColor"/><rect x="40" y="120" width="56" height="56" rx="8" fill="currentColor"/><rect x="120" y="120" width="56" height="56" rx="8" fill="none" stroke="currentColor" stroke-width="12"/></svg>
   <div class="title-label">CHAPTER · 12 / COMPLETE</div>
   <h1 class="title-main">情報のデジタル化</h1>
-  <div class="title-sub">文字も音も画像も、標本化・量子化・符号化で 0 と 1 の列へ</div>
+  <div class="title-sub">文字は文字コードで番号に、音や画像は標本化・量子化・符号化で 0 と 1 の列へ</div>
   <div class="title-meta">
     <div class="title-meta-item"><strong>POINT</strong>12 / 主要 18 語</div>
     <div class="title-meta-item"><strong>PRACTICE</strong>9 題完走</div>
@@ -1579,8 +1615,13 @@ body.miki-hidden .miki-back { display: inline-block; }
 <div id="mikibar" hidden>
   <div class="mb-titlebar">
     <span class="mb-grip" aria-hidden="true">⣿</span>
-    <span class="mb-name">miki.com <span class="mb-tag" id="mbTag"></span></span>
-    <button class="mb-min" onclick="mikiMin()" title="最小化 / 復帰" aria-label="miki.com を最小化">▢</button>
+    <span class="mb-name">miki.con <span class="mb-tag" id="mbTag"></span></span>
+    <span class="mb-fs" role="group" aria-label="セリフの文字サイズ" onpointerdown="event.stopPropagation()">
+      <button class="mb-fs-btn" id="fsDown" onclick="fsStep(-1)" title="セリフを小さく" aria-label="セリフを小さく">a</button>
+      <span class="mb-fs-lab" id="fsLabel">100</span>
+      <button class="mb-fs-btn mb-fs-up" id="fsUp" onclick="fsStep(1)" title="セリフを大きく" aria-label="セリフを大きく">A</button>
+    </span>
+    <button class="mb-min" onclick="mikiMin()" title="最小化 / 復帰" aria-label="miki.con を最小化">▢</button>
   </div>
   <div class="mb-body">
     <div class="mb-ava" title="顔をタップで開閉 / バーをドラッグで移動"><svg viewBox="0 0 48 48"><rect x="9" y="9" width="30" height="27" rx="8"/><circle cx="19" cy="21" r="2.4" fill="#2c5a99" stroke="none"/><circle cx="29" cy="21" r="2.4" fill="#2c5a99" stroke="none"/><path d="M25 26 q 4 1.6 0 3.1 q 4 1.6 0 3.1"/><line x1="24" y1="9" x2="24" y2="4"/><circle cx="24" cy="3" r="2" fill="#e0584f" stroke="none"/></svg></div>
@@ -2000,7 +2041,7 @@ document.addEventListener('keydown', (e) => {
   const tag = (e.target && e.target.tagName) || '';
   if (/^(INPUT|TEXTAREA|SELECT)$/.test(tag)) return;
   if (e.key === ' ') {
-    // Space: miki.com の会話(つづき)を優先して進める。会話が尽きたらスライド送り。
+    // Space: miki.con の会話(つづき)を優先して進める。会話が尽きたらスライド送り。
     e.preventDefault();
     if (typeof mikiCanAdvance === 'function' && mikiCanAdvance()) { mikiAdvance(); }
     else if (!ppOpen) { goToSlide(currentSlide + 1); }
@@ -2030,10 +2071,10 @@ document.addEventListener('touchend', (e) => {
   }
 }, { passive: true });
 function toggleFullscreen() { if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {}); else document.exitFullscreen().catch(() => {}); }
-// ===== miki.com NPC エンジン(対話キュー + オブジェクト連動 + タイプ表示 + ドラッグ) =====
+// ===== miki.con NPC エンジン(対話キュー + オブジェクト連動 + タイプ表示 + ドラッグ) =====
 // 口調は講義トーン(です・ます、落ち着いた自然語)。say は文字列/配列(複数=「つづき」)両対応。
 const MIKI_GUIDE = {
-  'タイトル': { tag: 'はじめに', say: ['今回は、情報のデジタル化を見ていきます。', '文字・音・色・画像・動画を、どれも 0 と 1 に置きかえます。', '共通の手順は「標本化 → 量子化 → 符号化」の三段階です。'] },
+  'タイトル': { tag: 'はじめに', say: ['今回は、情報のデジタル化を見ていきます。', '文字・音・色・画像・動画を、どれも 0 と 1 に置きかえます。', '文字は文字コードで番号に対応させ、音や画像は「標本化 → 量子化 → 符号化」の三段階で 0 と 1 にします。'] },
   'このサイトで扱う内容': { tag: '全体図', say: ['全体は、文字・音・色と画像・動画と立体の 4 つに分けて扱います。', '途中に、手を動かす実演や電卓を入れています。', '見たい箇所へは、右上の MENU からも移動できます。'] },
   '第1節 文字のデジタル化': { tag: '第1節', say: 'まず、文字をどう番号(文字コード)で表すかを見ます。' },
   '文字コードの 3 用語 (interactive)': { tag: '文字', say: ['3 つの用語を選ぶと、説明をこの欄に表示します。', '文字コードは「文字に割り当てた番号」、JIS や Unicode はその具体的な決まりです。'] },
@@ -2060,12 +2101,12 @@ const MIKI_GUIDE = {
   '実習8 ― 動画の作成': { tag: '実習8', say: 'フレームレートに時間をかけると、必要なフレーム数が出ます。' },
   '実習9 ― 立体の表現(3DCG・VR・AR・MR)': { tag: '実習9', say: 'VR は視界全体を CG で覆い、AR は現実に CG を重ねます。説明の取り違えを探しましょう。' },
   '第5節 参考: 発展副題': { tag: '発展', say: 'ここからは発展です。標本化定理と、データ圧縮への橋渡しを見ます。' },
-  '参考A 標本化周波数はどれだけ必要か': { tag: '参考A', say: ['標本化はどれだけ細かく測ればよいか、その目安が標本化定理です。', '音楽 CD の 44.1kHz もここから決まっています。'] },
+  '参考A 標本化周波数はどれだけ必要か': { tag: '参考A', say: ['標本化はどれだけ細かく測ればよいか、その目安が標本化定理です。', '音楽 CD の 44.1kHz は、人の可聴域と標本化定理をふまえた値です。'] },
   '参考B データ量を減らす ― 圧縮へ': { tag: '参考B', say: ['大きくなったデータを小さくする工夫が圧縮です。', '完全に戻せる可逆圧縮と、戻せない非可逆圧縮があります。次の POINT 13 で扱います。'] },
   'POINT 答え合わせ(主要用語)': { tag: 'まとめ', say: '学習ノートの主要用語を確認します。タップで 1 つずつ、全表示も使えます。' },
-  'POINT 12 まとめツリー': { tag: '一望', say: '文字・音・色と画像・動画と立体を、共通の三段階の見方で 1 枚にまとめました。' },
+  'POINT 12 まとめツリー': { tag: '一望', say: '文字は文字コード、音や画像などのアナログ量は標本化・量子化・符号化、動画と立体はそれぞれの表現技術で整理しています。' },
   '復習チャレンジ(10問ランダム)': { tag: '腕試し', say: '10 問のランダム出題で、理解度を確認します。' },
-  '完了': { tag: 'おわりに', say: ['これで一通りです。', 'どんな情報も、標本化・量子化・符号化で 0 と 1 の列になる ― この点を覚えておいてください。', '次回は POINT 13、データの圧縮です。'] }
+  '完了': { tag: 'おわりに', say: ['これで一通りです。', '文字は文字コードで番号に対応させ、音や画像は標本化・量子化・符号化で 0 と 1 の列になる ― この点を覚えておいてください。', '次回は POINT 13、データの圧縮です。'] }
 };
 const MIKI_TERM = {
   charcode:   ['文字コードは、文字や記号に割り当てた番号の決まりです。', '例えば「A」は番号 65、16 進数では 41 です。'],
@@ -2271,7 +2312,7 @@ const iconData = {
   gradation:  { term: '階調', eng: 'GRADATION', desc: '<strong>明るさ(濃淡)の段階の数</strong>。量子化ビット数で決まり、各色 8 ビットなら 2⁸ ＝ 256 階調。階調が多いほど、なめらかな色の変化を表せる。' },
   fullcolor:  { term: '24 ビットフルカラー', eng: '24-BIT FULL COLOR', desc: '<strong>R・G・B を各 8 ビット(計 24 ビット)で表す方式</strong>。2²⁴ ＝ 約 1677 万色を表現できる。1 画素のデータ量は 24 ÷ 8 ＝ 3 バイト。' },
   frame:      { term: 'フレーム', eng: 'FRAME', desc: '<strong>動画を構成する 1 枚 1 枚の静止画</strong>。これらを一定の時間間隔で次々に表示することで、動いて見える動画になる。' },
-  framerate:  { term: 'フレームレート', eng: 'FRAME RATE', desc: '<strong>1 秒間に表示するフレーム数</strong>。単位は <strong>fps</strong>。値が大きいほど、動きがなめらかになる。アニメは一般に 24fps が使われる。' }
+  framerate:  { term: 'フレームレート', eng: 'FRAME RATE', desc: '<strong>1 秒間に表示するフレーム数</strong>。単位は <strong>fps</strong>。値が大きいほど、動きがなめらかになる。映画やアニメーションの基準としては 24fps がよく使われる。' }
 };
 function selectIcon(panelId, key) {
   const panel = document.getElementById(panelId); if (!panel) return;
@@ -2282,7 +2323,7 @@ function selectIcon(panelId, key) {
   const d = iconData[key]; if (!d) return;
   panel.innerHTML = '<span class="ip-term">' + d.term + '</span><span class="ip-eng">' + d.eng + '</span><span class="ip-desc">' + d.desc + '</span>';
   if (typeof mikiTermTalk === 'function') mikiTermTalk(key);
-  // miki.com が表示中(ナビ役)のときだけ、スポットライト + リッチ解説を出す
+  // miki.con が表示中(ナビ役)のときだけ、スポットライト + リッチ解説を出す
   if (me && typeof openPointSpot === 'function') {
     if (document.body.classList.contains('miki-hidden')) closePointSpot();
     else openPointSpot(me, key);
@@ -2482,7 +2523,7 @@ function fpsUpdate(v) {
     else if (n <= 15) msg = n + ' fps:やや改善するが、まだカクつきが残る。';
     else if (n < 24) msg = n + ' fps:かなりなめらか。あと少しで映像並み。';
     else msg = n + ' fps:アニメ(24)〜映像(30)並みのなめらかさ。';
-    note.textContent = msg + ' アニメは 24fps、なめらかな映像は 60fps が使われる。';
+    note.textContent = msg + ' 映画やアニメーションの基準としては 24fps、なめらかな映像では 60fps がよく使われる。';
   }
 }
 
@@ -2565,7 +2606,7 @@ function showReviewResult() {
   document.getElementById('reviewComment').textContent = comments[reviewScore] || '基礎から見直そう。学習ノートを手元に。';
 }
 
-// miki.com 10進→2進ステッパー(ボタン主導・スライド送りと非競合)
+// miki.con 10進→2進ステッパー(ボタン主導・スライド送りと非競合)
 const MD_STEPS = [
   { code: 1, prev: 1, tag: '27÷2', say: '10 進数の 27 を 2 で割ります。商は 13、余りは <b>1</b>。この余りを記録します。' },
   { code: 2, prev: 2, tag: '13÷2', say: '商の 13 をまた 2 で割ります。商 6、余り <b>1</b>。同じことをくり返します。' },
@@ -2654,11 +2695,11 @@ function kbSweep() {
   setTimeout(() => { chars.forEach(c => { c.classList.remove('popping'); c.style.animationDelay = ''; }); }, chars.length * stepMs + popDur + 120);
   haptic(8);
 }
-// H コマンド = miki.com(常駐バー + ステッパー内ガイド)の表示/非表示
+// H コマンド = miki.con(常駐バー + ステッパー内ガイド)の表示/非表示
 function toggleMiki() { document.body.classList.toggle('miki-hidden'); if (document.body.classList.contains('miki-hidden') && typeof closePointSpot === 'function') closePointSpot(); haptic(8); }
 function mikiMin() { const b = document.getElementById('mikibar'); if (b) b.classList.toggle('collapsed'); haptic(8); }
 
-// ===== POINT スポットライト + リッチ解説ポップ(miki.com 表示時のみ・ナビ役) =====
+// ===== POINT スポットライト + リッチ解説ポップ(miki.con 表示時のみ・ナビ役) =====
 // 用語ごとの「動くイラスト + 平易な説明」。sf-flow/pulse/float/grow は hosoku と共通の動き。
 const POINT_ILLUST = {
   charcode: { tag: '① POINT', name: '文字コード',
@@ -2711,7 +2752,7 @@ const POINT_ILLUST = {
     desc: '動画を構成する <b>1 枚 1 枚の静止画</b>。これを一定間隔で次々に表示すると、動いて見えます。' },
   framerate: { tag: '⑮⑯ POINT', name: 'フレームレート',
     fig: `<svg viewBox="0 0 360 150"><g stroke="#3f78c4" stroke-width="4" class="sf-pulse">${[60,100,140,180,220,260,300].map(x=>`<line x1="${x}" y1="46" x2="${x}" y2="110"/>`).join('')}</g><line x1="50" y1="124" x2="310" y2="124" stroke="#8a6d1f" stroke-width="4" stroke-linecap="round"/><text x="180" y="34" font-size="18" font-weight="900" fill="#8a6d1f" text-anchor="middle" font-family="JetBrains Mono,monospace">fps</text><text x="180" y="146" font-size="11.5" fill="#bb453d" text-anchor="middle" font-family="Yusei Magic,cursive">1 秒間のフレーム数(多い=なめらか)</text></svg>`,
-    desc: '<b>1 秒間に表示するフレーム数</b>。単位は fps。値が大きいほど動きがなめらか。アニメは一般に 24fps。' }
+    desc: '<b>1 秒間に表示するフレーム数</b>。単位は fps。値が大きいほど動きがなめらか。映画やアニメーションの基準としては 24fps がよく使われます。' }
 };
 let ppOpen = false, ppCard = null;
 function openPointSpot(card, key) {
@@ -2737,7 +2778,7 @@ function positionPointSpot() {
   pop.style.maxHeight = '';                                   // 一旦リセットして自然高さを測る
   const pw = pop.offsetWidth || Math.min(520, window.innerWidth * 0.92);
   const ph = pop.offsetHeight || 280;
-  // miki.com バーの上端(表示中なら)を避ける
+  // miki.con バーの上端(表示中なら)を避ける
   const mb = document.getElementById('mikibar');
   const mbOn = mb && !mb.hidden && !document.body.classList.contains('miki-hidden');
   const floor = mbOn ? mb.getBoundingClientRect().top - 12 : window.innerHeight - 14;
@@ -2842,6 +2883,42 @@ rgbUpdate();
 fpsUpdate(5);
 initA11y();
 initCharWrap();
+
+// ===== 文字サイズ調整(2 系統・各5段階: 90/100/110/125/150 %) =====
+// --fs       … miki.con のセリフ専用(#mikibar .mb-say / .md-say)
+// --fs-site  … サイト本体(タイトル/本文/見出し/カード/補足モーダル)
+const FS_STEPS = [0.9, 1.0, 1.1, 1.25, 1.5];
+let fsIdx = 1, siteFsIdx = 1; // どちらも初期 100
+function fsApply() {
+  const v = FS_STEPS[fsIdx];
+  document.documentElement.style.setProperty('--fs', v);
+  const lab = document.getElementById('fsLabel');
+  if (lab) lab.textContent = String(Math.round(v * 100));
+  const down = document.getElementById('fsDown'); const up = document.getElementById('fsUp');
+  if (down) down.disabled = (fsIdx === 0);
+  if (up) up.disabled = (fsIdx === FS_STEPS.length - 1);
+}
+function fsStep(dir) {
+  fsIdx = Math.max(0, Math.min(FS_STEPS.length - 1, fsIdx + dir));
+  fsApply();
+  if (navigator.vibrate) navigator.vibrate(8);
+}
+function siteFsApply() {
+  const v = FS_STEPS[siteFsIdx];
+  document.documentElement.style.setProperty('--fs-site', v);
+  const lab = document.getElementById('sfsLabel');
+  if (lab) lab.textContent = String(Math.round(v * 100));
+  const down = document.getElementById('sfsDown'); const up = document.getElementById('sfsUp');
+  if (down) down.disabled = (siteFsIdx === 0);
+  if (up) up.disabled = (siteFsIdx === FS_STEPS.length - 1);
+}
+function siteFsStep(dir) {
+  siteFsIdx = Math.max(0, Math.min(FS_STEPS.length - 1, siteFsIdx + dir));
+  siteFsApply();
+  if (navigator.vibrate) navigator.vibrate(8);
+}
+fsApply();
+siteFsApply();
 
 window.addEventListener('load', () => {
   if (!isMobile()) return;
