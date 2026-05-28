@@ -380,7 +380,7 @@ law-illust など `viewBox="0 0 100 100"`(表示 92×92 px、モバイル 80×80
 ## 7. 標準作業フロー
 
 > **2026-05 改訂:一発制作は `NEW-LECTURE-PLAYBOOK.md` を最上位に従う。**
-> 新規単元は **空の `template.html` ではなく、canonical の `examples/11-analog-and-digital.html` をコピー**して、コンテンツ層だけを差し替える(miki.com / hosoku / スポットライト / P 文字ポップ / Space+もどす の標準インタラクション層をそのまま継承するため)。下記は基本骨子。詳細手順・差し替えインベントリ・パイプラインはプレイブック参照。
+> 新規単元は **空の `template.html` ではなく、canonical の `examples/11-analog-and-digital.html` をコピー**して、コンテンツ層だけを差し替える(miki.con / hosoku / スポットライト / P 文字ポップ / Space+もどす の標準インタラクション層をそのまま継承するため)。下記は基本骨子。詳細手順・差し替えインベントリ・パイプラインはプレイブック参照。
 
 ```
 [1] 要件把握
@@ -635,7 +635,7 @@ law-illust など `viewBox="0 0 100 100"`(表示 92×92 px、モバイル 80×80
 | ファイル | 内容 |
 |---|---|
 | **`NEW-LECTURE-PLAYBOOK.md`** | **🥇 最上位。一発制作のオーケストレーション**(scaffold = lec11 / コンテンツ差替インベントリ / パイプライン / トーン)。新規単元はまずこれ |
-| **`examples/11-analog-and-digital.html`** | **🥇 canonical(最新完成形)。新規単元はこれをコピーして中身だけ差し替える**。miki.com NPC / hosoku / POINT スポットライト+リッチ解説 / P 文字ポップ(くすみ色ランダム・フォーカス連動)/ Space+もどす / 手を動かす目玉インタラクション(8ビット変換機・2ⁿスライダー・変換表・ニブル分割図)を全実装 |
+| **`examples/11-analog-and-digital.html`** | **🥇 canonical(最新完成形)。新規単元はこれをコピーして中身だけ差し替える**。miki.con NPC / hosoku / POINT スポットライト+リッチ解説 / P 文字ポップ(くすみ色ランダム・フォーカス連動)/ Space+もどす / 手を動かす目玉インタラクション(8ビット変換機・2ⁿスライダー・変換表・ニブル分割図)を全実装 |
 | `template.html` | 最小構成の骨組み(標準インタラクション層は未搭載)。**実制作の出発点にはしない**。構造理解の参考用 |
 | `components.md` | 再利用可能パーツカタログ(標準 17 種 + 2026-04 追加 6 種 + 2026-05 lec10/11 追加) |
 | `examples/06-information-law.html` | **最新リファレンス**(情報に関する法規)。メニュー・リセット・スマホ対応・リッチインタラクション + ビジュアル必須6パターン全実装 |
@@ -908,9 +908,9 @@ function selectProp(key) {
 
 ## 15. 標準インタラクション層(2026-05 lec10/lec11 で確立・新規単元は継承)
 
-lec10/lec11 で「miki.com NPC + hosoku 補足 + POINT スポットライト + P 文字ポップ + Space/もどす」という一式が確立した。**これらは部品ではなくエンジン**であり、新規単元は `examples/11-analog-and-digital.html` をコピーして **1 文字も変えず継承**する(`NEW-LECTURE-PLAYBOOK.md`)。本節はその動作と落とし穴の索引。
+lec10/lec11 で「miki.con NPC + hosoku 補足 + POINT スポットライト + P 文字ポップ + Space/もどす」という一式が確立した。**これらは部品ではなくエンジン**であり、新規単元は `examples/11-analog-and-digital.html` をコピーして **1 文字も変えず継承**する(`NEW-LECTURE-PLAYBOOK.md`)。本節はその動作と落とし穴の索引。
 
-### 15.1 miki.com NPC バー(`#mikibar`)
+### 15.1 miki.con NPC バー(`#mikibar`)
 - スライド送りで `MIKI_GUIDE[data-title]` を**タイプライター表示**。`say` は文字列/配列(配列=「つづき」送り)。
 - 用語カードタップ→`mikiTermTalk(key)`(同キー連打で会話前進)、○×/判定→`mikiQuizReact(ok)`。
 - **Space で会話「つづき」**(`mikiCanAdvance()` が true の間)。会話が尽きたら `goToSlide` でスライド送り。スポットライト中(`ppOpen`)は Space でスライドを飛ばさない。

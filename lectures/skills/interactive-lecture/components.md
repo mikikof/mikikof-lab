@@ -2507,7 +2507,7 @@ function onResetHook() {
 
 | パターン | 役割 | 差し替えるデータ | canonical の場所 |
 |---|---|---|---|
-| **miki.com NPC バー** | スライド毎ナレーション・用語反応・会話操作 | `MIKI_GUIDE`(キー=data-title) / `MIKI_TERM` | `#mikibar` + miki エンジン |
+| **miki.con NPC バー** | スライド毎ナレーション・用語反応・会話操作 | `MIKI_GUIDE`(キー=data-title) / `MIKI_TERM` | `#mikibar` + miki エンジン |
 | **会話操作(Space/もどす/吹き出しタップ)** | Space で「つづき」(尽きたら送り) / もどすで1行戻る / スマホは吹き出しタップ | — | `kbSweep` 周辺 + `mikiBack`/`mikiCanAdvance` |
 | **hosoku 補足** | 難所の手描きポップ補足モーダル(P でマーカー走査) | `window.HOSOKU_SUPP`(チップ `data-supp` と1:1、5〜8件) | supp CSS/JS + `suppFig` |
 | **POINT スポットライト + リッチ解説** | 用語タップで強調+暗転+動く図ポップ(miki 表示時のみ) | `POINT_ILLUST`(キー=data-key) | `#pointSpot`/`#pointPop` + `openPointSpot` |
