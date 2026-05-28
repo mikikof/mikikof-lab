@@ -1,16 +1,30 @@
 ---
-updated: 2026-05-28
-prev_session: lec11/12 engine 改修(miki.com→miki.con + mikibar セリフ専用 文字サイズバー + サイト本体 transform: scale バー の 2 系統) + 本文 audit rev3-6 で計 14 件適用(両 lec 完全収束)。submodule + 親リポともに全 push 済(adcb835 / be6cd36)。
+updated: 2026-05-29
+prev_session: 一晩集中精査セッション(2026-05-28 深夜→05-29 早朝) ― AI臭根本除去(鋭く言えば全削除) + 新規 hosoku 4件追加(HEXUSE / RGBEYE / VECTOR / FPSANIM) + codex audit r1-r3 で 10 件適用(両 lec 完全収束 Accept)。前セッション(engine 改修 + audit rev3-6 で 14 件適用)と合わせて、lec11/lec12 は内容・engine とも完全成熟。submodule HEAD = 454baaa、親リポ = 7ff68ec、いずれも全 push 済。
 ---
 
 # lectures 次セッション resume
 
 ## 30 秒 status
-- **lec01〜lec12 まで公開済 + 全 push 済**(submodule HEAD = `adcb835`、親リポ pointer 同期済)。
-- 本日(2026-05-28)は lec11/lec12 の **engine 層を大幅強化** + **本文 audit を完全収束**まで進めた(下記)。
-- 新規制作の **次は lec13「データの圧縮」(POINT 13)** が自然な続き(プレイブック手順は不変、ただし継承元 canonical は新 engine 含む形に進化済)。
+- **lec01〜lec12 まで公開済 + 全 push 済**(submodule HEAD = `454baaa`、親リポ pointer 同期済)。
+- 2026-05-28→05-29 で lec11/lec12 を **engine + 内容 両方の最高水準まで磨いた**(下記)。
+- 新規制作の **次は lec13「データの圧縮」(POINT 13)** が自然な続き(プレイブック手順は不変、ただし継承元 canonical は新 engine + 9 件 hosoku 含む形に進化済 = 「鋭く言えば」反復禁止 / 量子化誤差との整合 / AGENDA 用語数整合 など、規範も充実)。
 
-## 本日の確定変更(canonical = lec11 が継承元、lec13+ は自動で取り込む)
+## 2026-05-28→05-29 の確定変更(canonical = lec11 が継承元、lec13+ は自動で取り込む)
+
+### 一晩集中精査(2026-05-29 早朝、commit `454baaa`)
+- **AI 臭根本除去**: 「鋭く言えば」 lec11=7件 + lec12=3件 を全て個別の言い回しに置換(核は / 要点をひと言にすれば / 要するに / かみ砕けば / 平たく言えば / 肝心なのは / ここが本質 / 核心は ほか)。memory `feedback_no_ai_tone_in_lectures` の同一フレーズ反復禁止を厳守。
+- 砕けた口語 / 古風表現: lec11「化ける」→「区別できなくなる」、「営み」→「工夫」、lec12「粗さが強くなる」→「コマの飛びが目立つ」
+- **新規 hosoku 4 件追加**:
+  - **HEXUSE**(lec11 SLIDE 8): 16 進数の実用例 ― HTMLカラーコード/MACアドレス/Unicode番号
+  - **RGBEYE**(lec12 SLIDE 16): なぜ赤・緑・青の 3 色か = 人の網膜の 3 種類の錐体細胞
+  - **VECTOR**(lec12 SLIDE 19): ラスタとベクタの違い・拡大時の挙動
+  - **FPSANIM**(lec12 SLIDE 24): リミテッドアニメ(2〜3 コマ撮り)・用途別 fps
+- **codex audit r1-r3 で 10 件適用**(全件 A カテゴリ実体的修正、wordsmithing ゼロ):
+  - lec11 r1(4)+r2(1) → r3 Accept: SLIDE 2 AGENDA タグ整合×2 / SLIDE 5 量子化誤差 / HEXUSE 桁表現 + 図中
+  - lec12 r1(5) → r2 Accept: FPSANIM 歴史断定弱化×2 / RGBEYE 表現精緻化×2 / SLIDE 27 3DCG 定義整合
+
+### 前セッション(2026-05-28、commit `adcb835`)
 
 ### engine 改修 (commit `adcb835`)
 - **NPC 名: `miki.com` → `miki.con`** に統一(全 lec11/12 本文・examples・skill docs `SKILL.md`/`NEW-LECTURE-PLAYBOOK.md`/`components.md`)。lec10 は当時の名前で据置(再 audit 回避)。
@@ -76,8 +90,10 @@ python3 -c "s=open('index.html').read();sc=s[s.find('<script>')+8:s.rfind('</scr
 - このクオリティを「一発」で出せるよう指示系統は更新済 → **PLAYBOOK に従えば再現可能**。
 
 ## ポインタ
-- 直近 submodule commit(全 push 済): `adcb835`(engine + audit 14 件) / `8fa7816`(skill docs miki.con) / `f825549`(前回 resume) / `2fe23c6`(指示系統)。
-- 親リポ my-company の submodule ポインタ = `adcb835`(push 済 `be6cd36`)。
-- 本日の audit ログ(親リポ): `.company/audit/reviews/2026-05-28/{1853 rev3 × 2, 1913 rev4 × 2, 1928 rev5, 1933 rev6}/`。
+- 直近 submodule commit(全 push 済): `454baaa`(一晩精査 + audit r1-r3 10件) / `2411a82`(前夜 resume) / `adcb835`(engine + audit 14 件) / `8fa7816`(skill docs miki.con) / `f825549`(前回 resume) / `2fe23c6`(指示系統)。
+- 親リポ my-company の submodule ポインタ = `454baaa`(push 済 `7ff68ec`)。
+- 直近 audit ログ:
+  - 2026-05-29 早朝(一晩精査): `0032-lec{11,12}-overnight-r1` / `0037-lec{11,12}-overnight-r2` / `0039-lec11-overnight-r3`
+  - 2026-05-28 早朝(engine 後): `1853 r3 × 2` / `1913 r4 × 2` / `1928 r5` / `1933 r6`
 - memory: `reference_miki_npc_hosoku_lec10`(2 系統文字サイズ + miki.con 詳細を反映済) / `reference_new_lecture_playbook` / `feedback_lecture_appendix_infodesign` / `feedback_audit_rerun_after_fixes` / `feedback_audit_textbook_grounded` / `feedback_no_ai_tone_in_lectures`。
 - ⚠ 同 repo で**並行セッション(paper-003/superelite/dst-deck)稼働中**: `git add`/index 共有で `--amend` が他者ステージを巻き込む。pointer commit は `git restore --staged .` でクリア後に該当ファイルだけ add → 新規 commit。
