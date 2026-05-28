@@ -935,12 +935,12 @@ body.miki-hidden .miki-back { display: inline-block; }
     <div class="agenda-item">
       <svg class="ai-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><text x="40" y="170" font-family="'JetBrains Mono',monospace" font-size="120" font-weight="700" fill="currentColor" stroke="none">01</text></svg>
       <div class="agenda-num">02</div>
-      <div class="agenda-content"><span class="a-tag">③④⑤⑥⑨⑩⑪ / 4 用語 + 実習2・3</span><h3>数を 0 と 1 で表す</h3><p>2 進法と 16 進法。変換機で 10 進・2 進・16 進を行き来する</p></div>
+      <div class="agenda-content"><span class="a-tag">③④⑤⑥ 4 用語 + ⑨⑩⑪ 変換ルール + 実習2・3</span><h3>数を 0 と 1 で表す</h3><p>2 進法と 16 進法。変換機で 10 進・2 進・16 進を行き来する</p></div>
     </div>
     <div class="agenda-item">
       <svg class="ai-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="40" y="48" width="176" height="48" rx="10"/><rect x="40" y="104" width="176" height="48" rx="10"/><rect x="40" y="160" width="176" height="48" rx="10"/></svg>
       <div class="agenda-num">03</div>
-      <div class="agenda-content"><span class="a-tag">⑦⑧⑫ / 2 用語 + 実習4・5</span><h3>情報量とその単位</h3><p>ビットとバイト。n ビットで表せる数を確かめる</p></div>
+      <div class="agenda-content"><span class="a-tag">⑦⑧ 2 用語 + ⑫ 公式 + 実習4・5</span><h3>情報量とその単位</h3><p>ビットとバイト。n ビットで表せる数を確かめる</p></div>
     </div>
     <div class="agenda-item appendix">
       <svg class="ai-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><path d="M32,200V64a8,8,0,0,1,8-8H96l32,32h88a8,8,0,0,1,8,8V200a8,8,0,0,1-8,8H40A8,8,0,0,1,32,200Z"/></svg>
@@ -985,7 +985,7 @@ body.miki-hidden .miki-back { display: inline-block; }
 <div class="slide" data-title="図解 連続量と離散量">
   <div class="eyebrow">FIGURE · 連続 と 離散</div>
   <h2 class="slide-title">なめらかな波を、階段に置きかえる</h2>
-  <p class="slide-subtitle">同じ「音の大きさ」でも、<strong>アナログ</strong>はなめらかな波(連続量)。<strong>デジタル</strong>はとびとびの段階(離散量)で表す。音や画像のようにアナログ量をデジタルに直すときは、<b>一定間隔で測って段階に置きかえる</b>ため細部がわずかに失われるが、数として正確に扱える。</p>
+  <p class="slide-subtitle">同じ「音の大きさ」でも、<strong>アナログ</strong>はなめらかな波(連続量)。<strong>デジタル</strong>はとびとびの段階(離散量)で表す。音や画像のようにアナログ量をデジタルに直すときは、<b>一定間隔で測って段階に置きかえる</b>ため細部がわずかに失われるが、<b>記録された段階の値としては正確に保存・コピー・計算できる</b>。</p>
   <div class="relate-fig">
     <svg viewBox="0 0 660 250" role="img" aria-label="アナログのなめらかな波と、それを一定間隔で測って段階に置きかえたデジタルの階段を重ねた図。">
       <line x1="40" y1="210" x2="640" y2="210" stroke="#D4E1EF" stroke-width="3"/>
@@ -1109,6 +1109,7 @@ body.miki-hidden .miki-back { display: inline-block; }
   <div class="icon-info-panel" id="termPanel2"><span style="color:var(--text-sub);font-style:italic;">▲ 4 つの用語をタップすると、それぞれの定義と例が表示されます。</span></div>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center;">
     <button class="supp-chip" data-supp="VOLTAGE"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>なぜ電圧の高低が 0 と 1 になる?</button>
+    <button class="supp-chip" data-supp="HEXUSE"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>16 進数はどこで見る?</button>
   </div>
 </div>
 
@@ -1344,7 +1345,7 @@ body.miki-hidden .miki-back { display: inline-block; }
           <circle class="sf-pulse" cx="136" cy="60" r="8" fill="none" stroke="#e0584f" stroke-width="2.6"/>
           <text x="150" y="16" font-size="11" fill="#b3433a" text-anchor="middle" font-family="Yusei Magic,cursive">どの段か紛れる → 読み違い ✗</text>
         </svg>
-        <div class="ap-note">段の幅が狭く、<b>わずかなノイズで隣の値に化ける</b>。区別する回路も複雑になる。</div>
+        <div class="ap-note">段の幅が狭く、<b>わずかなノイズで隣の値と区別できなくなる</b>。判定する回路も複雑になる。</div>
       </div>
     </div>
     <div class="appx-points">
@@ -1837,7 +1838,7 @@ window.HOSOKU_SUPP = {
     </div></div>
     <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
       <div class="sec-h">だから何度コピーしても落ちない</div>
-      <div class="sec-p">アナログのテープはダビングのたびに音がこもる(<b>世代劣化</b>)。デジタルは毎回 0・1 に読み直せるので、<b>ノイズが小さく 0・1 を正しく読み直せる範囲なら、コピーを重ねても元と同じ</b>に保てる。音楽配信や写真の複製が品質を保てるのはこのため(ただし、ノイズが大きすぎたり、保存時に非可逆圧縮をかけたりすると失われる)。<br>鋭く言えば、デジタルの強さは「<b>とびとびだから、間違いを 0・1 のどちらかに丸め直せる</b>」点にある ― 離散(②)の長所そのもの。</div>
+      <div class="sec-p">アナログのテープはダビングのたびに音がこもる(<b>世代劣化</b>)。デジタルは毎回 0・1 に読み直せるので、<b>ノイズが小さく 0・1 を正しく読み直せる範囲なら、コピーを重ねても元と同じ</b>に保てる。音楽配信や写真の複製が品質を保てるのはこのため(ただし、ノイズが大きすぎたり、保存時に非可逆圧縮をかけたりすると失われる)。<br>核は、デジタルの強さが <b>「とびとびだから、間違いを 0・1 のどちらかに丸め直せる」</b> 点にあること ― 離散(②)の長所そのもの。</div>
     </div></div>`
   },
   'VOLTAGE': {
@@ -1856,7 +1857,7 @@ window.HOSOKU_SUPP = {
     </div></div>
     <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
       <div class="sec-h">線を増やせば、大きな数も表せる</div>
-      <div class="sec-p">スイッチを <b>8 個</b> 並べれば 8 ビット = <b>1 バイト</b>(⑧)で、0〜255 の 256 通りを表せる。文字も数も画像も、結局はこの 0・1 の列。<br>鋭く言えば、2 進数が選ばれたのは「<b>電気で確実に作れる状態が 2 つだから</b>」 ― なぜ 2 値が有利かは参考A で詳しく見る。</div>
+      <div class="sec-p">スイッチを <b>8 個</b> 並べれば 8 ビット = <b>1 バイト</b>(⑧)で、0〜255 の 256 通りを表せる。文字も数も画像も、結局はこの 0・1 の列。<br>要点をひと言にすれば、2 進数が選ばれたのは <b>「電気で確実に作れる状態が 2 つだから」</b> ― なぜ 2 値が有利かは参考A で詳しく見る。</div>
     </div></div>`
   },
   'HEX4': {
@@ -1876,7 +1877,7 @@ window.HOSOKU_SUPP = {
     </div></div>
     <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
       <div class="sec-h">右から 4 桁ずつ区切るだけ</div>
-      <div class="sec-p">だから長い 2 進数も、<b>右から 4 桁ずつ</b> 区切れば一瞬で 16 進になる。例:<span class="mq">11011</span> → 4 桁に足りない左を 0 で埋めて <span class="mq">0001 1011</span> → <b>1</b> と <b>B</b> → <b>1B</b>(実習3 ⑴)。逆に 16 進 → 2 進は、各桁を 4 桁の 2 進に開く。<br>鋭く言えば、16 進は「<b>2 進数を 4 桁ずつ束ねて読みやすくした、人間用の表記</b>」。中身は同じ 0・1。</div>
+      <div class="sec-p">だから長い 2 進数も、<b>右から 4 桁ずつ</b> 区切れば一瞬で 16 進になる。例:<span class="mq">11011</span> → 4 桁に足りない左を 0 で埋めて <span class="mq">0001 1011</span> → <b>1</b> と <b>B</b> → <b>1B</b>(実習3 ⑴)。逆に 16 進 → 2 進は、各桁を 4 桁の 2 進に開く。<br>要するに、16 進は <b>「2 進数を 4 桁ずつ束ねて読みやすくした、人間用の表記」</b>。中身は同じ 0・1。</div>
     </div></div>`
   },
   'BIT2': {
@@ -1902,7 +1903,7 @@ window.HOSOKU_SUPP = {
     </div></div>
     <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
       <div class="sec-h">n ビットなら 2ⁿ 通り(⑫)</div>
-      <div class="sec-p">この「2 倍を n 回」が <span class="mq">2ⁿ</span>。だから 8 ビット(1 バイト)は <span class="mq">2⁸ = 256 通り</span>、16 ビットは <span class="mq">2¹⁶ = 65536 通り</span>。<b>2ⁿ が表したい段階の数以上になる最小の n</b> が、必要なビット数(実習5)。たとえば 256 段階なら 2⁸ = 256 でちょうど足りる。<br>鋭く言えば、ビットは「<b>はい / いいえ の質問 1 回分</b>」。n 回質問すれば 2ⁿ 通りを区別できる。</div>
+      <div class="sec-p">この「2 倍を n 回」が <span class="mq">2ⁿ</span>。だから 8 ビット(1 バイト)は <span class="mq">2⁸ = 256 通り</span>、16 ビットは <span class="mq">2¹⁶ = 65536 通り</span>。<b>2ⁿ が表したい段階の数以上になる最小の n</b> が、必要なビット数(実習5)。たとえば 256 段階なら 2⁸ = 256 でちょうど足りる。<br>かみ砕けば、ビットは <b>「はい / いいえ の質問 1 回分」</b>。n 回質問すれば 2ⁿ 通りを区別できる。</div>
     </div></div>`
   },
   'TERNARY': {
@@ -1916,7 +1917,7 @@ window.HOSOKU_SUPP = {
     </div></div>
     <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
       <div class="sec-h">それでも 2 進が世界標準になった</div>
-      <div class="sec-p">理由は <b>作りやすさと確実さ</b>。電気のオン / オフという 2 状態は、スイッチ 1 つで安定して作れる。3 状態にすると「中くらいの電圧」を正確に区別する必要があり、ノイズに弱く、回路も複雑になる。<b>安く・速く・間違えにくい</b> 2 値が、量産と高速化で圧勝した。<br>鋭く言えば、進法の「数学的な得」より、<b>物理的な作りやすさ</b>が勝負を決めた ― だから参考A の「2 状態は安定」が効いてくる。</div>
+      <div class="sec-p">理由は <b>作りやすさと確実さ</b>。電気のオン / オフという 2 状態は、スイッチ 1 つで安定して作れる。3 状態にすると「中くらいの電圧」を正確に区別する必要があり、ノイズに弱く、回路も複雑になる。<b>安く・速く・間違えにくい</b> 2 値が、量産と高速化で圧勝した。<br>平たく言えば、進法の「数学的な得」より、<b>物理的な作りやすさ</b>が勝負を決めた ― だから参考A の「2 状態は安定」が効いてくる。</div>
     </div></div>`
   },
   'STAIR': {
@@ -1936,7 +1937,7 @@ window.HOSOKU_SUPP = {
     </div></div>
     <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
       <div class="sec-h">でも「1000 倍」で数える場面もある</div>
-      <div class="sec-p">ハードディスクの容量表示などでは <b>1KB = 1000B</b> として数えることがあり、表示容量と実際の差が生まれる。この紛れを避けるため、1024 倍の方を <b>1KiB(キビバイト)</b> と別名で呼ぶ決まりもある。学習ノートでは伝統的な <b>1024 倍</b> で扱う。<br>鋭く言えば、同じ「KB」でも文脈で 1000 か 1024 か変わる ― 計算問題では <b>どちらの定義か</b>を最初に確認する。</div>
+      <div class="sec-p">ハードディスクの容量表示などでは <b>1KB = 1000B</b> として数えることがあり、表示容量と実際の差が生まれる。この紛れを避けるため、1024 倍の方を <b>1KiB(キビバイト)</b> と別名で呼ぶ決まりもある。学習ノートでは伝統的な <b>1024 倍</b> で扱う。<br>肝心なのは、同じ「KB」でも文脈で 1000 か 1024 か変わる点 ― 計算問題では <b>どちらの定義か</b>を最初に確認する。</div>
     </div></div>`
   },
   'COMPLEMENT': {
@@ -1963,7 +1964,7 @@ window.HOSOKU_SUPP = {
     </div></div>
     <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
       <div class="sec-h">「反転 + 1」がその相手を作る</div>
-      <div class="sec-p">A を全ビット反転すると <span class="mq">(2ⁿ−1) − A</span>(1111 から A を引いた形)。これに <b>1 を足す</b> と <span class="mq">2ⁿ − A</span> ― これがちょうど「足すと一周して 0 になる相手」、つまり −A。例:3 = 0011 → 反転 1100 → +1 で <b>1101</b> = 13、そして 3 + 13 = 16 で一周。<br>鋭く言えば、補数のおかげで <b>引き算を足し算の回路だけで実行できる</b> ― これは第 3 章(2 進数の計算)で本格的に扱う。</div>
+      <div class="sec-p">A を全ビット反転すると <span class="mq">(2ⁿ−1) − A</span>(1111 から A を引いた形)。これに <b>1 を足す</b> と <span class="mq">2ⁿ − A</span> ― これがちょうど「足すと一周して 0 になる相手」、つまり −A。例:3 = 0011 → 反転 1100 → +1 で <b>1101</b> = 13、そして 3 + 13 = 16 で一周。<br>ここが本質:補数のおかげで <b>引き算を足し算の回路だけで実行できる</b> ― これは第 3 章(2 進数の計算)で本格的に扱う。</div>
     </div></div>`
   },
   'INFO': {
@@ -1998,7 +1999,7 @@ window.HOSOKU_SUPP = {
     </div></div>
     <div class="supp-sec"><div class="sec-no">3</div><div class="sec-main">
       <div class="sec-h">珍しいことほど、情報量は大きい</div>
-      <div class="sec-p">さらに、<b>めったに起きないことほど、起きたと知ったときの情報量は大きい</b>(=驚きが大きい)。確率 p の出来事の情報量は <span class="mq">log₂(1 ÷ p) ビット</span>で、「ほぼ確実なこと」はほぼ 0、「まれなこと」は大きい。<br>つまりビットは単なる単位ではなく「<b>不確かさ・驚きの大きさ</b>」そのもの。次の POINT 13 の <b>圧縮</b>は、この情報量の限界に近いところまでデータを縮める営み。</div>
+      <div class="sec-p">さらに、<b>めったに起きないことほど、起きたと知ったときの情報量は大きい</b>(=驚きが大きい)。確率 p の出来事の情報量は <span class="mq">log₂(1 ÷ p) ビット</span>で、「ほぼ確実なこと」はほぼ 0、「まれなこと」は大きい。<br>つまりビットは単なる単位ではなく「<b>不確かさ・驚きの大きさ</b>」そのもの。次の POINT 13 で扱う <b>圧縮</b>は、この情報量の限界に近いところまでデータを縮める工夫。</div>
       <div class="sec-fig"><div class="sf-box"><svg viewBox="0 0 340 108">
         <text x="170" y="16" font-size="11" fill="#3b3a42" text-anchor="middle" font-family="Yusei Magic,cursive">情報量 = log₂(1 ÷ 確率)</text>
         <text x="16" y="46" font-size="10.5" fill="#6f6e78" font-family="Yusei Magic,cursive">ほぼ確実</text>
@@ -2028,6 +2029,37 @@ window.HOSOKU_SUPP = {
     <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
       <div class="sec-h">誤差は計算で広がる ― 桁あふれ・情報落ち</div>
       <div class="sec-p">小さな丸め誤差も積み重なると、<b>0.1 + 0.2 が 0.3 にぴったりならない</b>といったずれになる。ほかにも、扱える最大を超える <b>桁あふれ(オーバーフロー)</b>、大きい数に極小の数を足すと小さい方が消える <b>情報落ち</b> がある。<br>つまり、コンピュータの実数は「<b>有限のビットに収めた近似値</b>」。だからお金の計算などは、小数を避けて <b>整数(最小単位 = 1 円)</b> で扱うことが多い。</div>
+    </div></div>`
+  },
+  'HEXUSE': {
+    tag: 'SUPPLEMENT · 16 進の実用',
+    title: '<b>16 進数</b>はどこで見る?',
+    sub: '色・ネットワーク・メモリ ― 1 バイトをコンパクトに書きたい場面で出てくる。',
+    body: `
+    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
+      <div class="sec-h">HTML のカラーコード ― <span class="mq">#FF8000</span></div>
+      <div class="sec-p">Web ページの色は、RGB 各色 1 バイト(0〜255)を <b>16 進 2 桁</b> ずつ並べた <span class="mq">#RRGGBB</span> 形式で表す。例えば <span class="mq">#FF8000</span> は R=255・G=128・B=0 のオレンジ。<b>10 進では各色を最大 3 桁で書く必要があるのに、16 進なら各色を 2 桁でそろえて書ける</b>。1 バイト = 2 桁という見通しの良さが、16 進の代表的な使い道。</div>
+      <div class="sec-fig"><div class="sf-box"><svg viewBox="0 0 340 110">
+        <rect x="20" y="22" width="64" height="64" rx="10" fill="#FF8000" stroke="#3b3a42" stroke-width="2.4"/>
+        <text x="52" y="60" font-size="20" font-weight="900" fill="#fff" text-anchor="middle" font-family="Yusei Magic,cursive">色</text>
+        <text x="104" y="38" font-size="13" fill="#6f6e78" font-family="Yusei Magic,cursive">10 進</text>
+        <text x="104" y="58" font-size="15" fill="#3b3a42" font-family="JetBrains Mono,monospace">255 128 0</text>
+        <text x="104" y="80" font-size="13" fill="#6f6e78" font-family="Yusei Magic,cursive">16 進</text>
+        <text class="sf-pulse" x="200" y="80" font-size="20" font-weight="900" fill="#bb453d" font-family="JetBrains Mono,monospace">#FF8000</text>
+        <text x="170" y="102" font-size="10.5" fill="#2c5a99" text-anchor="middle" font-family="Yusei Magic,cursive">各色 最大 3 桁 → 各色 2 桁(1 バイト = 2 桁)</text>
+      </svg></div></div>
+    </div></div>
+    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
+      <div class="sec-h">他にも 1 バイトを 2 桁で書く場面で頻出</div>
+      <div class="sec-p"><b>MAC アドレス</b>(端末の番号、例 <span class="mq">00:1A:2B:3C:4D:5E</span>)、<b>UUID</b>(ファイル・端末の識別子)、<b>メモリの中身を表示するダンプ</b>、<b>Unicode の文字番号</b>(<span class="mq">U+3042</span> = あ) ― IT の現場では、<b>1 バイトを 2 桁ですっきり書きたい</b>場面で必ず 16 進が登場する。<br>言いかえれば、16 進は <b>「コンピュータの 1 バイトを、人間が読める短い記号に翻訳したもの」</b>。だから教科書でも実務でも頻出する。</div>
+      <div class="sec-fig"><div class="sf-box"><svg viewBox="0 0 340 100">
+        <g font-family="JetBrains Mono,monospace" font-size="13" font-weight="700">
+          <text x="20" y="32" fill="#2c5a99">MAC</text><text x="80" y="32" fill="#3b3a42">00:1A:2B:3C:4D:5E</text>
+          <text x="20" y="56" fill="#2c5a99">色</text><text x="80" y="56" fill="#3b3a42">#FFD54F(やわらかい黄)</text>
+          <text x="20" y="80" fill="#2c5a99">文字</text><text x="80" y="80" fill="#3b3a42">U+3042 = あ</text>
+        </g>
+        <text x="300" y="56" font-size="10.5" fill="#bb453d" text-anchor="middle" font-family="Yusei Magic,cursive">いつも 0〜F</text>
+      </svg></div></div>
     </div></div>`
   },
 

@@ -1223,6 +1223,9 @@ body.miki-hidden .miki-back { display: inline-block; }
   </div>
   <div class="cards-hint">タップして定義を表示</div>
   <div class="icon-info-panel" id="termPanel4"><span style="color:var(--text-sub);font-style:italic;">▲ 3 つの用語をタップすると、定義と例が表示されます。</span></div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center;">
+    <button class="supp-chip" data-supp="RGBEYE"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>なぜ赤・緑・青の 3 色?</button>
+  </div>
 </div>
 
 <!-- SLIDE 17: FLAGSHIP3 RGB 加法混色ミキサー -->
@@ -1294,6 +1297,9 @@ body.miki-hidden .miki-back { display: inline-block; }
   <div class="cards-hint">タップして定義を表示</div>
   <div class="icon-info-panel" id="termPanel5"><span style="color:var(--text-sub);font-style:italic;">▲ 3 つの用語をタップすると、定義と例が表示されます。</span></div>
   <p class="conv-note">画素の集まりで表す画像を <strong>ラスタ画像</strong>、点や線を数式で表す画像を <strong>ベクタ画像</strong> という。写真はラスタ、図形やロゴはベクタが向く。</p>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:center;">
+    <button class="supp-chip" data-supp="VECTOR"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>ラスタとベクタ、拡大で何が変わる?</button>
+  </div>
 </div>
 
 <!-- SLIDE 20: 実習2 画像のデジタル化(判定) -->
@@ -1388,13 +1394,16 @@ body.miki-hidden .miki-back { display: inline-block; }
   </div>
   <div class="cards-hint">タップして定義を表示</div>
   <div class="icon-info-panel" id="termPanel6"><span style="color:var(--text-sub);font-style:italic;">▲ 2 つの用語をタップすると、定義と例が表示されます。</span></div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center;">
+    <button class="supp-chip" data-supp="FPSANIM"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>アニメは本当に 24fps で全コマ描くの?</button>
+  </div>
 </div>
 
 <!-- SLIDE 25: FLAGSHIP5 fps 比較デモ -->
 <div class="slide" data-title="フレームレート比較デモ (interactive)">
   <div class="eyebrow">DEMO · fps を変えると、動きはどう変わる?</div>
   <h2 class="slide-title">フレームレートが高いほど、なめらか</h2>
-  <p class="slide-subtitle">同じ動きを、低いフレームレート(下のスライダーで変えられる)と、なめらかな表示で並べた。<strong>1 秒に表示する静止画の数(fps)が多いほど、動きはなめらか</strong> になる。スライダーを小さくすると、粗さが強くなる(下は動きの粗さを示す模式図)。</p>
+  <p class="slide-subtitle">同じ動きを、低いフレームレート(下のスライダーで変えられる)と、なめらかな表示で並べた。<strong>1 秒に表示する静止画の数(fps)が多いほど、動きはなめらか</strong> になる。スライダーを小さくすると、コマの飛びが目立つようになる。</p>
   <div class="fps-demo">
     <div class="fps-row"><span class="fps-tag" id="fpsTagLow">5 fps</span><div class="fps-track"><span class="fps-ball low" id="fpsLow"></span></div></div>
     <div class="fps-row"><span class="fps-tag">なめらか</span><div class="fps-track"><span class="fps-ball high"></span></div></div>
@@ -1443,7 +1452,7 @@ body.miki-hidden .miki-back { display: inline-block; }
       <div class="j-body">
         <div class="j-text">3DCG とは、遠近法などを利用して平面に立体的な物体を表現する技術である。</div>
         <div class="j-chips"><span class="j-chip" data-correct="true" onclick="judgeJ(this)">適切</span><span class="j-chip" data-correct="false" onclick="judgeJ(this)">不適切</span></div>
-        <div class="j-fb"><strong>適切</strong> 平面(画面)に、遠近法や陰影で立体的に見せるのが 3DCG。</div>
+        <div class="j-fb"><strong>適切</strong> コンピュータ上で立体物の形・位置・光の当たり方を計算し、画面上に立体的に描くのが 3DCG。</div>
       </div>
     </div>
     <div class="j-item">
@@ -1781,7 +1790,7 @@ window.HOSOKU_SUPP = {
     </div></div>
     <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
       <div class="sec-h">2 バイトなら 65536 種類</div>
-      <div class="sec-p">2 バイト ＝ 16 ビットで <b>2¹⁶ ＝ 65536 種類</b>(16 進数で 4 桁)を区別できる。これなら漢字やかなも収まる。世界中の文字をまとめて扱う Unicode は、さらに多くの文字に番号を割り当てている。<br>鋭く言えば、<b>「種類の多さ」がそのまま「必要なバイト数」を決める</b> ― 文字コードは番号の桁数の話だと考えるとよい。</div>
+      <div class="sec-p">2 バイト ＝ 16 ビットで <b>2¹⁶ ＝ 65536 種類</b>(16 進数で 4 桁)を区別できる。これなら漢字やかなも収まる。世界中の文字をまとめて扱う Unicode は、さらに多くの文字に番号を割り当てている。<br>要するに、<b>「種類の多さ」がそのまま「必要なバイト数」を決める</b> ― 文字コードは番号の桁数の話だと考えるとよい。</div>
     </div></div>`
   },
   'QBIT': {
@@ -1823,7 +1832,7 @@ window.HOSOKU_SUPP = {
     </div></div>
     <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
       <div class="sec-h">どれだけ細かく測ればよいか</div>
-      <div class="sec-p">もとの波に含まれる <b>最も高い周波数の 2 倍より高い周波数</b> で標本化すれば、もとの波を復元できる(<b>標本化定理</b>、参考A)。人の可聴域はおよそ 20kHz なので、その 2 倍より高い <b>44.1kHz</b> が音楽 CD で使われる。<br>鋭く言えば、<b>速い動きほど、細かく測らないと記録できない</b> ― 標本化周波数は「どこまで速い波を残せるか」を決める。</div>
+      <div class="sec-p">もとの波に含まれる <b>最も高い周波数の 2 倍より高い周波数</b> で標本化すれば、もとの波を復元できる(<b>標本化定理</b>、参考A)。人の可聴域はおよそ 20kHz なので、その 2 倍より高い <b>44.1kHz</b> が音楽 CD で使われる。<br>核心は <b>「速い動きほど細かく測らないと記録できない」</b> という点 ― 標本化周波数は「どこまで速い波を残せるか」を決める。</div>
     </div></div>`
   },
   'DATARULE': {
@@ -1863,7 +1872,7 @@ window.HOSOKU_SUPP = {
     </div></div>
     <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
       <div class="sec-h">インク(CMY)は、重ねるほど暗い</div>
-      <div class="sec-p">印刷は、紙にあたった光のうち <b>一部の色を吸収して</b> 残りを返す。シアン・マゼンタ・イエローのインクを重ねるほど吸収が増え、暗くなって <b>黒</b> に近づく。これが <b>減法混色</b>。何も塗らなければ紙の白。<br>鋭く言えば、光は「<b>出して足す</b>」、インクは「<b>吸って引く</b>」 ― だから三原色も、混ぜた結果(白/黒)も逆になる。</div>
+      <div class="sec-p">印刷は、紙にあたった光のうち <b>一部の色を吸収して</b> 残りを返す。シアン・マゼンタ・イエローのインクを重ねるほど吸収が増え、暗くなって <b>黒</b> に近づく。これが <b>減法混色</b>。何も塗らなければ紙の白。<br>平たく言えば、光は <b>「出して足す」</b>、インクは <b>「吸って引く」</b> ― だから三原色も、混ぜた結果(白/黒)も逆になる。</div>
     </div></div>`
   },
   'RESDPI': {
@@ -1993,6 +2002,115 @@ window.HOSOKU_SUPP = {
     <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
       <div class="sec-h">見分ける 2 つの問い</div>
       <div class="sec-p">①「<b>現実が見えるか?</b>」VR は見えない、AR・MR は見える。②「<b>CG を現実の場所で扱えるか?</b>」MR はできる、AR は重ねて見せるだけ。<br>つまり、違いは演出ではなく「<b>現実がどれだけ残り、CG とどう混ざるか</b>」で決まる。</div>
+    </div></div>`
+  },
+  'RGBEYE': {
+    tag: 'SUPPLEMENT · 三原色の理由',
+    title: 'なぜ <b>赤・緑・青</b>の 3 色なのか?',
+    sub: '人の目に「3 種類の色受容細胞」があるから。',
+    body: `
+    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
+      <div class="sec-h">網膜の錐体細胞は 3 種類</div>
+      <div class="sec-p">人の網膜には <b>3 種類の錐体細胞(さいたいさいぼう)</b> がある。それぞれが <b>長波長(赤付近)・中波長(緑付近)・短波長(青付近)</b> の光に強く反応する。脳はこの 3 つの反応の比から「何色か」を判断する。だから <b>赤・緑・青を適切な強さで混ぜれば、画面上で多くの色を表現できる</b>。RGB が三原色なのは数学的な決まりではなく、<b>人の目のしくみがそうなっているから</b>。</div>
+      <div class="sec-fig"><div class="sf-box"><svg viewBox="0 0 340 124">
+        <line x1="20" y1="100" x2="320" y2="100" stroke="#3b3a42" stroke-width="1.6"/>
+        <text x="22" y="118" font-size="10" fill="#3f78c4" font-family="Yusei Magic,cursive">短波長(青)</text>
+        <text x="170" y="118" font-size="10" fill="#3f9e57" text-anchor="middle" font-family="Yusei Magic,cursive">中波長(緑)</text>
+        <text x="320" y="118" font-size="10" fill="#bb453d" text-anchor="end" font-family="Yusei Magic,cursive">長波長(赤)</text>
+        <path class="sf-flow" d="M30 92 Q70 24 110 92" fill="none" stroke="#3f78c4" stroke-width="2.8" opacity="0.85"/>
+        <path class="sf-flow" d="M105 92 Q165 18 225 92" fill="none" stroke="#3f9e57" stroke-width="2.8" opacity="0.85"/>
+        <path class="sf-flow" d="M210 92 Q265 20 310 92" fill="none" stroke="#bb453d" stroke-width="2.8" opacity="0.85"/>
+        <text x="170" y="22" font-size="11" fill="#3b3a42" text-anchor="middle" font-family="Yusei Magic,cursive">3 種類の錐体細胞 ― 感度のピークが 3 つ</text>
+      </svg></div></div>
+    </div></div>
+    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
+      <div class="sec-h">ディスプレイは「目のしくみを利用する」装置</div>
+      <div class="sec-p">ディスプレイの 1 画素には、赤・緑・青の <b>3 つの光源</b> だけが並ぶ。だから物理的には虹のような連続スペクトルを出していない。それでも人の目が黄色や水色を感じるのは、<b>3 種類の錐体の反応比が同じになれば「同じ色」と感じる</b>しくみを利用しているから。物理的な光の組成と、知覚される色は厳密には別物。ディスプレイは <b>「目に同じ反応を引き起こす 3 色の組み合わせ」</b> を作って色を表している。<br>つまり、RGB は <b>光そのものではなく、人の知覚に合わせて選ばれた 3 色</b>。</div>
+      <div class="sec-fig"><div class="sf-box"><svg viewBox="0 0 340 100">
+        <text x="20" y="22" font-size="11" fill="#2c5a99" font-family="Yusei Magic,cursive">画素の中身</text>
+        <rect x="20" y="32" width="32" height="50" fill="#e0584f"/><rect x="56" y="32" width="32" height="50" fill="#3f9e57"/><rect x="92" y="32" width="32" height="50" fill="#3f78c4"/>
+        <text x="180" y="58" font-size="22" fill="#6f6e78" font-family="JetBrains Mono,monospace" text-anchor="middle">→</text>
+        <circle cx="270" cy="58" r="26" fill="#ffd54f" stroke="#bb453d" stroke-width="2"/>
+        <text x="270" y="62" font-size="13" fill="#3b3a42" text-anchor="middle" font-family="Yusei Magic,cursive">黄色に</text>
+        <text x="170" y="98" font-size="10.5" fill="#bb453d" text-anchor="middle" font-family="Yusei Magic,cursive">R+G で「黄色く感じる」 ― 知覚のしくみを利用</text>
+      </svg></div></div>
+    </div></div>`
+  },
+  'VECTOR': {
+    tag: 'SUPPLEMENT · 画像形式',
+    title: '<b>ラスタ</b>と<b>ベクタ</b>、拡大で何が変わる?',
+    sub: '写真はラスタ、ロゴはベクタ。拡大したときに差が出る。',
+    body: `
+    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
+      <div class="sec-h">ラスタ ― 画素を並べる(写真向き)</div>
+      <div class="sec-p"><b>ラスタ画像</b>は、画素を並べて画像を作る方式(JPEG・PNG・GIF など)。<b>1 画素ごとに色を持つ</b>ので、写真のような色がなめらかに変化する画像に向く。ただし <b>拡大するとモザイク(画素の四角)が見えてくる</b>。データ量は画素数で決まり、解像度と階調が大きいほど重くなる。</div>
+      <div class="sec-fig"><div class="sf-box"><svg viewBox="0 0 340 118">
+        <g>
+          <rect x="20" y="16" width="14" height="14" fill="#7da7d9"/><rect x="34" y="16" width="14" height="14" fill="#5b8bc6"/><rect x="48" y="16" width="14" height="14" fill="#3f78c4"/><rect x="62" y="16" width="14" height="14" fill="#5b8bc6"/><rect x="76" y="16" width="14" height="14" fill="#7da7d9"/>
+          <rect x="20" y="30" width="14" height="14" fill="#5b8bc6"/><rect x="34" y="30" width="14" height="14" fill="#3f78c4"/><rect x="48" y="30" width="14" height="14" fill="#2c5f9d"/><rect x="62" y="30" width="14" height="14" fill="#3f78c4"/><rect x="76" y="30" width="14" height="14" fill="#5b8bc6"/>
+          <rect x="20" y="44" width="14" height="14" fill="#3f78c4"/><rect x="34" y="44" width="14" height="14" fill="#2c5f9d"/><rect x="48" y="44" width="14" height="14" fill="#1d4d8f"/><rect x="62" y="44" width="14" height="14" fill="#2c5f9d"/><rect x="76" y="44" width="14" height="14" fill="#3f78c4"/>
+          <rect x="20" y="58" width="14" height="14" fill="#5b8bc6"/><rect x="34" y="58" width="14" height="14" fill="#3f78c4"/><rect x="48" y="58" width="14" height="14" fill="#2c5f9d"/><rect x="62" y="58" width="14" height="14" fill="#3f78c4"/><rect x="76" y="58" width="14" height="14" fill="#5b8bc6"/>
+          <rect x="20" y="72" width="14" height="14" fill="#7da7d9"/><rect x="34" y="72" width="14" height="14" fill="#5b8bc6"/><rect x="48" y="72" width="14" height="14" fill="#3f78c4"/><rect x="62" y="72" width="14" height="14" fill="#5b8bc6"/><rect x="76" y="72" width="14" height="14" fill="#7da7d9"/>
+        </g>
+        <text x="55" y="104" font-size="11" fill="#2c5a99" text-anchor="middle" font-family="Yusei Magic,cursive">ラスタ(画素)</text>
+        <text x="155" y="58" font-size="22" fill="#6f6e78" font-family="JetBrains Mono,monospace" text-anchor="middle">→拡大→</text>
+        <g class="sf-pulse"><rect x="210" y="14" width="44" height="44" fill="#7da7d9"/><rect x="254" y="14" width="44" height="44" fill="#3f78c4"/><rect x="210" y="58" width="44" height="44" fill="#3f78c4"/><rect x="254" y="58" width="44" height="44" fill="#2c5f9d"/></g>
+        <text x="254" y="114" font-size="11" fill="#bb453d" text-anchor="middle" font-family="Yusei Magic,cursive">画素が見える(粗くなる)</text>
+      </svg></div></div>
+    </div></div>
+    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
+      <div class="sec-h">ベクタ ― 点と線を式で表す(ロゴ向き)</div>
+      <div class="sec-p"><b>ベクタ画像</b>は、<b>点の座標と線・曲線の式</b>で画像を表す方式(SVG・PDF の図形・フォントなど)。「半径 50 の円を (100, 100) に」「太さ 3 の直線を…」と <b>幾何の情報</b>で持つので、<b>どれだけ拡大しても線がなめらかなまま</b>。色や形が少ない図形・ロゴ・アイコン・文字に向く。逆に、写真のように色が複雑に変化する画像は不向き(式が膨大になる)。</div>
+      <div class="sec-fig"><div class="sf-box"><svg viewBox="0 0 340 118">
+        <circle cx="55" cy="58" r="30" fill="#3f78c4" stroke="#1d4d8f" stroke-width="2.4"/>
+        <text x="55" y="104" font-size="11" fill="#2c5a99" text-anchor="middle" font-family="Yusei Magic,cursive">ベクタ(式)</text>
+        <text x="155" y="58" font-size="22" fill="#6f6e78" font-family="JetBrains Mono,monospace" text-anchor="middle">→拡大→</text>
+        <circle cx="262" cy="58" r="46" fill="#3f78c4" stroke="#1d4d8f" stroke-width="2.6"/>
+        <text x="262" y="114" font-size="11" fill="#2f7a46" text-anchor="middle" font-family="Yusei Magic,cursive">なめらかなまま</text>
+      </svg></div></div>
+    </div></div>
+    <div class="supp-sec"><div class="sec-no">3</div><div class="sec-main">
+      <div class="sec-h">使い分けの目安</div>
+      <div class="sec-p"><b>写真 → ラスタ</b>(JPEG)、<b>ロゴ・アイコン・文字 → ベクタ</b>(SVG)。看板や名刺の図形は、何倍に拡大してもくっきり見せたいので <b>ベクタ</b> で作る。一方、人物写真は微妙な色変化を画素で表すしかないので <b>ラスタ</b>。両方をまとめて扱えるのが PDF。<br>言いかえれば、ラスタは「<b>色のなめらかさ</b>」が長所で「<b>拡大の限界</b>」が短所。ベクタはその逆。</div>
+    </div></div>`
+  },
+  'FPSANIM': {
+    tag: 'SUPPLEMENT · 制作の実際',
+    title: 'アニメは本当に <b>24fps で全コマ</b>描くの?',
+    sub: '実はそうではない。1 枚を 2〜3 コマ持たせる「リミテッドアニメ」が広く使われる。',
+    body: `
+    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
+      <div class="sec-h">動きの少ない場面では「2〜3 コマ撮り」</div>
+      <div class="sec-p">日本のテレビアニメや映画アニメの多くは、見かけは 24fps でも <b>1 枚の絵を 2〜3 コマ続けて見せる</b>(同じ絵を 3 回表示=3 コマ撮り)。3 コマ撮りなら 24fps でも <b>実質 8 枚/秒の作画</b>でよい。これを <b>リミテッドアニメ</b> といい、限られた作画枚数で動きを表す手法。日本では『鉄腕アトム』以降のテレビアニメ制作で広く定着した。<b>動きを抑えるところは 3 コマ、激しいところは 2 コマや 1 コマ</b> と使い分け、印象的なシーンに作画を集中させる。</div>
+      <div class="sec-fig"><div class="sf-box"><svg viewBox="0 0 340 124">
+        <text x="20" y="20" font-size="11" fill="#2c5a99" font-family="Yusei Magic,cursive">3 コマ撮り(同じ絵を 3 コマ連続)</text>
+        <g font-family="Yusei Magic,cursive" font-size="13" font-weight="900" text-anchor="middle">
+          <rect x="20" y="30" width="34" height="40" rx="4" fill="#9db8de"/><text x="37" y="56" fill="#fff">A</text>
+          <rect x="56" y="30" width="34" height="40" rx="4" fill="#9db8de"/><text x="73" y="56" fill="#fff">A</text>
+          <rect x="92" y="30" width="34" height="40" rx="4" fill="#9db8de"/><text x="109" y="56" fill="#fff">A</text>
+          <rect x="128" y="30" width="34" height="40" rx="4" fill="#3f78c4"/><text x="145" y="56" fill="#fff">B</text>
+          <rect x="164" y="30" width="34" height="40" rx="4" fill="#3f78c4"/><text x="181" y="56" fill="#fff">B</text>
+          <rect x="200" y="30" width="34" height="40" rx="4" fill="#3f78c4"/><text x="217" y="56" fill="#fff">B</text>
+          <rect x="236" y="30" width="34" height="40" rx="4" fill="#2c5f9d"/><text x="253" y="56" fill="#fff">C</text>
+          <rect x="272" y="30" width="34" height="40" rx="4" fill="#2c5f9d"/><text x="289" y="56" fill="#fff">C</text>
+        </g>
+        <text x="55" y="82" font-size="10" fill="#bb453d" text-anchor="middle" font-family="Yusei Magic,cursive">3 コマ</text>
+        <text x="180" y="82" font-size="10" fill="#bb453d" text-anchor="middle" font-family="Yusei Magic,cursive">3 コマ</text>
+        <text x="280" y="82" font-size="10" fill="#bb453d" text-anchor="middle" font-family="Yusei Magic,cursive">…</text>
+        <text x="170" y="116" font-size="11" fill="#2c5a99" text-anchor="middle" font-family="Yusei Magic,cursive">24fps の流れで、新しい絵は 8 枚/秒だけ描く</text>
+      </svg></div></div>
+    </div></div>
+    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
+      <div class="sec-h">用途別の fps の使われ方</div>
+      <div class="sec-p">用途によって自然な fps が違う。<b>映画 24fps</b>(独特の「映画らしい」見え)、<b>テレビ放送 30/60fps</b>(なめらか)、<b>ゲーム 60fps 以上</b>(操作に対する反応がすばやい)、<b>VR 90fps 以上</b>(酔いを防ぐ)。同じ動画でも、fps が違えば印象は大きく変わる。<br>つまり、fps は単なる数字ではなく <b>「どんな見え方をねらうか」の選択</b>。学習ノートで 24fps を扱うのは計算がしやすいためで、現実の制作はもっと多様。</div>
+      <div class="sec-fig"><div class="sf-box"><svg viewBox="0 0 340 90">
+        <g font-family="Yusei Magic,cursive" font-size="11">
+          <text x="20" y="22" fill="#2c5a99">24 fps</text><rect x="80" y="14" width="42" height="14" rx="3" fill="#3f78c4"/><text x="130" y="25" fill="#3b3a42">映画</text>
+          <text x="20" y="42" fill="#2c5a99">30/60 fps</text><rect x="80" y="34" width="82" height="14" rx="3" fill="#3f78c4"/><text x="170" y="45" fill="#3b3a42">テレビ・配信</text>
+          <text x="20" y="62" fill="#2c5a99">60〜120 fps</text><rect x="80" y="54" width="120" height="14" rx="3" fill="#3f78c4"/><text x="208" y="65" fill="#3b3a42">ゲーム</text>
+          <text x="20" y="82" fill="#2c5a99">90+ fps</text><rect x="80" y="74" width="160" height="14" rx="3" fill="#e0584f"/><text x="248" y="85" fill="#3b3a42">VR(酔い防止)</text>
+        </g>
+      </svg></div></div>
     </div></div>`
   },
 
