@@ -25,3 +25,11 @@ Desktop.ini
 # Claude Code internal (commands は共有する)
 .claude/*
 !.claude/commands/
+
+# Copyrighted textbooks — DO NOT push to this PUBLIC repo
+# 教科書・学習ノート等の版元著作物。参照用にローカルへ置くが公開しない。
+lectures/_source/**/本文PDF*/
+**/本文PDF*/
+**/学習ノート*/
+**/高校情*
+*.pdf

@@ -1,0 +1,3265 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>制約と勾配 — Daisu Column</title>
+<meta name="description" content="受験で「等号成立条件を書け」と訓練された手筋を、等高線が制約に接するという幾何で読み直す。ラグランジュ未定乗数法・KKT 条件・双対性・サポートベクターマシンまで。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400;1,9..144,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+<!-- KaTeX (math typesetting) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '\\[', right: '\\]', display: true},
+      {left: '$',  right: '$',  display: false},
+      {left: '\\(', right: '\\)', display: false}
+    ],
+    throwOnError: false,
+    ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'option', 'svg']
+  });"></script>
+
+<style>
+:root {
+  --bg: #f7fafd;
+  --bg-card: #ffffff;
+  --bg-soft: #eff4fb;
+  --bg-tint: #e0ecf9;
+  --bg-deep: #0a2540;
+  --bg-wash: #dce8f6;
+
+  /* Charcoal (primary) — 制約・等高線 */
+  --accent-primary-deep: #1a1d22;
+  --accent-primary: #2e343e;
+  --accent-primary-bright: #545b68;
+  --accent-primary-light: #8a92a0;
+  --accent-primary-pale: #d5d8de;
+  --accent-primary-wash: #ededef;
+
+  /* Gold (secondary) — 勾配・極値点・乗数 */
+  --accent-secondary-deep: #6b4f00;
+  --accent-secondary: #b28a1c;
+  --accent-secondary-bright: #dbab2b;
+  --accent-secondary-light: #e6c25e;
+  --accent-secondary-pale: #f3e3b4;
+  --accent-secondary-wash: #f8efd3;
+
+  --ink: #0b1424;
+  --text: #1a2541;
+  --mute: #5b6a82;
+  --mute-soft: #8594ae;
+  --line: #d6e0ee;
+  --line-soft: #e8edf5;
+  --warn: #b54316;
+
+  --gold: #f4b93a;
+  --white: #ffffff;
+
+  --f-jp-display: 'Zen Old Mincho', 'Noto Serif JP', serif;
+  --f-jp-body: 'Zen Kaku Gothic New', 'Hiragino Sans', sans-serif;
+  --f-la-display: 'Fraunces', 'Playfair Display', Georgia, serif;
+  --f-la-body: 'DM Sans', system-ui, sans-serif;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--f-jp-body);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 2.0;
+  letter-spacing: 0.025em;
+  font-feature-settings: 'palt' 1;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  position: relative;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(circle at 1px 1px, rgba(46,52,62,0.06) 1px, transparent 0);
+  background-size: 28px 28px;
+}
+::selection { background: var(--accent-secondary); color: var(--white); }
+a { color: inherit; text-decoration: none; }
+
+/* ============ TOP NAV ============ */
+.topnav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 1.1rem 2.5rem;
+  background: rgba(247, 250, 253, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.4s var(--ease);
+}
+.topnav.hidden { transform: translateY(-100%); }
+.topnav-brand { display: flex; align-items: baseline; gap: 0.75rem; }
+.topnav-mark {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 1.25rem;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+}
+.topnav-sub {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--mute);
+  letter-spacing: 0.05em;
+}
+.topnav-back {
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mute);
+  transition: color 0.25s var(--ease);
+}
+.topnav-back:hover { color: var(--accent-secondary); }
+
+/* ============ HERO ============ */
+.hero {
+  min-height: 100vh;
+  padding: 8rem 2rem 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.hero-kicker {
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--accent-secondary-deep);
+  margin-bottom: 3rem;
+  display: flex; align-items: center; gap: 1rem;
+  animation: fadeUp 1.1s var(--ease-out) 0.1s both;
+}
+.hero-kicker::before, .hero-kicker::after {
+  content: '';
+  width: 36px; height: 1px;
+  background: var(--accent-secondary);
+}
+.hero-title {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: clamp(2.75rem, 8vw, 6.4rem);
+  letter-spacing: 0.04em;
+  line-height: 1.05;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 2.25rem;
+  animation: fadeUp 1.3s var(--ease-out) 0.3s both;
+}
+.hero-title .pop {
+  color: var(--accent-secondary-deep);
+  font-style: normal;
+  position: relative;
+  display: inline-block;
+}
+.hero-title .pop::after {
+  content: '';
+  position: absolute;
+  left: -4%;
+  bottom: 0.08em;
+  width: 108%;
+  height: 0.14em;
+  background: var(--gold);
+  z-index: -1;
+  opacity: 0.55;
+}
+.hero-sub {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.05rem, 2vw, 1.5rem);
+  color: var(--accent-primary);
+  letter-spacing: 0.02em;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  animation: fadeUp 1.3s var(--ease-out) 0.5s both;
+}
+.hero-sub .x {
+  margin: 0 0.5em;
+  color: var(--accent-secondary-deep);
+  font-style: normal;
+  font-weight: 800;
+}
+.hero-lede {
+  max-width: 660px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 2.15;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 4rem;
+  animation: fadeUp 1.3s var(--ease-out) 0.7s both;
+}
+.hero-lede strong {
+  font-weight: 500;
+  color: var(--accent-primary-deep);
+  border-bottom: 2px solid var(--accent-secondary-pale);
+  padding: 0 0.1em;
+}
+.scroll-cue {
+  position: absolute;
+  bottom: 2.5rem; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.85rem;
+  font-family: var(--f-la-body);
+  font-size: 0.7rem; font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--mute);
+  animation: fadeUp 1.3s var(--ease-out) 1.1s both;
+}
+.scroll-cue::after {
+  content: '';
+  width: 1px; height: 48px;
+  background: linear-gradient(to bottom, var(--mute), transparent);
+  animation: scrollBar 2.2s var(--ease) infinite;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scrollBar {
+  0% { transform: scaleY(0); transform-origin: top; opacity: 0.3; }
+  40% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+  60% { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
+  100% { transform: scaleY(0); transform-origin: bottom; opacity: 0.3; }
+}
+
+/* ============ CHAPTER BASE ============ */
+.chapter {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 7rem 2rem 5rem;
+  position: relative;
+}
+.ch-kicker {
+  display: flex; align-items: baseline; gap: 1.25rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+.ch-num {
+  font-family: var(--f-la-display);
+  font-style: italic; font-weight: 400;
+  font-size: 1.3rem;
+  color: var(--accent-secondary-deep);
+  letter-spacing: 0.02em;
+}
+.ch-cat {
+  font-family: var(--f-la-body);
+  font-size: 0.75rem; font-weight: 500;
+  letter-spacing: 0.4em; text-transform: uppercase;
+  color: var(--mute);
+  padding-left: 1.25rem;
+  border-left: 1px solid var(--line);
+}
+.ch-title {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: clamp(2.1rem, 4.8vw, 3.4rem);
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  color: var(--ink);
+  margin-bottom: 0.85rem;
+  display: flex; align-items: baseline; gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  text-align: center;
+}
+.ch-title .en {
+  font-family: var(--f-la-display);
+  font-style: italic; font-weight: 400;
+  font-size: 0.38em;
+  color: var(--mute-soft);
+  letter-spacing: 0.03em;
+}
+.ch-subtitle {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.08rem;
+  letter-spacing: 0.1em;
+  color: var(--accent-secondary-deep);
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--line);
+  text-align: center;
+}
+.ch-lede {
+  max-width: 780px;
+  font-size: 1.18rem; font-weight: 500;
+  line-height: 2.2;
+  color: var(--ink);
+  margin: 0 auto 4rem;
+  text-align: center;
+}
+.ch-lede strong {
+  font-weight: 500;
+  color: var(--ink);
+  background: linear-gradient(transparent 62%, var(--gold) 62%, var(--gold) 88%, transparent 88%);
+  background-size: 100% 100%;
+  padding: 0 0.1em;
+}
+.ch-lede em {
+  font-style: normal;
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  color: var(--accent-primary-deep);
+  letter-spacing: 0.03em;
+}
+.ch-body { max-width: 780px; margin: 0 auto; }
+.ch-body p {
+  font-size: 1.05rem; font-weight: 500;
+  line-height: 2.1;
+  margin-bottom: 1.75rem;
+  color: var(--ink);
+}
+.ch-body p strong {
+  font-weight: 700;
+  color: var(--ink);
+}
+.ch-body p em {
+  font-style: normal;
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  color: var(--accent-primary-deep);
+  background: linear-gradient(transparent 65%, var(--accent-secondary-pale) 65%);
+  padding: 0 0.15em;
+}
+.ch-body h3 {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  margin: 3rem 0 1.25rem;
+  padding-left: 0.85rem;
+  border-left: 4px solid var(--accent-secondary);
+  line-height: 1.6;
+}
+.ch-body h3 .en {
+  display: block;
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.78rem;
+  color: var(--mute);
+  letter-spacing: 0.04em;
+  margin-top: 0.2rem;
+}
+.ch-body h4 {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.08rem;
+  letter-spacing: 0.05em;
+  color: var(--accent-primary-deep);
+  margin: 2rem 0 0.85rem;
+  line-height: 1.6;
+}
+.ch-body .interlude {
+  margin: 2.5rem 0 1.5rem;
+  padding: 1rem 0 0;
+  border-top: 1px dashed var(--line);
+  font-family: var(--f-la-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent-secondary-deep);
+}
+.ch-body .meta-note {
+  font-size: 0.88rem;
+  color: var(--mute);
+  border-left: 2px solid var(--line);
+  padding: 0.4rem 1rem;
+  margin: 1.5rem 0;
+  line-height: 1.85;
+  font-style: normal;
+}
+
+/* ============ MATHEMATICS COMPONENTS ============ */
+.math-display {
+  margin: 2rem 0;
+  text-align: center;
+  font-size: 1.05rem;
+  overflow-x: auto;
+}
+.math-numbered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2.25rem 0;
+}
+.math-numbered .math-display { margin: 0; flex: 1; text-align: center; }
+.math-numbered .math-num {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  color: var(--accent-secondary-deep);
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.def-box, .thm-box, .ex-box {
+  margin: 2.5rem 0;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--accent-primary);
+  border-radius: 0 4px 4px 0;
+  padding: 1.5rem 1.8rem;
+}
+.def-box header, .thm-box header, .ex-box header {
+  font-family: var(--f-la-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent-secondary-deep);
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.thm-box { border-left-color: var(--accent-secondary); }
+.ex-box  { border-left-color: var(--accent-primary-bright); }
+.def-box p, .thm-box p, .ex-box p {
+  font-size: 1rem; line-height: 2;
+  margin-bottom: 0.85rem; color: var(--ink);
+}
+.def-box p:last-child, .thm-box p:last-child, .ex-box p:last-child { margin-bottom: 0; }
+.ex-box .ex-source {
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  color: var(--mute);
+  margin-top: 0.5rem;
+  letter-spacing: 0.04em;
+}
+
+.when-how {
+  margin: 2.5rem 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.when-how > div {
+  padding: 1.4rem 1.6rem;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.when-how .wh-label {
+  font-family: var(--f-la-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--accent-secondary-deep);
+  margin-bottom: 0.65rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.when-how .wh-body {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  line-height: 1.85;
+}
+@media (max-width: 600px) { .when-how { grid-template-columns: 1fr; } }
+
+.iff-decomp {
+  margin: 2.5rem 0;
+  padding: 1.6rem 1.8rem;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.iff-head {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+.iff-eq {
+  text-align: center;
+  font-family: var(--f-la-display);
+  font-size: 1.4rem;
+  font-style: italic;
+  color: var(--accent-secondary-deep);
+  margin: 0.5rem 0;
+}
+.iff-list { list-style: none; padding-left: 0; margin: 0; }
+.iff-list li {
+  padding: 0.5rem 0 0.5rem 2.4rem;
+  position: relative;
+  font-size: 1rem;
+  line-height: 1.85;
+  color: var(--ink);
+}
+.iff-list li::before {
+  content: '①';
+  position: absolute;
+  left: 0;
+  font-family: var(--f-la-display);
+  font-weight: 700;
+  color: var(--accent-secondary-deep);
+}
+.iff-list li:nth-child(2)::before { content: '②'; }
+.iff-list li:nth-child(3)::before { content: '③'; }
+.iff-list li:nth-child(4)::before { content: '④'; }
+
+/* ============ DIAGRAMS ============ */
+.dgm {
+  margin: 3rem auto;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 2rem 2rem 1.6rem;
+  max-width: 920px;
+}
+.dgm-head {
+  margin-bottom: 1.4rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.dgm-kicker {
+  font-family: var(--f-la-body);
+  font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--accent-secondary);
+  margin-bottom: 0.4rem;
+}
+.dgm-title {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--ink);
+  letter-spacing: 0.06em;
+}
+.dgm-svg-wrap {
+  width: 100%;
+  background: var(--bg);
+  border-radius: 3px;
+  padding: 1.2rem 0.5rem;
+}
+.dgm-svg-wrap svg { display: block; width: 100%; height: auto; }
+.dgm-caption {
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  line-height: 1.85;
+  color: var(--mute);
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+.dgm-caption strong {
+  color: var(--accent-primary-deep);
+  font-weight: 700;
+}
+
+.svg-label  { font-family: 'Zen Kaku Gothic New', sans-serif; font-weight: 700; font-size: 14px; fill: #0b1424; }
+.svg-sub    { font-family: 'Zen Kaku Gothic New', sans-serif; font-weight: 500; font-size: 12px; fill: #5b6a82; }
+.svg-en     { font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 13px; fill: #5b6a82; }
+
+.fig-axis {
+  font-family: 'Fraunces', Georgia, serif;
+  font-style: italic;
+  font-size: 14px;
+  fill: #5b6a82;
+}
+.fig-lbl {
+  font-family: 'KaTeX_Math', 'Latin Modern Math', 'Cambria Math', Georgia, serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 16px;
+  fill: #0b1424;
+}
+.fig-lbl.bold     { font-weight: 800; }
+.fig-lbl.gold     { fill: #6b4f00; }
+.fig-lbl.charcoal { fill: #1a1d22; }
+.fig-lbl.warn     { fill: #7a2810; }
+.fig-lbl-jp {
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  fill: #1a1d22;
+}
+
+/* Legend layout */
+.dgm-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 1.4rem;
+  align-items: stretch;
+  margin: 1.25rem 0 0.5rem;
+}
+.dgm-figure {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 1rem 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dgm-figure svg { display: block; width: 100%; height: auto; }
+.dgm-legend {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 1.4rem 1.5rem;
+}
+.dgm-legend-title {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--ink);
+  margin-bottom: 1rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--line-soft);
+  letter-spacing: 0.06em;
+}
+.legend-list { list-style: none; margin: 0; padding: 0; }
+.legend-item {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 0.75rem;
+  margin-bottom: 0.95rem;
+  font-size: 0.96rem;
+  line-height: 1.7;
+  color: var(--ink);
+  align-items: baseline;
+}
+.legend-item:last-child { margin-bottom: 0; }
+.legend-key {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  color: var(--ink);
+  margin-right: 0.35em;
+}
+.legend-foot {
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--line-soft);
+  font-size: 0.96rem;
+  color: var(--ink);
+  font-weight: 700;
+  text-align: center;
+  font-family: var(--f-jp-display);
+}
+.legend-foot.eq {
+  background: var(--accent-primary-wash);
+  border: 1px solid var(--accent-primary-pale);
+  border-radius: 4px;
+  padding: 0.85rem 1rem;
+  margin-top: 1rem;
+}
+@media (max-width: 760px) { .dgm-content { grid-template-columns: 1fr; } }
+
+.legend-item.sym {
+  grid-template-columns: minmax(58px, auto) 1fr;
+  gap: 0.85rem;
+}
+.legend-sym {
+  font-family: 'KaTeX_Math', 'Latin Modern Math', 'Cambria Math', Georgia, serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--accent-secondary-deep);
+  text-align: center;
+  padding: 0.15rem 0.55rem;
+  background: var(--accent-secondary-wash);
+  border-radius: 3px;
+  min-width: 28px;
+  display: inline-block;
+}
+.legend-sym.alt   { color: var(--accent-primary-deep); background: var(--accent-primary-wash); }
+.legend-sym.ink   { color: var(--ink); background: var(--bg-tint); }
+.legend-sym.warn  { color: var(--warn); background: #fde0d0; }
+.legend-sym.jp    { font-family: 'Zen Kaku Gothic New', sans-serif; font-style: normal; }
+
+/* Stack frames */
+.dgm-stack {
+  display: grid;
+  gap: 0.85rem;
+  margin: 1.25rem 0;
+}
+.dgm-stack-row {
+  display: grid;
+  grid-template-columns: minmax(0, 220px) 1fr;
+  gap: 1.25rem;
+  align-items: center;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.85rem 1.1rem;
+}
+.dgm-stack-fig {
+  background: var(--bg);
+  border-radius: 3px;
+  padding: 0.4rem;
+}
+.dgm-stack-fig svg { display: block; width: 100%; height: auto; }
+.dgm-stack-text { display: flex; flex-direction: column; gap: 0.35rem; }
+.dgm-stack-tag {
+  font-family: var(--f-la-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent-secondary-deep);
+}
+.dgm-stack-cond {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.08rem;
+  color: var(--ink);
+}
+.dgm-stack-desc {
+  font-size: 0.9rem;
+  color: var(--mute);
+  line-height: 1.6;
+}
+@media (max-width: 600px) { .dgm-stack-row { grid-template-columns: 1fr; } }
+
+/* ============ PULL-QUOTE ============ */
+.pull-quote {
+  margin: 3.5rem 0;
+  padding: 2rem 2.25rem;
+  background: var(--bg-card);
+  border-left: 4px solid var(--accent-secondary);
+  border-radius: 0 4px 4px 0;
+  position: relative;
+}
+.pull-quote::before {
+  content: '\201C';
+  position: absolute;
+  top: -0.3rem; left: 1rem;
+  font-family: var(--f-la-display);
+  font-size: 3.5rem; line-height: 1;
+  color: var(--accent-secondary);
+  opacity: 0.35;
+  font-weight: 800;
+}
+.pull-quote p {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1.95;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  margin-bottom: 0;
+}
+.pull-quote .attribution {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--mute);
+  margin-top: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+/* ============ REFERENCES ============ */
+.refs {
+  max-width: 820px;
+  margin: 6rem auto 2rem;
+  padding: 3rem 2.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.refs-head {
+  font-family: var(--f-la-body);
+  font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--mute);
+  margin-bottom: 1.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.refs-list { list-style: none; counter-reset: ref; }
+.refs-list li {
+  counter-increment: ref;
+  padding-left: 2.5rem;
+  position: relative;
+  margin-bottom: 1.25rem;
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: var(--ink);
+}
+.refs-list li::before {
+  content: '[' counter(ref) ']';
+  position: absolute; left: 0; top: 0.1rem;
+  font-family: var(--f-la-display);
+  font-style: italic; font-weight: 600;
+  color: var(--accent-secondary);
+}
+.ref-author { font-weight: 700; }
+.ref-title { margin-left: 0.3em; }
+.ref-meta {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--mute);
+  font-family: var(--f-la-body);
+  margin-top: 0.2rem;
+  letter-spacing: 0.01em;
+}
+.refs-note {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line-soft);
+  font-size: 0.85rem;
+  color: var(--mute);
+  line-height: 1.8;
+  font-weight: 400;
+}
+
+/* ============ FOOTER ============ */
+.footer {
+  border-top: 1px solid var(--line);
+  background: var(--bg-soft);
+  margin-top: 4rem;
+  padding: 5rem 2rem 3rem;
+  text-align: center;
+}
+.footer-mark {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: 2.5rem;
+  letter-spacing: 0.15em;
+  color: var(--ink);
+  margin-bottom: 0.75rem;
+}
+.footer-tag {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--mute);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.02em;
+}
+.footer-back {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.6rem 1.5rem;
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--mute);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  transition: all 0.25s var(--ease);
+}
+.footer-back:hover {
+  color: var(--ink);
+  border-color: var(--accent-secondary);
+}
+
+/* ============ TOC SECTION ============ */
+.toc-section {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 6rem 2rem 7rem;
+}
+.toc-kicker {
+  font-family: var(--f-la-body);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--accent-secondary-deep);
+  text-align: center;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+.toc-kicker::before, .toc-kicker::after {
+  content: '';
+  width: 36px; height: 1px;
+  background: var(--accent-secondary);
+}
+.toc-title {
+  font-family: var(--f-jp-display);
+  font-weight: 900;
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  letter-spacing: 0.1em;
+  text-align: center;
+  color: var(--ink);
+  margin-bottom: 0.6rem;
+}
+.toc-title .en {
+  display: block;
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.55em;
+  letter-spacing: 0.04em;
+  color: var(--mute-soft);
+  margin-top: 0.4rem;
+}
+.toc-note {
+  font-family: var(--f-jp-body);
+  font-size: 0.92rem;
+  text-align: center;
+  color: var(--mute);
+  margin-bottom: 3.25rem;
+}
+.toc-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.toc-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1.4rem;
+  align-items: center;
+  padding: 1.4rem 1.6rem;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.32s var(--ease), box-shadow 0.32s var(--ease), border-color 0.32s var(--ease);
+}
+.toc-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--accent-secondary);
+  transform: scaleY(0);
+  transform-origin: top center;
+  transition: transform 0.32s var(--ease);
+}
+.toc-card:hover {
+  border-color: var(--accent-secondary-pale);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 32px -18px rgba(178,138,28,0.45);
+}
+.toc-card:hover::before { transform: scaleY(1); }
+.toc-num {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 2.4rem;
+  line-height: 1;
+  color: var(--accent-secondary-deep);
+  letter-spacing: 0.02em;
+}
+.toc-text-title {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  margin-bottom: 0.25rem;
+}
+.toc-text-sub {
+  font-family: var(--f-jp-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--mute);
+  letter-spacing: 0.04em;
+  line-height: 1.55;
+}
+.toc-arrow {
+  font-family: var(--f-la-display);
+  font-size: 1.3rem;
+  color: var(--mute-soft);
+  transition: transform 0.32s var(--ease), color 0.32s var(--ease);
+}
+.toc-card:hover .toc-arrow {
+  color: var(--accent-secondary-deep);
+  transform: translateX(4px);
+}
+
+/* ============ SIDE RAIL ============ */
+.rail {
+  position: fixed;
+  left: 1.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 90;
+  display: none;
+}
+.rail-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  position: relative;
+}
+.rail-list::before {
+  content: '';
+  position: absolute;
+  left: 13px;
+  top: 14px;
+  bottom: 14px;
+  width: 1px;
+  background: var(--line);
+  z-index: 0;
+}
+.rail-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.25rem 0;
+  position: relative;
+  z-index: 1;
+}
+.rail-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 0.74rem;
+  color: var(--mute);
+  letter-spacing: 0.02em;
+  transition: all 0.32s var(--ease);
+}
+.rail-title {
+  font-family: var(--f-jp-body);
+  font-weight: 500;
+  font-size: 0.78rem;
+  color: var(--ink);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.28s var(--ease), transform 0.28s var(--ease);
+  pointer-events: none;
+  background: rgba(247, 250, 253, 0.9);
+  backdrop-filter: blur(6px);
+  padding: 0.1rem 0.5rem;
+  border-radius: 2px;
+}
+.rail:hover .rail-title { opacity: 1; transform: translateX(0); }
+.rail-item.active .rail-num {
+  background: var(--accent-secondary);
+  color: #fff;
+  border-color: var(--accent-secondary);
+  transform: scale(1.08);
+}
+.rail-item.active .rail-title {
+  opacity: 1;
+  transform: translateX(0);
+  color: var(--accent-secondary-deep);
+  font-weight: 700;
+}
+@media (min-width: 1180px) {
+  .rail { display: block; }
+}
+
+/* ============ MOBILE MENU ============ */
+.m-menu-btn {
+  position: fixed;
+  bottom: 1.4rem;
+  right: 1.4rem;
+  z-index: 95;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent-primary);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 10px 28px -10px rgba(46,52,62,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+  transition: background 0.25s var(--ease), transform 0.25s var(--ease);
+}
+.m-menu-btn:hover { background: var(--accent-secondary); transform: scale(1.05); }
+.m-menu-btn span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+}
+@media (min-width: 1180px) { .m-menu-btn { display: none; } }
+
+.m-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(11, 20, 36, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s var(--ease);
+}
+.m-drawer.open { opacity: 1; pointer-events: auto; }
+.m-drawer-panel {
+  width: 100%;
+  max-height: 82vh;
+  background: var(--bg);
+  border-radius: 14px 14px 0 0;
+  padding: 1.5rem 1.25rem 2.5rem;
+  overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform 0.34s var(--ease);
+  box-shadow: 0 -10px 40px -10px rgba(11,20,36,0.3);
+}
+.m-drawer.open .m-drawer-panel { transform: translateY(0); }
+.m-drawer-handle {
+  width: 40px; height: 4px;
+  background: var(--line);
+  border-radius: 2px;
+  margin: 0 auto 1.25rem;
+}
+.m-drawer-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0 0.5rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.m-drawer-title {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+}
+.m-drawer-title .en {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.7rem;
+  color: var(--mute);
+  margin-left: 0.6rem;
+  letter-spacing: 0.06em;
+}
+.m-drawer-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--mute);
+  cursor: pointer;
+  line-height: 1;
+  padding: 0.25rem 0.5rem;
+}
+.m-drawer-list {
+  list-style: none;
+}
+.m-drawer-list a {
+  display: grid;
+  grid-template-columns: 52px 1fr auto;
+  gap: 0.85rem;
+  padding: 1rem 0.5rem;
+  border-bottom: 1px solid var(--line-soft);
+  align-items: center;
+}
+.m-drawer-list a:last-child { border-bottom: none; }
+.md-num {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.6rem;
+  color: var(--accent-secondary-deep);
+  line-height: 1;
+}
+.md-title {
+  font-family: var(--f-jp-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--ink);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.15rem;
+}
+.md-sub {
+  font-family: var(--f-jp-body);
+  font-size: 0.78rem;
+  color: var(--mute);
+  letter-spacing: 0.03em;
+  line-height: 1.55;
+}
+.md-arrow {
+  font-family: var(--f-la-display);
+  font-size: 1.1rem;
+  color: var(--mute-soft);
+}
+
+/* ============ HERO KEY VISUAL ============ */
+.hero-key-visual {
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto 1.5rem;
+  padding: 0.3rem 0.5rem;
+  animation: fadeUp 1.3s var(--ease-out) 0.85s both;
+}
+.hero-key-visual svg { display: block; width: 100%; height: auto; }
+
+/* ============ PROGRESS BAR (top scroll indicator) ============ */
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(to right, var(--accent-primary) 0%, var(--accent-secondary) 60%, var(--accent-secondary-bright) 100%);
+  z-index: 110;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 12px -2px var(--accent-secondary-pale);
+}
+
+/* ============ READ TIME BADGE ============ */
+.read-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 auto 2rem;
+  padding: 0.45rem 1.1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mute);
+  animation: fadeUp 1.3s var(--ease-out) 0.9s both;
+}
+.read-time::before {
+  content: '';
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent-secondary);
+  box-shadow: 0 0 0 3px var(--accent-secondary-pale);
+}
+.read-time strong {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--accent-secondary-deep);
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+/* ============ KEYBIND HINT(目次下、PC のみ) ============ */
+.keybind-hint {
+  max-width: 720px;
+  margin: 2rem auto 0;
+  padding: 1rem 1.5rem;
+  background: var(--bg-soft);
+  border: 1px dashed var(--line);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.4rem;
+  flex-wrap: wrap;
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  color: var(--mute);
+  letter-spacing: 0.04em;
+}
+.keybind-hint kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  padding: 0.15rem 0.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  box-shadow: 0 1px 0 0 var(--line);
+  font-family: var(--f-la-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent-primary-deep);
+  letter-spacing: 0;
+  margin: 0 0.2rem;
+}
+.keybind-hint .kb-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+@media (max-width: 760px) {
+  .keybind-hint { display: none; }
+}
+
+/* ============ KEY TAKEAWAYS(章末まとめ) ============ */
+.ch-key {
+  margin: 3.5rem 0 1rem;
+  padding: 1.75rem 1.9rem;
+  background: linear-gradient(to bottom right, var(--accent-primary-wash) 0%, var(--bg-card) 60%, var(--accent-secondary-wash) 130%);
+  border: 1px solid var(--accent-secondary-pale);
+  border-left: 4px solid var(--accent-secondary);
+  border-radius: 0 6px 6px 0;
+  position: relative;
+}
+.ch-key::before {
+  content: '';
+  position: absolute;
+  top: -1px; right: -1px;
+  width: 60px; height: 60px;
+  background: linear-gradient(135deg, transparent 50%, var(--accent-secondary-pale) 50%);
+  border-radius: 0 6px 0 0;
+  opacity: 0.55;
+}
+.ch-key-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.85rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--accent-secondary-pale);
+  position: relative;
+}
+.ch-key-label {
+  font-family: var(--f-la-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--accent-secondary-deep);
+}
+.ch-key-en {
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: var(--mute);
+  letter-spacing: 0.04em;
+}
+.ch-key ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.ch-key li {
+  position: relative;
+  padding: 0.6rem 0 0.6rem 2.4rem;
+  font-size: 1rem;
+  line-height: 1.85;
+  color: var(--ink);
+  counter-increment: keytake;
+}
+.ch-key li::before {
+  content: counter(keytake, decimal-leading-zero);
+  position: absolute;
+  left: 0; top: 0.65rem;
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--accent-secondary-deep);
+  background: var(--accent-secondary-wash);
+  border: 1px solid var(--accent-secondary-pale);
+  border-radius: 3px;
+  padding: 0.05rem 0.45rem;
+  letter-spacing: 0.02em;
+}
+.ch-key { counter-reset: keytake; }
+
+/* ============ SECTION DIVIDER (装飾仕切り) ============ */
+.section-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 720px;
+  color: var(--accent-secondary);
+}
+.section-divider::before,
+.section-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent 0%, var(--line) 30%, var(--line) 70%, transparent 100%);
+}
+.section-divider .sd-mark {
+  margin: 0 1.5rem;
+  font-family: var(--f-la-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.4rem;
+  color: var(--accent-secondary);
+  opacity: 0.6;
+  letter-spacing: 0.1em;
+}
+
+/* ============ PRINT STYLES ============ */
+@media print {
+  .topnav, .scroll-cue, .rail, .m-menu-btn, .m-drawer, .progress-bar, .keybind-hint { display: none !important; }
+  body { background: #fff; font-size: 11pt; line-height: 1.7; }
+  body::before { display: none; }
+  .hero { min-height: auto; padding: 2rem 1rem; page-break-after: always; }
+  .hero-title { font-size: 2.4rem; }
+  .chapter { padding: 1.5rem 1rem; max-width: 100%; page-break-inside: avoid; }
+  .ch-title { font-size: 1.6rem; }
+  .dgm, .ch-key, .pull-quote, .thm-box, .def-box { page-break-inside: avoid; }
+  .footer { padding: 1.5rem 1rem; }
+  a { color: var(--ink); text-decoration: none; }
+  .refs li::before { color: var(--ink); }
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 960px) {
+  .topnav { padding: 0.9rem 1.25rem; }
+  .chapter { padding: 5rem 1.25rem 3.5rem; }
+  .dgm { padding: 1.5rem 1rem 1.2rem; }
+  .refs { padding: 2rem 1.5rem; }
+  .pull-quote { margin: 2.5rem 0; padding: 1.6rem 1.4rem; }
+  .pull-quote p { font-size: 1.05rem; }
+}
+@media (max-width: 760px) {
+  .toc-section { padding: 4rem 1.25rem 5rem; }
+  .toc-card { padding: 1.1rem 1.25rem; gap: 1rem; }
+  .toc-num { font-size: 1.9rem; }
+  .toc-text-title { font-size: 1rem; }
+  .toc-text-sub { font-size: 0.78rem; }
+}
+@media (max-width: 600px) {
+  body { font-size: 15px; }
+  .hero-title { font-size: 2.4rem; }
+  .ch-title { font-size: 1.85rem; }
+  .ch-lede { font-size: 1.05rem; }
+  .ch-body p { font-size: 0.98rem; }
+  .m-menu-btn { width: 50px; height: 50px; bottom: 1rem; right: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar" role="progressbar" aria-label="読書の進捗" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+<nav class="topnav" id="topnav">
+  <div class="topnav-brand">
+    <span class="topnav-mark">制</span>
+    <span class="topnav-sub">daisu column · vol. 04</span>
+  </div>
+  <a href="../../" class="topnav-back">← all articles</a>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="hero-kicker">Optimization · Vol. 04 · 2026</div>
+
+  <h1 class="hero-title">制約と<span class="pop">勾配</span></h1>
+
+  <div class="hero-sub">Constraints<span class="x">×</span>Gradients</div>
+
+  <p class="hero-lede">
+    制約付き最大最小で、<strong>達成点はどこにあるのか</strong>。<br>
+    受験で個別に覚えた手筋を、等高線と勾配の幾何で 1 つの条件に集約します。<br>
+    入口は受験の制約付き最大最小。出口はラグランジュ未定乗数法・KKT 条件・双対性・サポートベクターマシン。
+  </p>
+
+  <div class="hero-key-visual" aria-label="記事のキービジュアル">
+    <svg viewBox="0 0 320 90" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="円と等高線と勾配ベクトル">
+      <defs>
+        <marker id="heroArr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M0 0 L10 5 L0 10 z" fill="#6b4f00"/>
+        </marker>
+      </defs>
+      <!-- 中央の円(制約集合) -->
+      <circle cx="160" cy="45" r="26" fill="none" stroke="#1a1d22" stroke-width="1.4" opacity="0.55"/>
+      <!-- 等高線(細線、傾き SVG +2/3、画面で右下がり) -->
+      <line x1="40" y1="15" x2="280" y2="75" stroke="#1a1d22" stroke-width="0.7" stroke-dasharray="3 2" opacity="0.3"/>
+      <line x1="40" y1="35" x2="280" y2="85" stroke="#1a1d22" stroke-width="0.7" stroke-dasharray="3 2" opacity="0.3"/>
+      <line x1="60" y1="5" x2="280" y2="60" stroke="#1a1d22" stroke-width="0.7" stroke-dasharray="3 2" opacity="0.3"/>
+      <!-- 接線(最大値の等高線、太線) -->
+      <line x1="92" y1="-3" x2="280" y2="44" stroke="#6b4f00" stroke-width="1.4" opacity="0.85"/>
+      <!-- 接点 -->
+      <circle cx="180" cy="22" r="3.5" fill="#6b4f00" stroke="#fff" stroke-width="1.2"/>
+      <!-- ∇f 矢印 -->
+      <line x1="180" y1="22" x2="194" y2="-1" stroke="#6b4f00" stroke-width="1.4" marker-end="url(#heroArr)"/>
+      <!-- 半径(∇g 方向) -->
+      <line x1="160" y1="45" x2="180" y2="22" stroke="#1a1d22" stroke-width="1" stroke-dasharray="2 2" opacity="0.4"/>
+      <!-- ラベル -->
+      <text x="138" y="49" font-family="'Zen Kaku Gothic New', sans-serif" font-size="9" fill="#5b6a82">g=0</text>
+      <text x="195" y="6" font-family="'KaTeX_Math', Georgia, serif" font-style="italic" font-size="9" fill="#6b4f00">∇f</text>
+    </svg>
+  </div>
+
+  <div class="read-time" aria-label="推定読了時間">推定読了時間 <strong>25</strong> 分 · 7 章 + 12 図 + 参考文献 12 件</div>
+
+  <div class="scroll-cue">scroll</div>
+</section>
+
+<!-- ==================== TABLE OF CONTENTS ==================== -->
+<section class="toc-section" id="contents">
+  <div class="toc-kicker">Contents · 目次</div>
+  <h2 class="toc-title">本稿の構成<span class="en">Structure of This Article</span></h2>
+  <p class="toc-note">受験で扱う典型題から始め、ラグランジュ未定乗数法・KKT 条件・双対性を経て、機械学習・経済学・ゲーム理論・等周問題までを扱います。</p>
+  <ol class="toc-list">
+    <li>
+      <a href="#ch1" class="toc-card">
+        <span class="toc-num">01</span>
+        <span>
+          <span class="toc-text-title">受験での典型題</span>
+          <span class="toc-text-sub">領域内の最大最小、相加相乗、線形計画</span>
+        </span>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+    <li>
+      <a href="#ch2" class="toc-card">
+        <span class="toc-num">02</span>
+        <span>
+          <span class="toc-text-title">受験での解き直し</span>
+          <span class="toc-text-sub">等高線と接触、∇f と ∇g の平行</span>
+        </span>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+    <li>
+      <a href="#ch3" class="toc-card">
+        <span class="toc-num">03</span>
+        <span>
+          <span class="toc-text-title">大学からの読み返し</span>
+          <span class="toc-text-sub">ラグランジュ未定乗数法と Lagrangian</span>
+        </span>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+    <li>
+      <a href="#ch4" class="toc-card">
+        <span class="toc-num">04</span>
+        <span>
+          <span class="toc-text-title">不等式制約への拡張</span>
+          <span class="toc-text-sub">KKT 条件と補集合性</span>
+        </span>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+    <li>
+      <a href="#ch5" class="toc-card">
+        <span class="toc-num">05</span>
+        <span>
+          <span class="toc-text-title">入試問題で確かめる</span>
+          <span class="toc-text-sub">京都大学 2012 年の対称式問題ほか</span>
+        </span>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+    <li>
+      <a href="#ch6" class="toc-card">
+        <span class="toc-num">06</span>
+        <span>
+          <span class="toc-text-title">双対の風景</span>
+          <span class="toc-text-sub">線形計画双対と影の価格</span>
+        </span>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+    <li>
+      <a href="#ch7" class="toc-card">
+        <span class="toc-num">07</span>
+        <span>
+          <span class="toc-text-title">補章 ─ 応用の場面集</span>
+          <span class="toc-text-sub">SVM・効用最大化・ミニマックス・等周不等式</span>
+        </span>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+  </ol>
+
+  <div class="keybind-hint" aria-label="キーボードショートカット">
+    <span class="kb-group"><kbd>←</kbd><kbd>→</kbd>章を移動</span>
+    <span class="kb-group"><kbd>T</kbd>目次へ</span>
+    <span class="kb-group"><kbd>P</kbd>印刷ビュー</span>
+    <span class="kb-group"><kbd>?</kbd>ヘルプ</span>
+  </div>
+</section>
+
+<!-- ==================== SIDE RAIL ==================== -->
+<aside class="rail" id="rail" aria-label="目次ナビゲーション">
+  <ol class="rail-list">
+    <li><a href="#ch1" class="rail-item" data-ch="1"><span class="rail-num">01</span><span class="rail-title">受験での典型題</span></a></li>
+    <li><a href="#ch2" class="rail-item" data-ch="2"><span class="rail-num">02</span><span class="rail-title">受験での解き直し</span></a></li>
+    <li><a href="#ch3" class="rail-item" data-ch="3"><span class="rail-num">03</span><span class="rail-title">大学からの読み返し</span></a></li>
+    <li><a href="#ch4" class="rail-item" data-ch="4"><span class="rail-num">04</span><span class="rail-title">不等式制約</span></a></li>
+    <li><a href="#ch5" class="rail-item" data-ch="5"><span class="rail-num">05</span><span class="rail-title">入試問題</span></a></li>
+    <li><a href="#ch6" class="rail-item" data-ch="6"><span class="rail-num">06</span><span class="rail-title">双対の風景</span></a></li>
+    <li><a href="#ch7" class="rail-item" data-ch="7"><span class="rail-num">07</span><span class="rail-title">補章</span></a></li>
+  </ol>
+</aside>
+
+<!-- ==================== CHAPTERS ==================== -->
+<!-- 各章は別 Edit で本文と図を流し込む -->
+
+<section class="chapter" id="ch1">
+  <div class="ch-kicker">
+    <span class="ch-num">01</span>
+    <span class="ch-cat">Chapter One · Familiar Constraints in Entrance Exams</span>
+  </div>
+  <h2 class="ch-title">受験での典型題 <span class="en">Familiar Constraints in Entrance Exams</span></h2>
+  <div class="ch-subtitle">領域内の最大最小、相加相乗、共通テストの線形計画</div>
+  <p class="ch-lede">
+    制約付き最大最小は、受験で繰り返し扱われる主題です。共通テストの線形計画、入試の相加相乗、楕円上の最大値は、いずれも制約条件のもとで関数の極値を求める同じ枠組みに属します。
+  </p>
+  <div class="ch-body">
+
+    <p>制約付き最大最小は、受験で繰り返し扱われる題材です。共通テストの線形計画、入試の相加相乗、円や楕円の上の最大値は、どれも制約条件のもとで関数の最大値・最小値を求める同じ枠組みに属します。本章ではまず、典型的な 3 つの形を並べて整理します。本稿の出発点はここに置きます。</p>
+
+    <h3>線形計画 ─ 領域内の最大最小<span class="en">Linear Programming, the Familiar Triangle</span></h3>
+
+    <p>共通テストでもおなじみの構図。連立 1 次不等式 $x \ge 0,\ y \ge 0,\ 2x + y \le 4,\ x + 2y \le 4$ で定まる領域内で、目的関数 $f(x, y) = x + y$ の最大値を求める。境界となる直線を引き、領域の頂点を求め、各頂点で $f$ の値を比較する ─ これだけです。</p>
+
+    <div class="dgm">
+      <div class="dgm-head">
+        <div class="dgm-kicker">Diagram 01</div>
+        <div class="dgm-title">線形計画の典型図 ─ 領域の頂点が最大点になる</div>
+      </div>
+      <div class="dgm-content">
+        <div class="dgm-figure">
+          <svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="線形計画の領域と等高線">
+            <defs>
+              <marker id="arr01" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0 0 L10 5 L0 10 z" fill="#5b6a82"/>
+              </marker>
+            </defs>
+            <!-- 軸 -->
+            <line x1="30" y1="220" x2="360" y2="220" stroke="#5b6a82" stroke-width="1.2" marker-end="url(#arr01)"/>
+            <line x1="40" y1="240" x2="40" y2="20" stroke="#5b6a82" stroke-width="1.2" marker-end="url(#arr01)"/>
+            <text x="360" y="240" class="fig-axis">x</text>
+            <text x="22" y="22" class="fig-axis">y</text>
+            <!-- 領域(0,0)(2,0)(4/3,4/3)(0,2) -->
+            <!-- 単位: x=60px, y=60px、原点(40,220) -->
+            <!-- 頂点: O(40,220), A(160,220), B(120,140), C(40,100) -->
+            <polygon points="40,220 160,220 120,140 40,100" fill="#f3e3b4" fill-opacity="0.45" stroke="#6b4f00" stroke-width="1.5"/>
+            <!-- 等高線 x+y = c, c=0,1,2,8/3 -->
+            <g stroke="#2e343e" stroke-width="1" stroke-dasharray="3 3" opacity="0.55" fill="none">
+              <line x1="40" y1="280" x2="280" y2="40"/>
+              <line x1="40" y1="220" x2="220" y2="40"/>
+              <line x1="40" y1="160" x2="160" y2="40"/>
+            </g>
+            <!-- 最大点(等高線 x+y=8/3) -->
+            <line x1="40" y1="240" x2="240" y2="40" stroke="#6b4f00" stroke-width="2"/>
+            <circle cx="120" cy="140" r="6" fill="#6b4f00" stroke="#fff" stroke-width="2"/>
+            <!-- 頂点ラベル(マーカーから十分離して配置) -->
+            <text x="160" y="240" class="fig-lbl-jp">A</text>
+            <text x="22" y="105" class="fig-lbl-jp">C</text>
+            <text x="132" y="128" class="fig-lbl gold bold">B*</text>
+            <text x="32" y="240" class="fig-lbl-jp">O</text>
+            <!-- 領域のラベル -->
+            <text x="65" y="195" class="fig-lbl-jp" style="font-size:11px;">領域</text>
+            <!-- 等高線のラベル -->
+            <text x="232" y="58" class="fig-axis" style="font-size:11px;">x + y = c</text>
+          </svg>
+        </div>
+        <div class="dgm-legend">
+          <div class="dgm-legend-title">図の凡例</div>
+          <ul class="legend-list">
+            <li class="legend-item sym"><span class="legend-sym jp">領域</span><span><span class="legend-key">実行可能領域</span>$x \ge 0,\ y \ge 0,\ 2x+y \le 4,\ x+2y \le 4$ を満たす点の集合</span></li>
+            <li class="legend-item sym"><span class="legend-sym alt">B*</span><span><span class="legend-key">最大点</span>頂点 $(4/3, 4/3)$、$f = 8/3$</span></li>
+            <li class="legend-item sym"><span class="legend-sym ink">線</span><span><span class="legend-key">等高線</span>$f(x, y) = x + y = c$ は傾き $-1$ の平行直線</span></li>
+          </ul>
+          <div class="legend-foot eq">$\max_{(x, y) \in D} (x + y) = 8/3$</div>
+        </div>
+      </div>
+      <div class="dgm-caption">
+        等高線 $x + y = c$ を $c$ について平行移動すると、領域 $D$ から離れる直前にちょうど頂点 $(4/3, 4/3)$ で接する。<strong>領域の頂点が最大点</strong> ─ これが線形計画で頂点が最大値を与える理由です。
+      </div>
+    </div>
+
+    <p>頂点を機械的に列挙して終わり、というのは結果として正しい解法です。しかし、<em>なぜ頂点で最大になるか</em> は受験では問われません。等高線が直線で、領域が多角形だからというのが理由ですが、これを「等高線と領域の境界の接触」として読み直すと、章 02 で扱う幾何条件と直結します。</p>
+
+    <h3>相加相乗 ─ 等号成立条件を書け<span class="en">AM-GM, with the Equality Trace</span></h3>
+
+    <p>正の数 $x, y$ について $x + y \ge 2\sqrt{xy}$、等号は $x = y$ のとき。受験では「<em>等号成立条件を書け</em>」と繰り返し指導されます。この指導の中身は、最大値の <em>存在</em> を主張するだけでなく、その値を <em>実際に達成する点</em> を特定することにあり、本稿の中心的な問いに直結します。</p>
+
+    <p>たとえば $x > 0,\ y > 0,\ x + y = 4$ のもとで $xy$ の最大値は、$x = y = 2$ のとき $xy = 4$。$x + y = 4$ が制約、$xy$ が目的関数 ─ これがまさに「制約付き最大化」です。標準解法では「相加相乗の等号成立から $x = y$、そして $x + y = 4$ から $x = y = 2$」と進みます。しかし、これを <em>等高線と接触</em> の言葉で書き直すと、ラグランジュ未定乗数法の幾何が現れます(章 02 で確認します)。</p>
+
+    <p class="meta-note">「等号成立条件を書け」という指導は、受験で機械的なルールに見えるかもしれませんが、内容は <strong>達成点の確定</strong> です。$x + y \ge 2\sqrt{xy}$ の不等式からは「$xy$ の上限が $4$」までしか出ません。「実際に $xy = 4$ を取る $(x, y) = (2, 2)$ がある」を示して初めて、その値が最大値だと結論できます。</p>
+
+    <h3>円・楕円・球面の上の最大最小<span class="en">Maxima on Curves and Surfaces</span></h3>
+
+    <p>制約集合が直線でなく曲線になると、頂点列挙の手は通用しません。代表例:</p>
+
+    <div class="iff-decomp">
+      <div class="iff-head">よく出る制約付き最大最小の構図</div>
+      <ul class="iff-list">
+        <li>制約 $x^2 + y^2 = 1$ のもとで $f(x, y) = 2x + 3y$ の最大値を求めよ。</li>
+        <li>制約 $x + y + z = 3,\ x, y, z \ge 0$ のもとで $xyz$ の最大値を求めよ。</li>
+        <li>楕円 $\dfrac{x^2}{a^2} + \dfrac{y^2}{b^2} = 1$ に内接する長方形の面積を最大化せよ。</li>
+        <li>球面 $x^2 + y^2 + z^2 = 1$ のもとで $ax + by + cz$ の最大値を求めよ。</li>
+      </ul>
+    </div>
+
+    <p>受験では、それぞれに <em>標準解法</em> が用意されています。三角関数で置換、相加相乗、$f - c \cdot g$ の判別式、コーシー・シュワルツの不等式 ─ どれも 1 つの問題に対する有効な解法ですが、<strong>互いに独立な手筋に見える</strong> 点が難点です。これら 4 つの構図を統一する 1 本の原理が、章 03 で扱うラグランジュ未定乗数法です。</p>
+
+    <p>本稿は、受験で個別に覚える 30 通りの解法を、<em>1 つの幾何</em>(等高線と制約曲線の接触)に集約します。章 02 でその幾何を、章 03 で代数化を、章 04 で不等式制約への拡張を、章 05 で実題による検証を、章 06 で双対性を、章 07 で機械学習・経済学・ゲーム理論・変分法への応用を扱います。</p>
+
+    <div class="ch-key">
+      <div class="ch-key-head">
+        <span class="ch-key-label">Key Takeaways</span>
+        <span class="ch-key-en">本章のまとめ</span>
+      </div>
+      <ul>
+        <li>制約付き最大最小は、共通テストの線形計画・相加相乗・円や楕円上の最大値で <strong>繰り返し扱われる題材</strong>。受験段階で既に複数の個別解法が用意されている。</li>
+        <li>線形計画では領域の <strong>頂点</strong> で最大、相加相乗では <strong>等号成立条件</strong> が達成点の特定を担う。「達成点を書け」という指導の本質は、最大値の <em>存在</em> ではなく <em>位置</em> の確定にある。</li>
+        <li>$x^2 + y^2 = 1$ 上の $2x + 3y$、楕円内接長方形、$x + y + z$ 制約の $xyz$ 最大化 ─ ばらばらに見える 4 つの構図は、章 03 のラグランジュ未定乗数法で 1 つの幾何に統一される。</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<section class="chapter" id="ch2">
+  <div class="ch-kicker">
+    <span class="ch-num">02</span>
+    <span class="ch-cat">Chapter Two · Re-Solving with Level Sets and Gradients</span>
+  </div>
+  <h2 class="ch-title">受験での解き直し <span class="en">Re-Solving with Level Sets and Gradients</span></h2>
+  <div class="ch-subtitle">等高線と制約曲線の接触、勾配の向き</div>
+  <p class="ch-lede">
+    受験で機械的に処理してきた手筋を、<strong>等高線と勾配</strong> の言葉で言い直します。最大点では、目的関数の等高線が制約曲線に接します。
+  </p>
+  <div class="ch-body">
+
+    <p>章 01 で並べた 4 つの構図を、本章は <em>等高線と勾配</em> の幾何で書き直します。一見ばらばらに見える解法群が、一つの幾何条件に集約されることを示します。</p>
+
+    <h3>等高線と勾配ベクトル<span class="en">Level Sets and the Gradient Vector</span></h3>
+
+    <p>関数 $f(x, y)$ の <strong>等高線</strong> とは、$f$ の値が一定であるような点の集合 $\{ (x, y) : f(x, y) = c \}$ のことです。地図の標高線と同じ発想で、$c$ を動かせば曲線(または直線)の族が得られます。</p>
+
+    <p>$f$ の <strong>勾配 (gradient)</strong> $\nabla f = \bigl(\partial f / \partial x,\ \partial f / \partial y\bigr)$ は、その点で $f$ が <em>最も急に増える向き</em> を指すベクトルです。重要な性質を 2 つ:</p>
+
+    <div class="iff-decomp">
+      <div class="iff-head">勾配ベクトルの幾何的性質</div>
+      <ul class="iff-list">
+        <li>$\nabla f(P)$ は点 $P$ における $f$ の等高線に <em>直交</em> する。</li>
+        <li>$\nabla f(P)$ の向きは、$f$ が最も急に増える方向であり、その大きさは増加率に等しい。</li>
+      </ul>
+    </div>
+
+    <p>例として $f(x, y) = 2x + 3y$ をとると、$\nabla f = (2, 3)$ は定ベクトル。等高線は傾き $-2/3$ の平行直線の族で、すべての等高線は同じ方向 $(2, 3)$ に直交します。</p>
+
+    <h3>円の上で線形目的関数を最大にする<span class="en">A Linear Objective on the Circle</span></h3>
+
+    <p>典型例:制約 $g(x, y) = x^2 + y^2 - 1 = 0$ のもとで、$f(x, y) = 2x + 3y$ の最大値を求めよ。</p>
+
+    <p>$g$ の勾配は $\nabla g = (2x, 2y)$。これは円周上の点 $P = (x, y)$ から原点を結ぶ向き(の逆向き)、つまり <em>円の外向き法線</em> を表します。一方、$f$ の勾配 $\nabla f = (2, 3)$ は定ベクトル。等高線 $2x + 3y = c$ は傾き $-2/3$ の平行直線の族です。</p>
+
+    <p>$c$ を $-\infty$ から少しずつ大きくすると、等高線 $\{2x + 3y = c\}$ は左下から右上へ平行移動します。最初は円と交わらず、ある $c$ で円に接し、それより $c$ が大きい範囲では円を 2 点で横切り、反対側で再び接する。等高線が円に接するときの値 $c = \pm\sqrt{13}$ が、$f$ の最大値と最小値です。</p>
+
+    <div class="dgm">
+      <div class="dgm-head">
+        <div class="dgm-kicker">Diagram 02</div>
+        <div class="dgm-title">円の上で $2x + 3y$ を最大化する ─ 等高線が制約曲線に接するとき</div>
+      </div>
+      <div class="dgm-content">
+        <div class="dgm-figure">
+          <svg viewBox="0 0 380 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="円の上で線形目的関数を最大化する図">
+            <defs>
+              <marker id="arr02f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0 0 L10 5 L0 10 z" fill="#6b4f00"/>
+              </marker>
+              <marker id="arr02g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0 0 L10 5 L0 10 z" fill="#1a1d22"/>
+              </marker>
+            </defs>
+            <!-- 円(中心 190,140、半径 90) -->
+            <circle cx="190" cy="140" r="90" fill="#ededef" fill-opacity="0.55" stroke="#1a1d22" stroke-width="2"/>
+            <!-- 等高線 2x + 3y = c -->
+            <!-- 数学座標で傾き -2/3 → SVG では画面上で「右下がり」(SVG y/x の比 = +2/3) -->
+            <!-- 中心(190,140)を通る c=0 線:傾き SVG +2/3 で (40, 40) と (340, 240) -->
+            <g stroke="#1a1d22" stroke-width="1" stroke-dasharray="4 3" opacity="0.45" fill="none">
+              <!-- c < 0 線(左上、円との交点 2 つ) -->
+              <line x1="22" y1="82" x2="232" y2="222"/>
+              <!-- c = 0 線(円の中心 (190,140) を通る) -->
+              <line x1="40" y1="40" x2="340" y2="240"/>
+              <!-- c > 0 線(右上寄り、円との交点 2 つ) -->
+              <line x1="100" y1="20" x2="358" y2="192"/>
+            </g>
+            <!-- 接線(最大値 c=√13、接点 P*(240,65) を通り傾き SVG +2/3) -->
+            <line x1="160" y1="12" x2="340" y2="132" stroke="#6b4f00" stroke-width="2.5"/>
+            <!-- 接点 P* (240, 65) ─ 数学座標 (2/√13, 3/√13) -->
+            <circle cx="240" cy="65" r="6" fill="#6b4f00" stroke="#fff" stroke-width="2"/>
+            <!-- ∇f = 数学 (2, 3) → SVG 方向 (2, -3)、長さ 40、(2,-3)/√13 * 40 ≈ (22, -33) -->
+            <line x1="240" y1="65" x2="262" y2="32" stroke="#6b4f00" stroke-width="2.5" marker-end="url(#arr02f)"/>
+            <!-- ∇g(P*) は ∇f と同方向。半径方向(中心→接点)を破線で示して幾何を見せる -->
+            <line x1="190" y1="140" x2="240" y2="65" stroke="#1a1d22" stroke-width="2" stroke-dasharray="3 3" opacity="0.55"/>
+            <!-- 中心 -->
+            <circle cx="190" cy="140" r="3" fill="#1a1d22"/>
+            <!-- ラベル(マーカー/矢印先端から 10px+ 離して配置) -->
+            <text x="200" y="153" class="fig-lbl-jp" style="font-size:11px;">O</text>
+            <text x="252" y="56" class="fig-lbl gold bold">P*</text>
+            <text x="274" y="20" class="fig-lbl gold">∇f</text>
+            <text x="218" y="100" class="fig-lbl charcoal" style="font-size:13px;">∇g</text>
+            <text x="318" y="158" class="fig-lbl gold" style="font-size:11px;">c = √13</text>
+            <text x="60" y="218" class="fig-lbl-jp" style="font-size:11px;">円 g=0</text>
+          </svg>
+        </div>
+        <div class="dgm-legend">
+          <div class="dgm-legend-title">図の凡例</div>
+          <ul class="legend-list">
+            <li class="legend-item sym"><span class="legend-sym alt">P*</span><span><span class="legend-key">最大点</span>$\bigl(2/\sqrt{13},\ 3/\sqrt{13}\bigr)$、$f = \sqrt{13}$</span></li>
+            <li class="legend-item sym"><span class="legend-sym">∇f</span><span><span class="legend-key">$f$ の勾配</span>$\nabla f = (2, 3)$、等高線に直交</span></li>
+            <li class="legend-item sym"><span class="legend-sym alt">∇g</span><span><span class="legend-key">$g$ の勾配</span>$\nabla g = (2x, 2y)$、円の外向き法線</span></li>
+            <li class="legend-item sym"><span class="legend-sym ink">線</span><span><span class="legend-key">等高線</span>$2x + 3y = c$ は傾き $-2/3$ の平行直線</span></li>
+          </ul>
+          <div class="legend-foot eq">最大点 $P^*$ では $\nabla f \parallel \nabla g$</div>
+        </div>
+      </div>
+      <div class="dgm-caption">
+        最大点 $P^*$ では、目的関数の等高線(金の太線)と制約曲線(円)が <strong>共通の接線を持つ</strong>。これは「両者の法線が平行」と言い換えられ、$\nabla f \parallel \nabla g$ が成り立ちます。
+      </div>
+    </div>
+
+    <p>最大点では <strong>等高線と制約曲線が共通の接線を持つ</strong> ─ つまり両者の法線方向が一致します。法線方向は勾配ベクトルが指していますから、これは <em>勾配が平行</em> という条件にまとめられます。$P^* = (2/\sqrt{13},\ 3/\sqrt{13})$ では確かに $\nabla f = (2, 3)$ と $\nabla g = (4/\sqrt{13},\ 6/\sqrt{13}) = (2/\sqrt{13}) \cdot (2, 3)$ が同じ向きで、最大値は $f(P^*) = \sqrt{13}$。</p>
+
+    <h3>段階を追う ─ 等高線が制約曲線に近づく<span class="en">Three Stages of Approach</span></h3>
+
+    <p>等高線 $\{2x + 3y = c\}$ を $c$ について平行移動させたとき、円との関係は 3 段階で変わります。</p>
+
+    <div class="dgm">
+      <div class="dgm-head">
+        <div class="dgm-kicker">Diagram 03</div>
+        <div class="dgm-title">等高線が制約曲線に接するまでの 3 段階</div>
+      </div>
+      <div class="dgm-stack">
+        <div class="dgm-stack-row">
+          <div class="dgm-stack-fig">
+            <svg viewBox="0 0 200 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="段階1 等高線が円と交わる">
+              <!-- c = 1: y_svg = (2/3) x_svg + 5、円との交点 (64, 48) と (152, 106) -->
+              <circle cx="100" cy="90" r="55" fill="#ededef" fill-opacity="0.55" stroke="#1a1d22" stroke-width="1.5"/>
+              <line x1="0" y1="5" x2="200" y2="138" stroke="#6b4f00" stroke-width="2"/>
+              <circle cx="64" cy="48" r="3.5" fill="#6b4f00"/>
+              <circle cx="152" cy="106" r="3.5" fill="#6b4f00"/>
+            </svg>
+          </div>
+          <div class="dgm-stack-text">
+            <span class="dgm-stack-tag">Stage 1 — c が小さい</span>
+            <span class="dgm-stack-cond">等高線は円と $2$ 点で交わる</span>
+            <span class="dgm-stack-desc">交点上では $\nabla f$ と $\nabla g$ は平行でない。$c$ をまだ増やせる。</span>
+          </div>
+        </div>
+        <div class="dgm-stack-row">
+          <div class="dgm-stack-fig">
+            <svg viewBox="0 0 200 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="段階2 等高線が円に接する">
+              <!-- c = √13: 接点 (2/√13, 3/√13) → SVG (130, 44)、直線傾き +2/3 -->
+              <circle cx="100" cy="90" r="55" fill="#ededef" fill-opacity="0.55" stroke="#1a1d22" stroke-width="1.5"/>
+              <line x1="64" y1="0" x2="200" y2="91" stroke="#6b4f00" stroke-width="2.5"/>
+              <circle cx="130" cy="44" r="5" fill="#6b4f00" stroke="#fff" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="dgm-stack-text">
+            <span class="dgm-stack-tag">Stage 2 — c = √13(最大)</span>
+            <span class="dgm-stack-cond">等高線は円に $1$ 点で接する</span>
+            <span class="dgm-stack-desc">接点で $\nabla f \parallel \nabla g$。これが最大点。</span>
+          </div>
+        </div>
+        <div class="dgm-stack-row">
+          <div class="dgm-stack-fig">
+            <svg viewBox="0 0 200 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="段階3 等高線が円と交わらない">
+              <!-- c = 5: 直線傾き +2/3、円との距離 76 > 半径 55 → 交わらない -->
+              <circle cx="100" cy="90" r="55" fill="#ededef" fill-opacity="0.55" stroke="#1a1d22" stroke-width="1.5"/>
+              <line x1="102" y1="0" x2="200" y2="65" stroke="#6b4f00" stroke-width="2" stroke-dasharray="4 3" opacity="0.6"/>
+            </svg>
+          </div>
+          <div class="dgm-stack-text">
+            <span class="dgm-stack-tag">Stage 3 — c &gt; √13</span>
+            <span class="dgm-stack-cond">等高線は円と交わらない</span>
+            <span class="dgm-stack-desc">この $c$ は制約上では実現不可能。</span>
+          </div>
+        </div>
+      </div>
+      <div class="dgm-caption">
+        最大値 $c = \sqrt{13}$ は、等高線が円に <strong>接するとき</strong> ─ Stage 2 ─ に達成される。これが「最大点では勾配が平行になる」幾何条件の中身です。
+      </div>
+    </div>
+
+    <h3>章末の中心テーゼ<span class="en">The Central Thesis</span></h3>
+
+    <p>章 01 の 4 構図 ─ 線形計画、相加相乗、円上の最大、楕円内接長方形 ─ に共通する構造は、最大点で等高線と制約曲線が接する、という一点です。これを 1 つの式にまとめると次のとおり。</p>
+
+    <div class="pull-quote">
+      <p>制約 $g(x, y) = 0$ のもとで $f(x, y)$ の極値点を $P^*$ とすると、最大点・最小点では目的関数の等高線が制約曲線に接する。すなわち $\nabla f(P^*) \parallel \nabla g(P^*)$。</p>
+      <div class="attribution">─ 本稿の中心テーゼ</div>
+    </div>
+
+    <p>この一行は、解析の言葉では <em>ラグランジュ未定乗数法 (method of Lagrange multipliers)</em> に当たります。$n$ 変数の関数 $f$ を等式制約 $g_1 = \cdots = g_m = 0$ のもとで極値化するとき、制約集合が正則な極値点では実数 $\lambda_1, \ldots, \lambda_m$ が存在して</p>
+
+    <div class="math-display">
+      $$\nabla f(P^*) = \lambda_1 \nabla g_1(P^*) + \cdots + \lambda_m \nabla g_m(P^*)$$
+    </div>
+
+    <p>が成り立つ ─ という定理です。$\lambda_i$ を <strong>ラグランジュ未定乗数</strong> と呼びます。次章では、この定理の精密ステートメントと、なぜ成り立つかの幾何学的証明スケッチを述べます。</p>
+
+    <div class="ch-key">
+      <div class="ch-key-head">
+        <span class="ch-key-label">Key Takeaways</span>
+        <span class="ch-key-en">本章のまとめ</span>
+      </div>
+      <ul>
+        <li>$f$ の <strong>勾配ベクトル</strong> $\nabla f$ は等高線に直交し、$f$ が最も急に増える方向を指す。</li>
+        <li>制約 $g = 0$ のもとで $f$ を最大化したとき、最大点 $P^*$ では <em>等高線が制約曲線に接する</em>。両者の法線方向が一致するということで、$\nabla f \parallel \nabla g$ と書ける。</li>
+        <li>この幾何条件こそ <strong>ラグランジュ未定乗数法</strong> の中身。代数では $\nabla f = \lambda_1 \nabla g_1 + \cdots + \lambda_m \nabla g_m$、$\lambda_i$ をラグランジュ未定乗数と呼ぶ。</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<section class="chapter" id="ch3">
+  <div class="ch-kicker">
+    <span class="ch-num">03</span>
+    <span class="ch-cat">Chapter Three · Lagrange Multipliers</span>
+  </div>
+  <h2 class="ch-title">大学からの読み返し <span class="en">Lagrange Multipliers</span></h2>
+  <div class="ch-subtitle">法空間、Lagrangian、陰関数定理</div>
+  <p class="ch-lede">
+    章 02 の幾何条件「$\nabla f \parallel \nabla g$」を代数で書き直すと、<em>ラグランジュ未定乗数法</em> が現れます。Lagrangian を導入すれば、制約付き問題は停留点方程式に帰着します。
+  </p>
+  <div class="ch-body">
+
+    <p>章 02 の幾何条件「$\nabla f \parallel \nabla g$」を代数の言葉で精密化し、それが導かれる理由を陰関数定理の言葉でたどります。最後に、制約付き問題を <em>停留点方程式</em> に帰着させるラグランジュ関数を導入します。</p>
+
+    <h3>制約多様体と法空間<span class="en">The Constraint Manifold and Its Normal Space</span></h3>
+
+    <p>制約 $g_1(x) = \cdots = g_m(x) = 0$ を満たす点 $x \in \mathbb{R}^n$ の集合 $M = \{ x : g(x) = 0 \}$ を <strong>制約集合</strong> と呼びます。$g = (g_1, \ldots, g_m)$ が $C^1$ 級で、点 $x^* \in M$ で勾配ベクトル $\nabla g_1(x^*), \ldots, \nabla g_m(x^*)$ が $\mathbb{R}^n$ で <em>1 次独立</em> であるとき、その点での制約集合は局所的に滑らかな $n - m$ 次元の部分多様体になります。</p>
+
+    <p class="meta-note">この 1 次独立性は <strong>制約資格 (constraint qualification, LICQ)</strong> と呼ばれ、ラグランジュ未定乗数法が適用できる前提条件です。これが破れる例として、$g_1 = x^2 + y^2 - 1,\ g_2 = x - 1$ の交点 $(1, 0)$ では $\nabla g_1 = (2, 0)$ と $\nabla g_2 = (1, 0)$ が同方向で 1 次独立でなく、ラグランジュ条件が機械的には書けません。</p>
+
+    <p>$x^*$ における制約集合の <strong>接空間 (tangent space)</strong> は、$x^*$ から $M$ に沿って動ける方向を集めた線形空間で、$T_{x^*} M = \{ v \in \mathbb{R}^n : \nabla g_i(x^*) \cdot v = 0,\ i = 1, \ldots, m \}$ と書けます。すべての制約勾配に直交するベクトルの集まりです。</p>
+
+    <p>これに直交する空間が <strong>法空間 (normal space)</strong> $N_{x^*} M$ で、$\nabla g_1(x^*), \ldots, \nabla g_m(x^*)$ が張る線形空間に一致します。<em>$T_{x^*} M$ と $N_{x^*} M$ は $\mathbb{R}^n$ を直交分解する</em> ─ これが鍵です。</p>
+
+    <div class="dgm">
+      <div class="dgm-head">
+        <div class="dgm-kicker">Diagram 04</div>
+        <div class="dgm-title">$\mathbb{R}^2$ 内の円(制約集合)と、接空間・法空間の分解</div>
+      </div>
+      <div class="dgm-content">
+        <div class="dgm-figure">
+          <svg viewBox="0 0 380 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="円の接空間と法空間">
+            <defs>
+              <marker id="arr04" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0 0 L10 5 L0 10 z" fill="#1a1d22"/>
+              </marker>
+              <marker id="arr04g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0 0 L10 5 L0 10 z" fill="#6b4f00"/>
+              </marker>
+            </defs>
+            <!-- 円 -->
+            <circle cx="190" cy="140" r="90" fill="#ededef" fill-opacity="0.55" stroke="#1a1d22" stroke-width="2"/>
+            <!-- 接点 P* (190 + 90*cos(60°), 140 - 90*sin(60°)) = (235, 62) -->
+            <circle cx="235" cy="62" r="6" fill="#6b4f00" stroke="#fff" stroke-width="2"/>
+            <!-- 接線(接空間)— 接点で半径方向 (45,-78) に直交する方向 (78,45)、±80 で描画 -->
+            <line x1="157" y1="17" x2="313" y2="107" stroke="#1a1d22" stroke-width="2" stroke-dasharray="6 3"/>
+            <!-- ∇g vector: 接点から外向き法線方向 (0.5, -0.867)、長さ 50 → 終点 (260, 19) -->
+            <line x1="235" y1="62" x2="260" y2="19" stroke="#6b4f00" stroke-width="2.5" marker-end="url(#arr04g)"/>
+            <!-- 中心 -->
+            <circle cx="190" cy="140" r="3" fill="#1a1d22"/>
+            <!-- ラベル(マーカー/矢印先端から十分離して配置) -->
+            <text x="178" y="153" class="fig-lbl-jp" style="font-size:11px;">O</text>
+            <text x="244" y="55" class="fig-lbl gold bold">P*</text>
+            <text x="265" y="14" class="fig-lbl gold">∇g</text>
+            <text x="270" y="40" class="fig-lbl-jp" style="font-size:11px;">法空間 N</text>
+            <text x="80" y="100" class="fig-lbl-jp" style="font-size:11px;">接空間 T</text>
+            <text x="270" y="220" class="fig-lbl-jp" style="font-size:11px;">制約集合 M</text>
+          </svg>
+        </div>
+        <div class="dgm-legend">
+          <div class="dgm-legend-title">図の凡例</div>
+          <ul class="legend-list">
+            <li class="legend-item sym"><span class="legend-sym jp">M</span><span><span class="legend-key">制約集合</span>$g(x, y) = x^2 + y^2 - 1 = 0$ の零集合は円(1 次元の滑らかな多様体)</span></li>
+            <li class="legend-item sym"><span class="legend-sym jp">T</span><span><span class="legend-key">接空間</span>$T_{P^*} M$ は接線方向(1 次元)、$\nabla g \cdot v = 0$ なる $v$ の集合</span></li>
+            <li class="legend-item sym"><span class="legend-sym">∇g</span><span><span class="legend-key">$g$ の勾配</span>$\nabla g(P^*) = (2x^*, 2y^*)$、法空間 $N_{P^*} M$ を張る</span></li>
+          </ul>
+          <div class="legend-foot eq">$\mathbb{R}^2 = T_{P^*} M \oplus N_{P^*} M$</div>
+        </div>
+      </div>
+      <div class="dgm-caption">
+        円周上の各点で、接線方向(接空間)と動径方向(法空間)が直交分解を与える。$\nabla f$ が $T_{P^*} M$ 成分を持たない ─ これがラグランジュ条件の幾何的内容です。
+      </div>
+    </div>
+
+    <h3>ラグランジュ未定乗数法の精密ステートメント<span class="en">Theorem · Lagrange Multipliers</span></h3>
+
+    <aside class="thm-box">
+      <header>定理 (Lagrange Multipliers)</header>
+      <p>$U \subseteq \mathbb{R}^n$ を開集合、$g: U \to \mathbb{R}^m$ と $f: U \to \mathbb{R}$ を $C^1$ 級とし、$M = \{ x \in U : g(x) = 0 \}$ とする。$x^* \in M$ で $\mathrm{rank}\, Dg(x^*) = m$(制約資格 LICQ)が成り立ち、かつ $x^*$ が $f|_M$ の局所極値点であれば、$\lambda \in \mathbb{R}^m$ が存在して</p>
+      <div class="math-display">
+        $$\nabla f(x^*) = \sum_{i=1}^m \lambda_i \nabla g_i(x^*)$$
+      </div>
+      <p>が成り立つ。$\lambda_i$ をラグランジュ未定乗数と呼ぶ。</p>
+    </aside>
+
+    <p>これが章 02 の中心テーゼ「$\nabla f \parallel \nabla g$」の、 $n$ 変数・$m$ 制約への一般化です。<em>$\nabla f$ は法空間に属する</em> ─ つまり制約勾配たちの線形結合で表せる、ということを主張しています。</p>
+
+    <h3>なぜ成り立つか ─ 陰関数定理経由の証明スケッチ<span class="en">Proof Sketch via the Implicit Function Theorem</span></h3>
+
+    <p>議論の流れは 4 段。</p>
+
+    <div class="iff-decomp">
+      <div class="iff-head">ラグランジュ条件の導き方</div>
+      <ul class="iff-list">
+        <li><strong>制約集合は局所的に部分多様体</strong>:LICQ により、陰関数定理が適用でき、$M$ は $x^*$ の近傍で $n - m$ 次元の滑らかな部分多様体になる。</li>
+        <li><strong>接空間が決まる</strong>:$T_{x^*} M = \ker Dg(x^*)$、つまり制約勾配たちすべてに直交するベクトルの集合。</li>
+        <li><strong>極値点の必要条件</strong>:$x^*$ が $f|_M$ の極値点なら、$M$ 上で $x^*$ を通る任意の滑らかな曲線 $\gamma(t)$ について $\frac{d}{dt} f(\gamma(t))|_{t=0} = \nabla f(x^*) \cdot \gamma'(0) = 0$。$\gamma'(0)$ は接空間 $T_{x^*} M$ を自由に走るから、$\nabla f(x^*) \perp T_{x^*} M$。</li>
+        <li><strong>法空間への属し方</strong>:$\nabla f(x^*)$ が接空間に直交するということは、法空間 $N_{x^*} M = \mathrm{span}\{\nabla g_i(x^*)\}_i$ に属する。すなわち $\nabla f = \sum \lambda_i \nabla g_i$ なる $\lambda$ が存在する。</li>
+      </ul>
+    </div>
+
+    <p>議論自体は素朴ですが、要は <em>LICQ</em>(制約勾配の 1 次独立性)。これが破れると陰関数定理が使えず、上の議論は成立しません。実用上、入試問題で LICQ が破れる場面はほとんどありません(制約曲線が滑らかで、目的関数の極値点で交差や尖点が現れない限り)。一方、不等式制約に拡張する章 04 では、関連する問題が再び現れます。</p>
+
+    <p class="meta-note">この定理は <strong>必要条件</strong> です。$\nabla f = \lambda \nabla g$ を満たす点が、必ずしも極値点ではない場合があります(鞍点になることがある)。十分条件にするには 2 階の条件(縁付きヘッセ行列の符号)を見るか、目的関数と制約の凸性で議論するか、です。</p>
+
+    <h3>ラグランジュ関数 ─ 停留点方程式への帰着<span class="en">The Lagrangian</span></h3>
+
+    <p>定理の条件 $\nabla f - \sum \lambda_i \nabla g_i = 0$ を、もう一つの関数の <em>勾配の零</em> として書き直せれば、議論は $(n + m)$ 変数の停留点方程式に帰着します。</p>
+
+    <aside class="def-box">
+      <header>定義 (Lagrangian)</header>
+      <p>$f, g_1, \ldots, g_m$ に対し、変数 $x \in \mathbb{R}^n$ と乗数 $\lambda = (\lambda_1, \ldots, \lambda_m) \in \mathbb{R}^m$ をあわせて</p>
+      <div class="math-display">
+        $$L(x, \lambda) = f(x) - \sum_{i=1}^m \lambda_i g_i(x)$$
+      </div>
+      <p>と置く。これを <strong>ラグランジュ関数 (Lagrangian)</strong> と呼ぶ。</p>
+    </aside>
+
+    <p>すると次が成り立ちます。</p>
+
+    <div class="when-how">
+      <div>
+        <div class="wh-label">x について偏微分 = 0</div>
+        <div class="wh-body">$\dfrac{\partial L}{\partial x_j} = \dfrac{\partial f}{\partial x_j} - \sum_i \lambda_i \dfrac{\partial g_i}{\partial x_j} = 0$ ─ つまりラグランジュ条件</div>
+      </div>
+      <div>
+        <div class="wh-label">λ について偏微分 = 0</div>
+        <div class="wh-body">$\dfrac{\partial L}{\partial \lambda_i} = -g_i(x) = 0$ ─ つまり制約 $g_i = 0$</div>
+      </div>
+    </div>
+
+    <p>$x$ と $\lambda$ の両方について $\nabla L = 0$ を解けば、「ラグランジュ条件 + 制約」が同時に出ます。<strong>制約付き極値問題が、$n + m$ 変数の停留点方程式に変換された</strong> ─ これがラグランジュ関数を導入する目的です。停留点が <em>極値である</em> かは別途、 2 階条件(縁付きヘッセ行列の符号)や、目的関数・制約の凸性で判定する必要があります。</p>
+
+    <h3>具体例 ─ 円の上で $xy$ の最大最小<span class="en">Example · Maximizing xy on the Unit Circle</span></h3>
+
+    <p>制約 $g = x^2 + y^2 - 1 = 0$ のもとで $f = xy$ の最大値・最小値を求めます。受験では「$x = \cos\theta, y = \sin\theta$ と置いて $\frac{1}{2}\sin 2\theta$ を最大化」と進みますが、ラグランジュなら次のとおり。</p>
+
+    <p>$L = xy - \lambda(x^2 + y^2 - 1)$ として停留点を解く:</p>
+
+    <div class="math-display">
+      $$\frac{\partial L}{\partial x} = y - 2\lambda x = 0, \quad \frac{\partial L}{\partial y} = x - 2\lambda y = 0, \quad \frac{\partial L}{\partial \lambda} = -(x^2 + y^2 - 1) = 0.$$
+    </div>
+
+    <p>第 1, 2 式から $y = 2\lambda x,\ x = 2\lambda y$、これらを掛けて $xy = 4\lambda^2 xy$、つまり $xy(1 - 4\lambda^2) = 0$。$xy = 0$ は制約と矛盾するので排除し、$\lambda = \pm 1/2$。$\lambda = 1/2$ なら $y = x$、制約から $x = y = \pm 1/\sqrt{2}$、このとき $xy = 1/2$。$\lambda = -1/2$ なら $y = -x$、$x = -y = \pm 1/\sqrt{2}$、$xy = -1/2$。よって最大 $1/2$、最小 $-1/2$。</p>
+
+    <p>標準解法と結果は同じですが、 <em>$\lambda$ の値そのものに幾何的意味</em> がある点が違います。$\lambda = 1/2$ は、制約を「$x^2 + y^2 = 1$」から「$x^2 + y^2 = 1 + \varepsilon$」に微小に動かしたとき、最大値が $0.5 \cdot \varepsilon$ だけ動くという感度を表します(章 06 で再訪する <strong>影の価格</strong> の正体です。内点解・微分可能性の前提下で包絡線定理から従います)。</p>
+
+    <div class="ch-key">
+      <div class="ch-key-head">
+        <span class="ch-key-label">Key Takeaways</span>
+        <span class="ch-key-en">本章のまとめ</span>
+      </div>
+      <ul>
+        <li>LICQ(制約勾配の 1 次独立性)のもとで、制約集合 $M = \{g = 0\}$ は局所的に滑らかな $n - m$ 次元の <strong>部分多様体</strong>。陰関数定理が保証する。</li>
+        <li>極値点 $x^*$ では $\nabla f(x^*) \perp T_{x^*} M$、すなわち $\nabla f(x^*)$ は <em>法空間</em> $N_{x^*} M = \mathrm{span}\{\nabla g_i\}$ に属する。これがラグランジュ条件の幾何的内容。</li>
+        <li><strong>Lagrangian</strong> $L(x, \lambda) = f(x) - \sum \lambda_i g_i(x)$ を導入すると、 $\nabla L = 0$ が「ラグランジュ条件 + 制約」を同時に表す停留点方程式に化ける。</li>
+        <li>ラグランジュ乗数 $\lambda$ そのものに <em>感度</em> の意味がある:制約を 1 単位緩めたとき最適値がどれだけ動くか(影の価格、章 06 で詳述)。</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<section class="chapter" id="ch4">
+  <div class="ch-kicker">
+    <span class="ch-num">04</span>
+    <span class="ch-cat">Chapter Four · The KKT Conditions</span>
+  </div>
+  <h2 class="ch-title">不等式制約への拡張 <span class="en">The KKT Conditions</span></h2>
+  <div class="ch-subtitle">アクティブ集合、補集合性、Karush と Kuhn-Tucker</div>
+  <p class="ch-lede">
+    等式制約のラグランジュ条件を、<strong>不等式制約</strong> の場合に拡張したのが KKT 条件です。アクティブな制約だけが乗数を持つ、という補集合性が幾何を支配します。
+  </p>
+  <div class="ch-body">
+
+    <p>等式制約 $g = 0$ を <em>不等式制約</em> $g \le 0$ に置き換えると、何が変わるか。本章で扱うのが <strong>KKT 条件 (Karush-Kuhn-Tucker conditions)</strong> です。等式の場合との違いは 1 点に集約されます ─ <em>すべての制約が「効いている」とは限らない</em> こと。</p>
+
+    <h3>アクティブな制約とアクティブでない制約<span class="en">Active and Inactive Constraints</span></h3>
+
+    <p>不等式制約 $g_i(x) \le 0$ を考えます。ある点 $x^*$ で次の 2 つが起こりえます。</p>
+
+    <div class="iff-decomp">
+      <div class="iff-head">制約のアクティブ性</div>
+      <ul class="iff-list">
+        <li><strong>アクティブ (active)</strong>:$g_i(x^*) = 0$ ─ 境界の上にいる。制約が「効いている」。</li>
+        <li><strong>アクティブでない (inactive)</strong>:$g_i(x^*) &lt; 0$ ─ 内部にいる。制約は事実上効かず、無視してよい。</li>
+      </ul>
+    </div>
+
+    <p>最大点・最小点が領域の内部にあるなら、すべての不等式制約は <em>アクティブでない</em> ので、無制約問題と同じく $\nabla f = 0$ だけが必要条件です。一方、最適点が境界の一部にあれば、その境界に対応する制約だけが効きます。</p>
+
+    <h3>KKT 条件 ─ 不等式制約のラグランジュ条件<span class="en">The KKT Conditions</span></h3>
+
+    <aside class="thm-box">
+      <header>定理 (KKT, Karush 1939; Kuhn-Tucker 1951)</header>
+      <p>制約付き最大化問題</p>
+      <div class="math-display">
+        $$\max f(x) \quad \text{subject to} \quad g_i(x) \le 0\ (i = 1, \ldots, m),\quad h_j(x) = 0\ (j = 1, \ldots, k)$$
+      </div>
+      <p>を考える。$x^*$ が局所最大点で、適切な <em>制約資格</em>(LICQ または MFCQ 等)を満たすならば、乗数 $\lambda \in \mathbb{R}^m,\ \mu \in \mathbb{R}^k$ が存在して次の <strong>4 条件</strong> が同時に成り立つ。</p>
+      <p><strong>定常性 (Stationarity)</strong></p>
+      <div class="math-display">
+        $$\nabla f(x^*) = \sum_i \lambda_i \nabla g_i(x^*) + \sum_j \mu_j \nabla h_j(x^*)$$
+      </div>
+      <p><strong>主実行可能性 (Primal feasibility)</strong>:$g_i(x^*) \le 0,\ h_j(x^*) = 0$。</p>
+      <p><strong>双対実行可能性 (Dual feasibility)</strong>:$\lambda_i \ge 0$。</p>
+      <p><strong>補集合性 (Complementary slackness)</strong>:$\lambda_i\, g_i(x^*) = 0$。</p>
+      <p class="meta-note" style="margin: 0.85rem 0 0; padding: 0.4rem 1rem;">最小化問題は $f \mapsto -f$ で最大化問題に直すと、上の条件がそのまま使えます(教科書では最小化版で書かれることが多いが、本稿は受験の「最大値を求めよ」型に合わせて最大化版で書きます)。<em>Slater 条件</em> は凸計画の強双対性の文脈で別途用いるもので、 KKT の制約資格としてこの場面では用いません。</p>
+    </aside>
+
+    <p>4 つの条件の意味を 1 つずつ。</p>
+
+    <h4>(1) 定常性 ─ ラグランジュ条件の自然な拡張</h4>
+
+    <p>これは章 03 のラグランジュ条件そのものを、不等式制約と等式制約を区別せずに書いたものです。「目的関数の勾配は、(アクティブな)制約勾配の線形結合で表される」という主張です。$g_i$ がアクティブでないとき、後述の補集合性により $\lambda_i = 0$ が自動的に出るため、定常性の式は実質的にアクティブな制約だけを使うことになります。</p>
+
+    <h4>(2) 主実行可能性 ─ 制約を満たすこと</h4>
+
+    <p>これは当たり前の条件で、$x^*$ が制約集合内にあること。「実行可能 (feasible)」とは制約を満たすという意味。</p>
+
+    <h4>(3) 双対実行可能性 ─ 乗数は非負</h4>
+
+    <p>等式制約では乗数 $\mu_j$ は実数全体を動けますが、不等式制約の乗数 $\lambda_i$ は <em>非負</em> でなくてはいけません。これには明確な幾何的理由があります。</p>
+
+    <p>不等式制約 $g_i \le 0$ を緩める($g_i \le \varepsilon$ にする)と、実行可能領域は広がり、最大値はもとと同じか <em>より大きく</em> なります。「制約を緩めると最適値が改善する向き」が決まっており、これが乗数の符号を一意に固定します。$\lambda_i$ は <em>制約 $i$ を 1 単位緩めたときの最適値の増加量</em> ─ これが章 06 で扱う <strong>影の価格</strong> の幾何です。$\lambda_i = \partial f^*/\partial b_i$ という感度等式は、内点解・微分可能性・強双対性の下で <em>包絡線定理</em> から従う関係であり、無条件には成り立たないことに注意します。</p>
+
+    <h4>(4) 補集合性 ─ アクティブな制約だけが乗数を持つ</h4>
+
+    <p>4 つの条件の中で最も特徴的なのがこれ。$\lambda_i g_i(x^*) = 0$ を変形すると、$\lambda_i = 0$ または $g_i(x^*) = 0$ の <em>少なくとも一方</em> が成り立つ、と言い換えられます。</p>
+
+    <div class="iff-decomp">
+      <div class="iff-head">補集合性の幾何</div>
+      <ul class="iff-list">
+        <li>$g_i(x^*) &lt; 0$(アクティブでない) $\Rightarrow$ $\lambda_i = 0$。乗数は消える。</li>
+        <li>$g_i(x^*) = 0$(アクティブ) $\Rightarrow$ $\lambda_i \ge 0$ の値が出る。</li>
+      </ul>
+    </div>
+
+    <p>本章の冒頭で述べた「アクティブな制約だけが効く」を、代数式で表現したものです。最適点での解析が大幅に簡素化されます ─ $m$ 個の不等式制約があっても、アクティブなのは普通その一部だけだからです。</p>
+
+    <div class="dgm">
+      <div class="dgm-head">
+        <div class="dgm-kicker">Diagram 05</div>
+        <div class="dgm-title">KKT 条件 ─ アクティブな制約だけが乗数を持つ</div>
+      </div>
+      <div class="dgm-content">
+        <div class="dgm-figure">
+          <svg viewBox="0 0 380 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="KKT のアクティブ制約と非アクティブ制約">
+            <defs>
+              <marker id="arr05" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0 0 L10 5 L0 10 z" fill="#6b4f00"/>
+              </marker>
+            </defs>
+            <!-- スケール: 原点 (60, 220)、x 単位 110px、y 単位 80px(不均一スケール) -->
+            <!-- 三角領域 OAB: O(0,0)=(60,220), A(2,0)=(280,220), B(0,2)=(60,60)、斜辺は x+y=2 -->
+            <polygon points="60,220 280,220 60,60" fill="#f3e3b4" fill-opacity="0.5" stroke="#6b4f00" stroke-width="1.5"/>
+            <!-- 等高線 x + y = c (c=0.5, 1, 1.5)、数学的傾き -1 → SVG 傾き +(80/110)≈+0.73(画面右下がり) -->
+            <!-- c=0.5: 数学 (0.5,0)-(0,0.5) → SVG (115,220)-(60,180) -->
+            <!-- c=1.0: 数学 (1,0)-(0,1)   → SVG (170,220)-(60,140) -->
+            <!-- c=1.5: 数学 (1.5,0)-(0,1.5) → SVG (225,220)-(60,100) -->
+            <g stroke="#1a1d22" stroke-width="1" stroke-dasharray="4 3" opacity="0.45" fill="none">
+              <line x1="115" y1="220" x2="60" y2="180"/>
+              <line x1="170" y1="220" x2="60" y2="140"/>
+              <line x1="225" y1="220" x2="60" y2="100"/>
+            </g>
+            <!-- 接線(最大値 c=2、斜辺 AB と一致):金太線で強調 -->
+            <line x1="280" y1="220" x2="60" y2="60" stroke="#6b4f00" stroke-width="2.5"/>
+            <!-- 最大点 P*(1, 1) ─ 斜辺の中点 SVG (170, 140) -->
+            <!-- 検算:斜辺パラメータ t=0.5 → SVG x = 60 + 0.5*220 = 170, y = 220 - 0.5*160 = 140 ✓ -->
+            <circle cx="170" cy="140" r="6" fill="#6b4f00" stroke="#fff" stroke-width="2"/>
+            <!-- ∇f = 数学 (1, 1) → SVG ベクトル (+1, -1) のスケール調整 → 長さ約 35px で (+25, -25) -->
+            <!-- ∇g = 数学 (1, 1) で ∇f と完全に平行。視覚的に区別するため、別オフセットで描画 -->
+            <line x1="170" y1="140" x2="200" y2="110" stroke="#6b4f00" stroke-width="2.5" marker-end="url(#arr05)"/>
+            <!-- λ∇g 破線(同方向、 P* から少しずらして並行を強調) -->
+            <line x1="174" y1="136" x2="204" y2="106" stroke="#1a1d22" stroke-width="1.6" stroke-dasharray="3 3" opacity="0.7"/>
+            <!-- 非アクティブ制約の例:右辺の縦線 x=1.8 (SVG 60+1.8*110=258) -->
+            <line x1="258" y1="220" x2="258" y2="60" stroke="#7a2810" stroke-width="1.3" opacity="0.5" stroke-dasharray="2 3"/>
+            <!-- 軸・ラベル(マーカー/矢印から十分離して配置) -->
+            <text x="48" y="240" class="fig-axis">O</text>
+            <text x="296" y="240" class="fig-axis">A</text>
+            <text x="46" y="55" class="fig-axis">B</text>
+            <text x="158" y="158" class="fig-lbl gold bold">P*</text>
+            <text x="208" y="100" class="fig-lbl gold">∇f</text>
+            <text x="220" y="123" class="fig-lbl charcoal" style="font-size:11px;">λ∇g</text>
+            <text x="263" y="245" class="fig-lbl-jp warn" style="font-size:10px;">非アクティブ</text>
+            <text x="100" y="200" class="fig-lbl-jp" style="font-size:11px;">実行可能領域</text>
+            <text x="220" y="75" class="fig-lbl gold" style="font-size:12px;">g = 0</text>
+          </svg>
+        </div>
+        <div class="dgm-legend">
+          <div class="dgm-legend-title">図の凡例</div>
+          <ul class="legend-list">
+            <li class="legend-item sym"><span class="legend-sym alt">P*</span><span><span class="legend-key">最大点</span>斜辺 $x + y = 2$ 上の点(中点 $(1, 1)$ を代表で図示)。アクティブ制約は $g_3 = x + y - 2$ のみ</span></li>
+            <li class="legend-item sym"><span class="legend-sym">∇f</span><span><span class="legend-key">目的関数の勾配</span>$f = x + y$ なら $\nabla f = (1, 1)$。領域の外向き</span></li>
+            <li class="legend-item sym"><span class="legend-sym alt">λ∇g</span><span><span class="legend-key">アクティブ制約の勾配</span>$\nabla f = \lambda_3 \nabla g_3$、$\lambda_3 \ge 0$。$\nabla f \parallel \nabla g_3$</span></li>
+            <li class="legend-item sym"><span class="legend-sym warn">破線</span><span><span class="legend-key">非アクティブ制約</span>$x \le 1.8$ などは最適点で効かず $\lambda = 0$</span></li>
+          </ul>
+          <div class="legend-foot eq">補集合性:$\lambda_i\, g_i(x^*) = 0$</div>
+        </div>
+      </div>
+      <div class="dgm-caption">
+        最大点 $P^*$ では、目的関数の勾配 $\nabla f$ が <strong>アクティブな制約 $g_3$ の勾配方向</strong> と平行で、乗数 $\lambda_3 \ge 0$ で結ばれる。非アクティブな制約は乗数ゼロで計算から消える。これが KKT 条件の幾何的内容です。線形目的関数の場合、斜辺全体が最大集合となり、$P^*$ は代表点として中点を取りました。
+      </div>
+    </div>
+
+    <h3>歴史 ─ Karush 1939 と Kuhn-Tucker 1951<span class="en">A Brief Lineage</span></h3>
+
+    <p>定理の名前は「KKT」と並べて呼ばれますが、これには複雑な発見史があります。</p>
+
+    <div class="dgm">
+      <div class="dgm-head">
+        <div class="dgm-kicker">Diagram 06</div>
+        <div class="dgm-title">不等式制約の最適化条件 ─ 発見と命名の経緯</div>
+      </div>
+      <ol class="tl-list" style="margin: 1.5rem 0 0 0;">
+        <li class="tl-item" style="border-left-color: #1a1d22;">
+          <div class="tl-head"><time class="tl-year">1788</time><span class="tl-name">Lagrange</span></div>
+          <div class="tl-desc">『解析力学』で等式制約のラグランジュ未定乗数法を体系化。古典力学の拘束問題から派生。</div>
+        </li>
+        <li class="tl-item" style="border-left-color: #b28a1c;">
+          <div class="tl-head"><time class="tl-year">1939</time><span class="tl-name">Karush, William</span></div>
+          <div class="tl-desc">シカゴ大学の修士論文で、不等式制約付き最適化の必要条件を初めて導出。長らく未公刊だった。</div>
+        </li>
+        <li class="tl-item" style="border-left-color: #dbab2b;">
+          <div class="tl-head"><time class="tl-year">1948</time><span class="tl-name">John, Fritz</span></div>
+          <div class="tl-desc">制約資格を弱めた「Fritz John 条件」を発表。$\lambda_0 = 0$ も許す形で、制約資格が破れる場合の修正版。</div>
+        </li>
+        <li class="tl-item" style="border-left-color: #1a1d22;">
+          <div class="tl-head"><time class="tl-year">1951</time><span class="tl-name">Kuhn &amp; Tucker</span></div>
+          <div class="tl-desc">バークレー数理統計シンポジウムで「非線形計画」を発表。Karush と独立に同じ条件を導出。以後「Kuhn-Tucker 条件」として広まる。</div>
+        </li>
+        <li class="tl-item" style="border-left-color: #b28a1c;">
+          <div class="tl-head"><time class="tl-year">1970s</time><span class="tl-name">再発見と命名修正</span></div>
+          <div class="tl-desc">Karush の修士論文が再評価され、現代では「KKT 条件」と表記するのが主流に。</div>
+        </li>
+      </ol>
+      <div class="dgm-caption">
+        Karush の 1939 年の修士論文は、戦後シカゴ大学のアーカイブから再評価されるまで、長らく学界の表舞台に出ていませんでした。優先権が後年に再評価された珍しい例です。
+      </div>
+    </div>
+
+    <h3>制約資格 ─ KKT が成り立つ前提<span class="en">Constraint Qualifications</span></h3>
+
+    <p>KKT の主張は「適切な制約資格を満たすなら」という前提つきです。代表的なものを 3 つ。</p>
+
+    <div class="iff-decomp">
+      <div class="iff-head">主な制約資格</div>
+      <ul class="iff-list">
+        <li><strong>LICQ (Linear Independence Constraint Qualification)</strong>:$x^*$ でアクティブな制約勾配と等式制約の勾配たちが 1 次独立。等式制約のラグランジュ未定乗数法と同じ感覚。</li>
+        <li><strong>MFCQ (Mangasarian-Fromovitz Constraint Qualification)</strong>:LICQ を緩めた条件。乗数の一意性は失われるが、存在は保証される。</li>
+        <li><strong>Slater 条件</strong>:凸計画問題で、制約 $g_i(x) &lt; 0$ を厳密に満たす内点が存在する。凸最適化では最も使いやすい。</li>
+      </ul>
+    </div>
+
+    <p>受験問題のレベルで KKT を陽に使う場面はほぼありませんが、 <em>制約資格</em> という概念は、後の凸最適化や機械学習の理論で繰り返し登場します。「定理の前提条件を意識する習慣」を身につけるなら、ここで触れるのが最初の場面になります。</p>
+
+    <p class="meta-note">十分条件にするには、目的関数と制約集合の <strong>凸性</strong> を加える必要があります。本稿の最大化版に揃えると、<em>凹目的関数 + 凸実行可能集合 + KKT 条件 ⇒ 大域最大</em>(等価に、最小化版では <em>凸目的関数 + 凸制約集合 + KKT 条件 ⇒ 大域最小</em>)─ これが凸最適化の柱です(Boyd-Vandenberghe, Chapter 5)。</p>
+
+    <div class="ch-key">
+      <div class="ch-key-head">
+        <span class="ch-key-label">Key Takeaways</span>
+        <span class="ch-key-en">本章のまとめ</span>
+      </div>
+      <ul>
+        <li><strong>KKT 4 条件</strong>:(i) 定常性 ─ $\nabla f$ が制約勾配の線形結合、(ii) 主実行可能性、(iii) 双対実行可能性($\lambda_i \ge 0$)、(iv) 補集合性 ─ $\lambda_i g_i(x^*) = 0$。</li>
+        <li><em>アクティブな制約だけが乗数を持つ</em>。境界に張り付いていない制約は乗数ゼロで計算から消える。これが補集合性の幾何。</li>
+        <li>本稿の一般非線形 KKT には <strong>制約資格</strong>(LICQ または MFCQ 等)が必要。 Slater 条件は凸計画の強双対性の文脈で別途用いる(章 06 で詳述)。</li>
+        <li>歴史:Karush 1939(シカゴ大修士論文で先取り)、Kuhn-Tucker 1951(バークレー数理統計シンポで公表)。 1970 年代以後「KKT」と並記が定着。</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<section class="chapter" id="ch5">
+  <div class="ch-kicker">
+    <span class="ch-num">05</span>
+    <span class="ch-cat">Chapter Five · Verification on Entrance Exams</span>
+  </div>
+  <h2 class="ch-title">入試問題で確かめる <span class="en">Verification on Entrance Exams</span></h2>
+  <div class="ch-subtitle">京都大学 2012 年の対称式問題、円上の最大、楕円内接長方形</div>
+  <p class="ch-lede">
+    実際の入試問題で、標準解法とラグランジュ未定乗数法を <strong>並行で</strong> 解いてみます。どちらが本質を見せ、どちらが計算量で勝るのかが見えます。
+  </p>
+  <div class="ch-body">
+
+    <p>章 03 のラグランジュ未定乗数法を 3 つの問題で検証します。最初の 2 つは典型問題、最後は京都大学の実題。標準解法とラグランジュを並行で解き、計算量と <em>本質の見え方</em> の両方を比較します。</p>
+
+    <h3>例題 1 ─ 円の上の線形目的関数<span class="en">Linear Objective on the Unit Circle</span></h3>
+
+    <aside class="ex-box">
+      <header>例題 1</header>
+      <p>制約 $x^2 + y^2 = 1$ のもとで、$f(x, y) = 2x + 3y$ の最大値・最小値を求めよ。</p>
+      <div class="ex-source">章 02 の Diagram 02 と同じ題材。標準解法とラグランジュを並べる。</div>
+    </aside>
+
+    <p><strong>標準解法 (コーシー・シュワルツ)</strong>。$(2, 3) \cdot (x, y) \le \sqrt{2^2 + 3^2} \cdot \sqrt{x^2 + y^2} = \sqrt{13}$ により $-\sqrt{13} \le 2x + 3y \le \sqrt{13}$。等号成立は $(x, y) = \pm (2, 3)/\sqrt{13}$。</p>
+
+    <p><strong>ラグランジュ解法</strong>。$L = 2x + 3y - \lambda(x^2 + y^2 - 1)$ から</p>
+
+    <div class="math-display">
+      $$\frac{\partial L}{\partial x} = 2 - 2\lambda x = 0, \quad \frac{\partial L}{\partial y} = 3 - 2\lambda y = 0.$$
+    </div>
+
+    <p>これらから $x = 1/\lambda,\ y = 3/(2\lambda)$。制約に代入して $1/\lambda^2 + 9/(4\lambda^2) = 1$、$13/(4\lambda^2) = 1$、$\lambda = \pm \sqrt{13}/2$。最大は $\lambda = \sqrt{13}/2$ のときで、$(x, y) = (2/\sqrt{13},\ 3/\sqrt{13})$、$f = \sqrt{13}$。最小は $-\sqrt{13}$。</p>
+
+    <p>計算量に大きな差はありません。<em>コーシー・シュワルツは結果直行</em>、<em>ラグランジュは構造を明示</em>。受験ならコーシー・シュワルツが速いですが、 3 変数以上の制約問題ではラグランジュの方が機械的に通ります。</p>
+
+    <h3>例題 2 ─ 楕円に内接する長方形の面積最大化<span class="en">Maximizing a Rectangle Inscribed in an Ellipse</span></h3>
+
+    <aside class="ex-box">
+      <header>例題 2</header>
+      <p>楕円 $\dfrac{x^2}{a^2} + \dfrac{y^2}{b^2} = 1$($a, b &gt; 0$)に内接し、各辺が座標軸に平行な長方形のうち、面積が最大となるものを求めよ。</p>
+      <div class="ex-source">古典問題。微分積分の入門書で頻出。</div>
+    </aside>
+
+    <p>長方形の右上の頂点を $(x, y)$($x, y &gt; 0$)とすると、対称性から長方形の頂点は $(\pm x, \pm y)$、面積は $S = 4xy$。最大化問題は</p>
+
+    <div class="math-display">
+      $$\max 4xy \quad \text{subject to} \quad \frac{x^2}{a^2} + \frac{y^2}{b^2} = 1, \quad x, y &gt; 0.$$
+    </div>
+
+    <p><strong>標準解法 (三角関数置換)</strong>。$x = a\cos\theta,\ y = b\sin\theta$($0 &lt; \theta &lt; \pi/2$)で $S = 4ab\cos\theta\sin\theta = 2ab\sin 2\theta$。最大は $\theta = \pi/4$ で $S_{\max} = 2ab$。</p>
+
+    <p><strong>ラグランジュ解法</strong>。$L = 4xy - \lambda(x^2/a^2 + y^2/b^2 - 1)$ より</p>
+
+    <div class="math-display">
+      $$\frac{\partial L}{\partial x} = 4y - \frac{2\lambda x}{a^2} = 0, \quad \frac{\partial L}{\partial y} = 4x - \frac{2\lambda y}{b^2} = 0.$$
+    </div>
+
+    <p>第 1 式 $\times x$ と第 2 式 $\times y$ を加えると $8xy = 2\lambda(x^2/a^2 + y^2/b^2) = 2\lambda$、よって $\lambda = 4xy = S$。</p>
+
+    <p>第 1 式から $y = \lambda x / (2a^2)$、第 2 式から $x = \lambda y / (2b^2)$、両者を掛けて $xy = \lambda^2 xy / (4a^2 b^2)$、$xy \ne 0$ より $\lambda^2 = 4a^2 b^2$、$\lambda = 2ab$($\lambda &gt; 0$ を採用)。</p>
+
+    <p>すると $y = 2ab \cdot x / (2a^2) = bx/a$、制約に代入して $x^2/a^2 + (bx/a)^2/b^2 = 2x^2/a^2 = 1$、$x = a/\sqrt{2}$、$y = b/\sqrt{2}$。最大面積 $S = 4xy = 2ab$、 <em>$\lambda$ の値 $2ab$ は最大面積そのもの</em>。これは、制約の右辺 $1$ を $1 + \varepsilon$ に動かしたとき最大面積が $\lambda \varepsilon = 2ab\,\varepsilon$ だけ増えるという感度(影の価格)の現れです。</p>
+
+    <div class="dgm">
+      <div class="dgm-head">
+        <div class="dgm-kicker">Diagram 07</div>
+        <div class="dgm-title">楕円に内接する最大の長方形 ─ 頂点は $\theta = \pi/4$ の位置</div>
+      </div>
+      <div class="dgm-content">
+        <div class="dgm-figure">
+          <svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="楕円内接長方形">
+            <defs>
+              <marker id="arr07" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0 0 L10 5 L0 10 z" fill="#5b6a82"/>
+              </marker>
+            </defs>
+            <!-- 軸 -->
+            <line x1="40" y1="130" x2="340" y2="130" stroke="#5b6a82" stroke-width="1" marker-end="url(#arr07)"/>
+            <line x1="190" y1="250" x2="190" y2="20" stroke="#5b6a82" stroke-width="1" marker-end="url(#arr07)"/>
+            <text x="340" y="148" class="fig-axis">x</text>
+            <text x="170" y="20" class="fig-axis">y</text>
+            <!-- 楕円 a=140, b=90 -->
+            <ellipse cx="190" cy="130" rx="140" ry="90" fill="#ededef" fill-opacity="0.45" stroke="#1a1d22" stroke-width="1.8"/>
+            <!-- 最大長方形:x = a/√2 ≈ 99, y = b/√2 ≈ 63.6 -->
+            <!-- 中心 (190,130) を基準に、頂点 (190±99, 130±63.6) ≈ (91, 66.4), (289, 66.4), (289, 193.6), (91, 193.6) -->
+            <rect x="91" y="66" width="198" height="128" fill="#f3e3b4" fill-opacity="0.55" stroke="#6b4f00" stroke-width="2"/>
+            <!-- 頂点ハイライト -->
+            <circle cx="289" cy="66" r="5" fill="#6b4f00" stroke="#fff" stroke-width="2"/>
+            <!-- ラベル(マーカーから十分離して配置、複雑な式は凡例側へ) -->
+            <text x="298" y="54" class="fig-lbl gold bold">P*</text>
+            <text x="195" y="125" class="fig-lbl-jp" style="font-size:11px;">O</text>
+            <text x="320" y="148" class="fig-lbl-jp" style="font-size:11px;">a</text>
+            <text x="178" y="30" class="fig-lbl-jp" style="font-size:11px;">b</text>
+          </svg>
+        </div>
+        <div class="dgm-legend">
+          <div class="dgm-legend-title">図の凡例</div>
+          <ul class="legend-list">
+            <li class="legend-item sym"><span class="legend-sym alt">P*</span><span><span class="legend-key">最大点</span>$(a/\sqrt{2},\ b/\sqrt{2})$、$\theta = \pi/4$ に対応</span></li>
+            <li class="legend-item sym"><span class="legend-sym jp">楕</span><span><span class="legend-key">制約</span>$x^2/a^2 + y^2/b^2 = 1$</span></li>
+            <li class="legend-item sym"><span class="legend-sym jp">矩</span><span><span class="legend-key">最大長方形</span>面積 $S = 4xy = 2ab$、 $\lambda = 2ab$</span></li>
+          </ul>
+          <div class="legend-foot eq">$S_{\max} = 2ab,\ \lambda = 2ab$</div>
+        </div>
+      </div>
+      <div class="dgm-caption">
+        ラグランジュ乗数 $\lambda = 2ab$ は、最大面積 $S_{\max}$ そのものに一致する。これは「目的関数が線形変換に対して 1 次同次」のときに現れる Euler 関係の特殊例です。
+      </div>
+    </div>
+
+    <h3>例題 3 ─ 京都大学 2012 年 理系 第 3 問<span class="en">Kyoto Univ. 2012, Sci. Problem 3</span></h3>
+
+    <aside class="ex-box">
+      <header>例題 3</header>
+      <p>実数 $x, y$ が $x^2 + xy + y^2 = 6$ を満たしながら動くとき、$x^2 y + xy^2 - x^2 - 2xy - y^2 + x + y$ のとりうる値の範囲を求めよ。</p>
+      <div class="ex-source">京都大学 2012 年度 前期日程 理系 第 3 問</div>
+    </aside>
+
+    <p>この問題は本稿で扱う実題の中で計算量が最も大きい一題。標準解法は対称式置換、ラグランジュは形式上書けるものの計算が重く、両者の特徴が明確に分かれます。</p>
+
+    <p><strong>標準解法 (対称式)</strong>。$u = x + y,\ v = xy$ と置くと、$x^2 + xy + y^2 = (x + y)^2 - xy = u^2 - v = 6$、つまり $v = u^2 - 6$。一方、目的関数は</p>
+
+    <div class="math-display">
+      $$x^2 y + xy^2 - x^2 - 2xy - y^2 + x + y = xy(x + y) - (x + y)^2 + (x + y) = uv - u^2 + u.$$
+    </div>
+
+    <p>$v = u^2 - 6$ を代入すると、目的関数は $u(u^2 - 6) - u^2 + u = u^3 - u^2 - 5u$。$x, y$ が実数である条件は、$x, y$ が $t^2 - ut + v = 0$ の実数解だから、判別式 $u^2 - 4v \ge 0$、すなわち $u^2 - 4(u^2 - 6) \ge 0$、$-3u^2 + 24 \ge 0$、$-2\sqrt{2} \le u \le 2\sqrt{2}$。</p>
+
+    <p>あとは $h(u) = u^3 - u^2 - 5u$ を $u \in [-2\sqrt{2},\ 2\sqrt{2}]$ で微分して値域を決めるだけ ─ 微分すれば $h'(u) = 3u^2 - 2u - 5 = (3u - 5)(u + 1)$、停留点 $u = -1, 5/3$。区間内に両方含まれます($2\sqrt{2} \approx 2.83 &gt; 5/3$)。区間の端点と停留点で値を取ると</p>
+
+    <div class="math-display">
+      $$h(-2\sqrt{2}) = -8 - 6\sqrt{2},\quad h(-1) = 3,\quad h(5/3) = -175/27,\quad h(2\sqrt{2}) = -8 + 6\sqrt{2}.$$
+    </div>
+
+    <p>$h(-1) = 3$ で最大、$h(-2\sqrt{2}) = -8 - 6\sqrt{2}$ で最小。したがって目的関数の取りうる値の範囲は</p>
+
+    <div class="math-numbered">
+      <div class="math-display">$$-8 - 6\sqrt{2} \;\le\; x^2 y + xy^2 - x^2 - 2xy - y^2 + x + y \;\le\; 3.$$</div>
+      <div class="math-num">(✦)</div>
+    </div>
+
+    <p>最大値 $3$ は $u = -1$、すなわち $x + y = -1,\ xy = -5$ から $\{x, y\} = \bigl(\frac{-1 \pm \sqrt{21}}{2}\bigr)$ で達成、最小値 $-8 - 6\sqrt{2}$ は $u = -2\sqrt{2}$、すなわち $x = y = -\sqrt{2}$ で達成。<em>対称式の置換で 2 変数問題が 1 変数問題に化け、計算量が一気に減る</em>。</p>
+
+    <p><strong>ラグランジュ解法 (形式上)</strong>。$L = (x^2 y + xy^2 - x^2 - 2xy - y^2 + x + y) - \lambda(x^2 + xy + y^2 - 6)$ から $\partial L/\partial x, \partial L/\partial y$ を計算して停留点を求める ─ 計算式は 3 次まで現れ、行列式の場合分けが必要で、対称式置換より長い。<em>対称式の構造があるとき、それを使った置換が本質的に最短</em>。</p>
+
+    <p class="meta-note">京大はこの問題に「対称式の構造で 1 変数に落とす」を見せる意図があったと読めます。受験の本筋では、ラグランジュは <em>主役ではなく</em>「裏にある統一原理」として 1 行触れるだけで十分 ─ 1 行触れれば、なぜ対称式の置換がうまく行くのかが「制約付き極値問題の自然な変形」として理解できます。</p>
+
+    <h3>3 題から見えること<span class="en">What These Three Examples Show</span></h3>
+
+    <p>3 つの例題は、入試での <em>本音併走</em> を示しています。</p>
+
+    <div class="when-how">
+      <div>
+        <div class="wh-label">受験では</div>
+        <div class="wh-body">コーシー・シュワルツ、三角関数置換、対称式置換 ─ 個別の手筋で十分。Lagrange は迂回路</div>
+      </div>
+      <div>
+        <div class="wh-label">大学からは</div>
+        <div class="wh-body">$\nabla f = \lambda \nabla g$ という 1 つの幾何が、上の 3 手筋すべての根に座る</div>
+      </div>
+    </div>
+
+    <p>受験段階で Lagrange に乗り換える必要はありません。しかし「裏に同じ原理がある」と知っていれば、3 つの解法は <em>別個の手筋ではなく、同じ幾何の異なる切り口</em> として整理されます。これが本稿の中心的な指摘です。</p>
+
+    <div class="ch-key">
+      <div class="ch-key-head">
+        <span class="ch-key-label">Key Takeaways</span>
+        <span class="ch-key-en">本章のまとめ</span>
+      </div>
+      <ul>
+        <li>円上 $2x + 3y$ の最大化:Cauchy-Schwarz とラグランジュは <em>等しい計算量</em> で同じ結果 $\sqrt{13}$ を出す。前者は結果直行、後者は構造を明示。</li>
+        <li>楕円内接長方形:$S_{\max} = 2ab$、ラグランジュ乗数 $\lambda = 2ab = S_{\max}$。乗数の値そのものが最大面積に一致するのは、制約 $1 \mapsto 1+\varepsilon$ の感度の現れ(影の価格)。</li>
+        <li>京大 2012 年理系第 3 問:対称式 $u = x+y,\ v = xy$ で 2 変数を 1 変数 $h(u) = u^3 - u^2 - 5u$ に化け、$u \in [-2\sqrt{2}, 2\sqrt{2}]$ で値域 $-8 - 6\sqrt{2} \le S \le 3$。<em>対称式の置換が最短、ラグランジュは裏の原理を見せる役</em>。</li>
+        <li><strong>本音併走</strong>:受験で 30 通り暗記する手筋は、 1 つの幾何 $\nabla f \parallel \nabla g$ の異なる切り口として整理される。</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<section class="chapter" id="ch6">
+  <div class="ch-kicker">
+    <span class="ch-num">06</span>
+    <span class="ch-cat">Chapter Six · Duality</span>
+  </div>
+  <h2 class="ch-title">双対の風景 <span class="en">Duality</span></h2>
+  <div class="ch-subtitle">線形計画の主・双対、Slater 条件、影の価格</div>
+  <p class="ch-lede">
+    制約 1 本ごとに乗数 1 つ ─ この素朴な対応から、<em>主問題と双対問題</em> という二つの風景が現れます。線形計画では弱双対と強双対が、凸最適化では Slater 条件が橋を架けます。
+  </p>
+  <div class="ch-body">
+
+    <p>制約 1 本ごとに乗数 1 つ ─ この対応から自然に <strong>双対 (duality)</strong> の構造が生じます。同じ最適化問題を 2 つの角度から記述すると、主問題 (primal) と双対問題 (dual) という一対の問題が得られます。本章では、最も古典的で見通しのよい線形計画から始め、凸最適化の Slater 条件まで扱います。</p>
+
+    <h3>線形計画の主問題と双対問題<span class="en">LP Primal and Dual</span></h3>
+
+    <aside class="def-box">
+      <header>定義 (LP 主・双対)</header>
+      <p>主問題 (Primal):</p>
+      <div class="math-display">
+        $$\max c^\top x \quad \text{subject to} \quad A x \le b,\ x \ge 0.$$
+      </div>
+      <p>双対問題 (Dual):</p>
+      <div class="math-display">
+        $$\min b^\top y \quad \text{subject to} \quad A^\top y \ge c,\ y \ge 0.$$
+      </div>
+      <p>主の制約行列の <em>転置</em> が双対の制約行列、主の右辺ベクトルが双対の目的関数、主の目的ベクトルが双対の右辺、$\max$ と $\min$ が入れ替わる。</p>
+    </aside>
+
+    <p>機械的な対応関係に見えますが、Lagrangian から自然に出ます。主問題の Lagrangian を $L(x, y) = c^\top x - y^\top (A x - b) = c^\top x - y^\top A x + y^\top b$ と置き、$y \ge 0$ で固定して $x \ge 0$ について最大化すると、$x$ の係数 $c - A^\top y$ が非正なら最大は 0、正なら $+\infty$。したがって有界な双対関数は $g(y) = b^\top y$($A^\top y \ge c$ のときに限る)。これを $y$ について最小化したものが双対問題 ─ という流れです。</p>
+
+    <h3>弱双対性と強双対性<span class="en">Weak and Strong Duality</span></h3>
+
+    <aside class="thm-box">
+      <header>定理 (弱双対性)</header>
+      <p>$x$ が主問題で実行可能、$y$ が双対問題で実行可能ならば、$c^\top x \le b^\top y$。</p>
+    </aside>
+
+    <p><strong>証明スケッチ</strong>。$x \ge 0,\ A x \le b,\ y \ge 0,\ A^\top y \ge c$ から、$c^\top x \le (A^\top y)^\top x = y^\top A x \le y^\top b = b^\top y$。実行可能解の値は <em>常に主 $\le$ 双対</em> という大小関係が、計算なしで出ます。</p>
+
+    <p>主の最大値と双対の最小値の差を <strong>双対ギャップ (duality gap)</strong> と呼びます。LP では次が成り立ちます。</p>
+
+    <aside class="thm-box">
+      <header>定理 (強双対性 — LP)</header>
+      <p>主問題または双対問題が有界な最適解を持つならば、両者ともに最適解を持ち、最適値は一致する($c^\top x^* = b^\top y^*$)。双対ギャップは 0。</p>
+    </aside>
+
+    <p>これが <em>線形計画の双対性の核心</em>。「主を解けば双対も解けたことになる」 ─ LP ソルバが最大値と同時に乗数(双対変数)を返すのは、この理由によります。</p>
+
+    <h3>影の価格 ─ 乗数の経済学的意味<span class="en">Shadow Prices</span></h3>
+
+    <p>双対変数 $y_i$ には強い感度の意味があります。主問題の右辺 $b_i$ を 1 単位緩めると、最大値 $c^\top x^*$ が $y_i^*$ だけ動きます。これが <strong>影の価格 (shadow price)</strong>。</p>
+
+    <p>具体例:生産計画問題で、$b_i$ が原料 $i$ の在庫量、$y_i^*$ が原料 $i$ を 1 単位追加で買ったときの利益増加。原料 $i$ の市場価格が $y_i^*$ より安ければ買い増し、高ければ買い控え ─ 経済学の <em>意思決定の指針</em> がこの双対変数で記述されます。</p>
+
+    <p>章 03 の最後で「$\lambda = 1/2$ は感度の意味で重要」と書いたのは、この影の価格のことでした。Lagrangian の乗数とは、 <em>制約を緩めたときの最適値の改善量</em> ─ 局所的な経済学的価値の数値化です。</p>
+
+    <div class="dgm">
+      <div class="dgm-head">
+        <div class="dgm-kicker">Diagram 08</div>
+        <div class="dgm-title">LP 主・双対の対応 ─ 制約 1 本に対し乗数 1 つ</div>
+      </div>
+      <div class="dgm-content">
+        <div class="dgm-figure">
+          <svg viewBox="0 0 380 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="LP の主問題と双対問題">
+            <defs>
+              <marker id="arr08a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0 0 L10 5 L0 10 z" fill="#6b4f00"/>
+              </marker>
+            </defs>
+            <!-- 主問題 (左) -->
+            <rect x="20" y="50" width="150" height="180" fill="#ededef" fill-opacity="0.6" stroke="#1a1d22" stroke-width="1.6" rx="6"/>
+            <text x="95" y="80" class="fig-lbl-jp" text-anchor="middle" style="font-size:13px;font-weight:800;">主問題</text>
+            <text x="95" y="100" class="svg-en" text-anchor="middle">Primal</text>
+            <line x1="40" y1="115" x2="150" y2="115" stroke="#5b6a82" stroke-width="0.5"/>
+            <!-- 主の中身は SVG 内では記号ラベルのみ。式は凡例側へ -->
+            <text x="95" y="140" class="fig-lbl bold" text-anchor="middle" style="font-size:18px;">P</text>
+            <text x="95" y="170" class="fig-lbl-jp" text-anchor="middle" style="font-size:11px;">最大化</text>
+            <text x="95" y="195" class="fig-lbl-jp" text-anchor="middle" style="font-size:11px;">n 変数</text>
+            <text x="95" y="218" class="fig-lbl-jp" text-anchor="middle" style="font-size:11px;">m 本の不等式制約</text>
+
+            <!-- 双対矢印 (P ↔ D を結ぶ) -->
+            <line x1="175" y1="125" x2="205" y2="125" stroke="#6b4f00" stroke-width="2" marker-end="url(#arr08a)"/>
+            <line x1="205" y1="155" x2="175" y2="155" stroke="#6b4f00" stroke-width="2" marker-end="url(#arr08a)"/>
+            <text x="190" y="120" class="fig-lbl-jp" text-anchor="middle" style="font-size:10px;font-weight:700;">対応</text>
+            <text x="190" y="172" class="fig-lbl-jp" text-anchor="middle" style="font-size:10px;font-weight:700;">対応</text>
+
+            <!-- 双対問題 (右) -->
+            <rect x="210" y="50" width="150" height="180" fill="#f3e3b4" fill-opacity="0.45" stroke="#6b4f00" stroke-width="1.6" rx="6"/>
+            <text x="285" y="80" class="fig-lbl-jp" text-anchor="middle" style="font-size:13px;font-weight:800;">双対問題</text>
+            <text x="285" y="100" class="svg-en" text-anchor="middle">Dual</text>
+            <line x1="230" y1="115" x2="340" y2="115" stroke="#5b6a82" stroke-width="0.5"/>
+            <text x="285" y="140" class="fig-lbl bold gold" text-anchor="middle" style="font-size:18px;">D</text>
+            <text x="285" y="170" class="fig-lbl-jp" text-anchor="middle" style="font-size:11px;">最小化</text>
+            <text x="285" y="195" class="fig-lbl-jp" text-anchor="middle" style="font-size:11px;">m 変数</text>
+            <text x="285" y="218" class="fig-lbl-jp" text-anchor="middle" style="font-size:11px;">n 本の不等式制約</text>
+
+            <!-- 強双対性のキャプション -->
+            <text x="190" y="255" class="fig-lbl-jp" text-anchor="middle" style="font-size:11px;font-weight:700;">主の制約 m 本 ↔ 双対の変数 m 個</text>
+          </svg>
+        </div>
+        <div class="dgm-legend">
+          <div class="dgm-legend-title">図の凡例</div>
+          <ul class="legend-list">
+            <li class="legend-item sym"><span class="legend-sym alt">P</span><span><span class="legend-key">主問題</span>$\max c^\top x$ subject to $A x \le b,\ x \ge 0$。$n$ 変数 + $m$ 不等式制約</span></li>
+            <li class="legend-item sym"><span class="legend-sym">D</span><span><span class="legend-key">双対問題</span>$\min b^\top y$ subject to $A^\top y \ge c,\ y \ge 0$。$m$ 変数 + $n$ 不等式制約</span></li>
+            <li class="legend-item sym"><span class="legend-sym jp">対</span><span><span class="legend-key">対応</span>主の制約数 = 双対の変数数。乗数 $y_i$ = 制約 $i$ の影の価格</span></li>
+          </ul>
+          <div class="legend-foot eq">弱双対性: $c^\top x \le b^\top y$。強双対性は基底解の有界性などの条件下で成立し、等号</div>
+        </div>
+      </div>
+      <div class="dgm-caption">
+        制約 1 本ごとに双対変数 1 つ ─ 双対変数は <strong>影の価格</strong> として、制約を 1 単位緩めたときの最適値の改善量を表す。
+      </div>
+    </div>
+
+    <h3>凸最適化での双対 ─ Slater 条件<span class="en">Slater's Condition</span></h3>
+
+    <p>非線形凸最適化では、強双対性を保証するために <em>制約資格</em> を追加する必要があります。最もよく使われるのが <strong>Slater 条件</strong>。</p>
+
+    <aside class="thm-box">
+      <header>定理 (Slater の十分条件)</header>
+      <p>$f$ が凸、$g_i$ が凸($i = 1, \ldots, m$)、$h_j$ がアフィンの最適化問題で、すべての凸制約 $g_i(x) &lt; 0$ を厳密に満たす内点 $x_0$ が存在するとき、双対ギャップは 0(強双対性が成り立つ)。</p>
+    </aside>
+
+    <p>「実行可能領域に空でない開かれた内部がある」という素朴な条件です。LP の強双対性は Slater の特殊例として安易には回収できません ─ 退化 LP や、等式で表される面上の LP では通常の意味の内点が存在しないことがあります。LP の強双対性は、 <em>主問題または双対問題が有界な最適解を持つこと</em> から、基底解の構造を経由して直接示されます(Dantzig 1947 の主双対対称定理が古典的な扱い)。</p>
+
+    <p>非凸問題では双対ギャップが正になりえます。<em>強双対性は凸性が保証する性質</em> ─ これが凸最適化が機械学習・統計学・経済学で広く採用される理由です。</p>
+
+    <h3>章末 ─ Lagrangian の鞍点としての主双対<span class="en">The Saddle-Point View</span></h3>
+
+    <p>制約付き最小化問題 $\min f(x)$ subject to $g_i(x) \le 0$ で、 $f$ と $g_i$ がすべて凸で Slater 条件を満たすとき、強双対性が成り立ちます。このとき Lagrangian $L(x, \lambda) = f(x) + \lambda^\top g(x)$($\lambda \ge 0$)は <em>$x$ について凸、$\lambda$ について線形(よって凹)</em> という saddle 性質を持ち、 鞍点 $(x^*, \lambda^*)$ ─ つまり $L$ が $x^*$ で最小、$\lambda^*$ で最大となる点 ─ が主問題と双対問題の同時の最適解になります。</p>
+
+    <div class="math-display">
+      $$\min_x \max_{\lambda \ge 0} L(x, \lambda) = \max_{\lambda \ge 0} \min_x L(x, \lambda) = f(x^*).$$
+    </div>
+
+    <p>$\min_x \max_\lambda$ が主、$\max_\lambda \min_x$ が双対 ─ 強双対性の核心は、この 2 つの順序を交換できる点にあります。順序交換の根拠は凸性と Slater 条件、すなわち $L$ が両側で saddle 性質を持つこと。次章 07-3 で扱う von Neumann のミニマックス定理は、mixed strategy の単体上で同じ順序交換が成立する 1928 年の古典的結果です。</p>
+
+    <div class="ch-key">
+      <div class="ch-key-head">
+        <span class="ch-key-label">Key Takeaways</span>
+        <span class="ch-key-en">本章のまとめ</span>
+      </div>
+      <ul>
+        <li>制約 1 本に対し双対変数 1 つ ─ Lagrangian から自然に双対問題 $\min b^\top y$ が現れる。</li>
+        <li><strong>弱双対性</strong>($c^\top x \le b^\top y$)は無条件。<strong>強双対性</strong>(最適値が一致)は LP では基底解の有界性から、凸最適化では Slater 条件から成立する。</li>
+        <li><em>双対変数 = 影の価格</em>。制約 $i$ を 1 単位緩めたときの最適値改善量。経済学・生産計画・機械学習の意思決定の指針。</li>
+        <li>強双対性のもとで、Lagrangian $L(x, \lambda)$ は鞍点(saddle point)を持ち、$\min_x \max_{\lambda \ge 0} L = \max_{\lambda \ge 0} \min_x L$。順序交換が双対の本質。</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<section class="chapter" id="ch7">
+  <div class="ch-kicker">
+    <span class="ch-num">07</span>
+    <span class="ch-cat">Chapter Seven · Applications</span>
+  </div>
+  <h2 class="ch-title">補章 ─ 応用の場面集 <span class="en">Applications of the Multipliers</span></h2>
+  <div class="ch-subtitle">サポートベクターマシン、効用最大化、ミニマックス、等周不等式</div>
+  <p class="ch-lede">
+    同じ「制約と勾配の幾何」を、機械学習・経済学・ゲーム理論・変分法の <strong>4 つの場面</strong> でそれぞれ確認します。
+  </p>
+  <div class="ch-body">
+
+    <p>本稿の終章では、同じ「制約と勾配の幾何」が、機械学習・経済学・ゲーム理論・変分法の <em>4 つの場面</em> でそれぞれどう機能するかを順に扱います。</p>
+
+    <h3>07-1 サポートベクターマシンのマージン最大化<span class="en">Support Vector Machines</span></h3>
+
+    <p>機械学習の古典 <strong>サポートベクターマシン (SVM)</strong> は、線形分離可能な訓練データ $\{(x_i, y_i)\}_{i=1}^N$($y_i \in \{-1, +1\}$)に対し、 <em>分離超平面とデータの最小距離</em>(マージン)を最大化する超平面を求める問題です。</p>
+
+    <p>分離超平面を $w^\top x + b = 0$ と置くと、点 $x_i$ から超平面までの符号付き距離は $y_i (w^\top x_i + b) / \|w\|$。マージンを最大化することは、$\|w\|$ を最小化することと等価。SVM の最適化は</p>
+
+    <div class="math-display">
+      $$\min_{w, b}\ \tfrac{1}{2} \|w\|^2 \quad \text{subject to} \quad y_i (w^\top x_i + b) \ge 1 \quad (i = 1, \ldots, N).$$
+    </div>
+
+    <p>制約を章 04 の KKT 標準形 $g_i \le 0$ に揃えるため、 $g_i(w, b) = 1 - y_i(w^\top x_i + b) \le 0$ と書き直します(これで $\alpha_i \ge 0$ という双対実行可能性がそのまま使える)。SVM は凸最小化問題(目的関数 $\frac{1}{2}\|w\|^2$ が凸、制約も線形)で、内点条件(線形分離可能なら満たされる)から強双対性が成り立ちます。Lagrangian は $L = \frac{1}{2}\|w\|^2 - \sum_i \alpha_i [y_i(w^\top x_i + b) - 1]$。$\nabla_w L = 0$ から $w = \sum_i \alpha_i y_i x_i$、つまり <strong>最適超平面の法線は訓練点の線形結合</strong>。</p>
+
+    <p>そして補集合性 $\alpha_i [y_i(w^\top x_i + b) - 1] = 0$ により、$\alpha_i &gt; 0$ となる点 ─ すなわち <em>マージン上にちょうど乗っている点</em> ─ だけが $w$ の決定に寄与します。これらの点が <strong>サポートベクター</strong>。</p>
+
+    <div class="dgm">
+      <div class="dgm-head">
+        <div class="dgm-kicker">Diagram 09</div>
+        <div class="dgm-title">SVM ─ マージン最大化とサポートベクター</div>
+      </div>
+      <div class="dgm-content">
+        <div class="dgm-figure">
+          <svg viewBox="0 0 380 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SVM のマージンとサポートベクター">
+            <!-- 軸 -->
+            <line x1="30" y1="240" x2="360" y2="240" stroke="#5b6a82" stroke-width="0.8"/>
+            <line x1="30" y1="30" x2="30" y2="240" stroke="#5b6a82" stroke-width="0.8"/>
+            <!-- 分離超平面 (傾き 0.6 の直線) -->
+            <line x1="40" y1="180" x2="350" y2="-6" stroke="#6b4f00" stroke-width="2.5"/>
+            <!-- マージン上の境界 (両側) -->
+            <line x1="40" y1="220" x2="350" y2="34" stroke="#6b4f00" stroke-width="1.2" stroke-dasharray="5 4" opacity="0.7"/>
+            <line x1="40" y1="140" x2="350" y2="-46" stroke="#6b4f00" stroke-width="1.2" stroke-dasharray="5 4" opacity="0.7"/>
+            <!-- + クラス(右上) -->
+            <circle cx="220" cy="80" r="6" fill="#1a1d22"/>
+            <circle cx="260" cy="40" r="6" fill="#1a1d22"/>
+            <circle cx="310" cy="100" r="6" fill="#1a1d22"/>
+            <!-- サポートベクター + -->
+            <circle cx="200" cy="60" r="8" fill="#6b4f00" stroke="#fff" stroke-width="2"/>
+            <!-- - クラス(左下) -->
+            <rect x="80" y="200" width="10" height="10" fill="#1a1d22"/>
+            <rect x="130" y="220" width="10" height="10" fill="#1a1d22"/>
+            <rect x="55" y="160" width="10" height="10" fill="#1a1d22"/>
+            <!-- サポートベクター - -->
+            <rect x="105" y="186" width="14" height="14" fill="#6b4f00" stroke="#fff" stroke-width="2"/>
+            <!-- ∇f = w (超平面の法線) -->
+            <defs>
+              <marker id="arr09" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0 0 L10 5 L0 10 z" fill="#1a1d22"/>
+              </marker>
+            </defs>
+            <line x1="175" y1="120" x2="200" y2="80" stroke="#1a1d22" stroke-width="2" marker-end="url(#arr09)"/>
+            <!-- ラベル(マーカーから十分離して配置) -->
+            <text x="216" y="52" class="fig-lbl gold bold" style="font-size:11px;">SV+</text>
+            <text x="130" y="212" class="fig-lbl gold bold" style="font-size:11px;">SV−</text>
+            <text x="187" y="98" class="fig-lbl charcoal" style="font-size:12px;">w</text>
+            <text x="320" y="80" class="fig-axis" style="font-size:11px;">+1 領域</text>
+            <text x="40" y="245" class="fig-axis" style="font-size:11px;">−1 領域</text>
+            <text x="290" y="140" class="fig-axis" style="font-size:11px;">分離超平面</text>
+          </svg>
+        </div>
+        <div class="dgm-legend">
+          <div class="dgm-legend-title">図の凡例</div>
+          <ul class="legend-list">
+            <li class="legend-item sym"><span class="legend-sym ink">●</span><span><span class="legend-key">通常点</span>$\alpha_i = 0$、$w$ の決定に寄与しない</span></li>
+            <li class="legend-item sym"><span class="legend-sym">SV</span><span><span class="legend-key">サポートベクター</span>$\alpha_i &gt; 0$、マージン上にあり、$w$ を決める</span></li>
+            <li class="legend-item sym"><span class="legend-sym alt">w</span><span><span class="legend-key">法線ベクトル</span>$w = \sum_i \alpha_i y_i x_i$、サポートベクターの線形結合</span></li>
+          </ul>
+          <div class="legend-foot eq">補集合性:$\alpha_i [y_i(w^\top x_i + b) - 1] = 0$</div>
+        </div>
+      </div>
+      <div class="dgm-caption">
+        マージン上の少数の点(サポートベクター)だけが超平面の方向を決め、内側の点は <em>計算から消える</em>。これが SVM が高次元データで効率的に動く幾何的理由です。
+      </div>
+    </div>
+
+    <p>「<em>境界上の少数の点だけが分類器を決定する</em>」 ─ この性質は SVM 由来の概念で、KKT の補集合性から幾何的に導かれます。$N$ 個の訓練点があっても、サポートベクターは通常その一部だけ。高次元データを扱う場面で計算コストがサポートベクターの個数に依存するため、SVM は実用上有効な分類器として広く使われます。</p>
+
+    <h3>07-2 効用最大化 ─ 限界代替率と影の価格<span class="en">Utility Maximization in Microeconomics</span></h3>
+
+    <p>消費者が 2 財 $(x, y)$ を価格 $(p, q)$ で買い、所得 $m$ の下で効用 $U(x, y)$ を最大化する問題:</p>
+
+    <div class="math-display">
+      $$\max U(x, y) \quad \text{subject to} \quad p x + q y = m, \quad x, y \ge 0.$$
+    </div>
+
+    <p>$U$ が凹で内点解を持つと仮定すると、Lagrange 条件は $\nabla U = \lambda (p, q)$、つまり $\partial U/\partial x = \lambda p,\ \partial U/\partial y = \lambda q$。両者の比を取ると</p>
+
+    <div class="math-display">
+      $$\frac{\partial U / \partial x}{\partial U / \partial y} = \frac{p}{q}.$$
+    </div>
+
+    <p>左辺は経済学で <strong>限界代替率 (marginal rate of substitution, MRS)</strong> と呼ばれる量。「$x$ を 1 単位増やしたとき、効用 $U$ を保つには $y$ を何単位諦めればよいか」を表します(無差別曲線の接線の傾きの絶対値)。右辺は <em>価格比</em>。<em>最適消費点では MRS = 価格比</em> ─ ミクロ経済学の教科書冒頭に必ず出てくる命題ですが、その中身は単に Lagrange 条件です。</p>
+
+    <p>さらに、内点解で目的関数・制約が微分可能、かつ最適化問題の最適値関数 $U^*(m)$ が微分可能のとき、 <em>包絡線定理</em> から $\lambda = \partial U^* / \partial m$ ─ つまり <em>所得を 1 円増やしたときの効用の増加</em>(<strong>所得の限界効用</strong>)。これは章 06 で扱った <strong>影の価格</strong> の経済学版です。経済学の中心概念の 1 つ「限界 (margin)」は、Lagrange 乗数の解釈そのものです。</p>
+
+    <div class="dgm">
+      <div class="dgm-head">
+        <div class="dgm-kicker">Diagram 10</div>
+        <div class="dgm-title">効用最大化 ─ 無差別曲線と予算制約の接触</div>
+      </div>
+      <div class="dgm-content">
+        <div class="dgm-figure">
+          <svg viewBox="0 0 380 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="効用最大化の無差別曲線と予算制約">
+            <defs>
+              <marker id="arr10f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0 0 L10 5 L0 10 z" fill="#6b4f00"/>
+              </marker>
+            </defs>
+            <!-- スケール: 1 単位 = 60px、原点 SVG (40, 230)、数学 (x,y) → SVG (40+60x, 230-60y) -->
+            <!-- 設定: U = xy、価格 (p,q) = (1, 2)、所得 m = 4 → 予算線 x+2y=4 -->
+            <!-- 接点 P*(2, 1) → SVG (160, 170)、U(P*) = 2 -->
+
+            <!-- 軸 -->
+            <line x1="40" y1="230" x2="350" y2="230" stroke="#5b6a82" stroke-width="1"/>
+            <line x1="40" y1="240" x2="40" y2="20" stroke="#5b6a82" stroke-width="1"/>
+            <text x="340" y="248" class="fig-axis">x</text>
+            <text x="22" y="22" class="fig-axis">y</text>
+
+            <!-- 無差別曲線 U = xy = const、3 本(双曲線) -->
+            <!-- U=1 (内側、低い効用)、 通過点: (1,1)=(100,170), (2,0.5)=(160,200), (4,0.25)=(280,215) -->
+            <path d="M 100 170 Q 130 175 160 200 Q 220 213 280 215" fill="none" stroke="#1a1d22" stroke-width="1" stroke-dasharray="4 3" opacity="0.45"/>
+            <!-- U=2 (中、P* を通る、太線で強調)、通過点: (1,2)=(100,110), (2,1)=(160,170), (4,0.5)=(280,200) -->
+            <path d="M 100 110 Q 130 130 160 170 Q 220 192 280 200" fill="none" stroke="#6b4f00" stroke-width="2.4"/>
+            <!-- U=4 (外側、達成不可能)、通過点: (2,2)=(160,110), (4,1)=(280,170) -->
+            <path d="M 160 110 Q 200 125 220 140 Q 260 162 280 170" fill="none" stroke="#1a1d22" stroke-width="1" stroke-dasharray="4 3" opacity="0.45"/>
+
+            <!-- 予算制約 x + 2y = 4 → 数学 (0,2)-(4,0) → SVG (40,110)-(280,230) -->
+            <line x1="40" y1="110" x2="280" y2="230" stroke="#2e343e" stroke-width="2.5"/>
+            <!-- 検算: P*(160, 170) は予算線上か? t = (160-40)/240 = 0.5, y = 110 + 0.5*120 = 170 ✓ -->
+
+            <!-- 接点 P*(2, 1) → SVG (160, 170) -->
+            <circle cx="160" cy="170" r="6" fill="#6b4f00" stroke="#fff" stroke-width="2"/>
+
+            <!-- ∇U = (y, x) at (2,1) = (1, 2) → SVG ベクトル (+1, -2) 方向(y 反転) -->
+            <!-- 長さ 25 で正規化: (1,-2)/√5 * 25 ≈ (11.2, -22.4) → (171, 148) -->
+            <line x1="160" y1="170" x2="171" y2="148" stroke="#6b4f00" stroke-width="2.5" marker-end="url(#arr10f)"/>
+            <!-- 価格ベクトル (p, q) = (1, 2) も同方向、別オフセット破線で並行を示す -->
+            <line x1="164" y1="166" x2="175" y2="144" stroke="#1a1d22" stroke-width="1.6" stroke-dasharray="3 3" opacity="0.65"/>
+
+            <!-- ラベル(マーカー/矢印から十分離して配置) -->
+            <text x="172" y="184" class="fig-lbl gold bold">P*</text>
+            <text x="182" y="138" class="fig-lbl gold" style="font-size:13px;">∇U</text>
+            <text x="190" y="162" class="fig-lbl charcoal" style="font-size:11px;">(p,q)</text>
+            <text x="55" y="98" class="fig-axis" style="font-size:11px;">予算線 x+2y=4</text>
+            <text x="155" y="100" class="fig-axis" style="font-size:11px;">U=4(達成不可)</text>
+            <text x="290" y="195" class="fig-axis gold" style="font-size:11px;">U=2(最大)</text>
+            <text x="290" y="218" class="fig-axis" style="font-size:11px;">U=1</text>
+          </svg>
+        </div>
+        <div class="dgm-legend">
+          <div class="dgm-legend-title">図の凡例</div>
+          <ul class="legend-list">
+            <li class="legend-item sym"><span class="legend-sym alt">P*</span><span><span class="legend-key">最適消費点</span>$(2, 1)$、$U(P^*) = 2$。無差別曲線と予算制約が接する</span></li>
+            <li class="legend-item sym"><span class="legend-sym">∇U</span><span><span class="legend-key">効用の勾配</span>$\nabla U = (y, x) = (1, 2)$。接点で価格 $(p, q)$ と平行</span></li>
+            <li class="legend-item sym"><span class="legend-sym alt">(p,q)</span><span><span class="legend-key">価格ベクトル</span>$(1, 2)$。予算線の法線</span></li>
+            <li class="legend-item sym"><span class="legend-sym jp">U</span><span><span class="legend-key">無差別曲線</span>$U = xy = c$ の等高線(双曲線族)</span></li>
+          </ul>
+          <div class="legend-foot eq">$\dfrac{\partial U/\partial x}{\partial U/\partial y} = \dfrac{p}{q}$ ─ MRS = 価格比</div>
+        </div>
+      </div>
+      <div class="dgm-caption">
+        無差別曲線(双曲線族 $U = xy$)と予算制約(直線 $x + 2y = 4$)が <strong>ぴたりと接する点</strong> $(2, 1)$ で効用は最大化される。接点で $\nabla U = (1, 2) \parallel (p, q) = (1, 2)$ ─ ミクロ経済学の中心命題「MRS = 価格比」は、ラグランジュ条件の経済学的解釈に他なりません。
+      </div>
+    </div>
+
+    <h3>07-3 von Neumann のミニマックス ─ ゲーム理論の原点<span class="en">von Neumann's Minimax</span></h3>
+
+    <p>2 人ゼロ和ゲームで、プレイヤー I が混合戦略 $p \in \Delta_n$(確率単体)、II が $q \in \Delta_m$ を選ぶ。利得行列を $A$ とすると、期待利得は $K(p, q) = p^\top A q$。I は最大化、II は最小化を狙う。</p>
+
+    <p>素朴に考えると、$p$ を先に決めて II が最悪を取れば(maximin):</p>
+
+    <div class="math-display">
+      $$v_I = \max_p \min_q p^\top A q.$$
+    </div>
+
+    <p>逆に $q$ を先に決めて I が最良を取れば(minimax):</p>
+
+    <div class="math-display">
+      $$v_{II} = \min_q \max_p p^\top A q.$$
+    </div>
+
+    <p>一般に $v_I \le v_{II}$(弱双対性に対応)。等号が成り立つか?</p>
+
+    <aside class="thm-box">
+      <header>定理 (von Neumann 1928)</header>
+      <p>$X = \Delta_n,\ Y = \Delta_m$ は有界閉凸、$K(p, q) = p^\top A q$ は両側で線形(よって saddle 性質)。よって</p>
+      <div class="math-display">
+        $$\max_p \min_q p^\top A q = \min_q \max_p p^\top A q.$$
+      </div>
+      <p>この共通値が <strong>ゲームの値</strong> で、必ず存在する。</p>
+    </aside>
+
+    <p>1928 年の論文(<em>Math. Ann.</em> 100)は、混合戦略の発明と同時にゲーム理論の出発点となりました。Nash 1951 の均衡概念や、現代の機械学習の敵対的訓練(GAN, adversarial robust learning)は、すべてこの定理の延長線上にあります。</p>
+
+    <p>本稿の文脈で重要なのは、von Neumann のミニマックスが <strong>章 06 の鞍点の最も古典的な例</strong> だということ。Lagrangian の鞍点が主双対の最適解になる、というのは、混合戦略の均衡が両プレイヤーの最適戦略になる、と同じ構造です。</p>
+
+    <div class="dgm">
+      <div class="dgm-head">
+        <div class="dgm-kicker">Diagram 11</div>
+        <div class="dgm-title">ミニマックス ─ 利得行列の鞍点(saddle point)</div>
+      </div>
+      <div class="dgm-content">
+        <div class="dgm-figure">
+          <svg viewBox="0 0 380 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="2x2 ゲームの利得行列と鞍点">
+            <!-- 行列セル(2x2)、利得 A = [[2, 3], [1, 4]]、鞍点 = 左上セル(値 2) -->
+            <!-- 検算: R1 行最小 = 2、R2 行最小 = 1、 maximin = 2(R1) -->
+            <!--       C1 列最大 = 2、C2 列最大 = 4、 minimax = 2(C1) -->
+            <!--       maximin = minimax = 2 → 鞍点 = R1C1 = 2 -->
+            <rect x="100" y="60" width="80" height="80" fill="#f3e3b4" fill-opacity="0.55" stroke="#6b4f00" stroke-width="2"/>
+            <rect x="180" y="60" width="80" height="80" fill="#ffffff" stroke="#1a1d22" stroke-width="1.2"/>
+            <rect x="100" y="140" width="80" height="80" fill="#ffffff" stroke="#1a1d22" stroke-width="1.2"/>
+            <rect x="180" y="140" width="80" height="80" fill="#ffffff" stroke="#1a1d22" stroke-width="1.2"/>
+
+            <!-- 利得値 -->
+            <text x="140" y="108" class="fig-lbl gold bold" text-anchor="middle" style="font-size:24px;">2</text>
+            <text x="220" y="108" class="fig-lbl" text-anchor="middle" style="font-size:24px;">3</text>
+            <text x="140" y="188" class="fig-lbl" text-anchor="middle" style="font-size:24px;">1</text>
+            <text x="220" y="188" class="fig-lbl" text-anchor="middle" style="font-size:24px;">4</text>
+
+            <!-- 行ラベル(I のプレイヤー、左) -->
+            <text x="92" y="100" class="fig-lbl-jp gold" text-anchor="end" style="font-size:11px;font-weight:800;">R1(I が選ぶ)</text>
+            <text x="92" y="115" class="fig-axis" text-anchor="end" style="font-size:10px;">行最小 = 2</text>
+            <text x="92" y="180" class="fig-lbl-jp" text-anchor="end" style="font-size:11px;">R2</text>
+            <text x="92" y="195" class="fig-axis" text-anchor="end" style="font-size:10px;">行最小 = 1</text>
+
+            <!-- 列ラベル(II のプレイヤー、上) -->
+            <text x="140" y="48" class="fig-lbl-jp gold" text-anchor="middle" style="font-size:11px;font-weight:800;">C1(II が選ぶ)</text>
+            <text x="140" y="34" class="fig-axis" text-anchor="middle" style="font-size:10px;">列最大 = 2</text>
+            <text x="220" y="48" class="fig-lbl-jp" text-anchor="middle" style="font-size:11px;">C2</text>
+            <text x="220" y="34" class="fig-axis" text-anchor="middle" style="font-size:10px;">列最大 = 4</text>
+
+            <!-- 鞍点マーク矢印 -->
+            <line x1="140" y1="100" x2="170" y2="240" stroke="#6b4f00" stroke-width="1.2" stroke-dasharray="3 3" opacity="0.55"/>
+            <text x="180" y="255" class="fig-lbl-jp gold bold" style="font-size:12px;">鞍点 = 2</text>
+            <text x="180" y="270" class="fig-axis" style="font-size:10px;">maximin = minimax = 2</text>
+
+            <!-- maximin / minimax 矢印 -->
+            <text x="288" y="98" class="fig-axis" style="font-size:10px;">I の maximin:</text>
+            <text x="288" y="112" class="fig-axis" style="font-size:10px;">max(2, 1) = 2</text>
+            <text x="288" y="126" class="fig-axis" style="font-size:10px;">→ R1 を選ぶ</text>
+            <text x="288" y="148" class="fig-axis" style="font-size:10px;">II の minimax:</text>
+            <text x="288" y="162" class="fig-axis" style="font-size:10px;">min(2, 4) = 2</text>
+            <text x="288" y="176" class="fig-axis" style="font-size:10px;">→ C1 を選ぶ</text>
+          </svg>
+        </div>
+        <div class="dgm-legend">
+          <div class="dgm-legend-title">図の凡例</div>
+          <ul class="legend-list">
+            <li class="legend-item sym"><span class="legend-sym jp">A</span><span><span class="legend-key">利得行列</span>$\begin{pmatrix} 2 & 3 \\ 1 & 4 \end{pmatrix}$、I は最大化、II は最小化</span></li>
+            <li class="legend-item sym"><span class="legend-sym alt">鞍</span><span><span class="legend-key">鞍点</span>R1×C1 セル(値 $2$)が saddle point。$\max_i \min_j a_{ij} = \min_j \max_i a_{ij} = 2$</span></li>
+            <li class="legend-item sym"><span class="legend-sym jp">I</span><span><span class="legend-key">maximin 戦略</span>相手が最悪手を取っても自分の利得を最大化(R1)</span></li>
+            <li class="legend-item sym"><span class="legend-sym jp">II</span><span><span class="legend-key">minimax 戦略</span>相手が最良手を取っても自分の損失を最小化(C1)</span></li>
+          </ul>
+          <div class="legend-foot eq">$\max_p \min_q\, p^\top A q = \min_q \max_p\, p^\top A q$</div>
+        </div>
+      </div>
+      <div class="dgm-caption">
+        $\mathbf A = \bigl(\begin{smallmatrix} 2 & 3 \\ 1 & 4 \end{smallmatrix}\bigr)$ の左上セル(値 $2$)が <strong>行で見て最小、かつ列で見て最大</strong> ─ これが saddle point の幾何です。 von Neumann 1928 は、純粋戦略で鞍点が存在しない場合でも、 <em>混合戦略を許せば</em> すべての利得行列で saddle 値が存在することを示しました。
+      </div>
+    </div>
+
+    <h3>07-4 等周不等式 ─ 変分法の入口<span class="en">The Isoperimetric Inequality</span></h3>
+
+    <p>有限次元から関数空間へ。最古の問いの一つ:</p>
+
+    <aside class="ex-box">
+      <header>等周問題 (Dido の問題)</header>
+      <p>平面上で周長 $L$ が一定の単純閉曲線で囲まれる面積が最大となるのは、どの曲線か?</p>
+    </aside>
+
+    <p>答えは <em>円</em>。面積は $L^2 / (4\pi)$。これを Lagrange の方法の関数空間版で導きます。閉曲線を $\gamma(t) = (x(t), y(t))$ で表すと、最大化問題は</p>
+
+    <div class="math-display">
+      $$\max \int_0^1 \tfrac{1}{2}(x \dot y - y \dot x)\, dt \quad \text{subject to} \quad \int_0^1 \sqrt{\dot x^2 + \dot y^2}\, dt = L.$$
+    </div>
+
+    <p>ここで Lagrangian を周長 $L$ と区別して $\mathcal{L}$ と書きます。 $\mathcal{L} = \int_0^1 \left[ \tfrac{1}{2}(x\dot y - y\dot x) - \mu \sqrt{\dot x^2 + \dot y^2} \right] dt$ について Euler-Lagrange 方程式を立てると、最適曲線が <em>曲率一定</em> であることが従います。曲率一定の単純閉曲線は円のみ ─ よって最適解は半径 $R = L/(2\pi)$ の円。</p>
+
+    <p>有限次元の Lagrange 未定乗数法が、無限次元(関数空間)の変分問題に拡張された例です。Lagrange の方法は <strong>解析力学・古典力学・電磁気学・量子場の理論</strong> でも同じ形で現れます ─ Hamilton 形式、Euler-Lagrange 方程式、最小作用の原理、ゲージ場 ─ どれも Lagrangian の鞍点を求める問題として読み直せます。</p>
+
+    <p class="meta-note">解の一意性(円のみ)は、Wirtinger 不等式や曲線の対称化など、追加の補助定理が必要です。Lagrange 条件はあくまで <em>必要条件</em>。「曲率一定の曲線」までは出ますが、それが本当に最大を達成することの確認には別の議論が要ります。</p>
+
+    <div class="dgm">
+      <div class="dgm-head">
+        <div class="dgm-kicker">Diagram 12</div>
+        <div class="dgm-title">等周問題 ─ 周長一定で面積最大の図形は円</div>
+      </div>
+      <div class="dgm-content">
+        <div class="dgm-figure">
+          <svg viewBox="0 0 380 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="周長一定 L=10π の円・正方形・楕円の面積比較">
+            <!-- 共通: 周長 L、 3 図形の面積比較。詳細な数式は凡例側に -->
+            <!-- 左: 正方形 (辺 L/4、面積比 0.0625) -->
+            <g>
+              <rect x="35" y="105" width="65" height="65" fill="#ededef" fill-opacity="0.55" stroke="#1a1d22" stroke-width="1.6"/>
+              <text x="67" y="92" class="fig-lbl-jp" text-anchor="middle" style="font-size:11px;">正方形</text>
+              <text x="67" y="190" class="fig-axis" text-anchor="middle" style="font-size:11px;">辺 L/4</text>
+              <text x="67" y="205" class="fig-axis" text-anchor="middle" style="font-size:11px;">面積比</text>
+              <text x="67" y="225" class="fig-axis" text-anchor="middle" style="font-size:13px;font-weight:700;">0.0625</text>
+            </g>
+
+            <!-- 中央: 円(最大、強調) -->
+            <g>
+              <circle cx="190" cy="138" r="40" fill="#f3e3b4" fill-opacity="0.55" stroke="#6b4f00" stroke-width="2.5"/>
+              <text x="190" y="92" class="fig-lbl-jp gold bold" text-anchor="middle" style="font-size:12px;">円(最大)</text>
+              <text x="190" y="190" class="fig-axis" text-anchor="middle" style="font-size:11px;">半径 L/(2π)</text>
+              <text x="190" y="205" class="fig-axis" text-anchor="middle" style="font-size:11px;">面積比</text>
+              <text x="190" y="225" class="fig-lbl gold" text-anchor="middle" style="font-size:13px;font-weight:700;">0.0796</text>
+            </g>
+
+            <!-- 右: 楕円 -->
+            <g>
+              <ellipse cx="310" cy="138" rx="55" ry="22" fill="#ededef" fill-opacity="0.55" stroke="#1a1d22" stroke-width="1.6"/>
+              <text x="310" y="92" class="fig-lbl-jp" text-anchor="middle" style="font-size:11px;">楕円(細長)</text>
+              <text x="310" y="190" class="fig-axis" text-anchor="middle" style="font-size:11px;">周長 ≈ L</text>
+              <text x="310" y="205" class="fig-axis" text-anchor="middle" style="font-size:11px;">面積比</text>
+              <text x="310" y="225" class="fig-axis" text-anchor="middle" style="font-size:13px;font-weight:700;">&lt; 0.0796</text>
+            </g>
+
+            <!-- 不等式チェーン(SVG 内は短い説明のみ。数式は凡例 footer へ) -->
+            <text x="190" y="262" class="fig-lbl-jp gold bold" text-anchor="middle" style="font-size:12px;">等号は円のときに限る</text>
+          </svg>
+        </div>
+        <div class="dgm-legend">
+          <div class="dgm-legend-title">図の凡例</div>
+          <ul class="legend-list">
+            <li class="legend-item sym"><span class="legend-sym jp">□</span><span><span class="legend-key">正方形</span>周長 $L$、面積 $L^2/16 \approx 0.0625\,L^2$</span></li>
+            <li class="legend-item sym"><span class="legend-sym alt">◯</span><span><span class="legend-key">円</span>周長 $L$、面積 $L^2/(4\pi) \approx 0.0796\,L^2$ ─ <strong>すべての閉曲線中で最大</strong></span></li>
+            <li class="legend-item sym"><span class="legend-sym jp">⬭</span><span><span class="legend-key">楕円</span>偏平度に依存。離心率が大きいほど面積が小さくなる</span></li>
+          </ul>
+          <div class="legend-foot eq">等周不等式: $4\pi\,S \le L^2$、等号 ⇔ 円(面積比 = $S/L^2$ で表示)</div>
+        </div>
+      </div>
+      <div class="dgm-caption">
+        同じ周長 $L$ を持つ閉曲線の中で、面積を最大化する形は <strong>円</strong>。 Lagrange 法を関数空間に拡張すると Euler-Lagrange 方程式の制約付き版が出て、最適曲線が <em>曲率一定</em> ─ つまり円 ─ になることが導かれます。
+      </div>
+    </div>
+
+    <h3>章末 ─ 4 つの場面に共通する幾何<span class="en">The Same Geometry across Four Settings</span></h3>
+
+    <p>4 つの場面を並べると、どれも <em>制約と勾配の同じ幾何</em> の応用であることが分かります。</p>
+
+    <div class="iff-decomp">
+      <div class="iff-head">本章の通底主題</div>
+      <ul class="iff-list">
+        <li>SVM では、マージン制約のうち <em>アクティブなものだけ</em> がサポートベクター。これは KKT の補集合性。</li>
+        <li>効用最大化では、Lagrange 乗数が <em>所得の限界効用</em>。これは影の価格。</li>
+        <li>ミニマックスは Lagrangian の <em>鞍点の存在</em>。これは強双対性の古典版。</li>
+        <li>等周問題は <em>関数空間版</em> の Lagrange 条件。曲率一定が解。</li>
+      </ul>
+    </div>
+
+    <p>受験で 30 通り暗記する「制約付き最大最小」 ─ その背後には、$\nabla f = \lambda \nabla g$ という 1 つの幾何条件が一貫して成立しています。本稿はこの幾何条件を中心テーゼに据え、章 03 で代数化、章 04 で不等式制約への拡張、章 05 で実題による検証、章 06 で双対性への展開、章 07 で 4 つの応用、と読み直してきました。</p>
+
+    <p>次回以降の数学コラムでは、別の制約 ─ <em>対称性</em> や <em>群作用</em> ─ から最大最小を読み直す予定です。Lagrange の方法が、より一般的な幾何構造の一つの断面であった点は、別の文脈で改めて扱います。</p>
+
+    <div class="ch-key">
+      <div class="ch-key-head">
+        <span class="ch-key-label">Key Takeaways</span>
+        <span class="ch-key-en">本章のまとめ</span>
+      </div>
+      <ul>
+        <li><strong>SVM</strong>:マージン最大化問題に KKT を適用すると、補集合性から「サポートベクター(マージン上の少数点)だけが超平面の方向を決める」が自動的に出る。</li>
+        <li><strong>効用最大化</strong>:Lagrange 条件 $\nabla U = \lambda(p, q)$ から MRS = 価格比。$\lambda$ は所得の限界効用(影の価格、包絡線定理で正当化)。</li>
+        <li><strong>von Neumann ミニマックス</strong>:2 人零和ゲームの混合戦略均衡は Lagrangian の鞍点の古典版。 Nash 均衡や敵対的訓練(GAN)もこの延長線上にある。</li>
+        <li><strong>等周不等式</strong>:有限次元の Lagrange 法が関数空間へ拡張され、Euler-Lagrange 方程式の制約付き版で「曲率一定 ⇒ 円」を導く(一意性は Wirtinger 等の補助定理が要る)。</li>
+        <li><strong>本稿の通底主題</strong>:受験で 30 通り暗記する制約付き最大最小も、機械学習・経済学・ゲーム理論・変分法も、$\nabla f = \lambda \nabla g$ という 1 つの幾何の異なる現れである。</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ==================== REFERENCES ==================== -->
+<section class="refs">
+  <div class="refs-head">参考文献 · References</div>
+  <ol class="refs-list">
+    <li>
+      <span class="ref-author">Lagrange, J. L.</span>
+      <span class="ref-title"><em>Mécanique Analytique</em></span>
+      <span class="ref-meta">Paris, Veuve Desaint, 1788. 制約付き極値問題で未定乗数を体系的に用いた最古の文献。</span>
+    </li>
+    <li>
+      <span class="ref-author">Karush, W.</span>
+      <span class="ref-title">"Minima of Functions of Several Variables with Inequalities as Side Conditions"</span>
+      <span class="ref-meta">M.S. Thesis, Dept. of Mathematics, University of Chicago, 1939. KKT 条件の最初期の導出。長らく未公刊だった。</span>
+    </li>
+    <li>
+      <span class="ref-author">Kuhn, H. W. &amp; Tucker, A. W.</span>
+      <span class="ref-title">"Nonlinear Programming"</span>
+      <span class="ref-meta">in <em>Proceedings of the Second Berkeley Symposium on Mathematical Statistics and Probability</em>, J. Neyman (ed.), University of California Press, 1951, pp. 481–492.</span>
+    </li>
+    <li>
+      <span class="ref-author">von Neumann, J.</span>
+      <span class="ref-title">"Zur Theorie der Gesellschaftsspiele"</span>
+      <span class="ref-meta"><em>Mathematische Annalen</em>, Vol. 100, 1928, pp. 295–320. 2 人零和ゲームのミニマックス定理。</span>
+    </li>
+    <li>
+      <span class="ref-author">杉浦 光夫</span>
+      <span class="ref-title">『解析入門 I, II』</span>
+      <span class="ref-meta">東京大学出版会, 1980/1985. 陰関数定理とラグランジュ未定乗数法の標準的記述。</span>
+    </li>
+    <li>
+      <span class="ref-author">齋藤 正彦</span>
+      <span class="ref-title">『線型代数入門』</span>
+      <span class="ref-meta">東京大学出版会, 1966. 法空間・接空間の基礎。</span>
+    </li>
+    <li>
+      <span class="ref-author">松本 幸夫</span>
+      <span class="ref-title">『多様体の基礎』</span>
+      <span class="ref-meta">東京大学出版会, 1988. 制約集合を部分多様体として扱う流儀。</span>
+    </li>
+    <li>
+      <span class="ref-author">Boyd, S. &amp; Vandenberghe, L.</span>
+      <span class="ref-title"><em>Convex Optimization</em></span>
+      <span class="ref-meta">Cambridge University Press, 2004. 凸最適化と双対性の現代的標準書。第 5 章が Lagrange 双対を体系的に整理している。</span>
+    </li>
+    <li>
+      <span class="ref-author">Bertsekas, D. P.</span>
+      <span class="ref-title"><em>Nonlinear Programming</em>, 3rd ed.</span>
+      <span class="ref-meta">Athena Scientific, 2016. KKT 条件と制約資格(LICQ, MFCQ, Slater)の精密な扱い。</span>
+    </li>
+    <li>
+      <span class="ref-author">Rockafellar, R. T.</span>
+      <span class="ref-title"><em>Convex Analysis</em></span>
+      <span class="ref-meta">Princeton University Press, 1970. 凸解析の古典。双対性の幾何学を全面展開。</span>
+    </li>
+    <li>
+      <span class="ref-author">Vapnik, V. N.</span>
+      <span class="ref-title"><em>The Nature of Statistical Learning Theory</em></span>
+      <span class="ref-meta">Springer, 1995. サポートベクターマシンの理論的基盤。</span>
+    </li>
+    <li>
+      <span class="ref-author">京都大学</span>
+      <span class="ref-title">2012 年度 前期日程 理系 数学 第 3 問</span>
+      <span class="ref-meta">本稿章 05 で扱う実題。出典は各種年度別過去問データベースで照合。</span>
+    </li>
+  </ol>
+  <div class="refs-note">
+    本記事は上記文献および入試問題をもとに、受験生・大学初年次生向けに編集・再構成したものです。定理ステートメントや証明の精密化については原典を参照してください。
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="footer">
+  <div class="footer-mark">制</div>
+  <div class="footer-tag">Daisu Column · Vol. 04</div>
+  <div class="footer-tag">Constraints × Gradients</div>
+  <a href="../../" class="footer-back">← all articles</a>
+</footer>
+
+<!-- ==================== MOBILE DRAWER ==================== -->
+<button class="m-menu-btn" id="mMenuBtn" aria-label="目次を開く">
+  <span></span><span></span><span></span>
+</button>
+
+<div class="m-drawer" id="mDrawer" role="dialog" aria-modal="true" aria-label="目次">
+  <div class="m-drawer-panel">
+    <div class="m-drawer-handle" aria-hidden="true"></div>
+    <div class="m-drawer-head">
+      <span class="m-drawer-title">目次<span class="en">contents</span></span>
+      <button class="m-drawer-close" id="mDrawerClose" aria-label="閉じる">×</button>
+    </div>
+    <ol class="m-drawer-list">
+      <li><a href="#ch1" data-ch="1"><span class="md-num">01</span><span><span class="md-title">受験での典型題</span><span class="md-sub">領域内の最大最小、線形計画</span></span><span class="md-arrow">→</span></a></li>
+      <li><a href="#ch2" data-ch="2"><span class="md-num">02</span><span><span class="md-title">受験での解き直し</span><span class="md-sub">等高線と勾配の幾何</span></span><span class="md-arrow">→</span></a></li>
+      <li><a href="#ch3" data-ch="3"><span class="md-num">03</span><span><span class="md-title">大学からの読み返し</span><span class="md-sub">ラグランジュ未定乗数法</span></span><span class="md-arrow">→</span></a></li>
+      <li><a href="#ch4" data-ch="4"><span class="md-num">04</span><span><span class="md-title">不等式制約への拡張</span><span class="md-sub">KKT 条件と補集合性</span></span><span class="md-arrow">→</span></a></li>
+      <li><a href="#ch5" data-ch="5"><span class="md-num">05</span><span><span class="md-title">入試問題で確かめる</span><span class="md-sub">京大 2012 年と典型題</span></span><span class="md-arrow">→</span></a></li>
+      <li><a href="#ch6" data-ch="6"><span class="md-num">06</span><span><span class="md-title">双対の風景</span><span class="md-sub">線形計画双対と影の価格</span></span><span class="md-arrow">→</span></a></li>
+      <li><a href="#ch7" data-ch="7"><span class="md-num">07</span><span><span class="md-title">補章 ─ 応用の場面集</span><span class="md-sub">SVM・効用・ゲーム・等周</span></span><span class="md-arrow">→</span></a></li>
+    </ol>
+  </div>
+</div>
+
+<script>
+(function () {
+  const nav = document.getElementById('topnav');
+  let lastY = window.scrollY;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y > 120 && y > lastY) {
+      nav.classList.add('hidden');
+    } else {
+      nav.classList.remove('hidden');
+    }
+    lastY = y;
+  }, { passive: true });
+
+  const sections = document.querySelectorAll('section.chapter');
+  const railItems = document.querySelectorAll('.rail-item');
+  const drawerItems = document.querySelectorAll('.m-drawer-list a');
+
+  const setActive = (id) => {
+    railItems.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+    drawerItems.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+  };
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter(e => e.isIntersecting);
+      if (visible.length === 0) return;
+      visible.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      const top = visible[0];
+      if (top.boundingClientRect.top < window.innerHeight * 0.55) {
+        setActive(top.target.id);
+      }
+    }, { rootMargin: '-20% 0px -45% 0px', threshold: 0 });
+    sections.forEach(s => observer.observe(s));
+  }
+
+  const btn = document.getElementById('mMenuBtn');
+  const drawer = document.getElementById('mDrawer');
+  const closeBtn = document.getElementById('mDrawerClose');
+
+  const openDrawer = () => {
+    drawer.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+  const closeDrawer = () => {
+    drawer.classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
+  btn.addEventListener('click', openDrawer);
+  closeBtn.addEventListener('click', closeDrawer);
+  drawer.addEventListener('click', (e) => {
+    if (e.target === drawer) closeDrawer();
+  });
+  drawerItems.forEach(a => a.addEventListener('click', () => setTimeout(closeDrawer, 100)));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+  });
+
+  // ---- Progress bar (scroll indicator) ----
+  const progressBar = document.getElementById('progressBar');
+  const updateProgress = () => {
+    const doc = document.documentElement;
+    const scrollTop = window.scrollY || doc.scrollTop;
+    const scrollHeight = (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight;
+    const pct = scrollHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / scrollHeight) * 100)) : 0;
+    progressBar.style.width = pct + '%';
+    progressBar.setAttribute('aria-valuenow', Math.round(pct));
+  };
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  window.addEventListener('resize', updateProgress);
+  updateProgress();
+
+  // ---- Keyboard shortcuts ----
+  const chapters = ['hero-ignored', 'contents', 'ch1', 'ch2', 'ch3', 'ch4', 'ch5', 'ch6', 'ch7'];
+  const findCurrentChapter = () => {
+    const y = window.scrollY + window.innerHeight * 0.35;
+    let current = 0;
+    for (let i = 0; i < chapters.length; i++) {
+      const el = document.getElementById(chapters[i]);
+      if (el && el.offsetTop <= y) current = i;
+    }
+    return current;
+  };
+  const scrollToId = (id) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const isTypingTarget = (e) => {
+    const t = e.target;
+    return t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable);
+  };
+
+  document.addEventListener('keydown', (e) => {
+    if (isTypingTarget(e)) return;
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    if (drawer.classList.contains('open')) return;
+
+    const cur = findCurrentChapter();
+    if (e.key === 'ArrowRight') {
+      const next = Math.min(chapters.length - 1, cur + 1);
+      if (chapters[next]) { scrollToId(chapters[next]); e.preventDefault(); }
+    } else if (e.key === 'ArrowLeft') {
+      const prev = Math.max(0, cur - 1);
+      if (chapters[prev]) { scrollToId(chapters[prev]); e.preventDefault(); }
+    } else if (e.key === 't' || e.key === 'T') {
+      scrollToId('contents'); e.preventDefault();
+    } else if (e.key === 'p' || e.key === 'P') {
+      window.print(); e.preventDefault();
+    } else if (e.key === '?') {
+      alert('キーボードショートカット\n← / →  章を前後に移動\nT  目次へ\nP  印刷ビュー\nEsc  メニューを閉じる');
+      e.preventDefault();
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
