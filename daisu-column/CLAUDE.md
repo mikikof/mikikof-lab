@@ -28,7 +28,7 @@ daisu-column での記事制作・編集・本ファイルや `components.md` �
 
 **Claude 側の運用**:
 - `daisu-column/articles/*` または `daisu-column/components.md` または本ファイル(`daisu-column/CLAUDE.md`)を Read/Edit/Write したターンから、そのセッション全体に最大推論モードを適用
-- モデルは **Opus 4.7 [1M] 死守**。`/fast`(Opus 4.6 降格)や Sonnet/Haiku を検出したら、続行する前に「数学コラム制作では Opus 4.7 [1M] 推奨。fast を解除してから続行を」と警告し、ユーザーが明示続行と言うまで作業を止める
+- モデルは **最新最強の Opus [1M] 死守**。`/fast`(下位モデルへの降格)や Sonnet/Haiku を検出したら、続行する前に「数学コラム制作では 最新最強の Opus [1M] 推奨。fast を解除してから続行を」と警告し、ユーザーが明示続行と言うまで作業を止める
 - 毎ターン extended thinking を最大で使う(**ultrathink**)。簡単な編集でも省略しない
 - **時間度外視で品質優先**。複数案比較・反証検討・大学定理との対応確認・幾何学的整合性の数値検証を厭わない
 
@@ -654,7 +654,7 @@ bash scripts/publish.sh "{slug}" "daisu-column: コミットメッセージ"
 ## 重要な注意事項(再掲)
 
 - **§0-X 自誌引用禁止**: 東京出版系を一切引用しない
-- **§0-Y 最大推論モード**: Opus 4.7 [1M] 死守、ultrathink、codex は -p review-paper
+- **§0-Y 最大推論モード**: 最新最強の Opus [1M] 死守、ultrathink、codex は -p review-paper
 - **§4-0 SVG 内禁止事項**: KaTeX 構文・Unicode subscript/superscript・foreignObject・複雑数式・番号バッジを書かない
 - **§1-2 禁止表現**: 「ガッツポーズ」「攻略」等のチープなコピー調を排除
 - **§1-4 試験名**: 原則「共通テスト」、過去問引用時のみ「センター試験」

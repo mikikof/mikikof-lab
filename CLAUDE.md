@@ -55,7 +55,7 @@
 - 「数学」「受験数学」「大学数学」「東大京大」「数Ⅰ〜Ⅲ」「線形代数」「解析」「微分方程式」「証明」
 - 受験数学と大学数学の橋渡しを意識した硬派な数学読み物の依頼
 
-→ [`daisu-column/CLAUDE.md`](daisu-column/CLAUDE.md) を読み、以降はその指示に従う(本ツールは Opus 4.7 [1M] 死守 + ultrathink + codex は `-p review-paper`)
+→ [`daisu-column/CLAUDE.md`](daisu-column/CLAUDE.md) を読み、以降はその指示に従う(本ツールは 最新最強の Opus [1M] 死守 + ultrathink + codex は `-p review-paper`)
 
 ### ▶ 授業スライド(lectures)に行くキーワード
 
