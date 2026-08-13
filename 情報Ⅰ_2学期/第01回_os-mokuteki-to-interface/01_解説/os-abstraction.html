@@ -1,0 +1,1433 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>装置の違いを意識せずに使えるのは誰の仕事か ｜ mikikof-lab</title>
+<style>
+  :root{
+    --ink:#10161f; --muted:#6b7480; --line:#e6eaf1; --hair:#e8ecf3; --hair2:#cdd6e3;
+    --bg:#f6f7f9; --card:#ffffff;
+    --accent:#2f55d4; --orange:#cf5a18;
+    --ok:#2f55d4;  --ok-bg:#eaeffc; --ok-bd:#c6d2f4; --ok-tint:#f4f6fd;
+    --warn:#d8362e; --warn-bg:#fdecea; --warn-bd:#f3c4c1; --warn-tint:#fdf5f4;
+    --wave:#1b2330;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono","Roboto Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic","YuGothic",Meiryo,sans-serif;
+    line-height:1.65;
+  }
+  .wrap{max-width:920px; margin:0 auto; padding:0 16px 56px}
+
+  header.top{
+    position:relative;
+    padding:34px 2px 20px;
+    margin-bottom:22px;
+    border-bottom:1px solid var(--hair);
+  }
+  header.top .eyebrow{
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em;
+    color:var(--muted); display:flex; align-items:center; gap:9px; margin-bottom:16px;
+  }
+  header.top .eyebrow .dot{
+    width:7px; height:7px; border-radius:50%; flex:0 0 auto;
+    background:var(--accent); box-shadow:0 0 0 4px rgba(47,85,212,.13);
+  }
+  header.top h1{
+    margin:0; font-size:34px; line-height:1.08; font-weight:700;
+    letter-spacing:.015em; color:var(--ink);
+  }
+  header.top .enlabel{
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.28em; text-transform:uppercase;
+    color:var(--accent); margin-top:10px;
+  }
+  header.top .dek{
+    margin:15px 0 0; font-size:14px; color:var(--muted); max-width:44ch;
+  }
+  header.top .sig{ position:absolute; top:30px; right:2px; width:148px; height:48px; }
+  header.top .sig path{ stroke:var(--hair2); fill:none; }
+  header.top .sig circle{ fill:var(--accent); }
+
+  .banner{
+    border:1px solid; border-radius:10px; padding:12px 16px; margin-bottom:14px;
+    font-weight:700; font-size:15px; transition:.2s;
+  }
+  .banner small{display:block; font-weight:400; font-size:13px; margin-top:4px; line-height:1.55}
+  .banner.ok{background:var(--ok-bg); border-color:var(--ok-bd); color:var(--ok)}
+  .banner.warn{background:var(--warn-bg); border-color:var(--warn-bd); color:var(--warn)}
+
+  .canvas-box{
+    background:#fff; border:1px solid var(--line); border-radius:10px;
+    overflow:hidden; transition:background .25s; margin-bottom:16px;
+  }
+  .canvas-box.ok{background:var(--ok-tint)}
+  .canvas-box.warn{background:var(--warn-tint)}
+  canvas{display:block; width:100%; height:auto}
+
+  .panel{
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:16px 18px; margin-bottom:16px; box-shadow:0 1px 3px rgba(20,30,50,.05);
+  }
+
+  .controls{display:flex; flex-wrap:wrap; gap:16px 24px}
+  .ctrl{flex:1 1 250px}
+  .ctrl label{display:flex; justify-content:space-between; align-items:baseline; font-size:14px; font-weight:700; margin-bottom:7px}
+  .ctrl label .val{color:var(--ok); font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:14px}
+  input[type=range]{width:100%; accent-color:var(--ok); height:24px}
+
+  .presets{display:flex; flex-wrap:wrap; gap:9px; margin-top:16px}
+  .presets button{
+    border:1px solid var(--line); background:#fff; border-radius:999px;
+    padding:7px 15px; font-size:13.5px; cursor:pointer; color:var(--ink);
+    font-family:inherit; transition:.15s;
+  }
+  .presets button:hover{border-color:var(--ok); color:var(--ok); background:var(--ok-bg)}
+
+  .toggles{display:flex; flex-wrap:wrap; gap:12px 22px; margin-top:16px; padding-top:14px; border-top:1px solid var(--line); font-size:14px}
+  .toggles label{display:flex; align-items:center; gap:6px; cursor:pointer}
+  .toggles input{accent-color:var(--ok); width:16px; height:16px}
+
+  .readouts{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px}
+  .ro{background:#f7f9fc; border:1px solid var(--line); border-radius:8px; padding:10px 12px}
+  .ro .k{font-size:12px; color:var(--muted)}
+  .ro .v{font-size:18px; font-weight:700; font-family:var(--mono); font-variant-numeric:tabular-nums; margin-top:2px}
+  .ro.alias{background:var(--warn-tint); border-color:var(--warn-bd)}
+  .ro.alias .v{color:var(--warn)}
+
+  h2.sec{font-size:15px; color:var(--orange); margin:0 0 11px; border-bottom:2px solid var(--orange); padding-bottom:4px; display:inline-block}
+  .note{font-size:13.5px; font-weight:500; color:#374151; margin:0 0 12px}
+  .note b{color:var(--ink)}
+  .formula{
+    font-family:"Cambria Math","Latin Modern Math","Times New Roman",serif;
+    font-size:18px; background:#f7f9fc; border:1px solid var(--line);
+    border-radius:8px; padding:9px 16px; display:inline-block; color:var(--ink);
+  }
+
+  /* 深掘り(hosoku)チップ + ポップアウト */
+  .deep-chip{
+    display:inline-flex; align-items:center; gap:8px; margin-top:15px;
+    border:1px solid var(--ok-bd); background:var(--ok-bg); color:var(--ok);
+    border-radius:999px; padding:9px 17px; font-size:13.5px; font-weight:700;
+    font-family:inherit; cursor:pointer; transition:.15s;
+  }
+  .deep-chip:hover{background:#dde5fb; border-color:var(--accent)}
+  .deep-chip svg{width:15px; height:15px; flex:0 0 auto}
+  .deep-chip.primary{background:var(--ok); color:#fff; border-color:var(--ok); margin-top:6px}
+  .deep-chip.primary:hover{background:#244bc0; border-color:#244bc0}
+
+  .overlay{
+    position:fixed; inset:0; background:rgba(16,22,31,.55);
+    display:none; align-items:flex-start; justify-content:center;
+    padding:24px 14px; z-index:1000; overflow-y:auto;
+  }
+  .overlay.open{display:flex}
+  .modal{
+    background:#fff; border-radius:14px; max-width:660px; width:100%; margin:auto;
+    box-shadow:0 18px 60px rgba(16,22,31,.32); overflow:hidden;
+    animation:pop .18s ease-out;
+  }
+  @keyframes pop{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+  .modal > header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:17px 22px; border-bottom:1px solid var(--line);
+  }
+  .modal > header h3{margin:0; font-size:18px; font-weight:700; color:var(--ink); letter-spacing:.01em}
+  .modal .x{
+    border:none; background:none; cursor:pointer; color:var(--muted);
+    font-size:24px; line-height:1; padding:2px 8px; border-radius:8px; transition:.13s;
+  }
+  .modal .x:hover{background:var(--bg); color:var(--ink)}
+  .mbody{padding:20px 22px 24px}
+  .mblock{margin-bottom:22px}
+  .mblock:last-child{margin-bottom:0}
+  .mblock h4{margin:0 0 9px; font-size:14px; font-weight:700; color:var(--orange)}
+  .mblock p{margin:0 0 11px; font-size:14px; font-weight:500; color:#374151; line-height:1.72}
+  .mblock p:last-child{margin-bottom:0}
+  .mblock p b{color:var(--ink)}
+  .mini-box{
+    background:var(--ok-tint); border:1px solid var(--line);
+    border-radius:8px; overflow:hidden; margin:4px 0 6px;
+  }
+  .mini-box canvas{display:block; width:100%; height:auto}
+  .mini-cap{font-size:12.5px; color:var(--muted); margin:2px 0 0; font-weight:500}
+  .mini-cap b{color:var(--warn)}
+
+  /* ステップ案内 */
+  .steps{display:flex; flex-wrap:wrap; align-items:center; gap:9px}
+  .steps .slabel{font-size:13px; font-weight:700; color:var(--muted); margin-right:3px}
+  .steps button{
+    border:1px solid var(--line); background:#fff; border-radius:999px;
+    padding:7px 14px 7px 8px; font-size:13.5px; cursor:pointer; color:var(--ink);
+    font-family:inherit; transition:.15s; display:inline-flex; align-items:center; gap:7px;
+  }
+  .steps button .n{
+    display:inline-flex; align-items:center; justify-content:center; width:19px; height:19px;
+    border-radius:50%; background:var(--ok-bg); color:var(--ok);
+    font-size:11.5px; font-weight:700; font-family:var(--mono); flex:0 0 auto;
+  }
+  .steps button:hover{border-color:var(--ok); color:var(--ok)}
+  .steps button.active{background:var(--ok); border-color:var(--ok); color:#fff}
+  .steps button.active .n{background:rgba(255,255,255,.26); color:#fff}
+  .step-cap{margin:13px 0 0; font-size:13.5px; font-weight:500; color:#374151; line-height:1.62; min-height:1.6em}
+  .step-cap b{color:var(--ink)}
+  .step-cap.warn b{color:var(--warn)}
+
+  /* 用語辞典 */
+  details.glossary{
+    border:1px solid var(--line); border-radius:10px; background:var(--card);
+    margin-bottom:16px; box-shadow:0 1px 3px rgba(20,30,50,.05);
+  }
+  details.glossary>summary{
+    list-style:none; cursor:pointer; padding:14px 18px; font-size:15px; font-weight:700;
+    color:var(--orange); display:flex; align-items:center; gap:9px; user-select:none;
+  }
+  details.glossary>summary::-webkit-details-marker{display:none}
+  details.glossary>summary::before{
+    content:""; width:0; height:0; border-left:6px solid var(--muted);
+    border-top:5px solid transparent; border-bottom:5px solid transparent;
+    transition:transform .15s; flex:none;
+  }
+  details.glossary[open]>summary::before{transform:rotate(90deg)}
+  dl.gloss{margin:0; padding:2px 18px 18px}
+  dl.gloss dt{font-weight:700; color:var(--ink); font-size:13.5px; margin-top:12px}
+  dl.gloss dt:first-of-type{margin-top:0}
+  dl.gloss dt .en{color:var(--muted); font-family:var(--mono); font-size:11px; font-weight:400; margin-left:7px; letter-spacing:.02em}
+  dl.gloss dd{margin:3px 0 0; font-size:13px; font-weight:500; color:#374151; line-height:1.62}
+
+  /* 身のまわりの例（モーダル内） */
+  .wheel-wrap{
+    background:var(--ok-tint); border:1px solid var(--line); border-radius:8px;
+    padding:12px 10px 8px; margin:4px 0 10px;
+  }
+  .wheel-wrap svg{display:block; width:100%; max-width:340px; margin:0 auto}
+  .real-table{width:100%; border-collapse:collapse; margin:6px 0 6px; font-size:13px}
+  .real-table th,.real-table td{text-align:left; padding:7px 10px; border-bottom:1px solid var(--line)}
+  .real-table th{color:var(--muted); font-weight:700; font-size:12px; background:#f7f9fc}
+  .real-table td{font-weight:500; color:#374151}
+  .real-table td .big{font-family:var(--mono); font-weight:700; color:var(--ink)}
+
+  footer{font-size:12px; color:var(--muted); text-align:center; margin-top:20px}
+
+  @media (max-width:560px){
+    header.top{padding-top:26px}
+    header.top h1{font-size:26px}
+    header.top .sig{display:none}
+    .banner{font-size:14px}
+  }
+
+  /* ===== ここから下は、この単元のために足した部品 ===== */
+
+  /* 小書きの仮名が行頭に来ないようにする（禁則） */
+  header.top .dek{line-break:strict}
+
+  /* 二値スイッチ（この単元に連続量が無いので、スライダーの代わりに置く） */
+  .swhead{display:flex; align-items:flex-start; gap:8px; font-size:14px; font-weight:700; color:var(--ink); margin-bottom:9px; line-height:1.5}
+  .swn{
+    display:inline-flex; align-items:center; justify-content:center; width:21px; height:21px;
+    border-radius:50%; background:var(--ok-bg); color:var(--ok);
+    font-size:12px; font-weight:700; flex:0 0 auto; margin-top:1px;
+  }
+  .swbox{
+    display:flex; align-items:center; gap:9px; cursor:pointer;
+    border:1px solid var(--line); background:#fff; border-radius:9px; padding:10px 14px;
+    font-size:14px; font-weight:700; color:var(--muted); transition:.15s;
+  }
+  .swbox input{accent-color:var(--ok); width:17px; height:17px; flex:0 0 auto}
+  .swbox.on{border-color:var(--ok-bd); background:var(--ok-tint); color:var(--ok)}
+  .swbox:hover{border-color:var(--ok-bd)}
+
+  /* 4状態の表 */
+  .stbl-wrap{overflow-x:auto; margin-top:15px}
+  .stbl{width:100%; min-width:540px; border-collapse:collapse; font-size:13px}
+  .stbl th,.stbl td{text-align:left; padding:8px 11px; border-bottom:1px solid var(--line); white-space:nowrap}
+  .stbl th{color:var(--muted); font-weight:700; font-size:11.5px; background:#f7f9fc}
+  .stbl td{font-weight:500; color:#374151}
+  .stbl tr.cur td{background:var(--ok-tint)}
+  .stbl tr.cur.iswarn td{background:var(--warn-tint)}
+  .stbl td.jd{font-weight:700}
+  .stbl td.jd.ok{color:var(--ok)}
+  .stbl td.jd.warn{color:var(--warn)}
+  .stbl td.jd.dim{color:var(--muted); font-weight:500}
+  .cap{font-size:12.5px; color:var(--muted); margin:9px 0 0; font-weight:500}
+
+  /* カード振り分け（タップで入れる。ドラッグは使わない） */
+  .sortlead{font-size:13.5px; font-weight:500; color:#374151; margin:0 0 14px}
+  .scard{
+    border:1px solid var(--line); background:#fff; border-radius:10px;
+    padding:12px 14px; margin-bottom:10px;
+  }
+  .scard:last-child{margin-bottom:0}
+  .scard .sh{display:flex; align-items:flex-start; gap:10px}
+  .scard .mk{
+    display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px;
+    border-radius:7px; background:#eef2f8; color:#374151;
+    font-size:13px; font-weight:700; flex:0 0 auto;
+  }
+  .scard .stext{margin:0; font-size:13.5px; font-weight:500; color:#374151; line-height:1.62}
+  .scard .sbtns{display:flex; flex-wrap:wrap; gap:9px; margin:11px 0 0 34px}
+  .scard .sbtns button{
+    border:1px solid var(--line); background:#fff; border-radius:999px;
+    padding:7px 15px; font-size:13px; cursor:pointer; color:var(--ink);
+    font-family:inherit; font-weight:700; transition:.15s;
+  }
+  .scard .sbtns button:hover{border-color:var(--ok); color:var(--ok); background:var(--ok-bg)}
+  .scard .verdict{margin:10px 0 0 34px; font-size:13px; font-weight:700}
+  .scard .verdict.ok{color:var(--ok)}
+  .scard .verdict.ng{color:var(--warn)}
+  .scard .why{margin:5px 0 0 34px; font-size:13px; font-weight:500; color:#374151; line-height:1.62}
+  .scard .why .wtag{
+    display:inline-block; border-radius:5px; background:#f1f4f9; color:var(--muted);
+    font-size:11.5px; font-weight:700; padding:2px 7px; margin-right:7px;
+  }
+  .scard.right{border-color:var(--ok-bd); background:var(--ok-tint)}
+  .scard.wrong{border-color:var(--warn-bd); background:var(--warn-tint)}
+  .scard .layer{display:flex; align-items:center; gap:10px; margin:10px 0 0 34px}
+  .scard .layer .lt{font-size:12.5px; font-weight:700; color:var(--ok)}
+  .mini-stack{width:22px; height:46px; flex:0 0 auto}
+  .mini-stack rect{fill:#fff; stroke:var(--hair2); stroke-width:1}
+  .mini-stack rect.hi{fill:var(--ok-bg); stroke:var(--ok); stroke-width:1.6}
+
+  .sboxes{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px}
+  .sbox{border:1px solid var(--line); border-radius:10px; background:#fbfcfe; padding:12px 13px; min-height:96px}
+  .sbox > h4{
+    margin:0 0 10px; font-size:13.5px; font-weight:700; color:var(--ink);
+    display:flex; align-items:baseline; justify-content:space-between; gap:8px;
+  }
+  .sbox > h4 .cnt{font-size:11.5px; font-weight:700; color:var(--muted); font-family:var(--mono)}
+  .sbox .empty{margin:0; font-size:12.5px; color:var(--muted); font-weight:500}
+  .sortfoot{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:14px}
+  .sortfoot .cap{margin:0}
+  .btn-reset{
+    border:1px solid var(--line); background:#fff; border-radius:999px;
+    padding:7px 16px; font-size:13px; font-weight:700; cursor:pointer;
+    color:var(--muted); font-family:inherit; transition:.15s;
+  }
+  .btn-reset:hover{border-color:var(--ok); color:var(--ok)}
+
+  /* 引用（学習ノートの本文） */
+  .quote{
+    border-left:3px solid var(--ok-bd); background:#f7f9fc; border-radius:0 8px 8px 0;
+    padding:11px 15px; margin:10px 0 0;
+  }
+  .quote p{margin:0; font-size:13.5px; font-weight:500; color:#374151; line-height:1.7}
+  .quote .src{display:block; margin-top:6px; font-size:11.5px; color:var(--muted); font-weight:700}
+
+  @media (max-width:560px){
+    .sboxes{grid-template-columns:1fr}
+    .scard .sbtns{margin-left:0}
+    .scard .verdict,.scard .why,.scard .layer{margin-left:0}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="eyebrow"><span class="dot"></span>MIKIKOF-LAB · 学習ノート POINT 14 ｜ 3章</div>
+    <h1>装置の違いを意識せずに使えるのは誰の仕事か</h1>
+    <div class="enlabel">OS Abstraction and Hardware Interface</div>
+    <p class="dek">装置の違いを意識せずに使えるようにしているのは、規格でしょうか、OS でしょうか。</p>
+    <svg class="sig" viewBox="0 0 148 48" fill="none" aria-hidden="true">
+      <path d="M20 7 H132" stroke-width="6" stroke-linecap="round"/>
+      <path d="M20 19 H132" stroke-width="6" stroke-linecap="round"/>
+      <path d="M20 31 H132" stroke-width="6" stroke-linecap="round"/>
+      <path d="M20 43 H132" stroke-width="6" stroke-linecap="round"/>
+      <circle cx="11" cy="19" r="3.4"/>
+      <circle cx="11" cy="31" r="3.4"/>
+    </svg>
+  </header>
+
+  <div class="panel" id="intro">
+    <h2 class="sec">はじめに：つないだだけで使えるのは、なぜ</h2>
+    <p class="note">
+      USB ケーブルでプリンタをつなぐと、文書作成ソフトウェアから印刷できます。文書作成ソフトウェアは、つないだプリンタが<b>どんな装置なのかを、いちいち知らないまま</b>使えています。
+    </p>
+    <p class="note">
+      この「装置の違いを意識せずに使える」状態は、誰が作っているのでしょうか。ケーブルの形をそろえている <b>USB の規格</b>でしょうか。それとも <b>OS</b> でしょうか。どちらも「違いを吸収している」ように読めます。ここを操作で切り分けます。
+    </p>
+    <div>
+      <button class="deep-chip primary" id="open-basic" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 4.5h6a2 2 0 0 1 2 2V20a2 2 0 0 0-2-2H4z"></path><path d="M20 4.5h-6a2 2 0 0 0-2 2V20a2 2 0 0 1 2-2h6z"></path>
+        </svg>まずはイチから図解で理解する
+      </button>
+    </div>
+  </div>
+
+  <div id="banner" class="banner ok"></div>
+
+  <div id="cbox" class="canvas-box ok">
+    <canvas id="cv" role="img" aria-label="文書作成ソフトウェア、OS、USB、プリンタの4段を縦に重ねた図。OS の箱の下辺にはデバイスドライバの帯があり、USB とプリンタの間にはコネクタがある。スイッチ①を「そろえない」にすると USB の段が薄くなり、コネクタの形が合わなくなって、USB とプリンタの間が離れる。スイッチ②を「持っていない」にすると OS の下辺のデバイスドライバの帯が消え、OS と USB の間が離れ、OS の段の色が赤に変わる。"></canvas>
+  </div>
+
+  <div class="panel" id="step-panel">
+    <div class="steps">
+      <span class="slabel">順を追って見る</span>
+      <button data-step="1"><span class="n">1</span>場面を見る</button>
+      <button data-step="2"><span class="n">2</span>OS の用意を外す</button>
+      <button data-step="3"><span class="n">3</span>規格を外してみる</button>
+      <button data-step="4"><span class="n">4</span>4つの状態をまとめる</button>
+    </div>
+    <p class="step-cap" id="step-cap">ボタンを順に押すと、①と②が何を動かすのかを1つずつ確かめられます。</p>
+  </div>
+
+  <div class="panel">
+    <div class="controls">
+      <div class="ctrl">
+        <div class="swhead"><span class="swn">①</span><span>コネクタの形状と電気信号の形式を USB の規格でそろえる</span></div>
+        <label class="swbox on" id="sw1box"><input type="checkbox" id="sw1" checked><span id="sw1t">そろえる</span></label>
+      </div>
+      <div class="ctrl">
+        <div class="swhead"><span class="swn">②</span><span>OS がこのプリンタ用のデバイスドライバを持っている</span></div>
+        <label class="swbox on" id="sw2box"><input type="checkbox" id="sw2" checked><span id="sw2t">持っている</span></label>
+      </div>
+    </div>
+
+    <div class="presets">
+      <button data-s1="1" data-s2="1">そろっている・用意あり</button>
+      <button data-s1="1" data-s2="0">そろっている・用意なし</button>
+      <button data-s1="0" data-s2="1">そろっていない・用意あり</button>
+      <button data-s1="0" data-s2="0">そろっていない・用意なし</button>
+    </div>
+
+    <div class="toggles">
+      <label><input type="checkbox" id="t-label" checked> 層のラベルを出す</label>
+      <label><input type="checkbox" id="t-band"> デバイスドライバの帯を強調する</label>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="readouts">
+      <div class="ro" id="ro1"><div class="k">コネクタの形状と電気信号の形式</div><div class="v"><span id="v1">そろっている</span></div></div>
+      <div class="ro" id="ro2"><div class="k">OS の側の用意</div><div class="v"><span id="v2">ある</span></div></div>
+      <div class="ro" id="ro3"><div class="k">判定を動かしているスイッチ</div><div class="v">②</div></div>
+    </div>
+
+    <div class="stbl-wrap">
+      <table class="stbl" id="stbl">
+        <thead>
+          <tr><th>① 規格</th><th>② OS の用意</th><th>①の欄</th><th>②の欄</th><th>バナーの判定</th></tr>
+        </thead>
+        <tbody id="stbody"></tbody>
+      </table>
+    </div>
+    <p class="cap">判定の欄は、OS が「装置の違いを意識せず利用できるよう操作の内容を抽象化する」状態かどうかを表しています。通った状態から順に埋まります。</p>
+  </div>
+
+  <div class="panel">
+    <h2 class="sec">この図が言っていること</h2>
+    <p class="note">
+      コネクタの形状と電気信号の形式をそろえているのは、<b>USB という規格</b>です。これは機器と機器の間の取り決めで、<b>ハードウェアインタフェース</b>といいます。装置の違いを意識せずに使えるよう操作の内容を抽象化しているのは、<b>OS</b> です。
+    </p>
+    <p class="note">
+      どちらも「違いを吸収している」と読めますが、担っている場所が違います。①をどれだけ動かしてもバナーが動かないのは、そのためです。
+    </p>
+    <table class="real-table">
+      <thead><tr><th>仕事</th><th>担っているもの</th></tr></thead>
+      <tbody>
+        <tr><td>機器どうしを接続するコネクタの形状や電気信号の形式などの仕様を合わせる</td><td>ハードウェアインタフェース（USB などの規格）</td></tr>
+        <tr><td>装置の違いを意識せず利用できるよう、操作の内容を抽象化する</td><td>OS（目的のうち基本機能の提供）</td></tr>
+        <tr><td>周辺機器を OS が制御する</td><td>デバイスドライバ</td></tr>
+      </tbody>
+    </table>
+    <div>
+      <button class="deep-chip" id="open-deep" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle><line x1="16.2" y1="16.2" x2="21" y2="21"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line>
+        </svg>規格をそろえても、なぜ判定が動かないのか
+      </button>
+    </div>
+  </div>
+
+  <div class="panel" id="sort-panel">
+    <h2 class="sec">OS の目的かどうかで分ける</h2>
+    <p class="sortlead">
+      次の4つの記述を、「OS の目的」と「OS の目的ではない」に分けてみてください。記述を読んで、下の2つのボタンのどちらかを押します。
+    </p>
+    <div id="sort-tray"></div>
+    <div class="sboxes">
+      <div class="sbox"><h4>OS の目的<span class="cnt" id="cnt-yes">0枚</span></h4><div id="box-yes"><p class="empty">まだ入っていません。</p></div></div>
+      <div class="sbox"><h4>OS の目的ではない<span class="cnt" id="cnt-no">0枚</span></h4><div id="box-no"><p class="empty">まだ入っていません。</p></div></div>
+    </div>
+    <div class="sortfoot">
+      <button class="btn-reset" id="sort-reset" type="button">やり直す</button>
+      <span class="cap" id="sort-stat"></span>
+    </div>
+  </div>
+
+  <details class="glossary">
+    <summary>用語のおさらい</summary>
+    <dl class="gloss">
+      <dt>ハードウェア<span class="en">hardware</span></dt>
+      <dd>コンピュータを構成する装置の機能を実現する物理的な装置や部品。</dd>
+      <dt>周辺機器（デバイス）<span class="en">peripheral</span></dt>
+      <dd>本体に接続し、データの記憶や入出力を行う機器。</dd>
+      <dt>インタフェース<span class="en">interface</span></dt>
+      <dd>異なる機器やソフトウェア、人間との間でのデータのやり取りをする際、その間をつなぐ規格や機能。</dd>
+      <dt>ハードウェアインタフェース</dt>
+      <dd>インタフェースのうち、特にハードウェア間のもの。</dd>
+      <dt>ソフトウェアインタフェース</dt>
+      <dd>ソフトウェア間のインタフェース。API など。</dd>
+      <dt>オペレーティングシステム（OS）<span class="en">operating system</span></dt>
+      <dd>基本ソフトウェア。コンピュータの基本的な管理・制御を行う。</dd>
+      <dt>OS の目的</dt>
+      <dd>操作支援／基本機能の提供／資源の有効利用。</dd>
+      <dt>応用ソフトウェア<span class="en">application software</span></dt>
+      <dd>特定の作業を行うために使用されるソフトウェア。OS が提供する機能を利用して動作する。</dd>
+      <dt>デバイスドライバ<span class="en">device driver</span></dt>
+      <dd>コンピュータの周辺機器を、OS が制御するためのソフトウェア。</dd>
+    </dl>
+  </details>
+
+  <footer>mikikof-lab ／ OS の目的とハードウェアインタフェース（単一HTML・外部ライブラリ不使用）</footer>
+</div>
+
+<!-- 深掘りポップアウト -->
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="deep-title">
+  <div class="modal">
+    <header>
+      <h3 id="deep-title">規格をそろえても、なぜ判定が動かないのか</h3>
+      <button class="x" id="close-deep" type="button" aria-label="閉じる">×</button>
+    </header>
+    <div class="mbody">
+
+      <div class="mblock">
+        <h4>① 同じ USB につながる機器は、中でしていることが違う</h4>
+        <p>
+          USB という一つの規格で、プリンタもキーボードもハードディスクもつながります。規格がそろえているのは、<b>コネクタの形状と電気信号の形式</b>までです。
+        </p>
+        <div class="mini-box"><canvas id="cv2" role="img" aria-label="上に USB の規格を表す横長の帯があり、そこから同じ形のコネクタが3本下りて、プリンタ、キーボード、ハードディスクの3つの箱につながっている図。3つの箱の中の絵はそれぞれ違う。"></canvas></div>
+        <p class="mini-cap">コネクタの形はどれも同じです。中でしている仕事は、機器ごとに違います。</p>
+      </div>
+
+      <div class="mblock">
+        <h4>② ①が届く範囲と、②が受け持つ範囲は重ならない</h4>
+        <p>
+          規格が合わせているのは、<b>機器と機器の間</b>です。OS が受け持っているのは、その上の段です。二つの範囲は隣り合っているだけで、重なりません。だから①をどちらに動かしても、②の判定はそのままです。
+        </p>
+        <div class="mini-box"><canvas id="cv3" role="img" aria-label="文書作成ソフトウェア、OS、USB、プリンタの4段のとなりに、範囲を示す2本のかぎかっこを並べた図。上の2段が②の範囲、下の2段が①の範囲で、2本は重なっていない。"></canvas></div>
+        <p class="mini-cap" id="scope-cap"></p>
+      </div>
+
+      <div class="mblock">
+        <h4>③ 身のまわり：同じ口に挿し替えても、OS の用意は別々</h4>
+        <p>
+          同じ USB の口に、プリンタを挿しても、キーボードを挿しても、コネクタの形状と電気信号の形式は同じです。それでも OS の側では、<b>その機器を動作させるためのデバイスドライバ</b>が別々に要ります。
+        </p>
+        <div class="mini-box"><canvas id="cvw" role="img" aria-label="左右に2つのコマを並べた図。左のコマは OS の中の1つ目のタイルが光っていてプリンタにつながり、右のコマは2つ目のタイルが光っていてキーボードにつながっている。2つのコマのコネクタの形は同じ。"></canvas></div>
+        <p class="mini-cap">コネクタの形は左右で同じです。光っているタイル（デバイスドライバ）は左右で違います。</p>
+        <table class="real-table">
+          <thead><tr><th>つなぐ機器</th><th>つないでいる規格</th><th>基本ソフトウェアに追加するプログラム</th></tr></thead>
+          <tbody>
+            <tr><td>プリンタ</td><td><span class="big">USB</span></td><td>プリンタを動作させるためのデバイスドライバ</td></tr>
+            <tr><td>キーボード</td><td><span class="big">USB</span></td><td>キーボードを動作させるためのデバイスドライバ</td></tr>
+          </tbody>
+        </table>
+        <div class="quote">
+          <p>基本ソフトウェアに周辺機器を動作させるためのデバイスドライバというプログラムを追加することで、応用ソフトウェアは周辺機器の違いをほとんど意識することなく作業ができる。</p>
+          <span class="src">学習ノート POINT 14 実習2 の本文</span>
+        </div>
+      </div>
+
+      <div class="mblock">
+        <table class="real-table">
+          <thead><tr><th>仕事</th><th>担っているもの</th></tr></thead>
+          <tbody>
+            <tr><td>コネクタの形状や電気信号の形式などの仕様を合わせる</td><td>ハードウェアインタフェース</td></tr>
+            <tr><td>装置の違いを意識せず利用できるよう、操作の内容を抽象化する</td><td>OS</td></tr>
+          </tbody>
+        </table>
+        <p>
+          規格がそろえるのは機器と機器の間まで。装置の違いを意識せずに使えるようにするのは <b>OS の仕事</b>です。上のスイッチを動かしてから開き直すと、②の図も今の状態で描き直されます。
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- 基礎からゆっくり ポップアウト -->
+<div class="overlay" id="overlay-basic" role="dialog" aria-modal="true" aria-labelledby="basic-title">
+  <div class="modal">
+    <header>
+      <h3 id="basic-title">イチから図解：装置の違いと OS</h3>
+      <button class="x" id="close-basic" type="button" aria-label="閉じる">×</button>
+    </header>
+    <div class="mbody">
+
+      <div class="mblock">
+        <h4>① コンピュータと、つないで使う道具</h4>
+        <p>
+          コンピュータの本体に、キーボードやプリンタをつないで使います。この、つないで使う道具のことを<b>周辺機器</b>といいます。
+        </p>
+        <div class="mini-box"><canvas id="cvb1" role="img" aria-label="中央にコンピュータ本体の箱、左にキーボードの箱、右にプリンタの箱があり、それぞれ線でつながっている図。"></canvas></div>
+      </div>
+
+      <div class="mblock">
+        <h4>② 間をつなぐ規格</h4>
+        <p>
+          つなぐには、<b>差し込み口の形</b>と、やり取りする<b>電気信号の形式</b>をそろえておく必要があります。これをそろえる取り決めが規格で、USB はその一つです。
+        </p>
+        <div class="mini-box"><canvas id="cvb2" role="img" aria-label="左右に2つの絵を並べた図。左は四角い差し込みと丸い受け口で形が合わず離れている。右は同じ形の差し込みと受け口がはまり合っている。"></canvas></div>
+        <p class="mini-cap">左：形がそろっていません。右：形をそろえたので、つながります。</p>
+      </div>
+
+      <div class="mblock">
+        <h4>③ つながったあと、OS が間に立つ</h4>
+        <p>
+          つながっただけでは、文書作成ソフトウェアはその機器の扱い方を知りません。そこで <b>OS</b> が間に立ちます。OS は、周辺機器を動作させるための<b>デバイスドライバ</b>を持っていて、機器ごとの扱い方をそちらで引き受けます。
+        </p>
+        <div class="mini-box"><canvas id="cvb3" role="img" aria-label="上から文書作成ソフトウェア、OS、プリンタの3つの箱を縦に並べ、矢印でつないだ図。上の矢印には「印刷する」、下の矢印には「その機器のやり方で」と書かれている。"></canvas></div>
+      </div>
+
+      <div class="mblock">
+        <h4>④ 応用ソフトウェアから見た景色</h4>
+        <p>
+          文書作成ソフトウェアの側は「印刷する」と伝えるだけで済みます。その下の段の違いを、応用ソフトウェアはほとんど意識しません。これが「装置の違いを意識せず利用できるよう操作の内容を抽象化する」ということです。
+        </p>
+        <div class="mini-box"><canvas id="cvb4" role="img" aria-label="上に文書作成ソフトウェアの箱があり、そこから「印刷する」と書かれた矢印が下へ伸びる。その下は破線の枠で囲まれ、OS、USB、プリンタにあたる3つの箱が薄く描かれ、枠には「意識しない部分」と書かれている。"></canvas></div>
+      </div>
+
+      <div class="mblock">
+        <p>
+          この4つの絵が、上の図の4つの段にそのまま対応します。スイッチ①は②の絵の「形をそろえる」ところ、スイッチ②は③の絵の「デバイスドライバ」のところに当たります。
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const cv  = document.getElementById('cv');
+  const ctx = cv.getContext('2d');
+
+  let W = 0, H = 0;
+
+  const el = {
+    sw1:document.getElementById('sw1'), sw2:document.getElementById('sw2'),
+    sw1box:document.getElementById('sw1box'), sw2box:document.getElementById('sw2box'),
+    sw1t:document.getElementById('sw1t'), sw2t:document.getElementById('sw2t'),
+    v1:document.getElementById('v1'), v2:document.getElementById('v2'),
+    ro2:document.getElementById('ro2'),
+    banner:document.getElementById('banner'), cbox:document.getElementById('cbox'),
+    tLabel:document.getElementById('t-label'), tBand:document.getElementById('t-band'),
+    stbody:document.getElementById('stbody'), scopeCap:document.getElementById('scope-cap')
+  };
+
+  const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+  // ===== 状態判定（この単元の数理は二値の論理）=====
+  // バナーは②だけの関数。①には依存しない。
+  const judge = (s1, s2) => s2;
+
+  // ===== 主図：4段のスタック =====
+  function setupCanvas(){
+    const dpr = window.devicePixelRatio || 1;
+    const cssW = cv.clientWidth || 600;
+    const cssH = Math.max(300, Math.min(430, Math.round(cssW * 0.46)));
+    cv.style.height = cssH + 'px';
+    cv.width  = Math.round(cssW * dpr);
+    cv.height = Math.round(cssH * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    W = cssW; H = cssH;
+  }
+
+  function roundRect(c, x, y, w, h, r){
+    c.beginPath();
+    c.moveTo(x + r, y);
+    c.arcTo(x + w, y, x + w, y + h, r);
+    c.arcTo(x + w, y + h, x, y + h, r);
+    c.arcTo(x, y + h, x, y, r);
+    c.arcTo(x, y, x + w, y, r);
+    c.closePath();
+  }
+
+  function arrowHead(c, x, y, dir){
+    c.beginPath();
+    if(dir === 'down'){ c.moveTo(x, y); c.lineTo(x - 4.5, y - 8); c.lineTo(x + 4.5, y - 8); }
+    else { c.moveTo(x, y); c.lineTo(x - 8, y - 4.5); c.lineTo(x - 8, y + 4.5); }
+    c.closePath(); c.fill();
+  }
+
+  function box(c, x, y, w, h, o){
+    roundRect(c, x, y, w, h, 8);
+    c.fillStyle = o.fill; c.fill();
+    c.lineWidth = o.lw || 1.6; c.strokeStyle = o.stroke;
+    c.setLineDash(o.dash ? [6, 4] : []);
+    c.stroke(); c.setLineDash([]);
+  }
+
+  function badge(c, cx, cy, t, col, bg){
+    c.beginPath(); c.arc(cx, cy, 10, 0, Math.PI * 2);
+    c.fillStyle = bg; c.fill();
+    c.lineWidth = 1.5; c.strokeStyle = col; c.setLineDash([]); c.stroke();
+    c.fillStyle = col; c.font = 'bold 11.5px sans-serif';
+    c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.fillText(t, cx, cy + 0.5);
+    c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+  }
+
+  // 段のラベル行（文字は箱の外にだけ置く）
+  function labelLine(c, x, xr, yTop, name, sub, show, bd){
+    const by = yTop + 14;
+    if(show){
+      c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+      c.font = 'bold 12.5px sans-serif'; c.fillStyle = '#2f3742';
+      c.fillText(name, x, by);
+      const wn = c.measureText(name).width;
+      c.font = '11.5px sans-serif'; c.fillStyle = '#5b6470';
+      c.fillText(sub, x + wn + 3, by);
+    }
+    if(bd) badge(c, xr - 11, by - 4.5, bd.t, bd.col, bd.bg);
+  }
+
+  function drawDoc(c, cx, cy, s){
+    const w = s * 0.72, h = s;
+    c.setLineDash([]); c.strokeStyle = '#9aa4b2'; c.lineWidth = 1.4;
+    roundRect(c, cx - w / 2, cy - h / 2, w, h, 2.5);
+    c.fillStyle = '#fff'; c.fill(); c.stroke();
+    c.strokeStyle = '#c4ccd8'; c.lineWidth = 1.2;
+    for(let i = 1; i <= 3; i++){
+      const y = cy - h / 2 + (h * i) / 4;
+      c.beginPath(); c.moveTo(cx - w / 2 + 4, y); c.lineTo(cx + w / 2 - 4, y); c.stroke();
+    }
+  }
+
+  function drawPrinter(c, cx, cy, s){
+    const bw = s * 1.5, bh = s * 0.56;
+    c.setLineDash([]); c.strokeStyle = '#9aa4b2'; c.lineWidth = 1.4;
+    roundRect(c, cx - bw / 2, cy - bh / 2, bw, bh, 3);
+    c.fillStyle = '#fff'; c.fill(); c.stroke();
+    roundRect(c, cx - bw * 0.3, cy - bh / 2 - s * 0.34, bw * 0.6, s * 0.34, 1.5);
+    c.fillStyle = '#eef2f8'; c.fill(); c.stroke();
+    c.strokeStyle = '#c4ccd8'; c.lineWidth = 1.2;
+    c.beginPath(); c.moveTo(cx - bw * 0.26, cy + bh * 0.16); c.lineTo(cx + bw * 0.26, cy + bh * 0.16); c.stroke();
+  }
+
+  function drawKeyboard(c, cx, cy, s){
+    const bw = s * 1.6, bh = s * 0.52;
+    c.setLineDash([]); c.strokeStyle = '#9aa4b2'; c.lineWidth = 1.4;
+    roundRect(c, cx - bw / 2, cy - bh / 2, bw, bh, 3);
+    c.fillStyle = '#fff'; c.fill(); c.stroke();
+    c.fillStyle = '#c4ccd8';
+    const k = (bw - 10) / 5;
+    for(let r = 0; r < 2; r++){
+      for(let i = 0; i < 5; i++){
+        c.fillRect(cx - bw / 2 + 5 + i * k, cy - bh / 2 + 4 + r * (bh / 2.6), k * 0.62, bh / 4.6);
+      }
+    }
+  }
+
+  function drawDisk(c, cx, cy, s){
+    const bw = s * 1.2, bh = s * 0.72;
+    c.setLineDash([]); c.strokeStyle = '#9aa4b2'; c.lineWidth = 1.4;
+    roundRect(c, cx - bw / 2, cy - bh / 2, bw, bh, 3);
+    c.fillStyle = '#fff'; c.fill(); c.stroke();
+    c.strokeStyle = '#c4ccd8'; c.lineWidth = 1.3;
+    c.beginPath(); c.arc(cx, cy, bh * 0.28, 0, Math.PI * 2); c.stroke();
+    c.beginPath(); c.arc(cx, cy, 1.8, 0, Math.PI * 2); c.fillStyle = '#c4ccd8'; c.fill();
+  }
+
+  // デバイスドライバの帯（OS の箱の下辺に属する）
+  function drawBand(c, x, y, w, h, emph, col){
+    c.setLineDash([]);
+    roundRect(c, x, y, w, h, 3.5);
+    c.fillStyle = emph ? '#c3d2f6' : '#dde5fb'; c.fill();
+    c.lineWidth = emph ? 2.4 : 1.4; c.strokeStyle = col; c.stroke();
+    if(emph){
+      c.save();
+      roundRect(c, x, y, w, h, 3.5); c.clip();
+      c.strokeStyle = 'rgba(47,85,212,.30)'; c.lineWidth = 1.1;
+      for(let sx = x - h; sx < x + w; sx += 7){
+        c.beginPath(); c.moveTo(sx, y + h); c.lineTo(sx + h, y); c.stroke();
+      }
+      c.restore();
+    }
+  }
+
+  // USB とプリンタの間のコネクタ（①が支配する）
+  function drawConnector(c, cx, yTop, yBot, matched, s){
+    c.setLineDash([]);
+    if(matched){
+      const w = Math.max(20, 30 * s);
+      roundRect(c, cx - w / 2, yTop - 3, w, (yBot - yTop) + 6, 4);
+      c.fillStyle = '#dde5f2'; c.fill();
+      c.lineWidth = 1.5; c.strokeStyle = '#7c8695'; c.stroke();
+      c.beginPath();
+      c.moveTo(cx - w / 2 + 5, (yTop + yBot) / 2); c.lineTo(cx + w / 2 - 5, (yTop + yBot) / 2);
+      c.strokeStyle = '#9aa4b2'; c.lineWidth = 1.2; c.stroke();
+    } else {
+      const pw = Math.max(17, 24 * s), ph = Math.min(13, (yBot - yTop) * 0.34);
+      roundRect(c, cx - pw / 2, yTop, pw, ph, 2);
+      c.fillStyle = '#eef1f6'; c.fill();
+      c.lineWidth = 1.5; c.strokeStyle = '#9aa4b2'; c.stroke();
+      const r = Math.min(11, pw * 0.5);
+      c.beginPath(); c.arc(cx, yBot, r, Math.PI, Math.PI * 2);
+      c.fillStyle = '#eef1f6'; c.fill();
+      c.lineWidth = 1.5; c.strokeStyle = '#9aa4b2'; c.stroke();
+      c.fillStyle = '#5b6470'; c.font = '11.5px sans-serif';
+      c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+      c.fillText('仕様が合っていません', cx + pw / 2 + 11, (yTop + yBot) / 2 + 4);
+    }
+  }
+
+  function draw(){
+    const s1 = el.sw1.checked, s2 = el.sw2.checked;
+    const show = el.tLabel.checked, emph = el.tBand.checked;
+    const OK = cssVar('--ok'), WARN = cssVar('--warn');
+    const osCol = s2 ? OK : WARN;
+
+    ctx.clearRect(0, 0, W, H);
+    const bw = Math.min(W - 40, 560);
+    const x0 = Math.round((W - bw) / 2), x1 = x0 + bw, cx = (x0 + x1) / 2;
+
+    const LH = 19, BL = 18;
+    const fixed = LH * 4 + BL;
+    const flexMax = 46 + 10 + 66 + 38 + 44 + 38 + 48;
+    const S = Math.max(0.55, Math.min(1, (H - 22 - fixed) / flexMax));
+    const h1 = 46 * S, h2 = 66 * S, h3 = 44 * S, h4 = 48 * S;
+    const g12 = 10 * S, g23 = (s2 ? 16 : 38) * S, g34 = (s1 ? 16 : 38) * S;
+
+    let y = Math.max(10, (H - (fixed + flexMax * S)) / 2);
+
+    // 1段目 文書作成ソフトウェア
+    labelLine(ctx, x0, x1, y, '文書作成ソフトウェア', '（応用ソフトウェア）', show, null);
+    y += LH;
+    box(ctx, x0, y, bw, h1, { fill: '#f7f9fc', stroke: '#c4ccd8' });
+    drawDoc(ctx, cx, y + h1 / 2, Math.min(h1 * 0.74, 32));
+    y += h1 + g12;
+
+    // 2段目 OS（下辺にデバイスドライバの帯）
+    labelLine(ctx, x0, x1, y, 'OS', '（基本ソフトウェア）', show, null);
+    y += LH;
+    box(ctx, x0, y, bw, h2, { fill: s2 ? '#eaeffc' : '#fdecea', stroke: osCol, lw: 2 });
+    const bh = Math.max(12, 18 * S);
+    if(s2) drawBand(ctx, x0 + 12, y + h2 - bh - 5, bw - 24, bh, emph, OK);
+    y += h2;
+
+    // 帯のラベル行
+    if(show){
+      ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+      ctx.font = 'bold 11.5px sans-serif'; ctx.fillStyle = osCol;
+      ctx.fillText(s2 ? 'デバイスドライバ' : 'デバイスドライバがありません', x0, y + 13);
+    }
+    badge(ctx, x1 - 11, y + 9, '②', osCol, s2 ? '#eaeffc' : '#fdecea');
+    y += BL + g23;
+
+    // 3段目 USB
+    labelLine(ctx, x0, x1, y, 'USB', '（ハードウェアインタフェース）', show,
+      { t: '①', col: s1 ? OK : '#8b94a3', bg: s1 ? '#eaeffc' : '#eef1f6' });
+    y += LH;
+    box(ctx, x0, y, bw, h3, s1
+      ? { fill: '#f7f9fc', stroke: '#8b94a3' }
+      : { fill: '#fbfcfe', stroke: '#c4ccd8', dash: true });
+    y += h3;
+
+    // 3段目と4段目の間（コネクタ。①が支配する）
+    const gapTop = y, gapH = g34 + LH;
+    drawConnector(ctx, cx, gapTop, gapTop + gapH, s1, S);
+    labelLine(ctx, x0, x1, gapTop + gapH - LH, 'プリンタ', '（周辺機器）', show, null);
+    y = gapTop + gapH;
+
+    // 4段目 プリンタ
+    box(ctx, x0, y, bw, h4, { fill: '#f7f9fc', stroke: '#c4ccd8' });
+    drawPrinter(ctx, cx, y + h4 / 2, Math.min(h4 * 0.62, 30));
+  }
+
+  // ===== 4状態の表 =====
+  const ROWS = [
+    { s1: true,  s2: true  },
+    { s1: true,  s2: false },
+    { s1: false, s2: true  },
+    { s1: false, s2: false }
+  ];
+  const visited = {};
+  const key = (s1, s2) => (s1 ? '1' : '0') + (s2 ? '1' : '0');
+
+  function renderTable(s1, s2){
+    const cur = key(s1, s2);
+    visited[cur] = true;
+    let html = '';
+    ROWS.forEach(r => {
+      const k = key(r.s1, r.s2);
+      const seen = !!visited[k];
+      const j = judge(r.s1, r.s2);
+      const cls = (k === cur) ? ' class="cur' + (j ? '' : ' iswarn') + '"' : '';
+      const jcell = seen
+        ? '<td class="jd ' + (j ? 'ok' : 'warn') + '">' + (j ? 'OS が抽象化している' : 'OS が抽象化していない') + '</td>'
+        : '<td class="jd dim">—</td>';
+      html += '<tr' + cls + '>'
+        + '<td>' + (r.s1 ? 'そろえる' : 'そろえない') + '</td>'
+        + '<td>' + (r.s2 ? '持っている' : '持っていない') + '</td>'
+        + '<td>' + (seen ? (r.s1 ? 'そろっている' : 'そろっていない') : '—') + '</td>'
+        + '<td>' + (seen ? (r.s2 ? 'ある' : 'ない') : '—') + '</td>'
+        + jcell + '</tr>';
+    });
+    el.stbody.innerHTML = html;
+  }
+
+  function markAll(){ ROWS.forEach(r => { visited[key(r.s1, r.s2)] = true; }); }
+
+  // ===== バナーと読み取り欄 =====
+  function update(){
+    const s1 = el.sw1.checked, s2 = el.sw2.checked;
+    const ok = judge(s1, s2);
+
+    el.sw1t.textContent = s1 ? 'そろえる' : 'そろえない';
+    el.sw2t.textContent = s2 ? '持っている' : '持っていない';
+    el.sw1box.classList.toggle('on', s1);
+    el.sw2box.classList.toggle('on', s2);
+
+    el.v1.textContent = s1 ? 'そろっている' : 'そろっていない';
+    el.v2.textContent = s2 ? 'ある' : 'ない';
+    el.ro2.classList.toggle('alias', !s2);
+
+    el.cbox.className = 'canvas-box ' + (ok ? 'ok' : 'warn');
+    el.banner.className = 'banner ' + (ok ? 'ok' : 'warn');
+
+    if(ok){
+      el.banner.innerHTML =
+        '✓ OS が、装置の違いを意識せず利用できるよう操作の内容を抽象化しています'
+        + '<small>これは OS の目的の一つ、基本機能の提供です。</small>';
+    } else {
+      const tail = s1
+        ? 'コネクタの形状と電気信号の形式は USB の規格でそろっていますが、そちらをそろえることは OS の目的ではありません。'
+        : 'コネクタの形状と電気信号の形式もそろっていませんが、そちらをそろえることは OS の目的ではありません。';
+      el.banner.innerHTML =
+        '⚠ OS の側に、このプリンタを制御するための用意がありません'
+        + '<small>装置の違いを意識せず利用できるよう操作の内容を抽象化する、という状態にはなっていません。'
+        + tail + '</small>';
+    }
+
+    renderTable(s1, s2);
+    draw();
+  }
+
+  // ===== 深掘りポップアウト =====
+  const overlay = document.getElementById('overlay');
+  const cv2 = document.getElementById('cv2');
+  const cv3 = document.getElementById('cv3');
+  const cvw = document.getElementById('cvw');
+
+  function setupMini(canvas, ratio){
+    const dpr = window.devicePixelRatio || 1;
+    const cw = canvas.clientWidth || 560;
+    const ch = Math.round(cw * ratio);
+    canvas.style.height = ch + 'px';
+    canvas.width  = Math.round(cw * dpr);
+    canvas.height = Math.round(ch * dpr);
+    const c = canvas.getContext('2d');
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { c, w: cw, h: ch };
+  }
+
+  // モーダル内の図は中身の高さが決まっているので、比ではなく実寸で高さを決める
+  const miniPx = (canvas, px) => setupMini(canvas, px / (canvas.clientWidth || 560));
+
+  // ① 同じ USB につながる別々の周辺機器（固定の概念図）
+  function drawSameBus(){
+    const { c, w, h } = miniPx(cv2, 150);
+    c.clearRect(0, 0, w, h);
+    const OKC = cssVar('--ok');
+    const barY = 32, barH = 15;
+
+    c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+    c.font = 'bold 11.5px sans-serif'; c.fillStyle = '#374151';
+    c.fillText('USB（同じ規格）', 10, barY - 7);
+
+    c.setLineDash([]);
+    roundRect(c, 10, barY, w - 20, barH, 4);
+    c.fillStyle = '#eaeffc'; c.fill();
+    c.lineWidth = 1.6; c.strokeStyle = OKC; c.stroke();
+
+    const names = ['プリンタ', 'キーボード', 'ハードディスク'];
+    const bxW = Math.min(118, (w - 32) / 3), bxH = 42;
+    const boxY = barY + barH + 28;
+    for(let i = 0; i < 3; i++){
+      const bx = 10 + (w - 20) * (i + 0.5) / 3;
+      c.setLineDash([]);
+      roundRect(c, bx - 8, barY + barH, 16, 13, 2);
+      c.fillStyle = '#dde5f2'; c.fill();
+      c.lineWidth = 1.4; c.strokeStyle = '#7c8695'; c.stroke();
+      c.beginPath(); c.moveTo(bx, barY + barH + 13); c.lineTo(bx, boxY);
+      c.strokeStyle = '#9aa4b2'; c.lineWidth = 1.4; c.stroke();
+
+      roundRect(c, bx - bxW / 2, boxY, bxW, bxH, 6);
+      c.fillStyle = '#fff'; c.fill();
+      c.lineWidth = 1.5; c.strokeStyle = '#c4ccd8'; c.stroke();
+      if(i === 0) drawPrinter(c, bx, boxY + bxH / 2, 22);
+      if(i === 1) drawKeyboard(c, bx, boxY + bxH / 2, 24);
+      if(i === 2) drawDisk(c, bx, boxY + bxH / 2, 26);
+
+      c.fillStyle = '#374151'; c.font = '11.5px sans-serif'; c.textAlign = 'center';
+      c.fillText(names[i], bx, boxY + bxH + 17);
+    }
+    c.textAlign = 'left';
+  }
+
+  // ② ①の範囲と②の範囲は重ならない（今の操作値で描き直る）
+  function drawScope(){
+    const s1 = el.sw1.checked, s2 = el.sw2.checked;
+    const { c, w, h } = miniPx(cv3, 180);
+    c.clearRect(0, 0, w, h);
+    const OKC = cssVar('--ok'), WARNC = cssVar('--warn');
+    const wide = w > 470;
+
+    const bx = Math.round(w * 0.42), bxw = Math.round(w * 0.26);
+    const brX = bx + bxw + 14;
+    const S = Math.max(0.6, Math.min(1, (h - 18) / 162));
+    const bh = 30 * S, gp = 14 * S;
+    let y = Math.max(8, (h - (4 * bh + 3 * gp)) / 2);
+    const tops = [];
+
+    const names = ['文書作成ソフトウェア', 'OS', 'USB', 'プリンタ'];
+    for(let i = 0; i < 4; i++){
+      tops.push(y);
+      const isOs = i === 1, isUsb = i === 2;
+      c.setLineDash([]);
+      roundRect(c, bx, y, bxw, bh, 6);
+      c.fillStyle = isOs ? (s2 ? '#eaeffc' : '#fdecea') : '#f7f9fc';
+      c.fill();
+      c.lineWidth = isOs ? 1.8 : 1.4;
+      c.strokeStyle = isOs ? (s2 ? OKC : WARNC) : '#c4ccd8';
+      c.setLineDash(isUsb && !s1 ? [5, 3] : []);
+      c.stroke(); c.setLineDash([]);
+      if(isOs && s2){
+        roundRect(c, bx + 6, y + bh - 10 * S - 4, bxw - 12, 10 * S, 2.5);
+        c.fillStyle = '#dde5fb'; c.fill();
+        c.lineWidth = 1.2; c.strokeStyle = OKC; c.stroke();
+      }
+      c.fillStyle = '#374151'; c.font = '11.5px sans-serif';
+      c.textAlign = 'right'; c.textBaseline = 'middle';
+      c.fillText(names[i], bx - 10, y + bh / 2);
+      y += bh + gp;
+    }
+    c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+
+    function bracket(yA, yB, col, dashed, label){
+      c.strokeStyle = col; c.lineWidth = 2;
+      c.setLineDash(dashed ? [5, 3] : []);
+      c.beginPath();
+      c.moveTo(brX, yA); c.lineTo(brX + 9, yA);
+      c.lineTo(brX + 9, yB); c.lineTo(brX, yB);
+      c.stroke(); c.setLineDash([]);
+      c.fillStyle = col; c.font = 'bold 11.5px sans-serif';
+      c.textAlign = 'left'; c.textBaseline = 'middle';
+      c.fillText(label, brX + 15, (yA + yB) / 2);
+      c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+    }
+    bracket(tops[0], tops[1] + bh, s2 ? OKC : WARNC, !s2, wide ? '② OS が受け持つ範囲' : '② の範囲');
+    bracket(tops[2], tops[3] + bh, s1 ? '#5b6470' : '#9aa4b2', !s1, wide ? '① 規格が合わせる範囲' : '① の範囲');
+
+    if(el.scopeCap){
+      el.scopeCap.textContent = 'いまは①が「' + (s1 ? 'そろえる' : 'そろえない') + '」、②が「'
+        + (s2 ? '持っている' : '持っていない') + '」です。バナーに出ているのは②の範囲だけです。';
+    }
+  }
+
+  // ③ 同じ口に挿し替える（2コマ）
+  function drawSwap(){
+    const { c, w, h } = miniPx(cvw, 154);
+    c.clearRect(0, 0, w, h);
+    const OKC = cssVar('--ok');
+    const gap = 14, cw = (w - gap) / 2;
+    const S = Math.max(0.62, Math.min(1, (h - 75) / 68));
+
+    const caps = ['プリンタをつなぐ', 'キーボードをつなぐ'];
+    for(let i = 0; i < 2; i++){
+      const ox = i * (cw + gap);
+      const bx = ox + 10, bxw = cw - 20, mx = ox + cw / 2;
+      let y = 6;
+
+      c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+      c.font = 'bold 11.5px sans-serif'; c.fillStyle = '#374151';
+      c.fillText('OS', bx, y + 11);
+      y += 15;
+
+      const osH = 34 * S;
+      c.setLineDash([]);
+      roundRect(c, bx, y, bxw, osH, 6);
+      c.fillStyle = '#eaeffc'; c.fill();
+      c.lineWidth = 1.8; c.strokeStyle = OKC; c.stroke();
+      const tw = (bxw - 20 - 15) / 3;
+      for(let k = 0; k < 3; k++){
+        const tx = bx + 10 + k * (tw + 7.5);
+        roundRect(c, tx, y + osH - 13 * S - 5, tw, 13 * S, 2.5);
+        c.fillStyle = (k === i) ? '#a9c0f2' : '#eef1f6'; c.fill();
+        c.lineWidth = (k === i) ? 2 : 1.1;
+        c.strokeStyle = (k === i) ? OKC : '#c4ccd8'; c.stroke();
+      }
+      y += osH + 8;
+
+      roundRect(c, mx - 11, y, 22, 15, 3);
+      c.fillStyle = '#dde5f2'; c.fill();
+      c.lineWidth = 1.5; c.strokeStyle = '#7c8695'; c.stroke();
+      c.textAlign = 'left'; c.fillStyle = '#5b6470'; c.font = '11px sans-serif';
+      c.fillText('USB', mx + 16, y + 12);
+      y += 15 + 8;
+
+      const dh = 34 * S;
+      roundRect(c, bx, y, bxw, dh, 6);
+      c.fillStyle = '#fff'; c.fill();
+      c.lineWidth = 1.5; c.strokeStyle = '#c4ccd8'; c.stroke();
+      if(i === 0) drawPrinter(c, mx, y + dh / 2, Math.min(dh * 0.52, 22));
+      else drawKeyboard(c, mx, y + dh / 2, Math.min(dh * 0.66, 24));
+      y += dh;
+
+      c.fillStyle = '#374151'; c.font = '11.5px sans-serif'; c.textAlign = 'center';
+      c.fillText(caps[i], mx, y + 17);
+    }
+    c.textAlign = 'left';
+    c.strokeStyle = '#e6eaf1'; c.lineWidth = 1; c.setLineDash([]);
+    c.beginPath(); c.moveTo(cw + gap / 2, 6); c.lineTo(cw + gap / 2, h - 6); c.stroke();
+  }
+
+  function openDeep(){
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => { drawSameBus(); drawScope(); drawSwap(); });
+  }
+  function closeDeep(){
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ===== 基礎からゆっくり（イチから図解）=====
+  const overlayBasic = document.getElementById('overlay-basic');
+  const cvb1 = document.getElementById('cvb1'), cvb2 = document.getElementById('cvb2');
+  const cvb3 = document.getElementById('cvb3'), cvb4 = document.getElementById('cvb4');
+
+  // ① コンピュータと周辺機器
+  function drawBasic1(){
+    const { c, w, h } = miniPx(cvb1, 106);
+    c.clearRect(0, 0, w, h);
+    const bw = Math.min(104, (w - 70) / 3), bh = 44, cy = h / 2 - 8;
+    const xs = [w * 0.18, w * 0.5, w * 0.82];
+    const names = ['キーボード', 'コンピュータ本体', 'プリンタ'];
+    c.setLineDash([]);
+    for(let i = 0; i < 2; i++){
+      c.strokeStyle = '#9aa4b2'; c.lineWidth = 1.6;
+      c.beginPath(); c.moveTo(xs[i] + bw / 2, cy); c.lineTo(xs[i + 1] - bw / 2, cy); c.stroke();
+    }
+    for(let i = 0; i < 3; i++){
+      roundRect(c, xs[i] - bw / 2, cy - bh / 2, bw, bh, 7);
+      c.fillStyle = i === 1 ? '#eaeffc' : '#fff'; c.fill();
+      c.lineWidth = i === 1 ? 1.9 : 1.5;
+      c.strokeStyle = i === 1 ? cssVar('--ok') : '#c4ccd8'; c.stroke();
+      if(i === 0) drawKeyboard(c, xs[i], cy, 26);
+      if(i === 1) drawDoc(c, xs[i], cy, 26);
+      if(i === 2) drawPrinter(c, xs[i], cy, 24);
+      c.fillStyle = '#374151'; c.font = '11.5px sans-serif';
+      c.textAlign = 'center'; c.textBaseline = 'alphabetic';
+      c.fillText(names[i], xs[i], cy + bh / 2 + 18);
+    }
+    c.textAlign = 'left';
+  }
+
+  // ② 間をつなぐ規格
+  function drawBasic2(){
+    const { c, w, h } = miniPx(cvb2, 152);
+    c.clearRect(0, 0, w, h);
+    const OKC = cssVar('--ok'), TINT = cssVar('--ok-tint');
+    const gap = 16, cw = (w - gap) / 2;
+    const titles = ['形がそろっていない', '形をそろえた'];
+    for(let i = 0; i < 2; i++){
+      const ox = i * (cw + gap), mx = ox + cw / 2;
+      const line = i === 0 ? '#9aa4b2' : OKC;
+      const fill = i === 0 ? '#eef1f6' : '#dde5f2';
+      c.fillStyle = '#5b6470'; c.font = 'bold 11.5px sans-serif';
+      c.textAlign = 'center'; c.textBaseline = 'alphabetic';
+      c.fillText(titles[i], mx, 20);
+      c.setLineDash([]);
+
+      // 受け口（左は丸い穴・右は四角い穴）
+      const recY = i === 0 ? 100 : 84, recH = 36;
+      roundRect(c, mx - 29, recY, 58, recH, 5);
+      c.fillStyle = i === 0 ? '#eef1f6' : '#eaeffc'; c.fill();
+      c.lineWidth = 1.7; c.strokeStyle = line; c.stroke();
+      if(i === 0){
+        c.beginPath(); c.arc(mx, recY + recH / 2, 11, 0, Math.PI * 2);
+        c.fillStyle = TINT; c.fill(); c.lineWidth = 1.4; c.strokeStyle = line; c.stroke();
+      } else {
+        roundRect(c, mx - 10, recY - 2, 20, 20, 3);
+        c.fillStyle = TINT; c.fill(); c.lineWidth = 1.4; c.strokeStyle = line; c.stroke();
+      }
+
+      // 差し込み（四角い舌）
+      const plugY = 34, plugH = 24, stemH = i === 0 ? 12 : 30;
+      roundRect(c, mx - 9, plugY + plugH - 2, 18, stemH, 2.5);
+      c.fillStyle = fill; c.fill(); c.lineWidth = 1.6; c.strokeStyle = line; c.stroke();
+      roundRect(c, mx - 18, plugY, 36, plugH, 4);
+      c.fillStyle = fill; c.fill(); c.lineWidth = 1.7; c.strokeStyle = line; c.stroke();
+    }
+    c.strokeStyle = '#e6eaf1'; c.lineWidth = 1; c.setLineDash([]);
+    c.beginPath(); c.moveTo(cw + gap / 2, 8); c.lineTo(cw + gap / 2, h - 8); c.stroke();
+    c.textAlign = 'left';
+  }
+
+  // ③ OS が間に立つ
+  function drawBasic3(){
+    const { c, w, h } = miniPx(cvb3, 240);
+    c.clearRect(0, 0, w, h);
+    const OKC = cssVar('--ok');
+    const bx = 10, bxw = Math.max(118, w * 0.5);
+    const S = Math.max(0.6, Math.min(1, (h - 69) / 162));
+    const bh = 34 * S, ar = 30 * S;
+    let y = 18;
+    const names = ['文書作成ソフトウェア', 'OS（＋デバイスドライバ）', 'プリンタ'];
+    const arrows = ['「印刷する」', 'その機器のやり方で'];
+    c.textBaseline = 'alphabetic';
+    for(let i = 0; i < 3; i++){
+      c.textAlign = 'left'; c.font = '11.5px sans-serif'; c.fillStyle = '#374151';
+      c.fillText(names[i], bx, y - 5);
+      c.setLineDash([]);
+      roundRect(c, bx, y, bxw, bh, 6);
+      c.fillStyle = i === 1 ? '#eaeffc' : '#f7f9fc'; c.fill();
+      c.lineWidth = i === 1 ? 1.9 : 1.4;
+      c.strokeStyle = i === 1 ? OKC : '#c4ccd8'; c.stroke();
+      if(i === 1){
+        roundRect(c, bx + 8, y + bh - 11 * S - 4, bxw - 16, 11 * S, 2.5);
+        c.fillStyle = '#dde5fb'; c.fill(); c.lineWidth = 1.2; c.strokeStyle = OKC; c.stroke();
+      }
+      if(i === 0) drawDoc(c, bx + bxw / 2, y + bh / 2, Math.min(bh * 0.58, 22));
+      if(i === 2) drawPrinter(c, bx + bxw / 2, y + bh / 2, Math.min(bh * 0.5, 22));
+      y += bh;
+      if(i < 2){
+        const ax = bx + 26;
+        c.strokeStyle = '#8b94a3'; c.fillStyle = '#8b94a3'; c.lineWidth = 1.8;
+        c.beginPath(); c.moveTo(ax, y + 4); c.lineTo(ax, y + ar - 5); c.stroke();
+        arrowHead(c, ax, y + ar - 1, 'down');
+        c.fillStyle = '#5b6470'; c.font = '11.5px sans-serif'; c.textAlign = 'left';
+        c.fillText(arrows[i], ax + 13, y + ar / 2 + 4);
+        y += ar;
+      }
+      y += 17;
+    }
+  }
+
+  // ④ 応用ソフトウェアから見た景色
+  function drawBasic4(){
+    const { c, w, h } = miniPx(cvb4, 184);
+    c.clearRect(0, 0, w, h);
+    const OKC = cssVar('--ok');
+    const bx = 10, bxw = Math.max(110, w * 0.48);
+    const S = Math.max(0.6, Math.min(1, (h - 36) / 136));
+    let y = 18;
+
+    c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+    c.font = '11.5px sans-serif'; c.fillStyle = '#374151';
+    c.fillText('文書作成ソフトウェア', bx, y - 5);
+    const bh = 32 * S;
+    c.setLineDash([]);
+    roundRect(c, bx, y, bxw, bh, 6);
+    c.fillStyle = '#f7f9fc'; c.fill(); c.lineWidth = 1.7; c.strokeStyle = '#5b6470'; c.stroke();
+    drawDoc(c, bx + bxw / 2, y + bh / 2, Math.min(bh * 0.58, 22));
+    y += bh;
+
+    const ar = 28 * S, ax = bx + 26;
+    c.strokeStyle = OKC; c.fillStyle = OKC; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(ax, y + 4); c.lineTo(ax, y + ar - 5); c.stroke();
+    arrowHead(c, ax, y + ar - 1, 'down');
+    c.font = 'bold 11.5px sans-serif'; c.fillStyle = OKC; c.textAlign = 'left';
+    c.fillText('「印刷する」', ax + 13, y + ar / 2 + 4);
+    y += ar + 4;
+
+    const ih = 20 * S, ig = 8 * S;
+    const fh = 3 * ih + 2 * ig + 14;
+    c.setLineDash([5, 4]); c.strokeStyle = '#9aa4b2'; c.lineWidth = 1.5;
+    roundRect(c, bx - 4, y, bxw + 8, fh, 8); c.stroke(); c.setLineDash([]);
+    c.fillStyle = '#5b6470'; c.font = '11.5px sans-serif'; c.textAlign = 'left';
+    c.fillText('意識しない部分', bx + bxw + 14, y + fh / 2 + 4);
+
+    let iy = y + 7;
+    for(let i = 0; i < 3; i++){
+      roundRect(c, bx + 4, iy, bxw - 8, ih, 4);
+      c.fillStyle = i === 0 ? '#eef2fb' : '#f7f9fc'; c.fill();
+      c.lineWidth = 1.2; c.strokeStyle = '#cdd6e3'; c.stroke();
+      iy += ih + ig;
+    }
+  }
+
+  function openBasic(){
+    overlayBasic.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => { drawBasic1(); drawBasic2(); drawBasic3(); drawBasic4(); });
+  }
+  function closeBasic(){
+    overlayBasic.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ===== ステップ案内 =====
+  const stepCap = document.getElementById('step-cap');
+  const stepBtns = Array.from(document.querySelectorAll('.steps button'));
+  const STEP_DEFAULT = 'ボタンを順に押すと、①と②が何を動かすのかを1つずつ確かめられます。';
+
+  function setSwitches(a, b){ el.sw1.checked = a; el.sw2.checked = b; }
+  function clearSteps(reset){
+    stepBtns.forEach(b => b.classList.remove('active'));
+    if(reset){ stepCap.classList.remove('warn'); stepCap.innerHTML = STEP_DEFAULT; }
+  }
+  function setStep(n){
+    stepBtns.forEach(b => b.classList.toggle('active', b.dataset.step === String(n)));
+    stepCap.classList.remove('warn');
+    if(n === 1){
+      setSwitches(true, true);
+      el.tLabel.checked = true; el.tBand.checked = false;
+      stepCap.innerHTML = '<b>場面を見ます。</b>USB でつないだプリンタ1台を、文書作成ソフトウェアから使います。4つの段が縦に並んでいます。';
+    } else if(n === 2){
+      setSwitches(true, false);
+      el.tBand.checked = true;
+      stepCap.classList.add('warn');
+      stepCap.innerHTML = '<b>②を「持っていない」にしました。</b>OS の下辺の帯が消えて、②の欄とバナーが変わります。';
+    } else if(n === 3){
+      setSwitches(false, true);
+      el.tBand.checked = false;
+      stepCap.innerHTML = '<b>①を「そろえない」にしました。</b>①の欄だけが変わります。バナーは動きません。コネクタの形状と電気信号の形式をそろえる仕事は、OS の判定に入ってきません。';
+    } else {
+      markAll();
+      if(!el.sw2.checked) stepCap.classList.add('warn');
+      stepCap.innerHTML = '<b>4つの状態がそろいました。</b>①を変えると①の欄だけが変わります。判定を動かしているのは②だけです。';
+    }
+    update();
+  }
+  stepBtns.forEach(b => b.addEventListener('click', () => setStep(parseInt(b.dataset.step, 10))));
+
+  // ===== カード振り分け（実習5 の4記述・タップで入れる）=====
+  const SORT = [
+    { mk:'ア', ans:'yes', layer:null,
+      text:'応用ソフトウェアを複数同時に実行することができるように、限られたコンピュータ資源を有効に活用し、適切に管理する',
+      tag:'OS の目的の一つ', why:'資源の有効利用',
+      note:'今日の場面には出てきませんが、OS の目的です。' },
+    { mk:'イ', ans:'no', layer:'usb',
+      text:'どの機器でも同じように使用することができるように、機器どうしを接続するコネクタの形状や電気信号の形式などの仕様を合わせる',
+      tag:'学習ノートの解説', why:'ハードウェアのインタフェースの標準化の話なので、OS の目的ではない',
+      note:null },
+    { mk:'ウ', ans:'yes', layer:null,
+      text:'ユーザの誰もがコンピュータを容易に利用できるように、操作の一部を肩代わりし、ユーザの作業を支援する',
+      tag:'OS の目的の一つ', why:'操作の支援',
+      note:'今日の場面には出てきませんが、OS の目的です。' },
+    { mk:'エ', ans:'yes', layer:'os',
+      text:'ユーザが装置の違いを意識せずに利用できるように、操作の内容を抽象化する',
+      tag:'OS の目的の一つ', why:'基本機能の提供',
+      note:null }
+  ];
+  const placed = {};
+  const tray = document.getElementById('sort-tray');
+  const boxYes = document.getElementById('box-yes');
+  const boxNo  = document.getElementById('box-no');
+  const cntYes = document.getElementById('cnt-yes');
+  const cntNo  = document.getElementById('cnt-no');
+  const sortStat = document.getElementById('sort-stat');
+
+  function stackSvg(hi){
+    let r = '';
+    for(let i = 0; i < 4; i++){
+      r += '<rect' + (i === hi ? ' class="hi"' : '') + ' x="1.5" y="' + (1.5 + i * 11.3) + '" width="19" height="9.3" rx="2"></rect>';
+    }
+    return '<svg class="mini-stack" viewBox="0 0 22 46" aria-hidden="true">' + r + '</svg>';
+  }
+
+  function cardHtml(d, where){
+    const right = where === d.ans;
+    let cls = 'scard';
+    if(where) cls += right ? ' right' : ' wrong';
+    let inner = '<div class="sh"><span class="mk">' + d.mk + '</span><p class="stext">' + d.text + '</p></div>';
+    if(!where){
+      inner += '<div class="sbtns">'
+        + '<button data-mk="' + d.mk + '" data-to="yes" type="button">OS の目的</button>'
+        + '<button data-mk="' + d.mk + '" data-to="no" type="button">OS の目的ではない</button>'
+        + '</div>';
+    } else if(right){
+      inner += '<p class="verdict ok">正しく入っています</p>';
+      inner += '<p class="why"><span class="wtag">' + d.tag + '</span>' + d.why + '</p>';
+      if(d.note) inner += '<p class="why">' + d.note + '</p>';
+      if(d.layer){
+        inner += '<div class="layer">' + stackSvg(d.layer === 'os' ? 1 : 2)
+          + '<span class="lt">' + (d.layer === 'os' ? '上の図の OS の段' : '上の図の USB の段') + '</span></div>';
+      }
+    } else {
+      inner += '<p class="verdict ng">ここではありません</p>';
+      inner += '<div class="sbtns"><button data-mk="' + d.mk + '" data-to="'
+        + (where === 'yes' ? 'no' : 'yes') + '" type="button">もう一方へ移す</button></div>';
+    }
+    return '<div class="' + cls + '">' + inner + '</div>';
+  }
+
+  function bindSort(b){
+    b.addEventListener('click', () => { placed[b.dataset.mk] = b.dataset.to; renderSort(); });
+  }
+
+  function renderSort(){
+    let t = '', y = '', n = '', cy = 0, cn = 0, correct = 0;
+    SORT.forEach(d => {
+      const where = placed[d.mk];
+      if(!where){ t += cardHtml(d, null); return; }
+      if(where === 'yes'){ y += cardHtml(d, 'yes'); cy++; }
+      else { n += cardHtml(d, 'no'); cn++; }
+      if(where === d.ans) correct++;
+    });
+    tray.innerHTML = t;
+    boxYes.innerHTML = y || '<p class="empty">まだ入っていません。</p>';
+    boxNo.innerHTML  = n || '<p class="empty">まだ入っていません。</p>';
+    cntYes.textContent = cy + '枚';
+    cntNo.textContent  = cn + '枚';
+    const done = cy + cn;
+    sortStat.textContent = done < 4
+      ? '残り ' + (4 - done) + ' 枚です。'
+      : (correct === 4
+        ? '4枚とも正しく分けられました。イだけが、OS の目的ではありません。'
+        : '正しく入っていないカードがあります。「もう一方へ移す」を押してみてください。');
+    tray.querySelectorAll('button').forEach(bindSort);
+    boxYes.querySelectorAll('button').forEach(bindSort);
+    boxNo.querySelectorAll('button').forEach(bindSort);
+  }
+
+  document.getElementById('sort-reset').addEventListener('click', () => {
+    SORT.forEach(d => { delete placed[d.mk]; });
+    renderSort();
+  });
+
+  // ---- イベント ----
+  ['sw1', 'sw2'].forEach(id => el[id].addEventListener('change', () => { clearSteps(true); update(); }));
+  ['tLabel', 'tBand'].forEach(k => el[k].addEventListener('change', () => { clearSteps(true); draw(); }));
+  document.querySelectorAll('.presets button').forEach(b => {
+    b.addEventListener('click', () => {
+      el.sw1.checked = b.dataset.s1 === '1';
+      el.sw2.checked = b.dataset.s2 === '1';
+      clearSteps(true);
+      update();
+    });
+  });
+  document.getElementById('open-deep').addEventListener('click', openDeep);
+  document.getElementById('close-deep').addEventListener('click', closeDeep);
+  overlay.addEventListener('click', e => { if(e.target === overlay) closeDeep(); });
+  document.getElementById('open-basic').addEventListener('click', openBasic);
+  document.getElementById('close-basic').addEventListener('click', closeBasic);
+  overlayBasic.addEventListener('click', e => { if(e.target === overlayBasic) closeBasic(); });
+  document.addEventListener('keydown', e => {
+    if(e.key !== 'Escape') return;
+    if(overlay.classList.contains('open')) closeDeep();
+    if(overlayBasic.classList.contains('open')) closeBasic();
+  });
+  window.addEventListener('resize', () => {
+    setupCanvas(); draw();
+    if(overlay.classList.contains('open')){ drawSameBus(); drawScope(); drawSwap(); }
+    if(overlayBasic.classList.contains('open')){ drawBasic1(); drawBasic2(); drawBasic3(); drawBasic4(); }
+  });
+
+  renderSort();
+  setupCanvas();
+  update();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+# 情報Ⅰ 2学期 授業台帳（単一の正本）
+#
+# 回の一覧・アンカーの対応・配信先をここだけで持つ。
+# 回フォルダ・index.html・進捗表はこのファイルから生成する（手で書かない）。
+# TOML なのは stdlib の tomllib だけで読めるから（外部依存を足さない）。
+#
+#   python3 _ops/build_kai.py 1        1回ぶんを組む
+#   python3 _ops/build_kai.py --all    全回を組み直す
+#   python3 _ops/build_kai.py --index  ハブの index.html だけ作り直す
+#   python3 _ops/check_public.py       公開安全ゲート
+
+term = "2026年度 2学期"
+subject = "情報Ⅰ"
+school = "栄東"
+
+# --- 50分の型 ---------------------------------------------------------------
+# 変えるときはここを直し、_ops/kai/*.md の進行表も合わせる。
+[lesson]
+total_min = 50
+blocks = [
+  { key = "explain",  min = 25, label = "解説",           kit = "explainer" },
+  { key = "practice", min = 15, label = "プリント演習",   kit = "print" },
+  { key = "speed",    min = 10, label = "スピードテスト", kit = "quiz" },
+]
+
+# --- 正本の位置 -------------------------------------------------------------
+# company_root は 情報Ⅰ_2学期/ から .company/ までの相対パス。
+# mikikof-lab を単独で clone した環境では解決できない（build_kai.py が明示的に止まる）。
+[paths]
+company_root       = "../../../.."
+explainer_dist     = "media/webツール/情報/edu-explainer-kit/dist"
+print_dist         = "media/webツール/情報/印刷教材/dist"
+print_examples     = "media/webツール/情報/印刷教材/examples"
+quiz_data          = "media/webツール/情報/スピードクイズ/data/questions.js"
+lectures_articles  = "../lectures/articles"    # 情報Ⅰ_2学期/ からの相対（同一リポ）
+practices_articles = "../practices/articles"   # 同上
+
+# --- 配信先（既存の公開ハブ。my-company と物理隔離した public リポ） ---------
+[hubs.explainer]
+public_url = "https://mikikof.github.io/joho-explainer/"
+dev_repo   = "~/joho-explainer"
+sync       = "~/joho-explainer/sync_from_dev.sh"
+
+[hubs.quiz]
+public_url  = "https://mikikof.github.io/joho-quiz/"
+teacher_url = "https://mikikof.github.io/joho-quiz/teacher.html"
+dev_repo    = "~/joho-quiz"
+classes     = ["TR", "TB"]     # config.js の endpoints
+
+[hubs.lectures]
+public_url = "https://mikikof.github.io/mikikof-lab/lectures/"
+
+[hubs.practices]
+public_url = "https://mikikof.github.io/mikikof-lab/practices/"
+
+# --- アンカー対応表 ---------------------------------------------------------
+# lectures の lec 番号 = 学習ノートの POINT 番号（章番号とは無関係）。
+# practices の番号 = ベストフィットの「章-節」。
+# confirmed = false は「タイトル突合からの推定。原本で確認していない」の意。
+# 回を起こすとき、その回で使うアンカーだけは原本で確認して true にする。
+
+[anchor_map.chapter3]
+label = "3章 コンピュータの仕組み"
+note_pages = "p.34-45"
+points = [
+  { lec = 14, title = "ハードウェアとソフトウェア", practices = "03-08", practices_title = "ハードウェアとソフトウェア",   confirmed = true },  # 2026-08-02 原本確認（解答PDF p.10 / BF3章08）
+  { lec = 15, title = "2進数の計算",                practices = "03-09", practices_title = "２進数と論理演算",             confirmed = false },
+  { lec = 16, title = "論理回路と論理演算",         practices = "03-09", practices_title = "２進数と論理演算",             confirmed = false },
+  { lec = 17, title = "コンピュータの構成と動作",   practices = "03-10", practices_title = "コンピュータの構成と動作",     confirmed = false },
+  { lec = 18, title = "コンピュータの性能",         practices = "03-10", practices_title = "コンピュータの構成と動作",     confirmed = false },
+]
+
+[anchor_map.chapter4]
+label = "4章 プログラミングとシミュレーション"
+note_pages = "p.46-65"
+points = [
+  { lec = 19, title = "アルゴリズムとプログラミング",   practices = "04-11", practices_title = "アルゴリズム",                 confirmed = false },
+  { lec = 20, title = "プログラミングの基本(1)(2)",     practices = "04-12", practices_title = "プログラミング",               confirmed = false },
+  { lec = 21, title = "関数",                           practices = "04-12", practices_title = "プログラミング",               confirmed = false },
+  { lec = 22, title = "探索のアルゴリズム",             practices = "04-13", practices_title = "探索と整列のアルゴリズム",     confirmed = false },
+  { lec = 23, title = "整列のアルゴリズム",             practices = "04-13", practices_title = "探索と整列のアルゴリズム",     confirmed = false },
+  { lec = 24, title = "モデル化とシミュレーション",     practices = "04-14", practices_title = "モデル化とシミュレーション",   confirmed = false },
+  { lec = 25, title = "確定的モデルのシミュレーション", practices = "04-15", practices_title = "さまざまなシミュレーション",   confirmed = false },
+  { lec = 26, title = "確率的モデルのシミュレーション", practices = "04-15", practices_title = "さまざまなシミュレーション",   confirmed = false },
+]
+
+[anchor_map.chapter5]
+label = "5章 ネットワークと情報システム"
+note_pages = "p.66-85"
+points = [
+  { lec = 27, title = "ネットワークとプロトコル",                     practices = "05-16", practices_title = "インターネットの仕組み", confirmed = false },
+  { lec = 28, title = "★要確認（IPアドレス・接続技術・経路制御）",    practices = "05-16", practices_title = "インターネットの仕組み", confirmed = false },
+  { lec = 29, title = "Webページの閲覧と電子メールの送受信",          practices = "05-16", practices_title = "インターネットの仕組み", confirmed = false },
+  { lec = 30, title = "ネットワークセキュリティ",                     practices = "05-17", practices_title = "安全のための対策と技術", confirmed = false },
+  { lec = 31, title = "安全のための情報技術",                         practices = "05-17", practices_title = "安全のための対策と技術", confirmed = false },
+  { lec = 32, title = "情報システム",                                 practices = "05-18", practices_title = "情報システムを支えるもの", confirmed = false },
+  { lec = 33, title = "情報システムを支えるサービスや技術",           practices = "05-18", practices_title = "情報システムを支えるもの", confirmed = false },
+  { lec = 34, title = "データベース",                                 practices = "05-18", practices_title = "情報システムを支えるもの", confirmed = false },
+]
+
+[anchor_map.chapter6]
+label = "6章 データの活用"
+note_pages = "p.86-95"
+points = [
+  { lec = 35, title = "データの種類と扱い",                practices = "06-19", practices_title = "データの扱い", confirmed = false },
+  { lec = 36, title = "データの収集と整理",                practices = "06-19", practices_title = "データの扱い", confirmed = false },
+  { lec = 37, title = "★要確認（統計量・度数分布・分散）", practices = "06-20", practices_title = "データの分析", confirmed = false },
+  { lec = 38, title = "★要確認（時系列・回帰・相関）",     practices = "06-20", practices_title = "データの分析", confirmed = false },
+]
+
+# --- 既に作ってある個人学習教材（2026-08-02 時点） --------------------------
+# build_kai.py が「アンカー教材を作るか／案内するだけか」を判定する材料。
+[existing]
+lectures  = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+practices = ["01-01", "01-02", "01-03", "01-04", "01-thinking-step-1",
+             "02-05", "02-06", "02-07", "02-thinking-step-2"]
+
+# --- 回 ---------------------------------------------------------------------
+# 1回 = 50分。テーマはオーナーが回ごとに指示する。
+# status = planned / building / done
+#
+# 雛形（コメントを外して使う）:
+#
+# [[kai]]
+# no     = 1
+# slug   = "2shinsu-no-genzan"
+# theme  = "2進数の減算 ― 補数でなぜ引き算が足し算になるか"
+# nansho = "補数を取る操作と桁あふれを捨てる操作を別々に覚え、順序が入れ替わると答えが合わなくなる"
+# nansho_type = "B"                       # A 境界 / B 順序 / C 似て非なる / D 数えると合わない
+# date   = "2026-09-01"
+# status = "planned"
+# anchor = { kind = "lec", id = 15 }
+#
+#   [kai.artifacts]
+#   explainer = "twos-complement.html"     # explainer_dist からの相対
+#   print     = "2進数の計算"               # print_dist の <unit>（_問題/_解答 は付けない）
+#   quiz      = { id = "joho-binary-calc", set_index = 4 }   # ★0起点。index.html は QUIZ_SETS[?s] を引く
+#                                                            #   2026-08 時点の既存: 0 joho-digital /
+#                                                            #   1 joho-image-color / 2 joho-video-compression /
+#                                                            #   3 joho1-sample → 新規は 4
+#   lecture   = 15                          # 未作成なら作る / 既存なら案内のみ
+#   practice  = "03-09"
+
+[[kai]]
+no          = 1
+slug        = "os-mokuteki-to-interface"
+theme       = "装置の違いを意識せずに使えるのは誰の仕事か ― OS の目的とハードウェアインタフェース"
+nansho      = "「装置の違いを意識せずに使える」を作っているのがどの層か決まらない。仕様を合わせる(ハードウェアインタフェース)と操作の内容を抽象化する(OS)が、どちらも「違いを吸収している」と読めてしまう"
+nansho_type = "C"
+date        = "2026-09-上旬"
+status      = "building"
+anchor      = { kind = "lec", id = 14 }
+
+  [kai.artifacts]
+  explainer = "os-abstraction.html"
+  print     = "ハードウェアとソフトウェア"
+  quiz      = { id = "joho-hardware-software", set_index = 4 }
+  lecture   = 14
+  practice  = "03-08"

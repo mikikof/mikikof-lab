@@ -16,7 +16,11 @@
 | **Interactive Practice Lab**(演習用HTML教材) | `practices/` | `/practices/` | [practices/CLAUDE.md](practices/CLAUDE.md) |
 | **Quiz Form Kit**(Google フォーム小テスト作成キット / GAS) | `quiz/` | `/quiz/` | [quiz/CLAUDE.md](quiz/CLAUDE.md) |
 | **Flashcards**(HTML 単一ファイルの一問一答 / 単語帳) | `flashcards/` | `/flashcards/` | [flashcards/CLAUDE.md](flashcards/CLAUDE.md) |
+| **情報Ⅰ 2学期**(50分授業1回ぶんの集約ハブ) | `情報Ⅰ_2学期/` | `/情報Ⅰ_2学期/` | [情報Ⅰ_2学期/CLAUDE.md](情報Ⅰ_2学期/CLAUDE.md) |
 | (将来) その他ツール | — | — | — |
+
+> `情報Ⅰ_2学期/` だけは**教材を作る場所ではなく、授業1回ぶんを組み立てる場所**。
+> 実体は lectures / practices と、my-company 側の3キット(解説ツール・印刷教材・スピードクイズ)が持つ。
 
 ---
 
@@ -56,6 +60,18 @@
 - 受験数学と大学数学の橋渡しを意識した硬派な数学読み物の依頼
 
 → [`daisu-column/CLAUDE.md`](daisu-column/CLAUDE.md) を読み、以降はその指示に従う(本ツールは 最新最強の Opus [1M] 死守 + ultrathink + codex は `-p review-paper`)
+
+### ▶ 情報Ⅰ 2学期の授業1回(情報Ⅰ_2学期)に行くキーワード
+
+- 「2学期」「今回のテーマは○○」「50分の授業」「1回ぶん」「授業を組む」
+- 解説 25分 + プリント演習 15分 + スピードテスト 10分 の一式を求められたとき
+- 授業内で使う教材(解説ツール・印刷プリント・スピードテスト)をまとめて作るとき
+
+→ **`/joho-2gakki` で起動する**。規則は [情報Ⅰ_2学期/CLAUDE.md](情報Ⅰ_2学期/CLAUDE.md)
+
+> lectures / practices は**個人学習用**(1学期のアンケートを受けて授業内では使わない方針)。
+> 単元1本だけを作るなら下の lectures / practices に直接行ってよい。
+> 授業1回ぶんとして一式そろえるなら `/joho-2gakki` を通す。
 
 ### ▶ 授業スライド(lectures)に行くキーワード
 
