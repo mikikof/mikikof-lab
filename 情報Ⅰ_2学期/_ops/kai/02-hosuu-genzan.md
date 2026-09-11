@@ -4,7 +4,7 @@ slug: "hosuu-genzan"
 theme: "引き算を足し算に変える ― 補数と桁上がり"
 anchor: { kind: lec, id: 15 }
 date: "未定"
-status: building
+status: done
 ---
 
 # 第2回 引き算を足し算に変える

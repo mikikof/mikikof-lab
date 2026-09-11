@@ -4,7 +4,7 @@ slug: "ronri-kairo"
 theme: "「どちらか一方のときだけ」は OR ではない ― 階段スイッチと真理値表"
 anchor: { kind: lec, id: 16 }
 date: "未定"
-status: building
+status: done
 ---
 
 # 第3回 「どちらか一方のときだけ」は OR ではない
