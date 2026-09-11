@@ -249,7 +249,9 @@ def build_kai(m: dict, k: dict) -> list[str]:
     pra = art.get("practice")
     pra_url = ""
     if pra:
-        hits = sorted((HUB / p["practices_articles"]).glob(f"{pra}-*"))
+        # 思考のステップは番号のあとに slug を持たない（例: 03-thinking-step-4）。名前が一致するものも拾う
+        base = HUB / p["practices_articles"]
+        hits = sorted(x for x in base.iterdir() if x.is_dir() and (x.name == pra or x.name.startswith(pra + "-")))
         if hits:
             pra_url = f'{m["hubs"]["practices"]["public_url"]}articles/{hits[0].name}/'
         else:

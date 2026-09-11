@@ -56,64 +56,67 @@ public_url = "https://mikikof.github.io/mikikof-lab/practices/"
 # --- アンカー対応表 ---------------------------------------------------------
 # lectures の lec 番号 = 学習ノートの POINT 番号（章番号とは無関係）。
 # practices の番号 = ベストフィットの「章-節」。
-# confirmed = false は「タイトル突合からの推定。原本で確認していない」の意。
+# confirmed = true  は「タイトル突合からの推定。原本で確認していない」の意。
 # 回を起こすとき、その回で使うアンカーだけは原本で確認して true にする。
+# 2026-09-10 全行を原本で確認した（学習ノート 3〜6章 問題 Word・解答PDF、ベストフィット 3〜6章 問題・解答）。
+#   2学期の範囲は POINT 14〜37。38 は学習ノートに無い（6章は 35・36・37⑴・37⑵ で終わる）。
+#   授業テーマと自習教材の絞り込みは _ops/theme-plan.md。
 
 [anchor_map.chapter3]
 label = "3章 コンピュータの仕組み"
 note_pages = "p.34-45"
 points = [
   { lec = 14, title = "ハードウェアとソフトウェア", practices = "03-08", practices_title = "ハードウェアとソフトウェア",   confirmed = true },  # 2026-08-02 原本確認（解答PDF p.10 / BF3章08）
-  { lec = 15, title = "2進数の計算",                practices = "03-09", practices_title = "２進数と論理演算",             confirmed = false },
-  { lec = 16, title = "論理回路と論理演算",         practices = "03-09", practices_title = "２進数と論理演算",             confirmed = false },
-  { lec = 17, title = "コンピュータの構成と動作",   practices = "03-10", practices_title = "コンピュータの構成と動作",     confirmed = false },
-  { lec = 18, title = "コンピュータの性能",         practices = "03-10", practices_title = "コンピュータの構成と動作",     confirmed = false },
+  { lec = 15, title = "2進数の計算",                practices = "03-09", practices_title = "２進数と論理演算",             confirmed = true  },
+  { lec = 16, title = "論理回路と論理演算",         practices = "03-09", practices_title = "２進数と論理演算",             confirmed = true  },
+  { lec = 17, title = "コンピュータの構成と動作",   practices = "03-10", practices_title = "コンピュータの構成と動作",     confirmed = true  },
+  { lec = 18, title = "コンピュータの性能",         practices = "03-10", practices_title = "コンピュータの構成と動作",     confirmed = true  },
 ]
 
 [anchor_map.chapter4]
 label = "4章 プログラミングとシミュレーション"
 note_pages = "p.46-65"
 points = [
-  { lec = 19, title = "アルゴリズムとプログラミング",   practices = "04-11", practices_title = "アルゴリズム",                 confirmed = false },
-  { lec = 20, title = "プログラミングの基本(1)(2)",     practices = "04-12", practices_title = "プログラミング",               confirmed = false },
-  { lec = 21, title = "関数",                           practices = "04-12", practices_title = "プログラミング",               confirmed = false },
-  { lec = 22, title = "探索のアルゴリズム",             practices = "04-13", practices_title = "探索と整列のアルゴリズム",     confirmed = false },
-  { lec = 23, title = "整列のアルゴリズム",             practices = "04-13", practices_title = "探索と整列のアルゴリズム",     confirmed = false },
-  { lec = 24, title = "モデル化とシミュレーション",     practices = "04-14", practices_title = "モデル化とシミュレーション",   confirmed = false },
-  { lec = 25, title = "確定的モデルのシミュレーション", practices = "04-15", practices_title = "さまざまなシミュレーション",   confirmed = false },
-  { lec = 26, title = "確率的モデルのシミュレーション", practices = "04-15", practices_title = "さまざまなシミュレーション",   confirmed = false },
+  { lec = 19, title = "アルゴリズムとプログラミング",   practices = "04-11", practices_title = "アルゴリズム",                 confirmed = true  },
+  { lec = 20, title = "プログラミングの基本(1)(2)",     practices = "04-12", practices_title = "プログラミング",               confirmed = true  },
+  { lec = 21, title = "関数",                           practices = "04-12", practices_title = "プログラミング",               confirmed = true },   # 関数はベストフィットでは 04-12 の中
+  { lec = 22, title = "探索のアルゴリズム",             practices = "04-13", practices_title = "探索と整列のアルゴリズム",     confirmed = true  },
+  { lec = 23, title = "整列のアルゴリズム",             practices = "04-13", practices_title = "探索と整列のアルゴリズム",     confirmed = true  },
+  { lec = 24, title = "モデル化とシミュレーション",     practices = "04-14", practices_title = "モデル化とシミュレーション",   confirmed = true  },
+  { lec = 25, title = "確定的モデルのシミュレーション", practices = "04-15", practices_title = "さまざまなシミュレーション",   confirmed = true  },
+  { lec = 26, title = "確率的モデルのシミュレーション", practices = "04-15", practices_title = "さまざまなシミュレーション",   confirmed = true  },
 ]
 
 [anchor_map.chapter5]
 label = "5章 ネットワークと情報システム"
 note_pages = "p.66-85"
 points = [
-  { lec = 27, title = "ネットワークとプロトコル",                     practices = "05-16", practices_title = "インターネットの仕組み", confirmed = false },
-  { lec = 28, title = "★要確認（IPアドレス・接続技術・経路制御）",    practices = "05-16", practices_title = "インターネットの仕組み", confirmed = false },
-  { lec = 29, title = "Webページの閲覧と電子メールの送受信",          practices = "05-16", practices_title = "インターネットの仕組み", confirmed = false },
-  { lec = 30, title = "ネットワークセキュリティ",                     practices = "05-17", practices_title = "安全のための対策と技術", confirmed = false },
-  { lec = 31, title = "安全のための情報技術",                         practices = "05-17", practices_title = "安全のための対策と技術", confirmed = false },
-  { lec = 32, title = "情報システム",                                 practices = "05-18", practices_title = "情報システムを支えるもの", confirmed = false },
-  { lec = 33, title = "情報システムを支えるサービスや技術",           practices = "05-18", practices_title = "情報システムを支えるもの", confirmed = false },
-  { lec = 34, title = "データベース",                                 practices = "05-18", practices_title = "情報システムを支えるもの", confirmed = false },
+  { lec = 27, title = "ネットワークとプロトコル",                     practices = "05-16", practices_title = "インターネットの仕組み", confirmed = true  },
+  { lec = 28, title = "インターネットの仕組み⑴⑵",    practices = "05-16", practices_title = "インターネットの仕組み", confirmed = true  },
+  { lec = 29, title = "Webページの閲覧と電子メールの送受信",          practices = "05-16", practices_title = "インターネットの仕組み", confirmed = true  },
+  { lec = 30, title = "ネットワークセキュリティ",                     practices = "05-17", practices_title = "安全のための対策と技術", confirmed = true },   # パリティ（誤り検出）はベストフィットでは 05-16 と思考のステップ7
+  { lec = 31, title = "安全のための情報技術",                         practices = "05-17", practices_title = "安全のための対策と技術", confirmed = true  },
+  { lec = 32, title = "情報システム",                                 practices = "05-18", practices_title = "情報システムを支えるもの", confirmed = true  },
+  { lec = 33, title = "情報システムを支えるサービスや技術",           practices = "05-18", practices_title = "情報システムを支えるもの", confirmed = true  },
+  { lec = 34, title = "データベース",                                 practices = "05-18", practices_title = "情報システムを支えるもの", confirmed = true  },
 ]
 
 [anchor_map.chapter6]
 label = "6章 データの活用"
 note_pages = "p.86-95"
 points = [
-  { lec = 35, title = "データの種類と扱い",                practices = "06-19", practices_title = "データの扱い", confirmed = false },
-  { lec = 36, title = "データの収集と整理",                practices = "06-19", practices_title = "データの扱い", confirmed = false },
-  { lec = 37, title = "★要確認（統計量・度数分布・分散）", practices = "06-20", practices_title = "データの分析", confirmed = false },
-  { lec = 38, title = "★要確認（時系列・回帰・相関）",     practices = "06-20", practices_title = "データの分析", confirmed = false },
+  { lec = 35, title = "データの種類と扱い",                practices = "06-19", practices_title = "データの扱い", confirmed = true  },
+  { lec = 36, title = "データの収集と整理",                practices = "06-19", practices_title = "データの扱い", confirmed = true  },
+  { lec = 37, title = "データの分析⑴⑵", practices = "06-20", practices_title = "データの分析", confirmed = true  },
 ]
 
 # --- 既に作ってある個人学習教材（2026-08-02 時点） --------------------------
 # build_kai.py が「アンカー教材を作るか／案内するだけか」を判定する材料。
 [existing]
-lectures  = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+lectures  = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 practices = ["01-01", "01-02", "01-03", "01-04", "01-thinking-step-1",
-             "02-05", "02-06", "02-07", "02-thinking-step-2"]
+             "02-05", "02-06", "02-07", "02-thinking-step-2",
+             "03-08", "03-09", "03-thinking-step-4"]
 
 # --- 回 ---------------------------------------------------------------------
 # 1回 = 50分。テーマはオーナーが回ごとに指示する。
@@ -125,7 +128,7 @@ practices = ["01-01", "01-02", "01-03", "01-04", "01-thinking-step-1",
 # no     = 1
 # slug   = "2shinsu-no-genzan"
 # theme  = "2進数の減算 ― 補数でなぜ引き算が足し算になるか"
-# nansho = "補数を取る操作と桁あふれを捨てる操作を別々に覚え、順序が入れ替わると答えが合わなくなる"
+# nansho = "補数を取る操作と桁上がりを無視する操作を別々に覚え、順序が入れ替わると答えが合わなくなる"
 # nansho_type = "B"                       # A 境界 / B 順序 / C 似て非なる / D 数えると合わない
 # date   = "2026-09-01"
 # status = "planned"
@@ -157,3 +160,37 @@ anchor      = { kind = "lec", id = 14 }
   quiz      = { id = "joho-hardware-software", set_index = 4 }
   lecture   = 14
   practice  = "03-08"
+
+[[kai]]
+no          = 2
+slug        = "hosuu-genzan"
+theme       = "引き算を足し算に変える ― 補数と桁上がり"
+nansho      = "補数を取る操作（反転して 1 を足す）と桁上がりを無視する操作を別々に覚えてしまい、1 を足す前に足し算へ進む（答えが 1 小さい）か、5 桁目を残したまま答える"
+nansho_type = "B"
+date        = "未定"
+status      = "done"
+anchor      = { kind = "lec", id = 15 }
+
+  [kai.artifacts]
+  explainer = "complement-subtraction.html"
+  print     = "補数による減算"
+  quiz      = { id = "joho-binary-complement", set_index = 5 }
+  lecture   = 15
+  practice  = "03-09"
+
+[[kai]]
+no          = 3
+slug        = "ronri-kairo"
+theme       = "「どちらか一方のときだけ」は OR ではない ― 階段スイッチと真理値表"
+nansho      = "「どちらか一方が押されたときだけ点く」を OR と取り違え、両方が 1 の行で真理値表を 1 と埋めてしまう（違いが出るのはその 1 行だけ）"
+nansho_type = "C"
+date        = "未定"
+status      = "done"
+anchor      = { kind = "lec", id = 16 }
+  [kai.artifacts]
+  explainer = "logic-gates.html"
+  print     = "論理回路と真理値表"
+  quiz      = { id = "joho-logic-gates", set_index = 6 }
+  lecture   = 16
+  practice  = "03-thinking-step-4"
+

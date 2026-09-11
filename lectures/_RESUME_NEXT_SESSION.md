@@ -1,5 +1,5 @@
 ---
-updated: 2026-06-20
+updated: 2026-09-10（lec15「2進数の計算」を新規制作。codex audit 中・未 push。lec14 は 8/3 制作済みだが index 未登録だったので 9/10 に登録）
 prev_session: lec13「データの圧縮」(POINT 13) 新規制作 → codex audit r1(6件)/r2(5件)/r3(1件)収束 → brushup(ハフマン木図+モールスhosoku) → visual(実習2形式対応図+実習4対比バー)。submodule HEAD=b1cda52、親リポ=a19da77、いずれも push 済。lec01〜lec13 まで全公開。
 ---
 
@@ -54,3 +54,20 @@ python3 -c "s=open('index.html').read();sc=s[s.find('<script>')+8:s.rfind('</scr
 - 本日作業ログ: `.claude/session-logs/2026-06-20.md`。
 - memory: `reference_new_lecture_playbook` / `reference_miki_npc_hosoku_lec10` / `feedback_lecture_appendix_infodesign` / `feedback_audit_rerun_after_fixes` / `feedback_audit_textbook_grounded` / `feedback_no_ai_tone_in_lectures` / `feedback_lectures_pointnum_equals_lecnum`。
 - ⚠ 同 submodule に **別セッションの未コミット作業**(daisu-column/constraints-and-gradients、lectures/_source/本文PDF 2/)が残存。lec14 の commit 時も**名前指定 stage** で混ぜないこと。
+
+## 2026-09-10 追記 — lec15「2進数の計算」（POINT 15・p.36）
+
+- lec14 を継ぎ接ぎで組む生成器（scratchpad `lec15/build_lec15.py`。parts = CSS／mobile CSS／slides a・b／HOSOKU_SUPP／MIKI_GUIDE＋TERM／iconData／固有関数／reviewPool／MD_STEPS／POINT_ILLUST）。エンジンは lec14＝lec11 のまま。
+- 26 枚: 補数の計算機（①反転→②1 を足す→③a と足す→④桁上がりを無視。誤りの再現スイッチ 2 つ）／0110−0011 のステッパー／浮動小数点数ビルダー（0.625→3F20 0000 ほか 5 プリセット）／4 桁の小数の判定／参考 A〜D（章末1・2、符号あり 2 進数、誤差 5 種）／補足モーダル 9。
+- ★ 罠: 生成器が `</style>` を落として紺一色になった（memory `feedback_spliced_page_missing_close_tag`）。書き出し前に `</style>`／`</script>` の個数を assert する。
+- 用語: 5 桁目は「桁上がり（を無視する）」（解答 PDF p.10）。「桁あふれ誤差」は実習4 の別概念。「2 の補数」「符号ビット」は使わない。
+- index.html に 14・15 のカードを足し「15 UNITS」に。凍結コピーは examples/15-binary-arithmetic.html。
+
+## 2026-09-12 追記 — lec16「論理回路と論理演算」（POINT 16・p.38）
+
+- 生成器は scratchpad `lec16/`（c16.py＝回路図 SVG・真理値表・検算の assert／gen16_slides.py＝スライドと CSS／gen16_js.py＝補足・ガイド・用語・復習・ステッパー・固有関数／build_lec16.py＝lec15 の index.html を外枠に継ぎ接ぎ／check16.py＝機械検査／shoot16.mjs＝座標で押す実機検査）。**scratchpad は消えるので、次の単元は lec16 の index.html を外枠にする。**
+- 26 枚: スイッチとランプの実験台（階段スイッチ／OR回路／AND回路を切り替え、表の最後の列に比べる回路を並べる）／階段スイッチのステッパー／半加算回路（C と S のランプ）／8 行の表ビルダー（思考のステップ4 の Step 1〜3）／実習4（回路と選択肢を 1 行に）／実習5（すべて選んで判定）／参考 A 3 路スイッチの配線図（通電を金色）・B 4 路スイッチ 8 行・C 一方のみ 1 を AND・OR・NOT で組む（各回路の出力をバッジで）・D 全加算回路。補足 9、復習 19 問（正解の位置を散らした）。
+- ★ デスクトップでは miki.con の窓が下部のボタンを覆う（エンジン共通・lec11/lec15 も同じ）。lec16 は内容レイヤの CSS で下に 190px の余白を足した → memory `feedback_miki_window_covers_desktop_controls`。
+- ★ lec15 の復習チャレンジは 16 問中 14 問が「ア」が正解（未修正）→ memory `feedback_lecture_review_pool_answer_position`。
+- 用語: 論理積回路（AND回路）・論理和回路（OR回路）・否定回路（NOT回路）、「桁上げ」（学習ノート 16 実習3）。「排他的論理和回路（XOR回路）」「否定論理積回路（NAND回路）」はベストフィット例題48 の呼び名として使う。行の順は 00・01・10・11。
+- index.html に 16 のカードを足し「16 UNITS」に。凍結コピーは skills/interactive-lecture/examples/16-logic-circuits.html。codex 監査は `.company/audit/reviews/2026-09-12/0230-joho2-kai03-lec16-ss4/`。

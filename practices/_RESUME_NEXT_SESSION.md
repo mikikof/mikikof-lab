@@ -1,6 +1,6 @@
 ---
-updated: 2026-06-21
-prev_session: "02-07 + 思考のステップ2 を新規作成 → audit/brushup/visual まで完走・push 済み"
+updated: 2026-09-10（03-09「2進数と論理演算」を新規作成。codex audit 中・未 push。03-08 は 8/3 に作成済みだが index 未登録だったので 9/10 に登録）
+prev_session: "03-09 2進数と論理演算（例題 7 ＋ 演習 13・self 型主軸）を _build_0309.py で生成。原本図 46 枚を assets/ に抽出、解答は計算で独立検算"
 ---
 
 # practices(Interactive Practice Lab)— 次セッション復帰ガイド
@@ -37,3 +37,20 @@ prev_session: "02-07 + 思考のステップ2 を新規作成 → audit/brushup/
 - 直近 commit: submodule `b249661` / 親 `d7d14c8`(両方 push 済み)
 - audit ログ: `.company/audit/reviews/2026-06-21/0319-practices-0207-digital-info/`(r1)・`0341-practices-0207-digital-info-rev2/`(r2)
 - 制作哲学=`practices/CLAUDE.md` / 技術=`skills/interactive-practice/SKILL.md` / 部品=`components.md` / 02-07 ビルダー=`articles/02-07-digital-info-representation/_build_0207.py`
+
+## 2026-09-10 追記 — 03-09「2進数と論理演算」
+
+- 生成器 `articles/03-09-binary-and-logic/_build_0309.py`（02-07 の例を SRC に、03-08 と同じ差し替え方式）。**例題は 03-08 と同じ「例題ツアー」の段**（おさらいに畳まない）。計算・記述は self 型、選べる問題（例題48 match／類題80・練習86・87 single）は自動採点。
+- docx 抽出は `m:t` と下付き（`w:vertAlign`）と画像アンカー（`a:blip` → rels）まで拾う版（scratchpad `p0309/docx2txt2.py`。**次はこの版を practices 側へ置くこと**）。ド・モルガンの上線は `text-decoration: overline` で再現。
+- 原本図は問題 docx 36 枚＋解答 docx 10 枚（類題75 の筆算 6・類題81 の解答回路 2・練習86 の値入り回路 2）。図記号の選択肢は `<img>` を選択肢の中に入れる（`inline_img`）。
+- 落とし穴: `.self-q` は flex なので、問いの文に `<figure>` を並べると図が横に押し込まれる。`<div style="flex:1 1 auto;min-width:0">` で包む。2 進数リテラルは `white-space:nowrap`。17 列の表は 2 段に割る（横スクロールにしない）。
+- index.html に 03-08・03-09 のカードを足した（03-08 は 8/3 の回で漏れていた）。凍結コピーは examples/03-09-binary-and-logic.html。
+
+## 2026-09-12 追記 — 03-thinking-step-4「真理値表」
+
+- 生成器 `articles/03-thinking-step-4/_build_ss4.py`。**02-thinking-step-2 の index.html を読んで `<main>` と JS 配列だけ差し替え、自分の index.html に書く**（自分自身を読み直さないので何度でも回せる）。数値は 3 路・4 路の表と問1 の 4 回路を assert で原本の解答と照合してから組む。
+- 演習 3 問: 問（考えて納得の空欄 A〜D と図2 の X を self 型）／問1（single・正答 ②・回路図は選択肢の中に `<img>`）／問2（4 路スイッチ 8 行を self 型）。おさらい 3 領域（基本の回路・真理値表・図記号）には演習の答えを出さない。
+- 原本図は問題 docx の media から 11 枚（fig1〜fig11）。考えて納得の解答図（image6）は使わず、解説では HTML の表で出す。
+- 解答の解説は原文を引用した。数式画像が抜けて「」になっている文（行数 2^3 の行）は引用せず、自分の言葉の補足に回した。
+- `情報Ⅰ_2学期/_ops/build_kai.py` が slug の無いフォルダを未作成と判定していたので直した。
+- index.html に 3.S4 のカードを足し「12 units」に。凍結コピーは skills/interactive-practice/examples/03-thinking-step-4.html。
