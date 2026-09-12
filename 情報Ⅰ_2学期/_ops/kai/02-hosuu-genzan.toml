@@ -1,0 +1,22 @@
+# 第2回 — この回だけの台帳。
+#
+# manifest.toml には書かない。回ごとに別ファイルにしてあるのは、
+# 別々のチャットで別の回を同時に作っても、同じファイルを奪い合わないため。
+# 追加・改訂するときは、この回のファイルだけを触る。
+
+
+no          = 2
+slug        = "hosuu-genzan"
+theme       = "引き算を足し算に変える ― 補数と桁上がり"
+nansho      = "補数を取る操作（反転して 1 を足す）と桁上がりを無視する操作を別々に覚えてしまい、1 を足す前に足し算へ進む（答えが 1 小さい）か、5 桁目を残したまま答える"
+nansho_type = "B"
+date        = "未定"
+status      = "done"
+anchor      = { kind = "lec", id = 15 }
+
+[artifacts]
+explainer = "complement-subtraction.html"
+print     = "補数による減算"
+quiz      = { id = "joho-binary-complement", set_index = 5 }
+lecture   = 15
+practice  = "03-09"

@@ -1,0 +1,22 @@
+# 第3回 — この回だけの台帳。
+#
+# manifest.toml には書かない。回ごとに別ファイルにしてあるのは、
+# 別々のチャットで別の回を同時に作っても、同じファイルを奪い合わないため。
+# 追加・改訂するときは、この回のファイルだけを触る。
+
+
+no          = 3
+slug        = "ronri-kairo"
+theme       = "「どちらか一方のときだけ」は OR ではない ― 階段スイッチと真理値表"
+nansho      = "「どちらか一方が押されたときだけ点く」を OR と取り違え、両方が 1 の行で真理値表を 1 と埋めてしまう（違いが出るのはその 1 行だけ）"
+nansho_type = "C"
+date        = "未定"
+status      = "done"
+anchor      = { kind = "lec", id = 16 }
+
+[artifacts]
+explainer = "logic-gates.html"
+print     = "論理回路と真理値表"
+quiz      = { id = "joho-logic-gates", set_index = 6 }
+lecture   = 16
+practice  = "03-thinking-step-4"

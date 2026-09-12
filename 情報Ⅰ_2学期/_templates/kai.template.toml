@@ -1,0 +1,26 @@
+# 回の台帳の雛形。`_ops/kai/NN-<slug>.toml` へコピーして使う。
+#
+# 1回1ファイルにしてあるのは、別々のチャットで別の回を同時に作っても、
+# 同じファイルを奪い合わないようにするため。manifest.toml には書かない。
+#
+# ファイル名と中身の no / slug は一致させる（build_kai.py が確かめて、違えば止まる）。
+# 例: no = 6, slug = "hairetsu" なら 06-hairetsu.toml
+#
+#   status      = planned / building / done
+#   nansho_type = A 境界 / B 順序 / C 似て非なる / D 数えると合わない
+
+no          = 6
+slug        = "kebab-case-no-slug"
+theme       = "50分のテーマ（アンカーより狭い。POINT 1つがそのまま1回になるとは限らない）"
+nansho      = "初見で落ちる場所を1つだけ書く。内容として重要な場所とは限らない"
+nansho_type = "B"
+date        = "未定"
+status      = "planned"
+anchor      = { kind = "lec", id = 20 }
+
+[artifacts]
+explainer = "slug.html"        # explainer_dist からの相対
+print     = "単元名"            # print_dist の <unit>（_問題 / _解答 は付けない）
+quiz      = { id = "joho-slug", set_index = 9 }   # ★0起点。既存の最大 + 1 を使う
+lecture   = 20                 # 未作成ならこの回のフローで作る / 既存なら案内のみ
+practice  = "04-12"

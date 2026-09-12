@@ -1,0 +1,22 @@
+# 第5回 — この回だけの台帳。
+#
+# manifest.toml には書かない。回ごとに別ファイルにしてあるのは、
+# 別々のチャットで別の回を同時に作っても、同じファイルを奪い合わないため。
+# 追加・改訂するときは、この回のファイルだけを触る。
+
+
+no          = 5
+slug        = "kurikaeshi-han-i"
+theme       = "繰り返しが止まる値は、処理されない ― 範囲と条件の書き方"
+nansho      = "繰り返したい最後の値を、そのまま range の 2 つ目の数や while の条件の境目に書いてしまう。2 つ目の数も条件が偽になる値も「そこで止まる」側であって、最後に処理される値ではない。1 個ずれるだけなのでプログラムは止まらず、答えだけが静かに違う"
+nansho_type = "D"
+date        = "未定"
+status      = "done"
+anchor      = { kind = "lec", id = 20 }
+
+[artifacts]
+explainer = "loop-range.html"
+print     = "繰り返しの範囲"
+quiz      = { id = "joho-loop-range", set_index = 8 }
+lecture   = 20
+practice  = "04-12"

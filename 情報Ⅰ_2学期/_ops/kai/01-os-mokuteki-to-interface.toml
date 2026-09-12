@@ -1,0 +1,22 @@
+# 第1回 — この回だけの台帳。
+#
+# manifest.toml には書かない。回ごとに別ファイルにしてあるのは、
+# 別々のチャットで別の回を同時に作っても、同じファイルを奪い合わないため。
+# 追加・改訂するときは、この回のファイルだけを触る。
+
+
+no          = 1
+slug        = "os-mokuteki-to-interface"
+theme       = "装置の違いを意識せずに使えるのは誰の仕事か ― OS の目的とハードウェアインタフェース"
+nansho      = "「装置の違いを意識せずに使える」を作っているのがどの層か決まらない。仕様を合わせる(ハードウェアインタフェース)と操作の内容を抽象化する(OS)が、どちらも「違いを吸収している」と読めてしまう"
+nansho_type = "C"
+date        = "2026-09-上旬"
+status      = "done"
+anchor      = { kind = "lec", id = 14 }
+
+[artifacts]
+explainer = "os-abstraction.html"
+print     = "ハードウェアとソフトウェア"
+quiz      = { id = "joho-hardware-software", set_index = 4 }
+lecture   = 14
+practice  = "03-08"

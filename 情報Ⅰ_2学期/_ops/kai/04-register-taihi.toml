@@ -1,0 +1,22 @@
+# 第4回 — この回だけの台帳。
+#
+# manifest.toml には書かない。回ごとに別ファイルにしてあるのは、
+# 別々のチャットで別の回を同時に作っても、同じファイルを奪い合わないため。
+# 追加・改訂するときは、この回のファイルだけを触る。
+
+
+no          = 4
+slug        = "register-taihi"
+theme       = "同じレジスタに読み込めば、途中結果は消える ― 命令の並びと退避"
+nansho      = "計算の途中結果がレジスタに入っていることを見落とし、次の値を同じレジスタへ READ して上書きしてしまう。レジスタが1つなら先に主記憶へ書き出し、2つなら空いているほうへ読む、という一手が抜ける"
+nansho_type = "B"
+date        = "未定"
+status      = "done"
+anchor      = { kind = "lec", id = 17 }
+
+[artifacts]
+explainer = "instruction-execution.html"
+print     = "コンピュータの構成と動作"
+quiz      = { id = "joho-cpu-instruction", set_index = 7 }
+lecture   = 17
+practice  = "03-10"

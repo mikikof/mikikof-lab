@@ -2,7 +2,10 @@
 """情報Ⅰ 2学期 — 回フォルダを正本から組む。
 
 回フォルダは派生物。ここで組み直せる形を保つ（手でコピーして育てない）。
-台帳は _ops/manifest.toml だけ。読み込みは stdlib の tomllib（外部依存を足さない）。
+台帳は 2 つに分かれている。共有の設定（paths / hubs / anchor_map）は _ops/manifest.toml、
+回ごとのデータは _ops/kai/NN-<slug>.toml。回を別ファイルにしてあるのは、別々のチャットで
+別の回を同時に作っても、同じファイルを奪い合わないようにするため。
+読み込みは stdlib の tomllib（外部依存を足さない）。
 
     python3 _ops/build_kai.py 1        1回ぶんを組む
     python3 _ops/build_kai.py --all    全回を組み直す
@@ -37,9 +40,49 @@ def load() -> dict:
         die(f"台帳が無い: {MANIFEST}")
     with MANIFEST.open("rb") as fh:
         try:
-            return tomllib.load(fh)
+            m = tomllib.load(fh)
         except tomllib.TOMLDecodeError as e:
             die(f"manifest.toml の書式が壊れている: {e}")
+
+    # 旧形式の番人。古い手順（manifest に直接書き足す）で作業したセッションがあっても、
+    # 黙って取りこぼさずにここで止める。
+    if "kai" in m:
+        die("manifest.toml に [[kai]] が残っている。\n"
+            "       回の台帳は _ops/kai/NN-<slug>.toml に移した（同時作業での衝突を避けるため）。\n"
+            "       そのブロックを回のファイルへ移して、manifest からは消す。")
+    if "existing" in m:
+        die("manifest.toml に [existing] が残っている。\n"
+            "       作成済みの lectures / practices は articles/ を実際に見て判定するので持たない。消す。")
+
+    m["kai"] = load_kai()
+    return m
+
+
+def load_kai() -> list[dict]:
+    """回の台帳を _ops/kai/*.toml から集める。1回1ファイル（同時に別の回を作っても衝突しない）。"""
+    out: list[dict] = []
+    seen: dict[int, str] = {}
+    for path in sorted(KAI_SRC.glob("*.toml")):
+        with path.open("rb") as fh:
+            try:
+                k = tomllib.load(fh)
+            except tomllib.TOMLDecodeError as e:
+                die(f"{path.name} の書式が壊れている: {e}")
+        for key in ("no", "slug"):
+            if key not in k:
+                die(f"{path.name} に {key} が無い")
+        if not isinstance(k["no"], int):
+            die(f"{path.name} の no が整数でない: {k['no']!r}")
+        if k["no"] in seen:
+            die(f"回番号 {k['no']} が 2 つのファイルにある: {seen[k['no']]} と {path.name}")
+        seen[k["no"]] = path.name
+        expect = f"{k['no']:02d}-{k['slug']}.toml"
+        if path.name != expect:
+            die(f"ファイル名と中身が食い違う: {path.name} は {expect} にする")
+        out.append(k)
+    if not out:
+        die(f"回の台帳が1つも無い: {KAI_SRC}/NN-<slug>.toml")
+    return sorted(out, key=lambda k: k["no"])
 
 
 def company_root(m: dict) -> Path:
@@ -168,7 +211,7 @@ def hub_index_html(m: dict) -> str:
     kais = sorted(m.get("kai", []), key=lambda x: x["no"])
     if not kais:
         cards = '<div class="empty">回はまだ登録されていない。<br>'\
-                '<code>_ops/manifest.toml</code> の <code>[[kai]]</code> に足して '\
+                '<code>_ops/kai/NN-&lt;slug&gt;.toml</code> を起こして '\
                 '<code>build_kai.py</code> を走らせる。</div>'
     else:
         cards = "".join(
@@ -321,7 +364,8 @@ def main() -> None:
         except ValueError:
             die(f"回番号か --all / --index を渡す（受け取った値: {args[0]}）")
         if n not in kais:
-            die(f"第{n}回が台帳に無い。manifest.toml の [[kai]] に足す")
+            die(f"第{n}回が台帳に無い。_ops/kai/{n:02d}-<slug>.toml を作る"
+                "（雛形: _templates/kai.template.toml）")
         targets = [n]
 
     all_warn: list[str] = []
