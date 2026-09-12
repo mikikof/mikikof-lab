@@ -18,10 +18,11 @@ prev_session: 第5回の個人学習教材（lectures lec20 / practices 04-12）
 | | 版 | 状態 |
 |---|---|---|
 | submodule (mikikof-lab) | `6d1af39` 第5回: 個人学習教材 lec20 と practices 04-12 を保全 | **push 済み** |
-| 親リポ (my-company) | `211f38ae` submodule 参照の追随 / `e0b8513e` 締め（ORG.md・決定事項） | `211f38ae` は push 済み・`e0b8513e` は**未 push** |
+| 親リポ (my-company) | `211f38ae` submodule 参照の追随 / `e0b8513e` 締め（ORG.md・決定事項） | **どちらも push 済み** |
 
-**`e0b8513e` を push していない理由**: 親リポに別セッションの未 push（`c2e38af1`）があり、
-git はブランチ単位でしか押せないため、押すと相手の作業も公開される。本人が「submodule のみ push」を選んだ判断を維持した。
+**親リポの push の経緯**: 本人の判断で私からは push しなかった（当時、別セッションの未 push が混ざっており、
+git はブランチ単位でしか押せないため）。その後、別セッションが親リポを push したので、私の 2 件も origin に載った。
+**残っているローカル commit は submodule の `fa1ec5f`（この resume）だけ**で、これは push しない仕様。
 
 **並行セッションのこと（9/13 深夜）**
 - 親リポの `ee4e5966`（別セッションの persona 保存）に、**私の監査ログ 5 件が巻き込まれている**
@@ -35,9 +36,13 @@ git はブランチ単位でしか押せないため、押すと相手の作業�
 
 入口は **`/joho-2gakki`**。難所はまだ決めていない。
 
-**★ 着手前に必ず読む**: 別セッションが台帳の作りを変えている。
-`情報Ⅰ_2学期/CLAUDE.md` と `_ops/build_kai.py` を読み直し、**回ファイルの正本が
-`_ops/kai/*.md` と `*.toml` のどちらか**を確かめてから手を動かす。
+**★ 台帳の作りが変わった（9/13 に別セッションが移行済み。確認は済んでいる）**:
+
+- 回の台帳は **`_ops/kai/NN-<slug>.toml`**、進行台本は同名の **`.md`**。
+- `manifest.toml` は共有の設定（paths / hubs / anchor_map）だけで、**回は書かない**。
+  `[[kai]]` や `[existing]` を残すと `build_kai.py` が明示的に止まる。
+- 出荷ゲートの条件も **`_ops/kai/NN-<slug>.toml` の `status = "done"`** に変わった（ハブ `CLAUDE.md` §8）。
+- 第1〜5回はすべて `.toml` 側で `done` に移行済み。一覧の「準備中」は 0 件。
 
 材料はもう手元にある（lec20 で 20⑵ 全体を扱ったため）:
 - 学習ノート 20⑵ の POINT ①配列（リスト）②要素（＋添字）③一次元配列 ④二次元配列、実習1〜5 の正答
@@ -50,9 +55,11 @@ git はブランチ単位でしか押せないため、押すと相手の作業�
 
 第6回（POINT 20⑵）:
 
-- [ ] `情報Ⅰ_2学期/CLAUDE.md` と `_ops/build_kai.py` を読み、台帳の作り（`.md` / `.toml`）を確かめる
+- [ ] ハブ `CLAUDE.md` §11 を読む。**回番号は Phase 0 で先に取る**
+      （`_ops/kai/06-<slug>.toml` を先に置く。同じ番号を 2 つのチャットが取ると `build_kai.py` が止まる）
 - [ ] `_ops/theme-plan.md` §2b と `_ops/nansho-guide.md` を読み、**難所を 1 つ確定**する
-- [ ] 回ファイル `_ops/kai/06-<slug>.{md|toml}` を起こす（解答・原本の書き写しは入れない）
+- [ ] 台帳 `_ops/kai/06-<slug>.toml`（雛形 `_templates/kai.template.toml`）と
+      進行台本 `_ops/kai/06-<slug>.md` を起こす（解答・原本の書き写しは入れない）
 - [ ] 難所の数理を独立検算（原本で裏取り・**web 検索しない**）
 - [ ] 解説ツール（25分・丁寧体）→ `media/webツール/情報/edu-explainer-kit/dist/`
 - [ ] 印刷プリント（15分・常体）→ `media/webツール/情報/印刷教材/dist/`
@@ -63,11 +70,10 @@ git はブランチ単位でしか押せないため、押すと相手の作業�
 - [ ] 配信（`~/joho-explainer` / `~/joho-quiz` へ同期）
 - [ ] `/audit-review`（web 禁止・教科書準拠・slug は `joho2-`）→ 必須指摘を適用（5 件以上なら再 audit）
 - [ ] `python3 _ops/check_public.py` が exit 0
-- [ ] `manifest.toml` の第6回を `status = "done"`
+- [ ] `_ops/kai/06-<slug>.toml` の `status = "done"`（**manifest.toml には書かない**）
 
 持ち越し（第5回の残り。急ぎではない）:
 
-- [ ] 親リポ `e0b8513e` の push（別セッションの `c2e38af1` も一緒に出ることの判断が要る）
 - [ ] `ee4e5966` に巻き込まれた監査ログ 5 件の扱い（コミットメッセージが実態と合わない）
 - [ ] この resume 更新の commit は submodule にローカルで入れてある（未 push）
 
