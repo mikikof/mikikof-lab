@@ -1,0 +1,1073 @@
+<!doctype html>
+<!--
+  ============================================================================
+  情報 解説Webツール テンプレート（mikikof-lab / edu-explainer-kit 情報版）
+  正典＝この構造そのもの（examples/sampling-theorem.html）。新規単元はこれを cp し、
+  下記の「差し替え地図」の中身だけ書き換える。<style> と JS ハーネス（setupCanvas /
+  setupMini / xOf / yOf / arrowHead / roundRect / openDeep / openBasic / setStep /
+  イベント結線）は逐語のまま残す＝再設計しない。外部依存ゼロ（CDN・KaTeX・Chart.js
+  不使用）。localStorage 禁止。ビルド工程なし。
+
+  ── 多層サポートの並び（この順序を守る）──────────────────────────────
+   1. header.top        eyebrow（回・章）／h1（単元名）／enlabel（英語）／dek（問い一文）／署名SVG
+   2. #intro            「はじめに」やさしい導入（日常語）＋【基礎popoutボタン .deep-chip.primary】
+   3. #banner           状態判定バナー（ok↔warn）— 操作結果を即時に言葉で
+   4. #cbox > canvas#cv 主図（自作canvas・role=img＋aria-label）
+   5. #step-panel       ステップ案内「順を追って見る」（過程を1つずつ・既存トグルを駆動）
+   6. controls          スライダー2本＋presets（易→難・先頭が最も明快）＋toggles
+   7. readouts          数値カード（負の状態は .ro.alias）
+   8. 解説 panel        「この図が言っていること」＋【深掘りhosokuボタン .deep-chip】
+   9. details.glossary  用語のおさらい（既定で閉）
+  10. #overlay          深掘りhosoku：①直観 ②仕組みの数直線 ③身のまわり（実例＋実数）＋式
+  11. #overlay-basic    基礎hosoku：①波 ②ものさしで測る ③数だけ残る ④作り直す（最も噛み砕く）
+
+  ── MATERIAL（grep して関数ごと差し替え）──────────────────────────
+   数理: signal / aliasFreq 相当 ・ draw() ・ update()（バナー文言と状態判定）
+   ステップ: setStep()（各段の toggle 構成と平易キャプション）
+   深掘り: drawIntuition() / drawFold() / drawWheelStrip()（③は単元の身近な実例に）
+   基礎:   drawBasic1..4 / basicRecon()（ものさし・数の列・作り直し）
+
+  ── hosoku（/hosoku の思想を必ず適用）─────────────────────────────
+   難所には必ず深掘りポップアウトを置く。中身は「本文＋式＋動く/今の値で描き直る図」。
+   手描き感・鋭い具体数値・身近な実例で“目から鱗”を作る。チップ→モーダル、×/背景/Escで閉じる。
+   弱い生徒向けには基礎popout（最も噛み砕いた4図）も併設する。
+
+  ── 声（AI 臭を完全に排除）───────────────────────────────────────
+   禁止: 「〜することができます」「〜という形になります」「〜を行う」/ 「〜しましょう！」「ぜひ」
+   「重要なポイント」/ 抽象動詞メタファー（立ち上がる・湧き上がる・浮かび上がる・繋がっていく）/
+   無生物主語の能動 / 英語直訳カタカナ（アプローチ等）/ 過剰 hedging / 絵文字 / 感嘆符の乱用 /
+   80字超の一文。【語尾】要求調「〜してほしい」と断定「〜だ。／〜である。」は使わない。本文は
+   自然な丁寧体（です・ます）で統一し、依頼は「〜してみてください」。詳細は reproduction-regime §声。
+
+  詳細は ../reference/reproduction-regime.md（要石）と quality-checklist.md。
+  ============================================================================
+-->
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- FILL: タイトル -->
+<title>同じレジスタに読み込めば、途中結果は消える ― 命令の実行</title>
+<style>
+  :root{
+    --ink:#10161f; --muted:#6b7480; --line:#e6eaf1; --hair:#e8ecf3; --hair2:#cdd6e3;
+    --bg:#f6f7f9; --card:#ffffff;
+    --accent:#2f55d4; --orange:#cf5a18;
+    --ok:#2f55d4;  --ok-bg:#eaeffc; --ok-bd:#c6d2f4; --ok-tint:#f4f6fd;
+    --warn:#d8362e; --warn-bg:#fdecea; --warn-bd:#f3c4c1; --warn-tint:#fdf5f4;
+    --wave:#1b2330;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono","Roboto Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic","YuGothic",Meiryo,sans-serif;
+    line-height:1.65;
+  }
+  .wrap{max-width:920px; margin:0 auto; padding:0 16px 56px}
+
+  header.top{
+    position:relative;
+    padding:34px 2px 20px;
+    margin-bottom:22px;
+    border-bottom:1px solid var(--hair);
+  }
+  header.top .eyebrow{
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em;
+    color:var(--muted); display:flex; align-items:center; gap:9px; margin-bottom:16px;
+  }
+  header.top .eyebrow .dot{
+    width:7px; height:7px; border-radius:50%; flex:0 0 auto;
+    background:var(--accent); box-shadow:0 0 0 4px rgba(47,85,212,.13);
+  }
+  header.top h1{
+    margin:0; font-size:34px; line-height:1.08; font-weight:700;
+    letter-spacing:.015em; color:var(--ink);
+  }
+  header.top .enlabel{
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.28em; text-transform:uppercase;
+    color:var(--accent); margin-top:10px;
+  }
+  header.top .dek{
+    margin:15px 0 0; font-size:14px; color:var(--muted); max-width:44ch;
+  }
+  header.top .sig{ position:absolute; top:30px; right:2px; width:148px; height:48px; }
+  header.top .sig path{ stroke:var(--hair2); fill:none; }
+  header.top .sig circle{ fill:var(--accent); }
+
+  .banner{
+    border:1px solid; border-radius:10px; padding:12px 16px; margin-bottom:14px;
+    font-weight:700; font-size:15px; transition:.2s;
+  }
+  .banner small{display:block; font-weight:400; font-size:13px; margin-top:4px; line-height:1.55}
+  .banner.ok{background:var(--ok-bg); border-color:var(--ok-bd); color:var(--ok)}
+  .banner.warn{background:var(--warn-bg); border-color:var(--warn-bd); color:var(--warn)}
+
+  .canvas-box{
+    background:#fff; border:1px solid var(--line); border-radius:10px;
+    overflow:hidden; transition:background .25s; margin-bottom:16px;
+  }
+  .canvas-box.ok{background:var(--ok-tint)}
+  .canvas-box.warn{background:var(--warn-tint)}
+  canvas{display:block; width:100%; height:auto}
+
+  .panel{
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:16px 18px; margin-bottom:16px; box-shadow:0 1px 3px rgba(20,30,50,.05);
+  }
+
+  .controls{display:flex; flex-wrap:wrap; gap:16px 24px}
+  .ctrl{flex:1 1 250px}
+  .ctrl label{display:flex; justify-content:space-between; align-items:baseline; font-size:14px; font-weight:700; margin-bottom:7px}
+  .ctrl label .val{color:var(--ok); font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:14px}
+  input[type=range]{width:100%; accent-color:var(--ok); height:24px}
+
+  .presets{display:flex; flex-wrap:wrap; gap:9px; margin-top:16px}
+  .presets button{
+    border:1px solid var(--line); background:#fff; border-radius:999px;
+    padding:7px 15px; font-size:13.5px; cursor:pointer; color:var(--ink);
+    font-family:inherit; transition:.15s;
+  }
+  .presets button:hover{border-color:var(--ok); color:var(--ok); background:var(--ok-bg)}
+
+  .toggles{display:flex; flex-wrap:wrap; gap:12px 22px; margin-top:16px; padding-top:14px; border-top:1px solid var(--line); font-size:14px}
+  .toggles label{display:flex; align-items:center; gap:6px; cursor:pointer}
+  .toggles input{accent-color:var(--ok); width:16px; height:16px}
+
+  .readouts{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px}
+  .ro{background:#f7f9fc; border:1px solid var(--line); border-radius:8px; padding:10px 12px}
+  .ro .k{font-size:12px; color:var(--muted)}
+  .ro .v{font-size:18px; font-weight:700; font-family:var(--mono); font-variant-numeric:tabular-nums; margin-top:2px}
+  .ro.alias{background:var(--warn-tint); border-color:var(--warn-bd)}
+  .ro.alias .v{color:var(--warn)}
+
+  h2.sec{font-size:15px; color:var(--orange); margin:0 0 11px; border-bottom:2px solid var(--orange); padding-bottom:4px; display:inline-block}
+  .note{font-size:13.5px; font-weight:500; color:#374151; margin:0 0 12px}
+  .note b{color:var(--ink)}
+  .formula{
+    font-family:"Cambria Math","Latin Modern Math","Times New Roman",serif;
+    font-size:18px; background:#f7f9fc; border:1px solid var(--line);
+    border-radius:8px; padding:9px 16px; display:inline-block; color:var(--ink);
+  }
+
+  /* 深掘り(hosoku)チップ + ポップアウト */
+  .deep-chip{
+    display:inline-flex; align-items:center; gap:8px; margin-top:15px;
+    border:1px solid var(--ok-bd); background:var(--ok-bg); color:var(--ok);
+    border-radius:999px; padding:9px 17px; font-size:13.5px; font-weight:700;
+    font-family:inherit; cursor:pointer; transition:.15s;
+  }
+  .deep-chip:hover{background:#dde5fb; border-color:var(--accent)}
+  .deep-chip svg{width:15px; height:15px; flex:0 0 auto}
+  .deep-chip.primary{background:var(--ok); color:#fff; border-color:var(--ok); margin-top:6px}
+  .deep-chip.primary:hover{background:#244bc0; border-color:#244bc0}
+
+  .overlay{
+    position:fixed; inset:0; background:rgba(16,22,31,.55);
+    display:none; align-items:flex-start; justify-content:center;
+    padding:24px 14px; z-index:1000; overflow-y:auto;
+  }
+  .overlay.open{display:flex}
+  .modal{
+    background:#fff; border-radius:14px; max-width:660px; width:100%; margin:auto;
+    box-shadow:0 18px 60px rgba(16,22,31,.32); overflow:hidden;
+    animation:pop .18s ease-out;
+  }
+  @keyframes pop{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+  .modal > header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:17px 22px; border-bottom:1px solid var(--line);
+  }
+  .modal > header h3{margin:0; font-size:18px; font-weight:700; color:var(--ink); letter-spacing:.01em}
+  .modal .x{
+    border:none; background:none; cursor:pointer; color:var(--muted);
+    font-size:24px; line-height:1; padding:2px 8px; border-radius:8px; transition:.13s;
+  }
+  .modal .x:hover{background:var(--bg); color:var(--ink)}
+  .mbody{padding:20px 22px 24px}
+  .mblock{margin-bottom:22px}
+  .mblock:last-child{margin-bottom:0}
+  .mblock h4{margin:0 0 9px; font-size:14px; font-weight:700; color:var(--orange)}
+  .mblock p{margin:0 0 11px; font-size:14px; font-weight:500; color:#374151; line-height:1.72}
+  .mblock p:last-child{margin-bottom:0}
+  .mblock p b{color:var(--ink)}
+  .mini-box{
+    background:var(--ok-tint); border:1px solid var(--line);
+    border-radius:8px; overflow:hidden; margin:4px 0 6px;
+  }
+  .mini-box canvas{display:block; width:100%; height:auto}
+  .mini-cap{font-size:12.5px; color:var(--muted); margin:2px 0 0; font-weight:500}
+  .mini-cap b{color:var(--warn)}
+
+  /* ステップ案内 */
+  .steps{display:flex; flex-wrap:wrap; align-items:center; gap:9px}
+  .steps .slabel{font-size:13px; font-weight:700; color:var(--muted); margin-right:3px}
+  .steps button{
+    border:1px solid var(--line); background:#fff; border-radius:999px;
+    padding:7px 14px 7px 8px; font-size:13.5px; cursor:pointer; color:var(--ink);
+    font-family:inherit; transition:.15s; display:inline-flex; align-items:center; gap:7px;
+  }
+  .steps button .n{
+    display:inline-flex; align-items:center; justify-content:center; width:19px; height:19px;
+    border-radius:50%; background:var(--ok-bg); color:var(--ok);
+    font-size:11.5px; font-weight:700; font-family:var(--mono); flex:0 0 auto;
+  }
+  .steps button:hover{border-color:var(--ok); color:var(--ok)}
+  .steps button.active{background:var(--ok); border-color:var(--ok); color:#fff}
+  .steps button.active .n{background:rgba(255,255,255,.26); color:#fff}
+  .step-cap{margin:13px 0 0; font-size:13.5px; font-weight:500; color:#374151; line-height:1.62; min-height:1.6em}
+  .step-cap b{color:var(--ink)}
+  .step-cap.warn b{color:var(--warn)}
+
+  /* 用語辞典 */
+  details.glossary{
+    border:1px solid var(--line); border-radius:10px; background:var(--card);
+    margin-bottom:16px; box-shadow:0 1px 3px rgba(20,30,50,.05);
+  }
+  details.glossary>summary{
+    list-style:none; cursor:pointer; padding:14px 18px; font-size:15px; font-weight:700;
+    color:var(--orange); display:flex; align-items:center; gap:9px; user-select:none;
+  }
+  details.glossary>summary::-webkit-details-marker{display:none}
+  details.glossary>summary::before{
+    content:""; width:0; height:0; border-left:6px solid var(--muted);
+    border-top:5px solid transparent; border-bottom:5px solid transparent;
+    transition:transform .15s; flex:none;
+  }
+  details.glossary[open]>summary::before{transform:rotate(90deg)}
+  dl.gloss{margin:0; padding:2px 18px 18px}
+  dl.gloss dt{font-weight:700; color:var(--ink); font-size:13.5px; margin-top:12px}
+  dl.gloss dt:first-of-type{margin-top:0}
+  dl.gloss dt .en{color:var(--muted); font-family:var(--mono); font-size:11px; font-weight:400; margin-left:7px; letter-spacing:.02em}
+  dl.gloss dd{margin:3px 0 0; font-size:13px; font-weight:500; color:#374151; line-height:1.62}
+
+  /* 身のまわりの例（モーダル内） */
+  .wheel-wrap{
+    background:var(--ok-tint); border:1px solid var(--line); border-radius:8px;
+    padding:12px 10px 8px; margin:4px 0 10px;
+  }
+  .wheel-wrap svg{display:block; width:100%; max-width:340px; margin:0 auto}
+  .real-table{width:100%; border-collapse:collapse; margin:6px 0 6px; font-size:13px}
+  .real-table th,.real-table td{text-align:left; padding:7px 10px; border-bottom:1px solid var(--line)}
+  .real-table th{color:var(--muted); font-weight:700; font-size:12px; background:#f7f9fc}
+  .real-table td{font-weight:500; color:#374151}
+  .real-table td .big{font-family:var(--mono); font-weight:700; color:var(--ink)}
+
+  footer{font-size:12px; color:var(--muted); text-align:center; margin-top:20px}
+
+  @media (max-width:560px){
+    header.top{padding-top:26px}
+    header.top h1{font-size:26px}
+    header.top .sig{display:none}
+    .banner{font-size:14px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="eyebrow"><span class="dot"></span>MIKIKOF-LAB · 学習ノート POINT 17 ｜ 3章</div>
+    <h1>同じレジスタに読み込めば、途中結果は消える</h1>
+    <div class="enlabel">Fetch, Decode, Execute</div>
+    <p class="dek">命令の意味は同じなのに、並べる順で答えが変わるのはなぜでしょうか。</p>
+    <svg class="sig" viewBox="0 0 148 48" fill="none" aria-hidden="true">
+      <path d="M8 24 C 16 12 22 8 29 8 C 39 8 46 40 56 40 C 66 40 73 8 83 8 C 93 8 100 40 110 40 C 119 40 126 32 134 24" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="29" cy="8" r="3.4"/>
+      <circle cx="56" cy="40" r="3.4"/>
+      <circle cx="83" cy="8" r="3.4"/>
+      <circle cx="110" cy="40" r="3.4"/>
+    </svg>
+  </header>
+
+  <div class="panel" id="intro">
+    <h2 class="sec">はじめに：命令を 1 つずつ取り出して実行する</h2>
+    <p class="note">
+      コンピュータは、主記憶装置に並んだ命令を<b>番地の順に 1 つずつ取り出し</b>、解読して、実行します。計算に使う値は、いったん<b>レジスタ</b>という小さな置き場に読み込みます。ここでは 9 −（1 ＋ 7）を計算するプログラムを、1 命令ずつ動かします。
+    </p>
+    <p class="note">
+      レジスタは数が少なく、次の値を読み込むと<b>前の値は消えます</b>。計算の途中結果がレジスタに入ったまま次の値を読み込むと、その途中結果は失われます。下のボタンで 1 命令ずつ進めて、値がいまどこにあるかを追ってみてください。
+    </p>
+    <div>
+      <button class="deep-chip primary" id="open-basic" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 4.5h6a2 2 0 0 1 2 2V20a2 2 0 0 0-2-2H4z"></path><path d="M20 4.5h-6a2 2 0 0 0-2 2V20a2 2 0 0 1 2-2h6z"></path>
+        </svg>まずはイチから図解で理解する
+      </button>
+    </div>
+  </div>
+
+  <div id="banner" class="banner ok"></div>
+
+  <div id="cbox" class="canvas-box ok">
+    <canvas id="cv" role="img" aria-label="左に CPU、右に主記憶装置を並べた図。CPU の中にはプログラムカウンタ、命令レジスタ、命令解読器、レジスタ、演算装置がある。主記憶装置には番地のついた箱が並び、上に命令、下にデータが入っている。1 命令ずつ進めると、取り出し・解読・実行の順に矢印が動き、レジスタと主記憶の値が変わる。"></canvas>
+  </div>
+
+  <div class="panel" id="step-panel">
+    <div class="steps" id="steps">
+      <span class="slabel">順を追って見る</span>
+    </div>
+    <p class="step-cap" id="step-cap">ボタンを順に押すと、命令を 1 つずつ実行できます。</p>
+  </div>
+
+  <div class="panel">
+    <div class="presets" id="runner" aria-label="実行">
+      <button type="button" id="btn-next">1 命令すすめる ▶</button>
+      <button type="button" id="btn-prev">◀ 1 つもどす</button>
+      <button type="button" id="btn-reset">最初から</button>
+      <button type="button" id="btn-all">最後まで</button>
+    </div>
+
+    <div class="presets" id="presets">
+      <button type="button" data-preset="orig">原本の並び（退避あり）</button>
+      <button type="button" data-preset="nosave">退避を抜くとどうなる</button>
+      <button type="button" data-preset="expand">式を展開する（X − Y − Z）</button>
+      <button type="button" data-preset="tworeg">レジスタが 2 つあるとき</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="readouts">
+      <div class="ro"><div class="k">プログラムカウンタ</div><div class="v"><span id="ro-pc">1 番地</span></div></div>
+      <div class="ro"><div class="k">命令レジスタ</div><div class="v"><span id="ro-ir">—</span></div></div>
+      <div class="ro" id="ro-a-box"><div class="k">レジスタ A</div><div class="v"><span id="ro-a">空</span></div></div>
+      <div class="ro" id="ro-b-box" hidden><div class="k">レジスタ B</div><div class="v"><span id="ro-b">空</span></div></div>
+      <div class="ro" id="ro-mem-box"><div class="k">13 番地</div><div class="v"><span id="ro-mem">空</span></div></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2 class="sec">この図が言っていること</h2>
+    <p class="note">
+      レジスタは計算の作業台です。<b>READ は、作業台の中身を捨てて入れ直す命令</b>です。1 ＋ 7 の答えがレジスタに入っている状態で 9 を読み込むと、8 は残りません。だから原本の並びでは、<b>先に 13 番地へ書き出してから</b> 9 を読み込みます。
+    </p>
+    <p class="note">
+      レジスタが 2 つあるときは、書き出す代わりに<b>空いているほうへ読み込み</b>ます。どちらの場合も見ているのは同じ一点で、いま値がどこにあるか、です。命令の意味を覚えていても、並べる順が違えば答えは変わります。
+    </p>
+    <span class="formula">X −（Y ＋ Z）　X ＝ 10 番地　Y ＝ 11 番地　Z ＝ 12 番地　答え → 13 番地</span>
+    <div>
+      <button class="deep-chip" id="open-deep" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle><line x1="16.2" y1="16.2" x2="21" y2="21"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line>
+        </svg>READ は上書き・13 番地の二役・電卓のメモリ — もっと詳しく
+      </button>
+    </div>
+  </div>
+
+  <details class="glossary">
+    <summary>用語のおさらい</summary>
+    <dl class="gloss">
+      <dt>プログラム<span class="en">program</span></dt>
+      <dd>コンピュータに動作を指示する命令を組み合わせて、処理の手順を記述したものです。</dd>
+      <dt>命令セット<span class="en">instruction set</span></dt>
+      <dd>CPU ごとに定義された命令の集まりです。CPU が違えば命令セットも違います。</dd>
+      <dt>機械語<span class="en">machine language</span></dt>
+      <dd>0 と 1 のビット列からなる、CPU が動作の指示を直接理解できる命令です。</dd>
+      <dt>プログラム格納方式</dt>
+      <dd>主記憶装置に格納されているプログラムから命令を順に取り出し、解読して実行する仕組みです。</dd>
+      <dt>プログラムカウンタ<span class="en">program counter</span></dt>
+      <dd>主記憶装置にあるプログラムのうち、次に実行すべき命令のアドレス（番地）を記憶しているものです。</dd>
+      <dt>命令レジスタ</dt>
+      <dd>主記憶装置から取り出した命令を格納します。</dd>
+      <dt>命令解読器</dt>
+      <dd>命令レジスタから命令を受け取り、内容を解読して実行に必要な指示を決定する装置です。</dd>
+      <dt>レジスタ<span class="en">register</span></dt>
+      <dd>CPU の中でデータを一時的に置く場所です。数が少なく、次の値を読み込むと前の値は残りません。</dd>
+      <dt>アドレス（番地）</dt>
+      <dd>主記憶装置の場所を示す番号です。命令もデータも、番地のついた場所に置かれます。</dd>
+    </dl>
+  </details>
+
+  <footer>mikikof-lab ／ コンピュータの構成と動作（単一HTML・外部ライブラリ不使用）</footer>
+</div>
+
+<!-- 深掘りポップアウト -->
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="deep-title">
+  <div class="modal">
+    <header>
+      <h3 id="deep-title">READ は上書き・13 番地の二役・電卓のメモリ</h3>
+      <button class="x" id="close-deep" type="button" aria-label="閉じる">×</button>
+    </header>
+    <div class="mbody">
+
+      <div class="mblock">
+        <h4>1　レジスタは 1 つしかない作業台</h4>
+        <p class="note">机の上に、数を 1 つだけ置ける台があるとします。次の数を置くには、いま載っているものをどけなければなりません。READ はこの「どけて載せる」にあたります。どけた数は、どこかに書き留めていなければ失われます。</p>
+        <div class="mini-box"><canvas id="cv2" role="img" aria-label="作業台に 8 が載っている図と、9 を載せたときに 8 が消える図を左右に並べた図"></canvas></div>
+        <p class="mini-cap">左：レジスタに 8 が入っています。右：9 を読み込むと 8 は消えます。</p>
+      </div>
+
+      <div class="mblock">
+        <h4>2　13 番地は二役をする</h4>
+        <p class="note">原本の並びでは、13 番地は<b>途中結果の置き場</b>として一度使われ、そのあと<b>答えの置き場</b>として上書きされます。同じ番地に 2 回書き込むわけです。書き込む前に読み出すと、まだ空のものを引くことになります。</p>
+        <div class="mini-box"><canvas id="cv3" role="img" aria-label="いま選んでいる並びで、13 番地の中身が命令ごとにどう変わるかを左から右へ並べた図"></canvas></div>
+        <p class="mini-cap" id="deep-cap"></p>
+      </div>
+
+      <div class="mblock">
+        <h4>3　身のまわり：電卓のメモリキー</h4>
+        <p class="note">電卓で 9 −（1 ＋ 7）を計算するときも、同じことをします。先に 1 ＋ 7 を計算し、その 8 を <b>M+</b> でメモリに預けます。表示を消して 9 を打ち、<b>MR</b> で 8 を呼び戻して引きます。預けずに 9 を打つと、表示の 8 は消えます。メモリが主記憶、表示窓がレジスタにあたります。</p>
+        <div class="mini-box"><canvas id="cvw" role="img" aria-label="電卓の表示窓とメモリを上下に並べ、1 足す 7 の答えをメモリに預けてから 9 を入力し、呼び戻して引く手順を左から右へ描いた図"></canvas></div>
+        <p class="mini-cap">表示窓は 1 つしかありません。預けてから次を打つ、が同じ手順です。</p>
+      </div>
+
+      <div class="mblock">
+        <p class="note"><b>結論。</b>値がいまどこにあるかを追います。レジスタが足りなければ、主記憶へ預けてから次を読み込みます。</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- 基礎からゆっくり ポップアウト -->
+<div class="overlay" id="overlay-basic" role="dialog" aria-modal="true" aria-labelledby="basic-title">
+  <div class="modal">
+    <header>
+      <h3 id="basic-title">イチから図解：コンピュータの構成と動作</h3>
+      <button class="x" id="close-basic" type="button" aria-label="閉じる">×</button>
+    </header>
+    <div class="mbody">
+
+      <div class="mblock">
+        <h4>1　主記憶装置は、番地のついた箱の列</h4>
+        <p class="note">主記憶装置には、番号のついた箱が並んでいます。この番号を番地（アドレス）といいます。<b>命令もデータも、同じ列の箱に入っています</b>。上のほうに命令、下のほうに計算に使う値、という並べ方をします。</p>
+        <div class="mini-box"><canvas id="cvb1" role="img" aria-label="番地のついた箱が縦に並び、上の箱に命令、下の箱にデータが入っている図"></canvas></div>
+      </div>
+
+      <div class="mblock">
+        <h4>2　取り出し → 解読 → 実行 をくり返す</h4>
+        <p class="note">CPU は、プログラムカウンタが指す番地から命令を 1 つ<b>取り出し</b>、命令レジスタに入れます。次に命令解読器が<b>解読</b>し、最後に<b>実行</b>します。この 3 つをくり返して処理が進みます。この仕組みをプログラム格納方式といいます。</p>
+        <div class="mini-box"><canvas id="cvb2" role="img" aria-label="取り出し、解読、実行の3つの箱を矢印でつなぎ、最後から最初へ戻る矢印を描いた図"></canvas></div>
+      </div>
+
+      <div class="mblock">
+        <h4>3　READ と WRITE は向きが逆</h4>
+        <p class="note">READ は主記憶装置からレジスタへ値を読み込みます。WRITE はレジスタから主記憶装置へ書き込みます。矢印の向きが逆です。どちらの命令も、番地とレジスタの名前を指定します。</p>
+        <div class="mini-box"><canvas id="cvb3" role="img" aria-label="主記憶装置とレジスタを左右に置き、READ は主記憶からレジスタへ、WRITE はレジスタから主記憶へ向かう矢印で示した図"></canvas></div>
+      </div>
+
+      <div class="mblock">
+        <h4>4　作業台が 1 つなら、預けてから読む</h4>
+        <p class="note">レジスタが 1 つしかないとき、計算の途中結果を持ったまま次の値を読み込むことはできません。先に主記憶へ<b>預けて</b>から読み込みます。レジスタが 2 つあるときは、空いているほうへ読み込めば足ります。</p>
+        <div class="mini-box"><canvas id="cvb4" role="img" aria-label="レジスタが1つのときは主記憶へ預けてから読み込む流れと、レジスタが2つのときは空いているほうへ読み込む流れを上下に並べた図"></canvas></div>
+      </div>
+
+      <div class="mblock">
+        <p class="note">ここまで分かったら、上の図で 1 命令ずつ進めてみてください。並びを変えると、どこで途中結果が消えるかが見えます。</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const cv  = document.getElementById('cv');
+  const ctx = cv.getContext('2d');
+  let W = 0, H = 0, narrowFlag = false;
+
+  const el = {
+    banner: document.getElementById('banner'), cbox: document.getElementById('cbox'),
+    roPc: document.getElementById('ro-pc'), roIr: document.getElementById('ro-ir'),
+    roA: document.getElementById('ro-a'), roB: document.getElementById('ro-b'),
+    roABox: document.getElementById('ro-a-box'), roBBox: document.getElementById('ro-b-box'),
+    roMem: document.getElementById('ro-mem'), roMemBox: document.getElementById('ro-mem-box'),
+    steps: document.getElementById('steps'), stepCap: document.getElementById('step-cap'),
+    deepCap: document.getElementById('deep-cap')
+  };
+  const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+  // ---- 台帳（学習ノート 17 実習4 の主記憶。問題 p.41 の図）----
+  const MEM0 = { 10: 9, 11: 1, 12: 7, 13: null };
+  const DATA_ADR = [10, 11, 12, 13];
+  const DATA_NAME = { 10: 'X', 11: 'Y', 12: 'Z', 13: '' };
+
+  const PROGRAMS = {
+    orig: { label: '原本の並び', regs: ['A'], goal: 1, aim: 'X −（Y ＋ Z）', code: [
+      { t:'READ',  r:'A', adr:11, s:'READ A,(11)' },
+      { t:'ADDM',  r:'A', adr:12, s:'ADD A,(12)' },
+      { t:'WRITE', r:'A', adr:13, s:'WRITE (13),A' },
+      { t:'READ',  r:'A', adr:10, s:'READ A,(10)' },
+      { t:'SUBM',  r:'A', adr:13, s:'SUB A,(13)' },
+      { t:'WRITE', r:'A', adr:13, s:'WRITE (13),A' },
+      { t:'STOP',  s:'STOP' } ] },
+    nosave: { label: '退避を抜いた並び', regs: ['A'], goal: 1, aim: 'X −（Y ＋ Z）', code: [
+      { t:'READ',  r:'A', adr:11, s:'READ A,(11)' },
+      { t:'ADDM',  r:'A', adr:12, s:'ADD A,(12)' },
+      { t:'READ',  r:'A', adr:10, s:'READ A,(10)' },
+      { t:'SUBM',  r:'A', adr:13, s:'SUB A,(13)' },
+      { t:'WRITE', r:'A', adr:13, s:'WRITE (13),A' },
+      { t:'STOP',  s:'STOP' } ] },
+    expand: { label: '式を展開した並び', regs: ['A'], goal: 1, aim: 'X − Y − Z', code: [
+      { t:'READ',  r:'A', adr:10, s:'READ A,(10)' },
+      { t:'SUBM',  r:'A', adr:11, s:'SUB A,(11)' },
+      { t:'SUBM',  r:'A', adr:12, s:'SUB A,(12)' },
+      { t:'WRITE', r:'A', adr:13, s:'WRITE (13),A' },
+      { t:'STOP',  s:'STOP' } ] },
+    tworeg: { label: 'レジスタが 2 つ', regs: ['A','B'], goal: 17, aim: 'X ＋ Y ＋ Z', code: [
+      { t:'READ',  r:'A', adr:10, s:'READ A,(10)' },
+      { t:'READ',  r:'B', adr:11, s:'READ B,(11)' },
+      { t:'ADDR',  r1:'A', r2:'B', s:'ADD A,B' },
+      { t:'READ',  r:'B', adr:12, s:'READ B,(12)' },
+      { t:'ADDR',  r1:'A', r2:'B', s:'ADD A,B' },
+      { t:'WRITE', r:'A', adr:13, s:'WRITE (13),A' },
+      { t:'STOP',  s:'STOP' } ] }
+  };
+
+  const S = { prog: 'orig', n: 0 };
+  const fmt = v => (v === null || v === undefined) ? '空' : String(v);
+
+  // ---- 実行（n 命令まで）----
+  function exec(progKey, upto){
+    const p = PROGRAMS[progKey];
+    const mem = Object.assign({}, MEM0);
+    const regs = { A: { v: null, dirty: false }, B: { v: null, dirty: false } };
+    const log = [];
+    let lost = null;
+    for(let i = 0; i < upto; i++){
+      const c = p.code[i];
+      let desc = '', warnHere = false, flow = null;
+      if(c.t === 'READ'){
+        const prev = regs[c.r];
+        if(prev.dirty && prev.v !== null){ lost = { i: i, r: c.r, v: prev.v }; warnHere = true; }
+        const val = mem[c.adr];
+        desc = c.adr + ' 番地の ' + fmt(val) + ' をレジスタ ' + c.r + ' に読み込みます。'
+             + (warnHere ? 'レジスタ ' + c.r + ' に入っていた ' + prev.v + ' は、ここで消えます。' : '');
+        regs[c.r] = { v: val, dirty: false };
+        flow = { dir: 'in', adr: c.adr, r: c.r };
+      } else if(c.t === 'WRITE'){
+        desc = 'レジスタ ' + c.r + ' の ' + fmt(regs[c.r].v) + ' を ' + c.adr + ' 番地に書き込みます。';
+        mem[c.adr] = regs[c.r].v;
+        regs[c.r] = { v: regs[c.r].v, dirty: false };
+        flow = { dir: 'out', adr: c.adr, r: c.r };
+      } else if(c.t === 'ADDM'){
+        const a = regs[c.r].v === null ? 0 : regs[c.r].v;
+        const b = mem[c.adr] === null ? 0 : mem[c.adr];
+        desc = 'レジスタ ' + c.r + ' の ' + a + ' に ' + c.adr + ' 番地の ' + fmt(mem[c.adr]) + ' を足して、レジスタ ' + c.r + ' に入れます。';
+        regs[c.r] = { v: a + b, dirty: true };
+        flow = { dir: 'in', adr: c.adr, r: c.r, calc: true };
+      } else if(c.t === 'SUBM'){
+        const a = regs[c.r].v === null ? 0 : regs[c.r].v;
+        const b = mem[c.adr] === null ? 0 : mem[c.adr];
+        desc = 'レジスタ ' + c.r + ' の ' + a + ' から ' + c.adr + ' 番地の ' + fmt(mem[c.adr]) + ' を引いて、レジスタ ' + c.r + ' に入れます。'
+             + (mem[c.adr] === null ? '13 番地はまだ空なので、引く相手がありません。' : '');
+        regs[c.r] = { v: a - b, dirty: true };
+        flow = { dir: 'in', adr: c.adr, r: c.r, calc: true };
+      } else if(c.t === 'ADDR'){
+        const a = regs[c.r1].v, b = regs[c.r2].v;
+        desc = 'レジスタ ' + c.r1 + ' の ' + fmt(a) + ' に レジスタ ' + c.r2 + ' の ' + fmt(b) + ' を足して、レジスタ ' + c.r1 + ' に入れます。';
+        regs[c.r1] = { v: a + b, dirty: true };
+        flow = { dir: 'calc', r: c.r1 };
+      } else if(c.t === 'STOP'){
+        desc = 'プログラムを停止します。';
+      }
+      log.push({ i: i, c: c, desc: desc, warnHere: warnHere, flow: flow });
+    }
+    return { mem: mem, regs: regs, log: log, lost: lost };
+  }
+
+  function stateOf(){
+    const p = PROGRAMS[S.prog];
+    const st = exec(S.prog, S.n);
+    const done = S.n >= p.code.length;
+    const lostNow = st.lost !== null;
+    const wrong = done && st.mem[13] !== p.goal;
+    return { p: p, st: st, done: done, lostNow: lostNow, wrong: wrong,
+             state: (lostNow || wrong) ? 'warn' : 'ok' };
+  }
+
+  // ---- canvas ハーネス ----
+  const BOX_H = 30, BOX_GAP = 7;
+  function cpuHeight(){
+    // 26(見出し) + PC + 命令レジスタ + 命令解読器(+2) + レジスタ×n + 演算装置 + 下余白
+    return 26 + (BOX_H + BOX_GAP) * 3 + 2 + (BOX_H + BOX_GAP) * PROGRAMS[S.prog].regs.length + BOX_H + 10;
+  }
+  function memHeight(rowH){
+    return (PROGRAMS[S.prog].code.length + 1 + DATA_ADR.length) * rowH + 26;
+  }
+  function setupCanvas(){
+    const dpr = window.devicePixelRatio || 1;
+    const cssW = cv.clientWidth || 620;
+    const narrow = cssW < 640;
+    const rowH = narrow ? 21 : 23;
+    const cssH = narrow ? (cpuHeight() + 16 + memHeight(rowH) + 20)
+                        : (Math.max(cpuHeight(), memHeight(rowH)) + 20);
+    cv.style.height = cssH + 'px';
+    cv.width  = Math.round(cssW * dpr);
+    cv.height = Math.round(cssH * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    W = cssW; H = cssH; narrowFlag = narrow;
+  }
+  function roundRect(c, x, y, w, h, r){
+    c.beginPath();
+    c.moveTo(x + r, y); c.lineTo(x + w - r, y); c.quadraticCurveTo(x + w, y, x + w, y + r);
+    c.lineTo(x + w, y + h - r); c.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    c.lineTo(x + r, y + h); c.quadraticCurveTo(x, y + h, x, y + h - r);
+    c.lineTo(x, y + r); c.quadraticCurveTo(x, y, x + r, y); c.closePath();
+  }
+  function arrow(c, x1, y1, x2, y2, col){
+    c.strokeStyle = col; c.fillStyle = col; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke();
+    const a = Math.atan2(y2 - y1, x2 - x1), s = 6.5;
+    c.beginPath(); c.moveTo(x2, y2);
+    c.lineTo(x2 - s * Math.cos(a - 0.4), y2 - s * Math.sin(a - 0.4));
+    c.lineTo(x2 - s * Math.cos(a + 0.4), y2 - s * Math.sin(a + 0.4));
+    c.closePath(); c.fill();
+  }
+  function cell(c, x, y, w, h, label, val, opt){
+    opt = opt || {};
+    c.fillStyle = opt.fill || '#ffffff';
+    c.strokeStyle = opt.accent || '#cdd6e3';
+    c.lineWidth = opt.accent ? 2 : 1;
+    roundRect(c, x, y, w, h, 5); c.fill(); c.stroke();
+    c.fillStyle = opt.labelCol || cssVar('--muted');
+    c.font = '600 11px ' + FONT;
+    c.textAlign = 'left'; c.textBaseline = 'middle';
+    c.fillText(label, x + 8, y + h / 2);
+    if(val !== null && val !== undefined){
+      c.fillStyle = opt.valCol || cssVar('--ink');
+      c.font = '700 14px ' + MONO;
+      c.textAlign = 'right';
+      c.fillText(val, x + w - 8, y + h / 2);
+    }
+  }
+  const FONT = '"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",sans-serif';
+  const MONO = 'ui-monospace,"SF Mono",Menlo,Consolas,monospace';
+
+  // ---- 主図 ----
+  function draw(){
+    const s = stateOf();
+    const p = s.p, st = s.st;
+    const accent = s.state === 'warn' ? cssVar('--warn') : cssVar('--ok');
+    const last = S.n > 0 ? st.log[S.n - 1] : null;
+    ctx.clearRect(0, 0, W, H);
+
+    const pad = 10;
+    const cpuW = narrowFlag ? W - pad * 2 : W * 0.5 - pad;
+    const cpuX = pad, cpuY = pad;
+    const memX = narrowFlag ? pad : cpuX + cpuW + 16;
+    const memW = narrowFlag ? W - pad * 2 : W - memX - pad;
+
+    // --- 主記憶 ---
+    const rowH = narrowFlag ? 21 : 23;
+    const memRows = p.code.length + 1 + DATA_ADR.length;
+    const memY = narrowFlag ? cpuY + cpuHeight() + 16 : cpuY;
+    const memH = memRows * rowH + 26;
+    ctx.fillStyle = '#fbfcfe'; ctx.strokeStyle = '#cdd6e3'; ctx.lineWidth = 1;
+    roundRect(ctx, memX, memY, memW, memH, 7); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = cssVar('--muted'); ctx.font = '700 11px ' + FONT;
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('主記憶装置', memX + 10, memY + 7);
+    ctx.textAlign = 'right';
+    ctx.fillText('番地', memX + 44, memY + 7);
+
+    const rowY = {};
+    let y = memY + 24;
+    const drawRow = (adr, text, kind) => {
+      rowY[adr] = y + rowH / 2;
+      const cur = (kind === 'code') && (S.n < p.code.length) && (adr === S.n + 1);
+      const justRan = (kind === 'code') && last && (adr === last.i + 1);
+      const touched = last && last.flow && last.flow.adr === adr;
+      if(cur || justRan || touched){
+        ctx.fillStyle = (justRan && last.warnHere) || (touched && last.warnHere) ? cssVar('--warn-bg') : cssVar('--ok-bg');
+        roundRect(ctx, memX + 6, y + 1, memW - 12, rowH - 2, 4); ctx.fill();
+      }
+      ctx.fillStyle = cssVar('--muted'); ctx.font = '600 11px ' + MONO;
+      ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      ctx.fillText(String(adr), memX + 44, y + rowH / 2);
+      ctx.fillStyle = kind === 'code' ? cssVar('--ink') : '#374151';
+      ctx.font = (kind === 'code' ? '600 12px ' : '700 13px ') + MONO;
+      ctx.textAlign = 'left';
+      ctx.fillText(text, memX + 56, y + rowH / 2);
+      if(kind === 'data' && DATA_NAME[adr]){
+        ctx.fillStyle = cssVar('--muted'); ctx.font = '600 11px ' + FONT;
+        ctx.textAlign = 'right';
+        ctx.fillText(DATA_NAME[adr], memX + memW - 10, y + rowH / 2);
+      }
+      y += rowH;
+    };
+    p.code.forEach((c, i) => drawRow(i + 1, c.s, 'code'));
+    ctx.strokeStyle = '#e6eaf1'; ctx.beginPath();
+    ctx.moveTo(memX + 10, y + rowH / 2); ctx.lineTo(memX + memW - 10, y + rowH / 2); ctx.stroke();
+    ctx.fillStyle = cssVar('--muted'); ctx.font = '600 11px ' + MONO;
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.fillText('…', memX + 44, y + rowH / 2);
+    y += rowH;
+    DATA_ADR.forEach(a => drawRow(a, fmt(st.mem[a]), 'data'));
+
+    // --- CPU ---
+    const cpuH = cpuHeight();
+    ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#cdd6e3'; ctx.lineWidth = 1;
+    roundRect(ctx, cpuX, cpuY, cpuW, cpuH, 7); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = cssVar('--muted'); ctx.font = '700 11px ' + FONT;
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('CPU（中央処理装置）', cpuX + 10, cpuY + 7);
+
+    const bx = cpuX + 10, bw = cpuW - 20, bh = 30;
+    let by = cpuY + 26;
+    const pcVal = S.n < p.code.length ? (S.n + 1) + ' 番地' : '—';
+    cell(ctx, bx, by, bw, bh, 'プログラムカウンタ', pcVal,
+         { accent: S.n < p.code.length ? cssVar('--ok') : null, fill: cssVar('--ok-tint') });
+    const pcY = by + bh / 2; by += bh + 7;
+    cell(ctx, bx, by, bw, bh, '命令レジスタ', last ? last.c.s : '—', { fill: '#f7f9fc' });
+    const irY = by + bh / 2; by += bh + 7;
+    cell(ctx, bx, by, bw, bh, '命令解読器', last ? last.c.t.replace('ADDM','ADD').replace('SUBM','SUB').replace('ADDR','ADD') : '—', { fill: '#f7f9fc' });
+    by += bh + BOX_GAP + 2;
+
+    const regYs = {};
+    p.regs.forEach(r => {
+      const dirty = st.regs[r].dirty && st.regs[r].v !== null;
+      const hot = last && last.warnHere && last.c.r === r;
+      cell(ctx, bx, by, bw, bh, 'レジスタ ' + r + (dirty ? '（未保存）' : ''), fmt(st.regs[r].v),
+           { accent: hot ? cssVar('--warn') : (dirty ? cssVar('--orange') : null),
+             fill: hot ? cssVar('--warn-bg') : (dirty ? '#fff8f1' : '#ffffff'),
+             valCol: hot ? cssVar('--warn') : cssVar('--ink') });
+      regYs[r] = by + bh / 2; by += bh + 7;
+    });
+    cell(ctx, bx, by, bw, bh, '演算装置', last && (last.c.t === 'ADDM' || last.c.t === 'SUBM' || last.c.t === 'ADDR') ? '計算中' : '—',
+         { fill: '#f7f9fc' });
+
+    // --- 矢印（取り出し／実行のデータの動き）---
+    if(!narrowFlag && last){
+      const fromX = memX - 4, toX = cpuX + cpuW + 4;
+      if(rowY[last.i + 1] !== undefined){
+        arrow(ctx, fromX, rowY[last.i + 1], toX, irY, '#9fb4d8');
+      }
+      const f = last.flow;
+      if(f && f.adr !== undefined && rowY[f.adr] !== undefined && regYs[f.r] !== undefined){
+        if(f.dir === 'in') arrow(ctx, fromX, rowY[f.adr], toX, regYs[f.r], accent);
+        else arrow(ctx, toX, regYs[f.r], fromX, rowY[f.adr], accent);
+      }
+    }
+  }
+
+  // ---- バナー・読み取り欄 ----
+  function update(){
+    const s = stateOf();
+    const p = s.p, st = s.st;
+    const last = S.n > 0 ? st.log[S.n - 1] : null;
+
+    el.roPc.textContent = S.n < p.code.length ? (S.n + 1) + ' 番地' : '—（停止）';
+    el.roIr.textContent = last ? last.c.s : '—';
+    el.roA.textContent = fmt(st.regs.A.v) + (st.regs.A.dirty && st.regs.A.v !== null ? '（未保存）' : '');
+    el.roB.textContent = fmt(st.regs.B.v) + (st.regs.B.dirty && st.regs.B.v !== null ? '（未保存）' : '');
+    el.roBBox.hidden = p.regs.indexOf('B') < 0;
+    el.roMem.textContent = fmt(st.mem[13]);
+    el.roABox.classList.toggle('alias', !!(last && last.warnHere));
+    el.roMemBox.classList.toggle('alias', s.done && s.wrong);
+
+    el.cbox.className = 'canvas-box ' + s.state;
+    el.banner.className = 'banner ' + s.state;
+
+    let msg;
+    if(s.lostNow){
+      const L = st.lost;
+      msg = '⚠ レジスタ ' + L.r + ' の途中結果が消えました'
+          + '<small>' + (L.i + 1) + ' 番地の READ で、レジスタ ' + L.r + ' の ' + L.v + ' が上書きされました。'
+          + 'この ' + L.v + ' はまだ主記憶に書き込んでいないので、どこにも残っていません。'
+          + (s.done ? ' 13 番地に書かれたのは ' + fmt(st.mem[13]) + ' で、' + p.aim + ' の答えではありません。'
+                    : ' 先に WRITE で 13 番地へ書き出しておけば、残せました。') + '</small>';
+    } else if(s.done){
+      msg = '✓ 13 番地に ' + fmt(st.mem[13]) + ' が書き込まれました'
+          + '<small>' + p.aim + ' の答えです。'
+          + (S.prog === 'tworeg' ? '途中結果が入っているレジスタ A を避けて、空いているレジスタ B へ読み込んでいます。'
+             : S.prog === 'expand' ? '式を展開したので、そもそも途中結果を預ける必要がありません。'
+             : '先に 13 番地へ書き出してから、次の値を読み込んでいます。') + '</small>';
+    } else if(S.n === 0){
+      msg = '✓ 実行する前です'
+          + '<small>プログラムカウンタは 1 番地を指しています。1 命令ずつ進めて、レジスタと 13 番地の値を追ってみてください。</small>';
+    } else {
+      const dirtyReg = p.regs.filter(r => st.regs[r].dirty && st.regs[r].v !== null);
+      msg = '✓ ' + (S.n) + ' 番地まで実行しました'
+          + '<small>' + last.desc
+          + (dirtyReg.length ? ' いまレジスタ ' + dirtyReg.join('・') + ' に計算の途中結果があります。まだ主記憶には書いていません。' : '')
+          + '</small>';
+    }
+    el.banner.innerHTML = msg;
+
+    document.querySelectorAll('#presets button').forEach(b => {
+      const on = b.dataset.preset === S.prog;
+      b.style.background = on ? cssVar('--ok') : '';
+      b.style.color = on ? '#fff' : '';
+      b.style.borderColor = on ? cssVar('--ok') : '';
+    });
+    el.steps.querySelectorAll('button').forEach(b => {
+      b.classList.toggle('active', +b.dataset.step === S.n);
+    });
+    document.getElementById('btn-next').disabled = S.n >= p.code.length;
+    document.getElementById('btn-prev').disabled = S.n <= 0;
+
+    if(S.n === 0){
+      el.stepCap.classList.remove('warn');
+      el.stepCap.innerHTML = 'ボタンを順に押すと、命令を 1 つずつ実行できます。';
+    } else {
+      el.stepCap.classList.toggle('warn', !!last.warnHere);
+      el.stepCap.innerHTML = '<b>' + (last.i + 1) + ' 番地：' + last.c.s + '。</b>'
+        + '取り出し → 解読 → 実行。' + last.desc;
+    }
+    draw();
+    if(overlay.classList.contains('open')) drawDeep2();
+  }
+
+  // ---- ステップ（命令ごと）----
+  function renderSteps(){
+    Array.from(el.steps.querySelectorAll('button')).forEach(b => b.remove());
+    PROGRAMS[S.prog].code.forEach((c, i) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.dataset.step = String(i + 1);
+      b.innerHTML = '<span class="n">' + (i + 1) + '</span>' + c.s;
+      b.addEventListener('click', () => { S.n = i + 1; update(); });
+      el.steps.appendChild(b);
+    });
+  }
+  function setProg(k){
+    S.prog = k; S.n = 0;
+    renderSteps(); setupCanvas(); update();
+  }
+
+  // ---- 深掘り ----
+  const overlay = document.getElementById('overlay');
+  const cv2 = document.getElementById('cv2'), cv3 = document.getElementById('cv3'), cvw = document.getElementById('cvw');
+  function setupMini(canvas, ratio){
+    const dpr = window.devicePixelRatio || 1;
+    const cw = canvas.clientWidth || 560;
+    const ch = Math.round(cw * ratio);
+    canvas.style.height = ch + 'px';
+    canvas.width = Math.round(cw * dpr); canvas.height = Math.round(ch * dpr);
+    const c = canvas.getContext('2d');
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.clearRect(0, 0, cw, ch);
+    return { c: c, w: cw, h: ch };
+  }
+  function drawDeep1(){
+    const { c, w, h } = setupMini(cv2, 0.34);
+    const bw = Math.min(150, w * 0.36), bh = 54;
+    const y = h / 2 - bh / 2 + 6;
+    [[w * 0.25, '8 が載っている', '8', cssVar('--ok'), false],
+     [w * 0.75, '9 を読み込むと', '9', cssVar('--warn'), true]].forEach(([cx, cap, val, col, gone]) => {
+      const x = cx - bw / 2;
+      c.fillStyle = '#fff'; c.strokeStyle = col; c.lineWidth = 2;
+      roundRect(c, x, y, bw, bh, 6); c.fill(); c.stroke();
+      c.fillStyle = cssVar('--ink'); c.font = '700 26px ' + MONO;
+      c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.fillText(val, cx, y + bh / 2);
+      c.fillStyle = cssVar('--muted'); c.font = '600 12px ' + FONT;
+      c.fillText('レジスタ A', cx, y - 14);
+      c.fillStyle = col; c.font = '700 12px ' + FONT;
+      c.fillText(cap, cx, y + bh + 16);
+      if(gone){
+        c.strokeStyle = cssVar('--warn'); c.lineWidth = 2;
+        c.beginPath(); c.moveTo(cx - 34, y + bh + 34); c.lineTo(cx + 34, y + bh + 34); c.stroke();
+        c.fillStyle = cssVar('--warn'); c.font = '700 12px ' + FONT;
+        c.fillText('8 は消える', cx, y + bh + 48);
+      }
+    });
+    arrow(c, w * 0.25 + bw / 2 + 8, y + bh / 2, w * 0.75 - bw / 2 - 8, y + bh / 2, '#9fb4d8');
+  }
+  function drawDeep2(){
+    const { c, w, h } = setupMini(cv3, 0.30);
+    const p = PROGRAMS[S.prog];
+    const st = exec(S.prog, p.code.length);
+    const marks = [];
+    let cur = MEM0[13];
+    marks.push({ label: '最初', v: cur });
+    p.code.forEach((cc, i) => {
+      if(cc.t === 'WRITE' && cc.adr === 13){
+        const upto = exec(S.prog, i + 1);
+        marks.push({ label: (i + 1) + ' 番地', v: upto.mem[13] });
+      }
+    });
+    const n = marks.length;
+    const bw = Math.min(96, (w - 40) / n - 16), bh = 46;
+    const y = h / 2 - bh / 2;
+    marks.forEach((m, i) => {
+      const cx = (w / n) * (i + 0.5);
+      const x = cx - bw / 2;
+      const isLast = i === n - 1;
+      c.fillStyle = isLast ? cssVar('--ok-bg') : '#f7f9fc';
+      c.strokeStyle = isLast ? cssVar('--ok') : '#cdd6e3'; c.lineWidth = isLast ? 2 : 1;
+      roundRect(c, x, y, bw, bh, 6); c.fill(); c.stroke();
+      c.fillStyle = cssVar('--ink'); c.font = '700 20px ' + MONO;
+      c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.fillText(fmt(m.v), cx, y + bh / 2);
+      c.fillStyle = cssVar('--muted'); c.font = '600 11px ' + FONT;
+      c.fillText(m.label, cx, y - 12);
+      c.fillStyle = isLast ? cssVar('--ok') : cssVar('--muted');
+      c.font = '600 11px ' + FONT;
+      c.fillText(i === 0 ? '空' : (isLast ? '答え' : '途中結果'), cx, y + bh + 14);
+      if(i > 0) arrow(c, cx - bw / 2 - 14, y + bh / 2, cx - bw / 2 - 4, y + bh / 2, '#9fb4d8');
+    });
+    if(el.deepCap){
+      el.deepCap.textContent = n > 2
+        ? '「' + PROGRAMS[S.prog].label + '」では、13 番地に 2 回書き込みます。途中結果を置き、そのあと答えで上書きします。'
+        : '「' + PROGRAMS[S.prog].label + '」では、13 番地に書き込むのは最後の 1 回だけです。';
+    }
+  }
+  function drawDeep3(){
+    const { c, w, h } = setupMini(cvw, 0.42);
+    const steps = [['1 ＋ 7', '8', '表示窓'], ['M+', '8', 'メモリへ預ける'], ['9', '9', '表示窓は上書き'], ['− MR', '1', '呼び戻して引く']];
+    const bw = Math.min(104, (w - 30) / 4 - 12), bh = 44;
+    const y = h / 2 - bh / 2 - 4;
+    steps.forEach((s, i) => {
+      const cx = (w / 4) * (i + 0.5), x = cx - bw / 2;
+      const col = i === 1 ? cssVar('--orange') : (i === 3 ? cssVar('--ok') : '#cdd6e3');
+      c.fillStyle = i === 3 ? cssVar('--ok-bg') : '#ffffff';
+      c.strokeStyle = col; c.lineWidth = (i === 1 || i === 3) ? 2 : 1;
+      roundRect(c, x, y, bw, bh, 6); c.fill(); c.stroke();
+      c.fillStyle = cssVar('--ink'); c.font = '700 20px ' + MONO;
+      c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.fillText(s[1], cx, y + bh / 2);
+      c.fillStyle = cssVar('--muted'); c.font = '700 12px ' + FONT;
+      c.fillText(s[0], cx, y - 13);
+      c.fillStyle = i === 1 ? cssVar('--orange') : cssVar('--muted');
+      c.font = '600 11px ' + FONT;
+      c.fillText(s[2], cx, y + bh + 15);
+      if(i > 0) arrow(c, cx - bw / 2 - 13, y + bh / 2, cx - bw / 2 - 3, y + bh / 2, '#9fb4d8');
+    });
+    c.fillStyle = cssVar('--muted'); c.font = '600 11px ' + FONT;
+    c.textAlign = 'center';
+    c.fillText('メモリ＝主記憶　／　表示窓＝レジスタ', w / 2, h - 8);
+  }
+  function openDeep(){
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => { drawDeep1(); drawDeep2(); drawDeep3(); });
+  }
+  function closeDeep(){ overlay.classList.remove('open'); document.body.style.overflow = ''; }
+
+  // ---- 基礎 ----
+  const overlayBasic = document.getElementById('overlay-basic');
+  const cvb1 = document.getElementById('cvb1'), cvb2 = document.getElementById('cvb2'),
+        cvb3 = document.getElementById('cvb3'), cvb4 = document.getElementById('cvb4');
+  function drawBasic1(){
+    const { c, w, h } = setupMini(cvb1, 0.46);
+    const rows = [['1', 'READ A,(11)', '命令'], ['2', 'ADD A,(12)', '命令'], ['3', 'WRITE (13),A', '命令'],
+                  ['…', '', ''], ['10', '9', 'データ'], ['11', '1', 'データ'], ['12', '7', 'データ']];
+    const rh = Math.min(26, (h - 20) / rows.length), x = w * 0.16, bw = w * 0.62;
+    rows.forEach((r, i) => {
+      const y = 10 + i * rh;
+      if(r[1] !== ''){
+        c.fillStyle = r[2] === '命令' ? '#f4f6fd' : '#fff8f1';
+        c.strokeStyle = '#cdd6e3'; c.lineWidth = 1;
+        roundRect(c, x, y, bw, rh - 3, 4); c.fill(); c.stroke();
+        c.fillStyle = cssVar('--ink'); c.font = '600 12px ' + MONO;
+        c.textAlign = 'left'; c.textBaseline = 'middle';
+        c.fillText(r[1], x + 10, y + (rh - 3) / 2);
+        c.fillStyle = cssVar('--muted'); c.font = '600 11px ' + FONT;
+        c.textAlign = 'left';
+        c.fillText(r[2], x + bw + 10, y + (rh - 3) / 2);
+      }
+      c.fillStyle = cssVar('--muted'); c.font = '600 11px ' + MONO;
+      c.textAlign = 'right'; c.textBaseline = 'middle';
+      c.fillText(r[0], x - 8, y + (rh - 3) / 2);
+    });
+    c.fillStyle = cssVar('--muted'); c.font = '700 11px ' + FONT;
+    c.textAlign = 'right'; c.textBaseline = 'top';
+    c.fillText('番地', x - 8, 0);
+  }
+  function drawBasic2(){
+    const { c, w, h } = setupMini(cvb2, 0.30);
+    const names = ['取り出し', '解読', '実行'];
+    const bw = Math.min(130, (w - 40) / 3 - 14), bh = 48, y = h / 2 - bh / 2 - 6;
+    names.forEach((nm, i) => {
+      const cx = (w / 3) * (i + 0.5), x = cx - bw / 2;
+      c.fillStyle = cssVar('--ok-tint'); c.strokeStyle = cssVar('--ok'); c.lineWidth = 1.6;
+      roundRect(c, x, y, bw, bh, 6); c.fill(); c.stroke();
+      c.fillStyle = cssVar('--ink'); c.font = '700 14px ' + FONT;
+      c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.fillText(nm, cx, y + bh / 2);
+      if(i > 0) arrow(c, cx - bw / 2 - 14, y + bh / 2, cx - bw / 2 - 4, y + bh / 2, '#9fb4d8');
+    });
+    c.strokeStyle = '#9fb4d8'; c.lineWidth = 1.6; c.setLineDash([4, 3]);
+    c.beginPath();
+    c.moveTo(w / 6 * 5 + bw / 2 - 10, y + bh + 6); c.lineTo(w / 6 * 5, y + bh + 20);
+    c.lineTo(w / 6, y + bh + 20); c.lineTo(w / 6, y + bh + 6); c.stroke(); c.setLineDash([]);
+    c.fillStyle = cssVar('--muted'); c.font = '600 11px ' + FONT;
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    c.fillText('次の番地へ進んで、くり返す', w / 2, y + bh + 24);
+  }
+  function drawBasic3(){
+    const { c, w, h } = setupMini(cvb3, 0.34);
+    const bw = Math.min(150, w * 0.32), bh = 60;
+    const y = h / 2 - bh / 2;
+    const lx = w * 0.22 - bw / 2, rx = w * 0.78 - bw / 2;
+    [[lx, '主記憶装置', '11 番地：1'], [rx, 'レジスタ A', '1']].forEach(([x, t, v]) => {
+      c.fillStyle = '#ffffff'; c.strokeStyle = '#cdd6e3'; c.lineWidth = 1.4;
+      roundRect(c, x, y, bw, bh, 6); c.fill(); c.stroke();
+      c.fillStyle = cssVar('--muted'); c.font = '700 11px ' + FONT;
+      c.textAlign = 'center'; c.textBaseline = 'top';
+      c.fillText(t, x + bw / 2, y + 8);
+      c.fillStyle = cssVar('--ink'); c.font = '700 15px ' + MONO;
+      c.textBaseline = 'middle';
+      c.fillText(v, x + bw / 2, y + bh - 20);
+    });
+    arrow(c, lx + bw + 6, y + 18, rx - 6, y + 18, cssVar('--ok'));
+    c.fillStyle = cssVar('--ok'); c.font = '700 12px ' + MONO;
+    c.textAlign = 'center'; c.textBaseline = 'bottom';
+    c.fillText('READ', w / 2, y + 12);
+    arrow(c, rx - 6, y + bh - 12, lx + bw + 6, y + bh - 12, cssVar('--orange'));
+    c.fillStyle = cssVar('--orange');
+    c.textBaseline = 'top';
+    c.fillText('WRITE', w / 2, y + bh - 8);
+  }
+  function drawBasic4(){
+    const { c, w, h } = setupMini(cvb4, 0.42);
+    const rows = [['レジスタが 1 つ', ['計算する', '主記憶へ預ける', '次を読む'], cssVar('--ok')],
+                  ['レジスタが 2 つ', ['計算する', '空いているほうへ読む'], cssVar('--orange')]];
+    rows.forEach((r, ri) => {
+      const y = 14 + ri * (h / 2 - 6);
+      c.fillStyle = cssVar('--muted'); c.font = '700 12px ' + FONT;
+      c.textAlign = 'left'; c.textBaseline = 'top';
+      c.fillText(r[0], 4, y);
+      const n = r[1].length, bw = Math.min(130, (w - 20) / n - 14), bh = 36;
+      r[1].forEach((s, i) => {
+        const cx = (w / n) * (i + 0.5), x = cx - bw / 2, by = y + 20;
+        c.fillStyle = '#ffffff'; c.strokeStyle = r[2]; c.lineWidth = 1.5;
+        roundRect(c, x, by, bw, bh, 6); c.fill(); c.stroke();
+        c.fillStyle = cssVar('--ink'); c.font = '600 12px ' + FONT;
+        c.textAlign = 'center'; c.textBaseline = 'middle';
+        c.fillText(s, cx, by + bh / 2);
+        if(i > 0) arrow(c, cx - bw / 2 - 13, by + bh / 2, cx - bw / 2 - 3, by + bh / 2, '#9fb4d8');
+      });
+    });
+  }
+  function openBasic(){
+    overlayBasic.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => { drawBasic1(); drawBasic2(); drawBasic3(); drawBasic4(); });
+  }
+  function closeBasic(){ overlayBasic.classList.remove('open'); document.body.style.overflow = ''; }
+
+  // ---- イベント ----
+  document.getElementById('btn-next').addEventListener('click', () => { if(S.n < PROGRAMS[S.prog].code.length){ S.n++; update(); } });
+  document.getElementById('btn-prev').addEventListener('click', () => { if(S.n > 0){ S.n--; update(); } });
+  document.getElementById('btn-reset').addEventListener('click', () => { S.n = 0; update(); });
+  document.getElementById('btn-all').addEventListener('click', () => { S.n = PROGRAMS[S.prog].code.length; update(); });
+  document.querySelectorAll('#presets button').forEach(b => b.addEventListener('click', () => setProg(b.dataset.preset)));
+  document.getElementById('open-deep').addEventListener('click', openDeep);
+  document.getElementById('close-deep').addEventListener('click', closeDeep);
+  overlay.addEventListener('click', e => { if(e.target === overlay) closeDeep(); });
+  document.getElementById('open-basic').addEventListener('click', openBasic);
+  document.getElementById('close-basic').addEventListener('click', closeBasic);
+  overlayBasic.addEventListener('click', e => { if(e.target === overlayBasic) closeBasic(); });
+  document.addEventListener('keydown', e => {
+    if(e.key !== 'Escape') return;
+    if(overlay.classList.contains('open')) closeDeep();
+    if(overlayBasic.classList.contains('open')) closeBasic();
+  });
+  window.addEventListener('resize', () => {
+    setupCanvas(); draw();
+    if(overlay.classList.contains('open')){ drawDeep1(); drawDeep2(); drawDeep3(); }
+    if(overlayBasic.classList.contains('open')){ drawBasic1(); drawBasic2(); drawBasic3(); drawBasic4(); }
+  });
+
+  renderSteps();
+  setupCanvas();
+  update();
+})();
+</script>
+</body>
+</html>

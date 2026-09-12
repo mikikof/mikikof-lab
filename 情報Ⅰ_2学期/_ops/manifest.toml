@@ -151,7 +151,7 @@ theme       = "装置の違いを意識せずに使えるのは誰の仕事か �
 nansho      = "「装置の違いを意識せずに使える」を作っているのがどの層か決まらない。仕様を合わせる(ハードウェアインタフェース)と操作の内容を抽象化する(OS)が、どちらも「違いを吸収している」と読めてしまう"
 nansho_type = "C"
 date        = "2026-09-上旬"
-status      = "building"
+status      = "done"
 anchor      = { kind = "lec", id = 14 }
 
   [kai.artifacts]
@@ -194,3 +194,18 @@ anchor      = { kind = "lec", id = 16 }
   lecture   = 16
   practice  = "03-thinking-step-4"
 
+[[kai]]
+no          = 4
+slug        = "register-taihi"
+theme       = "同じレジスタに読み込めば、途中結果は消える ― 命令の並びと退避"
+nansho      = "計算の途中結果がレジスタに入っていることを見落とし、次の値を同じレジスタへ READ して上書きしてしまう。レジスタが1つなら先に主記憶へ書き出し、2つなら空いているほうへ読む、という一手が抜ける"
+nansho_type = "B"
+date        = "未定"
+status      = "done"
+anchor      = { kind = "lec", id = 17 }
+  [kai.artifacts]
+  explainer = "instruction-execution.html"
+  print     = "コンピュータの構成と動作"
+  quiz      = { id = "joho-cpu-instruction", set_index = 7 }
+  lecture   = 17
+  practice  = "03-10"

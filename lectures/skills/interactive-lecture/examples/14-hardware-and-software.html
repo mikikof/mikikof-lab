@@ -1318,7 +1318,7 @@ body.miki-hidden .miki-back { display: inline-block; }
         <div class="lay-slot" id="laySlot-app"></div>
       </div>
       <div class="lay-row" data-layer="os" id="layRow-os">
-        <div class="lay-side"><span class="lay-tag">⑥</span><span class="lay-name">OS ＋ デバイスドライバ</span></div>
+        <div class="lay-side"><span class="lay-tag">⑥</span><span class="lay-name">OS（基本ソフトウェア）</span></div>
         <div class="lay-slot" id="laySlot-os"></div>
       </div>
       <div class="lay-row" data-layer="hwif" id="layRow-hwif">
@@ -1353,7 +1353,7 @@ body.miki-hidden .miki-back { display: inline-block; }
     <div class="pq-opts" id="pq5">
       <div class="pq-opt" data-correct="false" data-fb="これは OS の目的の一つ、<b>資源の有効利用</b> にあたります。" onclick="answerPq(this)"><span class="pq-l">ア</span><span>限られたコンピュータ資源を有効に活用し適切に管理する</span></div>
       <div class="pq-opt" data-correct="true" data-fb="<b>これが正解です。</b>ハードウェアのインタフェースの標準化の話なので、OS の目的ではありません。担当は ④⑤ の側、つまり <b>ハードウェアインタフェース</b> です。" onclick="answerPq(this)"><span class="pq-l">イ</span><span>機器どうしを接続するコネクタの形状や電気信号の形式などの仕様を合わせる</span></div>
-      <div class="pq-opt" data-correct="false" data-fb="これは <b>操作の支援</b> にあたります。" onclick="answerPq(this)"><span class="pq-l">ウ</span><span>操作の一部を肩代わりしユーザの作業を支援する</span></div>
+      <div class="pq-opt" data-correct="false" data-fb="これは <b>操作支援</b> にあたります。" onclick="answerPq(this)"><span class="pq-l">ウ</span><span>操作の一部を肩代わりしユーザの作業を支援する</span></div>
       <div class="pq-opt" data-correct="false" data-fb="これは <b>基本機能の提供</b> にあたります。イ と紛らわしいのはここです。エ は操作の内容の側、イ は仕様の側の話です。" onclick="answerPq(this)"><span class="pq-l">エ</span><span>装置の違いを意識せず利用できるよう操作の内容を抽象化する</span></div>
     </div>
     <div class="pq-fb" id="pq5fb"></div>
@@ -1532,7 +1532,7 @@ body.miki-hidden .miki-back { display: inline-block; }
     <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">①</span><span class="answer-text">核となる部分と周辺機器を併せたもの</span><span class="answer-reveal" data-ans="ハードウェア">クリック</span></div>
     <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">②</span><span class="answer-text">接続してデータの記憶や入出力を行うもの</span><span class="answer-reveal" data-ans="周辺機器(デバイス)">クリック</span></div>
     <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">③</span><span class="answer-text">演算装置と制御装置から構成される中枢部分</span><span class="answer-reveal" data-ans="中央処理装置">クリック</span></div>
-    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">④</span><span class="answer-text">その間をつなぐ規格や機能のこと</span><span class="answer-reveal" data-ans="インタフェース">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">④</span><span class="answer-text">異なる機器やソフトウェア、人間との間でのデータのやり取りをする際、その間をつなぐ規格や機能のこと</span><span class="answer-reveal" data-ans="インタフェース">クリック</span></div>
     <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑤</span><span class="answer-text">特にハードウェア間の④</span><span class="answer-reveal" data-ans="ハードウェアインタフェース">クリック</span></div>
     <div class="answer-section-head"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="40" y="52" width="176" height="44" rx="12"/><rect x="40" y="160" width="176" height="44" rx="12"/></svg>2 — ソフトウェアとソフトウェアインタフェース</div>
     <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑥</span><span class="answer-text">基本ソフトウェア(OS)</span><span class="answer-reveal" data-ans="オペレーティングシステム">クリック</span></div>
@@ -1819,11 +1819,11 @@ window.HOSOKU_SUPP = {
   'RESOURCE': {
     tag: 'SUPPLEMENT · 資源',
     title: 'タスク管理とユーザ管理は<b>何の話</b>ですか?',
-    sub: 'どちらも、限られたものを誰にどう割り当てるかの話です。',
+    sub: '実行順序と CPU の割り当て、そして利用者の管理です。',
     body: `
     <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
       <div class="sec-h">実習2 に出てきた 2 つの管理</div>
-      <div class="sec-p">実習2 は OS の例として、<b>ソフトウェアの実行順序や CPU への割り当てなどを管理するタスク管理</b>と、<b>複数のユーザアカウントの登録や削除をするユーザ管理</b>を挙げていました。CPU は 1 つしかなく、使いたいソフトウェアは複数あります。順番と割り当てを決める仕事がなければ、複数のソフトウェアは同時に立ちゆきません。</div>
+      <div class="sec-p">実習2 は OS の例として、<b>ソフトウェアの実行順序や CPU への割り当てなどを管理するタスク管理</b>と、<b>複数のユーザアカウントの登録や削除をするユーザ管理</b>を挙げていました。CPU などのコンピュータ資源は限られており、使いたいソフトウェアは複数あります。順番と割り当てを決める仕事がなければ、複数のソフトウェアは同時に立ちゆきません。</div>
       <div class="sec-fig"><div class="sf-box">
         <table class="supp-tbl"><tr><th>管理</th><th>割り当てる相手</th></tr>
         <tr><td><span class="mq">タスク管理</span></td><td>実行順序と CPU</td></tr>
@@ -2051,7 +2051,7 @@ const MIKI_TERM = {
   api:         ['API は、機能の一部を他のプログラムから利用できるように提供するものです。', 'ソフトウェアインタフェースの一つです。'],
   aimSupport:  ['操作支援は、操作の一部を肩代わりして、ユーザの作業を支援することです。', 'OS の目的の一つです。'],
   aimBasic:    ['基本機能の提供は、装置の違いを意識せず利用できるよう、操作の内容を抽象化することです。', 'この回の要になる目的です。'],
-  aimResource: ['資源の有効利用は、限られたコンピュータ資源を有効に活用し、適切に管理することです。', 'タスク管理やユーザ管理が、その例にあたります。'],
+  aimResource: ['資源の有効利用は、限られたコンピュータ資源を有効に活用し、適切に管理することです。', '実行順序や CPU への割り当てを決めるタスク管理が、その例にあたります。'],
   iot:         ['IoT は、身のまわりのモノがインターネットにつながる仕組みです。', 'センサを搭載した機器や制御装置が、直接インターネットにつながります。'],
   sensor:      ['センサは、情報を収集する装置です。', 'IoT では、ここで集めた情報がやり取りされます。']
 };
@@ -2234,7 +2234,7 @@ const iconData = {
   api:         { term: 'API', eng: 'APPLICATION PROGRAMMING INTERFACE', desc: '<strong>ソフトウェアインタフェースの一つ</strong>。機能の一部を、他のプログラムから利用できるように提供します。実習6 の ア は、この API の説明です。' },
   aimSupport:  { term: '操作支援', eng: 'AIM 1 · SUPPORT', desc: '<strong>操作の一部を肩代わりし、ユーザの作業を支援する</strong>こと。オペレーティングシステムの目的の一つです。' },
   aimBasic:    { term: '基本機能の提供', eng: 'AIM 2 · ABSTRACTION', desc: '<strong>装置の違いを意識せず利用できるよう、操作の内容を抽象化する</strong>こと。応用ソフトウェアが周辺機器の違いをほとんど意識することなく作業ができるのは、この目的があるからです。' },
-  aimResource: { term: '資源の有効利用', eng: 'AIM 3 · RESOURCE', desc: '<strong>限られたコンピュータ資源を有効に活用し、適切に管理する</strong>こと。実行順序や CPU への割り当てを決めるタスク管理、ユーザアカウントを管理するユーザ管理が、その例にあたります。' },
+  aimResource: { term: '資源の有効利用', eng: 'AIM 3 · RESOURCE', desc: '<strong>限られたコンピュータ資源を有効に活用し、適切に管理する</strong>こと。実行順序や CPU への割り当てを決めるタスク管理が、その例にあたります。ユーザ管理は、OS が利用者を管理する仕事です。' },
   iot:         { term: 'IoT', eng: 'INTERNET OF THINGS', desc: '<strong>身のまわりのモノがインターネットにつながる仕組み</strong>。センサを搭載した機器や制御装置が直接インターネットにつながり、情報をやり取りします。' },
   sensor:      { term: 'センサ', eng: 'SENSOR', desc: '<strong>情報を収集する装置</strong>。IoT では、この装置が集めた情報がインターネットを通じてやり取りされます。' }
 };
@@ -2346,17 +2346,17 @@ function answerPq(opt) {
 const LAY_LAYER = { A: 'os', I: 'hwif', U: 'os', E: 'os', P1: 'app', P2: 'dev' };
 const LAY_CHIP  = { A: 'ア', I: 'イ', U: 'ウ', E: 'エ', P1: '応用', P2: '機器' };
 const LAY_FB = {
-  A: '<b>実習5 ア</b> の担当は <b>OS ＋ デバイスドライバ</b> の層です。限られたコンピュータ資源を有効に活用し適切に管理するのは、OS の目的の一つ <b>資源の有効利用</b> にあたります。',
+  A: '<b>実習5 ア</b> の担当は <b>OS（基本ソフトウェア）</b> の層です。限られたコンピュータ資源を有効に活用し適切に管理するのは、OS の目的の一つ <b>資源の有効利用</b> にあたります。',
   I: '<b class="lp-no">実習5 イ</b> の担当は <b>ハードウェアインタフェース</b> の層です。コネクタの形状や電気信号の形式などの仕様を合わせるのは、ハードウェアのインタフェースの標準化の話なので、<b class="lp-no">OS の目的ではありません</b>。',
-  U: '<b>実習5 ウ</b> の担当は <b>OS ＋ デバイスドライバ</b> の層です。操作の一部を肩代わりしユーザの作業を支援するのは、<b>操作の支援</b> にあたります。',
-  E: '<b>実習5 エ</b> の担当は <b>OS ＋ デバイスドライバ</b> の層です。装置の違いを意識せず利用できるよう操作の内容を抽象化するのは、<b>基本機能の提供</b> にあたります。そろえているのが「仕様」なら ⑤ の側、「操作の内容」なら OS の側です。',
+  U: '<b>実習5 ウ</b> の担当は <b>OS（基本ソフトウェア）</b> の層です。操作の一部を肩代わりしユーザの作業を支援するのは、<b>操作支援</b> にあたります。',
+  E: '<b>実習5 エ</b> の担当は <b>OS（基本ソフトウェア）</b> の層です。装置の違いを意識せず利用できるよう操作の内容を抽象化するのは、<b>基本機能の提供</b> にあたります。そろえているのが「仕様」なら ⑤ の側、「操作の内容」なら OS の側です。',
   P1: '担当は <b>応用ソフトウェア</b> の層です。文書作成・表計算などを行うのが応用ソフトウェアでした(実習2)。',
   P2: '担当は <b>周辺機器（デバイス）</b> の層です。データの記憶や入出力を行うのが周辺機器でした(POINT ①②)。'
 };
 const LAY_SAY = {
   A: ['資源の有効利用です。OS の目的の一つですね。'],
   I: ['ここだけ層が違います。合わせているのが仕様なので、ハードウェアインタフェースの側です。'],
-  U: ['操作の支援です。これも OS の目的です。'],
+  U: ['操作支援です。これも OS の目的です。'],
   E: ['基本機能の提供です。「操作の内容を抽象化する」が目印になります。'],
   P1: ['応用ソフトウェアの仕事です。'],
   P2: ['周辺機器の仕事です。']
@@ -2424,15 +2424,15 @@ const reviewPool = [
   { q: '中央処理装置を構成する 2 つの装置はどれか?', opts: ['入力装置と出力装置', '主記憶装置と補助記憶装置', '演算装置と制御装置', '制御装置と入力装置'], a: 2 },
   { q: '構成図で制御装置を特定する手がかりはどれか?', opts: ['制御命令が集まってくる先', '制御命令が送られてくる源', '補助記憶装置とだけつながっている', '出力装置とだけつながっている'], a: 1 },
   { q: '補助記憶装置がデータのやり取りをする相手はどれか?', opts: ['入力装置のみ', '出力装置のみ', '主記憶装置のみ', '演算装置のみ'], a: 2 },
-  { q: 'インタフェースの説明として正しいものはどれか?', opts: ['異なる機器やソフトウェア、人間との間をつなぐ規格や機能', '身のまわりのモノがインターネットにつながる仕組み', '人工知能における学習の仕組み', '自動的に動作し不利益をもたらすソフトウェア'], a: 0 },
+  { q: 'インタフェースの説明として正しいものはどれか?', opts: ['異なる機器やソフトウェア、人間との間でのデータのやり取りをする際、その間をつなぐ規格や機能', '身のまわりのモノがインターネットにつながる仕組み', '人工知能における学習の仕組み', '自動的に動作し不利益をもたらすソフトウェア'], a: 0 },
   { q: 'ハードウェアインタフェースがそろえているものはどれか?', opts: ['操作の内容', 'コネクタの形状や電気信号の形式などの仕様', 'ユーザアカウントの権限', 'ソフトウェアの実行順序'], a: 1 },
   { q: 'オペレーティングシステムの別の呼び方はどれか?', opts: ['応用ソフトウェア', '基本ソフトウェア', 'デバイスドライバ', 'インストーラ'], a: 1 },
   { q: 'ソフトウェア間のインタフェースの例として挙げられるものはどれか?', opts: ['USB', 'HDMI', 'API', 'NFC'], a: 2 },
-  { q: 'デバイスドライバの説明として適切なものはどれか?', opts: ['コンピュータに接続された周辺機器を制御するソフトウェア', '応用ソフトウェアをコンピュータに導入するソフトウェア', '自動的に動作し不利益をもたらすソフトウェア', 'ハードウェアと応用ソフトウェアの仲介役'], a: 0 },
+  { q: 'デバイスドライバの説明として適切なものはどれか?', opts: ['コンピュータに接続された周辺機器を制御するソフトウェア', '応用ソフトウェアをコンピュータに導入するソフトウェア', '自動的に動作し不利益をもたらすソフトウェア', 'ハードウェアと応用ソフトウェアの仲介役として機能し、タスク管理や記憶管理をするソフトウェア'], a: 0 },
   { q: 'オペレーティングシステムの目的として正しくないものはどれか?', opts: ['限られたコンピュータ資源を有効に活用し適切に管理する', '機器どうしを接続するコネクタの形状や電気信号の形式などの仕様を合わせる', '操作の一部を肩代わりしユーザの作業を支援する', '装置の違いを意識せず利用できるよう操作の内容を抽象化する'], a: 1 },
   { q: '「装置の違いを意識せず利用できるよう操作の内容を抽象化する」は、OS の目的のどれにあたるか?', opts: ['操作支援', '基本機能の提供', '資源の有効利用', 'どれにもあたらない'], a: 1 },
-  { q: 'ソフトウェアの実行順序や CPU への割り当てなどを管理するのはどれか?', opts: ['ユーザ管理', 'タスク管理', 'ファイル管理', 'デバイスドライバ'], a: 1 },
-  { q: 'IoT の説明として正しいものはどれか?', opts: ['機能の一部を他のプログラムから利用できるように提供する仕組み', '異なる機器やソフトウェア、人間との間をつなぐ規格や機能', '人工知能における学習の仕組み', 'センサを搭載した機器や制御装置が直接インターネットにつながり情報をやり取りする仕組み'], a: 3 },
+  { q: 'ソフトウェアの実行順序や CPU への割り当てなどを管理するのはどれか?', opts: ['ユーザ管理', 'タスク管理', '資源の有効利用', 'デバイスドライバ'], a: 1 },
+  { q: 'IoT の説明として正しいものはどれか?', opts: ['ソフトウェアの機能の一部を、他のプログラムから利用できるように提供しているもの', '異なる機器やソフトウェア、人間との間でのデータのやり取りをする際、その間をつなぐ規格や機能', '人工知能における学習の仕組み', 'センサを搭載した機器や制御装置が直接インターネットにつながり情報をやり取りする仕組み'], a: 3 },
   { q: 'センサの説明として正しいものはどれか?', opts: ['情報を収集する装置', '情報を出力する装置', '演算をする装置', '各装置を制御する装置'], a: 0 },
   { q: '映像・音声・制御信号を 1 本のケーブルにまとめて送る規格はどれか?', opts: ['Bluetooth', 'HDMI', 'IEEE 802.11', 'NFC'], a: 1 },
   { q: 'デバイスドライバ・OS・アプリケーションソフトウェアを、ハードウェアに近い順に並べるとどれか?', opts: ['OS ＜ デバイスドライバ ＜ アプリケーション', 'デバイスドライバ ＜ OS ＜ アプリケーション', 'アプリケーション ＜ OS ＜ デバイスドライバ', 'デバイスドライバ ＜ アプリケーション ＜ OS'], a: 1 }
@@ -2608,7 +2608,7 @@ const POINT_ILLUST = {
     desc: '<b>装置の違いを意識せず利用できるよう、操作の内容を抽象化する</b> ことです。この単元の要になる目的です。' },
   aimResource: { tag: '目的 3', name: '資源の有効利用',
     fig: `<svg viewBox="0 0 360 150"><rect x="40" y="44" width="280" height="62" rx="10" fill="#fff" stroke="#3b3a42" stroke-width="3"/><rect class="sf-grow" x="52" y="58" width="90" height="34" rx="6" fill="#3f78c4"/><rect class="sf-grow" style="animation-delay:.2s" x="150" y="58" width="60" height="34" rx="6" fill="#7ea3d6"/><rect class="sf-grow" style="animation-delay:.4s" x="218" y="58" width="40" height="34" rx="6" fill="#ffe27a"/><rect class="sf-grow" style="animation-delay:.6s" x="266" y="58" width="42" height="34" rx="6" fill="#c9d8ee"/></svg>`,
-    desc: '<b>限られたコンピュータ資源を有効に活用し、適切に管理する</b> ことです。タスク管理やユーザ管理がその例です。' },
+    desc: '<b>限られたコンピュータ資源を有効に活用し、適切に管理する</b> ことです。実行順序と CPU の割り当てを決めるタスク管理が、その例です。' },
   iot: { tag: '⑨ POINT', name: 'IoT',
     fig: `<svg viewBox="0 0 360 150"><circle class="sf-pulse" cx="180" cy="75" r="26" fill="#ffe27a" stroke="#3b3a42" stroke-width="3"/><rect x="40" y="18" width="52" height="34" rx="7" fill="#fff" stroke="#3b3a42" stroke-width="3"/><rect x="40" y="98" width="52" height="34" rx="7" fill="#fff" stroke="#3b3a42" stroke-width="3"/><rect x="268" y="18" width="52" height="34" rx="7" fill="#fff" stroke="#3b3a42" stroke-width="3"/><rect x="268" y="98" width="52" height="34" rx="7" fill="#fff" stroke="#3b3a42" stroke-width="3"/><path class="sf-flow" d="M92 36L156 66M92 114L156 84M268 36L204 66M268 114L204 84" fill="none" stroke="#3f78c4" stroke-width="3"/></svg>`,
     desc: '身のまわりのモノが <b>インターネットにつながる仕組み</b> です。センサを搭載した機器や制御装置が直接つながります。' },

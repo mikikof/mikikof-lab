@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>ハードウェアとソフトウェア | 情報Ⅰ 学習ノート対応</title>
+<title>コンピュータの構成と動作 ｜ 学習ノート POINT 17</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Noto+Serif+JP:wght@400;500;600;700;900&family=Noto+Sans+JP:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;700&family=Yusei+Magic&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
@@ -744,51 +744,55 @@ body.miki-hidden .miki-back { display: inline-block; }
   .field-eq .fe-ne { color:#e0584f; font-size:17px; }
   .field-eq .fe-r { color:#6f6e78; font-family:"Zen Maru Gothic","Klee One",sans-serif; font-weight:600; }
 
-/* ===== lec14 固有: 5 つの装置の構成図(文字は HTML 要素・SVG には置かない) ===== */
-.dev-fig { max-width: 900px; margin: 14px auto 0; background: var(--navy-bg); border: 1px solid var(--navy-pale); border-radius: 12px; padding: 16px 20px 18px; }
-.dev-cpu { border: 2.5px dashed var(--accent-gold); border-radius: 12px; padding: 10px 14px 12px; max-width: 540px; margin: 0 auto; background: rgba(201,169,97,0.07); }
-.dev-cpu-tag { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.16em; color: #8a6d1f; font-weight: 900; text-align: center; margin-bottom: 8px; }
-.dev-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.dev-link { display: flex; flex-direction: column; align-items: center; gap: 2px; margin: 8px 0; }
-.dev-link .dl-mark { font-family: 'JetBrains Mono', monospace; font-size: 17px; font-weight: 900; color: var(--navy-light); line-height: 1; }
-.dev-link .dl-lab { font-size: 11px; color: var(--text-sub); font-weight: 700; }
-.dev-row { display: grid; grid-template-columns: 1fr 54px 1fr 54px 1fr; align-items: center; gap: 4px; }
-.dev-box { background: #fff; border: 2px solid var(--navy-pale); border-radius: 10px; padding: 10px 8px 12px; text-align: center; cursor: pointer; transition: all 0.2s; }
-.dev-box:hover { border-color: var(--accent-gold); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(15,40,71,0.08); }
-.dev-box.selected { border-color: var(--accent-red); background: linear-gradient(180deg, rgba(201,169,97,0.10) 0%, #fff 100%); }
-.dev-box .db-no { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; font-weight: 900; color: var(--accent-red); display: block; margin-bottom: 2px; }
-.dev-box .db-name { font-family: 'Zen Maru Gothic', '游教科書体 横', 'Klee One', 'Noto Sans JP', sans-serif; font-weight: 700; font-size: 15px; color: var(--navy-darkest); line-height: 1.35; }
-.dev-sub { max-width: 250px; margin: 0 auto; }
-.dev-panel { margin-top: 14px; padding: 16px 18px; background: var(--navy-bg); border-left: 4px solid var(--accent-gold); border-radius: 0 4px 4px 0; min-height: 72px; font-size: 14.5px; line-height: 1.75; color: var(--text-main); font-weight: 500; }
-.dev-panel .dp-term { font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 900; color: var(--navy-darkest); font-size: 17px; margin-right: 8px; }
-.dev-pool { max-width: 900px; margin: 12px auto 0; padding: 12px 16px; background: #fff; border: 1px dashed var(--navy-pale); border-radius: 6px; font-size: 13px; line-height: 1.9; color: var(--text-sub); font-weight: 600; }
-.dev-pool .dpl-label { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.15em; color: var(--accent-red); font-weight: 700; margin-right: 8px; }
-.dev-pool .dpl-item { display: inline-block; margin-right: 14px; color: var(--navy-darkest); font-weight: 700; }
-
-/* ===== lec14 固有: 層の割り当て(この単元の目玉) ===== */
-.lay-wrap { max-width: 980px; margin: 12px auto 0; }
-.lay-stack { display: flex; flex-direction: column; gap: 8px; }
-.lay-row { display: grid; grid-template-columns: 260px 1fr; gap: 12px; align-items: center; background: var(--navy-bg); border: 2px solid var(--navy-pale); border-left: 6px solid var(--navy-light); border-radius: 10px; padding: 11px 16px; transition: all 0.25s; }
-.lay-row.hit { border-color: var(--accent-gold); border-left-color: var(--accent-gold); background: rgba(201,169,97,0.11); }
-.lay-row[data-layer="hwif"].hit { border-color: var(--accent-red); border-left-color: var(--accent-red); background: rgba(200,16,46,0.07); }
-.lay-side { display: flex; align-items: baseline; gap: 9px; }
-.lay-tag { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 900; color: var(--accent-red); }
-.lay-name { font-family: 'Zen Maru Gothic', '游教科書体 横', 'Klee One', 'Noto Sans JP', sans-serif; font-weight: 700; font-size: 15px; color: var(--navy-darkest); line-height: 1.4; }
-.lay-slot { display: flex; flex-wrap: wrap; gap: 6px; min-height: 26px; align-items: center; }
-.lay-chip { font-family: 'JetBrains Mono', monospace; font-weight: 900; font-size: 12.5px; color: #fff; background: var(--navy); border-radius: 20px; padding: 4px 14px; animation: fadeIn 0.3s; }
-.lay-row[data-layer="hwif"] .lay-chip { background: var(--accent-red); }
-.lay-hint { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--text-sub); font-weight: 700; text-align: center; margin-top: 12px; }
-.lay-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
-.lay-card { background: #fff; border: 2px solid var(--navy-pale); border-radius: 10px; padding: 10px 14px 12px; cursor: pointer; transition: all 0.2s; }
-.lay-card:hover { border-color: var(--accent-gold); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(15,40,71,0.08); }
-.lay-card.placed { opacity: 0.52; border-style: dashed; background: var(--navy-bg); transform: none; }
-.lc-mark { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.12em; color: var(--accent-red); font-weight: 900; display: block; margin-bottom: 3px; }
-.lc-text { font-size: 13.5px; line-height: 1.65; color: var(--text-main); font-weight: 500; }
-.lay-panel { margin-top: 14px; padding: 16px 18px; background: var(--navy-bg); border-left: 4px solid var(--accent-gold); border-radius: 0 4px 4px 0; min-height: 74px; font-size: 14.5px; line-height: 1.78; color: var(--text-main); font-weight: 500; }
-.lay-panel b { color: var(--navy-darkest); }
-.lay-panel .lp-no { color: var(--accent-red); font-weight: 700; }
-
-/* ===== lec14 固有: 4 択の実習(実習4・5・6) ===== */
+/* ===== lec17 固有: miki.con の窓(デスクトップでは下中央に浮く)の下に隠れた内容を、スクロールで窓の上へ出せるようにする ===== */
+@media (min-width: 721px) { body:not(.miki-hidden) .slide:not(.title-slide):not(.section-divider) { padding-bottom: 190px; } }
+/* ===== lec17 固有: 原本の設問文 ===== */
+.src-q { max-width: 1120px; margin: 10px auto 0; padding: 9px 16px; background: #fff; border: 1px solid var(--navy-pale); border-left: 4px solid var(--navy); border-radius: 0 6px 6px 0; font-size: 14.5px; line-height: 1.85; color: var(--text-main); font-weight: 500; }
+.src-q .sq-tag { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 900; color: var(--accent-red); letter-spacing: .1em; margin-right: 10px; }
+.conv-note { max-width: 920px; margin: 12px auto 0; font-size: 12.5px; color: var(--text-sub); line-height: 1.75; text-align: center; }
+/* ===== lec17 固有: 取り出し・解読・実行の 3 拍 ===== */
+.beat-box { max-width: 960px; margin: 12px auto 0; background: var(--navy-bg); border: 1px solid var(--navy-pale); border-radius: 12px; padding: 14px 18px; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 14px 22px; align-items: start; }
+.beat-cpu { display: flex; flex-direction: column; gap: 8px; }
+.beat-unit { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #fff; border: 2px solid var(--navy-pale); border-radius: 8px; padding: 9px 13px; transition: all .18s; }
+.beat-unit .bu-name { font-size: 13px; font-weight: 700; color: var(--text-sub); }
+.beat-unit .bu-val { font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 900; color: var(--navy-darkest); }
+.beat-unit.on { border-color: var(--accent-gold); background: rgba(201,169,97,0.16); box-shadow: 0 2px 0 var(--accent-gold); }
+.beat-unit.on .bu-name { color: var(--navy-darkest); }
+.beat-mem { background: #fff; border: 2px solid var(--navy-pale); border-radius: 8px; overflow: hidden; }
+.beat-mem .bm-head { background: var(--navy); color: #fff; font-size: 11px; font-weight: 900; letter-spacing: .1em; padding: 5px 12px; }
+.beat-mem .bm-row { display: flex; gap: 12px; padding: 5px 12px; border-top: 1px solid var(--navy-pale); font-family: 'JetBrains Mono', monospace; font-size: 13.5px; font-weight: 700; color: var(--navy-darkest); }
+.beat-mem .bm-row .bm-adr { color: var(--text-sub); min-width: 22px; text-align: right; }
+.beat-mem .bm-row.cur { background: rgba(201,169,97,0.22); }
+.beat-ctrl { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center; margin-top: 10px; }
+.beat-cap { max-width: 860px; margin: 10px auto 0; padding: 11px 16px; background: #fff; border-left: 4px solid var(--accent-gold); border-radius: 0 4px 4px 0; font-size: 14px; line-height: 1.78; color: var(--text-main); font-weight: 500; min-height: 52px; }
+.beat-cap b { color: var(--navy-darkest); }
+/* ===== lec17 固有: トレース表（実習4）===== */
+.trace-wrap { display: flex; gap: 16px; justify-content: center; align-items: flex-start; flex-wrap: wrap; margin-top: 12px; }
+.tt { border-collapse: separate; border-spacing: 0; margin: 0 auto; font-family: 'JetBrains Mono', monospace; font-weight: 900; font-size: 15px; color: var(--navy-darkest); background: #fff; border: 2px solid var(--navy-pale); border-radius: 10px; overflow: hidden; }
+.tt th { background: var(--navy); color: #fff; font-size: 12px; letter-spacing: .06em; padding: 6px 12px; font-weight: 900; }
+.tt td { padding: 6px 12px; text-align: center; border-top: 1px solid var(--navy-pale); min-width: 30px; }
+.tt td.lft { text-align: left; min-width: 190px; }
+.tt.trace td.lft { font-size: 14px; }
+.tt.memside th { background: var(--accent-red); }
+.tt .sr-blank { min-width: 34px; padding: 0 8px; font-size: 15px; }
+/* ===== lec17 固有: ○× の判定（実習3）===== */
+.j-list { max-width: 1000px; margin: 12px auto 0; display: flex; flex-direction: column; gap: 8px; }
+.j-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px 14px; align-items: center; background: #fff; border: 1px solid var(--navy-pale); border-radius: 10px; padding: 11px 15px; }
+.j-row .j-text { font-size: 14.5px; line-height: 1.8; color: var(--text-main); font-weight: 500; }
+.j-row .j-chips { display: flex; gap: 8px; }
+.j-row .j-fb { grid-column: 1 / -1; }
+/* ===== lec17 固有: 発展（参考A〜C）===== */
+.appx-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 900; color: var(--accent-red); letter-spacing: .12em; margin-bottom: 5px; }
+.prog-list { display: flex; flex-direction: column; gap: 5px; }
+.prog-row { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 10px; align-items: center; background: #fff; border: 1px solid var(--navy-pale); border-radius: 7px; padding: 6px 12px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; font-weight: 700; color: var(--navy-darkest); }
+.prog-row .pr-adr { color: var(--text-sub); text-align: right; }
+.prog-row .pr-note { font-family: 'Zen Maru Gothic', sans-serif; font-size: 12px; font-weight: 700; color: var(--text-sub); }
+.prog-row.hot { border-color: var(--accent-gold); background: rgba(201,169,97,0.16); }
+.prog-row.hot .pr-note { color: var(--accent-red); }
+.prog-cap { font-size: 12px; color: var(--text-sub); font-weight: 700; text-align: center; margin-top: 6px; }
+.prog-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 720px) { .beat-box { grid-template-columns: 1fr; } .prog-cols { grid-template-columns: 1fr; } .j-row { grid-template-columns: 1fr; } }
+/* ===== lec17 固有: 4 択の実習(実習2) ===== */
 .pq { max-width: 900px; margin: 14px auto 0; }
 .pq-q { background: var(--navy-darkest); color: #fff; padding: 15px 22px; border-radius: 8px 8px 0 0; font-family: '游教科書体 横', 'YuKyokasho Yoko', 'UD デジタル 教科書体 N-R', 'Klee One', 'Noto Serif JP', serif; font-weight: 600; font-size: 18px; line-height: 1.6; }
 .pq-num { font-family: 'JetBrains Mono', monospace; color: var(--accent-gold); font-size: 11px; letter-spacing: 0.2em; display: block; margin-bottom: 5px; }
@@ -806,25 +810,7 @@ body.miki-hidden .miki-back { display: inline-block; }
 .pq-fb.show { display: block; animation: fadeIn 0.3s; }
 .pq-fb b { color: var(--navy-darkest); }
 .pq-fb .pf-mark { font-family: 'JetBrains Mono', monospace; font-weight: 900; color: var(--accent-red); margin-right: 8px; }
-
-/* ===== lec14 固有: 発展の図(はしご / 一覧 / ポートの段) ===== */
-.ladder { display: flex; align-items: stretch; gap: 8px; flex-wrap: wrap; justify-content: center; }
-.ladder-step { flex: 1 1 168px; min-width: 152px; background: #fff; border: 2px solid var(--navy-pale); border-radius: 12px; padding: 12px 10px 14px; text-align: center; }
-.ladder-step.near { border-color: var(--accent-red); background: linear-gradient(180deg, rgba(200,16,46,0.05) 0%, #fff 100%); }
-.ladder-step.far { border-color: var(--accent-gold); background: linear-gradient(180deg, rgba(201,169,97,0.08) 0%, #fff 100%); }
-.ls-tag { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.14em; color: var(--accent-red); font-weight: 900; }
-.ls-name { font-family: 'Zen Maru Gothic', '游教科書体 横', 'Klee One', 'Noto Sans JP', sans-serif; font-weight: 700; font-size: 14.5px; color: var(--navy-darkest); margin: 3px 0 5px; line-height: 1.4; }
-.ls-note { font-size: 11.5px; color: var(--text-sub); line-height: 1.6; font-weight: 500; }
-.ladder-op { align-self: center; font-family: 'JetBrains Mono', monospace; font-weight: 900; color: var(--navy-light); font-size: 18px; }
-.if-list { display: grid; grid-template-columns: 180px 1fr; gap: 7px 14px; align-items: baseline; }
-.if-key { font-family: 'JetBrains Mono', monospace; font-weight: 900; font-size: 14px; color: var(--navy-darkest); background: #fff; border: 1px solid var(--navy-pale); border-radius: 6px; padding: 6px 10px; text-align: center; }
-.if-val { font-size: 13.5px; line-height: 1.7; color: var(--text-main); font-weight: 500; }
-.hub-steps { display: flex; gap: 10px; align-items: flex-end; justify-content: center; flex-wrap: wrap; }
-.hub-col { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-.hub-bar { width: 46px; background: linear-gradient(180deg, var(--navy-light) 0%, var(--navy) 100%); border-radius: 6px 6px 0 0; }
-.hub-num { font-family: 'JetBrains Mono', monospace; font-weight: 900; font-size: 16px; color: var(--navy-darkest); }
-.hub-lab { font-size: 11px; color: var(--text-sub); font-weight: 700; text-align: center; line-height: 1.4; }
-.hub-plus { align-self: center; font-family: 'JetBrains Mono', monospace; font-weight: 900; font-size: 13px; color: var(--accent-red); padding-bottom: 30px; }
+.p4-fb { max-width: 1120px; margin-left: auto; margin-right: auto; }
 /* ===== lec11 固有: POINT スポットライト + リッチ解説ポップ(miki.con 表示時のみ・ナビ役) ===== */
 /* スポットライト: 周囲を薄暗く(box-shadow 9999px)+ 金色パルスリング。miki バー(z150)は veil の上に残る */
 #pointSpot { position: fixed; left: 0; top: 0; width: 0; height: 0; z-index: 140; border-radius: 16px; pointer-events: none; opacity: 0;
@@ -863,27 +849,28 @@ body.miki-hidden .miki-back { display: inline-block; }
 @media (prefers-reduced-motion: reduce) { #pointSpot.on::after { animation: none; } #pointPop .sf-flow, #pointPop .sf-pulse, #pointPop .sf-float, #pointPop .sf-grow { animation: none; } }
 @media (max-width: 720px) { #pointPop { width: 92vw; max-height: 52vh; padding: 13px 15px; } #pointPop .pp-name { font-size: 18px; } #pointPop .pp-desc { font-size: 13.5px; } }
 
+@media (max-width: 1100px) {
+  .icon-cards.cols-5 { grid-template-columns: repeat(3, 1fr); }
+}
 @media (max-width: 720px) {
-  .dev-row { grid-template-columns: 1fr; gap: 6px; }
-  .dev-row .dev-link { margin: 4px 0; }
-  .dev-box .db-name { font-size: 13.5px; }
-  .dev-sub { max-width: none; }
-  .lay-cards { grid-template-columns: 1fr; }
-  .lay-row { grid-template-columns: 1fr; gap: 6px; padding: 10px 13px; }
-  .lay-name { font-size: 13.5px; }
-  .lc-text { font-size: 12.5px; }
-  .lay-panel, .dev-panel { padding: 13px 15px; font-size: 13.5px; }
+  .tl-body, .tb-body, .tl-wire .tl-body, .p3-grid, .p4-row, .p5-grid { grid-template-columns: 1fr; gap: 10px; }
+  .p5-target { display: flex; flex-direction: column; align-items: center; }
+  .tl { padding: 10px 12px 12px; }
+  .tl-sw { width: 74px; padding: 8px 4px 7px; }
+  .tl-sw .sw-name { font-size: 19px; }
+  .tl-lamp .lp { width: 50px; height: 50px; }
+  .tt { font-size: 14px; }
+  .tt th { padding: 5px 9px; font-size: 11px; }
+  .tt td { padding: 5px 9px; }
+  .tt-wrap { gap: 10px; }
+  .figrow { grid-template-columns: 1fr; }
+  .pq-opts.tbl4 { grid-template-columns: repeat(2, 1fr); }
+  .pq-opts.circ3 { grid-template-columns: 1fr; }
+  .icon-cards.cols-5 { grid-template-columns: repeat(2, 1fr); }
+  .icon-cards.cols-5 .icon-card:last-child { grid-column: 1 / -1; max-width: 50%; width: 100%; margin: 0 auto; }
   .pq-q { font-size: 15px; padding: 13px 17px; }
   .pq-opt { font-size: 13.5px; padding: 11px 13px; }
   .pq-fb { font-size: 13px; }
-  .if-list { grid-template-columns: 1fr; gap: 3px 0; }
-  .if-val { margin-bottom: 8px; }
-  .ladder-op { transform: rotate(90deg); }
-  .hub-steps { gap: 5px; }
-  .hub-bar { width: 30px; }
-  .hub-num { font-size: 13px; }
-  .hub-lab { font-size: 9.5px; }
-  .hub-plus { font-size: 11px; }
 }
 
 </style>
@@ -898,8 +885,8 @@ body.miki-hidden .miki-back { display: inline-block; }
 </defs></svg>
 
 <div class="topbar">
-  <span class="topbar-title">ハードウェアとソフトウェア</span>
-  <span class="topbar-subtitle">情報Ⅰ / 学習ノート POINT 14 ｜ p.34</span>
+  <span class="topbar-title">コンピュータの構成と動作</span>
+  <span class="topbar-subtitle">情報Ⅰ / 学習ノート POINT 17 ｜ p.40</span>
   <span class="topbar-chapter">CHAPTER · 3</span>
   <span class="tb-fs" role="group" aria-label="サイト本体の文字サイズ">
     <button class="tb-fs-btn" id="sfsDown" onclick="siteFsStep(-1)" title="文字を小さく" aria-label="サイト本体の文字を小さく">a</button>
@@ -931,370 +918,254 @@ body.miki-hidden .miki-back { display: inline-block; }
 
 <div class="slide-container" id="slideContainer">
 
-<!-- SLIDE 1: TITLE -->
+<!-- SLIDE 1: タイトル -->
 <div class="slide title-slide active" data-title="タイトル">
-  <svg class="title-deco" viewBox="0 0 256 256"><rect x="40" y="40" width="176" height="176" rx="26" fill="none" stroke="currentColor" stroke-width="12"/><rect x="96" y="96" width="64" height="64" rx="10" fill="none" stroke="currentColor" stroke-width="12"/></svg>
-  <svg class="title-deco-2" viewBox="0 0 256 256"><rect x="28" y="52" width="200" height="36" rx="12" fill="none" stroke="currentColor" stroke-width="14"/><rect x="28" y="110" width="200" height="36" rx="12" fill="none" stroke="currentColor" stroke-width="14"/><rect x="28" y="168" width="200" height="36" rx="12" fill="none" stroke="currentColor" stroke-width="14"/></svg>
-  <div class="title-label">CHAPTER · 3 / POINT 14 / 学習ノート p.34</div>
-  <h1 class="title-main">ハードウェアとソフトウェア</h1>
-  <div class="title-sub">装置の違いを意識せずに使えるのは、どの層の仕事か</div>
+  <svg class="title-deco" viewBox="0 0 256 256"><rect x="40" y="40" width="176" height="176" rx="18" fill="none" stroke="currentColor" stroke-width="12"/><path d="M40 96h176M96 40v176" fill="none" stroke="currentColor" stroke-width="12"/></svg>
+  <svg class="title-deco-2" viewBox="0 0 256 256"><rect x="48" y="56" width="160" height="40" rx="10" fill="none" stroke="currentColor" stroke-width="14"/><rect x="48" y="112" width="160" height="40" rx="10" fill="none" stroke="currentColor" stroke-width="14"/><rect x="48" y="168" width="160" height="40" rx="10" fill="none" stroke="currentColor" stroke-width="14"/></svg>
+  <div class="title-label">CHAPTER · 3 / POINT 17 / 学習ノート p.40</div>
+  <h1 class="title-main">コンピュータの構成と動作</h1>
+  <div class="title-sub">命令を 1 つずつ取り出して実行する仕組みと、値がいまどこにあるか</div>
   <div class="title-meta">
-    <div class="title-meta-item"><strong>POINT</strong>14</div>
-    <div class="title-meta-item"><strong>TERMS</strong>10 用語</div>
-    <div class="title-meta-item"><strong>PRACTICE</strong>6 題</div>
+    <div class="title-meta-item"><strong>POINT</strong>17</div>
+    <div class="title-meta-item"><strong>TERMS</strong>8 用語</div>
+    <div class="title-meta-item"><strong>PRACTICE</strong>4 題 + 章末</div>
     <div class="title-meta-item"><strong>UNIT</strong>第3章</div>
   </div>
 </div>
 
-<!-- SLIDE 2: AGENDA -->
+<!-- SLIDE 2: このサイトで扱う内容 -->
 <div class="slide" data-title="このサイトで扱う内容">
   <div class="eyebrow">AGENDA · このサイトで扱う内容</div>
   <h2 class="slide-title">このサイトで扱う内容</h2>
-  <p class="slide-subtitle">学習ノート POINT 14 の用語 10 個と実習 6 題を、4 つの観点に分けて扱います。中心にあるのは「<strong>装置の違いを意識せずに使える</strong>」状態を作っているのが<strong>どの層か</strong>という一点です。後半に、共通テストや実生活で必要になる発展 3 題を足します。</p>
+  <p class="slide-subtitle">学習ノート POINT 17 の用語 8 個と実習 4 題を、3 つの観点に分けて扱います。中心にあるのは「<strong>同じレジスタに読み込めば、途中結果は消える</strong>」です。後半に、章末5 とベストフィットの思考のステップ5 まで広げた発展を足します。</p>
   <div class="agenda-grid">
     <div class="agenda-item">
-      <svg class="ai-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="88" y="88" width="80" height="80" rx="14"/><path d="M56 56l32 32M200 56l-32 32M56 200l32-32M200 200l-32-32"/></svg>
+      <svg class="ai-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="40" y="56" width="176" height="144" rx="14"/><path d="M40 104h176M88 56v144"/></svg>
       <div class="agenda-num">01</div>
-      <div class="agenda-content"><span class="a-tag">①〜⑤ / 5 用語 + 実習1・3</span><h3>ハードウェアとインタフェース</h3><p>核となる部分と周辺機器、中央処理装置、そして機器どうしをつなぐ規格</p></div>
+      <h3>プログラムと命令</h3>
+      <p>プログラム・命令セット・機械語。CPU は主記憶装置の命令を順に取り出し、解読して実行する</p>
     </div>
     <div class="agenda-item">
-      <svg class="ai-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="40" y="52" width="176" height="44" rx="12"/><rect x="40" y="160" width="176" height="44" rx="12"/><path d="M128 96v64"/></svg>
+      <svg class="ai-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="56" y="56" width="144" height="144" rx="16"/><rect x="96" y="96" width="64" height="64" rx="8"/><path d="M128 24v32M128 200v32M24 128h32M200 128h32"/></svg>
       <div class="agenda-num">02</div>
-      <div class="agenda-content"><span class="a-tag">⑥⑦⑧ / 3 用語 + 実習2・4</span><h3>ソフトウェアとインタフェース</h3><p>基本ソフトウェアと応用ソフトウェア、デバイスドライバ、API</p></div>
+      <h3>CPU の中</h3>
+      <p>プログラムカウンタ・アドレス・命令レジスタ・命令解読器。どこに何が入るか</p>
     </div>
     <div class="agenda-item">
-      <svg class="ai-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><circle cx="128" cy="128" r="76"/><path d="M128 52v76l52 30"/></svg>
+      <svg class="ai-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><path d="M48 72h160M48 128h160M48 184h96"/><circle cx="196" cy="184" r="20"/></svg>
       <div class="agenda-num">03</div>
-      <div class="agenda-content"><span class="a-tag">POINT 3 + 実習5 / この回の要</span><h3>オペレーティングシステムの目的</h3><p>操作支援・基本機能の提供・資源の有効利用。仕様を合わせる仕事との切り分け</p></div>
+      <h3>プログラムを組み立てる</h3>
+      <p>命令を並べて計算する。読み込むと前の値は残らないので、途中結果は主記憶装置へ書き出す</p>
     </div>
     <div class="agenda-item">
-      <svg class="ai-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><circle cx="128" cy="128" r="34"/><path d="M128 94V40M128 162v54M94 128H40M162 128h54"/></svg>
-      <div class="agenda-num">04</div>
-      <div class="agenda-content"><span class="a-tag">⑨⑩ / 2 用語 + 実習6</span><h3>IoT</h3><p>身のまわりのモノがインターネットにつながる仕組みと、情報を収集する装置</p></div>
-    </div>
-    <div class="agenda-item appendix">
       <svg class="ai-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><path d="M32,200V64a8,8,0,0,1,8-8H96l32,32h88a8,8,0,0,1,8,8V200a8,8,0,0,1-8,8H40A8,8,0,0,1,32,200Z"/></svg>
-      <div class="agenda-num">05</div>
-      <div class="agenda-content"><span class="a-tag">APPENDIX / 3 副題</span><h3>参考: 発展副題</h3><p>三層の順序 / インタフェースの代表例 / USB ハブは何台つなげるか</p></div>
+      <div class="agenda-num">APPENDIX</div>
+      <h3>発展</h3>
+      <p>レジスタが 2 つのとき／式を展開する／繰り返しのあるプログラム（思考のステップ5）</p>
     </div>
   </div>
 </div>
 
-<!-- SLIDE 3: SECTION 1 DIVIDER -->
-<div class="slide section-divider" data-title="第1節 ハードウェアとインタフェース">
-  <svg class="section-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><rect x="84" y="84" width="88" height="88" rx="14"/><path d="M48 48l36 36M208 48l-36 36M48 208l36-36M208 208l-36-36"/></svg>
+<!-- SLIDE 3: SECTION 1 -->
+<div class="slide section-divider" data-title="第1節 プログラムと命令">
+  <svg class="section-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><rect x="40" y="56" width="176" height="144" rx="14"/><path d="M40 104h176M88 56v144"/></svg>
   <div class="section-number">SECTION · 01</div>
-  <h2 class="section-title-big">ハードウェアとインタフェース</h2>
-  <p class="section-tagline">機器そのものと、機器どうしをつなぐ規格</p>
+  <h2 class="section-title-big">プログラムと命令</h2>
+  <p class="section-tagline">命令を順に取り出し、解読して、実行する</p>
 </div>
 
-<!-- SLIDE 4: 用語 ①②③ -->
-<div class="slide" data-title="①②③ ハードウェア・周辺機器・中央処理装置 (interactive)">
-  <div class="eyebrow">POINT 1 / 学習ノート ①②③</div>
-  <h2 class="slide-title">ハードウェアを構成するもの</h2>
-  <p class="slide-subtitle"><strong>ハードウェア</strong>は、コンピュータの<strong>核となる部分</strong>と、それに接続する<strong>周辺機器</strong>を併せたものです。核の中枢にあたるのが<strong>中央処理装置</strong>です。下のカードをタップすると定義が表示されます。</p>
-  <div class="icon-cards">
-    <div class="icon-card" data-key="hardware" onclick="selectIcon('termPanel1', 'hardware')">
+<!-- SLIDE 4: ①〜④ (interactive) -->
+<div class="slide" data-title="①〜④ プログラム・命令セット・機械語・プログラム格納方式 (interactive)">
+  <div class="eyebrow">POINT 1 / 学習ノート ①〜④</div>
+  <h2 class="slide-title">命令を組み合わせたものがプログラム</h2>
+  <p class="slide-subtitle">コンピュータに動作を指示する命令を組み合わせ、処理の手順を記述したものが <strong>プログラム</strong> です。命令は CPU ごとに定義され、その集まりを <strong>命令セット</strong> といいます。カードをタップすると定義が表示されます。</p>
+  <div class="icon-cards cols-4">
+    <div class="icon-card" data-key="program" onclick="selectIcon('termPanel1', 'program')">
       <div class="icon-card-tag">① POINT</div>
-      <svg class="icon-card-svg" viewBox="0 0 256 256"><rect x="84" y="84" width="88" height="88" rx="16" fill="none" stroke="url(#icoNavy)" stroke-width="16" filter="url(#icoSh)"/><path d="M52 52l32 32M204 52l-32 32M52 204l32-32M204 204l-32-32" fill="none" stroke="url(#icoNavy)" stroke-width="13" stroke-linecap="round"/><circle cx="40" cy="40" r="17" fill="url(#icoGold)"/><circle cx="216" cy="40" r="17" fill="url(#icoGold)"/><circle cx="40" cy="216" r="17" fill="url(#icoGold)"/><circle cx="216" cy="216" r="17" fill="url(#icoGold)"/></svg>
-      <div class="icon-card-name">ハードウェア</div>
-      <div class="icon-card-sub">核となる部分＋周辺機器</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><rect x="52" y="36" width="152" height="184" rx="14" fill="url(#icoGold)" opacity="0.45"/><rect x="52" y="36" width="152" height="184" rx="14" fill="none" stroke="url(#icoNavy)" stroke-width="14" filter="url(#icoSh)"/><path d="M84 84h88M84 122h88M84 160h56" fill="none" stroke="url(#icoNavy)" stroke-width="12" stroke-linecap="round"/></svg>
+      <div class="icon-card-name">プログラム</div>
+      <div class="icon-card-sub">命令を組み合わせた処理の手順</div>
     </div>
-    <div class="icon-card" data-key="device" onclick="selectIcon('termPanel1', 'device')">
+    <div class="icon-card" data-key="iset" onclick="selectIcon('termPanel1', 'iset')">
       <div class="icon-card-tag">② POINT</div>
-      <svg class="icon-card-svg" viewBox="0 0 256 256"><rect x="40" y="104" width="176" height="76" rx="14" fill="none" stroke="url(#icoNavy)" stroke-width="16" filter="url(#icoSh)"/><path d="M84 104V56h88v48" fill="none" stroke="url(#icoNavy)" stroke-width="14" stroke-linejoin="round"/><rect x="84" y="180" width="88" height="40" rx="8" fill="url(#icoGold)" opacity="0.55"/><rect x="84" y="180" width="88" height="40" rx="8" fill="none" stroke="url(#icoNavy)" stroke-width="12"/></svg>
-      <div class="icon-card-name">周辺機器</div>
-      <div class="icon-card-sub">データの記憶や入出力を行う</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><rect x="36" y="48" width="80" height="56" rx="10" fill="url(#icoGold)" opacity="0.45"/><rect x="36" y="48" width="80" height="56" rx="10" fill="none" stroke="url(#icoNavy)" stroke-width="13" filter="url(#icoSh)"/><rect x="140" y="48" width="80" height="56" rx="10" fill="none" stroke="url(#icoNavy)" stroke-width="13"/><rect x="36" y="152" width="80" height="56" rx="10" fill="none" stroke="url(#icoNavy)" stroke-width="13"/><rect x="140" y="152" width="80" height="56" rx="10" fill="none" stroke="url(#icoNavy)" stroke-width="13"/></svg>
+      <div class="icon-card-name">命令セット</div>
+      <div class="icon-card-sub">CPU ごとに定義された命令の集まり</div>
     </div>
-    <div class="icon-card" data-key="cpu" onclick="selectIcon('termPanel1', 'cpu')">
+    <div class="icon-card" data-key="machine" onclick="selectIcon('termPanel1', 'machine')">
       <div class="icon-card-tag">③ POINT</div>
-      <svg class="icon-card-svg" viewBox="0 0 256 256"><rect x="72" y="72" width="112" height="112" rx="14" fill="none" stroke="url(#icoNavy)" stroke-width="16" filter="url(#icoSh)"/><rect x="106" y="106" width="44" height="44" rx="8" fill="url(#icoGold)"/><path d="M100 72V36M156 72V36M100 220v-36M156 220v-36M72 100H36M72 156H36M220 100h-36M220 156h-36" fill="none" stroke="url(#icoNavy)" stroke-width="13" stroke-linecap="round"/></svg>
-      <div class="icon-card-name">中央処理装置</div>
-      <div class="icon-card-sub">演算装置＋制御装置</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><rect x="40" y="72" width="176" height="112" rx="14" fill="none" stroke="url(#icoNavy)" stroke-width="14" filter="url(#icoSh)"/><text x="128" y="146" font-size="56" font-weight="800" text-anchor="middle" fill="url(#icoNavy)" font-family="'JetBrains Mono',monospace">01</text></svg>
+      <div class="icon-card-name">機械語</div>
+      <div class="icon-card-sub">CPU が直接理解できる 0 と 1 の命令</div>
+    </div>
+    <div class="icon-card" data-key="stored" onclick="selectIcon('termPanel1', 'stored')">
+      <div class="icon-card-tag">④ POINT</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><rect x="24" y="60" width="76" height="136" rx="12" fill="url(#icoGold)" opacity="0.45"/><rect x="24" y="60" width="76" height="136" rx="12" fill="none" stroke="url(#icoNavy)" stroke-width="13" filter="url(#icoSh)"/><rect x="156" y="88" width="76" height="80" rx="12" fill="none" stroke="url(#icoNavy)" stroke-width="13"/><path d="M108 128h36" fill="none" stroke="url(#icoNavy)" stroke-width="13" stroke-linecap="round"/><path d="M132 112l16 16-16 16" fill="none" stroke="url(#icoNavy)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="icon-card-name">プログラム格納方式</div>
+      <div class="icon-card-sub">主記憶装置の命令を順に取り出して実行</div>
     </div>
   </div>
   <div class="cards-hint">タップして定義を表示</div>
-  <div class="icon-info-panel" id="termPanel1"><span style="color:var(--text-sub);font-style:italic;">▲ 上の 3 つのカードをタップすると、学習ノートの定義が表示されます。</span></div>
+  <div class="icon-info-panel" id="termPanel1"><span style="color:var(--text-sub);font-style:italic;">▲ 上の 4 つのカードをタップすると、学習ノートの定義が表示されます。</span></div>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center;">
-    <button class="supp-chip" data-supp="CPU"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>なぜ中央処理装置が「中枢」なのですか?</button>
+    <button class="supp-chip" data-supp="ISET"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>同じプログラムが、どの CPU でも動きますか?</button>
   </div>
 </div>
 
-<!-- SLIDE 5: 図解 5つの装置 -->
-<div class="slide" data-title="図解 5 つの装置と中央処理装置">
-  <div class="eyebrow">FIGURE · 装置のつながり</div>
-  <h2 class="slide-title">5 つの装置は、どうつながっているか</h2>
-  <p class="slide-subtitle">コンピュータは <strong>入力・出力・記憶（主記憶と補助記憶）・演算・制御</strong> の装置で構成されます。演算装置と制御装置を併せたものが <strong>中央処理装置（CPU）</strong> です。各装置をタップすると、その装置の役割が下に表示されます。</p>
-  <div class="dev-fig">
-    <div class="dev-cpu">
-      <div class="dev-cpu-tag">CPU · 中央処理装置</div>
-      <div class="dev-pair">
-        <div class="dev-box" data-key="control" onclick="selectDev('control')"><span class="db-no">⑴</span><span class="db-name">制御装置</span></div>
-        <div class="dev-box" data-key="alu" onclick="selectDev('alu')"><span class="db-no">⑵</span><span class="db-name">演算装置</span></div>
-      </div>
-    </div>
-    <div class="dev-link"><span class="dl-mark" aria-hidden="true">↕</span><span class="dl-lab">制御命令とデータ</span></div>
-    <div class="dev-row">
-      <div class="dev-box" data-key="input" onclick="selectDev('input')"><span class="db-no">⑸</span><span class="db-name">入力装置</span></div>
-      <div class="dev-link"><span class="dl-mark" aria-hidden="true">→</span><span class="dl-lab">データ</span></div>
-      <div class="dev-box" data-key="main" onclick="selectDev('main')"><span class="db-no">⑶</span><span class="db-name">主記憶装置</span></div>
-      <div class="dev-link"><span class="dl-mark" aria-hidden="true">→</span><span class="dl-lab">結果</span></div>
-      <div class="dev-box" data-key="output" onclick="selectDev('output')"><span class="db-no">⑹</span><span class="db-name">出力装置</span></div>
-    </div>
-    <div class="dev-link"><span class="dl-mark" aria-hidden="true">↕</span><span class="dl-lab">主記憶装置とだけやり取りする</span></div>
-    <div class="dev-sub">
-      <div class="dev-box" data-key="aux" onclick="selectDev('aux')"><span class="db-no">⑷</span><span class="db-name">補助記憶装置</span></div>
-    </div>
+<!-- SLIDE 5: 実演 3拍 (interactive) -->
+<div class="slide" data-title="取り出し・解読・実行の 3 拍 (interactive)">
+  <div class="eyebrow">DEMO · 学習ノート POINT ④ プログラム格納方式</div>
+  <h2 class="slide-title">CPU は、番地の順に 3 拍をくり返す</h2>
+  <p class="slide-subtitle">プログラムカウンタが指す番地から命令を <strong>取り出し</strong>、命令解読器が <strong>解読</strong> し、そして <strong>実行</strong> します。「次へ」で 1 拍ずつ進みます。</p>
+  <div id="beatBox" class="beat-box"></div>
+  <div class="beat-ctrl">
+    <button class="md-btn" id="btBack" onclick="btStep(-1)">◀ 戻る</button>
+    <div class="md-dots" id="btDots"></div>
+    <button class="md-btn md-btn-main" id="btNext" onclick="btStep(1)">次へ ▶</button>
+    <button class="md-btn md-reset" onclick="btReset()">最初から</button>
   </div>
-  <div class="dev-panel" id="devPanel"><span style="color:var(--text-sub);font-style:italic;">▲ 図の中の装置をタップすると、その装置がしていることが表示されます。</span></div>
+  <p class="beat-cap" id="btCap"></p>
 </div>
 
 <!-- SLIDE 6: 実習1 -->
-<div class="slide" data-title="実習1 ― ハードウェアの構成">
+<div class="slide" data-title="実習1 ― 命令実行の流れ">
   <div class="eyebrow">PRACTICE 1 / 学習ノート 実習1</div>
-  <h2 class="slide-title">構成図の ⑴〜⑹ に入る装置</h2>
-  <p class="slide-subtitle">語群から選んで、⑴〜⑹ に当てはまる装置を答えてください。青い欄をタップすると記号と名称が表示されます。もう一度タップすると元に戻ります。<strong>制御命令がどこから出ているか</strong>、<strong>いちばん下の装置がどれとだけやり取りしているか</strong> が手がかりです。</p>
-  <div class="dev-fig">
-    <div class="dev-cpu">
-      <div class="dev-cpu-tag">CPU · 中央処理装置</div>
-      <div class="dev-pair">
-        <div class="dev-box" style="cursor:default"><span class="db-no">⑴</span><span class="db-name"><span class="sr-blank" data-ph="?" data-answer="ウ 制御装置" onclick="toggleSelBlank(this)">?</span></span></div>
-        <div class="dev-box" style="cursor:default"><span class="db-no">⑵</span><span class="db-name"><span class="sr-blank" data-ph="?" data-answer="エ 演算装置" onclick="toggleSelBlank(this)">?</span></span></div>
-      </div>
-    </div>
-    <div class="dev-link"><span class="dl-mark" aria-hidden="true">↕</span><span class="dl-lab">制御命令とデータ</span></div>
-    <div class="dev-row">
-      <div class="dev-box" style="cursor:default"><span class="db-no">⑸</span><span class="db-name"><span class="sr-blank" data-ph="?" data-answer="ア 入力装置" onclick="toggleSelBlank(this)">?</span></span></div>
-      <div class="dev-link"><span class="dl-mark" aria-hidden="true">→</span><span class="dl-lab">データ</span></div>
-      <div class="dev-box" style="cursor:default"><span class="db-no">⑶</span><span class="db-name"><span class="sr-blank" data-ph="?" data-answer="オ 主記憶装置" onclick="toggleSelBlank(this)">?</span></span></div>
-      <div class="dev-link"><span class="dl-mark" aria-hidden="true">→</span><span class="dl-lab">結果</span></div>
-      <div class="dev-box" style="cursor:default"><span class="db-no">⑹</span><span class="db-name"><span class="sr-blank" data-ph="?" data-answer="イ 出力装置" onclick="toggleSelBlank(this)">?</span></span></div>
-    </div>
-    <div class="dev-link"><span class="dl-mark" aria-hidden="true">↕</span><span class="dl-lab">⑶ とだけやり取りする</span></div>
-    <div class="dev-sub">
-      <div class="dev-box" style="cursor:default"><span class="db-no">⑷</span><span class="db-name"><span class="sr-blank" data-ph="?" data-answer="カ 補助記憶装置" onclick="toggleSelBlank(this)">?</span></span></div>
-    </div>
-  </div>
-  <div class="dev-pool"><span class="dpl-label">語群</span><span class="dpl-item">ア 入力装置</span><span class="dpl-item">イ 出力装置</span><span class="dpl-item">ウ 制御装置</span><span class="dpl-item">エ 演算装置</span><span class="dpl-item">オ 主記憶装置</span><span class="dpl-item">カ 補助記憶装置</span></div>
-</div>
-
-<!-- SLIDE 7: 用語 ④⑤ -->
-<div class="slide" data-title="④⑤ インタフェースとハードウェアインタフェース (interactive)">
-  <div class="eyebrow">POINT 1 / 学習ノート ④⑤</div>
-  <h2 class="slide-title">機器のあいだをつなぐもの</h2>
-  <p class="slide-subtitle"><strong>インタフェース</strong>は、異なる機器やソフトウェア、人間との間でのデータのやり取りをする際、その間をつなぐ<strong>規格や機能</strong>のことです。そのうちハードウェア間のものを <strong>ハードウェアインタフェース</strong> といいます。カードをタップすると定義が表示されます。</p>
-  <div class="icon-cards cols-2">
-    <div class="icon-card" data-key="iface" onclick="selectIcon('termPanel2', 'iface')">
-      <div class="icon-card-tag">④ POINT</div>
-      <svg class="icon-card-svg" viewBox="0 0 256 256"><rect x="20" y="84" width="76" height="88" rx="16" fill="none" stroke="url(#icoNavy)" stroke-width="15" filter="url(#icoSh)"/><rect x="160" y="84" width="76" height="88" rx="16" fill="none" stroke="url(#icoNavy)" stroke-width="15"/><rect x="96" y="110" width="64" height="36" rx="8" fill="url(#icoGold)"/></svg>
-      <div class="icon-card-name">インタフェース</div>
-      <div class="icon-card-sub">その間をつなぐ規格や機能</div>
-    </div>
-    <div class="icon-card" data-key="hwiface" onclick="selectIcon('termPanel2', 'hwiface')">
-      <div class="icon-card-tag">⑤ POINT</div>
-      <svg class="icon-card-svg" viewBox="0 0 256 256"><path d="M20 128h64" fill="none" stroke="url(#icoNavy)" stroke-width="15" stroke-linecap="round"/><rect x="84" y="96" width="52" height="64" rx="10" fill="url(#icoGold)"/><rect x="84" y="96" width="52" height="64" rx="10" fill="none" stroke="url(#icoNavy)" stroke-width="13" filter="url(#icoSh)"/><rect x="148" y="80" width="88" height="96" rx="14" fill="none" stroke="url(#icoNavy)" stroke-width="15"/><path d="M136 112h28M136 144h28" fill="none" stroke="url(#icoNavy)" stroke-width="12" stroke-linecap="round"/></svg>
-      <div class="icon-card-name">ハードウェアインタフェース</div>
-      <div class="icon-card-sub">コネクタの形状や電気信号の形式</div>
-    </div>
-  </div>
-  <div class="cards-hint">タップして定義を表示</div>
-  <div class="icon-info-panel" id="termPanel2"><span style="color:var(--text-sub);font-style:italic;">▲ 2 つのカードをタップすると、学習ノートの定義が表示されます。</span></div>
-  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center;">
-    <button class="supp-chip" data-supp="IFACE"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>インタフェースは機器だけの言葉ですか?</button>
-  </div>
-</div>
-
-<!-- SLIDE 8: 実習3 -->
-<div class="slide" data-title="実習3 ― インタフェースの規格">
-  <div class="eyebrow">PRACTICE 3 / 学習ノート 実習3</div>
-  <h2 class="slide-title">説明にあてはまる規格を選ぶ</h2>
-  <p class="slide-subtitle">⑴〜⑷の説明にあてはまる規格を、ア〜エから選んでください。設問をタップすると答えと、選んだ規格が上で強調されます。もう一度タップすると元に戻ります。</p>
-  <div class="chart-picker-wrap">
-    <div class="chart-options">
-      <div class="chart-option" data-letter="ア">
-        <svg viewBox="0 0 256 256" fill="none" stroke="url(#icoNavy)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"><polyline points="72 88 184 176 128 220 128 36 184 80 72 168"/></svg>
-        <div class="co-letter">ア</div><div class="co-name">Bluetooth</div>
-      </div>
-      <div class="chart-option" data-letter="イ">
-        <svg viewBox="0 0 256 256" fill="none" stroke="url(#icoNavy)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"><path d="M40 100h176l-22 56H62z"/><path d="M128 156v60"/><rect x="92" y="216" width="72" height="24" rx="10"/></svg>
-        <div class="co-letter">イ</div><div class="co-name">HDMI</div>
-      </div>
-      <div class="chart-option" data-letter="ウ">
-        <svg viewBox="0 0 256 256" fill="none" stroke="url(#icoNavy)" stroke-width="18" stroke-linecap="round"><path d="M36 106a130 130 0 0 1 184 0"/><path d="M76 148a74 74 0 0 1 104 0"/><circle cx="128" cy="196" r="14" fill="url(#icoGold)" stroke="none"/></svg>
-        <div class="co-letter">ウ</div><div class="co-name">IEEE 802.11</div>
-      </div>
-      <div class="chart-option" data-letter="エ">
-        <svg viewBox="0 0 256 256" fill="none" stroke="url(#icoNavy)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"><rect x="24" y="72" width="92" height="120" rx="14"/><path d="M156 88a66 66 0 0 1 0 80M196 64a108 108 0 0 1 0 128"/></svg>
-        <div class="co-letter">エ</div><div class="co-name">NFC</div>
-      </div>
-    </div>
-    <div class="chart-question-list">
-      <div class="chart-q" data-ans="イ" onclick="judgeIf(this)">
-        <div class="cq-num">⑴</div>
-        <div class="cq-text">ディスプレイをつなぎ、映像・音声・制御信号を1本のケーブルにまとめて送る。</div>
-        <div class="cq-ans"><span class="cq-ans-letter">イ</span>HDMI。映像と音声をまとめて 1 本で送る規格です。デジタルテレビやオーディオ機器をつなぐときに使います。</div>
-      </div>
-      <div class="chart-q" data-ans="ア" onclick="judgeIf(this)">
-        <div class="cq-num">⑵</div>
-        <div class="cq-text">100m程度まで通信可能、障害物による通信障害に強い。</div>
-        <div class="cq-ans"><span class="cq-ans-letter">ア</span>Bluetooth。スピーカ・マウス・キーボードなどを無線で接続するときに使います。</div>
-      </div>
-      <div class="chart-q" data-ans="ウ" onclick="judgeIf(this)">
-        <div class="cq-num">⑶</div>
-        <div class="cq-text">米国電気電子学会が策定する無線LANの標準規格。</div>
-        <div class="cq-ans"><span class="cq-ans-letter">ウ</span>IEEE 802.11。スマートフォンやスマート家電など、無線通信する機器がこの規格に従います。</div>
-      </div>
-      <div class="chart-q" data-ans="エ" onclick="judgeIf(this)">
-        <div class="cq-num">⑷</div>
-        <div class="cq-text">10cm程度の近距離、非接触キャッシュレス決済。</div>
-        <div class="cq-ans"><span class="cq-ans-letter">エ</span>NFC。ごく近い距離でだけ通信する規格です。</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- SLIDE 9: SECTION 2 DIVIDER -->
-<div class="slide section-divider" data-title="第2節 ソフトウェアとインタフェース">
-  <svg class="section-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><rect x="36" y="48" width="184" height="48" rx="14"/><rect x="36" y="160" width="184" height="48" rx="14"/><path d="M128 96v64"/></svg>
-  <div class="section-number">SECTION · 02</div>
-  <h2 class="section-title-big">ソフトウェアとインタフェース</h2>
-  <p class="section-tagline">基本ソフトウェアと応用ソフトウェア、その間をつなぐもの</p>
-</div>
-
-<!-- SLIDE 10: 用語 ⑥⑦⑧ -->
-<div class="slide" data-title="⑥⑦⑧ OS・ソフトウェアインタフェース・API (interactive)">
-  <div class="eyebrow">POINT 2 / 学習ノート ⑥⑦⑧</div>
-  <h2 class="slide-title">ソフトウェアの側の 3 用語</h2>
-  <p class="slide-subtitle">ソフトウェアには <strong>基本ソフトウェア</strong> と <strong>応用ソフトウェア</strong> があり、基本ソフトウェアにあたるのが <strong>オペレーティングシステム</strong> です。ソフトウェア間のインタフェースを <strong>ソフトウェアインタフェース</strong> といい、<strong>API</strong> などがあります。</p>
-  <div class="icon-cards">
-    <div class="icon-card" data-key="os" onclick="selectIcon('termPanel3', 'os')">
-      <div class="icon-card-tag">⑥ POINT</div>
-      <svg class="icon-card-svg" viewBox="0 0 256 256"><rect x="36" y="48" width="184" height="44" rx="12" fill="none" stroke="url(#icoNavy)" stroke-width="14"/><rect x="36" y="106" width="184" height="44" rx="12" fill="url(#icoGold)" opacity="0.55"/><rect x="36" y="106" width="184" height="44" rx="12" fill="none" stroke="url(#icoNavy)" stroke-width="14" filter="url(#icoSh)"/><rect x="36" y="164" width="184" height="44" rx="12" fill="none" stroke="url(#icoNavy)" stroke-width="14"/></svg>
-      <div class="icon-card-name">オペレーティングシステム</div>
-      <div class="icon-card-sub">基本ソフトウェア（OS）</div>
-    </div>
-    <div class="icon-card" data-key="swiface" onclick="selectIcon('termPanel3', 'swiface')">
-      <div class="icon-card-tag">⑦ POINT</div>
-      <svg class="icon-card-svg" viewBox="0 0 256 256"><rect x="20" y="64" width="88" height="128" rx="18" fill="none" stroke="url(#icoNavy)" stroke-width="15" filter="url(#icoSh)"/><rect x="148" y="64" width="88" height="128" rx="18" fill="none" stroke="url(#icoNavy)" stroke-width="15"/><path d="M108 104h40M108 152h40" fill="none" stroke="url(#icoGold)" stroke-width="16" stroke-linecap="round"/></svg>
-      <div class="icon-card-name">ソフトウェアインタフェース</div>
-      <div class="icon-card-sub">ソフトウェア間のインタフェース</div>
-    </div>
-    <div class="icon-card" data-key="api" onclick="selectIcon('termPanel3', 'api')">
-      <div class="icon-card-tag">⑧ POINT</div>
-      <svg class="icon-card-svg" viewBox="0 0 256 256"><rect x="80" y="44" width="140" height="168" rx="18" fill="none" stroke="url(#icoNavy)" stroke-width="15" filter="url(#icoSh)"/><path d="M20 128h60" fill="none" stroke="url(#icoNavy)" stroke-width="15" stroke-linecap="round"/><polyline points="52 96 88 128 52 160" fill="none" stroke="url(#icoGold)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/><path d="M128 96h56M128 160h56" fill="none" stroke="url(#icoNavy)" stroke-width="13" stroke-linecap="round"/></svg>
-      <div class="icon-card-name">API</div>
-      <div class="icon-card-sub">機能の一部を他へ提供する</div>
-    </div>
-  </div>
-  <div class="cards-hint">タップして定義を表示</div>
-  <div class="icon-info-panel" id="termPanel3"><span style="color:var(--text-sub);font-style:italic;">▲ 3 つのカードをタップすると、学習ノートの定義が表示されます。</span></div>
-</div>
-
-<!-- SLIDE 11: 実習2 -->
-<div class="slide" data-title="実習2 ― ソフトウェアのはたらき">
-  <div class="eyebrow">PRACTICE 2 / 学習ノート 実習2</div>
-  <h2 class="slide-title">空欄に入るのはどの語か</h2>
-  <p class="slide-subtitle">空欄①〜⑥をタップすると、語群の記号と語が表示されます。もう一度タップすると元に戻ります。この文には、この回の要になる一文が入っています。</p>
+  <h2 class="slide-title">空欄に入る語（語群から選ぶ）</h2>
+  <p class="slide-subtitle">空欄①〜⑦をタップすると答えが表示されます。<strong>④⑤⑥ の 3 語</strong> が、この単元の骨組みです。</p>
   <div class="fill-prose">
-    ソフトウェアには（<span class="sr-blank" data-ph="①" data-answer="カ OS" onclick="toggleSelBlank(this)">①</span>）のような（<span class="sr-blank" data-ph="②" data-answer="ア 基本" onclick="toggleSelBlank(this)">②</span>）ソフトウェアのほかに、文書作成・表計算などの（<span class="sr-blank" data-ph="③" data-answer="イ 応用" onclick="toggleSelBlank(this)">③</span>）ソフトウェアがある。（②）ソフトウェアに周辺機器を動作させるための（<span class="sr-blank" data-ph="④" data-answer="オ デバイスドライバ" onclick="toggleSelBlank(this)">④</span>）というプログラムを追加することで、（③）ソフトウェアは周辺機器の違いをほとんど意識することなく作業ができる。（①）は、ハードウェアと（③）ソフトウェアとの仲介をする。例えば、ソフトウェアの実行順序やCPUへの割り当てなどを管理する（<span class="sr-blank" data-ph="⑤" data-answer="エ タスク" onclick="toggleSelBlank(this)">⑤</span>）管理や、複数のユーザアカウントの登録や削除をする（<span class="sr-blank" data-ph="⑥" data-answer="ウ ユーザ" onclick="toggleSelBlank(this)">⑥</span>）管理などがある。
+    コンピュータに動作を指示する命令を組み合わせて、処理の手順が記述されたものを（<span class="sr-blank" data-ph="①" data-answer="エ プログラム" onclick="toggleSelBlank(this)">①</span>）という。動作の指示を CPU が直接理解できる命令は、（<span class="sr-blank" data-ph="②" data-answer="ウ 機械語" onclick="toggleSelBlank(this)">②</span>）と呼ばれるが、これは人にとって扱いづらい。そこで、人にとってわかりやすい単語や記号を使って、（①）を作成できる（<span class="sr-blank" data-ph="③" data-answer="キ プログラミング言語" onclick="toggleSelBlank(this)">③</span>）が人の手によっていくつも考案されている。<br>
+    CPU は、まず（<span class="sr-blank" data-ph="④" data-answer="オ 主記憶装置" onclick="toggleSelBlank(this)">④</span>）に格納されている（①）から命令を順に一つ取り出し、次にそれを（<span class="sr-blank" data-ph="⑤" data-answer="カ 解読" onclick="toggleSelBlank(this)">⑤</span>）して、（<span class="sr-blank" data-ph="⑥" data-answer="イ 実行" onclick="toggleSelBlank(this)">⑥</span>）する。この三つの動作を繰り返して処理を進めていく。この仕組みを（<span class="sr-blank" data-ph="⑦" data-answer="ア プログラム格納方式" onclick="toggleSelBlank(this)">⑦</span>）という。
   </div>
-  <div class="select-pool"><span class="sp-label">語群</span><span class="sp-item">ア 基本</span><span class="sp-item">イ 応用</span><span class="sp-item">ウ ユーザ</span><span class="sp-item">エ タスク</span><span class="sp-item">オ デバイスドライバ</span><span class="sp-item">カ OS</span></div>
-  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center;">
-    <button class="supp-chip" data-supp="DRIVER"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>デバイスドライバは何をしていますか?</button>
-    <button class="supp-chip" data-supp="RESOURCE"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>タスク管理とユーザ管理は何の話ですか?</button>
-  </div>
+  <div class="select-pool">《語群》 ア．プログラム格納方式　イ．実行　ウ．機械語　エ．プログラム　オ．主記憶装置　カ．解読　キ．プログラミング言語</div>
+  <p class="conv-note" style="max-width:920px;margin:12px auto 0;font-size:12.5px;color:var(--text-sub);line-height:1.75;text-align:center;">解答は ① エ、② ウ、③ キ、④ オ、⑤ カ、⑥ イ、⑦ ア です。取り出し・解読・実行の三つを繰り返す仕組みが、プログラム格納方式です。</p>
 </div>
 
-<!-- SLIDE 12: 実習4 -->
-<div class="slide" data-title="実習4 ― デバイスドライバ">
-  <div class="eyebrow">PRACTICE 4 / 学習ノート 実習4</div>
-  <h2 class="slide-title">デバイスドライバはどれか</h2>
-  <p class="slide-subtitle">選択肢をタップすると判定と解説が表示されます。もう一度タップすると元に戻ります。<strong>残りの 3 つがそれぞれ何の説明なのか</strong> まで言えると、次の実習5 でつまずきません。</p>
-  <div class="pq">
-    <div class="pq-q"><span class="pq-num">PRACTICE 4</span>デバイスドライバの説明として適切なものを、次のア〜エから選んでください。</div>
-    <div class="pq-opts" id="pq4">
-      <div class="pq-opt" data-correct="true" data-fb="<b>適切です。</b>デバイスドライバは、コンピュータに接続された周辺機器を制御するソフトウェアです。基本ソフトウェアに追加することで、応用ソフトウェアは周辺機器の違いをほとんど意識することなく作業ができます。" onclick="answerPq(this)"><span class="pq-l">ア</span><span>コンピュータに接続された周辺機器を制御するソフトウェア</span></div>
-      <div class="pq-opt" data-correct="false" data-fb="これは <b>インストーラ</b> の説明です。ソフトウェアを導入する役目であって、周辺機器を制御する役目ではありません。" onclick="answerPq(this)"><span class="pq-l">イ</span><span>応用ソフトウェアをコンピュータに導入するソフトウェア</span></div>
-      <div class="pq-opt" data-correct="false" data-fb="これは <b>マルウェア</b> の説明です。" onclick="answerPq(this)"><span class="pq-l">ウ</span><span>自動的に動作し不利益をもたらすソフトウェア</span></div>
-      <div class="pq-opt" data-correct="false" data-fb="これは <b>OS</b> の説明です。デバイスドライバは、その OS に追加して周辺機器を動作させるためのプログラムです。" onclick="answerPq(this)"><span class="pq-l">エ</span><span>ハードウェアと応用ソフトウェアの仲介役、タスク管理や記憶管理</span></div>
+<!-- SLIDE 7: SECTION 2 -->
+<div class="slide section-divider" data-title="第2節 CPU の中">
+  <svg class="section-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><rect x="56" y="56" width="144" height="144" rx="16"/><rect x="96" y="96" width="64" height="64" rx="8"/><path d="M128 24v32M128 200v32M24 128h32M200 128h32"/></svg>
+  <div class="section-number">SECTION · 02</div>
+  <h2 class="section-title-big">CPU の中</h2>
+  <p class="section-tagline">どこに何が入るかで、装置の名前が決まる</p>
+</div>
+
+<!-- SLIDE 8: ⑤〜⑧ (interactive) -->
+<div class="slide" data-title="⑤〜⑧ プログラムカウンタ・アドレス・命令解読器・命令レジスタ (interactive)">
+  <div class="eyebrow">POINT 2 / 学習ノート ⑤〜⑧</div>
+  <h2 class="slide-title">次の番地を覚える係、命令を置く係、解読する係</h2>
+  <p class="slide-subtitle">CPU の中には、役割の決まった置き場と装置があります。<strong>「何を記憶するか」で名前が決まります</strong>。カードをタップすると定義が表示されます。</p>
+  <div class="icon-cards cols-4">
+    <div class="icon-card" data-key="pc" onclick="selectIcon('termPanel2', 'pc')">
+      <div class="icon-card-tag">⑤ POINT</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><rect x="40" y="56" width="176" height="48" rx="10" fill="url(#icoGold)" opacity="0.5"/><rect x="40" y="56" width="176" height="48" rx="10" fill="none" stroke="url(#icoNavy)" stroke-width="13" filter="url(#icoSh)"/><rect x="40" y="136" width="176" height="48" rx="10" fill="none" stroke="url(#icoNavy)" stroke-width="13"/><path d="M128 104v32" fill="none" stroke="url(#icoNavy)" stroke-width="13"/><path d="M112 120l16 16 16-16" fill="none" stroke="url(#icoNavy)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="icon-card-name">プログラムカウンタ</div>
+      <div class="icon-card-sub">次に実行すべき命令の番地</div>
     </div>
-    <div class="pq-fb" id="pq4fb"></div>
+    <div class="icon-card" data-key="addr" onclick="selectIcon('termPanel2', 'addr')">
+      <div class="icon-card-tag">⑥ POINT</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><rect x="64" y="36" width="128" height="44" rx="8" fill="none" stroke="url(#icoNavy)" stroke-width="12"/><rect x="64" y="106" width="128" height="44" rx="8" fill="url(#icoGold)" opacity="0.5"/><rect x="64" y="106" width="128" height="44" rx="8" fill="none" stroke="url(#icoNavy)" stroke-width="12" filter="url(#icoSh)"/><rect x="64" y="176" width="128" height="44" rx="8" fill="none" stroke="url(#icoNavy)" stroke-width="12"/><path d="M32 58h20M32 128h20M32 198h20" fill="none" stroke="url(#icoNavy)" stroke-width="11" stroke-linecap="round"/></svg>
+      <div class="icon-card-name">アドレス（番地）</div>
+      <div class="icon-card-sub">主記憶装置の場所を示す番号</div>
+    </div>
+    <div class="icon-card" data-key="decoder" onclick="selectIcon('termPanel2', 'decoder')">
+      <div class="icon-card-tag">⑦ POINT</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><circle cx="128" cy="128" r="56" fill="url(#icoGold)" opacity="0.45"/><circle cx="128" cy="128" r="56" fill="none" stroke="url(#icoNavy)" stroke-width="14" filter="url(#icoSh)"/><path d="M128 40v28M128 188v28M40 128h28M188 128h28M66 66l20 20M170 170l20 20M190 66l-20 20M86 170l-20 20" fill="none" stroke="url(#icoNavy)" stroke-width="13" stroke-linecap="round"/></svg>
+      <div class="icon-card-name">命令解読器</div>
+      <div class="icon-card-sub">内容を解読し、必要な指示を決める</div>
+    </div>
+    <div class="icon-card" data-key="ireg" onclick="selectIcon('termPanel2', 'ireg')">
+      <div class="icon-card-tag">⑧ POINT</div>
+      <svg class="icon-card-svg" viewBox="0 0 256 256"><rect x="36" y="84" width="184" height="88" rx="12" fill="url(#icoGold)" opacity="0.45"/><rect x="36" y="84" width="184" height="88" rx="12" fill="none" stroke="url(#icoNavy)" stroke-width="14" filter="url(#icoSh)"/><path d="M68 128h120" fill="none" stroke="url(#icoNavy)" stroke-width="13" stroke-linecap="round"/><path d="M160 110l24 18-24 18" fill="none" stroke="url(#icoNavy)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="icon-card-name">命令レジスタ</div>
+      <div class="icon-card-sub">取り出した命令を格納する</div>
+    </div>
+  </div>
+  <div class="cards-hint">タップして定義を表示</div>
+  <div class="icon-info-panel" id="termPanel2"><span style="color:var(--text-sub);font-style:italic;">▲ 4 つのカードをタップすると、学習ノートの定義が表示されます。</span></div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center;">
+    <button class="supp-chip" data-supp="PCNEXT"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>プログラムカウンタは、いま実行中の番地ですか?</button>
   </div>
 </div>
 
-<!-- SLIDE 13: SECTION 3 DIVIDER -->
-<div class="slide section-divider" data-title="第3節 オペレーティングシステムの目的">
-  <svg class="section-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><circle cx="128" cy="128" r="80"/><path d="M128 48v80l54 32"/></svg>
+<!-- SLIDE 9: 実習2 -->
+<div class="slide" data-title="実習2 ― CPU の構成">
+  <div class="eyebrow">PRACTICE 2 / 学習ノート 実習2</div>
+  <h2 class="slide-title">説明から装置を選ぶ</h2>
+  <p class="slide-subtitle">選択肢をタップすると判定と解説が表示されます。<strong>「何を格納するか」</strong> で見分けます。</p>
+  <div class="src-q"><span class="sq-tag">実習2</span> 次の⑴～⑷の文章に該当する内容を次の語群から選び、記号で答えなさい。</div>
+  <div class="p4-row"><div class="pq" style="width:100%"><div class="pq-q">⑴ 主記憶装置から取り出された命令を格納する。</div><div class="pq-opts" id="pq2a">
+    <div class="pq-opt" data-correct="false" data-fb="制御装置は、命令が示す動作を実現するために各種装置へ制御信号を出す装置です。⑶ がこれにあたります。" onclick="answerPq(this)"><span class="pq-l">ア</span><span>制御装置</span></div>
+    <div class="pq-opt" data-correct="false" data-fb="命令解読器は、受け取った命令の内容を解読する装置です。⑵ がこれにあたります。" onclick="answerPq(this)"><span class="pq-l">イ</span><span>命令解読器</span></div>
+    <div class="pq-opt" data-correct="true" data-fb="<b>これが正解です。</b>命令レジスタは、主記憶装置から取り出した命令を格納します。解読するのは命令解読器です。" onclick="answerPq(this)"><span class="pq-l">ウ</span><span>命令レジスタ</span></div>
+    <div class="pq-opt" data-correct="false" data-fb="プログラムカウンタが記憶するのは命令そのものではなく、次に実行すべき命令の番地です。⑷ がこれにあたります。" onclick="answerPq(this)"><span class="pq-l">エ</span><span>プログラムカウンタ</span></div>
+  </div></div></div>
+  <div class="pq-fb p4-fb" id="pq2afb"></div>
+  <div class="p4-row"><div class="pq" style="width:100%"><div class="pq-q">⑷ 実行する命令の主記憶装置上のアドレスを格納する。</div><div class="pq-opts" id="pq2b">
+    <div class="pq-opt" data-correct="false" data-fb="制御装置は制御信号を出す装置で、番地を記憶する装置ではありません。" onclick="answerPq(this)"><span class="pq-l">ア</span><span>制御装置</span></div>
+    <div class="pq-opt" data-correct="false" data-fb="命令解読器は解読する装置です。番地を記憶しているわけではありません。" onclick="answerPq(this)"><span class="pq-l">イ</span><span>命令解読器</span></div>
+    <div class="pq-opt" data-correct="false" data-fb="命令レジスタが格納するのは、取り出した命令そのものです。番地ではありません。" onclick="answerPq(this)"><span class="pq-l">ウ</span><span>命令レジスタ</span></div>
+    <div class="pq-opt" data-correct="true" data-fb="<b>これが正解です。</b>プログラムカウンタは、実行する命令の主記憶装置上のアドレス（番地）を格納します。" onclick="answerPq(this)"><span class="pq-l">エ</span><span>プログラムカウンタ</span></div>
+  </div></div></div>
+  <div class="pq-fb p4-fb" id="pq2bfb"></div>
+  <p class="conv-note" style="max-width:920px;margin:12px auto 0;font-size:12.5px;color:var(--text-sub);line-height:1.75;text-align:center;">残る ⑵ 実行する命令を解読する は イ 命令解読器、⑶ 各種装置に制御信号を出す は ア 制御装置 です。</p>
+</div>
+
+<!-- SLIDE 10: 実習3 -->
+<div class="slide" data-title="実習3 ― 命令の形式">
+  <div class="eyebrow">PRACTICE 3 / 学習ノート 実習3</div>
+  <h2 class="slide-title">正しいものには ○、誤っているものには ×</h2>
+  <p class="slide-subtitle">チップをタップすると判定が出ます。<strong>命令セットは CPU ごと</strong> であることが要点です。</p>
+  <div class="src-q"><span class="sq-tag">実習3</span> 次の⑴～⑷の文章のうち、正しいものには○、誤っているものに×を記入しなさい。</div>
+  <div class="j-list">
+    <div class="j-row"><div class="j-text">⑴ CPU ごとに定義された命令の集まりを命令セットという。</div><div class="j-chips"><span class="j-chip" data-ok="true" onclick="judgeChip(this)">○</span><span class="j-chip" data-ok="false" onclick="judgeChip(this)">×</span></div><div class="j-fb" data-fb="正しい。学習ノート POINT ② の定義そのものです。">&nbsp;</div></div>
+    <div class="j-row"><div class="j-text">⑵ 命令セットに含まれない命令は直接実行できないので、複数の命令を組み合わせて実現する工夫が必要である。</div><div class="j-chips"><span class="j-chip" data-ok="true" onclick="judgeChip(this)">○</span><span class="j-chip" data-ok="false" onclick="judgeChip(this)">×</span></div><div class="j-fb" data-fb="正しい。この単元の例題も、三つの値を一度に演算する命令が無いので、二つに分けて実現しています。">&nbsp;</div></div>
+    <div class="j-row"><div class="j-text">⑶ 命令は、実行する操作を示す部分と操作対象のデータやアドレスを示す部分で構成される。</div><div class="j-chips"><span class="j-chip" data-ok="true" onclick="judgeChip(this)">○</span><span class="j-chip" data-ok="false" onclick="judgeChip(this)">×</span></div><div class="j-fb" data-fb="正しい。READ A,(11) なら、READ が操作、A と (11) が操作の対象です。">&nbsp;</div></div>
+    <div class="j-row"><div class="j-text">⑷ 命令セットは、どの CPU でも共通のため、同じプログラムをどの CPU でも動作させることができる。</div><div class="j-chips"><span class="j-chip" data-ok="false" onclick="judgeChip(this)">○</span><span class="j-chip" data-ok="true" onclick="judgeChip(this)">×</span></div><div class="j-fb" data-fb="誤り。命令は CPU ごとに定義されるので、全ての CPU で共通ではありません。ただし同じ命令セットをもつ CPU も存在し、それらどうしは同じプログラムを動作させられます（解答の解説）。">&nbsp;</div></div>
+  </div>
+</div>
+
+<!-- SLIDE 11: SECTION 3 -->
+<div class="slide section-divider" data-title="第3節 プログラムを組み立てる">
+  <svg class="section-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><path d="M48 72h160M48 128h160M48 184h96"/><circle cx="196" cy="184" r="20"/></svg>
   <div class="section-number">SECTION · 03</div>
-  <h2 class="section-title-big">オペレーティングシステムの目的</h2>
-  <p class="section-tagline">装置の違いを意識せずに使えるのは、どの層の仕事か</p>
+  <h2 class="section-title-big">プログラムを組み立てる</h2>
+  <p class="section-tagline">値がいまどこにあるかを追う</p>
 </div>
 
-<!-- SLIDE 14: POINT 3 OS の目的 -->
-<div class="slide" data-title="POINT 3 オペレーティングシステムの目的 (interactive)">
-  <div class="eyebrow">POINT 3 / 学習ノート 3</div>
-  <h2 class="slide-title">目的は 3 つの言葉で押さえる</h2>
-  <p class="slide-subtitle">オペレーティングシステムの目的には、<strong>操作支援</strong>、<strong>基本機能の提供</strong>、<strong>資源の有効利用</strong> などがあります。この 3 語がそのまま判定の物差しになります。カードをタップすると、それぞれの中身が表示されます。</p>
-  <div class="icon-cards">
-    <div class="icon-card" data-key="aimSupport" onclick="selectIcon('termPanel4', 'aimSupport')">
-      <div class="icon-card-tag">目的 1</div>
-      <svg class="icon-card-svg" viewBox="0 0 256 256"><rect x="60" y="36" width="136" height="52" rx="12" fill="none" stroke="url(#icoNavy)" stroke-width="15" filter="url(#icoSh)"/><path d="M128 220v-92" fill="none" stroke="url(#icoNavy)" stroke-width="15" stroke-linecap="round"/><polyline points="88 164 128 124 168 164" fill="none" stroke="url(#icoGold)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <div class="icon-card-name">操作支援</div>
-      <div class="icon-card-sub">操作の一部を肩代わりする</div>
-    </div>
-    <div class="icon-card" data-key="aimBasic" onclick="selectIcon('termPanel4', 'aimBasic')">
-      <div class="icon-card-tag">目的 2</div>
-      <svg class="icon-card-svg" viewBox="0 0 256 256"><circle cx="48" cy="52" r="24" fill="none" stroke="url(#icoNavy)" stroke-width="13"/><rect x="24" y="104" width="48" height="48" rx="6" fill="none" stroke="url(#icoNavy)" stroke-width="13"/><path d="M48 180l26 44H22z" fill="none" stroke="url(#icoNavy)" stroke-width="13" stroke-linejoin="round"/><path d="M96 128h36" fill="none" stroke="url(#icoNavy)" stroke-width="13" stroke-linecap="round"/><rect x="148" y="84" width="88" height="88" rx="22" fill="url(#icoGold)" opacity="0.55"/><rect x="148" y="84" width="88" height="88" rx="22" fill="none" stroke="url(#icoNavy)" stroke-width="15" filter="url(#icoSh)"/></svg>
-      <div class="icon-card-name">基本機能の提供</div>
-      <div class="icon-card-sub">操作の内容を抽象化する</div>
-    </div>
-    <div class="icon-card" data-key="aimResource" onclick="selectIcon('termPanel4', 'aimResource')">
-      <div class="icon-card-tag">目的 3</div>
-      <svg class="icon-card-svg" viewBox="0 0 256 256"><circle cx="128" cy="128" r="80" fill="none" stroke="url(#icoNavy)" stroke-width="16" filter="url(#icoSh)"/><path d="M128 48v80h80" fill="none" stroke="url(#icoGold)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/><path d="M128 128L68 182" fill="none" stroke="url(#icoNavy)" stroke-width="14" stroke-linecap="round"/></svg>
-      <div class="icon-card-name">資源の有効利用</div>
-      <div class="icon-card-sub">限られた資源を割り当てる</div>
-    </div>
-  </div>
-  <div class="cards-hint">タップして中身を表示</div>
-  <div class="icon-info-panel" id="termPanel4"><span style="color:var(--text-sub);font-style:italic;">▲ 3 つのカードをタップすると、それぞれの中身が表示されます。</span></div>
-  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center;">
-    <button class="supp-chip" data-supp="ABSTRACT"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>「操作の内容を抽象化する」とは?</button>
-  </div>
-</div>
-
-<!-- SLIDE 15: miki.con と 4 つの層(ステッパー) -->
-<div class="slide" data-title="miki.con と 4 つの層 (interactive)">
-  <div class="eyebrow">DEMO · 一つの動作を層に分ける</div>
-  <h2 class="slide-title">文書作成ソフトからプリンタを使う</h2>
-  <p class="slide-subtitle">USB ケーブルでつないだプリンタ 1 台を、文書作成ソフトから使います。「次へ」を押すたびに、<strong>その仕事を担当している層</strong> が 1 つずつ現れます。どこまでが <strong>OS の目的</strong> で、どこからが <strong>ハードウェアインタフェース</strong> かに注目してください。</p>
+<!-- SLIDE 12: miki.con とトレース (interactive) -->
+<div class="slide" data-title="miki.con とトレース表 (interactive)">
+  <div class="eyebrow">DEMO · 学習ノート実習4 のプログラム</div>
+  <h2 class="slide-title">1 命令ずつ実行して、値を追う</h2>
+  <p class="slide-subtitle">X −（Y ＋ Z）を計算します。10 番地に X ＝ 9、11 番地に Y ＝ 1、12 番地に Z ＝ 7、13 番地は空です。レジスタは A の一つだけ。「次へ」を押すたびに <strong>1 命令ずつ</strong> 実行します。</p>
   <div class="miki-demo">
     <div class="md-stage">
       <div class="md-pane md-code">
-        <div class="md-pane-tag">上から下へ ― 通る道すじ</div>
+        <div class="md-pane-tag">命令 ― 番地の順に</div>
         <div class="md-codelines">
-          <div class="mdc-line" data-i="1">文書作成ソフトが、印刷を指示する</div>
-          <div class="mdc-line" data-i="2">OS が受け取り、仲介する</div>
-          <div class="mdc-line" data-i="3">デバイスドライバが周辺機器を動作させる</div>
-          <div class="mdc-line" data-i="4">コネクタの形状と電気信号の形式がそろっている</div>
-          <div class="mdc-line" data-i="5">プリンタがデータの入出力を行う</div>
-          <div class="mdc-line" data-i="6"><span class="cm">/* 応用ソフトウェアは周辺機器の違いをほとんど意識することなく作業ができる */</span></div>
+          <div class="mdc-line" data-i="1">1　READ A,(11)</div>
+          <div class="mdc-line" data-i="2">2　ADD A,(12)</div>
+          <div class="mdc-line" data-i="3">3　WRITE (13),A</div>
+          <div class="mdc-line" data-i="4">4　READ A,(10)</div>
+          <div class="mdc-line" data-i="5">5　SUB A,(13)</div>
+          <div class="mdc-line" data-i="6">6　WRITE (13),A</div>
+          <div class="mdc-line" data-i="7"><span class="cm">/* 7　STOP */</span></div>
         </div>
       </div>
       <div class="md-pane md-prev">
-        <div class="md-pane-tag">その仕事の担当は誰か</div>
+        <div class="md-pane-tag">レジスタ A と 13 番地</div>
         <div class="md-doc" id="mdDoc">
-          <div class="mdp-line" data-i="1" style="display:flex;align-items:center;gap:8px;"><span style="color:#6f6e78;font-size:12px;">応用</span><span style="background:#0F2847;color:#fff;border-radius:6px;padding:3px 12px;font-weight:700;font-size:13px;">応用ソフトウェア</span></div>
-          <div class="mdp-line" data-i="2" style="display:flex;align-items:center;gap:8px;"><span style="color:#6f6e78;font-size:12px;">⑥</span><span style="background:#0F2847;color:#fff;border-radius:6px;padding:3px 12px;font-weight:700;font-size:13px;">オペレーティングシステム</span></div>
-          <div class="mdp-line" data-i="3" style="display:flex;align-items:center;gap:8px;"><span style="color:#6f6e78;font-size:12px;">実習2 ④</span><span style="background:#2C5F8D;color:#fff;border-radius:6px;padding:3px 12px;font-weight:700;font-size:13px;">デバイスドライバ</span></div>
-          <div class="mdp-line" data-i="4" style="display:flex;align-items:center;gap:8px;"><span style="color:#6f6e78;font-size:12px;">⑤</span><span style="background:#C8102E;color:#fff;border-radius:6px;padding:3px 12px;font-weight:700;font-size:13px;">ハードウェアインタフェース</span></div>
-          <div class="mdp-line" data-i="5" style="display:flex;align-items:center;gap:8px;"><span style="color:#6f6e78;font-size:12px;">②</span><span style="background:#0F2847;color:#fff;border-radius:6px;padding:3px 12px;font-weight:700;font-size:13px;">周辺機器（デバイス）</span></div>
-          <div class="mdp-line" data-i="6" style="margin-top:8px;padding-top:10px;border-top:2px dashed #c7d6ea;font-size:13px;line-height:1.7;"><span style="color:#bb453d;font-weight:700;">意識せずに使える</span> ＝ OS の <span style="font-weight:900;color:#0F2847;">基本機能の提供</span><br><span style="color:#bb453d;font-weight:700;">仕様を合わせる</span> ＝ <span style="font-weight:900;color:#0F2847;">④⑤</span> の側</div>
+          <div class="mdp-line" data-i="1" style="display:flex;align-items:center;gap:8px;"><span style="color:#6f6e78;font-size:12px;">レジスタ A</span><span style="background:#0F2847;color:#fff;border-radius:6px;padding:3px 12px;font-weight:700;font-size:13px;font-family:'JetBrains Mono',monospace;">1</span><span style="color:#6f6e78;font-size:12px;">13 番地は空</span></div>
+          <div class="mdp-line" data-i="2" style="display:flex;align-items:center;gap:8px;"><span style="color:#6f6e78;font-size:12px;">レジスタ A</span><span style="background:#0F2847;color:#fff;border-radius:6px;padding:3px 12px;font-weight:700;font-size:13px;font-family:'JetBrains Mono',monospace;">8</span><span style="color:#bb453d;font-size:12px;font-weight:700;">まだ主記憶に無い</span></div>
+          <div class="mdp-line" data-i="3" style="display:flex;align-items:center;gap:8px;"><span style="color:#6f6e78;font-size:12px;">13 番地</span><span style="background:#0F2847;color:#fff;border-radius:6px;padding:3px 12px;font-weight:700;font-size:13px;font-family:'JetBrains Mono',monospace;">8</span><span style="color:#6f6e78;font-size:12px;">途中結果を置いた</span></div>
+          <div class="mdp-line" data-i="4" style="display:flex;align-items:center;gap:8px;"><span style="color:#6f6e78;font-size:12px;">レジスタ A</span><span style="background:#bb453d;color:#fff;border-radius:6px;padding:3px 12px;font-weight:700;font-size:13px;font-family:'JetBrains Mono',monospace;">9</span><span style="color:#bb453d;font-size:12px;font-weight:700;">8 は上書きされた</span></div>
+          <div class="mdp-line" data-i="5" style="display:flex;align-items:center;gap:8px;"><span style="color:#6f6e78;font-size:12px;">レジスタ A</span><span style="background:#0F2847;color:#fff;border-radius:6px;padding:3px 12px;font-weight:700;font-size:13px;font-family:'JetBrains Mono',monospace;">1</span><span style="color:#6f6e78;font-size:12px;">9 − 8</span></div>
+          <div class="mdp-line" data-i="6" style="display:flex;align-items:center;gap:8px;"><span style="color:#6f6e78;font-size:12px;">13 番地</span><span style="background:#0F2847;color:#fff;border-radius:6px;padding:3px 12px;font-weight:700;font-size:13px;font-family:'JetBrains Mono',monospace;">1</span><span style="color:#6f6e78;font-size:12px;">答えで上書き</span></div>
+          <div class="mdp-line" data-i="7" style="margin-top:8px;padding-top:10px;border-top:2px dashed #c7d6ea;font-size:13px;line-height:1.7;"><span style="color:#bb453d;font-weight:700;">読み込むと前の値は残らない</span>。だから 3 番地で <span style="font-weight:900;color:#0F2847;">先に書き出す</span></div>
         </div>
       </div>
     </div>
     <div class="md-miki" id="mdMiki">
       <div class="md-ava"><svg viewBox="0 0 48 48"><rect x="9" y="9" width="30" height="27" rx="8"/><circle cx="19" cy="21" r="2.4" fill="#2c5a99" stroke="none"/><circle cx="29" cy="21" r="2.4" fill="#2c5a99" stroke="none"/><path d="M25 26 q 4 1.6 0 3.1 q 4 1.6 0 3.1"/><line x1="24" y1="9" x2="24" y2="4"/><circle cx="24" cy="3" r="2" fill="#e0584f" stroke="none"/></svg></div>
-      <div class="md-bubble"><div class="md-name">miki.con <span class="md-tag" id="mdTag">応用</span></div><div class="md-say" id="mdSay">文書作成ソフトは <b>応用ソフトウェア</b> です。まず、ここから印刷の指示が出ます。</div></div>
+      <div class="md-bubble"><div class="md-name">miki.con <span class="md-tag" id="mdTag">1 番地</span></div><div class="md-say" id="mdSay">11 番地の <b>1</b> をレジスタ A に読み込みます。レジスタ A は空から 1 になります。</div></div>
     </div>
     <button class="miki-back" onclick="toggleMiki()">▲ miki.con を表示 (H)</button>
     <div class="md-ctrl">
@@ -1304,271 +1175,128 @@ body.miki-hidden .miki-back { display: inline-block; }
       <button class="md-btn md-reset" onclick="mdReset()">最初から</button>
     </div>
   </div>
-</div>
-
-<!-- SLIDE 16: 目玉 層の割り当て -->
-<div class="slide" data-title="層の割り当て (interactive)">
-  <div class="eyebrow">SORT · どの層の仕事か</div>
-  <h2 class="slide-title">記述を、担当する層に置く</h2>
-  <p class="slide-subtitle">下の 6 枚の記述をタップすると、その仕事を担当する層に置かれます。うち 4 枚は <strong>実習5 のア〜エ</strong> です。<strong>OS の目的 3 語</strong>（操作支援・基本機能の提供・資源の有効利用）に当たるものと、そうでないものが分かれます。もう一度タップすると戻せます。</p>
-  <div class="lay-wrap">
-    <div class="lay-stack">
-      <div class="lay-row" data-layer="app" id="layRow-app">
-        <div class="lay-side"><span class="lay-tag">上</span><span class="lay-name">応用ソフトウェア</span></div>
-        <div class="lay-slot" id="laySlot-app"></div>
-      </div>
-      <div class="lay-row" data-layer="os" id="layRow-os">
-        <div class="lay-side"><span class="lay-tag">⑥</span><span class="lay-name">OS（基本ソフトウェア）</span></div>
-        <div class="lay-slot" id="laySlot-os"></div>
-      </div>
-      <div class="lay-row" data-layer="hwif" id="layRow-hwif">
-        <div class="lay-side"><span class="lay-tag">⑤</span><span class="lay-name">ハードウェアインタフェース</span></div>
-        <div class="lay-slot" id="laySlot-hwif"></div>
-      </div>
-      <div class="lay-row" data-layer="dev" id="layRow-dev">
-        <div class="lay-side"><span class="lay-tag">②</span><span class="lay-name">周辺機器（デバイス）</span></div>
-        <div class="lay-slot" id="laySlot-dev"></div>
-      </div>
-    </div>
-    <div class="lay-hint">TAP TO PLACE / TAP AGAIN TO TAKE BACK</div>
-    <div class="lay-cards">
-      <div class="lay-card" data-key="A" onclick="layPlace(this)"><span class="lc-mark">実習5 ア</span><span class="lc-text">限られたコンピュータ資源を有効に活用し適切に管理する</span></div>
-      <div class="lay-card" data-key="I" onclick="layPlace(this)"><span class="lc-mark">実習5 イ</span><span class="lc-text">機器どうしを接続するコネクタの形状や電気信号の形式などの仕様を合わせる</span></div>
-      <div class="lay-card" data-key="U" onclick="layPlace(this)"><span class="lc-mark">実習5 ウ</span><span class="lc-text">操作の一部を肩代わりしユーザの作業を支援する</span></div>
-      <div class="lay-card" data-key="E" onclick="layPlace(this)"><span class="lc-mark">実習5 エ</span><span class="lc-text">装置の違いを意識せず利用できるよう操作の内容を抽象化する</span></div>
-      <div class="lay-card" data-key="P1" onclick="layPlace(this)"><span class="lc-mark">実習2 より</span><span class="lc-text">文書作成・表計算などを行う</span></div>
-      <div class="lay-card" data-key="P2" onclick="layPlace(this)"><span class="lc-mark">POINT ①② より</span><span class="lc-text">データの記憶や入出力を行う</span></div>
-    </div>
-    <div class="lay-panel" id="layPanel"><span style="color:var(--text-sub);font-style:italic;">▲ 記述をタップすると、担当する層に置かれ、その理由がここに表示されます。</span></div>
-  </div>
-</div>
-
-<!-- SLIDE 17: 実習5 -->
-<div class="slide" data-title="実習5 ― OS の目的">
-  <div class="eyebrow">PRACTICE 5 / 学習ノート 実習5</div>
-  <h2 class="slide-title">OS の目的にあたらないのはどれか</h2>
-  <p class="slide-subtitle">選択肢をタップすると判定と解説が表示されます。もう一度タップすると元に戻ります。<strong>OS の目的 3 語のどれにも当てはまらないもの</strong> を探すのが手順です。</p>
-  <div class="pq">
-    <div class="pq-q"><span class="pq-num">PRACTICE 5</span>オペレーティングシステムの目的として正しくないものを、次のア〜エから選んでください。</div>
-    <div class="pq-opts" id="pq5">
-      <div class="pq-opt" data-correct="false" data-fb="これは OS の目的の一つ、<b>資源の有効利用</b> にあたります。" onclick="answerPq(this)"><span class="pq-l">ア</span><span>限られたコンピュータ資源を有効に活用し適切に管理する</span></div>
-      <div class="pq-opt" data-correct="true" data-fb="<b>これが正解です。</b>ハードウェアのインタフェースの標準化の話なので、OS の目的ではありません。担当は ④⑤ の側、つまり <b>ハードウェアインタフェース</b> です。" onclick="answerPq(this)"><span class="pq-l">イ</span><span>機器どうしを接続するコネクタの形状や電気信号の形式などの仕様を合わせる</span></div>
-      <div class="pq-opt" data-correct="false" data-fb="これは <b>操作支援</b> にあたります。" onclick="answerPq(this)"><span class="pq-l">ウ</span><span>操作の一部を肩代わりしユーザの作業を支援する</span></div>
-      <div class="pq-opt" data-correct="false" data-fb="これは <b>基本機能の提供</b> にあたります。イ と紛らわしいのはここです。エ は操作の内容の側、イ は仕様の側の話です。" onclick="answerPq(this)"><span class="pq-l">エ</span><span>装置の違いを意識せず利用できるよう操作の内容を抽象化する</span></div>
-    </div>
-    <div class="pq-fb" id="pq5fb"></div>
-  </div>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center;">
-    <button class="supp-chip" data-supp="LAYER"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>イ と エ は、どこで分かれますか?</button>
+    <button class="supp-chip" data-supp="OVERWRITE"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>READ すると、前の値はどこへ行きますか?</button>
+    <button class="supp-chip" data-supp="TWOROLE"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>13 番地に 2 回書くのは、なぜですか?</button>
   </div>
 </div>
 
-<!-- SLIDE 18: SECTION 4 DIVIDER -->
-<div class="slide section-divider" data-title="第4節 IoT">
-  <svg class="section-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><circle cx="128" cy="128" r="36"/><path d="M128 92V40M128 164v52M92 128H40M164 128h52"/><circle cx="128" cy="28" r="12"/><circle cx="128" cy="228" r="12"/><circle cx="28" cy="128" r="12"/><circle cx="228" cy="128" r="12"/></svg>
-  <div class="section-number">SECTION · 04</div>
-  <h2 class="section-title-big">IoT</h2>
-  <p class="section-tagline">身のまわりのモノがインターネットにつながる</p>
+<!-- SLIDE 13: 実習4 -->
+<div class="slide" data-title="実習4 ― コンピュータの動作">
+  <div class="eyebrow">PRACTICE 4 / 学習ノート 実習4</div>
+  <h2 class="slide-title">1〜5 番地に入る命令を選ぶ</h2>
+  <p class="slide-subtitle">空欄①〜⑤をタップすると答えが表示されます。<strong>③ を書かずに ④ へ進むと</strong>、レジスタ A の途中結果が消えます。</p>
+  <div class="src-q"><span class="sq-tag">実習4</span> 次のプログラムは、仮想プログラミング言語にしたがって、X －（ Y ＋ Z ）の計算をして13番地に結果を書き込むものである。一度に三つの値を演算する命令はないので、このプログラムでは、先に（ Y ＋ Z ）を計算し、 X からその答えを減算することで実現する。⑴～⑸に当てはまる命令を語群から選び、記号で答えなさい。なお、A レジスタを使うものとする。</div>
+  <div class="trace-wrap">
+    <table class="tt trace">
+      <thead><tr><th>番地</th><th>主記憶装置</th><th>実行後のレジスタ A</th><th>実行後の 13 番地</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td class="lft"><span class="sr-blank" data-ph="①" data-answer="エ READ A,(11)" onclick="toggleSelBlank(this)">①</span></td><td>1</td><td>空</td></tr>
+        <tr><td>2</td><td class="lft"><span class="sr-blank" data-ph="②" data-answer="イ ADD A,(12)" onclick="toggleSelBlank(this)">②</span></td><td>8</td><td>空</td></tr>
+        <tr><td>3</td><td class="lft"><span class="sr-blank" data-ph="③" data-answer="ウ WRITE (13),A" onclick="toggleSelBlank(this)">③</span></td><td>8</td><td>8</td></tr>
+        <tr><td>4</td><td class="lft"><span class="sr-blank" data-ph="④" data-answer="ア READ A,(10)" onclick="toggleSelBlank(this)">④</span></td><td>9</td><td>8</td></tr>
+        <tr><td>5</td><td class="lft"><span class="sr-blank" data-ph="⑤" data-answer="オ SUB A,(13)" onclick="toggleSelBlank(this)">⑤</span></td><td>1</td><td>8</td></tr>
+        <tr><td>6</td><td class="lft">WRITE (13),A</td><td>1</td><td>1</td></tr>
+        <tr><td>7</td><td class="lft">STOP</td><td>1</td><td>1</td></tr>
+      </tbody>
+    </table>
+    <table class="tt memside">
+      <thead><tr><th>番地</th><th>データ</th></tr></thead>
+      <tbody><tr><td>10</td><td>9　X</td></tr><tr><td>11</td><td>1　Y</td></tr><tr><td>12</td><td>7　Z</td></tr><tr><td>13</td><td></td></tr></tbody>
+    </table>
+  </div>
+  <div class="select-pool">《語群》 ア．READ A,(10)　イ．ADD A,(12)　ウ．WRITE (13),A　エ．READ A,(11)　オ．SUB A,(13)</div>
+  <p class="conv-note" style="max-width:920px;margin:12px auto 0;font-size:12.5px;color:var(--text-sub);line-height:1.75;text-align:center;">解答は ① エ、② イ、③ ウ、④ ア、⑤ オ です。SUB 命令はレジスタから主記憶装置の値を引く命令なので、（Y ＋ Z）の答えを一旦 13 番地に格納してから X を読み込みます。</p>
 </div>
 
-<!-- SLIDE 19: 用語 ⑨⑩ -->
-<div class="slide" data-title="⑨⑩ IoT とセンサ (interactive)">
-  <div class="eyebrow">POINT 4 / 学習ノート ⑨⑩</div>
-  <h2 class="slide-title">モノがインターネットにつながる</h2>
-  <p class="slide-subtitle"><strong>IoT</strong> は、身のまわりのモノがインターネットにつながる仕組みです。そこで情報を収集する装置が <strong>センサ</strong> です。カードをタップすると定義が表示されます。</p>
-  <div class="icon-cards cols-2">
-    <div class="icon-card" data-key="iot" onclick="selectIcon('termPanel5', 'iot')">
-      <div class="icon-card-tag">⑨ POINT</div>
-      <svg class="icon-card-svg" viewBox="0 0 256 256"><circle cx="128" cy="128" r="38" fill="url(#icoGold)" opacity="0.5"/><circle cx="128" cy="128" r="38" fill="none" stroke="url(#icoNavy)" stroke-width="15" filter="url(#icoSh)"/><path d="M128 90V52M128 166v38M90 128H52M166 128h38" fill="none" stroke="url(#icoNavy)" stroke-width="13" stroke-linecap="round"/><rect x="106" y="16" width="44" height="34" rx="8" fill="none" stroke="url(#icoNavy)" stroke-width="13"/><rect x="106" y="206" width="44" height="34" rx="8" fill="none" stroke="url(#icoNavy)" stroke-width="13"/><rect x="16" y="106" width="34" height="44" rx="8" fill="none" stroke="url(#icoNavy)" stroke-width="13"/><rect x="206" y="106" width="34" height="44" rx="8" fill="none" stroke="url(#icoNavy)" stroke-width="13"/></svg>
-      <div class="icon-card-name">IoT</div>
-      <div class="icon-card-sub">モノがインターネットにつながる</div>
-    </div>
-    <div class="icon-card" data-key="sensor" onclick="selectIcon('termPanel5', 'sensor')">
-      <div class="icon-card-tag">⑩ POINT</div>
-      <svg class="icon-card-svg" viewBox="0 0 256 256"><rect x="28" y="96" width="72" height="64" rx="12" fill="url(#icoGold)" opacity="0.5"/><rect x="28" y="96" width="72" height="64" rx="12" fill="none" stroke="url(#icoNavy)" stroke-width="15" filter="url(#icoSh)"/><path d="M132 84a62 62 0 0 1 0 88M176 56a104 104 0 0 1 0 144M220 28a146 146 0 0 1 0 200" fill="none" stroke="url(#icoNavy)" stroke-width="14" stroke-linecap="round"/></svg>
-      <div class="icon-card-name">センサ</div>
-      <div class="icon-card-sub">情報を収集する装置</div>
-    </div>
-  </div>
-  <div class="cards-hint">タップして定義を表示</div>
-  <div class="icon-info-panel" id="termPanel5"><span style="color:var(--text-sub);font-style:italic;">▲ 2 つのカードをタップすると、学習ノートの定義が表示されます。</span></div>
-  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center;">
-    <button class="supp-chip" data-supp="IOT"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>IoT とセンサはどうつながっていますか?</button>
-  </div>
-</div>
-
-<!-- SLIDE 20: 実習6 -->
-<div class="slide" data-title="実習6 ― IoT の説明">
-  <div class="eyebrow">PRACTICE 6 / 学習ノート 実習6</div>
-  <h2 class="slide-title">IoT の説明はどれか</h2>
-  <p class="slide-subtitle">選択肢をタップすると判定と解説が表示されます。もう一度タップすると元に戻ります。ここでも、<strong>ほかの 3 つが何の説明なのか</strong> まで言えるかどうかが分かれ目です。</p>
-  <div class="pq">
-    <div class="pq-q"><span class="pq-num">PRACTICE 6</span>IoT の説明として正しいものを、次のア〜エから選んでください。</div>
-    <div class="pq-opts" id="pq6">
-      <div class="pq-opt" data-correct="false" data-fb="これは <b>API</b> の説明です。ソフトウェアインタフェース（⑦）の一つでした。" onclick="answerPq(this)"><span class="pq-l">ア</span><span>機能の一部を他のプログラムから利用できるように提供</span></div>
-      <div class="pq-opt" data-correct="false" data-fb="これは <b>インタフェース</b> の説明です。④ の定義そのものです。" onclick="answerPq(this)"><span class="pq-l">イ</span><span>異なる機器やソフトウェア、人間との間をつなぐ規格や機能</span></div>
-      <div class="pq-opt" data-correct="false" data-fb="これは <b>機械学習</b> の説明です。" onclick="answerPq(this)"><span class="pq-l">ウ</span><span>人工知能における学習の仕組み</span></div>
-      <div class="pq-opt" data-correct="true" data-fb="<b>これが正解です。</b>身のまわりのモノがインターネットにつながる仕組みが IoT です。情報を収集するのが <b>センサ</b>（⑩）でした。" onclick="answerPq(this)"><span class="pq-l">エ</span><span>センサを搭載した機器や制御装置が直接インターネットにつながり情報をやり取りする仕組み</span></div>
-    </div>
-    <div class="pq-fb" id="pq6fb"></div>
-  </div>
-</div>
-
-<!-- SLIDE 21: APPENDIX DIVIDER -->
-<div class="slide section-divider" data-title="第5節 参考: 発展副題">
+<!-- SLIDE 14: SECTION 4 -->
+<div class="slide section-divider" data-title="第4節 参考: 発展副題">
   <svg class="section-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><path d="M32,200V64a8,8,0,0,1,8-8H96l32,32h88a8,8,0,0,1,8,8V200a8,8,0,0,1-8,8H40A8,8,0,0,1,32,200Z"/></svg>
-  <div class="section-number">APPENDIX</div>
-  <h2 class="section-title-big">参考: 発展副題</h2>
-  <p class="section-tagline">共通テスト・実生活で必要な射程まで</p>
+  <div class="section-number">SECTION · 04</div>
+  <h2 class="section-title-big">発展</h2>
+  <p class="section-tagline">レジスタが 2 つのとき、式を展開するとき、くり返すとき</p>
 </div>
 
-<!-- SLIDE 22: 参考A 三層の順序 -->
-<div class="slide" data-title="参考A ハードウェアに近い順に並べる">
-  <div class="eyebrow">APPENDIX A / 三層の順序</div>
-  <h2 class="slide-title">ハードウェアに近いのは、どれか</h2>
-  <p class="slide-subtitle">周辺機器を制御・操作するもの、基本的な管理と共通機能を担うもの、その上で用途向けの機能を担うもの。この 3 つを <strong>ハードウェアから近い順</strong> に並べると、そのまま前の節で見た層の順序になります。</p>
-  <div class="appx">
-    <div class="appx-figbox">
-      <div class="ladder">
-        <div class="ladder-step near">
-          <div class="ls-tag">NEAR</div>
-          <div class="ls-name">デバイスドライバ</div>
-          <div class="ls-note">周辺機器を制御・操作する</div>
-        </div>
-        <div class="ladder-op" aria-hidden="true">＜</div>
-        <div class="ladder-step">
-          <div class="ls-tag">MIDDLE</div>
-          <div class="ls-name">オペレーティングシステム</div>
-          <div class="ls-note">基本的な管理と共通機能を担う</div>
-        </div>
-        <div class="ladder-op" aria-hidden="true">＜</div>
-        <div class="ladder-step far">
-          <div class="ls-tag">FAR</div>
-          <div class="ls-name">アプリケーションソフトウェア</div>
-          <div class="ls-note">基本ソフトウェアの上で用途向けの機能を担う</div>
-        </div>
-      </div>
-      <div class="appx-cap">ハードウェアに <b>近い</b> ← デバイスドライバ ＜ オペレーティングシステム ＜ アプリケーションソフトウェア → <b>遠い</b></div>
-    </div>
-    <div class="appx-points">
-      <div class="appx-pt"><div class="pt-tag">なぜ一番下がドライバか</div><h4>ドライバがあって、OS が動かせる</h4><p>デバイスドライバがインストールされることで、<b>オペレーティングシステムが周辺機器を動作させることができます</b>。機器に触れる側にいちばん近いので、いちばん下です。</p></div>
-      <div class="appx-pt"><div class="pt-tag">なぜ一番上がアプリか</div><h4>アプリは OS の機能を使って動く</h4><p>アプリケーションソフトウェアは、<b>OS が提供する機能を利用して動作します</b>。オペレーティングシステムの上で、特定の作業を行うために使われるソフトウェアです。</p></div>
-    </div>
-    <p class="src-note">オペレーティング（operating）には「運用、操作」などの意味があります。<strong>コンピュータの基本的な管理・制御を行うソフトウェア</strong>、という定義とそのまま重なります。</p>
-  </div>
-  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center;">
-    <button class="supp-chip" data-supp="ORDER"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>この順序は何を根拠に決まりますか?</button>
+<!-- SLIDE 15: 参考A -->
+<div class="slide" data-title="参考A レジスタが 2 つあるとき（章末5）">
+  <div class="eyebrow">APPENDIX A · 学習ノート 3 章 章末5</div>
+  <h2 class="slide-title">空いているほうへ読み込む</h2>
+  <p class="slide-subtitle">レジスタが A と B の 2 つあり、加算命令は <strong>レジスタどうし</strong> しかできません。X ＋ Y ＋ Z を 13 番地に書き込みます。</p>
+  <div class="appx-figbox" id="ch5Box"></div>
+  <div class="appx-points">
+    <div class="appx-pt"><div class="appx-tag">1 回目の加算</div><h4>先に二つのレジスタへ読み込む</h4><p>加算はレジスタどうしなので、X を A に、Y を B に読み込んでから加算します。結果はレジスタ A に入ります。</p></div>
+    <div class="appx-pt"><div class="appx-tag">2 回目の加算</div><h4>空いている B に Z を読む</h4><p>すでに X ＋ Y の結果がレジスタ A に入っているので、Z はレジスタ B に読み込みます。A に読み込むと、途中結果が消えます。</p></div>
   </div>
 </div>
 
-<!-- SLIDE 23: 参考B インタフェースの代表例 -->
-<div class="slide" data-title="参考B インタフェースの代表例">
-  <div class="eyebrow">APPENDIX B / 規格と機器</div>
-  <h2 class="slide-title">どの規格が、どの機器に使われるか</h2>
-  <p class="slide-subtitle">インタフェースは <strong>情報機器を相互に接続する規格</strong> です。実習3 の <strong>Bluetooth・HDMI・IEEE 802.11</strong> に、汎用の <strong>USB</strong> と有線の <strong>イーサネット</strong> を加えた 5 つについて、つなぐ相手を並べます。</p>
-  <div class="appx">
-    <div class="appx-figbox">
-      <div class="if-list">
-        <div class="if-key">USB</div>
-        <div class="if-val">プリンタ、キーボード、ハードディスクなど。もっとも普及した汎用の規格です。</div>
-        <div class="if-key">HDMI</div>
-        <div class="if-val">デジタルテレビ、オーディオ機器。映像・音声・制御信号を 1 本のケーブルにまとめて送ります。</div>
-        <div class="if-key">イーサネット</div>
-        <div class="if-val">ハブ、ルータなどの有線通信機器。有線ネットワークの主流です。</div>
-        <div class="if-key">Bluetooth</div>
-        <div class="if-val">スピーカ、マウス、キーボードの無線接続。</div>
-        <div class="if-key">IEEE 802.11</div>
-        <div class="if-val">スマートフォン、スマート家電など無線通信する機器。無線 LAN の標準規格です。</div>
-      </div>
-      <div class="appx-cap">有線か無線か、そして <b>何をつなぐための規格か</b> で整理すると覚えやすくなります</div>
-    </div>
-    <div class="appx-points">
-      <div class="appx-pt"><div class="pt-tag">略称のもとの語</div><h4>頭文字が意味を持っている</h4><p><b>IEEE</b> は Institute of Electrical and Electronics Engineers（米国電気電子学会）、<b>HDMI</b> は High-Definition Multimedia Interface（高精細度マルチメディアインタフェース）、<b>USB</b> は Universal Serial Bus（ユニバーサルシリアルバス）の略称です。</p></div>
-      <div class="appx-pt"><div class="pt-tag">規格名とブランド名</div><h4>IEEE 802.11 と Wi-Fi の関係</h4><p>IEEE 802.11 に準拠する通信機器の相互接続性を、業界団体 Wi-Fi Alliance が保証する<b>ブランドが Wi-Fi</b> です。規格の名前とブランドの名前は別のものです。</p></div>
-    </div>
+<!-- SLIDE 16: 参考B -->
+<div class="slide" data-title="参考B 式を展開すると、退避が要らなくなる">
+  <div class="eyebrow">APPENDIX B · 解答の但し書き</div>
+  <h2 class="slide-title">同じ答えでも、手順の数は変わる</h2>
+  <p class="slide-subtitle">X −（Y ＋ Z）は X − Y − Z と同じです。<strong>式を展開すると</strong>、途中結果を書き出す必要がなくなります。</p>
+  <div class="appx-hero" id="expandBox"></div>
+  <div class="appx-points">
+    <div class="appx-pt"><div class="appx-tag">もとの順</div><h4>先に括弧の中を計算する</h4><p>（Y ＋ Z）を先に計算するので、その答えを置く場所が要ります。命令は 6 つです。</p></div>
+    <div class="appx-pt"><div class="appx-tag">展開した順</div><h4>左から順に引いていく</h4><p>X から Y を引き、続けて Z を引きます。レジスタの中身を捨てる場面がないので、書き出しは最後の 1 回だけ。命令は 4 つです。</p></div>
   </div>
 </div>
 
-<!-- SLIDE 24: 参考C USB ハブ -->
-<div class="slide" data-title="参考C USB ハブは何台つなげるか">
-  <div class="eyebrow">APPENDIX C / 数えかた</div>
-  <h2 class="slide-title">ハブを 1 台足すと、ポートは 3 つ増える</h2>
-  <p class="slide-subtitle">ポートが 4 つの USB ハブを 5 台使います。コンピュータに使える USB ポートは 1 つだけです。理論上、最大で何台の周辺機器を接続できるでしょうか。<strong>ハブを 1 台つなぐと、使えるポートがいくつ変わるか</strong> を先に決めるのが要点です。</p>
-  <div class="appx">
-    <div class="appx-figbox">
-      <div class="hub-steps">
-        <div class="hub-col"><span class="hub-num">1</span><div class="hub-bar" style="height:9px"></div><span class="hub-lab">はじめ<br>本体のポート</span></div>
-        <div class="hub-plus" aria-hidden="true">−1 ＋4</div>
-        <div class="hub-col"><span class="hub-num">4</span><div class="hub-bar" style="height:36px"></div><span class="hub-lab">ハブ 1 台目</span></div>
-        <div class="hub-plus" aria-hidden="true">＋3</div>
-        <div class="hub-col"><span class="hub-num">7</span><div class="hub-bar" style="height:63px"></div><span class="hub-lab">2 台目</span></div>
-        <div class="hub-plus" aria-hidden="true">＋3</div>
-        <div class="hub-col"><span class="hub-num">10</span><div class="hub-bar" style="height:90px"></div><span class="hub-lab">3 台目</span></div>
-        <div class="hub-plus" aria-hidden="true">＋3</div>
-        <div class="hub-col"><span class="hub-num">13</span><div class="hub-bar" style="height:117px"></div><span class="hub-lab">4 台目</span></div>
-        <div class="hub-plus" aria-hidden="true">＋3</div>
-        <div class="hub-col"><span class="hub-num">16</span><div class="hub-bar" style="height:144px;background:linear-gradient(180deg,#f4d995 0%,#8a6d1f 100%)"></div><span class="hub-lab">5 台目<br>= 答え</span></div>
-      </div>
-      <div class="appx-cap">4 ＋ 3 ＋ 3 ＋ 3 ＋ 3 ＝ <b>16 ポート</b>。よって理論上 <b>16 台</b> の周辺機器を接続できます</div>
-    </div>
-    <div class="appx-points">
-      <div class="appx-pt"><div class="pt-tag">1 台目だけ別</div><h4>本体の 1 ポートを使って 4 になる</h4><p>コンピュータには USB ポートが一つしか残っていないので、そのポートに 1 台目のハブを接続することになります。ここで使えるポートは <b>4 つ</b> になります。</p></div>
-      <div class="appx-pt"><div class="pt-tag">2 台目からは ＋3</div><h4>1 つ減って 4 つ増える</h4><p>どのハブに接続しようとも、接続することにより接続されたハブのポートが一つ減り、新たに接続したハブのポートでポートが四つ増えます。つまり <b>ポートが三つ増えていく</b> ということです。</p></div>
-    </div>
-  </div>
-  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center;">
-    <button class="supp-chip" data-supp="HUB"><span class="sc-tag">補足</span><span class="sc-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.2-4.2M11 8.2v5.6M8.2 11h5.6"/></svg></span>つなぎ方を変えても 16 台ですか?</button>
+<!-- SLIDE 17: 参考C -->
+<div class="slide" data-title="参考C くり返しのあるプログラム（思考のステップ5）">
+  <div class="eyebrow">APPENDIX C · ベストフィット 思考のステップ5</div>
+  <h2 class="slide-title">同じ番地へ戻ると、くり返しになる</h2>
+  <p class="slide-subtitle">ベストフィットの仮想コンピュータには、<strong>フラグレジスタ</strong> と <strong>分岐命令</strong> があります。分岐命令はプログラムカウンタを書き換えるので、実行が前の番地へ戻ります。</p>
+  <div class="appx-figbox" id="loopBox"></div>
+  <div class="appx-points">
+    <div class="appx-pt"><div class="appx-tag">フラグレジスタ</div><h4>計算の結果を覚えておく</h4><p>加算や減算の結果が 0 のとき「00」、正のとき「01」、負のとき「10」になります。分岐命令は、この値を見て戻るかどうかを決めます。</p></div>
+    <div class="appx-pt"><div class="appx-tag">レジスタの一覧表</div><h4>1 行ずつ書けば追える</h4><p>プログラムカウンタ・各レジスタ・フラグレジスタを 1 行ずつ書き出すと、くり返しの回数と最終値が見えます。この単元の実習4 で書いた表と同じやり方です。</p></div>
   </div>
 </div>
 
-<!-- SLIDE 25: 答え合わせ -->
-<div class="slide" data-title="POINT 答え合わせ(全 10 用語)">
-  <div class="eyebrow">REVIEW · 学習ノート POINT 14 解答</div>
-  <h2 class="slide-title">学習ノート POINT の 10 用語</h2>
+<!-- SLIDE 18: POINT 答え合わせ -->
+<div class="slide" data-title="POINT 答え合わせ(全 8 用語)">
+  <div class="eyebrow">REVIEW · 学習ノート POINT 17 解答</div>
+  <h2 class="slide-title">学習ノート POINT の 8 用語</h2>
   <p class="slide-subtitle">各行をタップすると答えが表示されます。「全表示」で一括展開、「全非表示」で初期化します。</p>
   <div class="answers-actions"><button onclick="revealAll()">全表示</button><button onclick="hideAll()">全非表示</button></div>
   <div class="answers-grid" id="pointAnswersGrid">
-    <div class="answer-section-head"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="88" y="88" width="80" height="80" rx="14"/><path d="M56 56l32 32M200 56l-32 32"/></svg>1 — ハードウェアとハードウェアインタフェース</div>
-    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">①</span><span class="answer-text">核となる部分と周辺機器を併せたもの</span><span class="answer-reveal" data-ans="ハードウェア">クリック</span></div>
-    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">②</span><span class="answer-text">接続してデータの記憶や入出力を行うもの</span><span class="answer-reveal" data-ans="周辺機器(デバイス)">クリック</span></div>
-    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">③</span><span class="answer-text">演算装置と制御装置から構成される中枢部分</span><span class="answer-reveal" data-ans="中央処理装置">クリック</span></div>
-    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">④</span><span class="answer-text">異なる機器やソフトウェア、人間との間でのデータのやり取りをする際、その間をつなぐ規格や機能のこと</span><span class="answer-reveal" data-ans="インタフェース">クリック</span></div>
-    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑤</span><span class="answer-text">特にハードウェア間の④</span><span class="answer-reveal" data-ans="ハードウェアインタフェース">クリック</span></div>
-    <div class="answer-section-head"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="40" y="52" width="176" height="44" rx="12"/><rect x="40" y="160" width="176" height="44" rx="12"/></svg>2 — ソフトウェアとソフトウェアインタフェース</div>
-    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑥</span><span class="answer-text">基本ソフトウェア(OS)</span><span class="answer-reveal" data-ans="オペレーティングシステム">クリック</span></div>
-    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑦</span><span class="answer-text">ソフトウェア間の④</span><span class="answer-reveal" data-ans="ソフトウェアインタフェース">クリック</span></div>
-    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑧</span><span class="answer-text">⑦の例</span><span class="answer-reveal" data-ans="API">クリック</span></div>
-    <div class="answer-section-head"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><circle cx="128" cy="128" r="34"/><path d="M128 94V40M128 162v54M94 128H40M162 128h54"/></svg>4 — IoT</div>
-    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑨</span><span class="answer-text">身のまわりのモノがインターネットにつながる仕組み</span><span class="answer-reveal" data-ans="IoT">クリック</span></div>
-    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑩</span><span class="answer-text">情報を収集する装置</span><span class="answer-reveal" data-ans="センサ">クリック</span></div>
+    <div class="answer-section-head"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="40" y="56" width="176" height="144" rx="14"/><path d="M40 104h176M88 56v144"/></svg>1 — コンピュータの構成</div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">①</span><span class="answer-text">コンピュータに動作を指示する命令を組み合わせて、処理の手順を記述したもの</span><span class="answer-reveal" data-ans="プログラム">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">②</span><span class="answer-text">CPU ごとに定義された命令の集まり</span><span class="answer-reveal" data-ans="命令セット">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">③</span><span class="answer-text">0と1のビット列からなる、CPU が動作の指示を直接理解できる命令</span><span class="answer-reveal" data-ans="機械語">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">④</span><span class="answer-text">主記憶装置に格納されているプログラムから命令を順に取り出し、解読して実行する仕組み</span><span class="answer-reveal" data-ans="プログラム格納方式">クリック</span></div>
+    <div class="answer-section-head"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="56" y="56" width="144" height="144" rx="16"/><rect x="96" y="96" width="64" height="64" rx="8"/></svg>2 — CPU の中</div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑤</span><span class="answer-text">主記憶装置にあるプログラムのうち、次に実行すべき命令のアドレス（番地）を記憶しているもの</span><span class="answer-reveal" data-ans="プログラムカウンタ">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑥</span><span class="answer-text">主記憶装置の場所を示す番号（⑤ が記憶しているもの）</span><span class="answer-reveal" data-ans="アドレス">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑦</span><span class="answer-text">⑧ から命令を受け取り、内容を解読して実行に必要な指示を決定する装置</span><span class="answer-reveal" data-ans="命令解読器">クリック</span></div>
+    <div class="answer-row" onclick="revealAnswer(this)"><span class="answer-num">⑧</span><span class="answer-text">主記憶装置から取り出した命令を格納するもの</span><span class="answer-reveal" data-ans="命令レジスタ">クリック</span></div>
   </div>
-  <p class="conv-note" style="max-width:920px;margin:14px auto 0;font-size:12.5px;color:var(--text-sub);line-height:1.75;text-align:center;"><strong>3 の欄</strong>（オペレーティングシステムの目的）は用語の穴埋めではなく、<strong>操作支援・基本機能の提供・資源の有効利用</strong> の 3 語をそのまま覚えます。</p>
 </div>
 
-<!-- SLIDE 26: まとめツリー -->
-<div class="slide" data-title="POINT 14 まとめツリー">
-  <div class="eyebrow">SUMMARY · POINT 14 を 1 枚で見渡す</div>
-  <h2 class="slide-title">ハードウェアとソフトウェアを 1 枚で見る</h2>
-  <p class="slide-subtitle">機器の側と、ソフトウェアの側、そして両者をつなぐ <strong>インタフェース</strong>。この単元は「<strong>どの層の仕事か</strong>」で並べ直すと見通しがよくなります。</p>
+<!-- SLIDE 19: まとめツリー -->
+<div class="slide" data-title="POINT 17 まとめツリー">
+  <div class="eyebrow">SUMMARY · POINT 17 を 1 枚で見渡す</div>
+  <h2 class="slide-title">コンピュータの構成と動作を 1 枚で見る</h2>
+  <p class="slide-subtitle">命令は <strong>番地の順</strong> に取り出され、<strong>3 拍</strong> で実行される。値は <strong>レジスタ</strong> に置かれ、次を読み込むと残らない。</p>
   <div class="summary-tree">
-    <div class="tree-root"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><rect x="36" y="48" width="184" height="44" rx="12"/><rect x="36" y="164" width="184" height="44" rx="12"/><path d="M128 92v72"/></svg>装置の違いを意識せずに使える ― その担当はどこか</div>
+    <div class="tree-root"><svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"><rect x="40" y="56" width="176" height="144" rx="14"/><path d="M40 104h176M88 56v144"/></svg>主記憶装置の命令を、番地の順に取り出して実行する</div>
     <div class="tree-branches">
-      <div class="tree-branch"><svg class="tb-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="88" y="88" width="80" height="80" rx="14"/><path d="M56 56l32 32M200 200l-32-32"/></svg><div class="tb-tag">SECTION 1</div><h4>ハードウェア</h4><p>① ハードウェア ② 周辺機器 ③ 中央処理装置</p></div>
-      <div class="tree-branch accent"><svg class="tb-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="24" y="88" width="76" height="80" rx="14"/><rect x="156" y="88" width="76" height="80" rx="14"/><path d="M100 128h56"/></svg><div class="tb-tag">SECTION 1 · つなぐ</div><h4>インタフェース</h4><p>④ インタフェース ⑤ ハードウェアインタフェース</p></div>
-      <div class="tree-branch"><svg class="tb-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="40" y="52" width="176" height="44" rx="12"/><rect x="40" y="160" width="176" height="44" rx="12"/><path d="M128 96v64"/></svg><div class="tb-tag">SECTION 2・3</div><h4>ソフトウェア</h4><p>⑥ OS ⑦ ソフトウェアインタフェース ⑧ API ／ 目的 3 語</p></div>
-      <div class="tree-branch accent"><svg class="tb-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><circle cx="128" cy="128" r="34"/><path d="M128 94V44M128 162v50M94 128H44M162 128h50"/></svg><div class="tb-tag">SECTION 4</div><h4>IoT</h4><p>⑨ IoT ⑩ センサ</p></div>
+      <div class="tree-branch accent"><svg class="tb-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="40" y="56" width="176" height="144" rx="14"/><path d="M40 104h176M88 56v144"/></svg><div class="tb-tag">SECTION 1</div><h4>プログラムと命令</h4><p>命令セットは CPU ごと。取り出し・解読・実行がプログラム格納方式</p></div>
+      <div class="tree-branch"><svg class="tb-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><rect x="56" y="56" width="144" height="144" rx="16"/><rect x="96" y="96" width="64" height="64" rx="8"/></svg><div class="tb-tag">SECTION 2</div><h4>CPU の中</h4><p>プログラムカウンタは次の番地、命令レジスタは命令、解読は命令解読器</p></div>
+      <div class="tree-branch accent"><svg class="tb-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><path d="M48 72h160M48 128h160M48 184h96"/><circle cx="196" cy="184" r="20"/></svg><div class="tb-tag">SECTION 3</div><h4>プログラムを組み立てる</h4><p>読み込むと前の値は残らない。途中結果は先に主記憶装置へ書き出す</p></div>
+      <div class="tree-branch"><svg class="tb-icon" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"><path d="M32,200V64a8,8,0,0,1,8-8H96l32,32h88a8,8,0,0,1,8,8V200a8,8,0,0,1-8,8H40A8,8,0,0,1,32,200Z"/></svg><div class="tb-tag">APPENDIX</div><h4>発展</h4><p>レジスタ 2 つ / 式の展開 / くり返しと分岐</p></div>
     </div>
   </div>
 </div>
 
-<!-- SLIDE 27: 復習チャレンジ -->
+<!-- SLIDE 20: 復習チャレンジ -->
 <div class="slide" data-title="復習チャレンジ(10問ランダム)">
   <div class="eyebrow">REVIEW · 10 QUESTIONS · RANDOM</div>
   <h2 class="slide-title">理解度チェック</h2>
-  <p class="slide-subtitle">POINT 14 の重要事項からランダムに 10 問出題します。即時採点で結果を表示します。</p>
+  <p class="slide-subtitle">POINT 17 の重要事項からランダムに 10 問出題します。即時採点で結果を表示します。</p>
   <div class="review-container">
     <div id="reviewStart">
-      <div class="review-intro">POINT 14 の <strong>本編 + 発展副題</strong> から計 16 問のプールを用意しています。10 問をランダムに出題し、即時採点します。</div>
+      <div class="review-intro">POINT 17 の <strong>本編 + 発展副題</strong> から計 16 問のプールを用意しています。10 問をランダムに出題し、即時採点します。</div>
       <button class="review-start-btn" onclick="startReview()">スタート</button>
     </div>
     <div class="review-q-area" id="reviewQuiz">
@@ -1585,17 +1313,17 @@ body.miki-hidden .miki-back { display: inline-block; }
   </div>
 </div>
 
-<!-- SLIDE 28: END CARD -->
+<!-- SLIDE 21: 完了 -->
 <div class="slide title-slide" data-title="完了">
   <svg class="title-deco" viewBox="0 0 256 256"><polyline points="40 144 96 200 224 72" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
-  <svg class="title-deco-2" viewBox="0 0 256 256"><rect x="28" y="52" width="200" height="36" rx="12" fill="none" stroke="currentColor" stroke-width="14"/><rect x="28" y="110" width="200" height="36" rx="12" fill="none" stroke="currentColor" stroke-width="14"/><rect x="28" y="168" width="200" height="36" rx="12" fill="none" stroke="currentColor" stroke-width="14"/></svg>
+  <svg class="title-deco-2" viewBox="0 0 256 256"><rect x="48" y="56" width="160" height="40" rx="10" fill="none" stroke="currentColor" stroke-width="14"/><rect x="48" y="112" width="160" height="40" rx="10" fill="none" stroke="currentColor" stroke-width="14"/><rect x="48" y="168" width="160" height="40" rx="10" fill="none" stroke="currentColor" stroke-width="14"/></svg>
   <div class="title-label">CHAPTER · 3 / COMPLETE</div>
-  <h1 class="title-main">ハードウェアとソフトウェア</h1>
-  <div class="title-sub">仕様を合わせる側と、操作の内容を抽象化する側</div>
+  <h1 class="title-main">コンピュータの構成と動作</h1>
+  <div class="title-sub">命令を 1 つずつ取り出し、値がいまどこにあるかを追う</div>
   <div class="title-meta">
-    <div class="title-meta-item"><strong>POINT</strong>14 / 10 用語</div>
-    <div class="title-meta-item"><strong>PRACTICE</strong>6 題完走</div>
-    <div class="title-meta-item"><strong>KEY</strong>どの層の仕事か</div>
+    <div class="title-meta-item"><strong>POINT</strong>17 / 8 用語</div>
+    <div class="title-meta-item"><strong>PRACTICE</strong>4 題完走</div>
+    <div class="title-meta-item"><strong>KEY</strong>読み込むと前の値は残らない</div>
   </div>
 </div>
 </div>
@@ -1754,186 +1482,35 @@ body.miki-hidden .miki-back { display: inline-block; }
 
 
 // ============================================================
-// HOSOKU_SUPP ― lec14「ハードウェアとソフトウェア」用の補足コンテンツ
-//   読み込み順: 上の supp.js(window.suppFig + モーダル)→ この定義 → lec14 本体 JS
-//   図は HTML 要素(supp-tbl / field-eq)で組み、SVG の中に名称ラベルを置かない
+// HOSOKU_SUPP ― lec16「論理回路と論理演算」用の補足コンテンツ
+//   読み込み順: 上の supp.js(window.suppFig + モーダル)→ この定義 → lec16 本体 JS
+//   図は HTML 要素(supp-tbl / field-eq)で組み、回路の図記号だけ SVG で描く(名称は SVG の外に置く)
 // ============================================================
 window.HOSOKU_SUPP = {
-  'CPU': {
-    tag: 'SUPPLEMENT · 中枢',
-    title: 'なぜ中央処理装置が<b>中枢</b>なのですか?',
-    sub: '演算をする装置と、各装置を制御する装置。この 2 つが一つになっています。',
-    body: `
-    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
-      <div class="sec-h">計算する側と、指図する側</div>
-      <div class="sec-p">中央処理装置は、<b>演算をする演算装置</b>と<b>各装置を制御する制御装置</b>から構成されるコンピュータの中枢部分です。片方だけでは足りません。計算する力があっても、いつ何をどこへ動かすかを決める側がいなければ、装置はばらばらに止まったままです。</div>
-      <div class="sec-fig"><div class="sf-box">
-        <table class="supp-tbl"><tr><th>装置</th><th>していること</th></tr>
-        <tr><td><span class="mq">制御装置</span></td><td>ほかの四つの装置へ命令を送り、制御する</td></tr>
-        <tr><td><span class="mq">演算装置</span></td><td>処理命令に従ってデータ処理をする</td></tr></table>
-      </div></div>
-    </div></div>
-    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
-      <div class="sec-h">制御の流れをたどると、制御装置が見つかる</div>
-      <div class="sec-p">構成図で装置を見分けるときは、まず制御装置を特定します。<b>制御命令は制御装置からのみ送られている</b>ので、制御の流れの源をたどればそこが制御装置です。もう一つの手がかりは記憶装置で、<b>補助記憶装置とデータのやり取りをするのは主記憶装置のみ</b>です。装置名を覚えていなくても、この 2 本の手がかりを先に当てれば、残りは順に決まっていきます。</div>
-    </div></div>`
+  "ISET": {
+    tag: "SUPPLEMENT · 命令セット",
+    title: "同じプログラムが、<b>どの CPU でも動き</b>ますか?",
+    sub: "命令は CPU ごとに定義されます。ただし、同じ命令セットをもつ CPU どうしなら動きます。",
+    body: "<div class=\"supp-sec\"><div class=\"sec-no\">1</div><div class=\"sec-main\"><div class=\"sec-h\">命令は CPU ごとに決まっている</div><div class=\"sec-p\">学習ノートの POINT ② は「命令は CPU ごとに定義され、定義された命令の集まりを命令セットという」と書いています。CPU が違えば、理解できる命令も違います。実習3 ⑷ が × になるのはこのためです。</div></div></div><div class=\"supp-sec\"><div class=\"sec-no\">2</div><div class=\"sec-main\"><div class=\"sec-h\">同じ命令セットなら、同じプログラムが動く</div><div class=\"sec-p\">解答の解説は続けて、<b>同じ命令セットをもつ CPU も存在し、それらどうしは同じプログラムを動作させることができる</b>と書いています。「どの CPU でも」が誤りで、「同じ命令セットなら」が正しい、という区別です。</div><div class=\"sec-fig\"><div class=\"sf-box\"><table class=\"supp-tbl\"><tr><th>組み合わせ</th><th>同じプログラムが動くか</th></tr><tr><td>同じ命令セットの CPU どうし</td><td><span class=\"mq\" style=\"color:#2c5a99;font-weight:800;\">動く</span></td></tr><tr><td>違う命令セットの CPU</td><td><span class=\"mq\" style=\"color:#bb453d;font-weight:800;\">動かない</span></td></tr></table></div></div></div></div><div class=\"supp-sec\"><div class=\"sec-no\">3</div><div class=\"sec-main\"><div class=\"sec-h\">足りない命令は、組み合わせて作る</div><div class=\"sec-p\">実習3 ⑵ のとおり、命令セットに無い命令は直接実行できません。この単元の実習4 も、三つの値を一度に演算する命令が無いので、二つの計算に分けています。<b>命令が足りないときは、並べ方で実現する</b>わけです。</div></div></div>"
   },
-  'IFACE': {
-    tag: 'SUPPLEMENT · 二種類',
-    title: 'インタフェースは<b>機器だけ</b>の言葉ですか?',
-    sub: 'いいえ。定義は「異なる機器やソフトウェア、人間との間」まで含みます。',
-    body: `
-    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
-      <div class="sec-h">定義の中に、機器・ソフトウェア・人間が並んでいる</div>
-      <div class="sec-p">インタフェースは、<b>異なる機器やソフトウェア、人間との間でのデータのやり取りをする際、その間をつなぐ規格や機能</b>のことです。つまり最初から、機器どうしだけの言葉ではありません。そのうちハードウェア間のものを特に <b>ハードウェアインタフェース</b>（⑤）といい、ソフトウェア間のものを <b>ソフトウェアインタフェース</b>（⑦）といいます。</div>
-      <div class="sec-fig"><div class="sf-box">
-        <div class="field-eq"><span class="fe-p fe-w">ハードウェア</span><span class="fe-op">―</span><span class="fe-p fe-s">⑤ ハードウェアインタフェース</span><span class="fe-op">―</span><span class="fe-p fe-w">ハードウェア</span></div>
-        <div class="field-eq"><span class="fe-p fe-w">ソフトウェア</span><span class="fe-op">―</span><span class="fe-p fe-s alt">⑦ ソフトウェアインタフェース（⑧ API など）</span><span class="fe-op">―</span><span class="fe-p fe-w">ソフトウェア</span></div>
-      </div></div>
-    </div></div>
-    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
-      <div class="sec-h">同じ「つなぐ」でも、つなぐ相手が違う</div>
-      <div class="sec-p">ハードウェアインタフェースがそろえているのは、<b>コネクタの形状や電気信号の形式などの仕様</b>です。ソフトウェアインタフェースの例である <b>API</b> は、<b>機能の一部を他のプログラムから利用できるように提供</b>します。どちらも「間をつなぐ」ものですが、つなぐ相手と、そろえている中身が違います。実習6 の ア と イ は、この違いをそのまま問うています。</div>
-    </div></div>`
+  "PCNEXT": {
+    tag: "SUPPLEMENT · 取り違えやすいところ",
+    title: "プログラムカウンタは、<b>いま実行中</b>の番地ですか?",
+    sub: "いいえ。<b>次に実行すべき</b>命令の番地です。1 つずれると、表が 1 行ずつずれます。",
+    body: "<div class=\"supp-sec\"><div class=\"sec-no\">1</div><div class=\"sec-main\"><div class=\"sec-h\">学習ノートの定義は「次に実行すべき」</div><div class=\"sec-p\">POINT ⑤ は「主記憶装置にあるプログラムのうち、<b>次に実行すべき命令</b>のアドレス（番地）を記憶しているもの」です。いま解読している命令が入っているのは命令レジスタで、こちらは別の置き場です。</div><div class=\"sec-fig\"><div class=\"sf-box\"><table class=\"supp-tbl\"><tr><th>置き場</th><th>入っているもの</th></tr><tr><td>プログラムカウンタ</td><td>次に取り出す命令の<b>番地</b></td></tr><tr><td>命令レジスタ</td><td>いま取り出した<b>命令そのもの</b></td></tr><tr><td>レジスタ（A・B）</td><td>計算に使う<b>値</b></td></tr></table></div></div></div></div><div class=\"supp-sec\"><div class=\"sec-no\">2</div><div class=\"sec-main\"><div class=\"sec-h\">3 拍のどこで進むか</div><div class=\"sec-p\">取り出し・解読・実行の 3 拍のうち、番地が進むのは<b>取り出したあと</b>です。だから実行している最中のプログラムカウンタは、すでに次の番地を指しています。表を書くときは「実行後」の値でそろえると、ずれません。</div></div></div>"
   },
-  'DRIVER': {
-    tag: 'SUPPLEMENT · デバイスドライバ',
-    title: 'デバイスドライバは<b>何をしている</b>のですか?',
-    sub: 'OS に追加されるプログラムで、周辺機器を制御します。',
-    body: `
-    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
-      <div class="sec-h">基本ソフトウェアに追加するプログラム</div>
-      <div class="sec-p">デバイスドライバは、<b>コンピュータに接続された周辺機器を制御するソフトウェア</b>です。実習2 の言い方をそのまま借りれば、<b>基本ソフトウェアに周辺機器を動作させるためのデバイスドライバというプログラムを追加する</b>、となります。デバイスドライバがインストールされることで、<b>オペレーティングシステムが周辺機器を動作させることができます</b>。</div>
-      <div class="sec-fig"><div class="sf-box">
-        <table class="supp-tbl"><tr><th>層</th><th>その層がしていること</th></tr>
-        <tr><td><span class="mq">応用ソフトウェア</span></td><td>文書作成・表計算などを行う</td></tr>
-        <tr><td><span class="mq">OS ＋ ドライバ</span></td><td>ハードウェアと応用ソフトウェアとの仲介をする</td></tr>
-        <tr><td><span class="mq">周辺機器</span></td><td>データの記憶や入出力を行う</td></tr></table>
-      </div></div>
-    </div></div>
-    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
-      <div class="sec-h">そこから何が言えるか</div>
-      <div class="sec-p">実習2 は、この追加の結果として <b>応用ソフトウェアは周辺機器の違いをほとんど意識することなく作業ができる</b>と書いています。応用ソフトウェアの側から見れば、相手がどの周辺機器かをいちいち気にせずに済む、ということです。言いかえると、意識せずに済むという状態は <b>応用ソフトウェアが自力で作っているのではなく、下の層が作っている</b>ものです。</div>
-    </div></div>`
+  "OVERWRITE": {
+    tag: "SUPPLEMENT · この単元の難所",
+    title: "READ すると、<b>前の値はどこ</b>へ行きますか?",
+    sub: "どこにも行きません。上書きされて消えます。残したいなら、先に主記憶装置へ書き出します。",
+    body: "<div class=\"supp-sec\"><div class=\"sec-no\">1</div><div class=\"sec-main\"><div class=\"sec-h\">レジスタは、数を 1 つだけ置ける台</div><div class=\"sec-p\">READ は「主記憶装置の値をレジスタに読み出す」命令です。台の上にすでに何か載っていれば、それを<b>どけて</b>から載せることになります。どけた数は、書き留めていなければ失われます。</div><div class=\"sec-fig\"><div class=\"sf-box\"><div class=\"field-eq\"><span class=\"fe-p fe-s\">A ＝ 8</span><span class=\"fe-op\">READ A,(10) →</span><span class=\"fe-p fe-w\">A ＝ 9</span></div><div class=\"bit-cap\">8 は<b>消える</b>。13 番地に書き出していれば残る</div></div></div></div></div><div class=\"supp-sec\"><div class=\"sec-no\">2</div><div class=\"sec-main\"><div class=\"sec-h\">だから、書き出してから読み込む</div><div class=\"sec-p\">実習4 の 3 番地が WRITE (13),A なのはこのためです。解答の解説も「（Y＋Z）の答えがレジスタ A に入った状態であるが、<b>一旦、主記憶装置に格納する必要がある</b>」と書いています。並べ方を変えるだけで、答えが変わります。</div></div></div><div class=\"supp-sec\"><div class=\"sec-no\">3</div><div class=\"sec-main\"><div class=\"sec-h\">レジスタが 2 つあるなら、空いているほうへ</div><div class=\"sec-p\">章末5 ではレジスタが A と B の 2 つあります。X ＋ Y の結果が A に入っているので、Z は B に読み込みます。<b>書き出すか、空いているほうを使うか</b>。どちらも「途中結果を上書きしない」ための一手です。</div></div></div>"
   },
-  'RESOURCE': {
-    tag: 'SUPPLEMENT · 資源',
-    title: 'タスク管理とユーザ管理は<b>何の話</b>ですか?',
-    sub: '実行順序と CPU の割り当て、そして利用者の管理です。',
-    body: `
-    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
-      <div class="sec-h">実習2 に出てきた 2 つの管理</div>
-      <div class="sec-p">実習2 は OS の例として、<b>ソフトウェアの実行順序や CPU への割り当てなどを管理するタスク管理</b>と、<b>複数のユーザアカウントの登録や削除をするユーザ管理</b>を挙げていました。CPU などのコンピュータ資源は限られており、使いたいソフトウェアは複数あります。順番と割り当てを決める仕事がなければ、複数のソフトウェアは同時に立ちゆきません。</div>
-      <div class="sec-fig"><div class="sf-box">
-        <table class="supp-tbl"><tr><th>管理</th><th>割り当てる相手</th></tr>
-        <tr><td><span class="mq">タスク管理</span></td><td>実行順序と CPU</td></tr>
-        <tr><td><span class="mq">ユーザ管理</span></td><td>複数のユーザアカウント</td></tr></table>
-      </div></div>
-    </div></div>
-    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
-      <div class="sec-h">OS の目的 3 語のどれにあたるか</div>
-      <div class="sec-p">この 2 つはどちらも、<b>限られたコンピュータ資源を有効に活用し適切に管理する</b>という一言にまとまります。POINT 3 の 3 語でいえば <b>資源の有効利用</b> です。実習5 の ア は、まさにこの文でした。実習2 と実習5 が別々の問題に見えて、同じ 1 つの目的を指しているのが分かります。</div>
-    </div></div>`
-  },
-  'ABSTRACT': {
-    tag: 'SUPPLEMENT · 抽象化',
-    title: '「操作の内容を<b>抽象化する</b>」とは?',
-    sub: '相手の装置ごとに違う手順を、共通の一つの操作にまとめることです。',
-    body: `
-    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
-      <div class="sec-h">応用ソフトウェアの側から見る</div>
-      <div class="sec-p">OS の目的の一つ <b>基本機能の提供</b> は、実習5 の言葉では <b>装置の違いを意識せず利用できるよう操作の内容を抽象化する</b>ことです。応用ソフトウェアの側から見ると、相手の周辺機器が変わっても、こちらの言い方は変わらない、ということになります。実習2 の <b>応用ソフトウェアは周辺機器の違いをほとんど意識することなく作業ができる</b> は、これを結果の側から書いた文です。</div>
-      <div class="sec-fig"><div class="sf-box">
-        <div class="field-eq"><span class="fe-p fe-w">周辺機器 A</span><span class="fe-p fe-w">周辺機器 B</span><span class="fe-p fe-w">周辺機器 C</span></div>
-        <div class="field-eq"><span class="fe-op">↓ 違いは下の層で吸収</span></div>
-        <div class="field-eq"><span class="fe-p fe-s">応用ソフトウェアから見ると、同じ 1 つの操作</span></div>
-      </div></div>
-    </div></div>
-    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
-      <div class="sec-h">抽象化しているのは「操作の内容」</div>
-      <div class="sec-p">見落としやすいのは、抽象化の対象が <b>操作の内容</b> だという点です。コネクタの形や信号の形を変えているわけではありません。<b>形をそろえる仕事と、操作の言い方をそろえる仕事は別の層にあります</b>。実習5 で イ と エ が並んでいるのは、この 2 つを取り違えていないかを見るためです。</div>
-    </div></div>`
-  },
-  'LAYER': {
-    tag: 'SUPPLEMENT · この回の要',
-    title: 'イ と エ は、<b>どこで分かれる</b>のですか?',
-    sub: '判定の物差しは一つ。OS の目的 3 語のどれかに当たるかどうかです。',
-    body: `
-    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
-      <div class="sec-h">どちらも「違いを吸収している」ように読める</div>
-      <div class="sec-p">イ は <b>機器どうしを接続するコネクタの形状や電気信号の形式などの仕様を合わせる</b>、エ は <b>装置の違いを意識せず利用できるよう操作の内容を抽象化する</b>。どちらも違いをならしている文に読めるので、勘で選ぶと外します。原本の解説がここだけ理由まで書いているのも、そのためです。イ については <b>ハードウェアのインタフェースの標準化の話なので、OS の目的ではない</b> とあります。</div>
-      <div class="sec-fig"><div class="sf-box">
-        <table class="supp-tbl"><tr><th>記述</th><th>そろえているもの</th><th>担当</th></tr>
-        <tr><td><span class="mq">イ</span></td><td>コネクタの形状・電気信号の形式などの仕様</td><td>④⑤ の側</td></tr>
-        <tr><td><span class="mq">エ</span></td><td>操作の内容</td><td>OS(基本機能の提供)</td></tr></table>
-      </div></div>
-    </div></div>
-    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
-      <div class="sec-h">手順にすると、迷いが消える</div>
-      <div class="sec-p">手順は 2 つだけです。まず <b>その記述がそろえているものは何か</b> を一語で言います。次に <b>それが OS の目的 3 語（操作支援・基本機能の提供・資源の有効利用）のどれかに当たるか</b> を見ます。<b>仕様</b> と答えが出た時点で、3 語のどれにも当たりません。当たらないものは ④⑤ の側、つまりハードウェアインタフェースの話です。</div>
-    </div></div>
-    <div class="supp-sec"><div class="sec-no">3</div><div class="sec-main">
-      <div class="sec-h">言葉のどこを見ればよいか</div>
-      <div class="sec-p">選択肢の文には、担当を示す語が必ず入っています。イ の <b>コネクタ・電気信号・形式・仕様</b> は、どれも機器そのものの言葉です。エ の <b>操作の内容</b> は、使う側の言葉です。<b>機器の言葉が並んでいたら ④⑤、使い方の言葉が並んでいたら OS</b>。この見分け方は、実習4 で エ が OS の説明だと分かるときにも同じように効きます。</div>
-    </div></div>`
-  },
-  'IOT': {
-    tag: 'SUPPLEMENT · IoT',
-    title: 'IoT と<b>センサ</b>はどうつながっていますか?',
-    sub: '集める装置と、集めた情報が通る道。この 2 つで一組です。',
-    body: `
-    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
-      <div class="sec-h">定義を 2 つ並べる</div>
-      <div class="sec-p">IoT は <b>身のまわりのモノがインターネットにつながる仕組み</b>、センサは <b>情報を収集する装置</b> です。実習6 の正しい説明は、この 2 つをつないだ形になっています。<b>センサを搭載した機器や制御装置が直接インターネットにつながり情報をやり取りする仕組み</b>。つまり、集める装置がセンサ、つながる先がインターネットです。</div>
-      <div class="sec-fig"><div class="sf-box">
-        <div class="field-eq"><span class="fe-p fe-s">⑩ センサ</span><span class="fe-op">→</span><span class="fe-p fe-w">搭載した機器・制御装置</span><span class="fe-op">→</span><span class="fe-p fe-s alt">インターネット</span></div>
-        <div class="field-eq"><span class="fe-r">この全体の仕組みが ⑨ IoT</span></div>
-      </div></div>
-    </div></div>
-    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
-      <div class="sec-h">よく隣に置かれる 3 つの語</div>
-      <div class="sec-p">実習6 で IoT の隣に並ぶのは <b>API</b>、<b>インタフェース</b>、<b>機械学習</b> です。いずれもこの章と近い場所に出てくる語なので、説明文だけを見て取り違えやすくなっています。<b>ア は API、イ はインタフェース、ウ は機械学習</b>。この対応まで言えるようにしておくと、選択肢の順番が変わっても迷いません。</div>
-    </div></div>`
-  },
-  'ORDER': {
-    tag: 'SUPPLEMENT · 順序',
-    title: 'この順序は<b>何を根拠に</b>決まりますか?',
-    sub: '上の層が下の層の機能を使う、という向きで決まります。',
-    body: `
-    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
-      <div class="sec-h">どちらがどちらを使っているか</div>
-      <div class="sec-p">並べ方の根拠は、<b>どちらがどちらの機能を使っているか</b> です。デバイスドライバがインストールされることで、<b>オペレーティングシステムが周辺機器を動作させることができます</b>。そしてアプリケーションソフトウェアは、<b>OS が提供する機能を利用して動作します</b>。使われる側が下、使う側が上になります。</div>
-      <div class="sec-fig"><div class="sf-box">
-        <div class="field-eq"><span class="fe-r">近い</span><span class="fe-p fe-s">デバイスドライバ</span><span class="fe-op">＜</span><span class="fe-p fe-w">オペレーティングシステム</span><span class="fe-op">＜</span><span class="fe-p fe-s alt">アプリケーションソフトウェア</span><span class="fe-r">遠い</span></div>
-        <div class="bit-cap"><b>近い</b> = ハードウェアの側 ／ <b>遠い</b> = 使う人の側</div>
-      </div></div>
-    </div></div>
-    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
-      <div class="sec-h">名前そのものが手がかりになる</div>
-      <div class="sec-p">オペレーティング（operating）には <b>運用、操作</b> などの意味があります。コンピュータの基本的な管理・制御を行うソフトウェア、という定義とそのまま重なる名前です。アプリケーションソフトウェアは <b>特定の作業を行うために使用されるソフトウェア</b>で、応用ソフトウェアともいいます。名前の意味をたどると、順序も自然に決まります。</div>
-    </div></div>`
-  },
-  'HUB': {
-    tag: 'SUPPLEMENT · 数えかた',
-    title: 'つなぎ方を変えても <b>16 台</b> ですか?',
-    sub: 'どのハブにつないでも、1 台増えるごとにポートは 3 つ増えます。',
-    body: `
-    <div class="supp-sec"><div class="sec-no">1</div><div class="sec-main">
-      <div class="sec-h">1 台つなぐと、1 つ減って 4 つ増える</div>
-      <div class="sec-p">3 台目のハブは、1 台目の空きポートにつないでも、2 台目のポートにつないでもかまいません。<b>どのハブに接続しようとも、接続することにより接続されたハブのポートが一つ減り、新たに接続したハブのポートでポートが四つ増える</b>からです。差し引きは常に <span class="mq">＋3</span>。だからつなぎ方を変えても合計は変わりません。</div>
-      <div class="sec-fig"><div class="sf-box">
-        <table class="supp-tbl"><tr><th>ハブの台数</th><th>使えるポート</th><th>増え方</th></tr>
-        <tr><td>1 台</td><td><span class="mq">4</span></td><td>1 − 1 ＋ 4</td></tr>
-        <tr><td>3 台</td><td><span class="mq">10</span></td><td>4 ＋ 3 ＋ 3</td></tr>
-        <tr><td>5 台</td><td><span class="mq">16</span></td><td>4 ＋ 3 ＋ 3 ＋ 3 ＋ 3</td></tr></table>
-      </div></div>
-    </div></div>
-    <div class="supp-sec"><div class="sec-no">2</div><div class="sec-main">
-      <div class="sec-h">式にしてから数える</div>
-      <div class="sec-p">先に <b>1 台目は ＋4、2 台目からは ＋3</b> と決めてしまえば、あとは足すだけです。<span class="mq">4 ＋ 3 ＋ 3 ＋ 3 ＋ 3 ＝ 16</span>。図を描いて一つずつ数えるより速く、数え落としも起きません。ハブの台数が変わっても、<b>4 に 3 を（台数 − 1）回足す</b>と考えれば同じ手順で求められます。</div>
-    </div></div>`
-  },
-
+  "TWOROLE": {
+    tag: "SUPPLEMENT · 13 番地の二役",
+    title: "13 番地に <b>2 回書く</b>のは、なぜですか?",
+    sub: "1 回目は途中結果の置き場、2 回目は答えの置き場だからです。",
+    body: "<div class=\"supp-sec\"><div class=\"sec-no\">1</div><div class=\"sec-main\"><div class=\"sec-h\">空いている番地を、作業台として借りる</div><div class=\"sec-p\">13 番地は、はじめ空です。3 番地の WRITE で（Y ＋ Z）の答えを置き、6 番地の WRITE で最終の答えを置きます。同じ場所を 2 回使うので、値は 1 度書きかわります。</div><div class=\"sec-fig\"><div class=\"sf-box\"><div class=\"field-eq\"><span class=\"fe-p\">空</span><span class=\"fe-op\">3 番地 →</span><span class=\"fe-p fe-s\">8</span><span class=\"fe-op\">6 番地 →</span><span class=\"fe-p fe-s alt\">1</span></div><div class=\"bit-cap\">途中結果 → 答え。<b>同じ番地</b>を二役で使う</div></div></div></div></div><div class=\"supp-sec\"><div class=\"sec-no\">2</div><div class=\"sec-main\"><div class=\"sec-h\">書く前に読むと、空のものを引く</div><div class=\"sec-p\">もし 3 番地の WRITE を書かずに 5 番地の SUB へ進むと、13 番地はまだ空のままです。引く相手がないので、正しい答えは出せません。<b>書いてから読む</b>、という順序がここで効きます。</div></div></div><div class=\"supp-sec\"><div class=\"sec-no\">3</div><div class=\"sec-main\"><div class=\"sec-h\">式を展開すれば、借りなくて済む</div><div class=\"sec-p\">X −（Y ＋ Z）を X − Y − Z に直すと、途中結果を置く必要がありません。解答の但し書きも「式を展開し、X − Y − Z で処理を行うこともできる」と書いています。<b>同じ答えでも、手順の数が変わります。</b></div></div></div>"
+  }
 };
 
 
@@ -2012,48 +1589,36 @@ function toggleFullscreen() { if (!document.fullscreenElement) document.document
 // ===== miki.con NPC エンジン(対話キュー + オブジェクト連動 + タイプ表示 + ドラッグ) =====
 // 口調は講義トーン(です・ます、落ち着いた自然語)。say は文字列/配列(複数=「つづき」)両対応。
 const MIKI_GUIDE = {
-  'タイトル': { tag: 'はじめに', say: ['今回は、ハードウェアとソフトウェアを層に分けて見ていきます。', 'この回の要は一つです。「装置の違いを意識せずに使える」状態を作っているのは、どの層の仕事なのか。', '画面下のこの欄で、各場面の見どころをお伝えします。'] },
-  'このサイトで扱う内容': { tag: '全体図', say: ['全体は 4 つの観点と、発展 3 題で構成されています。', '見たい箇所へは、右上の MENU からも移動できます。'] },
-  '第1節 ハードウェアとインタフェース': { tag: '第1節', say: 'まず、機器そのものと、機器どうしをつなぐ規格から見ていきます。' },
-  '①②③ ハードウェア・周辺機器・中央処理装置 (interactive)': { tag: '①②③', say: ['下の 3 つのカードを選ぶと、その用語の定義をこの欄に表示します。', 'ハードウェアは、核となる部分と周辺機器を併せたものです。核の中枢が中央処理装置にあたります。'] },
-  '図解 5 つの装置と中央処理装置': { tag: '図解', say: ['入力・出力・記憶・演算・制御。この 5 つで構成されます。', '演算装置と制御装置を併せたものが中央処理装置です。装置をタップすると役割が出ます。'] },
-  '実習1 ― ハードウェアの構成': { tag: '実習1', say: ['青い欄をタップすると、記号と装置名が出ます。', '制御命令がどこから出ているか、いちばん下の装置がどれとだけやり取りしているか。この 2 つが手がかりです。'] },
-  '④⑤ インタフェースとハードウェアインタフェース (interactive)': { tag: '④⑤', say: ['インタフェースは、その間をつなぐ規格や機能のことです。', 'そのうちハードウェア間のものが、ハードウェアインタフェースです。あとで効いてくる区別です。'] },
-  '実習3 ― インタフェースの規格': { tag: '実習3', say: '設問をタップすると答えが出て、上の規格が強調されます。有線か無線か、何をつなぐ規格かで整理してください。' },
-  '第2節 ソフトウェアとインタフェース': { tag: '第2節', say: 'ここからはソフトウェアの側です。基本ソフトウェアと応用ソフトウェア、その間をつなぐものを扱います。' },
-  '⑥⑦⑧ OS・ソフトウェアインタフェース・API (interactive)': { tag: '⑥⑦⑧', say: ['3 つのカードを選ぶと、それぞれの定義を表示します。', 'ソフトウェアの側にも、インタフェースがあります。その例が API です。'] },
-  '実習2 ― ソフトウェアのはたらき': { tag: '実習2', say: ['空欄をタップすると、語群の記号と語が出ます。', '「周辺機器の違いをほとんど意識することなく作業ができる」― この一文が、この回の中心にあります。'] },
-  '実習4 ― デバイスドライバ': { tag: '実習4', say: '残りの 3 つがそれぞれ何の説明なのか。そこまで言えると、次の実習5 でつまずきません。' },
-  '第3節 オペレーティングシステムの目的': { tag: '第3節', say: 'ここがこの回の要です。装置の違いを意識せずに使えるのは、どの層の仕事かを決めます。' },
-  'POINT 3 オペレーティングシステムの目的 (interactive)': { tag: 'POINT 3', say: ['目的は、操作支援、基本機能の提供、資源の有効利用の 3 語です。', 'この 3 語が、そのまま判定の物差しになります。'] },
-  '層の割り当て (interactive)': { tag: '割り当て', say: ['記述をタップすると、担当する層に置かれます。', '6 枚のうち 1 枚だけが、OS ではなくハードウェアインタフェースの層に落ちます。'] },
-  '実習5 ― OS の目的': { tag: '実習5', say: ['そろえているものを一語で言ってから、3 語のどれかに当たるかを見ます。', '仕様、と答えが出たら、それは OS の目的ではありません。'] },
-  '第4節 IoT': { tag: '第4節', say: '最後は IoT です。身のまわりのモノがインターネットにつながる仕組みを扱います。' },
-  '⑨⑩ IoT とセンサ (interactive)': { tag: '⑨⑩', say: ['2 つのカードを選ぶと、定義を表示します。', '情報を収集する装置がセンサ、その全体の仕組みが IoT です。'] },
-  '実習6 ― IoT の説明': { tag: '実習6', say: 'ここでも、ほかの 3 つが何の説明なのかまで言えるかどうかが分かれ目です。' },
-  '第5節 参考: 発展副題': { tag: '発展', say: 'ここからは発展です。授業では扱わない範囲まで広げます。' },
-  '参考A ハードウェアに近い順に並べる': { tag: '参考A', say: ['3 つの層を、ハードウェアから近い順に並べます。', '根拠は、どちらがどちらの機能を使っているかです。'] },
-  '参考B インタフェースの代表例': { tag: '参考B', say: '代表的な 5 つの規格を、つなぐ相手と一緒に並べます。実習3 の 3 つに、USB とイーサネットが加わります。' },
-  '参考C USB ハブは何台つなげるか': { tag: '参考C', say: ['ハブを 1 台足すと、使えるポートがいくつ変わるか。ここを先に決めます。', '1 つ減って 4 つ増えるので、差し引き 3 つです。'] },
-  'POINT 答え合わせ(全 10 用語)': { tag: 'まとめ', say: '学習ノートの 10 用語を確認します。タップで 1 つずつ、全表示も使えます。' },
-  'POINT 14 まとめツリー': { tag: '一望', say: '機器の側、つなぐもの、ソフトウェアの側、そして IoT。4 つに分けてまとめました。' },
-  '復習チャレンジ(10問ランダム)': { tag: '腕試し', say: '10 問のランダム出題で、理解度を確認します。' },
-  '完了': { tag: 'おわりに', say: ['これで一通りです。', '仕様を合わせているのは ④⑤ の側、操作の内容を抽象化しているのが OS の側。この切り分けを覚えておいてください。', 'お疲れさまでした。'] }
+  "タイトル": { tag: "はじめに", say: ["今回は、コンピュータの構成と動作を扱います。", "中心に扱うのは、計算の途中結果がいまどこにあるか、です。", "画面下のこの欄で、各場面の要点をお伝えします。"] },
+  "このサイトで扱う内容": { tag: "全体図", say: ["全体は 3 つの観点と、発展 3 題でできています。", "見たい箇所へは、右上の MENU からも移動できます。"] },
+  "第1節 プログラムと命令": { tag: "第1節", say: "はじめに、プログラムと命令の関係、そして CPU が命令を実行する手順を確かめます。" },
+  "①〜④ プログラム・命令セット・機械語・プログラム格納方式 (interactive)": { tag: "①〜④", say: ["4 つのカードを選ぶと、その用語の定義をこの欄に表示します。", "命令は CPU ごとに定義されます。だから、同じプログラムがどの CPU でも動くわけではありません。"] },
+  "取り出し・解読・実行の 3 拍 (interactive)": { tag: "3 拍", say: ["「次へ」を押すと、1 拍ずつ進みます。", "番地が進むのは、命令を取り出したあとです。実行している間、プログラムカウンタはすでに次を指しています。"] },
+  "実習1 ― 命令実行の流れ": { tag: "実習1", say: ["空欄をタップすると答えが出ます。", "④ 主記憶装置、⑤ 解読、⑥ 実行。この三つを繰り返す仕組みが、⑦ プログラム格納方式です。"] },
+  "第2節 CPU の中": { tag: "第2節", say: "ここからは CPU の中です。何を記憶するかで、装置の名前が決まります。" },
+  "⑤〜⑧ プログラムカウンタ・アドレス・命令解読器・命令レジスタ (interactive)": { tag: "⑤〜⑧", say: ["4 つのカードを選ぶと、定義を表示します。", "プログラムカウンタが記憶しているのは、命令そのものではなく、次に実行すべき命令の番地です。"] },
+  "実習2 ― CPU の構成": { tag: "実習2", say: ["選択肢をタップすると判定が出ます。", "「命令を格納する」のか「番地を格納する」のかで見分けます。"] },
+  "実習3 ― 命令の形式": { tag: "実習3", say: ["○ か × をタップすると判定が出ます。", "⑷ だけが誤りです。命令セットは CPU ごとに定義されます。"] },
+  "第3節 プログラムを組み立てる": { tag: "第3節", say: "ここからは、命令を並べて計算します。この単元の山場です。" },
+  "実習4 ― コンピュータの動作": { tag: "実習4", say: ["空欄をタップすると答えが出ます。", "③ を書かずに ④ へ進むと、レジスタ A の 8 が 9 に置き換わって消えます。表の 3 行目と 4 行目を見比べてください。"] },
+  "第4節 参考: 発展副題": { tag: "発展", say: "ここからは発展です。章末5 と、ベストフィットの思考のステップ5 まで広げます。" },
+  "参考A レジスタが 2 つあるとき（章末5）": { tag: "参考A", say: ["加算命令がレジスタどうしなので、先に二つへ読み込みます。", "2 回目の加算では、すでに結果が A に入っています。だから Z は B に読み込みます。"] },
+  "参考B 式を展開すると、退避が要らなくなる": { tag: "参考B", say: ["X −（Y ＋ Z）は X − Y − Z と同じです。", "左から順に引いていくと、途中結果を置く場所が要りません。命令は 6 つから 4 つに減ります。"] },
+  "参考C くり返しのあるプログラム（思考のステップ5）": { tag: "参考C", say: ["分岐命令は、プログラムカウンタを書き換えます。", "書き換えた先が前の番地なら、そこからもう一度実行します。これがくり返しです。"] },
+  "POINT 答え合わせ(全 8 用語)": { tag: "まとめ", say: "学習ノートの 8 用語を確認します。タップで 1 つずつ、全表示も使えます。" },
+  "POINT 17 まとめツリー": { tag: "一望", say: "プログラムと命令、CPU の中、プログラムの組み立て。3 つに分けてまとめました。" },
+  "復習チャレンジ(10問ランダム)": { tag: "腕試し", say: "10 問のランダム出題で、理解度を確認します。" },
+  "完了": { tag: "おわりに", say: ["これで一通りです。", "命令の意味を覚えても、並べる順で答えは変わります。値がいまどこにあるかを追ってください。", "お疲れさまでした。"] }
 };
 const MIKI_TERM = {
-  hardware:    ['ハードウェアは、コンピュータの核となる部分と、それに接続する周辺機器を併せたものです。', '機械そのものの側、と考えてください。'],
-  device:      ['周辺機器は、核となる部分に接続して、データの記憶や入出力を行う装置です。', 'デバイスともいいます。'],
-  cpu:         ['中央処理装置は、演算装置と制御装置から構成される中枢部分です。', '計算する側と、各装置に命令を送る側が一つになっています。'],
-  iface:       ['インタフェースは、その間をつなぐ規格や機能のことです。', '機器どうしだけでなく、ソフトウェアや人間との間も含みます。'],
-  hwiface:     ['ハードウェアインタフェースは、インタフェースのうち特にハードウェア間のものです。', 'コネクタの形状や電気信号の形式などの仕様を合わせます。'],
-  os:          ['オペレーティングシステムは、基本ソフトウェアです。OS とも書きます。', 'ハードウェアと応用ソフトウェアとの仲介をします。'],
-  swiface:     ['ソフトウェアインタフェースは、ソフトウェア間のインタフェースです。', '例として API があります。'],
-  api:         ['API は、機能の一部を他のプログラムから利用できるように提供するものです。', 'ソフトウェアインタフェースの一つです。'],
-  aimSupport:  ['操作支援は、操作の一部を肩代わりして、ユーザの作業を支援することです。', 'OS の目的の一つです。'],
-  aimBasic:    ['基本機能の提供は、装置の違いを意識せず利用できるよう、操作の内容を抽象化することです。', 'この回の要になる目的です。'],
-  aimResource: ['資源の有効利用は、限られたコンピュータ資源を有効に活用し、適切に管理することです。', '実行順序や CPU への割り当てを決めるタスク管理が、その例にあたります。'],
-  iot:         ['IoT は、身のまわりのモノがインターネットにつながる仕組みです。', 'センサを搭載した機器や制御装置が、直接インターネットにつながります。'],
-  sensor:      ['センサは、情報を収集する装置です。', 'IoT では、ここで集めた情報がやり取りされます。']
+  "program": ["プログラムは、コンピュータに動作を指示する命令を組み合わせて、処理の手順を記述したものです。", "命令は CPU ごとに定義されています。"],
+  "iset": ["命令セットは、CPU ごとに定義された命令の集まりです。", "同じ命令セットをもつ CPU どうしなら、同じプログラムが動きます。"],
+  "machine": ["機械語は、0 と 1 のビット列からなる命令です。", "CPU が動作の指示を直接理解できますが、人には扱いづらいものです。"],
+  "stored": ["プログラム格納方式は、主記憶装置のプログラムから命令を順に取り出し、解読して実行する仕組みです。", "取り出し、解読、実行。この三つをくり返します。"],
+  "pc": ["プログラムカウンタは、次に実行すべき命令のアドレスを記憶しています。", "いま実行中の番地ではなく、次の番地です。"],
+  "addr": ["アドレスは、主記憶装置の場所を示す番号です。番地ともいいます。", "命令もデータも、番地のついた場所に置かれます。"],
+  "decoder": ["命令解読器は、命令レジスタから命令を受け取り、内容を解読します。", "解読したうえで、実行に必要な指示を決めます。"],
+  "ireg": ["命令レジスタは、主記憶装置から取り出した命令を格納します。", "格納するのは命令そのもので、番地ではありません。"]
 };
 const MIKI_REACT = {
   correct: ['正解です。', 'その通りです。', 'よく見ています。正解です。'],
@@ -2222,21 +1787,16 @@ function openMenu() { document.getElementById('menuOverlay').classList.add('open
 function closeMenu() { document.getElementById('menuOverlay').classList.remove('open'); document.getElementById('menuPanel').classList.remove('open'); }
 buildMenu();
 
-// 用語データ(10 用語 + OS の目的 3 語、5 パネル) — 学習ノートの定義フレームに準拠
+// 用語データ(8 用語 + 桁上げ・行数・埋め順、3 パネル) — 学習ノートの定義フレームに準拠
 const iconData = {
-  hardware:    { term: 'ハードウェア', eng: 'HARDWARE', desc: '<strong>コンピュータの核となる部分と、それに接続しデータの記憶や入出力を行う周辺機器（デバイス）を併せたもの</strong>。機械そのものの側を指す言葉です。' },
-  device:      { term: '周辺機器（デバイス）', eng: 'DEVICE', desc: '<strong>コンピュータの核となる部分に接続し、データの記憶や入出力を行うもの</strong>。デバイスともいいます。プリンタやキーボードのように、核の外側についている装置です。' },
-  cpu:         { term: '中央処理装置', eng: 'CPU', desc: '<strong>演算をする演算装置と、各装置を制御する制御装置から構成されるコンピュータの中枢部分</strong>。CPU ともいいます。計算する側と、命令を送る側の 2 つで一組です。' },
-  iface:       { term: 'インタフェース', eng: 'INTERFACE', desc: '<strong>異なる機器やソフトウェア、人間との間でのデータのやり取りをする際、その間をつなぐ規格や機能のこと</strong>。つなぐ相手によって、⑤ と ⑦ に分かれます。' },
-  hwiface:     { term: 'ハードウェアインタフェース', eng: 'HARDWARE INTERFACE', desc: '<strong>インタフェースのうち、特にハードウェア間のもの</strong>。機器どうしを接続するコネクタの形状や電気信号の形式などの仕様を合わせます。USB や HDMI がその例です。' },
-  os:          { term: 'オペレーティングシステム', eng: 'OPERATING SYSTEM', desc: '<strong>基本ソフトウェア（OS）</strong>。ハードウェアと応用ソフトウェアとの仲介をします。実行順序や CPU への割り当てを管理するタスク管理、ユーザアカウントを管理するユーザ管理などを行います。' },
-  swiface:     { term: 'ソフトウェアインタフェース', eng: 'SOFTWARE INTERFACE', desc: '<strong>ソフトウェア間のインタフェース</strong>。⑧ API などがあります。つなぐ相手がソフトウェアどうしである点が、⑤ との違いです。' },
-  api:         { term: 'API', eng: 'APPLICATION PROGRAMMING INTERFACE', desc: '<strong>ソフトウェアインタフェースの一つ</strong>。機能の一部を、他のプログラムから利用できるように提供します。実習6 の ア は、この API の説明です。' },
-  aimSupport:  { term: '操作支援', eng: 'AIM 1 · SUPPORT', desc: '<strong>操作の一部を肩代わりし、ユーザの作業を支援する</strong>こと。オペレーティングシステムの目的の一つです。' },
-  aimBasic:    { term: '基本機能の提供', eng: 'AIM 2 · ABSTRACTION', desc: '<strong>装置の違いを意識せず利用できるよう、操作の内容を抽象化する</strong>こと。応用ソフトウェアが周辺機器の違いをほとんど意識することなく作業ができるのは、この目的があるからです。' },
-  aimResource: { term: '資源の有効利用', eng: 'AIM 3 · RESOURCE', desc: '<strong>限られたコンピュータ資源を有効に活用し、適切に管理する</strong>こと。実行順序や CPU への割り当てを決めるタスク管理が、その例にあたります。ユーザ管理は、OS が利用者を管理する仕事です。' },
-  iot:         { term: 'IoT', eng: 'INTERNET OF THINGS', desc: '<strong>身のまわりのモノがインターネットにつながる仕組み</strong>。センサを搭載した機器や制御装置が直接インターネットにつながり、情報をやり取りします。' },
-  sensor:      { term: 'センサ', eng: 'SENSOR', desc: '<strong>情報を収集する装置</strong>。IoT では、この装置が集めた情報がインターネットを通じてやり取りされます。' }
+  "program": { term: "プログラム", eng: "PROGRAM", desc: "<strong>コンピュータに動作を指示する命令を組み合わせて、処理の手順を記述したもの</strong>。命令は CPU ごとに定義されます。" },
+  "iset": { term: "命令セット", eng: "INSTRUCTION SET", desc: "<strong>CPU ごとに定義された命令の集まり</strong>。命令セットに含まれない命令は直接実行できないので、複数の命令を組み合わせて実現します。" },
+  "machine": { term: "機械語", eng: "MACHINE LANGUAGE", desc: "<strong>0と1のビット列からなる、CPU が動作の指示を直接理解できる命令</strong>。人には扱いづらいので、わかりやすい単語や記号を使うプログラミング言語が考案されました。" },
+  "stored": { term: "プログラム格納方式", eng: "STORED PROGRAM", desc: "<strong>主記憶装置に格納されているプログラムから命令を順に取り出し、解読して実行する仕組み</strong>。取り出し・解読・実行の三つをくり返して処理を進めます。" },
+  "pc": { term: "プログラムカウンタ", eng: "PROGRAM COUNTER", desc: "<strong>主記憶装置にあるプログラムのうち、次に実行すべき命令のアドレス（番地）を記憶しているもの</strong>。いま実行中の番地ではありません。" },
+  "addr": { term: "アドレス（番地）", eng: "ADDRESS", desc: "<strong>主記憶装置の場所を示す番号</strong>。命令もデータも、番地のついた場所に置かれます。READ や WRITE は、この番地を指定します。" },
+  "decoder": { term: "命令解読器", eng: "DECODER", desc: "<strong>命令レジスタから命令を受け取り、内容を解読して実行に必要な指示を決定する装置</strong>。3 拍のうちの「解読」を担います。" },
+  "ireg": { term: "命令レジスタ", eng: "INSTRUCTION REGISTER", desc: "<strong>主記憶装置から取り出した命令を格納するもの</strong>。格納するのは命令そのもので、番地ではありません（番地はプログラムカウンタ）。" }
 };
 function selectIcon(panelId, key) {
   const panel = document.getElementById(panelId); if (!panel) return;
@@ -2293,39 +1853,6 @@ function toggleSelBlank(b) {
   haptic(8);
 }
 
-// 5 つの装置の構成図(タップで役割を表示)
-const devData = {
-  control: { term: '制御装置', desc: 'ほかの四つの装置へ命令を送り、制御する装置です。<strong>制御命令は制御装置からのみ送られている</strong>ので、制御の流れの源をたどればここだと分かります。' },
-  alu:     { term: '演算装置', desc: '処理命令に従ってデータ処理をし、転送命令に従って<strong>演算結果を主記憶装置へ転送する</strong>装置です。制御装置と併せて中央処理装置（CPU）になります。' },
-  main:    { term: '主記憶装置', desc: '<strong>データはすべて記憶装置を経由して流れています</strong>。制御装置の指示で、データおよび処理命令は主記憶装置から演算装置へ転送されます。' },
-  aux:     { term: '補助記憶装置', desc: '<strong>補助記憶装置とデータのやり取りをするのは主記憶装置のみ</strong>です。この一点が、構成図で位置を見分けるときの手がかりになります。' },
-  input:   { term: '入力装置', desc: 'データをコンピュータに入れる装置です。入力されたデータも、記憶装置を経由して流れていきます。' },
-  output:  { term: '出力装置', desc: '制御装置からの転送命令に従い、主記憶装置から演算結果が転送され、<strong>出力装置によって演算結果が出力されます</strong>。' }
-};
-function selectDev(key) {
-  const d = devData[key]; if (!d) return;
-  document.querySelectorAll('.dev-box[data-key]').forEach(b => b.classList.remove('selected'));
-  const me = document.querySelector('.dev-box[data-key="' + key + '"]');
-  if (me) me.classList.add('selected');
-  const p = document.getElementById('devPanel');
-  if (p) p.innerHTML = '<span class="dp-term">' + d.term + '</span>' + d.desc;
-  haptic(8);
-}
-
-// 実習3 インタフェース(設問タップ → 答えを表示 + 上の規格を強調 / 再タップで戻す)
-function judgeIf(el) {
-  const wrap = el.closest('.chart-picker-wrap') || document;
-  const was = el.classList.contains('revealed');
-  wrap.querySelectorAll('.chart-q').forEach(q => q.classList.remove('revealed'));
-  wrap.querySelectorAll('.chart-option').forEach(o => o.classList.remove('highlight'));
-  if (!was) {
-    el.classList.add('revealed');
-    const ans = el.dataset.ans;
-    if (ans) { const t = wrap.querySelector('.chart-option[data-letter="' + ans + '"]'); if (t) t.classList.add('highlight'); }
-  }
-  haptic(8);
-}
-
 // 実習4・5・6 の 4 択(同じ選択肢の再タップで初期化 / 別の選択肢で切替)
 function answerPq(opt) {
   const box = opt.parentElement;
@@ -2342,66 +1869,97 @@ function answerPq(opt) {
   if (typeof mikiQuizReact === 'function') mikiQuizReact(ok);
 }
 
-// この単元の目玉: 記述を担当する層に置く(再タップで戻せる)
-const LAY_LAYER = { A: 'os', I: 'hwif', U: 'os', E: 'os', P1: 'app', P2: 'dev' };
-const LAY_CHIP  = { A: 'ア', I: 'イ', U: 'ウ', E: 'エ', P1: '応用', P2: '機器' };
-const LAY_FB = {
-  A: '<b>実習5 ア</b> の担当は <b>OS（基本ソフトウェア）</b> の層です。限られたコンピュータ資源を有効に活用し適切に管理するのは、OS の目的の一つ <b>資源の有効利用</b> にあたります。',
-  I: '<b class="lp-no">実習5 イ</b> の担当は <b>ハードウェアインタフェース</b> の層です。コネクタの形状や電気信号の形式などの仕様を合わせるのは、ハードウェアのインタフェースの標準化の話なので、<b class="lp-no">OS の目的ではありません</b>。',
-  U: '<b>実習5 ウ</b> の担当は <b>OS（基本ソフトウェア）</b> の層です。操作の一部を肩代わりしユーザの作業を支援するのは、<b>操作支援</b> にあたります。',
-  E: '<b>実習5 エ</b> の担当は <b>OS（基本ソフトウェア）</b> の層です。装置の違いを意識せず利用できるよう操作の内容を抽象化するのは、<b>基本機能の提供</b> にあたります。そろえているのが「仕様」なら ⑤ の側、「操作の内容」なら OS の側です。',
-  P1: '担当は <b>応用ソフトウェア</b> の層です。文書作成・表計算などを行うのが応用ソフトウェアでした(実習2)。',
-  P2: '担当は <b>周辺機器（デバイス）</b> の層です。データの記憶や入出力を行うのが周辺機器でした(POINT ①②)。'
-};
-const LAY_SAY = {
-  A: ['資源の有効利用です。OS の目的の一つですね。'],
-  I: ['ここだけ層が違います。合わせているのが仕様なので、ハードウェアインタフェースの側です。'],
-  U: ['操作支援です。これも OS の目的です。'],
-  E: ['基本機能の提供です。「操作の内容を抽象化する」が目印になります。'],
-  P1: ['応用ソフトウェアの仕事です。'],
-  P2: ['周辺機器の仕事です。']
-};
-const LAY_ALL = '6 枚すべて置けました。<b>OS の目的にあたるのは ア・ウ・エ の 3 枚</b>。残る <b class="lp-no">イ だけがハードウェアインタフェースの層</b> です。判定の物差しは、操作支援・基本機能の提供・資源の有効利用 の 3 語でした。';
-const LAY_PROMPT = '<span style="color:var(--text-sub);font-style:italic;">▲ 記述をタップすると、担当する層に置かれ、その理由がここに表示されます。</span>';
-function layRefresh() {
-  ['app', 'os', 'hwif', 'dev'].forEach(l => {
-    const row = document.getElementById('layRow-' + l);
-    const slot = document.getElementById('laySlot-' + l);
-    if (row && slot) row.classList.toggle('hit', slot.children.length > 0);
-  });
+// ===== lec17 目玉 1: 取り出し・解読・実行の 3 拍 =====
+// 学習ノート POINT ④ プログラム格納方式。1 命令ぶんを 3 拍に割り、2 命令ぶん進めて「くり返し」を見せる。
+const BT_MEM = [
+  { adr: 1, text: 'READ A,(11)' },
+  { adr: 2, text: 'ADD A,(12)' },
+  { adr: 3, text: 'WRITE (13),A' }
+];
+const BT_STEPS = [
+  { pc: 1, ir: '—', dec: '—', beat: 0, cap: 'プログラムカウンタが <b>1 番地</b> を指しています。まだ命令は取り出していません。' },
+  { pc: 2, ir: 'READ A,(11)', dec: '—', beat: 1, cap: '<b>取り出し</b>。1 番地の命令を命令レジスタに入れました。プログラムカウンタは、もう次の 2 番地を指しています。' },
+  { pc: 2, ir: 'READ A,(11)', dec: 'READ', beat: 2, cap: '<b>解読</b>。命令解読器が「主記憶装置からレジスタへ読み出す命令だ」と読み取りました。' },
+  { pc: 2, ir: 'READ A,(11)', dec: 'READ', beat: 3, cap: '<b>実行</b>。11 番地の値をレジスタ A に読み込みました。ここまでで 1 命令ぶんです。' },
+  { pc: 3, ir: 'ADD A,(12)', dec: 'READ', beat: 1, cap: '<b>取り出し</b>（2 命令目）。2 番地の命令を命令レジスタに入れ、プログラムカウンタは 3 番地へ進みました。' },
+  { pc: 3, ir: 'ADD A,(12)', dec: 'ADD', beat: 2, cap: '<b>解読</b>。加算の命令だと読み取りました。' },
+  { pc: 3, ir: 'ADD A,(12)', dec: 'ADD', beat: 3, cap: '<b>実行</b>。演算装置が加算します。この 3 拍を、STOP まで番地の順にくり返します。これがプログラム格納方式です。' }
+];
+let btI = 0;
+function btRender() {
+  const st = BT_STEPS[btI];
+  const box = document.getElementById('beatBox'); if (!box) return;
+  const unit = (name, val, on) => '<div class="beat-unit' + (on ? ' on' : '') + '"><span class="bu-name">' + name + '</span><span class="bu-val">' + val + '</span></div>';
+  const rows = BT_MEM.map(m => '<div class="bm-row' + (m.adr === st.pc ? ' cur' : '') + '"><span class="bm-adr">' + m.adr + '</span><span>' + m.text + '</span></div>').join('');
+  box.innerHTML =
+    '<div class="beat-cpu">'
+    + unit('プログラムカウンタ', st.pc + ' 番地', st.beat === 1)
+    + unit('命令レジスタ', st.ir, st.beat === 1)
+    + unit('命令解読器', st.dec, st.beat === 2)
+    + unit('演算装置・レジスタ', st.beat === 3 ? '実行中' : '—', st.beat === 3)
+    + '</div>'
+    + '<div class="beat-mem"><div class="bm-head">主記憶装置</div>' + rows + '</div>';
+  const cap = document.getElementById('btCap'); if (cap) cap.innerHTML = st.cap;
+  const dots = document.getElementById('btDots');
+  if (dots) { dots.innerHTML = ''; BT_STEPS.forEach((_, k) => { const d = document.createElement('span'); d.className = 'md-dot' + (k < btI ? ' done' : '') + (k === btI ? ' cur' : ''); dots.appendChild(d); }); }
+  const b = document.getElementById('btBack'); if (b) b.disabled = btI === 0;
+  const n = document.getElementById('btNext'); if (n) n.disabled = btI === BT_STEPS.length - 1;
 }
-function layTell(html) {
-  const p = document.getElementById('layPanel'); if (!p) return;
-  const n = document.querySelectorAll('.lay-card.placed').length;
-  let s = html || LAY_PROMPT;
-  if (n === 6) s += '<br><br>' + LAY_ALL;
-  p.innerHTML = s;
+function btStep(d) { const n = btI + d; if (n >= 0 && n < BT_STEPS.length) { btI = n; btRender(); haptic(8); } }
+function btReset() { btI = 0; btRender(); haptic([15, 40, 15]); }
+
+// ===== lec17 実習3: ○ × の判定 =====
+function judgeChip(el) {
+  const row = el.closest('.j-row'); if (!row) return;
+  const fb = row.querySelector('.j-fb');
+  const chips = row.querySelectorAll('.j-chip');
+  const was = el.classList.contains('judged-correct') || el.classList.contains('judged-wrong');
+  chips.forEach(c => c.classList.remove('judged-correct', 'judged-wrong'));
+  if (was) { if (fb) fb.classList.remove('show'); haptic(8); return; }
+  const ok = el.dataset.ok === 'true';
+  el.classList.add(ok ? 'judged-correct' : 'judged-wrong');
+  if (fb) { fb.innerHTML = '<span class="pf-mark">' + (ok ? '○' : '×') + '</span>' + (fb.dataset.fb || ''); fb.classList.add('show'); }
+  haptic(ok ? 20 : [40, 30, 40]);
+  if (typeof mikiQuizReact === 'function') mikiQuizReact(ok);
 }
-function layPlace(card) {
-  const k = card.dataset.key;
-  const layer = LAY_LAYER[k]; if (!layer) return;
-  if (card.classList.contains('placed')) {
-    card.classList.remove('placed');
-    const chip = document.querySelector('.lay-chip[data-key="' + k + '"]');
-    if (chip) chip.remove();
-    layRefresh(); layTell(''); haptic(8); return;
-  }
-  card.classList.add('placed');
-  const slot = document.getElementById('laySlot-' + layer);
-  if (slot) {
-    const c = document.createElement('span');
-    c.className = 'lay-chip'; c.dataset.key = k; c.textContent = LAY_CHIP[k];
-    slot.appendChild(c);
-  }
-  layRefresh(); layTell(LAY_FB[k]); haptic(20);
-  if (typeof mikiObjTalk === 'function' && LAY_SAY[k]) mikiObjTalk('割り当て', LAY_SAY[k]);
+
+// ===== lec17 参考A・B・C: 発展の図（静止。命令の並びを読ませる） =====
+function progList(rows, cap) {
+  const body = rows.map(r => '<div class="prog-row' + (r[2] ? ' hot' : '') + '"><span class="pr-adr">' + r[0] + '</span><span>' + r[1] + '</span><span class="pr-note">' + (r[3] || '') + '</span></div>').join('');
+  return '<div class="prog-list">' + body + '</div>' + (cap ? '<div class="prog-cap">' + cap + '</div>' : '');
 }
-function layResetAll() {
-  document.querySelectorAll('.lay-card.placed').forEach(c => c.classList.remove('placed'));
-  document.querySelectorAll('.lay-chip').forEach(c => c.remove());
-  layRefresh(); layTell('');
+function drawAppx() {
+  const a = document.getElementById('ch5Box');
+  if (a) a.innerHTML = progList([
+    [1, 'READ A,(10)', false, 'X をレジスタ A へ'],
+    [2, 'READ B,(11)', false, 'Y をレジスタ B へ'],
+    [3, 'ADD A,B', true, 'A ＝ X ＋ Y'],
+    [4, 'READ B,(12)', true, 'Z は空いている B へ'],
+    [5, 'ADD A,B', false, 'A ＝ X ＋ Y ＋ Z'],
+    [6, 'WRITE (13),A', false, '13 番地へ書き込む'],
+    [7, 'STOP', false, '']
+  ], '4 番地でレジスタ A に読み込むと、3 番地で作った X ＋ Y が消える');
+  const b = document.getElementById('expandBox');
+  if (b) b.innerHTML = '<div class="prog-cols"><div>' + '<div class="appx-tag">もとの順　X −（Y ＋ Z）</div>' + progList([
+    [1, 'READ A,(11)', false, ''], [2, 'ADD A,(12)', false, '途中結果'],
+    [3, 'WRITE (13),A', true, '書き出す'], [4, 'READ A,(10)', false, ''],
+    [5, 'SUB A,(13)', false, ''], [6, 'WRITE (13),A', false, '答え']
+  ], '命令は 6 つ') + '</div><div>' + '<div class="appx-tag">展開した順　X − Y − Z</div>' + progList([
+    [1, 'READ A,(10)', false, ''], [2, 'SUB A,(11)', false, ''],
+    [3, 'SUB A,(12)', false, ''], [4, 'WRITE (13),A', true, '書き出しは 1 回']
+  ], '命令は 4 つ') + '</div></div>';
+  const c = document.getElementById('loopBox');
+  if (c) c.innerHTML = progList([
+    [0, 'READ A,(12)', false, 'A ＝ 0（数える先）'],
+    [1, 'READ B,(11)', false, 'B ＝ 5（残りの回数）'],
+    [2, 'ADD A,(10)', false, 'A に 1 を足す'],
+    [3, 'SUB B,(13)', false, 'B から 1 を引く'],
+    [4, 'JPNZ (2)', true, 'B が 0 でなければ 2 番地へ戻る'],
+    [5, 'WRITE (14),A', false, '答えを書き込む'],
+    [6, 'STOP', false, '']
+  ], '4 番地でプログラムカウンタが 2 に書きかわる。2〜4 番地が 5 回くり返される');
 }
-// answers-grid(10 用語)
+
 function revealAnswer(row) {
   const reveal = row.querySelector('.answer-reveal');
   if (row.classList.contains('revealed')) { row.classList.remove('revealed'); reveal.textContent = 'クリック'; }
@@ -2420,22 +1978,22 @@ function hideAll() {
 
 // 復習チャレンジ(プール 16 問)
 const reviewPool = [
-  { q: 'ハードウェアの説明として正しいものはどれか?', opts: ['コンピュータを動作させるためのプログラム', 'コンピュータの核となる部分と、それに接続する周辺機器を併せたもの', '基本ソフトウェアと応用ソフトウェアを併せたもの', '情報を収集する装置'], a: 1 },
-  { q: '中央処理装置を構成する 2 つの装置はどれか?', opts: ['入力装置と出力装置', '主記憶装置と補助記憶装置', '演算装置と制御装置', '制御装置と入力装置'], a: 2 },
-  { q: '構成図で制御装置を特定する手がかりはどれか?', opts: ['制御命令が集まってくる先', '制御命令が送られてくる源', '補助記憶装置とだけつながっている', '出力装置とだけつながっている'], a: 1 },
-  { q: '補助記憶装置がデータのやり取りをする相手はどれか?', opts: ['入力装置のみ', '出力装置のみ', '主記憶装置のみ', '演算装置のみ'], a: 2 },
-  { q: 'インタフェースの説明として正しいものはどれか?', opts: ['異なる機器やソフトウェア、人間との間でのデータのやり取りをする際、その間をつなぐ規格や機能', '身のまわりのモノがインターネットにつながる仕組み', '人工知能における学習の仕組み', '自動的に動作し不利益をもたらすソフトウェア'], a: 0 },
-  { q: 'ハードウェアインタフェースがそろえているものはどれか?', opts: ['操作の内容', 'コネクタの形状や電気信号の形式などの仕様', 'ユーザアカウントの権限', 'ソフトウェアの実行順序'], a: 1 },
-  { q: 'オペレーティングシステムの別の呼び方はどれか?', opts: ['応用ソフトウェア', '基本ソフトウェア', 'デバイスドライバ', 'インストーラ'], a: 1 },
-  { q: 'ソフトウェア間のインタフェースの例として挙げられるものはどれか?', opts: ['USB', 'HDMI', 'API', 'NFC'], a: 2 },
-  { q: 'デバイスドライバの説明として適切なものはどれか?', opts: ['コンピュータに接続された周辺機器を制御するソフトウェア', '応用ソフトウェアをコンピュータに導入するソフトウェア', '自動的に動作し不利益をもたらすソフトウェア', 'ハードウェアと応用ソフトウェアの仲介役として機能し、タスク管理や記憶管理をするソフトウェア'], a: 0 },
-  { q: 'オペレーティングシステムの目的として正しくないものはどれか?', opts: ['限られたコンピュータ資源を有効に活用し適切に管理する', '機器どうしを接続するコネクタの形状や電気信号の形式などの仕様を合わせる', '操作の一部を肩代わりしユーザの作業を支援する', '装置の違いを意識せず利用できるよう操作の内容を抽象化する'], a: 1 },
-  { q: '「装置の違いを意識せず利用できるよう操作の内容を抽象化する」は、OS の目的のどれにあたるか?', opts: ['操作支援', '基本機能の提供', '資源の有効利用', 'どれにもあたらない'], a: 1 },
-  { q: 'ソフトウェアの実行順序や CPU への割り当てなどを管理するのはどれか?', opts: ['ユーザ管理', 'タスク管理', '資源の有効利用', 'デバイスドライバ'], a: 1 },
-  { q: 'IoT の説明として正しいものはどれか?', opts: ['ソフトウェアの機能の一部を、他のプログラムから利用できるように提供しているもの', '異なる機器やソフトウェア、人間との間でのデータのやり取りをする際、その間をつなぐ規格や機能', '人工知能における学習の仕組み', 'センサを搭載した機器や制御装置が直接インターネットにつながり情報をやり取りする仕組み'], a: 3 },
-  { q: 'センサの説明として正しいものはどれか?', opts: ['情報を収集する装置', '情報を出力する装置', '演算をする装置', '各装置を制御する装置'], a: 0 },
-  { q: '映像・音声・制御信号を 1 本のケーブルにまとめて送る規格はどれか?', opts: ['Bluetooth', 'HDMI', 'IEEE 802.11', 'NFC'], a: 1 },
-  { q: 'デバイスドライバ・OS・アプリケーションソフトウェアを、ハードウェアに近い順に並べるとどれか?', opts: ['OS ＜ デバイスドライバ ＜ アプリケーション', 'デバイスドライバ ＜ OS ＜ アプリケーション', 'アプリケーション ＜ OS ＜ デバイスドライバ', 'デバイスドライバ ＜ アプリケーション ＜ OS'], a: 1 }
+  { q: "プログラムカウンタが記憶しているものはどれか?", opts: ["実行し終えた命令のアドレス（番地）", "主記憶装置から取り出した命令そのもの", "次に実行すべき命令のアドレス（番地）", "計算の途中結果"], a: 2 },
+  { q: "主記憶装置から取り出した命令を格納するものはどれか?", opts: ["命令レジスタ", "プログラムカウンタ", "命令解読器", "制御装置"], a: 0 },
+  { q: "命令レジスタから命令を受け取り、内容を解読して実行に必要な指示を決定する装置はどれか?", opts: ["プログラムカウンタ", "主記憶装置", "演算装置", "命令解読器"], a: 3 },
+  { q: "CPU が命令を実行するときの三つの動作の順として正しいものはどれか?", opts: ["実行 → 取り出し → 解読", "取り出し → 解読 → 実行", "解読 → 取り出し → 実行", "取り出し → 実行 → 解読"], a: 1 },
+  { q: "主記憶装置のプログラムから命令を順に取り出し、解読して実行する仕組みを何というか?", opts: ["命令セット", "機械語", "プログラム格納方式", "プログラミング言語"], a: 2 },
+  { q: "CPU ごとに定義された命令の集まりを何というか?", opts: ["命令セット", "プログラム", "機械語", "アドレス"], a: 0 },
+  { q: "命令セットについて正しいものはどれか?", opts: ["どの CPU でも共通なので、同じプログラムがどの CPU でも動く", "同じ命令セットをもつ CPU どうしなら、同じプログラムが動く", "命令セットに無い命令も、そのまま実行できる", "命令セットは主記憶装置の容量で決まる"], a: 1 },
+  { q: "0 と 1 のビット列からなり、CPU が直接理解できる命令を何というか?", opts: ["プログラミング言語", "命令レジスタ", "アドレス", "機械語"], a: 3 },
+  { q: "レジスタ A に 8 が入っている。10 番地の 9 を READ A,(10) で読み込んだ後のレジスタ A の値はどれか?", opts: ["8 のまま", "8 と 9 の両方", "9", "17"], a: 2 },
+  { q: "計算の途中結果が入ったレジスタへ次の値を読み込むと、途中結果はどうなるか?", opts: ["主記憶装置へ自動的に移される", "上書きされて消える", "別のレジスタへ移される", "プログラムカウンタに残る"], a: 1 },
+  { q: "X −（Y ＋ Z）を、レジスタ A だけで計算する。（Y ＋ Z）を求めたあと、X を読み込む前にすることはどれか?", opts: ["途中結果を主記憶装置へ WRITE で書き出す", "そのまま READ してよい", "先に SUB で引いておく", "プログラムを STOP する"], a: 0 },
+  { q: "レジスタが A と B の二つある。レジスタ A に X ＋ Y の結果が入っているとき、Z を読み込む先はどれか?", opts: ["レジスタ A", "13 番地", "プログラムカウンタ", "レジスタ B"], a: 3 },
+  { q: "レジスタの値を、主記憶装置の指定した番地に書き込む命令はどれか?", opts: ["READ", "WRITE", "ADD", "STOP"], a: 1 },
+  { q: "X −（Y ＋ Z）を X − Y − Z と展開して計算すると、何が変わるか?", opts: ["答えが変わる", "レジスタが 2 つ必要になる", "途中結果を書き出す必要がなくなる", "命令セットが変わる"], a: 2 },
+  { q: "ベストフィットの仮想コンピュータで、分岐命令が書き換えるものはどれか?", opts: ["プログラムカウンタ", "命令レジスタ", "データレジスタ", "主記憶装置のデータ"], a: 0 },
+  { q: "加算命令 ADD A,B は、結果をどこに入れるか?", opts: ["レジスタ B", "主記憶装置", "命令レジスタ", "レジスタ A"], a: 3 }
 ];
 let reviewQuestions = [], reviewIdx = 0, reviewScore = 0;
 function startReview() {
@@ -2480,14 +2038,15 @@ function showReviewResult() {
   document.getElementById('reviewComment').textContent = comments[reviewScore] || '基礎から見直そう。学習ノートを手元に。';
 }
 
-// miki.con 「4 つの層」ステッパー(ボタン主導・スライド送りと非競合)
+// miki.con 「階段スイッチ」ステッパー(ボタン主導・スライド送りと非競合)
 const MD_STEPS = [
-  { code: 1, prev: 1, tag: '応用',   say: '文書作成ソフトは <b>応用ソフトウェア</b> です。まず、ここから印刷の指示が出ます。' },
-  { code: 2, prev: 2, tag: '⑥ OS',  say: '受け取るのは <b>オペレーティングシステム</b>。OS は、ハードウェアと応用ソフトウェアとの仲介をします。' },
-  { code: 3, prev: 3, tag: 'ドライバ', say: 'OS に <b>デバイスドライバ</b> が追加されていると、OS が周辺機器を動作させることができます。' },
-  { code: 4, prev: 4, tag: '⑤ 規格', say: 'コネクタの形状や電気信号の形式などの仕様を合わせているのは <b>ハードウェアインタフェース</b> です。ここは <b>OS の目的ではありません</b>。' },
-  { code: 5, prev: 5, tag: '② 機器', say: '最後に <b>周辺機器</b> が、データの記憶や入出力を行います。' },
-  { code: 6, prev: 6, tag: 'まとめ', say: '「周辺機器の違いをほとんど意識することなく作業ができる」― これが OS の <b>基本機能の提供</b> です。仕様を合わせる仕事は <b>④⑤</b> の側にあります。' }
+  { code: 1, prev: 1, tag: "1 番地", say: "11 番地の <b>1</b> をレジスタ A に読み込みます。レジスタ A は空から 1 になります。", styled: false },
+  { code: 2, prev: 2, tag: "2 番地", say: "12 番地の <b>7</b> を加算します。レジスタ A は <b>8</b>。これが（Y ＋ Z）の答えです。まだ主記憶装置には書いていません。", styled: false },
+  { code: 3, prev: 3, tag: "3 番地", say: "レジスタ A の 8 を <b>13 番地に書き出します</b>。ここが並びの分かれ目です。", styled: false },
+  { code: 4, prev: 4, tag: "4 番地", say: "10 番地の 9 を読み込みます。レジスタ A の <b>8 は 9 に置き換わります</b>。書き出していたので、8 は 13 番地に残っています。", styled: false },
+  { code: 5, prev: 5, tag: "5 番地", say: "13 番地の 8 を減算します。9 − 8 で、レジスタ A は <b>1</b> です。", styled: false },
+  { code: 6, prev: 6, tag: "6 番地", say: "レジスタ A の 1 を 13 番地に書き込みます。13 番地は 8 から <b>1</b> に書きかわります。これが答えです。", styled: false },
+  { code: 7, prev: 7, tag: "まとめ", say: "READ は、レジスタの中身を捨てて入れ直す命令です。<b>途中結果は、読み込む前に書き出しておく</b>。命令の意味は同じでも、並べる順で答えが変わります。", styled: false }
 ];
 let mdI = 0;
 function mdRender() {
@@ -2576,45 +2135,30 @@ function mikiMin() { const b = document.getElementById('mikibar'); if (b) b.clas
 // ===== POINT スポットライト + リッチ解説ポップ(miki.con 表示時のみ・ナビ役) =====
 // 用語ごとの「動くイラスト + 平易な説明」。sf-flow/pulse/float/grow は hosoku と共通の動き。
 const POINT_ILLUST = {
-  hardware: { tag: '① POINT', name: 'ハードウェア',
-    fig: `<svg viewBox="0 0 360 150"><rect x="140" y="42" width="80" height="66" rx="10" fill="#e9f0fb" stroke="#3b3a42" stroke-width="3"/><rect class="sf-pulse" x="40" y="28" width="52" height="34" rx="8" fill="#fff" stroke="#3b3a42" stroke-width="3"/><rect class="sf-pulse" style="animation-delay:.2s" x="40" y="90" width="52" height="34" rx="8" fill="#fff" stroke="#3b3a42" stroke-width="3"/><rect class="sf-pulse" style="animation-delay:.4s" x="268" y="28" width="52" height="34" rx="8" fill="#fff" stroke="#3b3a42" stroke-width="3"/><rect class="sf-pulse" style="animation-delay:.6s" x="268" y="90" width="52" height="34" rx="8" fill="#fff" stroke="#3b3a42" stroke-width="3"/><path class="sf-flow" d="M92 45H140M92 107H140M220 45h48M220 107h48" fill="none" stroke="#3f78c4" stroke-width="3"/></svg>`,
-    desc: 'コンピュータの <b>核となる部分</b> と、それに接続する <b>周辺機器</b> を併せたものです。機械そのものの側を指します。' },
-  device: { tag: '② POINT', name: '周辺機器（デバイス）',
-    fig: `<svg viewBox="0 0 360 150"><rect x="120" y="58" width="120" height="52" rx="10" fill="#e9f0fb" stroke="#3b3a42" stroke-width="3"/><path d="M150 58V28h60v30" fill="none" stroke="#3b3a42" stroke-width="3"/><rect class="sf-float" x="150" y="110" width="60" height="30" rx="5" fill="#fff" stroke="#bb453d" stroke-width="3"/><path class="sf-flow" d="M56 84h60M244 84h60" fill="none" stroke="#3f78c4" stroke-width="3"/></svg>`,
-    desc: '核となる部分に接続し、<b>データの記憶や入出力を行う</b> 装置です。デバイスともいいます。' },
-  cpu: { tag: '③ POINT', name: '中央処理装置',
-    fig: `<svg viewBox="0 0 360 150"><rect x="132" y="35" width="96" height="80" rx="10" fill="#fff" stroke="#3b3a42" stroke-width="3"/><rect class="sf-pulse" x="148" y="52" width="30" height="46" rx="5" fill="#3f78c4"/><rect class="sf-pulse" style="animation-delay:.3s" x="184" y="52" width="30" height="46" rx="5" fill="#ffe27a" stroke="#8a6d1f" stroke-width="2"/><path d="M150 35V18M210 35V18M150 115v17M210 115v17M132 58h-20M132 92h-20M228 58h20M228 92h20" stroke="#3b3a42" stroke-width="3" stroke-linecap="round"/></svg>`,
-    desc: '<b>演算をする演算装置</b> と <b>各装置を制御する制御装置</b> から構成される中枢部分です。CPU ともいいます。' },
-  iface: { tag: '④ POINT', name: 'インタフェース',
-    fig: `<svg viewBox="0 0 360 150"><rect x="36" y="42" width="90" height="66" rx="12" fill="#fff" stroke="#3b3a42" stroke-width="3"/><rect x="234" y="42" width="90" height="66" rx="12" fill="#fff" stroke="#3b3a42" stroke-width="3"/><rect class="sf-pulse" x="140" y="58" width="80" height="34" rx="8" fill="#ffe27a" stroke="#8a6d1f" stroke-width="3"/><path class="sf-flow" d="M126 75h12M222 75h12" stroke="#3f78c4" stroke-width="3"/></svg>`,
-    desc: '異なる機器やソフトウェア、人間との間でのデータのやり取りをする際、<b>その間をつなぐ規格や機能</b> のことです。' },
-  hwiface: { tag: '⑤ POINT', name: 'ハードウェアインタフェース',
-    fig: `<svg viewBox="0 0 360 150"><path d="M40 75h56" stroke="#3b3a42" stroke-width="4" stroke-linecap="round"/><rect class="sf-float" x="96" y="52" width="54" height="46" rx="8" fill="#ffe27a" stroke="#3b3a42" stroke-width="3"/><rect x="180" y="36" width="120" height="78" rx="12" fill="#fff" stroke="#3b3a42" stroke-width="3"/><path d="M152 64h28M152 86h28" stroke="#3b3a42" stroke-width="4" stroke-linecap="round"/></svg>`,
-    desc: 'インタフェースのうち、特にハードウェア間のものです。<b>コネクタの形状や電気信号の形式などの仕様を合わせます</b>。' },
-  os: { tag: '⑥ POINT', name: 'オペレーティングシステム',
-    fig: `<svg viewBox="0 0 360 150"><rect x="70" y="14" width="220" height="34" rx="8" fill="#fff" stroke="#3b3a42" stroke-width="3"/><rect class="sf-pulse" x="70" y="58" width="220" height="34" rx="8" fill="#ffe27a" stroke="#3b3a42" stroke-width="3"/><rect x="70" y="102" width="220" height="34" rx="8" fill="#fff" stroke="#3b3a42" stroke-width="3"/><path class="sf-flow" d="M180 48v10M180 92v10" stroke="#3f78c4" stroke-width="3"/></svg>`,
-    desc: '基本ソフトウェア（OS）です。<b>ハードウェアと応用ソフトウェアとの仲介</b> をします。' },
-  swiface: { tag: '⑦ POINT', name: 'ソフトウェアインタフェース',
-    fig: `<svg viewBox="0 0 360 150"><rect x="40" y="26" width="100" height="98" rx="14" fill="#fff" stroke="#3b3a42" stroke-width="3"/><rect x="220" y="26" width="100" height="98" rx="14" fill="#fff" stroke="#3b3a42" stroke-width="3"/><path class="sf-flow" d="M140 46h80M220 104h-80" stroke="#3f78c4" stroke-width="4"/><rect class="sf-pulse" x="164" y="62" width="32" height="26" rx="6" fill="#ffe27a" stroke="#8a6d1f" stroke-width="2"/></svg>`,
-    desc: '<b>ソフトウェア間のインタフェース</b> です。API などがあります。つなぐ相手がソフトウェアどうしである点が ⑤ との違いです。' },
-  api: { tag: '⑧ POINT', name: 'API',
-    fig: `<svg viewBox="0 0 360 150"><rect x="150" y="20" width="170" height="110" rx="14" fill="#fff" stroke="#3b3a42" stroke-width="3"/><path class="sf-flow" d="M40 75h74" stroke="#3f78c4" stroke-width="4"/><polyline class="sf-pulse" points="120 52 150 75 120 98" fill="none" stroke="#bb453d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><rect x="180" y="44" width="112" height="16" rx="6" fill="#e9f0fb"/><rect x="180" y="72" width="70" height="16" rx="6" fill="#ffe27a"/><rect x="180" y="100" width="92" height="16" rx="6" fill="#e9f0fb"/></svg>`,
-    desc: '<b>機能の一部を他のプログラムから利用できるように提供</b> します。ソフトウェアインタフェースの一つです。' },
-  aimSupport: { tag: '目的 1', name: '操作支援',
-    fig: `<svg viewBox="0 0 360 150"><rect x="110" y="16" width="140" height="34" rx="8" fill="#e9f0fb" stroke="#3b3a42" stroke-width="3"/><path d="M180 134V70" stroke="#3b3a42" stroke-width="4" stroke-linecap="round"/><polyline class="sf-float" points="146 100 180 64 214 100" fill="none" stroke="#bb453d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-    desc: '<b>操作の一部を肩代わりし、ユーザの作業を支援する</b> ことです。OS の目的の一つです。' },
-  aimBasic: { tag: '目的 2', name: '基本機能の提供',
-    fig: `<svg viewBox="0 0 360 150"><circle cx="52" cy="32" r="18" fill="#fff" stroke="#3b3a42" stroke-width="3"/><rect x="34" y="58" width="36" height="34" rx="4" fill="#fff" stroke="#3b3a42" stroke-width="3"/><path d="M52 102l20 34H32z" fill="#fff" stroke="#3b3a42" stroke-width="3" stroke-linejoin="round"/><path class="sf-flow" d="M96 75h64" stroke="#3f78c4" stroke-width="4"/><rect class="sf-pulse" x="184" y="38" width="136" height="74" rx="18" fill="#ffe27a" stroke="#3b3a42" stroke-width="3"/></svg>`,
-    desc: '<b>装置の違いを意識せず利用できるよう、操作の内容を抽象化する</b> ことです。この単元の要になる目的です。' },
-  aimResource: { tag: '目的 3', name: '資源の有効利用',
-    fig: `<svg viewBox="0 0 360 150"><rect x="40" y="44" width="280" height="62" rx="10" fill="#fff" stroke="#3b3a42" stroke-width="3"/><rect class="sf-grow" x="52" y="58" width="90" height="34" rx="6" fill="#3f78c4"/><rect class="sf-grow" style="animation-delay:.2s" x="150" y="58" width="60" height="34" rx="6" fill="#7ea3d6"/><rect class="sf-grow" style="animation-delay:.4s" x="218" y="58" width="40" height="34" rx="6" fill="#ffe27a"/><rect class="sf-grow" style="animation-delay:.6s" x="266" y="58" width="42" height="34" rx="6" fill="#c9d8ee"/></svg>`,
-    desc: '<b>限られたコンピュータ資源を有効に活用し、適切に管理する</b> ことです。実行順序と CPU の割り当てを決めるタスク管理が、その例です。' },
-  iot: { tag: '⑨ POINT', name: 'IoT',
-    fig: `<svg viewBox="0 0 360 150"><circle class="sf-pulse" cx="180" cy="75" r="26" fill="#ffe27a" stroke="#3b3a42" stroke-width="3"/><rect x="40" y="18" width="52" height="34" rx="7" fill="#fff" stroke="#3b3a42" stroke-width="3"/><rect x="40" y="98" width="52" height="34" rx="7" fill="#fff" stroke="#3b3a42" stroke-width="3"/><rect x="268" y="18" width="52" height="34" rx="7" fill="#fff" stroke="#3b3a42" stroke-width="3"/><rect x="268" y="98" width="52" height="34" rx="7" fill="#fff" stroke="#3b3a42" stroke-width="3"/><path class="sf-flow" d="M92 36L156 66M92 114L156 84M268 36L204 66M268 114L204 84" fill="none" stroke="#3f78c4" stroke-width="3"/></svg>`,
-    desc: '身のまわりのモノが <b>インターネットにつながる仕組み</b> です。センサを搭載した機器や制御装置が直接つながります。' },
-  sensor: { tag: '⑩ POINT', name: 'センサ',
-    fig: `<svg viewBox="0 0 360 150"><rect x="46" y="52" width="72" height="46" rx="10" fill="#e9f0fb" stroke="#3b3a42" stroke-width="3"/><path class="sf-pulse" d="M146 48a44 44 0 0 1 0 54" fill="none" stroke="#3f78c4" stroke-width="4" stroke-linecap="round"/><path class="sf-pulse" style="animation-delay:.2s" d="M182 32a76 76 0 0 1 0 86" fill="none" stroke="#3f78c4" stroke-width="4" stroke-linecap="round"/><path class="sf-pulse" style="animation-delay:.4s" d="M218 16a108 108 0 0 1 0 118" fill="none" stroke="#bb453d" stroke-width="4" stroke-linecap="round"/></svg>`,
-    desc: '<b>情報を収集する装置</b> です。IoT では、ここで集めた情報がインターネットを通じてやり取りされます。' }
+  "program": { tag: "① POINT", name: "プログラム",
+    fig: "<svg viewBox=\"0 0 360 150\"><rect x=\"110\" y=\"18\" width=\"140\" height=\"104\" rx=\"8\" fill=\"#fff\" stroke=\"#0F2847\" stroke-width=\"3\"/><path d=\"M132 44h96M132 70h96M132 96h60\" stroke=\"#3f78c4\" stroke-width=\"5\" stroke-linecap=\"round\"/><text x=\"180\" y=\"140\" font-size=\"12\" fill=\"#6f6e78\" text-anchor=\"middle\">命令を並べたもの</text></svg>",
+    desc: "<b>命令を組み合わせて、処理の手順を記述したもの</b>です。命令は CPU ごとに定義されています。" },
+  "iset": { tag: "② POINT", name: "命令セット",
+    fig: "<svg viewBox=\"0 0 360 150\"><rect x=\"58\" y=\"30\" width=\"88\" height=\"36\" rx=\"6\" fill=\"#e9f0fb\" stroke=\"#0F2847\" stroke-width=\"2.5\"/><rect x=\"58\" y=\"78\" width=\"88\" height=\"36\" rx=\"6\" fill=\"#e9f0fb\" stroke=\"#0F2847\" stroke-width=\"2.5\"/><rect x=\"212\" y=\"30\" width=\"88\" height=\"36\" rx=\"6\" fill=\"#e9f0fb\" stroke=\"#0F2847\" stroke-width=\"2.5\"/><rect x=\"212\" y=\"78\" width=\"88\" height=\"36\" rx=\"6\" fill=\"#e9f0fb\" stroke=\"#0F2847\" stroke-width=\"2.5\"/><text x=\"102\" y=\"54\" font-size=\"14\" fill=\"#2c5a99\" text-anchor=\"middle\" font-family=\"'JetBrains Mono',monospace\">READ</text><text x=\"102\" y=\"102\" font-size=\"14\" fill=\"#2c5a99\" text-anchor=\"middle\" font-family=\"'JetBrains Mono',monospace\">ADD</text><text x=\"256\" y=\"54\" font-size=\"14\" fill=\"#2c5a99\" text-anchor=\"middle\" font-family=\"'JetBrains Mono',monospace\">WRITE</text><text x=\"256\" y=\"102\" font-size=\"14\" fill=\"#2c5a99\" text-anchor=\"middle\" font-family=\"'JetBrains Mono',monospace\">SUB</text><text x=\"180\" y=\"140\" font-size=\"12\" fill=\"#6f6e78\" text-anchor=\"middle\">この CPU が理解できる命令の集まり</text></svg>",
+    desc: "<b>CPU ごとに定義された命令の集まり</b>です。含まれない命令は、複数の命令を組み合わせて実現します。" },
+  "machine": { tag: "③ POINT", name: "機械語",
+    fig: "<svg viewBox=\"0 0 360 150\"><rect x=\"70\" y=\"40\" width=\"220\" height=\"52\" rx=\"8\" fill=\"#fff\" stroke=\"#0F2847\" stroke-width=\"3\"/><text x=\"180\" y=\"76\" font-size=\"26\" fill=\"#0F2847\" text-anchor=\"middle\" font-family=\"'JetBrains Mono',monospace\" font-weight=\"700\">0110 1001</text><text x=\"180\" y=\"140\" font-size=\"12\" fill=\"#6f6e78\" text-anchor=\"middle\">CPU が直接理解できる形</text></svg>",
+    desc: "<b>0 と 1 のビット列からなる命令</b>です。CPU は直接理解できますが、人には扱いづらいものです。" },
+  "stored": { tag: "④ POINT", name: "プログラム格納方式",
+    fig: "<svg viewBox=\"0 0 360 150\"><rect x=\"30\" y=\"28\" width=\"96\" height=\"84\" rx=\"8\" fill=\"#fff\" stroke=\"#0F2847\" stroke-width=\"3\"/><text x=\"78\" y=\"62\" font-size=\"13\" fill=\"#3b3a42\" text-anchor=\"middle\">主記憶</text><text x=\"78\" y=\"84\" font-size=\"13\" fill=\"#3b3a42\" text-anchor=\"middle\">装置</text><rect x=\"234\" y=\"28\" width=\"96\" height=\"84\" rx=\"8\" fill=\"#e9f0fb\" stroke=\"#0F2847\" stroke-width=\"3\"/><text x=\"282\" y=\"76\" font-size=\"16\" fill=\"#2c5a99\" text-anchor=\"middle\">CPU</text><path class=\"sf-flow\" d=\"M134 70 H226\" stroke=\"#3f78c4\" stroke-width=\"3\"/><path d=\"M214 60 l14 10 -14 10\" fill=\"none\" stroke=\"#3f78c4\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><text x=\"180\" y=\"56\" font-size=\"12\" fill=\"#6f6e78\" text-anchor=\"middle\">命令を 1 つずつ</text><text x=\"180\" y=\"140\" font-size=\"12\" fill=\"#6f6e78\" text-anchor=\"middle\">取り出し → 解読 → 実行 をくり返す</text></svg>",
+    desc: "主記憶装置の命令を<b>順に取り出し、解読して実行する仕組み</b>です。三つの動作をくり返します。" },
+  "pc": { tag: "⑤ POINT", name: "プログラムカウンタ",
+    fig: "<svg viewBox=\"0 0 360 150\"><rect x=\"96\" y=\"16\" width=\"168\" height=\"28\" rx=\"5\" fill=\"#fff\" stroke=\"#0F2847\" stroke-width=\"2.5\"/><rect x=\"96\" y=\"50\" width=\"168\" height=\"28\" rx=\"5\" fill=\"#ffe27a\" stroke=\"#0F2847\" stroke-width=\"3\"/><rect x=\"96\" y=\"84\" width=\"168\" height=\"28\" rx=\"5\" fill=\"#fff\" stroke=\"#0F2847\" stroke-width=\"2.5\"/><text x=\"86\" y=\"36\" font-size=\"13\" fill=\"#6f6e78\" text-anchor=\"end\" font-family=\"'JetBrains Mono',monospace\">3</text><text x=\"86\" y=\"70\" font-size=\"13\" fill=\"#bb453d\" text-anchor=\"end\" font-family=\"'JetBrains Mono',monospace\" font-weight=\"700\">4</text><text x=\"86\" y=\"104\" font-size=\"13\" fill=\"#6f6e78\" text-anchor=\"end\" font-family=\"'JetBrains Mono',monospace\">5</text><text x=\"180\" y=\"70\" font-size=\"13\" fill=\"#7a5a00\" text-anchor=\"middle\" font-family=\"'JetBrains Mono',monospace\">次に実行する命令</text><text x=\"180\" y=\"140\" font-size=\"12\" fill=\"#6f6e78\" text-anchor=\"middle\">記憶しているのは「番地」</text></svg>",
+    desc: "<b>次に実行すべき命令のアドレス（番地）</b>を記憶しています。いま実行中の番地ではありません。" },
+  "addr": { tag: "⑥ POINT", name: "アドレス（番地）",
+    fig: "<svg viewBox=\"0 0 360 150\"><rect x=\"110\" y=\"14\" width=\"150\" height=\"30\" rx=\"5\" fill=\"#fff\" stroke=\"#0F2847\" stroke-width=\"2.5\"/><rect x=\"110\" y=\"52\" width=\"150\" height=\"30\" rx=\"5\" fill=\"#fff\" stroke=\"#0F2847\" stroke-width=\"2.5\"/><rect x=\"110\" y=\"90\" width=\"150\" height=\"30\" rx=\"5\" fill=\"#fff\" stroke=\"#0F2847\" stroke-width=\"2.5\"/><text x=\"100\" y=\"35\" font-size=\"13\" fill=\"#2c5a99\" text-anchor=\"end\" font-family=\"'JetBrains Mono',monospace\" font-weight=\"700\">10</text><text x=\"100\" y=\"73\" font-size=\"13\" fill=\"#2c5a99\" text-anchor=\"end\" font-family=\"'JetBrains Mono',monospace\" font-weight=\"700\">11</text><text x=\"100\" y=\"111\" font-size=\"13\" fill=\"#2c5a99\" text-anchor=\"end\" font-family=\"'JetBrains Mono',monospace\" font-weight=\"700\">12</text><text x=\"185\" y=\"35\" font-size=\"14\" fill=\"#3b3a42\" text-anchor=\"middle\" font-family=\"'JetBrains Mono',monospace\">9</text><text x=\"185\" y=\"73\" font-size=\"14\" fill=\"#3b3a42\" text-anchor=\"middle\" font-family=\"'JetBrains Mono',monospace\">1</text><text x=\"185\" y=\"111\" font-size=\"14\" fill=\"#3b3a42\" text-anchor=\"middle\" font-family=\"'JetBrains Mono',monospace\">7</text><text x=\"180\" y=\"140\" font-size=\"12\" fill=\"#6f6e78\" text-anchor=\"middle\">場所を示す番号。命令もデータも同じ列</text></svg>",
+    desc: "<b>主記憶装置の場所を示す番号</b>です。READ や WRITE は、この番地を指定して読み書きします。" },
+  "decoder": { tag: "⑦ POINT", name: "命令解読器",
+    fig: "<svg viewBox=\"0 0 360 150\"><rect x=\"40\" y=\"52\" width=\"84\" height=\"40\" rx=\"6\" fill=\"#fff\" stroke=\"#0F2847\" stroke-width=\"2.5\"/><text x=\"82\" y=\"78\" font-size=\"13\" fill=\"#3b3a42\" text-anchor=\"middle\" font-family=\"'JetBrains Mono',monospace\">ADD</text><circle class=\"sf-pulse\" cx=\"180\" cy=\"72\" r=\"34\" fill=\"#e9f0fb\" stroke=\"#0F2847\" stroke-width=\"3\"/><text x=\"180\" y=\"78\" font-size=\"13\" fill=\"#2c5a99\" text-anchor=\"middle\">解読</text><rect x=\"236\" y=\"52\" width=\"84\" height=\"40\" rx=\"6\" fill=\"#fff\" stroke=\"#0F2847\" stroke-width=\"2.5\"/><text x=\"278\" y=\"78\" font-size=\"12\" fill=\"#3b3a42\" text-anchor=\"middle\">加算せよ</text><path d=\"M126 72 H142M218 72 H232\" stroke=\"#3f78c4\" stroke-width=\"3\" stroke-linecap=\"round\"/><text x=\"180\" y=\"140\" font-size=\"12\" fill=\"#6f6e78\" text-anchor=\"middle\">命令を読み取り、指示に変える</text></svg>",
+    desc: "命令レジスタから命令を受け取り、<b>内容を解読して実行に必要な指示を決定する装置</b>です。" },
+  "ireg": { tag: "⑧ POINT", name: "命令レジスタ",
+    fig: "<svg viewBox=\"0 0 360 150\"><rect x=\"30\" y=\"40\" width=\"100\" height=\"64\" rx=\"8\" fill=\"#fff\" stroke=\"#0F2847\" stroke-width=\"2.5\"/><text x=\"80\" y=\"78\" font-size=\"12\" fill=\"#6f6e78\" text-anchor=\"middle\">主記憶装置</text><rect class=\"sf-pulse\" x=\"210\" y=\"46\" width=\"120\" height=\"52\" rx=\"8\" fill=\"#ffe27a\" stroke=\"#0F2847\" stroke-width=\"3\"/><text x=\"270\" y=\"78\" font-size=\"14\" fill=\"#7a5a00\" text-anchor=\"middle\" font-family=\"'JetBrains Mono',monospace\">ADD A,(12)</text><path class=\"sf-flow\" d=\"M138 72 H202\" stroke=\"#3f78c4\" stroke-width=\"3\"/><path d=\"M190 62 l14 10 -14 10\" fill=\"none\" stroke=\"#3f78c4\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><text x=\"180\" y=\"140\" font-size=\"12\" fill=\"#6f6e78\" text-anchor=\"middle\">取り出した命令そのものを置く</text></svg>",
+    desc: "<b>主記憶装置から取り出した命令を格納するもの</b>です。番地を記憶するのはプログラムカウンタです。" }
 };
 let ppOpen = false, ppCard = null;
 function openPointSpot(card, key) {
@@ -2685,19 +2229,12 @@ function resetAllInteractions() {
   if (!confirm('このページのすべてのインタラクションを初期状態に戻します。よろしいですか?')) return;
   document.querySelectorAll('.icon-card.selected').forEach(c => c.classList.remove('selected'));
   if (typeof closePointSpot === 'function') closePointSpot();
-  const p1 = document.getElementById('termPanel1'); if (p1) p1.innerHTML = '<span style="color:var(--text-sub);font-style:italic;">▲ 上の 3 つのカードをタップすると、学習ノートの定義が表示されます。</span>';
-  const p2 = document.getElementById('termPanel2'); if (p2) p2.innerHTML = '<span style="color:var(--text-sub);font-style:italic;">▲ 2 つのカードをタップすると、学習ノートの定義が表示されます。</span>';
-  const p3 = document.getElementById('termPanel3'); if (p3) p3.innerHTML = '<span style="color:var(--text-sub);font-style:italic;">▲ 3 つのカードをタップすると、学習ノートの定義が表示されます。</span>';
-  const p4 = document.getElementById('termPanel4'); if (p4) p4.innerHTML = '<span style="color:var(--text-sub);font-style:italic;">▲ 3 つのカードをタップすると、それぞれの中身が表示されます。</span>';
-  const p5 = document.getElementById('termPanel5'); if (p5) p5.innerHTML = '<span style="color:var(--text-sub);font-style:italic;">▲ 2 つのカードをタップすると、学習ノートの定義が表示されます。</span>';
-  document.querySelectorAll('.dev-box.selected').forEach(b => b.classList.remove('selected'));
-  const dp = document.getElementById('devPanel'); if (dp) dp.innerHTML = '<span style="color:var(--text-sub);font-style:italic;">▲ 図の中の装置をタップすると、その装置がしていることが表示されます。</span>';
+  const p1 = document.getElementById('termPanel1'); if (p1) p1.innerHTML = '<span style="color:var(--text-sub);font-style:italic;">▲ 上の 4 つのカードをタップすると、学習ノートの定義が表示されます。</span>';
+  const p2 = document.getElementById('termPanel2'); if (p2) p2.innerHTML = '<span style="color:var(--text-sub);font-style:italic;">▲ 4 つのカードをタップすると、学習ノートの定義が表示されます。</span>';
+  if (typeof btReset === 'function') { btI = 0; btRender(); }
   document.querySelectorAll('.sr-blank.reveal, .cv-blank.reveal').forEach(b => { b.classList.remove('reveal'); b.textContent = b.dataset.ph || 'クリック'; });
-  document.querySelectorAll('.chart-q.revealed').forEach(q => q.classList.remove('revealed'));
-  document.querySelectorAll('.chart-option.highlight').forEach(o => o.classList.remove('highlight'));
   document.querySelectorAll('.pq-opt').forEach(o => o.classList.remove('chosen-right', 'chosen-wrong', 'show-right'));
   document.querySelectorAll('.pq-fb').forEach(f => { f.classList.remove('show'); f.innerHTML = ''; });
-  if (typeof layResetAll === 'function') layResetAll();
   document.querySelectorAll('.j-chip').forEach(c => c.classList.remove('judged-correct', 'judged-wrong'));
   document.querySelectorAll('.j-fb.show').forEach(f => f.classList.remove('show'));
   document.querySelectorAll('#pointAnswersGrid .answer-row.revealed').forEach(r => { r.classList.remove('revealed'); r.querySelector('.answer-reveal').textContent = 'クリック'; });
@@ -2773,9 +2310,9 @@ function siteFsStep(dir) {
 fsApply();
 siteFsApply();
 
-// lec14 固有の操作要素にも、キーボード操作と role を付ける(標準の initA11y は触らない)
-function initA11yLec14() {
-  const sel = '.dev-box[data-key], .lay-card, .pq-opt, .chart-q';
+// lec17 固有の操作要素にも、キーボード操作と role を付ける(標準の initA11y は触らない)
+function initA11yLec17() {
+  const sel = '.pq-opt, .j-chip';
   const handle = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); e.currentTarget.click(); } };
   document.querySelectorAll(sel).forEach(el => {
     if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
@@ -2784,10 +2321,11 @@ function initA11yLec14() {
   });
 }
 initA11y();
-initA11yLec14();
+initA11yLec17();
 mdRender();
+btRender();
+drawAppx();
 initCharWrap();
-layRefresh();
 
 window.addEventListener('load', () => {
   if (!isMobile()) return;
