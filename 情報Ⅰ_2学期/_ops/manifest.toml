@@ -110,13 +110,13 @@ points = [
   { lec = 37, title = "データの分析⑴⑵", practices = "06-20", practices_title = "データの分析", confirmed = true  },
 ]
 
-# --- 既に作ってある個人学習教材（2026-08-02 時点） --------------------------
+# --- 既に作ってある個人学習教材（2026-09-12 時点） --------------------------
 # build_kai.py が「アンカー教材を作るか／案内するだけか」を判定する材料。
 [existing]
-lectures  = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+lectures  = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
 practices = ["01-01", "01-02", "01-03", "01-04", "01-thinking-step-1",
              "02-05", "02-06", "02-07", "02-thinking-step-2",
-             "03-08", "03-09", "03-thinking-step-4"]
+             "03-08", "03-09", "03-10", "03-thinking-step-4"]
 
 # --- 回 ---------------------------------------------------------------------
 # 1回 = 50分。テーマはオーナーが回ごとに指示する。
@@ -209,3 +209,19 @@ anchor      = { kind = "lec", id = 17 }
   quiz      = { id = "joho-cpu-instruction", set_index = 7 }
   lecture   = 17
   practice  = "03-10"
+
+[[kai]]
+no          = 5
+slug        = "kurikaeshi-han-i"
+theme       = "繰り返しが止まる値は、処理されない ― 範囲と条件の書き方"
+nansho      = "繰り返したい最後の値を、そのまま range の 2 つ目の数や while の条件の境目に書いてしまう。2 つ目の数も条件が偽になる値も「そこで止まる」側であって、最後に処理される値ではない。1 個ずれるだけなのでプログラムは止まらず、答えだけが静かに違う"
+nansho_type = "D"
+date        = "未定"
+status      = "building"
+anchor      = { kind = "lec", id = 20 }
+  [kai.artifacts]
+  explainer = "loop-range.html"
+  print     = "繰り返しの範囲"
+  quiz      = { id = "joho-loop-range", set_index = 8 }
+  lecture   = 20
+  practice  = "04-12"
