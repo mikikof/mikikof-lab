@@ -1,129 +1,131 @@
 ---
-updated: 2026-09-12
-prev_session: 第4回（POINT 17 コンピュータの構成と動作）の授業用3点・lec17・practices 03-10 を作り、codex 監査を 2 巡で収束させ、manifest を done にして push し、そのあと未決だった 2 件（速テストの正解位置の偏り・lec11〜15 の miki.con の窓に隠れる内容）を是正して push した
+updated: 2026-09-13
+prev_session: 第5回（POINT 20⑴ 繰り返しの範囲）の授業用3点を作り、codex を 2 巡回して収束させ、配信して 4 リポジトリとも push した。lectures lec20 と practices 04-12 は未着手
 ---
 
-# 情報Ⅰ 2学期 — 次セッション resume（第5回を作る）
+# 情報Ⅰ 2学期 — 次セッション resume（第5回の lec20・practices 04-12 を作る）
 
 ## 1. 30 秒 status
 
-- 第1〜4回（POINT 14・15・16・17）の授業用3点と、個人学習用の lectures（lec14〜17）・
-  practices（03-08・03-09・03-10・思考のステップ4）がそろった。manifest は 4 回すべて `done`。
-- 第4回と、同日に是正した未決 2 件は 4 リポジトリとも push 済み（§6 のハッシュ）。保全の残りは無い。
-- 次は第5回。並びは確定していて **POINT 20⑴「プログラミングの基本⑴」**（本人が 9/12 に
-  「あと6回以上」と回答 → 17 → 20⑴ → 20⑵ → 22 → 25 → 26）。入口は `/joho-2gakki`。
+- 第1〜5回の**授業内3点**（解説ツール・印刷プリント・速テスト）がそろった。第5回ぶんは
+  4 リポジトリとも push 済みで、**GitHub Pages の反映まで確認した**（§6 のハッシュ）。保全の残りは無い。
+- **第5回だけ manifest が `building` のまま**。lectures lec20 と practices 04-12 が未作成のため。
+  この 2 本を作れば第5回は done になる。
+- 個人学習用の在庫: lectures は lec01〜17、practices は 03-10 までと思考のステップ4。
+- 第6回以降の並び（確定）: **第6回 20⑵ → 第7回 22 → 第8回 25 → 第9回 26**。
 
-## 2. 確定事項（変えない前提）
+## 2. 次にやること — lec20 と practices 04-12
+
+### lec20（学習ノート POINT 20 全体）
+
+**本人の決定（2026-09-12）**: **POINT 20⑴⑵ の全体に加えて、章末1・2 も参考に入れる。**
+lec17 が章末5 を参考A に入れたのと同じ作り。26〜30 枚の見込み。
+
+- 入口は `lectures/skills/interactive-lecture/NEW-LECTURE-PLAYBOOK.md`（最上位。矛盾したらこれが勝つ）。
+  **canonical = `examples/11-analog-and-digital.html` を cp し、コンテンツ層だけ差し替える。**
+  標準インタラクション層（miki.con / hosoku / スポットライト / P 文字ポップ / Space+もどす）は 1 文字も変えない。
+- 差し替えるデータ構造: `HOSOKU_SUPP`（チップと 1:1）／`MIKI_GUIDE`（キー = 各スライドの `data-title` 完全一致）／
+  `MIKI_TERM`／`iconData`／`POINT_ILLUST`／`reviewPool`／`MD_STEPS`／`resetAllInteractions` の単元固有部。
+- **POINT 番号 = lec 番号。** 章番号とは無関係。
+- 直近 2 本の実績: lec17 は 2345 行・スライド 21 枚・参考 3 本・reviewPool 16 問・iconData 9。lec16 は 313KB。
+- **復習の正解の位置は散らす**（lec17 は 16 問を ア4・イ4・ウ4・エ4）。lec15 で 16 問中 14 問が「ア」に
+  偏った前科がある。
+- **デスクトップで miki.con の窓が下部を覆う問題**の余白（lec16 の CSS）を必ず入れる。
+- 内容の芯（第5回の難所と揃える）: 20⑴ は「止まる合図の値は処理されない」、20⑵ は「添字は 0 から」と
+  「繰り返しを抜けた後の変数は 1 つ先を指している」（章末2）。**「終了値」という語は使わない**（§3）。
+- 終わったら `lectures/index.html` に `CHAPTER · 20` のカードを追加し、
+  `skills/interactive-lecture/examples/20-*.html` に凍結コピーを置く。
+
+### practices 04-12（ベストフィット 4章12「プログラミング」）
+
+- **生成器方式。** 直近の 03-10 は `_build_0310.py`（1123 行）→ `index.html`（5123 行）。
+  エンジン（CSS / JS ハーネス / サイドバー / トップバー / フッタ）は
+  `skills/interactive-practice/examples/02-07-digital-info-representation.html` を**1 文字も変えずに流用**し、
+  差し替えるのは `<main id="stages">` の中身と `TIMELINE_ENTRIES` / `PROBLEMS` / サマリの分母・閾値だけ。
+- **収録範囲は原本どおり全部**: 例題55〜59・類題99〜104・練習105〜106 の 13 問。
+  関数（例題59・類題104）はベストフィットでは 12 節に入っているので**外さない**
+  （学習ノートでは POINT 21 だが、節の切り方が原本で違う）。
+- **原本の図 5 枚は抽出済み**。`unzip -q "practices/_source/ベストフィット問題/BF情1New-4章12プログラミング-問題（Python）.docx" -d /tmp/extract-0412`
+  → `word/media/image1〜5.jpeg`。image1〜3 = 中学までの復習の 3 構造（順次・分岐・反復）、
+  image4 = 変数の図、image5 = **類題99 のフローチャート（本文が「右のフローチャート」と参照している）**。
+  `articles/04-12-programming/assets/fig{N}-{slug}.jpeg` に置いて `<img>` で載せる。
+  テキストの注記で代替しない（§4.10b）。
+- **問題文は一字一句変えない**（「，」→「、」の置換だけは 03-10 でやっている）。独自に問題を足さない。
+- 解答 docx に解説が無い小問は自前で補強する（§4.3）。全問にビジュアルを添える（§4.4）。
+- 終わったら `practices/index.html` にエントリを追加し、`skills/interactive-practice/examples/` に凍結。
+
+## 3. 確定事項（変えない前提）
 
 - 授業 50 分＝解説ツール 25 分／印刷プリント 15 分／スピードテスト 10 分。一回一難所。
-  難所を 1 文で決めてから作る（`_ops/nansho-guide.md`）。
-- 2学期は学習ノートの順に POINT 14〜26。回数別の取り方は `_ops/theme-plan.md` §2b。
-  残りの並び（確定）: **第5回 20⑴ → 第6回 20⑵ → 第7回 22 → 第8回 25 → 第9回 26**
 - 台帳は `_ops/manifest.toml` だけ。回フォルダは `build_kai.py` で組む派生物（手で育てない）。
 - 語尾: 解説ツール＝丁寧体／プリント＝常体・設問「答えなさい」／速テスト＝常体「選べ・答えよ」／
-  lectures＝丁寧体（実習の問題文は原文を引用枠で）／practices＝常体（問題文は原本一字一句）。
-- 正解は原本（学習ノート・解答 PDF・ベストフィット）で裏取りし、web 検索しない。
-  数値は独立に検算し、生成器に assert を置く。
-- **原本の問題文を写している箇所は、言い回しを直さない。** 第4回のプリント大問1 は学習ノート実習2 の
-  原文そのままで、監査の「言い換えろ」を原本 p40 で確認して却下した（`kai/04` の「用語の線」に記録）。
-  原本に誤植があるときは直して記録する（練習93 の括弧落ちは `_build_0310.py` にコメント）。
+  lectures＝丁寧体（miki.con も講義トーン）／practices＝原本の問題文は原文のまま。
+- **第5回で引いた用語の線（lec20・practices でも守る）**: range の 2 番目の数を**「終了値」と呼ばない**。
+  原本どうしで指すものが逆（学習ノート解答は「終了値の**次の値**」、ベストフィット解答は「終了値」そのもの）。
+  中立な教科書の「値1・値2・増減値」＋「値2 は含まれない」を使う。
+  ただし **practices は原本の文をそのまま載せる場所**なので、ベストフィットの「終了値」はその中でだけ原文どおり。
+- 正解は原本（学習ノート解答 PDF・ベストフィット解答 docx）で裏取りし、**web 検索しない**。
 - mikikof-lab は public。push 前に `check_public.py` が exit 0。
-- codex 監査は `-p review-paper` で 2 本（授業用3点／lectures＋practices）。事実台帳を同梱する。
-  5 件以上直したら次の巡を回す。**2 巡目は「直した箇所の一覧」と「却下した指摘とその根拠」を渡す**
-  （第4回の rev2 はこの形で要修正 0 に収束した）。指摘は採否の前にコード・原本の図・実機で裏を取る。
-- lectures: POINT 番号＝lec 番号。新しい lec は lec16 の index.html を外枠にして内容レイヤだけ差し替える。
-  デスクトップの miki.con の窓対策の余白（lec16 の CSS）を入れ、復習の正解の位置は散らす
-  （lec17 は 16 問を ア4・イ4・ウ4・エ4）。
-- **見出し・キーメッセージは、その回の発展部分で反証されないかを確かめる。**
-  第4回は当初「途中結果はレジスタに置いたままにできない」だったが、同じ回の章末5（レジスタ 2 つ）で
-  反証されるので「同じレジスタに読み込めば、途中結果は消える」に差し替えた。
-- 検査は実物のボタンを座標で押す（押す点が覆われていないかを elementFromPoint で確かめてから）。
-  検査が 0 を返したら、まず**検査側のセレクタ名**を疑う（第4回で `side-item` という無い名前を使って
-  偽陰性を出した。正しくは `sb-section`）。
-- **合格が出たときは、その検査が不合格を出せる形かを先に確かめる。** lec11 で「窓に覆われたボタン」を
-  数えて 95 個中 0 個の合格を得たが、測るべきは「最下端まで送っても内容が窓の上に出てこないか」だった。
-  probe が画面外の要素を `cx>W||cy>H` で skip していたのも重なっていた。
-- **属性の有無を件数で代用しない。** `190px` の出現数で余白の有無を判定しかけたが、
-  同じ値が `.wd-img svg` や `.tt td.lft` にも使われていた。規則の**行そのもの**を見る。
-- **選択肢を並べ替えたら、期待する正解「文字列」の表を別に作って `choices[answer]` と照合する。**
-  添字を直し忘れるのが最も危ない。
+- codex 監査は `-p review-paper`（`~/.codex/review-paper.config.toml` が実体。`config.toml` の
+  `[profiles.X]` を探す旧仕様ではない）。実走ログ冒頭の `reasoning effort: high` /
+  `reasoning summaries: detailed` で効いていることを確かめる。5 件以上直したら次の巡を回し、
+  **2 巡目には「直した箇所の一覧」と「却下した指摘とその根拠」を渡す**。
 
-## 3. 実行環境 / コマンド
+## 4. 第5回で得た教訓（次も同じ罠を踏む）
+
+- **実物でしか出ない欠陥が 14 件あった。** うち 2 件は出荷を止める種類で、
+  ①図を出す関数の引数がずれて**問題用紙に答えの線が描かれていた**（キャプションに `false` が印字され、
+  図番号のラベルも消えていた）、②**設問文が正解の数をそのまま書いていた**。
+  どちらも機械チェックは緑のまま通っていた。**問題側の本文に答えの数が出ていないことを、
+  タグを剥いだ本文で数える**のが効いた。
+- **測り方そのものを 3 回間違えた。** スマホ幅を headless の `--window-size=390` で測ったが、
+  実際は幅の下限で 500px にレイアウトされていた（**iframe に 390px で埋めて撮る**）。
+  実行時に組み立てる数値を静的 grep で測ろうとした。誤答の型を一つの言い回しだけで検出した。
+- **名前を直したら、その名前が指す計算も直す。** 監査の指摘でトグルを改名したが表示を直さず、
+  増減値が負のときと 1 以外のときに名前と食い違っていた。**名前が崩れる方向へ振って実物を見る。**
+- **監査の診断が誤りでも、引っかかった場所は当たっている。** 「2 に戻ります」の 2 は手順番号だが
+  値と読み違えられた。診断は却下しつつ「手順 2」と明示した。
+
+## 5. 実行環境 / コマンド
 
 ```bash
-HUB="/Users/mikiokofune/my-company/.company/education/high-school/mikikof-lab/情報Ⅰ_2学期"
-WEB="/Users/mikiokofune/my-company/.company/media/webツール/情報"
-cd "$HUB"
-# Phase 0: 回ファイルを起こす（manifest の [[kai]] no = 5 も足す）
-cp _templates/kai.template.md _ops/kai/05-<slug>.md
-# Phase 1: 原本 docx のテキスト抽出（w:t・m:t・上下付き・画像アンカー）。出力は公開リポに置かない
-mkdir -p /tmp/genpon && python3 _ops/docx2txt2.py /tmp/genpon \
-  "/Users/mikiokofune/my-company/.company/education/high-school/mikikof-lab/lectures/_source/学習ノート_問題/高校情1学習ノート（p.34～45）-3章コンピュータの仕組み-問題Word.docx"
-# 学習ノート 問題PDF を直接読む（pdftotext がある。POINT 17 は p40 だった）
-pdftotext -layout "$HUB/../lectures/_source/高校情1学習ノート-問題PDF.pdf" - | less
-# Phase 2c: 速テストのセット一覧と正解位置の分布（次は set_index 8）
-node -e 'const fs=require("fs"),vm=require("vm");
-const s=vm.runInNewContext(fs.readFileSync("'"$WEB"'/スピードクイズ/data/questions.js","utf8")+"\n;window.QUIZ_SETS",{window:{}});
-s.forEach((x,i)=>{const mc=x.questions.filter(q=>q.type==="mc"),d={};
-mc.forEach(q=>{const k="アイウエ"[q.answer];d[k]=(d[k]||0)+1});
-console.log(i,x.id,JSON.stringify(d))})'
-# Phase 5: 回フォルダを組む → 公開安全ゲート
+LAB="/Users/mikiokofune/my-company/.company/education/high-school/mikikof-lab"
+HUB="$LAB/情報Ⅰ_2学期"
+# lec20 の scaffold（canonical を cp してコンテンツ層だけ差し替える）
+mkdir -p "$LAB/lectures/articles/20-programming-basics"
+cp "$LAB/lectures/skills/interactive-lecture/examples/11-analog-and-digital.html" \
+   "$LAB/lectures/articles/20-programming-basics/index.html"
+# practices 04-12 の原本図を抽出
+unzip -q "$LAB/practices/_source/ベストフィット問題/BF情1New-4章12プログラミング-問題（Python）.docx" -d /tmp/extract-0412
+ls /tmp/extract-0412/word/media/
+# 原本テキスト（w:t と m:t の両方を拾う。w:t だけだと数式が落ちる）
+python3 "$HUB/_ops/docx2txt2.py" /tmp/genpon \
+  "$LAB/practices/_source/ベストフィット問題/BF情1New-4章12プログラミング-問題（Python）.docx" \
+  "$LAB/practices/_source/ベストフィット解答/BF情1New-4章-解答（Python）.docx"
+# 学習ノート 20⑴⑵・章末1・2（問題 p.48-51 / p.64、解答 PDF p.14 / p.18）
+pdftotext -layout "$LAB/lectures/_source/高校情1学習ノート-解答PDF.pdf" - | less
+# lec の機械チェック（プレイブック §6）と、回フォルダの組み直し
 cd "$HUB" && python3 _ops/build_kai.py 5 && python3 _ops/check_public.py
 ```
 
-制作の手順メモ
-- 解説ツール: 既存の `dist/<近い単元>.html` を cp して教材部分（MATERIAL）を差し替える。直すときは dist を直接。
-- 印刷プリント: `印刷教材/dist/_gen_<単元>.js` を直して `node` で問題・解答 HTML を再生成 →
-  headless Chrome の `--print-to-pdf` → `pdfinfo` で枚数、`pdftoppm -gray` で目視。
-  狭いカラムに表を入れると縦潰れするので `table-layout:fixed` を当てる。
-- lec の内容差し替えで**正規表現を使わない**。`window.X = {...}` は補足エンジンの説明コメント内にも
-  同じ文字列があり、そちらに先にマッチしてエンジン本体を消す（第4回で 44,000 字を失った）。
-  節単位＋行頭アンカー（`^`, `re.M`）で組み、置換は**件数アサート付きの python** で行う。
+## 6. ポインタ
 
-## 4. 残工程チェックリスト（第5回）
-
-- [ ] Phase 0: manifest に `[[kai]] no = 5`（status building・anchor lec20・artifacts: explainer／print／
-      quiz set_index 8／lecture 20／practice）、`_ops/kai/05-<slug>.md` に難所 1 文と型、
-      25/15/10 の見取り図 → 本人の合意
-- [ ] Phase 1: 原本の裏取り（学習ノート POINT 20⑴ の実習文と解答 PDF の該当ページ、
-      ベストフィット 4章の該当節）→「共通の例と数値」の表と独立検算
-- [ ] Phase 2: 解説ツール → 印刷プリント（A4 2 枚・グレースケール）→ 速テスト（`questions.js` に追記）
-- [ ] Phase 3: 未作成のアンカーだけ作る（lec20 と practices の 4 章該当節。`[existing]` と突き合わせる）
-- [ ] Phase 4〜7: 整合 → `build_kai.py 5` → 配信用コピー（`情報/`、`~/joho-explainer` の同期配列と
-      カード、`~/joho-quiz`）→ codex 監査 2 本 → manifest を done → push
+- 第5回の commit（すべて push 済み・Pages 反映も確認・2026-09-12）:
+  mikikof-lab `e597005`／my-company `cb9ae93c`／joho-explainer `03fbad3`／joho-quiz `d339be7`
+- 公開 URL: 解説ツール `https://mikikof.github.io/joho-explainer/loop-range.html`／
+  速テスト `https://mikikof.github.io/joho-quiz/?s=8`（配布は teacher.html でクラスと課題名を入れて作る）
+- 回ファイル: `_ops/kai/05-kurikaeshi-han-i.md`（設計・進行台本・監査の採否。**答えは書いていない**）
+- 答えと数値の台帳（非公開側）: `media/webツール/情報/edu-explainer-kit/specs/loop-range.spec.md`、
+  `media/webツール/情報/印刷教材/specs/繰り返しの範囲.spec.md`
+- 監査ログ: `.company/audit/reviews/2026-09-12/2310-joho2-kai05-3ten`（1 巡目）・
+  `2340-joho2-kai05-3ten-rev2`（2 巡目。**渡し方の手本**）
+- 決定と TODO: `.company/secretary/notes/2026-09-12-decisions.md`
+- 回ファイルの手本: `_ops/kai/04-register-taihi.md`・`_ops/kai/05-kurikaeshi-han-i.md`
+- memory: `project_joho1_2gakki`、`feedback_renamed_label_must_match_what_it_shows`、
+  `feedback_headless_mobile_width_floor`、`feedback_codex_review_profile_removed`、
+  `feedback_lecture_review_pool_answer_position`、`feedback_miki_window_covers_desktop_controls`
 
 ## 未決（本人の判断待ち）
 
-- 学習ノート 37 を lecture 2 本に割るか（theme-plan §5）。
-  これは単元の切り方＝カリキュラムの設計判断で、欠陥の修正ではない。
-
-### 2026-09-12 に是正して未決から外したもの（履歴）
-
-- **速テストの正解位置の偏り**。第2回は mc5 問すべて「ア」、第3回は mc6 問すべて「ア」、
-  `joho1-sample` は mc7 のうちイ6 だった。13 問を動かし全 8 セットで偏り 0 件。
-  据え置きの線 = 数値昇順の選択肢／包括肢（「4 行とも違う」）は末尾／教科書の語順を持つ列はその順を保つ。
-- **lec11〜15 の miki.con の窓に隠れる内容**。lec16・17 と同じ余白の規則を足し、
-  7 本すべて「隠れたまま 0 枚」を実測。凍結コピーも同期。
-
-## 5. 作業方針（本人の指定）
-
-- lectures・practices は個人学習用で、授業内では使わない。質は落とさない。
-- 授業日程は台帳に書かない（本人が持つ）。
-- 教材の日本語は AI 臭を避ける（演出語・決めぜりふ・「〜しよう」型の誘導を使わない）。
-
-## 6. ポインタ
-
-- 第4回の commit（すべて push 済み・2026-09-12）:
-  mikikof-lab `ceff69e`／my-company `ad27e08a`／joho-explainer `d78c50d`／joho-quiz `ca41d4c`
-- 未決 2 件の是正（同日・すべて push 済み）:
-  mikikof-lab `c9c2924`（lec11〜15 の余白）／my-company `a1f18eaa`／
-  joho-quiz `1e9a74a`（正解位置）。joho-explainer は変更なし
-  （この resume ファイル自身のコミットは mikikof-lab のローカルに 1 本だけ残る。次の push に同梱される）
-- 回ファイルの手本: `_ops/kai/03-ronri-kairo.md`・`_ops/kai/04-register-taihi.md`
-  （共通の例と数値・用語の線・使わないもの・却下した監査指摘の記録）
-- 監査ログ: `.company/audit/reviews/2026-09-12/1840-joho2-kai04-3ten`・
-  `1840-joho2-kai04-lec17-prac0310`・`2110-joho2-kai04-rev2`（2 巡目の渡し方の手本）
-- 決定と TODO: `.company/secretary/notes/2026-09-12-decisions.md`、`.company/secretary/todos/2026-09-12.md`
-- memory: `project_joho1_2gakki`、`feedback_headline_contradicted_by_own_material`、
-  `feedback_lecture_review_pool_answer_position`、`feedback_miki_window_covers_desktop_controls`、
-  `feedback_spliced_page_missing_close_tag`
+- 学習ノート 37 を lecture 2 本に割るか（`_ops/theme-plan.md` §5）。
+  単元の切り方＝カリキュラムの設計判断で、欠陥の修正ではない。3学期の話。
