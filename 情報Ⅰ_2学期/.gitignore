@@ -31,3 +31,9 @@ _work/
 *.log
 __pycache__/
 **/__pycache__/
+
+# --- 確認用のショートカット（シンボリックリンク・本体は my-company 側） ---
+# mikikof-lab は public。追跡するとリポジトリの外を指す壊れたリンクになるので外す。
+_preview-series
+**/_preview-series
+_preview/

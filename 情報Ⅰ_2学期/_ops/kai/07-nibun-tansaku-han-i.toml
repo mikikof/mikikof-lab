@@ -15,7 +15,8 @@ status      = "done"
 anchor      = { kind = "lec", id = 22 }
 
 [artifacts]
-explainer = "binary-search.html"
+explainer = "binary-search/"   # 3ページのシリーズ（00 イチから図解 / 01 範囲 / 02 計算量）＋回ハブ。
+                               # 末尾の / がディレクトリの合図。公開 URL もこの名前で組まれる。
 print     = "二分探索の範囲"
 quiz      = { id = "joho-binary-search", set_index = 10 }
 lecture   = 22

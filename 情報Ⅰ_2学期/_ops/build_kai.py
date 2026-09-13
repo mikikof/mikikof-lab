@@ -109,7 +109,18 @@ def copy_one(src: Path, dst_dir: Path, label: str, warn: list[str]) -> Path | No
         return None
     dst_dir.mkdir(parents=True, exist_ok=True)
     dst = dst_dir / src.name
-    shutil.copy2(src, dst)
+    if src.is_dir():
+        # 解説ツールが複数ページのシリーズになった回は、正本がディレクトリになる。
+        # 残りの回も順に同じ形へ移るので、回ごとの特別扱いにしない。
+        # 入れ替えなので、古い版が残らないよう一度消してから写す。
+        if dst.exists():
+            shutil.rmtree(dst)
+        # ★ _src は生成器の入力（body/mat/series.toml）。mikikof-lab は public なので
+        #   写してはいけない。公開するのは対話型ツールそのものだけ。
+        shutil.copytree(src, dst,
+                        ignore=shutil.ignore_patterns("_src", ".DS_Store", "*.py"))
+    else:
+        shutil.copy2(src, dst)
     return dst
 
 
