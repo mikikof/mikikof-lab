@@ -15,7 +15,9 @@ status      = "done"
 anchor      = { kind = "lec", id = 20 }
 
 [artifacts]
-explainer = "array-index-trace.html"
+explainer = "array-index-trace/"   # 3ページのシリーズ（00 イチから図解 / 01 抜けた添字 /
+                                  # 02 なぜ1つ先か）＋回ハブ。末尾の / がディレクトリの合図。
+                                  # 公開 URL もこの名前で組まれる。
 print     = "配列と添字のずれ"
 quiz      = { id = "joho-array-index", set_index = 9 }
 lecture   = 20
