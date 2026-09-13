@@ -1599,6 +1599,13 @@ html[data-theme="dark"]{
   --navy:#7e8cdd; --navy-deep:#aab4ee; --navy-mid:#6a78cf;
   --navy-tint:#1e2540; --navy-tint-bd:#333c5e;
   --field:#171c26; --field-bd:#2a3140; --ghost:#1a2033;
+  /* ★ 上の :root で --accent と --ok 系を定義し直しているので、ダーク側にも
+     対を置く。片方だけだとライトの藍（#3a4db8）が暗い地の上に残り、
+     判定バナーが青地に青文字で読めなくなる。実際に 4 シリーズ全部でそうなっていた。
+     変数は正しくダークなのに描画された色はライト、という食い違いは
+     「書いた値」ではなく getComputedStyle で測って初めて分かる。 */
+  --accent:#7e8cdd;
+  --ok:#7e8cdd; --ok-bg:#1e2540; --ok-bd:#333c5e; --ok-tint:#171d30;
   --warn:#e0796c; --warn-bg:#2c1a17; --warn-bd:#54302a; --warn-tint:#211613;
   --amber:#d3a154; --amber-tint:#2a2318; --amber-bd:#4a3d23;
   --mk-y:#5d4d18; --mk-p:#5d2338; --mk-b:#20345e;
@@ -1616,9 +1623,11 @@ html[data-theme="dark"]{
   background:linear-gradient(160deg, var(--navy-mid), var(--navy)) !important;
   border-color:var(--navy) !important;
 }
-.banner.ok{background:linear-gradient(180deg, #f3f5fd, var(--ok-bg))}
-.banner.warn{background:linear-gradient(180deg, #fdf3f1, var(--warn-bg))}
-.canvas-box{background:linear-gradient(180deg, #faf8f4, var(--field))}
+/* ★ グラデの上端を直書きすると、下端だけダークに置き換わって
+   「明るい上端＋暗い下端」の帯になる。両端とも変数にする。 */
+.banner.ok{background:linear-gradient(180deg, var(--ok-tint), var(--ok-bg))}
+.banner.warn{background:linear-gradient(180deg, var(--warn-tint), var(--warn-bg))}
+.canvas-box{background:linear-gradient(180deg, var(--subtle), var(--field))}
 .metrics .mcard{box-shadow:0 1px 2px rgba(22,27,34,.04)}
 .figbox #ctlpanel{box-shadow:0 1px 2px rgba(22,27,34,.04), 0 12px 28px rgba(22,27,34,.07)}
 
@@ -2515,12 +2524,48 @@ main.page h2{font-size:28px !important}
   function F(px, w){ return (w || '600') + ' '
     + MF(Math.max(15, Math.round(px * 1.35))) + 'px ' + window.JPFONT; }
 
+  /* 器の幅に収めて描く。収まらなければ級数を下げ、それでも無理なら文字単位で折る。
+     返り値は使った行数。
+     ★ この頁は描画ごとに c を取り出す作りなので、c を引数で受ける
+       （ほかの回は ctx をクロージャで掴んでいる。同じ関数をそのまま移せない）。
+     ★ 行頭の約物を前の行へ繰り上げるときは、繰り上げた結果その行が器幅を
+       超えないかを見る。見ないと右揃えで超えた分が外へ出る。 */
+  function drawFit(c, t, px, x, y, align, maxW, w, lh){
+    var p = px, wt = w || '700';
+    c.textAlign = align;
+    while(p > 11){
+      c.font = F(p, wt);
+      if(c.measureText(t).width <= maxW) break;
+      p -= 0.5;
+    }
+    c.font = F(Math.max(11, p), wt);
+    if(c.measureText(t).width <= maxW){ c.fillText(t, x, y); return 1; }
+    var lines = [], cur = '';
+    for(var k = 0; k < t.length; k++){
+      var c1 = t.charAt(k);
+      if(cur && c.measureText(cur + c1).width > maxW){ lines.push(cur); cur = c1; }
+      else { cur += c1; }
+    }
+    if(cur) lines.push(cur);
+    for(var q = 1; q < lines.length; q++){
+      while(lines[q] && '。、」）'.indexOf(lines[q].charAt(0)) >= 0
+            && c.measureText(lines[q - 1] + lines[q].charAt(0)).width <= maxW){
+        lines[q - 1] += lines[q].charAt(0); lines[q] = lines[q].slice(1);
+      }
+    }
+    for(var r = 0; r < lines.length; r++) c.fillText(lines[r], x, y + r * (lh || 19));
+    return lines.length;
+  }
+
   /* 箱を 1 列描く。opt = {mid, hit, cross, dim:[], order:{}} */
   function row(o, opt){
     var c = o.c, W = o.w, a = arr(), n = a.length, gap = 7;
     var bw = Math.max(30, Math.min(54, Math.floor((W - 36 - gap * (n - 1)) / n)));
     var bh = 40;
-    var ox = Math.round((W - (bw * n + gap * (n - 1))) / 2), oy = 44;
+    /* ★ 箱の上 oy-10 に「◯ 回目」「真ん中」を描くのに、見出しは y=22 に描いている。
+       44 だとラベルが 34 に来て、15px の見出しと重なる（場面 2・3 でそうなっていた）。
+       はみ出しではなく重なりなので、はみ出し検査では鳴らない。箱の列を下げる。 */
+    var ox = Math.round((W - (bw * n + gap * (n - 1))) / 2), oy = 58;
     var okc = K('--k-main'), warnc = K('--k-warn');
     for(var k = 0; k < n; k++){
       var x = ox + k * (bw + gap);

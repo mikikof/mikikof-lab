@@ -1599,6 +1599,13 @@ html[data-theme="dark"]{
   --navy:#7e8cdd; --navy-deep:#aab4ee; --navy-mid:#6a78cf;
   --navy-tint:#1e2540; --navy-tint-bd:#333c5e;
   --field:#171c26; --field-bd:#2a3140; --ghost:#1a2033;
+  /* ★ 上の :root で --accent と --ok 系を定義し直しているので、ダーク側にも
+     対を置く。片方だけだとライトの藍（#3a4db8）が暗い地の上に残り、
+     判定バナーが青地に青文字で読めなくなる。実際に 4 シリーズ全部でそうなっていた。
+     変数は正しくダークなのに描画された色はライト、という食い違いは
+     「書いた値」ではなく getComputedStyle で測って初めて分かる。 */
+  --accent:#7e8cdd;
+  --ok:#7e8cdd; --ok-bg:#1e2540; --ok-bd:#333c5e; --ok-tint:#171d30;
   --warn:#e0796c; --warn-bg:#2c1a17; --warn-bd:#54302a; --warn-tint:#211613;
   --amber:#d3a154; --amber-tint:#2a2318; --amber-bd:#4a3d23;
   --mk-y:#5d4d18; --mk-p:#5d2338; --mk-b:#20345e;
@@ -1616,9 +1623,11 @@ html[data-theme="dark"]{
   background:linear-gradient(160deg, var(--navy-mid), var(--navy)) !important;
   border-color:var(--navy) !important;
 }
-.banner.ok{background:linear-gradient(180deg, #f3f5fd, var(--ok-bg))}
-.banner.warn{background:linear-gradient(180deg, #fdf3f1, var(--warn-bg))}
-.canvas-box{background:linear-gradient(180deg, #faf8f4, var(--field))}
+/* ★ グラデの上端を直書きすると、下端だけダークに置き換わって
+   「明るい上端＋暗い下端」の帯になる。両端とも変数にする。 */
+.banner.ok{background:linear-gradient(180deg, var(--ok-tint), var(--ok-bg))}
+.banner.warn{background:linear-gradient(180deg, var(--warn-tint), var(--warn-bg))}
+.canvas-box{background:linear-gradient(180deg, var(--subtle), var(--field))}
 .metrics .mcard{box-shadow:0 1px 2px rgba(22,27,34,.04)}
 .figbox #ctlpanel{box-shadow:0 1px 2px rgba(22,27,34,.04), 0 12px 28px rgba(22,27,34,.07)}
 
@@ -2534,6 +2543,39 @@ main.page h2{font-size:28px !important}
   function F(px, w){ return (w || '600') + ' '
     + MF(Math.max(15, Math.round(px * 1.35))) + 'px ' + window.JPFONT; }
 
+  /* 器の幅に収めて描く。収まらなければ級数を下げ、それでも無理なら文字単位で折る。
+     返り値は使った行数。
+     ★ この頁は描画ごとに c を取り出す作りなので、c を引数で受ける
+       （ほかの回は ctx をクロージャで掴んでいる。同じ関数をそのまま移せない）。
+     ★ 行頭の約物を前の行へ繰り上げるときは、繰り上げた結果その行が器幅を
+       超えないかを見る。見ないと右揃えで超えた分が外へ出る。 */
+  function drawFit(c, t, px, x, y, align, maxW, w, lh){
+    var p = px, wt = w || '700';
+    c.textAlign = align;
+    while(p > 11){
+      c.font = F(p, wt);
+      if(c.measureText(t).width <= maxW) break;
+      p -= 0.5;
+    }
+    c.font = F(Math.max(11, p), wt);
+    if(c.measureText(t).width <= maxW){ c.fillText(t, x, y); return 1; }
+    var lines = [], cur = '';
+    for(var k = 0; k < t.length; k++){
+      var c1 = t.charAt(k);
+      if(cur && c.measureText(cur + c1).width > maxW){ lines.push(cur); cur = c1; }
+      else { cur += c1; }
+    }
+    if(cur) lines.push(cur);
+    for(var q = 1; q < lines.length; q++){
+      while(lines[q] && '。、」）'.indexOf(lines[q].charAt(0)) >= 0
+            && c.measureText(lines[q - 1] + lines[q].charAt(0)).width <= maxW){
+        lines[q - 1] += lines[q].charAt(0); lines[q] = lines[q].slice(1);
+      }
+    }
+    for(var r = 0; r < lines.length; r++) c.fillText(lines[r], x, y + r * (lh || 19));
+    return lines.length;
+  }
+
   function n(){ return NS[parseInt(el.nsl.value, 10)]; }
   /* 最大の比較回数 */
   function maxCmp(v){ return Math.ceil(Math.log2(v + 1)); }
@@ -2555,10 +2597,15 @@ main.page h2{font-size:28px !important}
   function drawHalving(o){
     var c = o.c, W = o.w, v = n(), s = seq(v);
     var rows = s.slice(0, 9);
-    var left = 104, right = W - 58, oy = 30, rh = 21;
+    /* ★ ラベル「◯ 回比べたあと」が帯に食い込んでいた（x=12 から描き、帯は 104 から）。
+       原本の語を保つため、帯の開始を広げる。 */
+    var left = 132, right = W - 58, rh = 21;
     var okc = K('--k-main');
     c.fillStyle = K('--k-inksoft'); c.font = F(12.5, '700'); c.textAlign = 'left';
-    c.fillText(fmtN(v) + ' 件から始めて、1 回比べるごとに残りが半分になる', 12, 18);
+    /* ★ 折り返した行数ぶん、表を下げる。下げないと 2 行目が 1 行目に重なる。 */
+    var hRows = drawFit(c, fmtN(v) + ' 件から始めて、1 回比べるごとに残りが半分になる',
+      12.5, 12, 18, 'left', W - 24, '700', 15);
+    var oy = 30 + (hRows - 1) * 15;
     rows.forEach(function(r, k){
       var y = oy + k * rh;
       c.fillStyle = K('--k-inksoft'); c.font = F(11.5); c.textAlign = 'left';
@@ -2575,19 +2622,22 @@ main.page h2{font-size:28px !important}
     var extra = s.length - rows.length;
     c.fillStyle = K('--k-inkfaint'); c.font = F(11); c.textAlign = 'left';
     if(extra > 0){
-      c.fillText('… このあと ' + extra + ' 行つづく', 12, oy + rows.length * rh + 12);
+      drawFit(c, '… このあと ' + extra + ' 行つづく',
+        11, 12, oy + rows.length * rh + 12, 'left', W - 24, '700', 15);
     }
-    c.fillStyle = K('--k-main'); c.font = F(12, '700');
-    c.fillText('残りが 0 件になるまで ' + maxCmp(v) + ' 回。これが最大の比較回数',
-               12, oy + rows.length * rh + (extra > 0 ? 30 : 14));
+    c.fillStyle = K('--k-main');
+    drawFit(c, '残りが 0 件になるまで ' + maxCmp(v) + ' 回。これが最大の比較回数',
+      12, 12, oy + rows.length * rh + (extra > 0 ? 30 : 14), 'left', W - 24, '700', 15);
   }
 
   /* ---- 場面 2: 件数と回数の対比 ---- */
   function drawScale(o){
     var c = o.c, W = o.w, v = n(), b = maxCmp(v);
-    var left = 108, right = W - 86, oy = 44, okc = K('--k-main');
+    var left = 108, right = W - 86, okc = K('--k-main');
     c.fillStyle = K('--k-inksoft'); c.font = F(12.5, '700'); c.textAlign = 'left';
-    c.fillText(fmtN(v) + ' 件から 1 つ探すとき、最大で何回比べるか', 12, 20);
+    var hS = drawFit(c, fmtN(v) + ' 件から 1 つ探すとき、最大で何回比べるか',
+      12.5, 12, 20, 'left', W - 24, '700', 15);
+    var oy = 44 + (hS - 1) * 15;
     function bar(y, label, val, col, txt){
       c.fillStyle = K('--k-inksoft'); c.font = F(11.5, '700'); c.textAlign = 'left';
       c.fillText(label, 12, y + 11);
@@ -2601,21 +2651,23 @@ main.page h2{font-size:28px !important}
     bar(oy + 34, '半分ずつ', b, okc, b + ' 回');
     /* 目盛りの代わりに、帯の全長が件数であることを書いておく */
     c.fillStyle = K('--k-inkfaint'); c.font = F(11); c.textAlign = 'left';
-    c.fillText('帯の全体が ' + fmtN(v) + ' 件ぶん。半分ずつの帯は、短すぎてほとんど見えない',
-               12, oy + 72);
+    drawFit(c, '帯の全体が ' + fmtN(v) + ' 件ぶん。半分ずつの帯は、短すぎてほとんど見えない',
+      11, 12, oy + 72, 'left', W - 24, '700', 15);
     c.fillStyle = K('--k-main'); c.font = F(12, '700');
-    c.fillText('2 を ' + b + ' 回かけると ' + fmtCount(Math.pow(2, b)) + ' で、'
-               + fmtN(v) + ' 件を超える', 12, oy + 92);
+    drawFit(c, '2 を ' + b + ' 回かけると ' + fmtCount(Math.pow(2, b)) + ' で、' + fmtN(v) + ' 件を超える',
+      12, 12, oy + 92, 'left', W - 24, '700', 15);
   }
 
   /* ---- 場面 3: 1〜100 の数当て（73 を当てる） ---- */
   var GUESS = [[1,100,50],[51,100,75],[51,74,62],[63,74,68],[69,74,71],[72,74,73]];
   function drawGuess(o){
     var c = o.c, W = o.w;
-    var left = 78, right = W - 52, oy = 30, rh = 20;
+    var left = 78, right = W - 52, rh = 20;
     var sc = (right - left) / 100, okc = K('--k-main');
     c.fillStyle = K('--k-inksoft'); c.font = F(12.5, '700'); c.textAlign = 'left';
-    c.fillText('1 から 100 のうち 73 を当てる', 12, 18);
+    var hG = drawFit(c, '1 から 100 のうち 73 を当てる',
+      12.5, 12, 18, 'left', W - 24, '700', 15);
+    var oy = 30 + (hG - 1) * 15;
     GUESS.forEach(function(s, k){
       var y = oy + k * rh;
       c.fillStyle = K('--k-inksoft'); c.font = F(11); c.textAlign = 'left';
@@ -2629,10 +2681,11 @@ main.page h2{font-size:28px !important}
       c.fillText(String(s[2]), right + 6, y + 11);
     });
     c.fillStyle = K('--k-inkfaint'); c.font = F(11); c.textAlign = 'left';
-    c.fillText('薄い青が残っている範囲、縦線がその回に答える数', 12, oy + 6 * rh + 12);
+    drawFit(c, '薄い青が残っている範囲、縦線がその回に答える数',
+      11, 12, oy + 6 * rh + 12, 'left', W - 24, '700', 15);
     c.fillStyle = K('--k-main'); c.font = F(12, '700');
-    c.fillText('この例は 6 回で当たった。どんな数でも 7 回あれば必ず当たる',
-               12, oy + 6 * rh + 30);
+    drawFit(c, 'この例は 6 回で当たった。どんな数でも 7 回あれば必ず当たる',
+      12, 12, oy + 6 * rh + 30, 'left', W - 24, '700', 15);
   }
 
   function draw(){
