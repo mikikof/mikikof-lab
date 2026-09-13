@@ -15,7 +15,8 @@ status      = "done"
 anchor      = { kind = "lec", id = 20 }
 
 [artifacts]
-explainer = "loop-range.html"
+explainer = "loop-range/"   # 3ページのシリーズ（00 イチから図解 / 01 止まる値 /
+                            # 02 なぜ1つ先か）＋回ハブ。末尾の / がディレクトリの合図。
 print     = "繰り返しの範囲"
 quiz      = { id = "joho-loop-range", set_index = 8 }
 lecture   = 20

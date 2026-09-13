@@ -1,0 +1,3062 @@
+<!doctype html>
+<!--
+  情報 解説Webツール — なぜ合図が 1 つ先なのか
+  第5回 プログラミングの基本⑴（02）。
+  ★ このファイルは生成物。手で直さない。
+    中身  = dist/loop-range/_src/02-hitotsusaki.body.html ＋ 02-hitotsusaki.mat.js
+    外枠  = _series/engine.css ＋ _series/engine.js
+    組む  = python3 _series/build_series.py loop-range
+  外部依存ゼロ（CDN・Webフォント・KaTeX・Chart.js 不使用）。localStorage 不使用。
+-->
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>なぜ合図が 1 つ先なのか ｜ mikikof-lab</title>
+<style>
+/* ============================================================================
+   情報 解説Webツール — シリーズ engine（共有の外枠）
+   ----------------------------------------------------------------------------
+   由来: 数学キットの凍結正典 dist/2日目前半_ランダムウォーク/ の外枠
+   （specs/mess2026/shell.css ＋ assets/template-series.html の <style>）を、
+   情報キットの憲法に合わせて作り直したもの。
+
+   情報キットに合わせて変えたところ（正典から持ち込まなかったもの）:
+     - Web フォントを使わない（憲法1・外部依存ゼロ）。書体はシステム Hiragino。
+     - KaTeX を使わない。数式は HTML の <sub>/<sup> ＋ .formula（serif 箱）。
+       正典が .katex に当てていた横スクロールは .formula に当てる。
+     - Chart.js を使わない。図はすべて自作 canvas。
+     - 色は情報キットの tokens.css だけ。--warn（赤系）は負の状態専用。
+     - LaTeX コピー（.cpy）と #admin-toggle は入れない（数式を持たないため）。
+
+   ★ このファイルは全ページ共有。回ごとにコピーして育てない。
+     直すときはここを直して build_series.py で組み直す。
+   ============================================================================ */
+
+/* ===== 1. トークン ========================================================= */
+:root{
+  /* 情報キットの色（正本 = assets/tokens.css）。新造しない */
+  --ink:#10161f; --muted:#6b7480; --line:#e6eaf1; --hair:#e8ecf3; --hair2:#cdd6e3;
+  --bg:#f6f7f9; --card:#ffffff;
+  --accent:#2f55d4; --orange:#cf5a18;
+  --ok:#2f55d4; --ok-bg:#eaeffc; --ok-bd:#c6d2f4; --ok-tint:#f4f6fd;
+  --warn:#d8362e; --warn-bg:#fdecea; --warn-bd:#f3c4c1; --warn-tint:#fdf5f4;
+  --wave:#1b2330;
+  --mono:ui-monospace,"SF Mono","JetBrains Mono","Roboto Mono",Menlo,Consolas,monospace;
+
+  /* 外枠が使う別名（正典の規則をそのまま効かせるため。値は上の情報キット色） */
+  --paper:#ffffff; --page-bg:#f6f7f9; --subtle:#f7f9fc;
+  --ink-soft:#374151; --ink-faint:#6b7480;
+  --line-2:#cdd6e3;
+  --navy:#2f55d4; --navy-deep:#1e3c9b; --navy-mid:#5b7ae0;
+  --navy-tint:#eaeffc; --navy-tint-bd:#c6d2f4;
+  --warm:#cf5a18; --radius:10px;
+  --c-white:#ffffff; --c-ink-on-accent:#ffffff;
+
+  /* canvas 用（JS は KC() で読む。CSS 変数は canvas から直接使えない） */
+  --k-main:#2f55d4; --k-second:#cf5a18; --k-warn:#d8362e; --k-ok:#1f7a4d;
+  --k-accent:#6b4ba8; --k-deep:#1b2330;
+  --k-gray:#9aa4b2; --k-tick:#5b6470;
+  --k-ink:#1b2330; --k-inksoft:#374151; --k-inkfaint:#8b94a3;
+  --k-line:#e6eaf1; --k-line2:#c4ccd8;
+  --k-paper:#ffffff; --k-subtle:#f7f9fc;
+  --k-tint:#eaeffc; --k-tintbd:#c6d2f4;
+  --k-dim:#f4f5f7; --k-dimink:#a9b2c0; --k-dimbd:#e0e5ee;
+  --k-hit:#dde5fb;
+
+  /* 参考書の強調装置に使う色（マーカー3色と黒帯）。
+     自前の印刷教材・ベストフィット・螢雪の誌面から取っている。 */
+  --mk-y:#ffe7a3; --mk-p:#ffd2e0; --mk-b:#cbdcff;
+  --ground:#f0efec; --ghost:#eef2fb;
+  --amber:#b57611; --amber-tint:#fdf4e3; --amber-bd:#eedcb6;
+  --field:#eef3fc; --field-bd:#dbe5f7;
+  --band:#1b2330; --band-ink:#ffffff;
+}
+
+/* ===== 2. 下地 ============================================================= */
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--page-bg); color:var(--ink);
+  font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic","YuGothic",Meiryo,sans-serif;
+  font-weight:500; line-height:1.72;
+}
+/* 本文は 500。antialiased は付けない（macOS で薄く細くなる） */
+
+.page{
+  max-width:920px; margin:26px auto; background:var(--paper);
+  border:1px solid var(--line); border-radius:14px;
+  box-shadow:0 1px 3px rgba(20,30,50,.05), 0 8px 28px rgba(20,30,50,.05);
+  padding:40px 44px 36px; position:relative; overflow:hidden;
+}
+.page::before{
+  content:""; position:absolute; top:0; left:0; right:0; height:4px;
+  background:linear-gradient(90deg,var(--navy) 0%,var(--navy-mid) 58%,var(--warm) 100%);
+}
+
+.kicker{display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:13px;
+  color:var(--ink-soft); margin-bottom:13px}
+.badge{display:inline-block; background:var(--navy-tint); border:1px solid var(--navy-tint-bd);
+  color:var(--navy); font-size:12px; font-weight:700; padding:3px 12px; border-radius:999px;
+  letter-spacing:.02em}
+.badge.wk{background:var(--warn-bg); border-color:var(--warn-bd); color:var(--warn)}
+.badge.em{background:#e9f5ee; border-color:#c5e3d1; color:#1f7a4d}
+
+h1{font-size:31px; font-weight:700; color:var(--ink); line-height:1.3;
+  letter-spacing:.01em; margin:0 0 11px}
+.lead{font-size:15.5px; color:var(--ink-soft); margin:0 0 20px}
+h2{font-size:18px; font-weight:700; color:var(--ink); margin:32px 0 13px;
+  display:flex; align-items:center; gap:10px}
+h2 .bar{width:4px; height:19px; border-radius:2px; background:var(--navy); flex:none}
+p{margin:11px 0; font-size:14.5px; color:var(--ink-soft)}
+p b, li b{color:var(--ink); font-weight:700}
+code{background:var(--subtle); border:1px solid var(--line); border-radius:4px;
+  padding:1px 6px; font-size:.9em; font-family:var(--mono)}
+hr.div{border:none; border-top:1px solid var(--line); margin:28px 0}
+.foot{font-size:12.5px; color:var(--ink-faint); text-align:center; margin-top:6px}
+
+/* 数式（KaTeX 不使用。HTML の <sub>/<sup> ＋ serif 箱） */
+.formula{
+  font-family:"Cambria Math","Latin Modern Math","Times New Roman",serif;
+  font-size:18px; background:var(--subtle); border:1px solid var(--line);
+  border-radius:8px; padding:9px 16px; display:inline-block; color:var(--ink);
+}
+
+/* ===== 3. 導入・注意の器 =================================================== */
+.callout{display:flex; gap:13px; background:var(--subtle); border:1px solid var(--line);
+  border-radius:var(--radius); padding:15px 17px}
+.callout.navy{background:var(--navy-tint); border-color:var(--navy-tint-bd)}
+.callout .ico{flex:none; color:var(--navy); margin-top:2px; display:flex}
+.callout .ico svg{width:19px; height:19px}
+.callout .ttl{font-weight:700; color:var(--ink); margin:0 0 4px; font-size:15px}
+.callout p{margin:0}
+.callout.intro{align-items:center; flex-wrap:wrap}
+.btn-primary{background:var(--navy); color:#fff; border:none; border-radius:8px;
+  padding:10px 18px; font-family:inherit; font-size:14px; font-weight:700; cursor:pointer;
+  white-space:nowrap; transition:.13s; display:inline-flex; align-items:center; gap:8px}
+.btn-primary:hover{background:var(--navy-deep)}
+.btn-primary svg{width:16px; height:16px}
+
+/* 一言でいうと（読み手を掴む器） */
+.oneline{display:flex; gap:15px; align-items:flex-start; margin:18px 0 20px;
+  background:var(--navy-tint); border:1px solid var(--navy-tint-bd);
+  border-left:6px solid var(--navy); border-radius:0 12px 12px 0; padding:16px 20px}
+.oneline .olk{flex:none; align-self:center; background:var(--navy); color:#fff; font-weight:700;
+  font-size:12px; letter-spacing:.04em; border-radius:5px; padding:5px 11px; white-space:nowrap}
+.oneline p{margin:0; font-size:16px; line-height:1.7; font-weight:700; color:var(--ink)}
+@media(max-width:640px){ .oneline{flex-direction:column; gap:10px} .oneline p{font-size:15px} }
+
+/* ===== 4. 状態判定バナー（情報キットの中核・A型） ========================== */
+.banner{
+  border:1px solid; border-radius:10px; padding:12px 16px; margin-bottom:13px;
+  font-weight:700; font-size:15px; transition:.2s;
+}
+.banner small{display:block; font-weight:500; font-size:13px; margin-top:5px; line-height:1.58}
+.banner.ok{background:var(--ok-bg); border-color:var(--ok-bd); color:var(--ok)}
+.banner.warn{background:var(--warn-bg); border-color:var(--warn-bd); color:var(--warn)}
+
+/* ===== 5. 図の器 =========================================================== */
+.figbox{position:relative; margin:14px 0 4px}
+.zoomrow{display:flex; justify-content:flex-end; margin-bottom:6px}
+.fig-zoom{display:inline-flex; align-items:center; gap:6px; background:var(--paper);
+  border:1px solid var(--line-2); color:var(--ink-soft); border-radius:999px; padding:5px 13px;
+  font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer;
+  box-shadow:0 1px 3px rgba(20,30,50,.06); transition:.13s}
+.fig-zoom:hover{color:var(--navy); border-color:var(--navy-mid)}
+.fig-zoom svg{width:14px; height:14px}
+
+.canvas-box{background:var(--paper); border:1px solid var(--line); border-radius:10px;
+  overflow:hidden; transition:background .25s; }
+.canvas-box.ok{background:var(--ok-tint)}
+.canvas-box.warn{background:var(--warn-tint)}
+/* inline のままだとベースラインの隙間が図の下に出る */
+.canvas-box canvas{display:block; width:100%}
+.chart-wrap{position:relative; width:100%}
+.chart-wrap canvas{display:block; width:100%; height:auto}
+
+.legend{display:flex; flex-wrap:wrap; gap:16px; margin:9px 0 6px; font-size:12.5px;
+  color:var(--ink-soft)}
+.legend span{display:flex; align-items:center; gap:6px}
+.sw-key{width:12px; height:12px; border-radius:3px; flex:none}
+.sw-key.ln{height:0; border-top:2.6px solid currentColor; border-radius:0; width:16px}
+.cap{font-size:12.5px; color:var(--ink-soft); margin:9px 0 0; line-height:1.62}
+
+/* ===== 6. 操作パネル ======================================================= */
+.panel{border:1px solid var(--line); border-radius:10px; padding:16px 18px;
+  background:var(--paper); box-shadow:0 1px 3px rgba(20,30,50,.05); margin:12px 0}
+.ctl-row{display:flex; align-items:center; gap:14px; margin-bottom:12px}
+.ctl-row:last-child{margin-bottom:0}
+.ctl-row label.sl{font-size:14px; color:var(--ink-soft); white-space:nowrap; font-weight:700}
+input[type=range]{flex:1; accent-color:var(--navy); height:24px}
+.sl-out{font-size:16px; font-weight:700; color:var(--navy); min-width:42px; text-align:right;
+  font-family:var(--mono); font-variant-numeric:tabular-nums}
+
+.qrow{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:8px}
+.qrow:last-child{margin-bottom:0}
+.qcap{font-size:12.5px; color:var(--ink-faint); font-weight:700; margin-right:2px}
+.qbtn{font-size:13.5px; padding:7px 15px; border-radius:999px; border:1px solid var(--line);
+  background:var(--paper); color:var(--ink); cursor:pointer; font-family:inherit; transition:.13s;
+  display:inline-flex; align-items:center; gap:7px}
+.qbtn:hover{background:var(--navy-tint); border-color:var(--navy-mid); color:var(--navy)}
+.qbtn.active{background:var(--navy); color:#fff; border-color:var(--navy)}
+.qbtn .n{display:inline-flex; align-items:center; justify-content:center; width:19px; height:19px;
+  border-radius:50%; background:var(--navy-tint); color:var(--navy); font-size:11.5px;
+  font-weight:700; font-family:var(--mono); flex:none}
+.qbtn.active .n{background:rgba(255,255,255,.26); color:#fff}
+
+/* ===== 段階バー（図の上に置く細い帯）=====
+   参照（lecture_intro）と同じ作り。一度に一つの段階だけを図に映し、
+   その切り替えをここに置く。
+   ★ スマホでチップが何段にも折れると、開いた瞬間に操作だけで画面が埋まり、
+     図が1枚も見えない。参照は 4 個 / 3 段。字と余白を詰めて収める。 */
+/* 主たる行為（自動で進む）は、設定つまみと見た目で区別する */
+.qbtn.play{background:var(--navy); color:#fff; border-color:var(--navy); font-weight:700}
+.qbtn.play:hover{background:var(--navy-deep); color:#fff}
+.qbtn.play .n{background:rgba(255,255,255,.26); color:#fff; font-family:inherit}
+html[data-theme="dark"] .qbtn.play{color:#0c1016}
+
+.stagebar{padding:10px 12px; margin:0 0 10px}
+.stagebar .qrow{margin-bottom:0}
+.qbtn.qstage{font-weight:700}
+@media(max-width:600px){
+  .stagebar{padding:8px 10px}
+  .stagebar .qrow{gap:6px}
+  .qbtn.qstage{font-size:12.5px; padding:6px 11px; gap:5px}
+  .qbtn.qstage .n{width:17px; height:17px; font-size:11px}
+}
+/* 左カラムの段階カードは押せる（JS で cursor も付ける） */
+#stages .step{cursor:pointer}
+#stages .step:hover{border-color:var(--navy-tint-bd)}
+
+/* ===== 図の枠を詰める（.figbox の中だけ）=====
+   実測: 図枠 957px のうち、絵は 281px しか無く、残り 676px が
+   操作パネル(240)・指標(190)・バナー(92)・段階バー(62)・凡例ほか(92) だった。
+   参照は図枠 804px で、その大半がプロット。
+   ★ 絵を膨らませるのではなく枠を削る。9 個の箱と 3 本の帯に 281px は妥当な配分で、
+     無理に伸ばしても余白が増えるだけ。内容は 1 つも落とさず、余白と字だけ詰める。 */
+.figbox .panel{padding:12px 14px}
+.figbox .ctl-row{margin-bottom:9px}
+.figbox .qrow{margin-bottom:7px}
+.figbox .metrics{grid-template-columns:repeat(auto-fit,minmax(116px,1fr));
+  gap:8px; margin:10px 0 6px}
+.figbox .mcard{padding:9px 11px; border-top-width:3px}
+.figbox .mlab{font-size:11.5px; margin-bottom:3px}
+.figbox .mval{font-size:19px}
+.figbox .legend{margin:7px 0 5px}
+.figbox .cap{margin:7px 0 0}
+/* 指標が 5 枚あっても 1 段に収まる幅では、カードをさらに詰める */
+@media(min-width:1280px){
+  .page > .figbox .metrics{grid-template-columns:repeat(5,minmax(0,1fr))}
+}
+
+.switches{display:flex; flex-wrap:wrap; gap:14px 22px; margin-top:14px; padding-top:13px;
+  border-top:1px solid var(--line)}
+.sw{position:relative; display:inline-flex; align-items:center; gap:9px; cursor:pointer;
+  font-size:13.5px; color:var(--ink)}
+.sw input{position:absolute; opacity:0; width:0; height:0}
+.sw .track{width:36px; height:21px; border-radius:999px; background:#cdd6e3; transition:.18s;
+  position:relative; flex:none}
+.sw .track::after{content:""; position:absolute; top:2px; left:2px; width:17px; height:17px;
+  border-radius:50%; background:#fff; transition:.18s; box-shadow:0 1px 2px rgba(0,0,0,.22)}
+.sw input:checked + .track{background:var(--navy)}
+.sw input:checked + .track::after{transform:translateX(15px)}
+.sw input:focus-visible + .track{box-shadow:0 0 0 3px var(--navy-tint)}
+
+/* ===== 7. 数値カード ======================================================= */
+.metrics{display:grid; grid-template-columns:repeat(auto-fit,minmax(136px,1fr)); gap:10px;
+  margin:12px 0}
+.mcard{background:var(--subtle); border:1px solid var(--line); border-radius:8px;
+  padding:11px 13px; border-top:3px solid var(--line-2); transition:.2s}
+.mcard.hl{background:var(--navy-tint); border-color:var(--navy-tint-bd); border-top-color:var(--navy)}
+.mcard.pk{background:var(--warn-tint); border-color:var(--warn-bd); border-top-color:var(--warn)}
+.mlab{font-size:12px; color:var(--ink-soft); margin:0 0 4px}
+.mval{font-size:22px; font-weight:700; color:var(--ink); margin:0;
+  font-family:var(--mono); font-variant-numeric:tabular-nums}
+.mcard.hl .mval{color:var(--navy)}
+.mcard.pk .mval{color:var(--warn)}
+
+/* ===== 8. 板書ステッパー・答え ============================================= */
+.exbox{border:1.5px solid var(--navy-tint-bd); border-radius:14px; background:var(--paper);
+  margin:16px 0; overflow:hidden}
+.exbox .exhead{display:flex; align-items:center; gap:10px; padding:10px 16px;
+  background:var(--navy-tint)}
+.exbox .expill{background:var(--navy); color:#fff; font-weight:700; font-size:12.5px;
+  border-radius:999px; padding:3px 13px; flex:none}
+.exbox .extime{background:var(--paper); border:1px solid var(--navy-tint-bd); color:var(--navy);
+  font-size:12px; font-weight:700; border-radius:999px; padding:2px 11px; flex:none}
+.exbox .exttl{font-size:13.5px; color:var(--ink); font-weight:700}
+.exbox .exbody{padding:13px 18px 15px}
+.exbox .exbody p{margin:6px 0}
+
+.steps{display:grid; gap:5px; margin:12px 0 4px}
+.step{display:flex; gap:12px; padding:9px 12px; border-radius:10px; border:1px solid transparent;
+  opacity:.45; transition:.15s}
+.step .sno{flex:none; width:26px; height:26px; border-radius:50%; background:var(--subtle);
+  border:1px solid var(--line-2); color:var(--ink-soft); font-weight:700; font-size:13px;
+  display:flex; align-items:center; justify-content:center; font-family:var(--mono)}
+.step.on{opacity:1; background:var(--navy-tint); border-color:var(--navy-tint-bd)}
+.step.on .sno{background:var(--navy); border-color:var(--navy); color:#fff}
+.step.done{opacity:1}
+.step.done .sno{background:var(--c-white); border-color:var(--navy-mid); color:var(--navy)}
+.step.warnstep.on{background:var(--warn-bg); border-color:var(--warn-bd)}
+.step.warnstep.on .sno{background:var(--warn); border-color:var(--warn)}
+.step .sbody{flex:1; min-width:0}
+.step .smath{font-size:15px; color:var(--ink); font-weight:700}
+.step .snote{font-size:12.5px; color:var(--ink-soft); margin-top:3px; line-height:1.6}
+.stepctl{display:flex; gap:8px; align-items:center; margin:10px 0 2px; flex-wrap:wrap}
+
+.ansbar{display:flex; gap:11px; align-items:center; background:#e9f5ee; border:1px solid #c5e3d1;
+  border-radius:10px; padding:11px 15px; margin:12px 0; font-size:14.5px; color:var(--ink)}
+.ansbar .anspill{background:#1f7a4d; color:#fff; font-weight:700; font-size:12px;
+  border-radius:999px; padding:3px 12px; flex:none}
+
+/* ===== 9. 用語のおさらい =================================================== */
+details.glossary{border:1px solid var(--line); border-radius:10px; background:var(--card);
+  margin:16px 0; box-shadow:0 1px 3px rgba(20,30,50,.05)}
+details.glossary>summary{list-style:none; cursor:pointer; padding:14px 18px; font-size:15px;
+  font-weight:700; color:var(--warm); display:flex; align-items:center; gap:9px; user-select:none}
+details.glossary>summary::-webkit-details-marker{display:none}
+details.glossary>summary::before{content:""; width:0; height:0; border-left:6px solid var(--muted);
+  border-top:5px solid transparent; border-bottom:5px solid transparent;
+  transition:transform .15s; flex:none}
+details.glossary[open]>summary::before{transform:rotate(90deg)}
+dl.gloss{margin:0; padding:2px 18px 18px}
+dl.gloss dt{font-weight:700; color:var(--ink); font-size:13.5px; margin-top:12px}
+dl.gloss dt:first-of-type{margin-top:0}
+dl.gloss dt .en{color:var(--muted); font-family:var(--mono); font-size:11px; font-weight:400;
+  margin-left:7px; letter-spacing:.02em}
+dl.gloss dd{margin:3px 0 0; font-size:13px; color:var(--ink-soft); line-height:1.62}
+
+/* ===== 10. 基礎解説モーダル =============================================== */
+.overlay{position:fixed; inset:0; background:rgba(16,22,31,.55); display:none;
+  align-items:flex-start; justify-content:center; padding:26px 14px; z-index:1000; overflow-y:auto}
+.overlay.open{display:flex}
+.modal{background:var(--paper); border-radius:14px; max-width:680px; width:100%; margin:auto;
+  box-shadow:0 18px 60px rgba(16,22,31,.32); overflow:hidden}
+.modal-head{position:sticky; top:0; background:var(--paper); display:flex; align-items:flex-start;
+  justify-content:space-between; gap:12px; padding:17px 24px 13px; border-bottom:1px solid var(--line);
+  z-index:2}
+.modal-head .mh-k{font-size:11.5px; color:var(--navy); font-weight:700; letter-spacing:.04em;
+  margin:0 0 2px}
+.modal-head h3{margin:0; font-size:19px; font-weight:700; color:var(--ink); line-height:1.34}
+.modal-close{flex:none; border:1px solid var(--line-2); background:var(--paper); border-radius:8px;
+  width:33px; height:33px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  color:var(--ink-soft)}
+.modal-close:hover{background:var(--subtle); color:var(--navy)}
+.modal-close svg{width:17px; height:17px}
+.modal-body{padding:17px 24px 26px}
+.mblock{margin-bottom:22px}
+.mblock:last-child{margin-bottom:0}
+.mblock h4{margin:0 0 9px; font-size:14px; font-weight:700; color:var(--warm)}
+.mblock p{margin:0 0 11px; font-size:14px; color:var(--ink-soft); line-height:1.72}
+.mblock p:last-child{margin-bottom:0}
+.mini-box{background:var(--ok-tint); border:1px solid var(--line); border-radius:8px;
+  overflow:hidden; margin:6px 0 6px}
+.mini-box canvas{display:block; width:100%; height:auto}
+.mini-cap{font-size:12.5px; color:var(--ink-soft); margin:3px 0 0}
+.real-table{width:100%; border-collapse:collapse; margin:8px 0; font-size:13px}
+.real-table th,.real-table td{text-align:left; padding:7px 10px; border-bottom:1px solid var(--line)}
+.real-table th{color:var(--ink-soft); font-weight:700; font-size:12px; background:var(--subtle)}
+.real-table td{color:var(--ink-soft)}
+.real-table td .big{font-family:var(--mono); font-weight:700; color:var(--ink)}
+
+/* ===== 11. 補足チップ（hosoku） =========================================== */
+.hk-chip{display:inline-flex; align-items:center; gap:5px; vertical-align:baseline;
+  background:var(--navy-tint); border:1px solid var(--navy-tint-bd); color:var(--navy);
+  border-radius:999px; padding:1px 10px 2px; font-family:inherit; font-size:.9em; font-weight:700;
+  cursor:pointer; transition:.12s; line-height:1.55}
+.hk-chip:hover{background:#dde5fb; border-color:var(--navy-mid); color:var(--navy-deep)}
+.hk-chip svg{width:12px; height:12px; flex:none}
+.hk-ov{position:fixed; inset:0; background:rgba(16,22,31,.5); display:none; align-items:flex-start;
+  justify-content:center; padding:28px 14px; z-index:1100; overflow-y:auto}
+.hk-ov.open{display:flex}
+.hk-card{background:var(--paper); border-radius:14px; max-width:560px; width:100%; margin:auto;
+  box-shadow:0 16px 56px rgba(0,0,0,.30)}
+.hk-head{position:sticky; top:0; background:var(--paper); display:flex; align-items:flex-start;
+  justify-content:space-between; gap:12px; padding:16px 22px 12px; border-bottom:1px solid var(--line);
+  z-index:2}
+.hk-head .hk-k{font-size:11.5px; color:var(--navy); font-weight:700; letter-spacing:.04em; margin:0 0 2px}
+.hk-head h4{margin:0; font-size:18px; font-weight:700; color:var(--ink); line-height:1.34}
+.hk-close{flex:none; border:1px solid var(--line-2); background:var(--paper); border-radius:8px;
+  width:32px; height:32px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  color:var(--ink-soft)}
+.hk-close:hover{background:var(--subtle); color:var(--navy)}
+.hk-close svg{width:17px; height:17px}
+.hk-body{padding:15px 22px 22px}
+.hk-body p{margin:8px 0; font-size:14.5px; line-height:1.72; color:var(--ink-soft)}
+.hk-figwrap{margin:13px auto 4px; max-width:400px; background:var(--ok-tint);
+  border:1px solid var(--line); border-radius:8px; overflow:hidden}
+.hk-figwrap canvas{display:block; width:100%}
+.hk-ctl{display:flex; align-items:center; gap:12px; margin:9px 0 2px}
+.hk-ctl label{font-size:13px; color:var(--ink-soft); white-space:nowrap; font-weight:700}
+.hk-ctl input[type=range]{flex:1; accent-color:var(--navy); height:22px}
+.hk-ctl .hk-out{font-size:15px; font-weight:700; color:var(--navy); min-width:46px; text-align:right;
+  font-family:var(--mono); font-variant-numeric:tabular-nums}
+.hk-qrow{display:flex; flex-wrap:wrap; gap:7px; margin:7px 0 2px}
+.hk-qbtn{font-size:13px; padding:4px 12px; border-radius:999px; border:1px solid var(--line);
+  background:var(--paper); color:var(--ink); cursor:pointer; font-family:inherit; transition:.12s}
+.hk-qbtn:hover{background:var(--navy-tint); border-color:var(--navy-mid)}
+.hk-qbtn.active{background:var(--navy); color:#fff; border-color:var(--navy)}
+.hk-num{background:var(--subtle); border:1px solid var(--line); border-radius:8px; padding:10px 14px;
+  margin:11px 0; font-size:14px; color:var(--ink); line-height:1.65; font-variant-numeric:tabular-nums}
+.hk-key{display:flex; gap:9px; background:var(--navy-tint); border:1px solid var(--navy-tint-bd);
+  border-radius:8px; padding:10px 13px; margin:11px 0; font-size:14px; color:var(--ink); line-height:1.62}
+.hk-key .hk-ico{flex:none; color:var(--navy); margin-top:1px; display:flex}
+/* P 走査: 本文の <b> に下マーカー。開いている間に P で左→右へ走る */
+.hk-body p b, .hk-body p strong{position:relative; z-index:0; font-weight:700; color:var(--ink)}
+.hk-body p b::after, .hk-body p strong::after{content:""; position:absolute; left:-.04em;
+  right:-.04em; bottom:.04em; height:.34em; z-index:-1; background:var(--navy-tint);
+  transform:scaleX(1); transform-origin:left center}
+.hk-body p b.hk-pop::after, .hk-body p strong.hk-pop::after{
+  animation:hk-sweep .5s cubic-bezier(.22,1,.36,1) both; animation-delay:var(--d,0s)}
+@keyframes hk-sweep{from{transform:scaleX(0)} to{transform:scaleX(1)}}
+@media (prefers-reduced-motion:reduce){
+  .hk-body p b.hk-pop::after, .hk-body p strong.hk-pop::after{animation:none}
+}
+
+/* ===== 12. 図の拡大 ======================================================= */
+.zoom-ov{position:fixed; inset:0; background:rgba(16,22,31,.62); display:none;
+  align-items:center; justify-content:center; z-index:1200; padding:16px}
+.zoom-ov.open{display:flex}
+.zoom-stage{background:var(--paper); border-radius:14px; box-shadow:0 18px 60px rgba(0,0,0,.34);
+  max-width:97vw; max-height:96vh; overflow:auto; padding:18px 22px 22px; position:relative}
+.zoom-close{position:absolute; top:12px; right:14px; z-index:3; display:inline-flex;
+  align-items:center; gap:6px; background:var(--navy); color:#fff; border:none; border-radius:8px;
+  padding:7px 13px; font-family:inherit; font-size:13px; font-weight:700; cursor:pointer}
+.zoom-close:hover{background:var(--navy-deep)}
+#zoom-host{margin-top:4px; width:100%}
+.figbox.zoomed .zoomrow{display:none}
+
+/* ===== 13. ページ送り ===================================================== */
+.sernav{display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:10px;
+  margin:26px 0 2px; padding-top:18px; border-top:1px solid var(--line); font-size:13.5px}
+.sernav a{display:inline-flex; align-items:center; gap:7px; text-decoration:none;
+  color:var(--ink-soft); border:1px solid var(--line-2); border-radius:999px; padding:8px 14px;
+  background:var(--paper); transition:.13s; line-height:1.4}
+.sernav a:hover{color:var(--navy); border-color:var(--navy-mid); background:var(--subtle)}
+.sernav .sn-prev{justify-self:start} .sernav .sn-up{justify-self:center; font-weight:700}
+.sernav .sn-next{justify-self:end}
+.sernav svg{width:15px; height:15px; flex:none}
+@media(max-width:600px){
+  .sernav{grid-template-columns:1fr 1fr; gap:8px}
+  .sernav .sn-up{grid-column:1 / -1; order:3}
+}
+
+/* ===== 14. 右上のボタン =================================================== */
+.theme-toggle,.pres-toggle{position:fixed; top:14px; z-index:900; display:inline-flex;
+  align-items:center; gap:7px; background:var(--paper); color:var(--ink-soft);
+  border:1px solid var(--line-2); border-radius:999px; padding:6px 13px; font-family:inherit;
+  font-size:12px; font-weight:700; cursor:pointer; box-shadow:0 1px 3px rgba(20,30,50,.10);
+  transition:.14s}
+.theme-toggle{right:16px} .pres-toggle{right:118px}
+.theme-toggle:hover,.pres-toggle:hover{color:var(--navy); border-color:var(--navy-mid)}
+.theme-toggle svg,.pres-toggle svg{width:14px; height:14px}
+@media print{ .theme-toggle,.pres-toggle{display:none} }
+
+/* ===== 15. PC フルスクリーン（本文=左 / 図=右・sticky） ================== */
+@media(min-width:1280px){
+  body{font-size:16.5px}
+  h1{font-size:36px}
+  .page:has(> .figbox){max-width:1640px; display:grid;
+    grid-template-columns:minmax(440px,42%) minmax(0,1fr); column-gap:56px;
+    padding:52px 56px 44px; align-items:start}
+  .page:has(> .figbox) > *{grid-column:1; min-width:0}
+  .page > .figbox{grid-column:2 !important; grid-row:1/240; position:sticky; top:18px;
+    align-self:start; margin-top:4px}
+  .page > .figbox ~ .figbox{grid-column:1 !important; grid-row:auto; position:static}
+  .page:has(> .figbox) > .sernav, .page:has(> .figbox) > hr.div,
+  .page:has(> .figbox) > .foot{grid-column:1/-1}
+  .page:not(:has(> .figbox)){max-width:1180px}
+}
+
+/* ===== 16. ダークテーマ =================================================== */
+html[data-theme="dark"]{color-scheme:dark}
+html[data-theme="dark"]{
+  --paper:#141a24; --page-bg:#0c1016; --subtle:#1b2230; --card:#141a24;
+  --ink:#e8edf5; --ink-soft:#aeb9c8; --ink-faint:#828e9e; --muted:#828e9e;
+  --line:#252e3c; --line-2:#333e4f; --hair:#252e3c; --hair2:#333e4f; --bg:#0c1016;
+  --navy:#7d9dff; --navy-deep:#dbe4ff; --navy-mid:#5f7ce0;
+  --navy-tint:#182142; --navy-tint-bd:#31406e;
+  --accent:#7d9dff; --orange:#e8894e; --warm:#e8894e;
+  --ok:#7d9dff; --ok-bg:#182142; --ok-bd:#31406e; --ok-tint:#121a2e;
+  --warn:#ef7b72; --warn-bg:#2c1614; --warn-bd:#5d2a26; --warn-tint:#1e1413;
+  --wave:#e8edf5;
+  --c-white:#141a24; --c-ink-on-accent:#0c1016;
+  /* canvas 側も暗色へ差し替える。片方だけだと図が明色のまま残る */
+  --k-main:#7d9dff; --k-second:#e8894e; --k-warn:#ef7b72; --k-ok:#35c08d;
+  --k-accent:#a78bfa; --k-deep:#e8edf5;
+  --k-gray:#7a8698; --k-tick:#aeb9c8;
+  --k-ink:#e8edf5; --k-inksoft:#aeb9c8; --k-inkfaint:#828e9e;
+  --k-line:#252e3c; --k-line2:#333e4f;
+  --k-paper:#141a24; --k-subtle:#1b2230;
+  --k-tint:#182142; --k-tintbd:#31406e;
+  --k-dim:#1a212c; --k-dimink:#5d6878; --k-dimbd:#2a3342;
+  --k-hit:#22305c;
+}
+/* 直書きの白を塞ぐ（正典が 15 か所で踏んだ穴。面が白いまま残り白地に白になる） */
+html[data-theme="dark"] .panel,
+html[data-theme="dark"] .exbox,
+html[data-theme="dark"] .sernav a,
+html[data-theme="dark"] .qbtn,
+html[data-theme="dark"] .fig-zoom,
+html[data-theme="dark"] .modal-close,
+html[data-theme="dark"] .hk-close,
+html[data-theme="dark"] .hk-qbtn,
+html[data-theme="dark"] .canvas-box,
+html[data-theme="dark"] details.glossary,
+html[data-theme="dark"] .theme-toggle,
+html[data-theme="dark"] .pres-toggle{background:var(--paper); border-color:var(--line-2)}
+html[data-theme="dark"] .step.done .sno,
+html[data-theme="dark"] .exbox .extime{background:var(--subtle)}
+html[data-theme="dark"] .sw .track{background:#3a4557}
+html[data-theme="dark"] .sw .track::after{background:var(--ink-soft)}
+html[data-theme="dark"] .qbtn.active{background:var(--navy); border-color:var(--navy); color:#0c1016}
+html[data-theme="dark"] .btn-primary,
+html[data-theme="dark"] .expill,
+html[data-theme="dark"] .anspill,
+html[data-theme="dark"] .step.on .sno,
+html[data-theme="dark"] .zoom-close{color:#0c1016}
+html[data-theme="dark"] .ansbar{background:#122a20; border-color:#25543f}
+html[data-theme="dark"] .ansbar .anspill{background:#35c08d}
+html[data-theme="dark"] .badge.em{background:#122a20; border-color:#25543f; color:#35c08d}
+html[data-theme="dark"] .mini-box,
+html[data-theme="dark"] .hk-figwrap{background:var(--subtle)}
+html[data-theme="dark"] .overlay,
+html[data-theme="dark"] .hk-ov,
+html[data-theme="dark"] .zoom-ov{background:rgba(3,6,10,.74)}
+html[data-theme="dark"] .real-table th{background:var(--subtle)}
+html[data-theme="dark"] .page{box-shadow:0 0 0 1px rgba(255,255,255,.03), 0 30px 80px rgba(0,0,0,.55)}
+
+/* ===== 17. 説明モード（投影・収録） ======================================= */
+body.present{overflow:hidden}
+body.present .page{max-width:none !important; width:100vw; height:100vh; margin:0; border:none;
+  border-radius:0; box-shadow:none; padding:0; display:block !important; overflow:hidden}
+body.present .page::before{height:6px}
+body.present .theme-toggle{opacity:.25}
+body.present .theme-toggle:hover{opacity:1}
+body.present .sernav, body.present hr.div, body.present .foot{display:none !important}
+
+.pres-stage{display:none}
+body.present .pres-stage{display:block; position:fixed; inset:0; z-index:60;
+  background:var(--page-bg); padding:58px 64px 96px; overflow:hidden}
+body.present .pres-slide{display:none; height:100%}
+body.present .pres-slide.on{display:grid; grid-template-rows:auto minmax(0,1fr); gap:20px; height:100%}
+.pres-head{display:flex; align-items:center; gap:16px; flex-wrap:wrap}
+.pres-kick{display:inline-flex; align-items:center; gap:8px; background:var(--navy-tint);
+  border:1px solid var(--navy-tint-bd); color:var(--navy-deep); border-radius:999px;
+  padding:6px 18px; font-size:19px; font-weight:700; letter-spacing:.02em}
+.pres-h{font-size:clamp(30px,3.1vw,52px); font-weight:700; color:var(--ink); line-height:1.26;
+  margin:0}
+.pres-body{min-height:0; overflow-y:auto; display:flex; flex-direction:column}
+body.present .pres-body{font-size:clamp(19px,1.55vw,27px); line-height:1.8; color:var(--ink)}
+body.present .pres-body > *{flex:none}
+body.present .pres-body > .figbox{flex:1 1 auto; min-height:0}
+body.present .pres-body p{margin:13px 0; font-size:1em; color:var(--ink)}
+body.present .pres-body .formula{font-size:1.1em}
+body.present .pres-slide:first-child .pres-body{justify-content:center}
+body.present .pres-slide:first-child .lead{font-size:clamp(23px,2.1vw,37px); line-height:1.75;
+  color:var(--ink); max-width:44em}
+/* 例題・手順・答え・ポイント */
+body.present .pres-body .exbox{border-width:2px; border-radius:18px}
+body.present .pres-body .exbox .exhead{padding:13px 24px}
+body.present .pres-body .expill{font-size:19px; padding:5px 20px}
+body.present .pres-body .extime{font-size:18px; padding:4px 16px}
+body.present .pres-body .exbox .exttl{font-size:.8em}
+body.present .pres-body .exbody{padding:18px 26px 22px}
+body.present .pres-body .step{padding:13px 17px; opacity:.62}
+body.present .pres-body .step.on{opacity:1}
+body.present .pres-body .step .sno{width:37px; height:37px; font-size:19px}
+body.present .pres-body .step .smath{font-size:1.05em}
+body.present .pres-body .step .snote{font-size:.74em}
+body.present .pres-body .ansbar{padding:17px 24px; border-radius:14px; border-width:2px;
+  font-size:1.15em}
+body.present .pres-body .anspill{font-size:19px; padding:5px 18px}
+body.present .pres-body .callout{padding:20px 24px; border-radius:14px}
+body.present .pres-body .callout .ttl{font-size:1.05em}
+body.present .pres-body .oneline p{font-size:1.1em}
+body.present .pres-body .hk-chip{font-size:.8em; padding:2px 12px 3px}
+/* バナー（情報キットの中核なので投影でも主役の大きさにする） */
+body.present .pres-body .banner{font-size:1.05em; padding:18px 24px; border-radius:14px;
+  border-width:2px; margin-bottom:16px}
+body.present .pres-body .banner small{font-size:.78em; margin-top:7px}
+/* 数値カード */
+body.present .pres-body .metrics{grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:18px; margin:0}
+body.present .pres-body .mcard{padding:16px 20px; border-top-width:5px; border-radius:14px}
+body.present .pres-body .mlab{font-size:19px; margin-bottom:7px}
+body.present .pres-body .mval{font-size:clamp(34px,3.4vw,56px); line-height:1.1}
+/* 図 */
+body.present .pres-body .figbox{position:static !important; height:100%; display:grid;
+  grid-template-rows:auto 1fr auto auto; gap:12px; margin:0; overflow:hidden}
+body.present .pres-body .zoomrow{display:none}
+body.present .pres-body .chart-wrap{height:100% !important; max-width:none !important; margin:0}
+body.present .pres-body .canvas-box{height:100%}
+/* ★ !important が要る。SETUP() が canvas の height を **inline** で入れるので、
+   クラスの規則では勝てず、.canvas-box{overflow:hidden} に図の下半分が切られる
+   （プログラムの欄が途中で消える形で出る）。 */
+body.present .pres-body .canvas-box canvas{height:100% !important; object-fit:contain}
+body.present .pres-body .panel{padding:15px 19px; border-radius:14px}
+body.present .pres-body .panel .qbtn{font-size:19px; padding:8px 20px}
+body.present .pres-body .qcap, body.present .pres-body .ctl-row label.sl{font-size:19px}
+body.present .pres-body .sl-out{font-size:26px; min-width:62px}
+body.present .pres-body .sw{font-size:19px}
+body.present .pres-body .legend{font-size:19px; gap:26px}
+body.present .pres-body .cap{font-size:18px; line-height:1.62}
+body.present .pres-body input[type=range]{height:30px}
+/* 横長画面: 図(左) ＋ 操作(中) ＋ 指標(右) */
+@media(min-aspect-ratio:13/10){
+  /* 横長画面: バナー(全幅) → 図(左) ＋ 操作(右) → 指標(全幅) → 凡例 → 説明。
+     ★ 指標を細い右列に縦積みすると、5 枚目が列から出てスクロール待ちになり、
+       投影では「切れている」ようにしか見えない。全幅に寝かせると数字を大きく出せる。 */
+  /* 指標は engine が別の面へ借り出すので、ここでは場所を取らない。
+     図に高さを渡すための割り付け: バナー(全幅) → 図(左)＋操作(右) → 凡例 → 説明 */
+  body.present .pres-slide.has-fig .pres-body .figbox{
+    grid-template-columns:minmax(0,1fr) clamp(260px,21vw,380px);
+    grid-template-rows:auto minmax(0,1fr) auto auto;
+    column-gap:26px; row-gap:10px}
+  body.present .pres-slide.has-fig .pres-body .banner{grid-column:1/-1; grid-row:1}
+  body.present .pres-slide.has-fig .pres-body .chart-wrap,
+  body.present .pres-slide.has-fig .pres-body .canvas-box{grid-column:1; grid-row:2}
+  body.present .pres-slide.has-fig .pres-body .panel{grid-column:2; grid-row:2;
+    align-self:stretch; overflow:auto}
+  body.present .pres-slide.has-fig .pres-body .legend{grid-column:1/-1; grid-row:3}
+  body.present .pres-slide.has-fig .pres-body .cap{grid-column:1/-1; grid-row:4}
+  body.present .pres-slide.has-fig .pres-body .mval{font-size:clamp(26px,2.2vw,38px)}
+  body.present .pres-slide.has-fig .pres-body .mcard{padding:10px 14px}
+  body.present .pres-slide.has-fig .pres-body .mlab{font-size:16px; margin-bottom:4px}
+}
+/* 答え・ポイントは中央に大きく */
+body.present .pres-slide:has(.ansbar) .pres-body,
+body.present .pres-slide:has(.callout) .pres-body{justify-content:center}
+/* 操作パネル内で数値が切れないように */
+body.present .pres-body .ctl-row{display:grid; grid-template-columns:1fr auto; gap:6px 12px;
+  align-items:center}
+body.present .pres-body .ctl-row label.sl{grid-column:1; grid-row:1}
+body.present .pres-body .ctl-row .sl-out{grid-column:2; grid-row:1; min-width:0; white-space:nowrap}
+body.present .pres-body .ctl-row input[type=range]{grid-column:1/-1; grid-row:2; width:100%}
+/* 下部バー */
+.pres-bar{display:none}
+body.present .pres-bar{display:flex; position:fixed; left:0; right:0; bottom:0; z-index:61;
+  align-items:center; gap:18px; padding:12px 24px; background:var(--paper);
+  border-top:1px solid var(--line); font-size:17px; color:var(--ink-soft)}
+.pres-dots{display:flex; gap:8px; flex:1}
+.pres-dot{height:6px; flex:1; border-radius:999px; background:var(--line-2); transition:.2s}
+.pres-dot.on{background:var(--navy)}
+.pres-dot.done{background:var(--navy-mid)}
+.pres-nav{display:flex; gap:10px}
+.pres-nav button{background:var(--subtle); border:1px solid var(--line-2); color:var(--ink);
+  border-radius:999px; padding:7px 18px; font-family:inherit; font-size:17px; font-weight:700;
+  cursor:pointer}
+.pres-nav button:hover{border-color:var(--navy-mid); color:var(--navy)}
+.pres-count{font-family:var(--mono); font-variant-numeric:tabular-nums; font-weight:700;
+  color:var(--navy); font-size:19px}
+.pres-hint{font-size:15px; color:var(--ink-faint)}
+@media(max-width:900px){ .pres-hint{display:none} }
+.pres-pal{display:flex; align-items:center; gap:8px; margin-right:4px}
+.pres-pal .pl{font-size:14px; color:var(--ink-soft)}
+.pres-swatch{width:29px; height:29px; border-radius:50%; border:2px solid transparent;
+  cursor:pointer; padding:0; position:relative; box-shadow:0 1px 3px rgba(0,0,0,.18); transition:.14s}
+.pres-swatch:hover{transform:translateY(-2px)}
+.pres-swatch.on{border-color:var(--ink); box-shadow:0 0 0 2px var(--paper),0 2px 8px rgba(0,0,0,.25)}
+.pres-swatch i{position:absolute; inset:3px; border-radius:50%; display:block}
+/* 動くアイコン */
+.pres-ico{width:26px; height:26px; flex:none}
+.pres-ico *{transform-box:fill-box; transform-origin:center}
+@keyframes pi-walk{0%{transform:translateX(0)}25%{transform:translateX(3px) translateY(-3px)}
+  50%{transform:translateX(6px) translateY(1px)}75%{transform:translateX(9px) translateY(-2px)}
+  100%{transform:translateX(0)}}
+@keyframes pi-pulse{0%,100%{opacity:.35; transform:scale(.86)}50%{opacity:1; transform:scale(1.06)}}
+@keyframes pi-dash{to{stroke-dashoffset:-28}}
+@keyframes pi-rise{0%{transform:scaleY(.35)}50%{transform:scaleY(1)}100%{transform:scaleY(.35)}}
+@keyframes pi-spin{to{transform:rotate(360deg)}}
+.pi-walk{animation:pi-walk 2.4s ease-in-out infinite}
+.pi-pulse{animation:pi-pulse 1.9s ease-in-out infinite}
+.pi-dash{stroke-dasharray:6 5; animation:pi-dash 1.4s linear infinite}
+.pi-rise{animation:pi-rise 2.1s ease-in-out infinite}
+.pi-rise2{animation:pi-rise 2.1s ease-in-out infinite .25s}
+.pi-rise3{animation:pi-rise 2.1s ease-in-out infinite .5s}
+.pi-spin{animation:pi-spin 7s linear infinite}
+@media (prefers-reduced-motion:reduce){ .pres-ico *{animation:none !important} }
+
+/* ===== 18. 説明モードの配色 4 種 ==========================================
+   正典（validate_palette 全 PASS）の 4 配色をそのまま使う。
+   新しい配色を作らない（検証していない配色を投影に出さないため）。 */
+body.present{
+  --p-bg:#f7f9fb; --p-bg2:#eef2f6; --p-card:#ffffff;
+  --p-ink:#16202b; --p-ink2:#465565;
+  --p-key:#1b4f86; --p-key-l:#4a83c4; --p-amber:#b8860b; --p-terra:#b03a2e;
+  --p-line:#dde4ea; --p-tint:#eaf1f9; --p-tint-bd:#cfe0f0; --p-amber-tint:#f6eedb;
+}
+body.present .pres-stage{background:
+  radial-gradient(1200px 700px at 78% -14%, rgba(27,79,134,.08), transparent 58%),
+  radial-gradient(900px 560px at -6% 4%, rgba(23,105,132,.06), transparent 55%),
+  var(--p-bg)}
+body.present .pres-body,
+body.present .pres-body p,
+body.present .pres-body .exbody,
+body.present .pres-body .snote{color:var(--p-ink)}
+body.present .pres-h{color:var(--p-ink)}
+body.present .pres-body b, body.present .pres-body strong{color:var(--p-key)}
+body.present .pres-kick{background:var(--p-key); color:#fff; border:none;
+  box-shadow:0 2px 10px rgba(27,79,134,.28)}
+body.present .pres-body .exbox{background:var(--p-card); border-color:var(--p-tint-bd)}
+body.present .pres-body .exbox .exhead{background:var(--p-tint)}
+body.present .pres-body .expill{background:var(--p-key); color:#fff}
+body.present .pres-body .extime{background:var(--p-card); border-color:var(--p-tint-bd);
+  color:var(--p-key)}
+body.present .pres-body .panel,
+body.present .pres-body .mcard,
+body.present .pres-body .canvas-box{background:var(--p-card); border-color:var(--p-line)}
+body.present .pres-body .mcard{border-top-color:var(--p-key)}
+body.present .pres-body .mcard.hl{background:var(--p-tint); border-color:var(--p-tint-bd)}
+body.present .pres-body .mval{color:var(--p-key)}
+body.present .pres-body .mlab{color:var(--p-ink2)}
+body.present .pres-body .step.on{background:var(--p-tint); border-color:var(--p-tint-bd)}
+body.present .pres-body .step .sno{background:var(--p-card); border-color:var(--p-line);
+  color:var(--p-ink2)}
+body.present .pres-body .step.on .sno{background:var(--p-key); border-color:var(--p-key); color:#fff}
+body.present .pres-body .step .snote{color:var(--p-ink2)}
+body.present .pres-body .ansbar{background:var(--p-amber-tint); border-color:#e8d4ad}
+body.present .pres-body .anspill{background:var(--p-amber); color:#fff}
+body.present .pres-body .callout{background:var(--p-card); border-color:var(--p-line)}
+body.present .pres-body .callout.navy{background:var(--p-tint); border-color:var(--p-tint-bd)}
+body.present .pres-body .callout .ico, body.present .pres-body .callout .ttl{color:var(--p-key)}
+body.present .pres-body .oneline{background:var(--p-tint); border-color:var(--p-tint-bd);
+  border-left-color:var(--p-key)}
+body.present .pres-body .oneline .olk{background:var(--p-key)}
+body.present .pres-body .oneline p{color:var(--p-key)}
+body.present .pres-body .qbtn{background:var(--p-card); border-color:var(--p-line); color:var(--p-ink)}
+body.present .pres-body .qbtn.active{background:var(--p-key); border-color:var(--p-key); color:#fff}
+body.present .pres-body .qbtn .n{background:var(--p-tint); color:var(--p-key)}
+body.present .pres-body .sl-out{color:var(--p-key)}
+body.present .pres-body .cap, body.present .pres-body .legend{color:var(--p-ink2)}
+body.present .pres-body input[type=range]{accent-color:var(--p-key)}
+body.present .pres-body .sw input:checked + .track{background:var(--p-key)}
+body.present .pres-body .hk-chip{background:var(--p-amber-tint); border-color:#e8d4ad; color:#8a5a12}
+/* バナーは投影でも ok↔warn の意味を保つ（配色に飲ませない） */
+body.present .pres-body .banner.ok{background:var(--p-tint); border-color:var(--p-tint-bd);
+  color:var(--p-key)}
+body.present .pres-body .banner.warn{background:#fbe9e7; border-color:#f0c3bd; color:var(--p-terra)}
+body.present .pres-bar{background:var(--p-card); border-top-color:var(--p-line); color:var(--p-ink2)}
+body.present .pres-dot{background:var(--p-line)}
+body.present .pres-dot.on{background:var(--p-key)}
+body.present .pres-dot.done{background:var(--p-key-l)}
+body.present .pres-nav button{background:var(--p-bg2); border-color:var(--p-line); color:var(--p-ink)}
+body.present .pres-nav button:hover{border-color:var(--p-key); color:var(--p-key)}
+body.present .pres-count{color:var(--p-key)}
+
+body.present[data-ptheme="shiro"]{
+  --p-bg:#f7f9fb; --p-bg2:#eef2f6; --p-card:#ffffff; --p-ink:#16202b; --p-ink2:#465565;
+  --p-key:#1b4f86; --p-key-l:#4a83c4; --p-amber:#b8860b; --p-terra:#b03a2e;
+  --p-line:#dde4ea; --p-tint:#eaf1f9; --p-tint-bd:#cfe0f0; --p-amber-tint:#f6eedb;
+  --k-main:#0072a0; --k-second:#d03a22; --k-warn:#b8860b; --k-ok:#12876e; --k-accent:#7546b5;
+  --k-deep:#0f3763; --k-gray:#7b8794; --k-tick:#55606c;
+  --k-paper:#ffffff; --k-subtle:#eef2f6; --k-line:#dde4ea; --k-line2:#cfe0f0;
+  --k-ink:#16202b; --k-inksoft:#465565; --k-tint:#eaf1f9; --k-tintbd:#cfe0f0;
+  --k-dim:#eef2f6; --k-dimink:#8b96a3; --k-dimbd:#dde4ea; --k-hit:#d8e6f6;
+}
+body.present[data-ptheme="aizumi"]{
+  --p-bg:#eef3f9; --p-bg2:#e2ebf4; --p-card:#ffffff; --p-ink:#122c4a; --p-ink2:#3d5773;
+  --p-key:#123d6b; --p-key-l:#3f74b0; --p-amber:#a5760d; --p-terra:#a5352a;
+  --p-line:#d3dfec; --p-tint:#e2edf8; --p-tint-bd:#c2d7ee; --p-amber-tint:#f2e8d2;
+  --k-main:#00618a; --k-second:#c1341e; --k-warn:#a5760d; --k-ok:#0f7761; --k-accent:#6a3fa6;
+  --k-deep:#0d2f55; --k-gray:#6f7d8c; --k-tick:#4a5766;
+  --k-paper:#ffffff; --k-subtle:#e2ebf4; --k-line:#d3dfec; --k-line2:#c2d7ee;
+  --k-ink:#122c4a; --k-inksoft:#3d5773; --k-tint:#e2edf8; --k-tintbd:#c2d7ee;
+  --k-dim:#e2ebf4; --k-dimink:#7e8da0; --k-dimbd:#d3dfec; --k-hit:#cfe0f4;
+}
+body.present[data-ptheme="mori"]{
+  --p-bg:#f2f6f4; --p-bg2:#e7eeeb; --p-card:#ffffff; --p-ink:#17282a; --p-ink2:#425456;
+  --p-key:#176984; --p-key-l:#3b8ea6; --p-amber:#9c7a12; --p-terra:#9f4030;
+  --p-line:#d8e2de; --p-tint:#e6f1f3; --p-tint-bd:#c6dee4; --p-amber-tint:#f0ead6;
+  --k-main:#00697f; --k-second:#bf3f2a; --k-warn:#9c7a12; --k-ok:#0f7a63; --k-accent:#6b4a9e;
+  --k-deep:#123f4c; --k-gray:#71807f; --k-tick:#465655;
+  --k-paper:#ffffff; --k-subtle:#e7eeeb; --k-line:#d8e2de; --k-line2:#c6dee4;
+  --k-ink:#17282a; --k-inksoft:#425456; --k-tint:#e6f1f3; --k-tintbd:#c6dee4;
+  --k-dim:#e7eeeb; --k-dimink:#7d8c8a; --k-dimbd:#d8e2de; --k-hit:#d2e8ec;
+}
+body.present[data-ptheme="yoru"]{
+  --p-bg:#0b0f14; --p-bg2:#131a22; --p-card:#151d26; --p-ink:#e6ecf3; --p-ink2:#aab6c4;
+  --p-key:#7fb0e8; --p-key-l:#a7cbf2; --p-amber:#d9a441; --p-terra:#e5806e;
+  --p-line:#28323e; --p-tint:#16243a; --p-tint-bd:#2f4666; --p-amber-tint:#2a2114;
+  --k-main:#5aa8e0; --k-second:#ef7060; --k-warn:#d9a441; --k-ok:#35c0a4; --k-accent:#a58bf0;
+  --k-deep:#d9e7f7; --k-gray:#7d8b9a; --k-tick:#aab6c4;
+  --k-paper:#151d26; --k-subtle:#131a22; --k-line:#28323e; --k-line2:#2f4666;
+  --k-ink:#e6ecf3; --k-inksoft:#aab6c4; --k-tint:#16243a; --k-tintbd:#2f4666;
+  --k-dim:#1a232e; --k-dimink:#5f6b7a; --k-dimbd:#2a3542; --k-hit:#1e3354;
+}
+/* 夜: 面と文字を暗面向けに持ち上げる（地の色だけ変えると文字が沈む） */
+body.present[data-ptheme="yoru"] .pres-stage{background:
+  radial-gradient(1200px 700px at 78% -14%, rgba(78,168,222,.13), transparent 58%),
+  radial-gradient(900px 560px at -6% 4%, rgba(224,165,46,.08), transparent 55%), var(--p-bg)}
+body.present[data-ptheme="yoru"] .pres-kick,
+body.present[data-ptheme="yoru"] .pres-body .expill,
+body.present[data-ptheme="yoru"] .pres-body .anspill,
+body.present[data-ptheme="yoru"] .pres-body .step.on .sno,
+body.present[data-ptheme="yoru"] .pres-body .qbtn.active,
+body.present[data-ptheme="yoru"] .pres-body .oneline .olk{color:#0d1219}
+body.present[data-ptheme="yoru"] .pres-body .legend,
+body.present[data-ptheme="yoru"] .pres-body .cap{color:#b9c4d6}
+body.present[data-ptheme="yoru"] .pres-body .mlab{color:#aab6c9}
+body.present[data-ptheme="yoru"] .pres-body .panel,
+body.present[data-ptheme="yoru"] .pres-body .mcard,
+body.present[data-ptheme="yoru"] .pres-body .canvas-box{background:#1b202b}
+body.present[data-ptheme="yoru"] .pres-body .sw,
+body.present[data-ptheme="yoru"] .pres-body .qcap,
+body.present[data-ptheme="yoru"] .pres-body .ctl-row label.sl{color:#cbd5e6}
+body.present[data-ptheme="yoru"] .pres-body .qbtn{background:#232a38; color:#dfe6f2;
+  border-color:#3a4257}
+body.present[data-ptheme="yoru"] .pres-body .qbtn .n{background:#2f3a4c; color:#9fc4ee}
+body.present[data-ptheme="yoru"] .pres-body .sw .track{background:#3a4257}
+body.present[data-ptheme="yoru"] .pres-body .banner.warn{background:#2c1614; border-color:#5d2a26;
+  color:#f0a79f}
+body.present[data-ptheme="yoru"] .pres-body .hk-chip{background:var(--p-amber-tint);
+  border-color:#4a3d1e; color:#e8bd63}
+
+/* ===== 19. スマホ（通常表示） ============================================= */
+@media (max-width:600px){
+  .page{padding:26px 18px 24px; margin:12px; border-radius:12px}
+  h1{font-size:25px}
+  /* 指で押す標的を確保する。実測（390px）では 操作ボタン 33px・補足チップ 25px・
+     拡大 31px しかなく、どれも指の目安 40px を下回っていた。字は変えず高さだけ足す。
+     button は中身を自動で上下中央に置くので、min-height だけで文字は動かない。 */
+  .qbtn, .qbtn.qstage, .fig-zoom{min-height:40px}
+  .hk-chip{min-height:36px}
+  .hk-qbtn{min-height:38px}
+  .sw{min-height:40px}
+  /* 図の「拡大」は、図を見たあとに使うもの。スマホでは図枠を縦の並びにして最後へ回し、
+     その分だけ canvas を上げる。実測（390x844）で 01 の canvas 下端が 81px
+     画面からはみ出していた。00 と 02 は元から収まっている。 */
+  .figbox{display:flex; flex-direction:column}
+  .figbox > .zoomrow{order:9; margin-top:4px}
+  /* 段階バーは 1 行に収める。4 つの段階チップが折り返すと、指の標的を 40px に
+     そろえた分だけ丈が伸び（実測 119px）、その分そのまま図が下へ押し出される。
+     標的を小さく戻すのは本末転倒なので、器の中だけ横に流す。
+     ページ本体は横に流さない（.formula と同じ扱い）。 */
+  .stagebar .qrow{flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch;
+    scrollbar-width:none; padding-bottom:2px; margin-bottom:0}
+  .stagebar .qrow::-webkit-scrollbar{display:none}
+  .stagebar .qbtn{flex:0 0 auto}
+  .exbox .exhead{flex-wrap:wrap; row-gap:6px}
+  .exbox .expill, .exbox .extime{flex:none; white-space:nowrap}
+  .ansbar{flex-wrap:wrap; row-gap:6px}
+  .ansbar .anspill{flex:none; white-space:nowrap}
+  /* 幅の広い数式は、その要素だけ横スクロール（ページ本体は横に流さない） */
+  .formula{display:block; overflow-x:auto; overflow-y:hidden;
+    -webkit-overflow-scrolling:touch; max-width:100%}
+  .modal-body, .modal-head{padding-left:18px; padding-right:18px}
+}
+
+/* ===== 20. スマホの説明モード =============================================
+   投影の「1画面1スライド」は、スマホの縦幅では入り切らない。
+   切り落とし（overflow:hidden）をやめ、縦スクロールで読む形に読み替える。
+   発火条件は幅だけでは足りない。横持ち（844x390）は幅で素通りするので高さも見る。 */
+@media (max-width:820px), (max-height:600px){
+  body.present .pres-stage{padding:8px 12px calc(var(--pbar,96px) + 14px)}
+  body.present .page{padding:0 !important}
+  body.present .pres-slide.on{gap:10px; grid-template-rows:auto minmax(0,1fr)}
+  body.present .pres-body{overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch}
+  body.present .pres-body > .figbox{flex:none !important}
+  body.present .pres-toggle, body.present .theme-toggle{display:none !important}
+
+  body.present .pres-h{font-size:clamp(20px,5.4vw,28px); line-height:1.35}
+  body.present .pres-kick{font-size:13px; padding:4px 12px}
+  body.present .pres-head{gap:10px}
+  body.present .pres-body{font-size:16px; line-height:1.75}
+  body.present .pres-body p{margin:10px 0}
+  body.present .pres-body .formula{font-size:1em}
+  body.present .pres-slide:first-child .lead{font-size:clamp(17px,4.4vw,22px); line-height:1.7}
+
+  body.present .pres-body .exbox{border-radius:14px; border-width:1.5px}
+  body.present .pres-body .exbox .exhead{padding:9px 14px}
+  body.present .pres-body .expill{font-size:14px; padding:3px 12px}
+  body.present .pres-body .extime{font-size:13px; padding:3px 10px}
+  body.present .pres-body .exbody{padding:12px 14px 14px}
+  body.present .pres-body .steps{gap:8px}
+  body.present .pres-body .step{padding:9px 11px}
+  body.present .pres-body .step .sno{width:28px; height:28px; font-size:15px}
+  body.present .pres-body .step .smath{font-size:1em}
+  body.present .pres-body .step .snote{font-size:.8em}
+  body.present .pres-body .ansbar{padding:12px 14px; font-size:1.05em; border-radius:12px;
+    border-width:1.5px}
+  body.present .pres-body .anspill{font-size:14px; padding:3px 12px}
+  body.present .pres-body .callout{padding:13px 15px; border-radius:12px}
+  body.present .pres-body .banner{font-size:1em; padding:12px 15px; border-radius:12px;
+    border-width:1.5px; margin-bottom:10px}
+  body.present .pres-body .banner small{font-size:.82em}
+
+  body.present .pres-body .metrics{
+    grid-template-columns:repeat(auto-fit,minmax(138px,1fr)) !important; gap:10px}
+  body.present .pres-body .mcard{padding:10px 12px; border-top-width:4px; border-radius:11px}
+  body.present .pres-body .mlab{font-size:13px; margin-bottom:4px}
+  body.present .pres-body .mval{font-size:clamp(22px,6.2vw,31px) !important; line-height:1.15}
+
+  /* 図まわり — DOM 順（操作が先）のままだと、開いた瞬間に操作パネルで画面が埋まり
+     図が1枚も見えない。「図 → 凡例 → 操作 → 指標 → 説明」へ並べ替える。 */
+  body.present .pres-body .figbox{display:flex !important; flex-direction:column;
+    height:auto !important; overflow:visible}
+  body.present .pres-body .figbox > .banner{order:0}
+  body.present .pres-body .figbox > .canvas-box,
+  body.present .pres-body .figbox > .chart-wrap{order:1}
+  body.present .pres-body .figbox > .legend{order:2}
+  body.present .pres-body .figbox > .panel{order:3}
+  body.present .pres-body .figbox > .metrics{order:4}
+  body.present .pres-body .figbox > .cap{order:5}
+  body.present .pres-body .canvas-box{height:auto}
+  body.present .pres-body .canvas-box canvas{height:auto; object-fit:fill}
+  body.present .pres-body .panel{padding:11px 13px; border-radius:12px; margin-bottom:10px}
+  body.present .pres-body .panel .qbtn{font-size:14px; padding:6px 13px}
+  body.present .pres-body .qcap, body.present .pres-body .ctl-row label.sl{font-size:14px}
+  body.present .pres-body .sl-out{font-size:18px; min-width:44px}
+  body.present .pres-body .sw{font-size:14px}
+  body.present .pres-body .legend{font-size:14px; gap:14px}
+  body.present .pres-body .cap{font-size:13.5px; line-height:1.6}
+  body.present .pres-body input[type=range]{height:26px}
+
+  /* grid/flex の子は既定で min-width:auto。0 にして「箱は器に収まり中身だけ流れる」形に */
+  body.present .pres-body .steps, body.present .pres-body .step{min-width:0}
+  body.present .pres-body .step > *{min-width:0}
+  body.present .pres-body .formula{display:block; overflow-x:auto; overflow-y:hidden;
+    -webkit-overflow-scrolling:touch; max-width:100%}
+
+  body.present .pres-bar{flex-wrap:wrap; gap:8px 10px; font-size:14px;
+    padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px))}
+  body.present .pres-count{font-size:15px; white-space:nowrap; order:1}
+  body.present .pres-dots{order:2; flex:1 1 50px; gap:5px}
+  body.present .pres-nav{order:3; gap:6px}
+  body.present .pres-nav button{font-size:14px; padding:6px 12px; white-space:nowrap}
+  body.present .pres-hint{display:none !important}
+  body.present .pres-pal{order:4; flex:1 0 100%; justify-content:center; gap:7px; margin:0}
+  body.present .pres-pal .pl{font-size:12px; white-space:nowrap}
+  body.present .pres-swatch{width:24px; height:24px}
+  body.present .pres-swatch i{inset:7px !important}
+}
+/* 横長のスマホ・小型タブレットに投影用の3列を出さない
+   （min-aspect-ratio だけだと 844x390 が3列になって潰れる） */
+@media (max-width:900px), (max-height:600px){
+  body.present .pres-slide.has-fig .pres-body .figbox{
+    grid-template-columns:1fr !important; grid-template-rows:auto !important}
+  body.present .pres-slide.has-fig .pres-body .canvas-box,
+  body.present .pres-slide.has-fig .pres-body .chart-wrap,
+  body.present .pres-slide.has-fig .pres-body .panel,
+  body.present .pres-slide.has-fig .pres-body .metrics,
+  body.present .pres-slide.has-fig .pres-body .legend,
+  body.present .pres-slide.has-fig .pres-body .cap{
+    grid-column:1 !important; grid-row:auto !important; overflow:visible !important}
+}
+/* 画面の大きさによらず、入り切らない内容を切り落とさない。
+   読めないより、スクロールできるほうが害が小さい。 */
+body.present .pres-body{overflow-y:auto}
+
+/* ===== 21. 参考書の強調装置 ===============================================
+   受験生は参考書の版面を大量に見ている。実測では本文 15.5px・h2 18px で、
+   見出しと本文の差が **1.09 倍**しかなく、色面も名札も無かった。
+   だから「字が小さい」「装飾が弱い」「どこを強調しているか分からない」になる。
+
+   合わせ先は、同じ単元の自前の印刷教材（二分探索の範囲_問題.html）と、
+   ベストフィット・螢雪の実誌面。共通していた装置は 4 つ:
+     ① 役割ごとの固定の名札（解答・POINT・例1 …）— 同じ役割はいつも同じ名札
+     ② 色面の 3 トーン（濃＝見出し帯／薄＝囲み／白＝本文）
+     ③ 見出しは本文よりはるかに大きく、色帯で挟む
+     ④ マーカーは本文の核だけに引く（引きすぎると効かなくなる）
+
+   ★ 名札は「上手に教える匂い」とは別物。嫌われるのは説教くさい**文**であって、
+     視覚的な段差そのものではない。前回はそこを取り違えて装置ごと捨てた。
+   ========================================================================== */
+
+/* --- 級数の底上げ（実測値からの引き上げ） --- */
+body{font-size:17px; line-height:1.8}
+main.page p{font-size:17px}
+main.page .lead{font-size:18.5px; font-weight:700; color:var(--ink); line-height:1.75}
+/* ★ 詳細度を既存に合わせる。実測で 4 つが効いていなかった:
+   `.step .snote`(2クラス) が `.snote`(1クラス) に勝ち、`.figbox .mval` も同様。
+   `.cap` は `main.page p`(クラス1+要素2) に負けて本文と同じ級数まで膨らんだ。
+   !important では殴らない。説明モードの指定は 3 クラスなので、これより強く残る。 */
+.step .snote{font-size:15px; line-height:1.78}
+.step .smath{font-size:17.5px}
+.figbox .mlab{font-size:12.5px}
+.figbox .mval{font-size:24px}
+.banner{font-size:18px}
+.banner small{font-size:14px}
+main.page .cap, main.page .foot{font-size:13.5px}
+.qbtn{font-size:14.5px}
+.glossary summary{font-size:16.5px}
+.gloss dt{font-size:16px}
+.gloss dd{font-size:16px}
+@media(min-width:1280px){
+  body{font-size:17.5px}
+  main.page p{font-size:17.5px}
+  main.page h1{font-size:40px; letter-spacing:-.01em}
+}
+
+/* --- 見出し：色帯で挟み、本文の 1.4 倍以上にする --- */
+main.page h2{
+  font-size:25px; line-height:1.45; margin:36px 0 15px; padding:0 0 10px;
+  border-bottom:3px solid var(--navy);
+  display:flex; align-items:center; gap:12px;
+}
+main.page h2 .bar{
+  flex:none; width:8px; height:26px; border-radius:2px;
+  background:var(--navy); margin:0;
+}
+/* 見出しの右に置く英字（自前プリントの BINARY SEARCH と同じ役) */
+main.page h2 .en{
+  margin-left:auto; font-size:12px; font-weight:700; letter-spacing:.18em;
+  color:var(--ink-faint); white-space:nowrap;
+}
+
+/* --- ① 役割の名札。同じ役割はいつも同じ名札にする --- */
+.pill{
+  display:inline-block; background:var(--navy); color:var(--c-white);
+  font-weight:700; font-size:13px; letter-spacing:.04em;
+  padding:3px 12px; border-radius:5px; margin-right:10px;
+  white-space:nowrap; vertical-align:1px;
+}
+.pill.warn{background:var(--warn)}
+.pill.ok{background:#1f7a4d}
+.pill.deep{background:var(--band)}
+
+/* --- ④ マーカー。核だけに引く --- */
+.mk{background:linear-gradient(transparent 58%, var(--mk-y) 58%); font-weight:700}
+.mk.p{background:linear-gradient(transparent 58%, var(--mk-p) 58%)}
+.mk.b{background:linear-gradient(transparent 58%, var(--mk-b) 58%)}
+
+/* --- POINT の黒帯（自前プリントと同じ形） --- */
+.pointbox{border:2px solid var(--band); border-radius:9px; overflow:hidden; margin:24px 0}
+.pointbox .ph{
+  background:var(--band); color:var(--band-ink); font-weight:700;
+  letter-spacing:.36em; text-align:center; font-size:14px; padding:8px 0 8px .36em;
+}
+.pointbox dl{
+  margin:0; padding:15px 19px; display:grid;
+  grid-template-columns:auto 1fr; gap:9px 16px; align-items:baseline;
+}
+.pointbox dt{font-weight:700; color:var(--navy); white-space:nowrap; font-size:16.5px}
+.pointbox dd{margin:0; font-size:16.5px; line-height:1.7}
+
+/* --- 段の梯子：番号バッジを大きく、選択中の色面を強くする --- */
+.step{padding:12px 14px}
+.step .sno{width:30px; height:30px; font-size:16px; flex:none}
+.step.on{background:var(--navy-tint); border-color:var(--navy)}
+.step.on .sno{background:var(--navy); color:var(--c-white); border-color:var(--navy)}
+.step.on .smath{color:var(--navy-deep)}
+
+/* --- ダークでも同じ段差が出るようにする --- */
+html[data-theme="dark"]{
+  --mk-y:#5d4d18; --mk-p:#5d2338; --mk-b:#20345e;
+  --band:#e8edf5; --band-ink:#141a24;
+}
+html[data-theme="dark"] .pointbox dt{color:var(--navy-mid)}
+
+/* --- 見出しの折れ ---
+   実測（1440px）: 左カラムは 557px しかなく、40px の 14 文字が収まらずに
+   最後の 1 文字「す」だけが次行へ落ちていた（最終行の幅 40px）。
+   40px は左カラムが広い画面だけにし、それ以下は収まる級数へ。
+   折れるときは均等に折る（balance は未対応ブラウザでは無視されるだけ）。 */
+/* balance は見出しだけに当てる。本文調の行に当てると「範囲／が縮まなくなり」のように
+   文節の途中で折れて、かえって読みにくくなる（実測で 01 のリードに出た）。 */
+main.page h1, main.page h2{text-wrap:balance}
+/* ★ 和文の既定の折り返しは**文字単位**なので、見出しが「範囲か／ら外す」のように
+   語の途中で切れる。balance を外すと今度は「調べ終えた中央／は、範囲から外す」と
+   助詞が行頭に来る。どちらも指定の問題ではなく、折る単位の問題。
+   body の見出しに文節境界の ZWSP を入れてあるので、keep-all でそこだけを折り位置にする。
+   overflow-wrap:anywhere は最後の逃げ道（ZWSP が無い見出しでも版面から溢れない）。 */
+main.page h1{word-break:keep-all; overflow-wrap:anywhere}
+@media(min-width:1280px) and (max-width:1599px){
+  main.page h1{font-size:34px}
+}
+@media(min-width:1600px){
+  main.page h1{font-size:40px}
+}
+
+/* --- スマホ：図を先に出す ---
+   実測（390x844）: 級数を上げたぶん図の上が伸び、canvas の下端が 52px 画面から出た。
+   上の要素は 題115 + リード92 + 見出し43 + 導入文89 + 空き で、詰めるには無理がある。
+   そこで **CSS の order** で図を題とリードの直後へ回す。
+   ★ DOM の順は変えない。説明モードはスライドを DOM 順で組むので、順番が変わらない。
+     前に「図を前へ出すと説明モードの順が変わる」として見送ったが、それは DOM を動かす
+     案の話で、order とは別物だった。 */
+@media(max-width:600px){
+  main.page{display:flex; flex-direction:column}
+  main.page > *{order:2}
+  main.page > .kicker, main.page > h1, main.page > .lead{order:0}
+  main.page > .figbox{order:1}
+}
+
+/* --- スマホ：段差は保ったまま、少しだけ詰める --- */
+@media(max-width:600px){
+  body{font-size:16.5px}
+  main.page p{font-size:16.5px}
+  main.page .lead{font-size:17.5px}
+  main.page h2{font-size:21px; margin:28px 0 12px}
+  main.page h2 .bar{height:22px; width:7px}
+  main.page h2 .en{display:none}
+  /* ★ balance はスマホでは外す。幅が狭いと「両行の長さを揃える」ほうが優先され、
+     読点を無視した位置（調べ終えた中央／は、範囲から外す）で折れて読みにくくなる。
+     既定の折り返しなら禁則処理が働き、読点のあとで折れる。
+     同じ指定が画面幅で逆に働く例なので、幅ごとに実測して決める。 */
+  main.page h1, main.page h2{text-wrap:wrap}
+  .step .snote{font-size:14.5px}
+  .figbox .mval{font-size:21px}
+  .banner{font-size:16.5px}
+  .pointbox dt, .pointbox dd{font-size:15.5px}
+}
+
+/* ===== 22. 参照の作りに寄せる ==============================================
+   名指しされていた実物（東進 superelite の講義ツール／数学キットのランダムウォーク）を
+   実際に開いて型を取った。私の版に無かったのは装置の種類ではなく **強度と見せ方**:
+     ① 紙が浮いていない（影が無い）
+     ② 図枠の中の操作パネルを padding 12/14 まで詰めていた（参照は 18/20）
+     ③ 「ラベル＋スライダー＋大きな数値」の行が無い（ピルに置き換えていた）
+     ④ トグルスイッチと区切り罫が無い
+     ⑤ 凡例が無い
+     ⑥ 英字ラベルが見出しの右端にあり、参照のように**見出しの上**に出ていない
+   ========================================================================== */
+
+/* ① 紙を浮かせる */
+main.page{box-shadow:0 1px 3px rgba(20,30,45,.05), 0 8px 28px rgba(20,30,45,.06)}
+
+/* ② 操作パネルは「詰めない」が「嵩ませない」
+   実測（1440px）: canvas 281 に対して操作パネルが 276 で、図と操作が同じ高さだった。
+   参照は canvas 511 / 操作 162（図が 3.15 倍・図枠の 55%）。
+   余白は残しつつ行間を締めて、主役を図に戻す。 */
+.figbox .panel{padding:15px 18px}
+.figbox .qrow{margin-bottom:9px}
+.figbox .ctl-row{margin-bottom:10px}
+.figbox .panel > :last-child{margin-bottom:0}
+.figbox .stagebar{padding:9px 12px; margin-bottom:9px}
+.figbox .stagebar .qrow{margin-bottom:0}
+.figbox .banner{margin-bottom:9px}
+
+/* ③ ラベル＋スライダー＋大きな数値 */
+.ctl-row{display:flex; align-items:center; gap:14px; margin-bottom:14px}
+.ctl-row label.sl{font-size:15px; font-weight:700; color:var(--ink-soft);
+  white-space:nowrap; min-width:84px}
+.ctl-row input[type=range]{flex:1; min-width:0; height:26px; accent-color:var(--navy)}
+.sl-out{font-size:23px; font-weight:700; color:var(--navy-deep); min-width:62px;
+  text-align:right; font-feature-settings:"tnum"; line-height:1.1}
+.qcap{font-size:15px; font-weight:700; color:var(--ink-soft); min-width:84px}
+
+/* ④ トグルは区切り罫の下に置き、実物のスイッチにする */
+.switches{display:flex; flex-wrap:wrap; gap:22px; margin-top:16px; padding-top:15px;
+  border-top:1px solid var(--line)}
+.sw{position:relative; display:inline-flex; align-items:center; gap:10px; cursor:pointer;
+  font-size:15px; color:var(--ink); font-weight:700}
+.sw input{position:absolute; opacity:0; width:0; height:0}
+.sw .track{width:40px; height:23px; border-radius:999px; background:var(--line-2);
+  transition:.18s; position:relative; flex:none}
+.sw .track::after{content:""; position:absolute; top:2.5px; left:2.5px; width:18px; height:18px;
+  border-radius:50%; background:var(--c-white); transition:.18s;
+  box-shadow:0 1px 2px rgba(0,0,0,.22)}
+.sw input:checked + .track{background:var(--navy)}
+.sw input:checked + .track::after{transform:translateX(17px)}
+.sw input:focus-visible + .track{box-shadow:0 0 0 3px var(--navy-tint)}
+
+/* ⑤ 凡例（図が何を描いているかを図の外に出す） */
+.legend{display:flex; flex-wrap:wrap; gap:18px; margin:9px 0 10px;
+  font-size:13px; color:var(--ink-soft); font-weight:700}
+.legend span{display:flex; align-items:center; gap:7px}
+.legend .sw-key{width:24px; height:13px; border-radius:3px; display:inline-block; flex:none}
+
+/* ⑥ 英字ラベルは見出しの「上」に、字間を広げて小さく */
+.enrow{font-size:12px; font-weight:700; letter-spacing:.2em; color:var(--navy-mid);
+  margin:34px 0 3px; display:flex; align-items:center; gap:9px}
+.enrow::before{content:""; width:7px; height:7px; border-radius:50%;
+  background:var(--navy-mid); flex:none}
+.enrow + h2{margin-top:0}
+main.page h2 .en{display:none}          /* 右端の英字はやめる（上へ移した） */
+
+/* ⑦ 見出しの塗り分け（参照は 2 色で意味を切っている） */
+.hi{color:var(--navy)}
+
+@media(max-width:600px){
+  /* ★ スマホでラベルを横に固定したまま横並びを続けると、390px では
+     「動かす ▶自動で進む ←」で切れて「→ 最初から」が次行に落ちる、という
+     不格好な折り返しになる（実測で確認）。ラベルを上に置いて縦に積む。 */
+  .figbox .qrow, .figbox .ctl-row{
+    display:grid; grid-template-columns:1fr auto; gap:6px 10px;
+    align-items:center; margin-bottom:13px;
+  }
+  .figbox .qrow > .qcap, .figbox .ctl-row > label.sl{
+    grid-column:1 / -1; min-width:0; font-size:13.5px; margin-bottom:1px;
+  }
+  /* ボタンの並びは、ラベルの下で自由に折り返させる */
+  .figbox .qrow{grid-template-columns:1fr}
+  .figbox .qrow > .qbtn{justify-self:start}
+  .figbox .qrow{display:flex; flex-wrap:wrap; gap:8px}
+  .figbox .qrow > .qcap{flex:0 0 100%; margin-bottom:2px}
+  .figbox .ctl-row > input[type=range]{grid-column:1; min-width:0}
+  .figbox .ctl-row > .sl-out{grid-column:2}
+  .sl-out{font-size:21px; min-width:56px}
+  .enrow{font-size:11px; margin-top:26px}
+}
+
+/* ===== 23. 版面のデザイン ==================================================
+   実測で「強弱が無い」の正体が割れた。級数が小さいのではなく **段が多すぎる**。
+   私の版は 28 種を 34〜11px に詰めており、隣との差が 0〜1px の段が 12 組あった
+   （25→24→23、18.5→18→17.5→16.5→16→15.8→15→14.5→14→13.5→13→12.5→12→11.5→11）。
+   梯子ではなく連続体で、目は段差を読めない。
+   superelite のツールは 40 → 17 → 13.5 → 13 → 12 → 9.5 の 6 段で、
+   **40 と 17 のあいだに何も無い**。跳びがあるから強弱が出る。
+
+   ここで 6 段に畳む:
+     L1 見出し 44 / L2 数値 28 / L3 中見出し 25 / L4 本文 17.5 / L5 補助 13.5 / L6 ラベル 12
+   併せて、3 つの参照に共通していた版面（温かい地・浮く大角丸カード・極小英字ラベル・
+   2 色の見出し・右上の薄い巨大円・太い罫）を入れる。
+   ========================================================================== */
+
+/* --- 地を温かいグレーにして、紙を浮かせる --- */
+body{background:var(--ground)}
+main.page{
+  border-radius:26px; border-color:transparent;
+  box-shadow:0 2px 6px rgba(20,30,45,.05), 0 22px 60px rgba(20,30,45,.09);
+  position:relative; overflow:hidden;
+}
+/* 右上の薄い巨大円（カードの角からはみ出す）
+   ★ ::before は使えない。74 行目の .page::before が頁上部のグラデーション帯を描いており、
+     そこへ重ねると帯の background と height を奪って帯が消える。さらに元の規則の
+     left:0 だけが生き残り、円が右ではなく左端に貼り付く（実測で確認）。
+     擬似要素を奪わず ::after に置く。 */
+main.page::after{
+  content:""; position:absolute; top:-390px; right:-180px; left:auto;
+  width:560px; height:560px; border-radius:50%;
+  background:var(--ghost); pointer-events:none; z-index:0;
+}
+main.page > *{position:relative; z-index:1}
+
+/* --- ヒーローを全幅に出す（左カラム 557px では 44px の見出しが入らない） --- */
+@media(min-width:1280px){
+  /* ★ 行も明示する。図は grid-row:1/240 を持っているので、全幅の行（1/-1）は
+     1〜240 行目に置けず、ヒーローが 240 行目より後ろへ送られて消えた（実測で確認）。
+     ヒーローを 1〜3 行、図を 4 行目からにして衝突をなくす。
+     3 頁とも kicker → h1 → lead → figbox の順なので、この割り当てで揃う。 */
+  .page:has(> .figbox) > .kicker{grid-column:1/-1 !important; grid-row:1}
+  .page:has(> .figbox) > h1{grid-column:1/-1 !important; grid-row:2; max-width:1020px}
+  .page:has(> .figbox) > .lead{grid-column:1/-1 !important; grid-row:3; max-width:760px}
+  .page > .figbox{grid-row:4/240 !important}
+  main.page h1{font-size:44px; line-height:1.28; letter-spacing:-.015em; margin:6px 0 10px}
+  main.page .lead{font-size:17.5px; max-width:760px}
+}
+
+/* --- L1〜L6 の 6 段に畳む（間の段を全部この 6 つへ寄せる） --- */
+main.page h1{font-weight:800}
+main.page h2{font-size:25px}
+.mval, .sl-out{font-size:28px; font-weight:800; color:var(--navy-deep)}
+main.page p, .step .snote, .step .smath, .pointbox dt, .pointbox dd,
+main.page .lead, .banner, .formula{font-size:17.5px}
+.step .smath, .pointbox dt, .banner, main.page .lead{font-weight:700}
+.step .sno{font-size:17.5px; font-weight:800}
+.qcap, .ctl-row label.sl, .qbtn, .hk-chip, main.page .cap, main.page .foot,
+.glossary summary, .banner small, .gloss dt, .gloss dd,
+.sn-prev, .sn-up, .sn-next{font-size:13.5px}
+.qcap, .ctl-row label.sl, .qbtn, .hk-chip, .glossary summary, .gloss dt{font-weight:700}
+.mlab, .legend, .badge, .enrow, .pointbox .ph, .fig-zoom, .kicker,
+.step .sno + .sbody .sub, .qbtn .n{font-size:12px; font-weight:700}
+.enrow, .pointbox .ph, .badge{letter-spacing:.18em}
+
+/* ★ 詳細度を合わせて畳み損ねを潰す。実測で 5 つ残っていた:
+   `.figbox .mval`(24px) と `.figbox .mlab`(12.5px) が 2 クラスで、私の 1 クラス指定に
+   勝っていた（今セッション 2 度目の同じ罠）。用語のおさらいの見出しと語釈も同じ。
+   ※ `.formula sub`(14.6px) は直さない。下付き文字をブラウザが親の 0.83 倍に落とす
+     正しい挙動で、段の乱れではない。潰すと log の添字が本文と同じ大きさになる。 */
+.figbox .mval, .metrics .mval{font-size:28px}
+.figbox .mlab, .metrics .mlab{font-size:12px}
+main.page .glossary summary{font-size:13.5px}
+main.page .gloss dt, main.page .gloss dd{font-size:13.5px}
+
+/* --- セクションの罫を太く、英字ラベルを主題色で --- */
+main.page h2{border-bottom-width:2.5px; padding-bottom:12px; margin:8px 0 16px}
+.enrow{margin:40px 0 4px; color:var(--navy)}
+.enrow::before{width:6px; height:6px}
+
+/* --- 図枠・パネルも大角丸にそろえる --- */
+.figbox .panel, .canvas-box, .pointbox, .metrics .mcard, .glossary{border-radius:14px}
+.figbox .stagebar{border-radius:14px}
+
+@media(max-width:600px){
+  main.page{border-radius:18px; margin:10px}
+  main.page::after{width:330px; height:330px; top:-250px; right:-110px}
+  main.page h1{font-size:27px; font-weight:800}
+  main.page h2{font-size:21px}
+  main.page p, .step .snote, main.page .lead, .banner{font-size:16.5px}
+  .mval, .sl-out{font-size:24px}
+}
+
+/* ===== 24. 図を全幅の主役にする ============================================
+   「左に本文・右に図」の分割では、1440px でも図に 713px しか渡らず、
+   9 個の箱は幅で頭打ち（bw=69）になっていた。参照のうち実際に
+   インタラクティブ・ツールである higgs-hunt / fraud-detect は、どちらも
+   **図が画面を占め、操作子がその直下に横一列、読み物は下**という作り。
+   分割をやめて 1 カラムにすると図に 1068px 渡り、箱も帯も大きくなる。
+   読み物だけは行長が伸びすぎないよう 820px に抑える。 */
+@media(min-width:1280px){
+  .page:has(> .figbox){display:block; max-width:1180px; padding:52px 56px 44px}
+  .page > .figbox{position:static !important; margin:0 0 34px}
+  .page:has(> .figbox) > .kicker,
+  .page:has(> .figbox) > h1,
+  .page:has(> .figbox) > .lead{max-width:none}
+  /* 読み物は行長を抑える（図の幅で本文を流すと 60 字を超えて読みにくい） */
+  .page:has(> .figbox) > p,
+  .page:has(> .figbox) > h2,
+  .page:has(> .figbox) > .enrow,
+  .page:has(> .figbox) > .steps,
+  .page:has(> .figbox) > .pointbox,
+  .page:has(> .figbox) > .glossary,
+  .page:has(> .figbox) > .foot{max-width:820px}
+}
+
+/* ===== 25. 横長講義形 ＋ デザインの刷新 ====================================
+   ご依頼は「PC・Chromebook では横長講義形」。24 で 1 カラムの縦積みにしたのは
+   その逆で、頁が縦に伸びて第 1 画面に収まらなくなっていた。
+   図（大）を左、操作パネルを右レールに並べ、段階バー・判定バナー・指標は全幅。
+
+   併せて、今まで手を付けていなかった 3 つを刷新する:
+     ① 色 — 紺一色＋灰＋赤しか無かった。図の地に色面、中央 m に琥珀、役割で色を割る
+     ② 囲い — 白いカードに細い灰枠、の一律使いをやめ、役割ごとに作り分ける
+     ③ 太さ — 800 / 700 / 500 の対比と、数字の等幅
+   ========================================================================== */
+@media(min-width:1280px){
+  /* ★ 図はヒーローの直下に置く。英字ラベル・中見出し・導入文を先に積むと、
+     実測で canvas の上端が 650px まで下がり、1000px の画面から図が出た。
+     投影で使う版面なので、図が第 1 画面に無いのは目的に反する。
+     並べ替えは order で行う（DOM は動かさないので投影のスライド順は変わらない）。 */
+  .page:has(> .figbox){display:flex; flex-direction:column;
+    max-width:1340px; padding:52px 56px 44px}
+  .page:has(> .figbox) > *{order:2; align-self:stretch}
+  .page:has(> .figbox) > .kicker,
+  .page:has(> .figbox) > h1,
+  .page:has(> .figbox) > .lead{order:0}
+  .page:has(> .figbox) > .figbox{order:1}
+
+  /* ★ グリッドは通常表示だけ。投影は生の .figbox を面へ借りるので、
+     明示の行番号を持ったまま移すと器と噛み合わず canvas が 0px に潰れる
+     （実測 s2:図が縮んだ 0/346px）。 */
+  body:not(.present) .page > .figbox{position:static !important; margin:0 0 34px;
+    display:grid; grid-template-columns:minmax(0,1fr) 344px; column-gap:22px}
+  body:not(.present) .figbox > .zoomrow{grid-column:1/-1}
+  body:not(.present) .figbox > .stagebar{grid-column:1/-1}
+  body:not(.present) .figbox > .banner{grid-column:1/-1}
+  body:not(.present) .figbox > .canvas-box{grid-column:1}
+  body:not(.present) .figbox > #ctlpanel{grid-column:2; grid-row:4/6; align-self:stretch}
+  body:not(.present) .figbox > .legend{grid-column:1}
+  body:not(.present) .figbox > .metrics{grid-column:1/-1}
+  body:not(.present) .figbox > .cap{grid-column:1/-1}
+  .page:has(> .figbox) > p,
+  .page:has(> .figbox) > h2,
+  .page:has(> .figbox) > .enrow,
+  .page:has(> .figbox) > .steps,
+  .page:has(> .figbox) > .pointbox,
+  .page:has(> .figbox) > .glossary,
+  .page:has(> .figbox) > .foot{max-width:840px}
+}
+
+/* ① 図は色面の上に置く（白の中に白い図だと、図がどこまでか分からない） */
+/* 横の余白は入れない。canvas の幅がそのぶん縮み、図の描画がはみ出す側へ倒れる
+   （実測: 390px 端末で 330→310px になり、配列の行 326px が外へ出た）。
+   色面は残し、上下だけ空ける。 */
+.canvas-box{background:var(--field); border-color:var(--field-bd); padding:14px 0}
+
+/* ② 囲いを役割ごとに作り分ける */
+.figbox > #ctlpanel{background:var(--paper); border:1px solid var(--line);
+  box-shadow:0 1px 2px rgba(20,30,45,.04), 0 10px 26px rgba(20,30,45,.07)}
+.figbox .stagebar{background:var(--paper); border-color:var(--line)}
+/* 段の梯子は枠を外して、選んだ段だけ縦罫と色面で示す */
+.steps .step{border:none; border-left:3px solid transparent; border-radius:0;
+  padding:12px 0 12px 15px; background:none}
+.steps .step.on{border-left-color:var(--navy); background:linear-gradient(90deg,var(--navy-tint),transparent 72%)}
+.steps .step + .step{border-top:1px solid var(--line)}
+/* 指標は上辺に色を差す */
+.metrics .mcard{border-top:3px solid var(--line-2); background:var(--paper)}
+.metrics .mcard.hl{border-top-color:var(--navy); background:var(--navy-tint)}
+.metrics .mcard.pk{border-top-color:var(--warn); background:var(--warn-tint)}
+
+/* ③ 太さの対比と数字の等幅 */
+.mval, .sl-out{font-variant-numeric:tabular-nums; font-weight:800; letter-spacing:-.01em}
+main.page h1{font-weight:800}
+.step.on .smath{font-weight:800}
+main.page p{font-weight:500}
+.banner{font-weight:700}
+
+/* 中央 m は琥珀で。青（範囲）と赤（異常）から独立した役割を持たせる */
+.legend .sw-key.mid{border:2px solid var(--amber); background:var(--amber-tint)}
+.badge.wk{background:var(--amber-tint); border-color:var(--amber-bd); color:var(--amber)}
+
+@media(max-width:600px){
+  .canvas-box{padding:11px 0}
+  .steps .step{padding:11px 0 11px 13px}
+}
+
+/* ===== 26. 横一枚に収める ==================================================
+   投影で使う版面なので、スクロールせずに 1 画面で完結させる。
+   ヒーローを詰め、図・操作・指標・段の梯子を 1 画面に入れ、
+   読み物は畳んだ 1 行にする（開けば読める）。 */
+@media(min-width:1280px){
+  .page:has(> .figbox){padding:26px 40px 22px; margin:12px auto}
+  main.page h1{font-size:34px; margin:2px 0 4px}
+  main.page .lead{font-size:16.5px; margin:0 0 14px}
+  .kicker{margin-bottom:8px}
+  .page > .figbox{margin:0 0 14px}
+  .figbox .panel{padding:13px 16px}
+  .figbox .qrow{margin-bottom:8px}
+  .figbox .ctl-row{margin-bottom:9px}
+  .figbox .stagebar{padding:8px 12px; margin-bottom:8px}
+  .figbox .banner{margin-bottom:8px; padding:11px 16px}
+  .figbox .metrics{margin:10px 0 0}
+  .figbox .mcard{padding:8px 12px}
+  .mval, .sl-out{font-size:24px}
+  .figbox .cap{display:none}            /* 図の下の注は畳んだ読み物の中で足りる */
+
+  /* 段の梯子は横一列にして高さを食わない */
+  .steps{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:0 0 12px}
+  .steps .step{border:1px solid var(--line); border-radius:10px;
+    padding:9px 12px; background:var(--paper)}
+  .steps .step + .step{border-top:1px solid var(--line)}
+  .steps .step .snote{display:none}
+  .steps .step .smath{font-size:15px}
+  .steps .step .sno{width:24px; height:24px; font-size:13px}
+
+  /* 読み物は畳んだ 1 行 */
+  .page > details.glossary{margin:0}
+  .page > details.glossary > summary{padding:11px 18px; font-size:14px}
+  .page:has(> .figbox) > details.glossary{max-width:none}
+}
+
+/* ===== 27. 1 画面に入れるための削り ========================================
+   実測（1440x900・実高 813px）で頁が 1130px あり 317px 超過。内訳は
+   ヒーロー129 / 拡大行36 / 段階バー63 / 判定バナー90 / canvas器397 /
+   操作パネル407 / 凡例27 / 指標95 / 梯子+読み物108。
+   ★ 図の行の高さは canvas ではなく**操作パネル**が決めている。
+     canvas だけ縮めても行は縮まない。両方を同時に詰める。 */
+@media(min-width:1280px){
+  /* 拡大は段階バーの右上へ重ねて、行を 1 つ減らす（-36px） */
+  .page > .figbox{position:relative !important}
+  .figbox > .zoomrow{position:absolute; top:-4px; right:0; margin:0; z-index:3}
+  .figbox > .stagebar{padding-right:104px}
+
+  /* 判定バナーを 1 行に（-30px） */
+  .banner{padding:9px 16px}
+  .banner small{display:inline; margin-left:12px}
+
+  /* 凡例は畳んだ読み物へ回す（図の色は図の中で分かる） */
+  .figbox > .legend{display:none}
+
+  /* 操作パネルを詰める（-80px 前後） */
+  .figbox #ctlpanel{padding:11px 14px}
+  .figbox #ctlpanel .qrow{margin-bottom:6px; gap:7px}
+  .figbox #ctlpanel .ctl-row{margin-bottom:7px; gap:10px}
+  .figbox #ctlpanel .qbtn{padding:5px 12px; min-height:0}
+  .ctl-row label.sl, .qcap{min-width:68px; font-size:13px}
+  .sl-out{font-size:21px; min-width:52px}
+
+  /* 指標・梯子・読み物を詰める（-45px 前後） */
+  .figbox .metrics{gap:7px; margin:8px 0 0}
+  .figbox .mcard{padding:6px 11px; border-top-width:2.5px}
+  .mval{font-size:21px}
+  .mlab{font-size:11.5px}
+  .steps{gap:7px; margin:0 0 9px}
+  .steps .step{padding:7px 11px}
+  .steps .step .smath{font-size:14px}
+  .steps .step .sno{width:22px; height:22px; font-size:12px}
+  .page > details.glossary > summary{padding:9px 16px; font-size:13.5px}
+
+  /* ヒーローをもう一段詰める */
+  .page:has(> .figbox){padding:20px 40px 18px; margin:8px auto}
+  main.page h1{font-size:31px; margin:0 0 3px}
+  main.page .lead{font-size:16px; margin:0 0 10px}
+  .kicker{margin-bottom:6px}
+}
+
+/* ===== 28. 広い画面のレイアウトを一度きりで定義し直す ======================
+   §15 / §22 / §24 / §25 / §26 / §27 と 7 層の上書きを積み上げた結果、
+   層どうしが打ち消し合い、1 か所直すたびに別の場所が壊れる状態になった。
+   直近の症状は、拡大行を absolute にして**流れの行が 1 つ減り**、
+   固定で書いた `grid-row:4/6` が canvas の下へずれて操作パネルが右下に落ちたこと。
+   8 層目を足すのをやめ、広い画面の版面をここで一度きり定義する。
+
+   芯は 2 つ。
+     ① 頁を「画面の高さで完結する 1 枚」にする（縦フレックス。図枠が余りを取る）
+     ② 図枠は**行番号でなく名前付きの領域**で置く。子の増減で崩れない
+   ========================================================================== */
+@media(min-width:1280px){
+  /* --- 前の層の広画面指定を無効化（打ち消し合いを断つ） --- */
+  .page:has(> .figbox) > *{order:initial}
+  /* ★ 打ち消しは**直下の子すべて**に当てる。figbox・steps・sernav の
+     grid 指定（§15 の `grid-row:1/240` や `grid-column:1/-1`）が残っていて、
+     縦フレックスにしたあとも座標が狂っていた（ナビが図より上に出た）。 */
+  .page:has(> .figbox) > *{
+    grid-column:auto !important; grid-row:auto !important; grid-area:auto !important;
+    position:static !important;
+    /* ★ order も潰す。§26 の `.figbox{order:1}` は 2 クラスで、
+       `> *`（1クラス+全称）より詳細度が高く、打ち消しが効かなかった。
+       その結果 figbox だけが最後に回り、読み物とナビが図より上に出ていた。 */
+    order:0 !important;
+  }
+  body:not(.present) .figbox > .zoomrow,
+  body:not(.present) .figbox > .stagebar,
+  body:not(.present) .figbox > .banner,
+  body:not(.present) .figbox > .canvas-box,
+  body:not(.present) .figbox > #ctlpanel,
+  body:not(.present) .figbox > .legend,
+  body:not(.present) .figbox > .metrics,
+  body:not(.present) .figbox > .cap{grid-column:auto; grid-row:auto}
+
+  /* --- ① 画面の高さで完結する 1 枚 --- */
+  /* ★ 固定高と overflow:hidden にしていたため、「くわしく読む」を開いても
+     伸びる先が無くスクロールできなかった。min-height にすれば、
+     閉じているときは 1 画面ぴったり、開いたときはページが伸びて読める。 */
+  body:not(.present){overflow:auto}
+  body:not(.present) .page:has(> .figbox){
+    display:flex !important; flex-direction:column;
+    min-height:calc(100vh - 20px); margin:10px auto; max-width:1520px;
+    padding:16px 30px 12px; overflow:visible;
+  }
+  /* 開いたら図枠は自然な高さに戻す（伸びしろを本文に渡す） */
+  .page:has(> .figbox):has(details.glossary[open]) > .figbox{flex:0 0 auto}
+  .page:has(> .figbox) > .kicker{flex:none; margin-bottom:4px}
+  .page:has(> .figbox) > h1{flex:none; font-size:30px; margin:0 0 2px}
+  .page:has(> .figbox) > .lead{flex:none; font-size:15.5px; margin:0 0 10px; max-width:none}
+  .page:has(> .figbox) > .steps{display:none}          /* 段階バーと重複 */
+  .page:has(> .figbox) > details.glossary{flex:none; margin:10px 0 0; max-width:none}
+  .page:has(> .figbox) > .sernav{flex:none; margin-top:8px}
+
+  /* --- ② 図枠：名前付きの領域で置く（行番号に依存しない） --- */
+  body:not(.present) .page > .figbox{
+    flex:1 1 auto; min-height:0; margin:0; position:relative;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 326px;
+    grid-template-rows:auto auto minmax(0,1fr) auto;
+    grid-template-areas:
+      "stage stage"
+      "ban   ban"
+      "fig   ctl"
+      "mets  ctl";
+    column-gap:18px; row-gap:10px;
+  }
+  body:not(.present) .figbox > .stagebar  {grid-area:stage; margin:0}
+  body:not(.present) .figbox > .banner    {grid-area:ban;   margin:0}
+  body:not(.present) .figbox > .canvas-box{grid-area:fig;   min-height:0; margin:0}
+  body:not(.present) .figbox > #ctlpanel  {grid-area:ctl;   margin:0; align-self:start}
+  body:not(.present) .figbox > .metrics   {grid-area:mets;  margin:0}
+  body:not(.present) .figbox > .legend,
+  body:not(.present) .figbox > .cap       {display:none}
+  body:not(.present) .figbox > .zoomrow{
+    position:absolute; top:-2px; right:0; margin:0; z-index:3}
+  body:not(.present) .figbox > .stagebar{padding-right:100px}
+
+  /* 中身を画面に合わせて詰める */
+  .figbox .stagebar{padding:7px 12px}
+  .figbox .banner{padding:8px 15px}
+  .banner small{display:inline; margin-left:12px}
+  .figbox #ctlpanel{padding:11px 14px}
+  .figbox #ctlpanel .qrow{margin-bottom:6px; gap:7px}
+  .figbox #ctlpanel .ctl-row{margin-bottom:7px; gap:10px}
+  .figbox .metrics{gap:7px; margin:0}
+  .figbox .mcard{padding:6px 11px}
+}
+
+/* ===== 29. 色を設計し直す ==================================================
+   ここまで色を一度も設計していなかった。紺 #2f55d4 一色に灰と赤を足しただけで、
+   図の地も冷たい水色。参照（superelite）は「深いインク＋落ち着いた藍＋暖かい砂」で、
+   彩度の高い原色を面で使わない。安く見える原因はそこ。
+
+   組み方:
+     地   = 暖かいオフホワイト（冷たい水色をやめる）
+     主色 = 藍（#3a4db8）。面で使うのは帯と選択中だけ
+     副色 = 砂/琥珀（#b0741a）。中央 m と「山場」に割り当て、主色と役割を分ける
+     負   = 煉瓦（#b23b30）。赤の彩度を落として警告の品位を上げる
+     線   = 暖かいグレー。冷たい #e6eaf1 をやめる
+   canvas も同じトークン（--k-*）を読むので、図の見え方ごと変わる。 */
+:root{
+  --ink:#161b22; --ink-soft:#3b444f; --ink-faint:#6b7480; --muted:#6b7480;
+  --line:#e7e3dc; --line-2:#d3cdc3; --hair:#ece8e1; --hair2:#d3cdc3;
+  --paper:#ffffff; --page-bg:#f2f0ec; --ground:#f2f0ec; --subtle:#faf8f5;
+  --navy:#3a4db8; --navy-deep:#26307d; --navy-mid:#6a78cf;
+  --navy-tint:#eaecf9; --navy-tint-bd:#cfd4f0;
+  --accent:#3a4db8; --ok:#3a4db8; --ok-bg:#eaecf9; --ok-bd:#cfd4f0; --ok-tint:#f5f6fd;
+  --warn:#b23b30; --warn-bg:#fbeeec; --warn-bd:#eccbc6; --warn-tint:#fdf6f5;
+  --warm:#b0741a; --orange:#b0741a;
+  --field:#f6f4ef; --field-bd:#e4dfd5;
+  --ghost:#eceaf7;
+  --amber:#b0741a; --amber-tint:#fbf3e4; --amber-bd:#ecdcbb;
+  --mk-y:#ffe8ae; --mk-p:#f7d3dc; --mk-b:#d3dcf7;
+  --band:#1b2230; --band-ink:#ffffff;
+
+  /* canvas 用（KC() が読む）。図の地・箱・帯・×印がここで決まる */
+  --k-main:#3a4db8; --k-second:#b0741a; --k-warn:#b23b30; --k-ok:#2f6b4f;
+  --k-accent:#6a5aa8; --k-deep:#161b22;
+  --k-gray:#9c968c; --k-tick:#6b7480;
+  --k-ink:#161b22; --k-inksoft:#3b444f; --k-inkfaint:#8e887e;
+  --k-line:#e7e3dc; --k-line2:#cdc6ba;
+  --k-paper:#ffffff; --k-subtle:#faf8f5;
+  --k-tint:#eaecf9; --k-tintbd:#cfd4f0;
+  --k-dim:#f4f2ed; --k-dimink:#a9a399; --k-dimbd:#e2ddd3;
+  --k-hit:#dfe3f8;
+}
+html[data-theme="dark"]{
+  --ink:#eceff5; --ink-soft:#b3bac6; --ink-faint:#868e9b; --muted:#868e9b;
+  --line:#2a3140; --line-2:#3a4254; --paper:#161b24; --page-bg:#0e1218;
+  --ground:#0e1218; --subtle:#1b2130;
+  --navy:#7e8cdd; --navy-deep:#aab4ee; --navy-mid:#6a78cf;
+  --navy-tint:#1e2540; --navy-tint-bd:#333c5e;
+  --field:#171c26; --field-bd:#2a3140; --ghost:#1a2033;
+  --warn:#e0796c; --warn-bg:#2c1a17; --warn-bd:#54302a; --warn-tint:#211613;
+  --amber:#d3a154; --amber-tint:#2a2318; --amber-bd:#4a3d23;
+  --mk-y:#5d4d18; --mk-p:#5d2338; --mk-b:#20345e;
+  --band:#eceff5; --band-ink:#161b24;
+  --k-main:#7e8cdd; --k-second:#d3a154; --k-warn:#e0796c; --k-ok:#5aa886;
+  --k-ink:#eceff5; --k-inksoft:#b3bac6; --k-inkfaint:#868e9b;
+  --k-line:#2a3140; --k-line2:#3a4254; --k-paper:#161b24; --k-subtle:#1b2130;
+  --k-tint:#1e2540; --k-tintbd:#333c5e;
+  --k-dim:#1a202b; --k-dimink:#6b7382; --k-dimbd:#2a3140; --k-hit:#2b3358;
+  --k-gray:#7c8494; --k-tick:#868e9b; --k-deep:#eceff5;
+}
+
+/* 帯・選択中の面は 2 色の grad にして、べた塗りの安っぽさを消す */
+.qbtn.active, .qbtn.play, .pill, .steps .step.on .sno{
+  background:linear-gradient(160deg, var(--navy-mid), var(--navy)) !important;
+  border-color:var(--navy) !important;
+}
+.banner.ok{background:linear-gradient(180deg, #f3f5fd, var(--ok-bg))}
+.banner.warn{background:linear-gradient(180deg, #fdf3f1, var(--warn-bg))}
+.canvas-box{background:linear-gradient(180deg, #faf8f4, var(--field))}
+.metrics .mcard{box-shadow:0 1px 2px rgba(22,27,34,.04)}
+.figbox #ctlpanel{box-shadow:0 1px 2px rgba(22,27,34,.04), 0 12px 28px rgba(22,27,34,.07)}
+
+/* ===== 30. 書体を組み直す ==================================================
+   実測でつかんだ 3 つを直す。
+     ① 数字が和文の従属欧文で出ていた（10 桁 285px。欧文書体なら 222px ＝ 28% 間延び）
+     ② 指標の数値が ui-monospace の太さ 500。主役にしたい数値が一番弱かった
+     ③ 本文が 15.5px/700 のまま（17.5px の指定が詳細度で負けていた）
+   欧文を先、和文を後ろに置く stack にすると、日本語の字形は変えずに
+   数字と英字だけが締まる。外部フォントは使わない（憲法の外部依存ゼロ）。 */
+:root{
+  --sans:"Helvetica Neue","Segoe UI",system-ui,-apple-system,"Hiragino Sans",
+         "Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --num:"Helvetica Neue","Segoe UI",system-ui,-apple-system,sans-serif;
+}
+body, main.page, main.page *{font-family:var(--sans)}
+code, .code, pre{font-family:var(--mono)}
+
+/* 本文：大きく、少し太く。細くて小さいという指摘の直接の手当て */
+body{font-size:18px; font-weight:500; line-height:1.85; letter-spacing:.005em}
+main.page p, main.page .lead, .step .snote, .pointbox dd, .gloss dd{
+  font-size:17px !important; font-weight:500 !important; line-height:1.8}
+main.page .lead{font-size:18px !important; font-weight:700 !important}
+.banner{font-size:18px !important; font-weight:700}
+main.page h1{letter-spacing:-.02em}
+main.page h2{letter-spacing:-.01em}
+
+/* 数値：等幅をやめ、欧文の太字で立てる */
+.mval, .sl-out, .qbtn .n, .step .sno{
+  font-family:var(--num) !important; font-weight:800 !important;
+  font-variant-numeric:tabular-nums; letter-spacing:-.015em}
+/* ★ `.mval{30px}` だけでは、同じ宣言ブロックに並べた `.mval,.sl-out,…` の指定や
+   §27 の `.figbox .mcard` 側の指定と競合して負ける。実際に当たる鎖で書く。 */
+.figbox .metrics .mcard .mval, .metrics .mcard .mval{font-size:30px !important}
+.figbox #ctlpanel .ctl-row .sl-out, .ctl-row .sl-out{font-size:23px !important}
+
+/* ラベル・ボタン：小さすぎたので一段上げ、字間を締める */
+.qbtn, .hk-chip, .qcap, .ctl-row label.sl, .glossary summary{
+  font-size:14.5px !important; font-weight:700}
+.mlab{font-size:12.5px !important; font-weight:700; letter-spacing:.01em}
+.badge, .enrow, .pointbox .ph{font-weight:800; letter-spacing:.16em}
+
+@media(max-width:600px){
+  body{font-size:17px}
+  main.page p, .step .snote{font-size:16.5px !important}
+  .mval{font-size:26px !important}
+}
+
+/* ===== 31. アイコン ========================================================
+   ラベルに小さな線画を添える。Lucide 風の自作 SVG をインラインで置くので
+   外部依存は増えない（憲法の外部依存ゼロを守る）。
+   色は currentColor。ラベルの色に追従し、暗色でも破綻しない。 */
+.lbi{width:16px; height:16px; flex:none; margin-right:7px; vertical-align:-3px;
+  color:var(--navy-mid); opacity:.95}
+.qcap, .ctl-row label.sl{display:inline-flex; align-items:center}
+.banner .bi{width:19px; height:19px; margin-right:9px; vertical-align:-4px; flex:none}
+.mcard .mlab .mi{width:13px; height:13px; margin-right:5px; vertical-align:-2px;
+  color:var(--ink-faint)}
+@media(max-width:600px){ .lbi{width:15px; height:15px; margin-right:6px} }
+
+/* ===== 32. 強調の段階 ======================================================
+   太字と下線だけでは、どれが一番大事かが伝わらない。大きさも変えて段を作る。
+     em1 いちばん大事  … 1.24em ＋ 800 ＋ マーカー（1 ページに 1〜2 か所）
+     em2 大事          … 1.10em ＋ 800 ＋ 色
+     em3 用語          … 等倍 ＋ 700 ＋ 下線（点線）
+   上から順に強く、数を減らす。全部を強調したら何も強調していないのと同じ。 */
+.em1{font-size:1.24em; font-weight:800; line-height:1.5;
+  background:linear-gradient(transparent 62%, var(--mk-y) 62%); padding:0 .1em}
+.em2{font-size:1.1em; font-weight:800; color:var(--navy-deep)}
+.em3{font-weight:700; border-bottom:2px dotted var(--navy-mid); padding-bottom:1px}
+.em1 + .em1, .em2 + .em2{margin-left:.1em}
+
+/* くわしく読むの中身：図とテキストの組み */
+.glossary .fig-note{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:18px; align-items:center; margin:18px 0; padding:16px 18px;
+  background:var(--subtle); border:1px solid var(--line); border-radius:14px}
+.glossary .fig-note svg{width:100%; height:auto; display:block}
+.glossary .fig-note .cap2{font-size:15px; line-height:1.75; margin:0}
+@media(max-width:720px){ .glossary .fig-note{grid-template-columns:1fr} }
+
+/* ===== 33. 級数をはっきり上げる ============================================
+   「小さい」を 4 回いただいた。小刻みに上げてきたのが間違いで、
+   本文 17〜18px は読み物として小さい。基準そのものを上げる。
+   ここが最終の指定になるよう、当たる鎖で書く（層の打ち消し合いを避ける）。 */
+body{font-size:20px; line-height:1.9}
+main.page p, main.page .lead,
+.glossary p, .glossary .cap2,
+.step .snote{font-size:20px !important; font-weight:500 !important; line-height:1.85}
+main.page .lead{font-size:22px !important; font-weight:700 !important}
+main.page h1{font-size:36px !important}
+main.page h2{font-size:28px !important}
+.banner{font-size:21px !important}
+.banner small{font-size:17px !important}
+
+/* POINT と用語：読み物の本体なので本文と同じ大きさに */
+.pointbox dt{font-size:20px !important}
+.pointbox dd{font-size:20px !important; line-height:1.8}
+.pointbox .ph{font-size:16px !important}
+.glossary .gloss dt{font-size:19px !important}
+.glossary .gloss dd{font-size:19px !important; line-height:1.8}
+.glossary summary{font-size:18px !important}
+
+/* 操作まわり：指で押す物なので一段上げる */
+.qbtn, .hk-chip{font-size:16px !important}
+.qcap, .ctl-row label.sl{font-size:16px !important}
+.figbox .metrics .mcard .mlab{font-size:14px !important}
+.figbox .metrics .mcard .mval, .metrics .mcard .mval{font-size:34px !important}
+.figbox #ctlpanel .ctl-row .sl-out, .ctl-row .sl-out{font-size:26px !important}
+.badge{font-size:13.5px !important}
+
+@media(max-width:600px){
+  body{font-size:18px}
+  main.page p, .step .snote, .glossary p, .glossary .cap2{font-size:18px !important}
+  main.page .lead{font-size:19px !important}
+  main.page h1{font-size:28px !important}
+  main.page h2{font-size:23px !important}
+  .banner{font-size:18.5px !important}
+  .pointbox dt, .pointbox dd{font-size:18px !important}
+  .figbox .metrics .mcard .mval{font-size:28px !important}
+}
+
+/* ===== 34. 補足モーダルの級数 ==============================================
+   本文を 20px に上げたのに、補足モーダルだけ .hk-* の別系統で
+   見出し 18px・本文 14.5px・ラベル 11.5px のまま取り残されていた。
+   同じ基準に揃える。当たる鎖で書く（層の打ち消し合いを避ける）。 */
+.hk-card .hk-head .hk-k{font-size:15px !important; letter-spacing:.1em}
+.hk-card .hk-head h4{font-size:27px !important; line-height:1.35; font-weight:800}
+.hk-card .hk-body p{font-size:20px !important; line-height:1.8; color:var(--ink)}
+.hk-card .hk-body .hk-num{font-size:18px !important; line-height:1.75}
+.hk-card .hk-body .hk-key{font-size:19px !important; line-height:1.75}
+.hk-card .hk-body .hk-key div{font-size:19px !important}
+.hk-card .hk-ctl label{font-size:16px !important}
+.hk-card .hk-ctl .hk-out{font-size:24px !important; min-width:58px}
+.hk-card .hk-qbtn{font-size:16px !important; padding:7px 16px}
+.hk-card .hk-close{font-size:18px}
+
+@media(max-width:600px){
+  .hk-card .hk-head h4{font-size:22px !important}
+  .hk-card .hk-body p{font-size:18px !important}
+  .hk-card .hk-body .hk-num, .hk-card .hk-body .hk-key,
+  .hk-card .hk-body .hk-key div{font-size:17px !important}
+  .hk-card .hk-ctl .hk-out{font-size:21px !important}
+}
+
+</style>
+</head>
+<body>
+<button id="pres-toggle" class="pres-toggle" title="説明モード（投影・収録用）">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+  <span>説明</span>
+</button>
+<button id="theme-toggle" class="theme-toggle" title="ライト／ダークの切り替え">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  <span id="theme-label">ダーク</span>
+</button>
+<main class="page">
+  <div class="kicker">
+    <span class="badge">第5回 プログラミングの基本⑴</span>
+    <span class="badge wk">深掘り</span>
+    <span>半開区間</span>
+  </div>
+
+  <h1>なぜ合図が​<span class="hi">1 つ先</span>なのか</h1>
+  <p class="lead">処理されるのは、値1 を含み、<span class="mk">値2 を含まない</span>ところまでです。</p>
+
+  <div class="figbox" id="fig-naze">
+    <div class="zoomrow">
+      <button class="fig-zoom" type="button" data-fig="fig-naze"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>拡大して見る</button>
+    </div>
+
+    <div class="panel stagebar">
+      <div class="qrow">
+        <button class="qbtn qstage active" type="button" data-stage="1"><span class="n">1</span>合図を動かす</button>
+        <button class="qbtn qstage" type="button" data-stage="2"><span class="n">2</span>処理される範囲</button>
+        <button class="qbtn qstage" type="button" data-stage="3"><span class="n">3</span>身のまわり</button>
+      </div>
+    </div>
+
+    <div id="banner" class="banner ok"></div>
+
+    <div id="cbox" class="canvas-box ok">
+      <canvas id="cv" role="img" aria-label="段階で入れ替わる図。合図を動かす段階では、合図の値を変えた 2 本の数直線を上下に並べ、処理される丸の個数が 1 つだけ違うようすを示す。処理される範囲の段階では、値1 の位置を塗った丸で、値2 の位置を縦の点線で表し、その間だけが処理されることと、回数の式を示す。身のまわりの段階では、エレベーターで階を上がるときの通る階の数と上がる段の数が 1 つずれるようすと、定規の目盛りの本数を示す。丸をタップすると合図がそこへ動く。"></canvas>
+    </div>
+
+    <div class="panel" id="ctlpanel">
+      <div class="qrow" id="row-aizu">
+        <span class="qcap"><svg class="lbi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18"/><path d="M5 8h14"/></svg>下の段の合図</span>
+        <button class="qbtn" type="button" data-a="8">8</button>
+        <button class="qbtn active" type="button" data-a="9">9</button>
+        <button class="qbtn" type="button" data-a="11">11</button>
+      </div>
+      <div class="ctl-row" id="row-v2b">
+        <label class="sl" for="v2b"><svg class="lbi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"/></svg>値2</label>
+        <input id="v2b" type="range" min="3" max="12" step="1" value="10" aria-label="値2">
+        <span class="sl-out" id="v2bval">10</span>
+      </div>
+      <div class="ctl-row" id="row-kai">
+        <label class="sl" for="kai"><svg class="lbi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20h4v-5h4v-5h4V5h6"/></svg>何階まで上がるか</label>
+        <input id="kai" type="range" min="4" max="9" step="1" value="8" aria-label="何階まで上がるか">
+        <span class="sl-out" id="kaival">8</span>
+      </div>
+    </div>
+
+    <div class="legend" id="leg">
+      <span><i class="sw-key" style="background:var(--ok)"></i>処理される値</span>
+      <span><i class="sw-key" style="border:2px dashed var(--warn); background:transparent"></i>処理されない値</span>
+      <span><i class="sw-key ln" style="color:var(--warn)"></i>止まる合図（値2）</span>
+    </div>
+
+    <div class="metrics" id="mets"></div>
+    <p class="cap" id="stage-cap"></p>
+  </div>
+
+  <div class="steps" id="stages">
+    <div class="step on" data-stage="1"><span class="sno">1</span><div class="sbody"><div class="smath">合図を動かす</div><div class="snote">合図を 10 にすると 9 まで、9 にすると 8 までです。違いは最後の 1 つだけで、その 1 つが落ちます。</div></div></div>
+    <div class="step" data-stage="2"><span class="sno">2</span><div class="sbody"><div class="smath">処理される範囲</div><div class="snote">値1 は含み、値2 は含みません。回数は、値2 から値1 を引いた数を増減値で割って切り上げた数です。</div></div></div>
+    <div class="step" data-stage="3"><span class="sno">3</span><div class="sbody"><div class="smath">身のまわり</div><div class="snote">3 階から 8 階へ上がると、上がる段は 5 つ、通る階は 6 つ。定規も 0 から 10 cm に目盛りは 11 本です。</div></div></div>
+  </div>
+
+  <h2><span class="bar"></span>合図を 1 つずらすと、最後の 1 つが落ちる</h2>
+
+  <p>数えたい値を最後まで数えてから止めます。合図を最後の値そのものに置くと、<b>その 1 つ手前で終わります</b>。だから合図は、最後に処理したい値の 1 つ先に置きます。上の場面 1 で、合図だけが違う 2 本の並びを見比べてみてください。<button class="hk-chip" type="button" data-hk="zurasu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.5a2.4 2.4 0 1 1 3.3 2.2c-.6.3-.9.7-.9 1.3v.5M12 16.5v.01"/></svg>落ちるのはどの 1 つですか</button></p>
+
+  <h2><span class="bar"></span>処理される範囲と、回る回数</h2>
+
+  <p>数直線で見ると、処理されるのは<b>値1 を含み、値2 を含まない</b>ところまでです。増減値が正なら値1 から右へ、負なら左へ進みます。どちらの向きでも、止まるのは値2 で、その値は処理されません。<button class="hk-chip" type="button" data-hk="hankai"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.5a2.4 2.4 0 1 1 3.3 2.2c-.6.3-.9.7-.9 1.3v.5M12 16.5v.01"/></svg>負の向きでも同じですか</button></p>
+
+  <p><span class="formula">回る回数 ＝ （値2 − 値1）÷ 増減値 の切り上げ</span></p>
+
+  <p>増減値が負のときは、引き算も割り算もどちらも負になるので、答えは正のままです。式はひとつで足ります。</p>
+
+  <h2><span class="bar"></span>身のまわりにある同じずれ</h2>
+
+  <p>エレベーターで 3 階から 8 階へ上がります。<b>上がる段数</b>は 8 − 3 で 5 つ分です。ところが<b>通る階</b>は 3・4・5・6・7・8 の 6 つあります。「〜から〜まで」は、差と個数が 1 つずれます。<button class="hk-chip" type="button" data-hk="jyougi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.5a2.4 2.4 0 1 1 3.3 2.2c-.6.3-.9.7-.9 1.3v.5M12 16.5v.01"/></svg>定規でも同じですか</button></p>
+
+  <table class="real-table">
+    <thead><tr><th>書きたいこと</th><th>最後に処理する値</th><th>range の値2</th></tr></thead>
+    <tbody>
+      <tr><td>7×1 から 7×9 まで</td><td><span class="big">9</span></td><td><span class="big">10</span></td></tr>
+      <tr><td>1 から 5 までの和</td><td><span class="big">5</span></td><td><span class="big">6</span></td></tr>
+      <tr><td>2 から a−1 まで調べる</td><td><span class="big">a−1</span></td><td><span class="big">a</span></td></tr>
+    </tbody>
+  </table>
+
+  <p>右の列は、左から 1 つ先へずれています。この 1 つ分が、合図の値です。</p>
+
+  <details class="glossary">
+    <summary>用語のおさらい</summary>
+    <div style="padding:2px 18px 18px">
+      <dl class="gloss">
+        <dt>値1・値2・増減値</dt><dd>range に書く 3 つの数。値1 から始め、増減値ずつ動かし、値2 で止まります。<b>値2 は含まれません。</b></dd>
+        <dt>while 文</dt><dd>続ける条件を書く形。条件が真の間くり返し、偽になった時点で抜けます。</dd>
+        <dt>切り上げ</dt><dd>小数部分があれば、1 つ上の整数にすること。回数を出すときに使います。</dd>
+      </dl>
+    </div>
+  </details>
+
+  <p class="foot">差と個数は 1 つずれます。最後に処理したい値の 1 つ先が、止まる合図です。</p>
+  <nav class="sernav" aria-label="ページ送り">
+    <a class="sn-prev" href="01-tomaru.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>前：繰り返しが止まる値は、処理されない</a>
+    <a class="sn-up" href="index.html">この回の一覧へ</a>
+    <span></span>
+  </nav>
+</main>
+<div class="hk-ov" id="hk-ov" role="dialog" aria-modal="true" aria-label="補足">
+  <div class="hk-card">
+    <div class="hk-head"><div><p class="hk-k">補足</p><h4>—</h4></div>
+      <button class="hk-close" type="button" aria-label="補足を閉じる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <div class="hk-body"></div>
+  </div>
+</div>
+<div class="zoom-ov" id="zoom" role="dialog" aria-modal="true" aria-label="図の拡大表示">
+  <div class="zoom-stage">
+    <button class="zoom-close" id="zoom-close" type="button" aria-label="拡大を閉じる"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>閉じる</button>
+    <div id="zoom-host"></div>
+  </div>
+</div>
+<script>
+/* ============================================================================
+   情報 解説Webツール — シリーズ engine（共有 JS）
+   ----------------------------------------------------------------------------
+   由来: 数学キットの凍結正典（specs/mess2026/shell_{kc,theme,pres}.js ＋
+   dist/2日目前半_ランダムウォーク/ の zoom・補足エンジン）を、情報キットに
+   合わせて作り直したもの。
+
+   正典から意図して変えたところ（そのまま写すと壊れる箇所）:
+
+   1. 再描画の登録を eval でしない。
+      正典は eval('draw') で描画関数を拾うが、それは engine と MATERIAL が
+      同じ <script> にいるときしか効かない。こちらは engine と MATERIAL を
+      別の <script> に分けたので、eval では**何も拾えず、登録が黙って 0 件**に
+      なる。テーマを切り替えても図の色が変わらない形で出る。
+      → MATERIAL 側から window.REDRAW(fn) で明示的に登録する。
+
+   2. 補足（HK）をクリック時に読む。
+      window.HK を定義するのは MATERIAL で、engine より後に走る。
+      読み込み時に束ねると undefined を掴む。→ 押した時に window.HK を見る。
+
+   3. 補足の図の色を、開くたびに読み直す。
+      正典は var NAVY=KC(...) をモジュール先頭で1回だけ評価しているので、
+      テーマを変えてもチップの図だけ前の色が残る。→ fig() の中で読む。
+
+   4. KaTeX を使わない（情報キットは数式を <sub>/<sup> で書く）。
+      正典の Edu.renderAllMath 呼び出しは外した。
+
+   ★ このファイルは全ページ共有。回ごとにコピーして育てない。
+   ============================================================================ */
+
+/* ===== 1. 色とテーマの土台 =============================================== */
+(function(){
+  var cache = {};
+  /* canvas は CSS 変数を直接使えない。KC() で読む。
+     ★ body を先に読む。説明モードの 4 配色は body.present[data-ptheme] に載るので、
+     html だけを見ると canvas に届かない（明暗は body が html から継承する）。 */
+  window.KC = function(n){
+    if(cache[n]) return cache[n];
+    var el = document.body || document.documentElement;
+    var v = getComputedStyle(el).getPropertyValue(n).trim();
+    if(!v) v = getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    return (cache[n] = v || '#000');
+  };
+
+  window.__redraws = [];
+  /* MATERIAL から呼ぶ。テーマ切替・説明モード・拡大のたびに呼び直される */
+  window.REDRAW = function(fn){ if(typeof fn === 'function') window.__redraws.push(fn); };
+
+  window.THEME_SYNC = function(){
+    cache = {};
+    (window.__redraws || []).forEach(function(f){ try{ f(); }catch(e){} });
+  };
+
+  /* 投影時の拡大率。canvas 内の文字は必ず fs() を通す。
+     画面幅で決める（一律 1.75 倍にすると、スマホで canvas は小さいまま
+     文字だけ大きくなり、軸の名前と目盛りが重なる）。 */
+  window.PRES_Z = function(){
+    if(!document.body.classList.contains('present')) return 1;
+    var w = window.innerWidth || 1280, h = window.innerHeight || 800;
+    if(w <= 480 || h <= 600) return 1.08;
+    if(w >= 1100) return 1.75;
+    return 1.08 + (w - 480) * (1.75 - 1.08) / (1100 - 480);
+  };
+  window.ZOOM = 1;
+  /* 図の中の文字寸法。直書き（c.font='700 12px …'）は投影で潰れるので使わない */
+  window.fs = function(px){
+    return Math.round(px * window.ZOOM * window.PRES_Z() * 10) / 10;
+  };
+  /* ★ 図の中の文字は CSS では変えられない（canvas に描いている）ので、ここで底上げする。
+     ただし**定義の外**に置くこと。中に入れると、呼ぶたびに自分自身を包み直して
+     2 回目で無限再帰する（実際に一度そう書いてしまった。node --check は構文しか
+     見ないので素通りする）。IIFE で元の関数を捕まえてから包む。 */
+  (function(){
+    var base = window.fs;
+    window.fs = function(px){ return base(Math.max(15, Math.round(px * 1.35))); };
+  })();
+
+  /* 下部バーの高さを実測して --pbar に入れる。折り返し段数で変わるので固定値では足りない */
+  function syncBar(){
+    var b = document.querySelector('.pres-bar');
+    var h = (b && getComputedStyle(b).display !== 'none')
+          ? Math.ceil(b.getBoundingClientRect().height) : 0;
+    document.documentElement.style.setProperty('--pbar', h + 'px');
+  }
+  window.addEventListener('resize', syncBar);
+  window.addEventListener('orientationchange', function(){ setTimeout(syncBar, 150); });
+  if(document.body){
+    new MutationObserver(syncBar).observe(document.body,
+      {attributes:true, attributeFilter:['class'], childList:true});
+  }
+  [0, 300, 900].forEach(function(t){ setTimeout(syncBar, t); });
+})();
+
+/* ===== 2. ライト／ダークの切り替え ======================================= */
+(function(){
+  var b = document.getElementById('theme-toggle'),
+      l = document.getElementById('theme-label');
+  if(!b) return;
+  b.addEventListener('click', function(){
+    var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
+    if(l) l.textContent = dark ? 'ダーク' : 'ライト';
+    if(window.THEME_SYNC) window.THEME_SYNC();
+  });
+})();
+
+/* ===== 3. 共有の canvas ヘルパー ========================================= */
+(function(){
+  /* DPR ハーネス。CSS 寸法とビットマップ寸法の**両方**を設定する。
+     style を設定しないと Retina(dpr=2) で canvas が2倍に膨れて本文に覆いかぶさり、
+     かつ引き伸ばされてぼやける。dpr=1 の headless では再現しない。 */
+  window.SETUP = function(cv, cssH){
+    var dpr = window.devicePixelRatio || 1;
+    var w = cv.clientWidth || cv.parentNode.clientWidth || 600;
+    var h = Math.max(1, Math.round(cssH));
+    cv.style.width = '100%';
+    cv.style.height = h + 'px';
+    cv.width = Math.round(w * dpr);
+    cv.height = Math.round(h * dpr);
+    var c = cv.getContext('2d');
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { c:c, w:w, h:h };
+  };
+  /* 比で高さを決める小図。最低高さを渡せる（狭い画面で最後の行が消えるのを防ぐ） */
+  window.SETUP_MINI = function(cv, ratio, minH){
+    var w = cv.clientWidth || cv.parentNode.clientWidth || 560;
+    return window.SETUP(cv, Math.max(Math.round(w * ratio), minH || 0));
+  };
+
+  window.arrowHead = function(c, x, y, dir){
+    c.beginPath();
+    if(dir === 'up')        { c.moveTo(x, y); c.lineTo(x - 4.5, y + 8); c.lineTo(x + 4.5, y + 8); }
+    else if(dir === 'down') { c.moveTo(x, y); c.lineTo(x - 4.5, y - 8); c.lineTo(x + 4.5, y - 8); }
+    else                    { c.moveTo(x, y); c.lineTo(x - 8, y - 4.5); c.lineTo(x - 8, y + 4.5); }
+    c.closePath(); c.fill();
+  };
+
+  window.roundRect = function(c, x, y, w, h, r){
+    c.beginPath(); c.moveTo(x + r, y);
+    c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r);
+    c.arcTo(x, y + h, x, y, r);         c.arcTo(x, y, x + w, y, r);
+    c.closePath();
+  };
+
+  /* 白板ラベル。文字と図形を重ねないための部品。
+     図の線の上に文字を置くときは必ずこれを通す（下地を敷いてから字を置く）。 */
+  window.plate = function(c, t, x, y, col, size){
+    size = size || 12;
+    var b = window.fs(size);
+    c.save();
+    c.font = '700 ' + b + 'px ' + window.JPFONT;
+    var w = c.measureText(t).width, p = b * 0.42, ph = b + 7;
+    c.fillStyle = window.KC('--k-paper');
+    c.globalAlpha = 0.94;
+    window.roundRect(c, x - w/2 - p, y - ph/2, w + 2*p, ph, 6); c.fill();
+    c.globalAlpha = 1;
+    c.strokeStyle = window.KC('--k-line2'); c.lineWidth = 1;
+    window.roundRect(c, x - w/2 - p, y - ph/2, w + 2*p, ph, 6); c.stroke();
+    c.fillStyle = col; c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.fillText(t, x, y);
+    c.restore();
+  };
+
+  /* キャンバスの端で切れないように、ラベルの中心 x を内側へ寄せる */
+  window.clampX = function(c, t, x, W, size){
+    var w = c.measureText(t).width / 2 + 8;
+    return Math.max(w, Math.min(W - w, x));
+  };
+
+  /* ★ 欧文を先に置く。和文書体から始めると数字と英字が「従属欧文」で描かれ、
+     10 桁で 285px（欧文書体なら 222px）と 28% 間延びして、字が安く見える。
+     和文は後ろに残すので、日本語の字形は変わらない。外部フォントは使わない。 */
+  window.JPFONT = '"Helvetica Neue","Segoe UI",system-ui,"Hiragino Sans",'
+                + '"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif';
+  window.MONOFONT = '"SF Mono","JetBrains Mono",ui-monospace,Menlo,Consolas,monospace';
+})();
+
+/* ===== 4. 図の拡大（拡大して見る） ======================================= */
+(function(){
+  var ov = document.getElementById('zoom'),
+      host = document.getElementById('zoom-host');
+  if(!ov || !host) return;
+  var cur = null, ph = null;
+
+  function refit(){
+    if(window.THEME_SYNC) window.THEME_SYNC();
+    window.dispatchEvent(new Event('resize'));
+  }
+  function open(id){
+    var fig = document.getElementById(id); if(!fig) return;
+    cur = fig;
+    ph = document.createElement('div');           /* 元の位置に目印を置いて借りる */
+    fig.parentNode.insertBefore(ph, fig);
+    host.appendChild(fig);
+    fig.classList.add('zoomed');
+    ov.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    window.ZOOM = 1.6;
+    setTimeout(refit, 40);
+  }
+  function close(){
+    if(!cur) return;
+    cur.classList.remove('zoomed');
+    ph.parentNode.insertBefore(cur, ph);          /* 借りた図を元の位置へ返す */
+    ph.remove();
+    ov.classList.remove('open');
+    document.body.style.overflow = '';
+    cur = null; ph = null;
+    window.ZOOM = 1;
+    setTimeout(refit, 40);
+  }
+  document.querySelectorAll('.fig-zoom').forEach(function(b){
+    b.addEventListener('click', function(){ open(this.dataset.fig); });
+  });
+  var zc = document.getElementById('zoom-close');
+  if(zc) zc.addEventListener('click', close);
+  ov.addEventListener('click', function(e){ if(e.target === ov) close(); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && ov.classList.contains('open')) close();
+  });
+})();
+
+/* ===== 5. 基礎・深掘りのモーダル ========================================= */
+/* 中身の描画は MATERIAL 側。engine は開け閉めと、開いた後の描画合図だけを持つ。
+   window.ON_MODAL_OPEN = {'overlay-basic':fn, 'overlay':fn} で受ける。 */
+(function(){
+  function wire(ovId, btnId, closeId){
+    var ov = document.getElementById(ovId);
+    if(!ov) return;
+    var btn = document.getElementById(btnId), cl = document.getElementById(closeId);
+    function open(){
+      ov.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      var fn = (window.ON_MODAL_OPEN || {})[ovId];
+      if(!fn) return;
+      /* ★ rAF で待たない（headless の virtual time では発火しないことがある）。
+         器は display:flex になっているので、版面を強制確定させれば同期で描ける。 */
+      void ov.offsetWidth;
+      fn();
+      setTimeout(fn, 60);
+    }
+    function close(){ ov.classList.remove('open'); document.body.style.overflow = ''; }
+    if(btn) btn.addEventListener('click', open);
+    if(cl) cl.addEventListener('click', close);
+    ov.addEventListener('click', function(e){ if(e.target === ov) close(); });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && ov.classList.contains('open')) close();
+    });
+    (window.__modals = window.__modals || {})[ovId] = { open:open, close:close };
+  }
+  wire('overlay-basic', 'open-basic', 'close-basic');
+  wire('overlay', 'open-deep', 'close-deep');
+})();
+
+/* ===== 6. 補足チップ（hosoku） ==========================================
+   本文の一点に .hk-chip を置き、押すと中央のモーダルが開く。
+   中身は MATERIAL 側の window.HK（キーは data-hk と 1 対 1）。
+     HK = { key: { k:小ラベル, title:見出し, html:本文, fig:function(cv,A){…} } }
+   html には FW('aria-label') で図枠、.hk-num で検算した数、.hk-key で一言を置く。
+   開いている間に P を押すと、本文の <b> のマーカーが左→右へ走る。 */
+(function(){
+  var ov = document.getElementById('hk-ov');
+  if(!ov) return;
+  var elK = ov.querySelector('.hk-k'),
+      elT = ov.querySelector('h4'),
+      elBody = ov.querySelector('.hk-body'),
+      running = false;
+
+  window.FW = function(label){
+    return '<div class="hk-figwrap"><canvas class="hk-fig" role="img" aria-label="'
+         + label + '">補足の図</canvas></div>';
+  };
+  window.BULB = '<span class="hk-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"'
+    + ' stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+    + '<path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1h6c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/>'
+    + '</svg></span>';
+
+  /* 図から使う道具一式。★色は open のたびに読み直す（テーマに追従させるため） */
+  function bundle(){
+    return {
+      setup: window.SETUP, setupMini: window.SETUP_MINI,
+      plate: window.plate, arrowHead: window.arrowHead, roundRect: window.roundRect,
+      fs: window.fs, font: window.JPFONT, mono: window.MONOFONT,
+      MAIN: window.KC('--k-main'),   SECOND: window.KC('--k-second'),
+      WARN: window.KC('--k-warn'),   OK:     window.KC('--k-ok'),
+      GRAY: window.KC('--k-gray'),   TICK:   window.KC('--k-tick'),
+      INK:  window.KC('--k-ink'),    INKSOFT:window.KC('--k-inksoft'),
+      LINE: window.KC('--k-line'),   LINE2:  window.KC('--k-line2'),
+      PAPER:window.KC('--k-paper'),  SUBTLE: window.KC('--k-subtle'),
+      TINT: window.KC('--k-tint'),   DIM:    window.KC('--k-dim'),
+      DIMINK:window.KC('--k-dimink'),DIMBD:  window.KC('--k-dimbd'),
+      HIT:  window.KC('--k-hit'),    DEEP:   window.KC('--k-deep'),
+      raf: function(fn){ running = true; (function loop(){ if(!running) return; fn(); requestAnimationFrame(loop); })(); }
+    };
+  }
+
+  var curKey = null;
+  function draw(){
+    var HK = window.HK || {};
+    var e = HK[curKey]; if(!e || !e.fig) return;
+    var cv = elBody.querySelector('canvas.hk-fig'); if(!cv) return;
+    /* ★ 例外を握りつぶさない。握りつぶすと「図が白紙」という同じ見た目になり、
+       原因が分からなくなる。記録して、検査から読めるようにしておく。 */
+    try{ e.fig(cv, bundle()); }
+    catch(err){
+      (window.__hkErr = window.__hkErr || []).push(curKey + ': ' + (err && err.message));
+    }
+  }
+  function open(key){
+    var HK = window.HK || {};          /* ★ 押した時に読む（MATERIAL は engine より後に走る） */
+    var e = HK[key]; if(!e) return;
+    running = false; curKey = key;
+    elK.textContent = e.k || '補足';
+    elT.textContent = e.title || '';
+    elBody.innerHTML = e.html || '';
+    ov.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    /* ★ requestAnimationFrame で待たない。
+       headless（--virtual-time-budget）では rAF が発火しないことがあり、
+       そのとき図は永久に白紙のままになる。器は既に display:flex なので、
+       版面を強制的に確定させれば同期で正しい寸法が取れる。 */
+    void ov.offsetWidth;
+    draw();
+    setTimeout(draw, 60);              /* 寸法が落ち着いたあと、もう一度だけ */
+  }
+  function close(){
+    running = false; curKey = null;
+    ov.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  /* P 走査: 本文の <b> の下マーカーを左→右へ引き直す */
+  function sweep(){
+    var bs = elBody.querySelectorAll('p b, p strong');
+    bs.forEach(function(b){ b.classList.remove('hk-pop'); b.style.removeProperty('--d'); });
+    void elBody.offsetWidth;
+    bs.forEach(function(b, k){
+      b.style.setProperty('--d', (k * 0.08) + 's');
+      b.classList.add('hk-pop');
+    });
+  }
+  ov.addEventListener('click', function(e){ if(e.target === ov) close(); });
+  ov.querySelector('.hk-close').addEventListener('click', close);
+  document.addEventListener('keydown', function(e){
+    if(!ov.classList.contains('open')) return;
+    if(e.key === 'Escape'){ close(); return; }
+    if(e.key === 'p' || e.key === 'P'){ e.preventDefault(); sweep(); }
+  });
+  document.querySelectorAll('.hk-chip').forEach(function(c){
+    c.addEventListener('click', function(){ open(c.getAttribute('data-hk')); });
+  });
+  /* テーマを変えたら、開いている補足の図も描き直す */
+  window.REDRAW(function(){ if(ov.classList.contains('open')) draw(); });
+})();
+
+/* ===== 7. 説明モード（投影・収録） ======================================
+   ページ内の既存ブロックを集めて 1 画面 1 ブロックに割り付ける。
+   図は clone せず**本体を借りて**、閉じるときに元の位置へ返す
+   （clone にすると結線と状態が切れ、操作しても図が反応しない）。
+   ★ 情報キットの状態判定バナーは .figbox の中に置く。shell は .banner を
+     集めないので、figbox の外に出すと投影でバナーだけ消える。 */
+(function(){
+  var page = document.querySelector('main.page'); if(!page) return;
+  var stage = null, bar = null, slides = [], idx = 0, borrowed = [];
+
+  var PALS = [
+    {k:'shiro',  n:'白磁', a:'#1b4f86', b:'#b8860b', c:'#f7f9fb'},
+    {k:'aizumi', n:'藍墨', a:'#123d6b', b:'#a5760d', c:'#eef3f9'},
+    {k:'mori',   n:'森',   a:'#176984', b:'#9c7a12', c:'#f2f6f4'},
+    {k:'yoru',   n:'夜',   a:'#7fb0e8', b:'#d9a441', c:'#0b0f14'}
+  ];
+  var ICONS = {
+    title:"<svg class='pres-ico' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path class='pi-dash' d='M2 17c3-6 5 4 8-3s5 6 12-5'/><circle class='pi-pulse' cx='20' cy='6' r='2.4' fill='currentColor' stroke='none'/></svg>",
+    ex:"<svg class='pres-ico' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='3' width='18' height='18' rx='3'/><path class='pi-dash' d='M7 9h10M7 13h7'/><circle class='pi-pulse' cx='17.5' cy='16.5' r='2' fill='currentColor' stroke='none'/></svg>",
+    fig:"<svg class='pres-ico' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 21V3M3 21h18'/><rect class='pi-rise' x='6' y='11' width='3.2' height='8' rx='1' fill='currentColor' stroke='none'/><rect class='pi-rise2' x='11' y='7' width='3.2' height='12' rx='1' fill='currentColor' stroke='none'/><rect class='pi-rise3' x='16' y='13' width='3.2' height='6' rx='1' fill='currentColor' stroke='none'/></svg>",
+    steps:"<svg class='pres-ico' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path class='pi-rise' d='M3 20h4v-5H3zM10 20h4v-9h-4zM17 20h4V6h-4z'/><circle class='pi-walk' cx='5' cy='10' r='1.8' fill='currentColor' stroke='none'/></svg>",
+    ans:"<svg class='pres-ico' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><circle class='pi-pulse' cx='12' cy='12' r='9'/><path d='M8 12.5l2.6 2.6L16 9.5'/></svg>",
+    point:"<svg class='pres-ico' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1h6c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z'/><circle class='pi-pulse' cx='12' cy='9' r='2.6' fill='currentColor' stroke='none'/></svg>",
+    foot:"<svg class='pres-ico' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path class='pi-spin' d='M12 3a9 9 0 1 1-6.4 2.6'/><path d='M3 3v5h5'/><circle class='pi-pulse' cx='12' cy='12' r='2.2' fill='currentColor' stroke='none'/></svg>"
+  };
+  function mk(cls, html){
+    var d = document.createElement('div'); d.className = cls;
+    if(html != null) d.innerHTML = html; return d;
+  }
+  function kicker(){
+    var k = page.querySelector('.kicker'); if(!k) return '';
+    return Array.prototype.map.call(k.querySelectorAll('.badge'), function(b){
+      return b.textContent.trim(); }).join(' ・ ');
+  }
+
+  function build(){
+    var out = [], title = (page.querySelector('h1') || {}).textContent || '';
+    title = title.trim();
+
+    var lead = page.querySelector('.lead');
+    out.push({kick:kicker(), head:title, nodes: lead ? [lead.cloneNode(true)] : [], key:'title'});
+
+    var ex = page.querySelector('.exbox');
+    if(ex) out.push({kick:'問い', head:title, nodes:[ex.cloneNode(true)], key:'ex'});
+
+    /* 図（本体を借りる。clone すると結線と状態が切れて、操作しても反応しなくなる） */
+    var fig = page.querySelector('.figbox');
+    if(fig){
+      var h2 = null, p = fig.previousElementSibling;
+      while(p){ if(p.tagName === 'H2'){ h2 = p; break; } p = p.previousElementSibling; }
+      out.push({kick:'動かして見る', head: h2 ? h2.textContent.trim() : '動かして確かめる',
+                borrow:fig, hasFig:true, key:'fig'});
+      /* ★ 指標は図と同じ面に置かない。
+         図の canvas は中身で高さが決まる（この単元では約 560px）。
+         同じ面にバナー・指標・凡例・説明を全部載せると、図に残る高さが 280px ほどになり、
+         object-fit:contain が図を 1/3 に縮める。切れてはいないので機械の検査は通るが、
+         投影すると配列の数字もプログラムも読めない。面を分けて、図に高さを渡す。
+         借り出す（clone しない）ので、数は図の操作にそのまま追従する。 */
+      var mt = fig.querySelector('.metrics');
+      if(mt) out.push({kick:'いまの値', head:'数で確かめる', borrow:mt, key:'nums'});
+    }
+
+    /* 板書ステッパー。★全手を1画面に載せると枠から落ちる。4 手ずつに割る */
+    var steps = page.querySelector('.steps');
+    if(steps){
+      var items = Array.prototype.slice.call(steps.querySelectorAll('.step'));
+      var PER = 4, npg = Math.max(1, Math.ceil(items.length / PER));
+      for(var si = 0; si < npg; si++){
+        (function(si){
+          var cl = steps.cloneNode(true);
+          Array.prototype.slice.call(cl.querySelectorAll('.step')).forEach(function(el, k){
+            if(k < si*PER || k >= (si+1)*PER) el.remove();
+          });
+          out.push({kick:'解説', head: npg > 1 ? ('手順を一つずつ　' + (si+1) + ' / ' + npg)
+                                               : '手順を一つずつ',
+                    nodes:[cl], key:'steps'});
+        })(si);
+      }
+    }
+
+    var ans = page.querySelector('.ansbar');
+    if(ans) out.push({kick:'答え', head:title, nodes:[ans.cloneNode(true)], key:'ans'});
+
+    var cos = page.querySelectorAll('.callout.navy:not(.intro), .oneline');
+    if(cos.length){
+      var ns = [];
+      Array.prototype.forEach.call(cos, function(c){ ns.push(c.cloneNode(true)); });
+      out.push({kick:'ここだけは持ち帰る', head:'まとめ', nodes:ns, key:'point'});
+    }
+
+    var ft = page.querySelector('.foot');
+    if(ft) out.push({kick:'おわりに', head:ft.textContent.trim(), nodes:[], key:'foot'});
+    return out;
+  }
+
+  function render(){
+    var defs = build();
+    stage = mk('pres-stage'); slides = [];
+    defs.forEach(function(d){
+      var s = mk('pres-slide' + (d.hasFig ? ' has-fig' : ''));
+      var head = mk('pres-head');
+      if(d.kick) head.appendChild(mk('pres-kick', (ICONS[d.key] || '') + '<span>' + d.kick + '</span>'));
+      var h = document.createElement('h2');
+      h.className = 'pres-h'; h.textContent = d.head || '';
+      head.appendChild(h);
+      var body = mk('pres-body');
+      (d.nodes || []).forEach(function(n){ body.appendChild(n); });
+      if(d.borrow){
+        var ph = document.createElement('div'); ph.className = 'pres-ph';
+        d.borrow.parentNode.insertBefore(ph, d.borrow);
+        borrowed.push({node:d.borrow, ph:ph});
+        body.appendChild(d.borrow);
+        if(d.extra){
+          var ph2 = document.createElement('div');
+          d.extra.parentNode.insertBefore(ph2, d.extra);
+          borrowed.push({node:d.extra, ph:ph2});
+          d.borrow.appendChild(d.extra);
+        }
+      }
+      s.appendChild(head); s.appendChild(body);
+      stage.appendChild(s); slides.push(s);
+    });
+    document.body.appendChild(stage);
+
+    bar = mk('pres-bar');
+    var dots = mk('pres-dots');
+    slides.forEach(function(){ dots.appendChild(mk('pres-dot')); });
+    var cnt = mk('pres-count'); cnt.id = 'pres-count';
+    var nav = mk('pres-nav');
+    nav.innerHTML = '<button id="pres-prev" type="button">← 戻る</button>'
+                  + '<button id="pres-next" type="button">進む →</button>'
+                  + '<button id="pres-exit" type="button">終了 (Esc)</button>';
+    var hint = mk('pres-hint', '← → / Space で送る ・ f で全画面');
+    bar.appendChild(cnt); bar.appendChild(dots); bar.appendChild(hint); bar.appendChild(nav);
+
+    var pal = mk('pres-pal'); pal.appendChild(mk('pl', '配色'));
+    var cur = document.body.getAttribute('data-ptheme') || 'shiro';
+    PALS.forEach(function(t){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'pres-swatch' + (t.k === cur ? ' on' : '');
+      b.title = t.n; b.setAttribute('aria-label', '配色：' + t.n);
+      b.style.background = 'linear-gradient(135deg,' + t.a + ' 0 50%,' + t.b + ' 50% 100%)';
+      b.innerHTML = '<i style="background:' + t.c + '; inset:9px"></i>';
+      b.onclick = function(){
+        document.body.setAttribute('data-ptheme', t.k);
+        bar.querySelectorAll('.pres-swatch').forEach(function(x){ x.classList.remove('on'); });
+        b.classList.add('on');
+        setTimeout(function(){ if(window.THEME_SYNC) window.THEME_SYNC(); }, 20);
+      };
+      pal.appendChild(b);
+    });
+    bar.appendChild(pal);
+    document.body.appendChild(bar);
+
+    document.getElementById('pres-prev').onclick = function(){ go(idx - 1); };
+    document.getElementById('pres-next').onclick = function(){ go(idx + 1); };
+    document.getElementById('pres-exit').onclick = leave;
+  }
+
+  /* 入り切らない分を「見えないまま捨てない」。枠に収まるまで本文の字送りを詰める。
+     canvas は CSS 高さで決まるので、文字だけ詰めれば図は崩れない。 */
+  function fit(sl){
+    if(!sl) return;
+    var body = sl.querySelector('.pres-body'); if(!body) return;
+    body.style.fontSize = '';
+    var sr = sl.getBoundingClientRect();
+    function over(){
+      var els = body.querySelectorAll('*');
+      for(var k = 0; k < els.length; k++){
+        var e = els[k];
+        if(e.namespaceURI === 'http://www.w3.org/2000/svg') continue;  /* SVG 内は数えない */
+        if(!e.getClientRects().length) continue;
+        var r = e.getBoundingClientRect();
+        if(r.height < 1 && r.width < 1) continue;
+        /* 余裕は +2。−2 にすると枠いっぱいの要素を全部はみ出しと数え、字が下限まで縮む */
+        if(r.bottom > sr.bottom + 2 || r.right > sr.right + 2) return true;
+      }
+      return false;
+    }
+    /* ★ 縮めるのは「切り落とされる」ときだけにする。
+       .pres-body は overflow-y:auto にしてあるので、入り切らない分はスクロールで読める。
+       それなのに縮めると、投影で 8.6px まで小さくなって誰にも読めなくなる（実測）。
+       読めない字より、スクロールできるほうが害が小さい。
+       さらに .panel / .metrics は各自スクロールするので、その中の要素は数えない
+       （数えると「スクロールで読める分」まで溢れと見なして、字だけが縮む）。 */
+    var oy = getComputedStyle(body).overflowY;
+    if(oy === 'auto' || oy === 'scroll') return;
+    if(!over()) return;
+    for(var s = 0.96; s >= 0.88; s -= 0.04){   /* 下限 0.88em。これ以上は小さくしない */
+      body.style.fontSize = s + 'em';
+      if(!over()) return;
+    }
+    body.style.fontSize = '0.88em';
+  }
+
+  function go(i){
+    if(!slides.length) return;
+    idx = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach(function(s, k){ s.classList.toggle('on', k === idx); });
+    bar.querySelectorAll('.pres-dot').forEach(function(d, k){
+      d.classList.toggle('on', k === idx);
+      d.classList.toggle('done', k < idx);
+    });
+    document.getElementById('pres-count').textContent = (idx + 1) + ' / ' + slides.length;
+    fit(slides[idx]);                       /* 同期で詰める。出してから詰めると一瞬はみ出す */
+    setTimeout(function(){
+      if(window.THEME_SYNC) window.THEME_SYNC();
+      window.dispatchEvent(new Event('resize'));
+      fit(slides[idx]);
+    }, 60);
+  }
+
+  function enter(){ if(stage) return; render(); document.body.classList.add('present'); go(0); }
+  function leave(){
+    if(!stage) return;
+    borrowed.forEach(function(b){ b.ph.parentNode.insertBefore(b.node, b.ph); b.ph.remove(); });
+    borrowed = []; stage.remove(); bar.remove();
+    stage = null; bar = null; slides = [];
+    document.body.classList.remove('present');
+    setTimeout(function(){
+      if(window.THEME_SYNC) window.THEME_SYNC();
+      window.dispatchEvent(new Event('resize'));
+    }, 60);
+  }
+
+  var t = document.getElementById('pres-toggle');
+  if(t) t.addEventListener('click', function(){ stage ? leave() : enter(); });
+
+  document.addEventListener('keydown', function(e){
+    if(!stage){
+      if(e.key === 'p' && !e.metaKey && !e.ctrlKey && document.activeElement === document.body){
+        e.preventDefault(); enter();
+      }
+      return;
+    }
+    /* モーダルが開いているときは触らない（裏の面が進む事故を防ぐ） */
+    if(document.querySelector('.overlay.open,.hk-ov.open,.zoom-ov.open')) return;
+    if(e.key === 'Escape'){ e.preventDefault(); leave(); }
+    else if(e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown'){ e.preventDefault(); go(idx + 1); }
+    else if(e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); go(idx - 1); }
+    else if(e.key === 'Home'){ e.preventDefault(); go(0); }
+    else if(e.key === 'End'){ e.preventDefault(); go(slides.length - 1); }
+    else if(e.key === 'f' || e.key === 'F'){
+      e.preventDefault();
+      if(document.fullscreenElement) document.exitFullscreen();
+      else if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+    }
+  });
+})();
+
+</script>
+<script>
+/* ===================== MATERIAL — なぜ合図が 1 つ先なのか ====================
+   3 つの場面を 1 枚の canvas で切り替える。
+
+   数の正本 = specs/loop-range.spec.md（非公開）。独立検算済み（python）。
+     合図 10 → 1〜9（9 個）／合図 9 → 1〜8（8 個）／合図 11 → 1〜10（10 個）。
+     回数 ＝ ⌈(値2 − 値1) ÷ 増減値⌉。増減値が負でも同じ式で合う。
+     3 階から 8 階へ上がると、上がる段は 5、通る階は 6。定規は 0〜10 cm で目盛り 11 本。
+
+   ★「差」と「個数」は 1 つずれる。これがこの回の難所の正体で、
+     配列の添字（第6回）とも、階段や本のページとも同じ形をしている。
+   ============================================================================ */
+(function(){
+  "use strict";
+
+  var cv  = document.getElementById('cv');
+  var ctx = cv.getContext('2d');
+  var K   = window.KC;
+  var W = 0, H = 0;
+
+  var el = {
+    banner:document.getElementById('banner'), cbox:document.getElementById('cbox'),
+    cap:document.getElementById('stage-cap'), mets:document.getElementById('mets'),
+    leg:document.getElementById('leg'),
+    v2b:document.getElementById('v2b'), v2bval:document.getElementById('v2bval'),
+    kai:document.getElementById('kai'), kaival:document.getElementById('kaival'),
+    rowAizu:document.getElementById('row-aizu'), rowV2b:document.getElementById('row-v2b'),
+    rowKai:document.getElementById('row-kai')
+  };
+
+  function MF(px){ return Math.round(px * (window.ZOOM || 1) * 10) / 10; }
+  /* ★ 図の中の文字は CSS では変えられない。canvas に JS が直接描いている。 */
+  function F(px, w){ return (w || '600') + ' '
+    + MF(Math.max(15, Math.round(px * 1.35))) + 'px ' + window.JPFONT; }
+
+  /* 器の幅に収めて描く。収まらなければ級数を下げ、それでも無理なら文字単位で折る。 */
+  function drawFit(t, px, x, y, align, maxW, w, lh){
+    var p = px, wt = w || '700';
+    ctx.textAlign = align;
+    while(p > 11){
+      ctx.font = F(p, wt);
+      if(ctx.measureText(t).width <= maxW) break;
+      p -= 0.5;
+    }
+    ctx.font = F(Math.max(11, p), wt);
+    if(ctx.measureText(t).width <= maxW){ ctx.fillText(t, x, y); return 1; }
+    var lines = [], cur = '';
+    for(var k = 0; k < t.length; k++){
+      var c1 = t.charAt(k);
+      if(cur && ctx.measureText(cur + c1).width > maxW){ lines.push(cur); cur = c1; }
+      else { cur += c1; }
+    }
+    if(cur) lines.push(cur);
+    for(var q = 1; q < lines.length; q++){
+      while(lines[q] && '。、」）'.indexOf(lines[q].charAt(0)) >= 0){
+        lines[q - 1] += lines[q].charAt(0);
+        lines[q] = lines[q].slice(1);
+      }
+    }
+    for(var r = 0; r < lines.length; r++) ctx.fillText(lines[r], x, y + r * (lh || 19));
+    return lines.length;
+  }
+
+  /* ===== 数理 ===== */
+  var stage = 1, aizu = 9;           /* 下の段の合図。上の段は 10 で固定 */
+  var V1 = 1, STEP = 1, FLOOR0 = 3;  /* 値1 と増減値、エレベーターの出発階 */
+
+  function v2b(){ return Math.max(3, Math.min(12, parseInt(el.v2b.value, 10))); }
+  function kai(){ return Math.max(4, Math.min(9, parseInt(el.kai.value, 10))); }
+  function upto(stop){
+    var out = [];
+    for(var i = V1; i < stop; i += STEP){ out.push(i); if(out.length > 30) break; }
+    return out;
+  }
+  function calcN(stop){ return Math.max(0, Math.ceil((stop - V1) / STEP)); }
+
+  var HIT = [];
+
+  /* 数直線を 1 本。stop より手前を塗り、stop に合図の縦線を立てる */
+  function line(y, stop, label, col, collect){
+    var c = ctx, lo = 0, hi = 12, padL = 26, padR = 22;
+    var X = function(k){ return padL + (k - lo) / (hi - lo) * (W - padL - padR); };
+    c.setLineDash([]);
+    c.strokeStyle = K('--k-line2'); c.lineWidth = 1.3;
+    c.beginPath(); c.moveTo(padL - 6, y); c.lineTo(W - padR + 6, y); c.stroke();
+    for(var k = 1; k <= 11; k++){
+      var x = X(k), on = (k < stop);
+      if(collect) HIT.push({x:x - 11, y:y - 12, w:22, h:24});
+      if(on){
+        c.beginPath(); c.arc(x, y, 5.8, 0, Math.PI * 2);
+        c.fillStyle = col; c.fill();
+        c.lineWidth = 1.7; c.strokeStyle = K('--k-paper'); c.stroke();
+      } else {
+        c.beginPath(); c.arc(x, y, 5.8, 0, Math.PI * 2);
+        c.lineWidth = 1.9; c.setLineDash([3, 2.6]); c.strokeStyle = K('--k-warn');
+        c.stroke(); c.setLineDash([]);
+      }
+      c.fillStyle = on ? K('--k-ink') : K('--k-inkfaint');
+      c.font = F(11.5, on ? '700' : '600'); c.textAlign = 'center';
+      c.fillText(String(k), x, y + 21);
+    }
+    var xs = X(stop);
+    c.strokeStyle = K('--k-warn'); c.lineWidth = 2.2; c.setLineDash([4, 3]);
+    c.beginPath(); c.moveTo(xs, y - 17); c.lineTo(xs, y + 11); c.stroke(); c.setLineDash([]);
+    c.fillStyle = col; c.textAlign = 'left';
+    drawFit(label, 11.5, 8, y - 22, 'left', W - 20, '700');
+    return {X:X};
+  }
+
+  /* ===== 場面① 合図を動かす ===== */
+  function drawStage1(){
+    var c = ctx;
+    HIT = [];
+    c.fillStyle = K('--k-inksoft');
+    var ln = drawFit('合図だけが違う 2 本を並べます', 13, W / 2, 22, 'center', W - 16, '700');
+    var y1 = 66 + (ln - 1) * 19, y2 = y1 + Math.max(58, Math.round(70 * TIGHT));
+    line(y1, 10, '合図 10 → 9 まで（9 個）', K('--k-ok'), false);
+    line(y2, aizu, '合図 ' + aizu + ' → ' + (aizu - 1) + ' まで（' + (aizu - 1) + ' 個）',
+         aizu === 10 ? K('--k-ok') : K('--k-warn'), true);
+    if(window.__setHit) window.__setHit(HIT);
+    var y = y2 + 46;
+    c.fillStyle = aizu === 10 ? K('--k-ok') : K('--k-warn');
+    var l2 = drawFit(aizu === 10 ? '同じ並びです'
+                                 : '違うのは右端の ' + Math.abs(aizu - 10) + ' 個だけです',
+                     12.5, 14, y, 'left', W - 24, '700');
+    y += (l2 - 1) * 19;
+    c.fillStyle = K('--k-inkfaint');
+    var l3 = drawFit('真ん中が抜けたりはしません。動くのはいつも右端です',
+                     12, 14, y + 22, 'left', W - 24, '600');
+    return y + 38 + (l3 - 1) * 18;
+  }
+
+  /* ===== 場面② 処理される範囲 ===== */
+  function drawStage2(){
+    var c = ctx, stop = v2b(), L = upto(stop);
+    HIT = [];
+    c.fillStyle = K('--k-inksoft');
+    var ln = drawFit('値1 は含み、値2 は含みません', 13, W / 2, 22, 'center', W - 16, '700');
+    var y = 86 + (ln - 1) * 19;
+    var lo = 0, hi = 12, padL = 26, padR = 22;
+    var X = function(k){ return padL + (k - lo) / (hi - lo) * (W - padL - padR); };
+    /* 処理される範囲の帯。数直線より先に敷いて、丸と重ならないようにする */
+    var bandH = Math.max(26, Math.round(34 * TIGHT));
+    c.fillStyle = K('--k-tint');
+    c.fillRect(X(V1), y - bandH / 2, X(stop) - X(V1), bandH);
+    c.fillStyle = K('--k-main'); c.font = F(11.5, '700'); c.textAlign = 'center';
+    c.fillText('処理される範囲', (X(V1) + X(stop)) / 2, y - bandH / 2 - 9);
+    /* ★ 数直線のラベルは空にする。左端に「値1 ＝ 1　値2 ＝ 10」を出すと、
+       中央の「処理される範囲」とほぼ同じ高さに並び、幅が狭まったときに当たる。
+       同じことは見出しと、下の「含む／含まない」がすでに言っている。 */
+    var g = line(y, stop, '', K('--k-main'), true);
+    if(window.__setHit) window.__setHit(HIT);
+    var yy = y + 44;
+    c.fillStyle = K('--k-ok'); c.font = F(11.5, '700'); c.textAlign = 'center';
+    c.fillText('含む', X(V1), yy);
+    c.fillStyle = K('--k-warn');
+    c.fillText('含まない', X(stop), yy);
+    yy += 26;
+    c.fillStyle = K('--k-deep');
+    var l2 = drawFit('回数 ＝ （' + stop + ' − ' + V1 + '）÷ ' + STEP + ' の切り上げ ＝ '
+                     + calcN(stop) + ' 回', 12.5, 14, yy, 'left', W - 24, '700');
+    yy += (l2 - 1) * 19;
+    c.fillStyle = K('--k-inkfaint');
+    var l3 = drawFit(L.length ? 'いま処理されるのは ' + L.join('・') : '処理される値はありません',
+                     12, 14, yy + 22, 'left', W - 24, '600');
+    return yy + 38 + (l3 - 1) * 18;
+  }
+
+  /* ===== 場面③ 身のまわり（エレベーターと定規） ===== */
+  function drawStage3(){
+    var c = ctx, top = kai();
+    HIT = [];
+    var floors = [];
+    for(var f = FLOOR0; f <= top; f++) floors.push(f);
+    c.fillStyle = K('--k-inksoft');
+    var ln = drawFit('通る階の数と、上がる段の数は 1 つずれます',
+                     13, W / 2, 22, 'center', W - 16, '700');
+    var y = 74 + (ln - 1) * 19;
+    var padL = 30, padR = 26;
+    var X = function(i){
+      return floors.length < 2 ? W / 2
+           : padL + i / (floors.length - 1) * (W - padL - padR);
+    };
+    c.setLineDash([]);
+    c.strokeStyle = K('--k-line2'); c.lineWidth = 1.4;
+    c.beginPath(); c.moveTo(padL - 14, y); c.lineTo(W - padR + 12, y); c.stroke();
+    for(var i = 0; i < floors.length; i++){
+      var x = X(i);
+      HIT.push({x:x - 14, y:y - 14, w:28, h:28});
+      c.beginPath(); c.arc(x, y, 7, 0, Math.PI * 2);
+      c.fillStyle = K('--k-ok'); c.fill();
+      c.lineWidth = 1.8; c.strokeStyle = K('--k-paper'); c.stroke();
+      c.fillStyle = K('--k-ink'); c.font = F(12, '700'); c.textAlign = 'center';
+      c.fillText(floors[i] + ' 階', x, y + 26);
+      c.fillStyle = K('--k-ok'); c.font = F(11, '700');
+      c.fillText(String(i + 1) + ' つ目', x, y - 16);
+      if(i < floors.length - 1){
+        var xb = X(i + 1), ym = y + 46;
+        c.strokeStyle = K('--k-warn'); c.lineWidth = 2.2; c.setLineDash([]);
+        c.beginPath(); c.moveTo(x + 10, ym); c.lineTo(xb - 13, ym); c.stroke();
+        window.arrowHead(c, xb - 10, ym, 'right');
+        c.fillStyle = K('--k-warn'); c.font = F(11, '700'); c.textAlign = 'center';
+        c.fillText(String(i + 1), (x + xb) / 2, ym - 7);
+      }
+    }
+    if(window.__setHit) window.__setHit(HIT);
+    var yy = y + 74;
+    c.fillStyle = K('--k-ok'); c.textAlign = 'left';
+    var l2 = drawFit('通る階 ＝ ' + floors.length + ' つ　／　上がる段 ＝ '
+                     + (floors.length - 1) + ' つ', 12.5, 14, yy, 'left', W - 24, '700');
+    yy += (l2 - 1) * 19;
+    c.fillStyle = K('--k-inkfaint');
+    var l3 = drawFit('定規も同じです。0 cm から 10 cm までの長さは 10 cm、目盛りは 11 本あります',
+                     12, 14, yy + 22, 'left', W - 24, '600');
+    return yy + 38 + (l3 - 1) * 18;
+  }
+
+  var TIGHT = 1;
+
+  function draw(){
+    var vh = (window.innerHeight || 900);
+    var lid = Math.max(220, Math.round(vh * 0.40));
+    var h = stage === 1 ? 280 : 270;
+    TIGHT = 1;
+    var o = window.SETUP(cv, h);
+    W = o.w; H = o.h;
+    ctx.clearRect(0, 0, W, H);
+    var used = run();
+    if(used > lid){
+      /* ★ TIGHT を戻さない。このあと「使った高さへ合わせ直す」再描画が走る。 */
+      TIGHT = Math.max(0.62, lid / used);
+      ctx.clearRect(0, 0, W, H);
+      used = run();
+    }
+    if(Math.abs(used - H) > 14){
+      var o2 = window.SETUP(cv, Math.max(180, used));
+      W = o2.w; H = o2.h;
+      ctx.clearRect(0, 0, W, H);
+      run();
+    }
+  }
+  function run(){
+    return stage === 1 ? drawStage1() : stage === 2 ? drawStage2() : drawStage3();
+  }
+
+  /* ===== 指標カード ===== */
+  function met(lab, val, cls){
+    return '<div class="mcard' + (cls ? ' ' + cls : '') + '"><p class="mlab">' + lab
+         + '</p><p class="mval">' + val + '</p></div>';
+  }
+  function metrics(){
+    var h = '';
+    if(stage === 1){
+      h = met('上の段の合図', '10', 'hl')
+        + met('下の段の合図', String(aizu), aizu === 10 ? '' : 'pk')
+        + met('個数の差', String(Math.abs(aizu - 10)) + ' 個');
+    } else if(stage === 2){
+      var stop = v2b();
+      h = met('値1', String(V1))
+        + met('値2', String(stop), 'pk')
+        + met('最後に処理する値', String(stop - STEP), 'hl')
+        + met('回数', calcN(stop) + ' 回');
+    } else {
+      var n = kai() - FLOOR0 + 1;
+      h = met('通る階', n + ' つ', 'hl')
+        + met('上がる段', (n - 1) + ' つ', 'pk')
+        + met('差', '1');
+    }
+    el.mets.innerHTML = h;
+  }
+
+  /* ===== 操作行の出し入れ =====
+     ★ hidden 属性でなく style.display。.ctl-row / .qrow は display:flex なので
+       hidden 属性では負けて、効かない操作子が残る。 */
+  function showRow(node, on){ if(node) node.style.display = on ? '' : 'none'; }
+
+  function update(){
+    showRow(el.rowAizu, stage === 1);
+    showRow(el.rowV2b,  stage === 2);
+    showRow(el.rowKai,  stage === 3);
+    showRow(el.leg,     stage === 1 || stage === 2);
+    el.v2bval.textContent = String(v2b());
+    el.kaival.textContent = String(kai());
+
+    var warn = (stage === 1 && aizu !== 10) || (stage === 3);
+    el.cbox.className = 'canvas-box ' + (warn ? 'warn' : 'ok');
+    el.banner.className = 'banner ' + (warn ? 'warn' : 'ok');
+
+    if(stage === 1){
+      el.banner.innerHTML = (aizu === 10)
+        ? '✓ 合図が同じなので、並びも同じです'
+          + '<small>どちらも 9 まで処理されます。合図の 10 は処理されません。</small>'
+        : '⚠ 合図を ' + aizu + ' にすると、' + (aizu - 1) + ' で終わります'
+          + '<small>目標が 9 までなら、'
+          + (aizu < 10 ? (9 - (aizu - 1)) + ' 個足りません。' : '余分に出ています。')
+          + '落ちるのは右端の 1 つずつで、真ん中は変わりません。</small>';
+    } else if(stage === 2){
+      var stop = v2b();
+      el.banner.innerHTML = '✓ 値1 の ' + V1 + ' は含み、値2 の ' + stop + ' は含みません'
+        + '<small>処理されるのは ' + V1 + ' から ' + (stop - STEP) + ' までの '
+        + calcN(stop) + ' 個です。回数は、値2 から値1 を引いた数を増減値で割り、'
+        + '切り上げた数になります。</small>';
+    } else {
+      var n = kai() - FLOOR0 + 1;
+      el.banner.innerHTML = '⚠ 通る階は ' + n + ' つ、上がる段は ' + (n - 1) + ' つです'
+        + '<small>' + FLOOR0 + ' 階から ' + kai() + ' 階へ上がると、差は '
+        + (n - 1) + ' ですが、通る階は ' + n + ' つあります。'
+        + '「〜から〜まで」は、差と個数が 1 つずれます。</small>';
+    }
+
+    el.cap.innerHTML = ['',
+      'ボタンで下の段の合図を替えると、右端の丸だけが出たり消えたりします。',
+      'つまみで値2 を動かすと、帯の右端と回数が同時に動きます。',
+      'つまみで何階まで上がるかを替えても、通る階と上がる段の差は 1 のままです。'][stage];
+
+    document.querySelectorAll('.qstage').forEach(function(b){
+      b.classList.toggle('active', +b.dataset.stage === stage);
+    });
+    document.querySelectorAll('#stages .step').forEach(function(s2){
+      s2.classList.toggle('on', +s2.dataset.stage === stage);
+    });
+    metrics(); draw();
+  }
+
+  /* ===== 結線 ===== */
+  document.querySelectorAll('.qstage').forEach(function(b){
+    b.addEventListener('click', function(){ stage = +b.dataset.stage; update(); });
+  });
+  document.querySelectorAll('#stages .step').forEach(function(s2){
+    s2.style.cursor = 'pointer';
+    s2.addEventListener('click', function(){ stage = +s2.dataset.stage; update(); });
+  });
+  document.querySelectorAll('.qbtn[data-a]').forEach(function(b){
+    b.addEventListener('click', function(){
+      aizu = +b.dataset.a;
+      document.querySelectorAll('.qbtn[data-a]').forEach(function(o){
+        o.classList.toggle('active', o === b); });
+      update();
+    });
+  });
+  el.v2b.addEventListener('input', update);
+  el.kai.addEventListener('input', update);
+
+  /* 図を直接押して動かす。当たり判定は draw() が実際に使った座標。 */
+  window.__setHit = function(l){ HIT = l; };
+  cv.style.cursor = 'pointer';
+  cv.addEventListener('click', function(ev){
+    if(!HIT.length) return;
+    var r = cv.getBoundingClientRect();
+    var x = (ev.clientX - r.left) * (cv.clientWidth / r.width);
+    var y = (ev.clientY - r.top)  * (cv.clientHeight / r.height);
+    for(var k = 0; k < HIT.length; k++){
+      var h = HIT[k];
+      if(x >= h.x - 4 && x <= h.x + h.w + 4 && y >= h.y - 4 && y <= h.y + h.h + 4){
+        if(stage === 1){
+          var v = k + 1;                       /* 1〜11 の目盛り */
+          if(v === 8 || v === 9 || v === 11){
+            aizu = v;
+            document.querySelectorAll('.qbtn[data-a]').forEach(function(o){
+              o.classList.toggle('active', +o.dataset.a === aizu); });
+            update();
+          }
+        } else if(stage === 2){
+          var v2 = k + 1;
+          if(v2 >= 3 && v2 <= 12){ el.v2b.value = String(v2); update(); }
+        } else {
+          el.kai.value = String(Math.max(4, Math.min(9, FLOOR0 + k)));
+          update();
+        }
+        return;
+      }
+    }
+  });
+
+  window.addEventListener('resize', draw);
+  window.REDRAW(draw);
+
+  /* ===== 補足（hosoku）— 中に操作子を入れる ===== */
+  window.HK = {
+    zurasu: {
+      k:'補足 ・ 落ちる 1 つ', title:'落ちるのは、いつも右端です',
+      html:'<p>合図を 1 つ手前にすると、並びから落ちるのは<b>右端の 1 つだけ</b>です。'
+        + '真ん中が抜けたり、全部が変わったりはしません。'
+        + 'だから答えは<b>少しだけ</b>違い、見ただけでは気づきにくくなります。'
+        + 'つまみで合図を動かして、どこが動くかを見てみてください。</p>'
+        + '<div class="hk-ctl"><label>合図の値</label>'
+        + '<input class="hk-st" type="range" min="6" max="12" step="1" value="9" aria-label="合図の値">'
+        + '<span class="hk-out">9</span></div>'
+        + window.FW('合図の値を動かしたときに、並びの右端だけが出たり消えたりするようすを示す図')
+        + '<div class="hk-num">合図 10 なら 9 まで（9 個）。合図 9 なら 8 まで（8 個）。'
+        + '合図 12 なら 11 まで（11 個）。個数はいつも合図より 1 つ少なくなります。</div>'
+        + '<div class="hk-key">' + window.BULB
+        + '<div>個数 ＝ <b>合図 − 値1</b>。値1 が 1 なら、個数は合図より 1 つ少なくなります。</div></div>',
+      fig:function(cv2, B){
+        var root = cv2.closest('.hk-card');
+        var sl = root ? root.querySelector('.hk-st') : null;
+        var out = root ? root.querySelector('.hk-out') : null;
+        function paint(){
+          var stop = sl ? +sl.value : 9;
+          if(out) out.textContent = String(stop);
+          var d = B.setupMini(cv2, 0.42, 146), c = d.c, Wd = d.w;
+          c.clearRect(0, 0, Wd, d.h);
+          var lo = 0, hi = 13, padL = 24, padR = 20, y = 80;
+          var X = function(k){ return padL + (k - lo) / (hi - lo) * (Wd - padL - padR); };
+          c.strokeStyle = B.LINE2; c.lineWidth = 1.3;
+          c.beginPath(); c.moveTo(padL - 6, y); c.lineTo(Wd - padR + 6, y); c.stroke();
+          var n = 0;
+          for(var k = 1; k <= 12; k++){
+            var x = X(k), on = (k < stop);
+            if(on) n++;
+            if(on){
+              c.beginPath(); c.arc(x, y, 5.2, 0, Math.PI * 2);
+              c.fillStyle = B.OK; c.fill();
+              c.lineWidth = 1.5; c.strokeStyle = B.PAPER; c.stroke();
+            } else {
+              c.beginPath(); c.arc(x, y, 5.2, 0, Math.PI * 2);
+              c.lineWidth = 1.6; c.setLineDash([3, 2.4]); c.strokeStyle = B.DIMBD;
+              c.stroke(); c.setLineDash([]);
+            }
+            c.fillStyle = on ? B.INK : B.DIMINK;
+            c.font = (on ? '700 ' : '') + B.fs(11) + 'px ' + B.font; c.textAlign = 'center';
+            c.fillText(String(k), x, y + 20);
+          }
+          var xs = X(stop);
+          c.strokeStyle = B.WARN; c.lineWidth = 1.8; c.setLineDash([4, 3]);
+          c.beginPath(); c.moveTo(xs, y - 18); c.lineTo(xs, y + 10); c.stroke(); c.setLineDash([]);
+          c.fillStyle = B.WARN; c.font = '700 ' + B.fs(11) + 'px ' + B.font; c.textAlign = 'center';
+          c.fillText('合図 ' + stop, xs, y - 22);
+          c.fillStyle = B.DEEP; c.font = '700 ' + B.fs(12.5) + 'px ' + B.font;
+          c.fillText('処理されるのは ' + (stop - 1) + ' まで（' + n + ' 個）', Wd / 2, 24);
+        }
+        if(sl) sl.addEventListener('input', paint);
+        paint();
+      }
+    },
+
+    hankai: {
+      k:'補足 ・ 向きが変わっても', title:'負の向きでも、止まるのは値2',
+      html:'<p>増減値が負なら、並びは左へ伸びます。'
+        + 'それでも<b>止まるのは値2</b>で、その値は処理されません。'
+        + '回数の式もひとつで足ります。引き算も割り算もどちらも負になるので、'
+        + '答えは正のままです。ボタンで向きを替えて確かめてみてください。</p>'
+        + '<div class="hk-qrow"><button class="hk-qbtn active" type="button" data-d="p">＋1 で右へ</button>'
+        + '<button class="hk-qbtn" type="button" data-d="m">−2 で左へ</button></div>'
+        + window.FW('増減値が正のときと負のときで、並びの向きは変わっても値2が処理されないことを示す図')
+        + '<div class="hk-num">値1 ＝ 1、値2 ＝ 10、増減値 ＝ ＋1 なら 9 個。'
+        + '値1 ＝ 8、値2 ＝ 2、増減値 ＝ −2 なら 8・6・4 の 3 個で、'
+        + '（2 − 8）÷（−2）＝ 3 と合います。</div>'
+        + '<div class="hk-key">' + window.BULB
+        + '<div>向きが変わっても、<b>値2 は含まない</b>という決まりは変わりません。</div></div>',
+      fig:function(cv2, B){
+        var root = cv2.closest('.hk-card'), dir = 'p';
+        function paint(){
+          var a = (dir === 'p') ? 1 : 8, b = (dir === 'p') ? 10 : 2;
+          var s2 = (dir === 'p') ? 1 : -2;
+          var L = [], i;
+          if(s2 > 0){ for(i = a; i < b; i += s2) L.push(i); }
+          else      { for(i = a; i > b; i += s2) L.push(i); }
+          var d = B.setupMini(cv2, 0.44, 150), c = d.c, Wd = d.w;
+          c.clearRect(0, 0, Wd, d.h);
+          var lo = 0, hi = 11, padL = 24, padR = 20, y = 82;
+          var X = function(k){ return padL + (k - lo) / (hi - lo) * (Wd - padL - padR); };
+          c.strokeStyle = B.LINE2; c.lineWidth = 1.3;
+          c.beginPath(); c.moveTo(padL - 6, y); c.lineTo(Wd - padR + 6, y); c.stroke();
+          for(var k = 1; k <= 10; k++){
+            var x = X(k), on = (L.indexOf(k) >= 0);
+            if(on){
+              c.beginPath(); c.arc(x, y, 5.4, 0, Math.PI * 2);
+              c.fillStyle = B.OK; c.fill();
+              c.lineWidth = 1.5; c.strokeStyle = B.PAPER; c.stroke();
+            } else {
+              c.beginPath(); c.arc(x, y, 3.4, 0, Math.PI * 2);
+              c.fillStyle = B.DIMBD; c.fill();
+            }
+            c.fillStyle = on ? B.INK : B.DIMINK;
+            c.font = (on ? '700 ' : '') + B.fs(11) + 'px ' + B.font; c.textAlign = 'center';
+            c.fillText(String(k), x, y + 20);
+          }
+          var xb = X(b);
+          c.strokeStyle = B.WARN; c.lineWidth = 1.8; c.setLineDash([4, 3]);
+          c.beginPath(); c.moveTo(xb, y - 18); c.lineTo(xb, y + 10); c.stroke(); c.setLineDash([]);
+          c.fillStyle = B.WARN; c.font = '700 ' + B.fs(11) + 'px ' + B.font; c.textAlign = 'center';
+          c.fillText('値2 ＝ ' + b, xb, y - 22);
+          c.fillStyle = B.DEEP; c.font = '700 ' + B.fs(12.5) + 'px ' + B.font;
+          c.fillText('（' + b + ' − ' + a + '）÷ ' + s2 + ' ＝ ' + L.length + ' 個', Wd / 2, 24);
+          c.fillStyle = B.INKSOFT; c.font = B.fs(11) + 'px ' + B.font;
+          c.fillText('i は ' + L.join('・'), Wd / 2, 46);
+        }
+        if(root) root.querySelectorAll('.hk-qbtn').forEach(function(b2){
+          b2.addEventListener('click', function(){
+            dir = b2.dataset.d;
+            root.querySelectorAll('.hk-qbtn').forEach(function(o){ o.classList.toggle('active', o === b2); });
+            paint();
+          });
+        });
+        paint();
+      }
+    },
+
+    jyougi: {
+      k:'補足 ・ 定規と階段', title:'差と個数は、いつも 1 つずれる',
+      html:'<p>0 cm から 10 cm までの長さは 10 cm ですが、<b>目盛りの本数は 11 本</b>です。'
+        + '階段でも同じで、3 階から 8 階へ上がる段は 5 つ、通る階は 6 つです。'
+        + '<b>差</b>と<b>個数</b>は 1 つずれます。'
+        + 'つまみで長さを変えて、本数との関係を見てみてください。</p>'
+        + '<div class="hk-ctl"><label>長さ（cm）</label>'
+        + '<input class="hk-st" type="range" min="3" max="10" step="1" value="6" aria-label="長さ">'
+        + '<span class="hk-out">6 cm</span></div>'
+        + window.FW('定規の目盛りを並べ、長さと目盛りの本数が1つずれることを示す図')
+        + '<div class="hk-num">0 から 6 cm までの長さは 6 cm、目盛りは 7 本。'
+        + '0 から 10 cm なら長さ 10 cm、目盛り 11 本。いつも 1 本多くなります。</div>'
+        + '<div class="hk-key">' + window.BULB
+        + '<div>くり返しの回数を数えるときも、<b>端の 1 つを足すか引くか</b>で迷います。'
+        + '図に書き出せば、迷わずに済みます。</div></div>',
+      fig:function(cv2, B){
+        var root = cv2.closest('.hk-card');
+        var sl = root ? root.querySelector('.hk-st') : null;
+        var out = root ? root.querySelector('.hk-out') : null;
+        function paint(){
+          var L = sl ? +sl.value : 6;
+          if(out) out.textContent = L + ' cm';
+          var d = B.setupMini(cv2, 0.42, 144), c = d.c, Wd = d.w;
+          c.clearRect(0, 0, Wd, d.h);
+          var padL = 26, padR = 22, y = 78;
+          var X = function(k){ return padL + k / L * (Wd - padL - padR); };
+          c.fillStyle = B.SUBTLE; c.fillRect(padL, y - 22, X(L) - padL, 30);
+          c.strokeStyle = B.LINE2; c.lineWidth = 1.4;
+          c.strokeRect(padL, y - 22, X(L) - padL, 30);
+          for(var k = 0; k <= L; k++){
+            var x = X(k);
+            c.strokeStyle = B.MAIN; c.lineWidth = 2;
+            c.beginPath(); c.moveTo(x, y - 22); c.lineTo(x, y - 6); c.stroke();
+            c.fillStyle = B.INKSOFT; c.font = B.fs(11) + 'px ' + B.font; c.textAlign = 'center';
+            c.fillText(String(k), x, y + 22);
+          }
+          /* 長さの矢印。目盛りの下へ置いて重ねない */
+          var ym = y + 44;
+          c.strokeStyle = B.WARN; c.lineWidth = 2; c.setLineDash([]);
+          c.beginPath(); c.moveTo(padL, ym); c.lineTo(X(L) - 3, ym); c.stroke();
+          B.arrowHead(c, X(L), ym, 'right');
+          c.fillStyle = B.WARN; c.font = '700 ' + B.fs(11.5) + 'px ' + B.font; c.textAlign = 'center';
+          c.fillText('長さ ' + L + ' cm', (padL + X(L)) / 2, ym - 8);
+          c.fillStyle = B.DEEP; c.font = '700 ' + B.fs(12.5) + 'px ' + B.font; c.textAlign = 'center';
+          c.fillText('長さ ' + L + ' cm ／ 目盛り ' + (L + 1) + ' 本', Wd / 2, 24);
+        }
+        if(sl) sl.addEventListener('input', paint);
+        paint();
+      }
+    }
+  };
+
+  update();
+})();
+
+</script>
+</body>
+</html>
