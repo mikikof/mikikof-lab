@@ -15,7 +15,7 @@ status      = "done"
 anchor      = { kind = "lec", id = 14 }
 
 [artifacts]
-explainer = "os-abstraction.html"
+explainer = "os-abstraction/"
 print     = "ハードウェアとソフトウェア"
 quiz      = { id = "joho-hardware-software", set_index = 4 }
 lecture   = 14
