@@ -15,7 +15,7 @@ status      = "done"
 anchor      = { kind = "lec", id = 16 }
 
 [artifacts]
-explainer = "logic-gates.html"
+explainer = "logic-gates/"
 print     = "論理回路と真理値表"
 quiz      = { id = "joho-logic-gates", set_index = 6 }
 lecture   = 16
