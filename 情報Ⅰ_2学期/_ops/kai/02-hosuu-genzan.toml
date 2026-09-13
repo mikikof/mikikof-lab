@@ -15,7 +15,7 @@ status      = "done"
 anchor      = { kind = "lec", id = 15 }
 
 [artifacts]
-explainer = "complement-subtraction.html"
+explainer = "complement-subtraction/"
 print     = "補数による減算"
 quiz      = { id = "joho-binary-complement", set_index = 5 }
 lecture   = 15
