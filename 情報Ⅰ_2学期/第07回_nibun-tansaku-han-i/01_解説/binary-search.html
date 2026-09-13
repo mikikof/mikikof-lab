@@ -1,0 +1,1116 @@
+<!doctype html>
+<!--
+  情報 解説Webツール — 調べ終えた中央は、範囲から外す（二分探索）
+  第7回（情報Ⅰ 2学期・POINT 22）。正典 = edu-explainer-kit/assets/template.html を cp。
+  <style> と JS ハーネス（setupCanvas / setupMini / arrowHead / roundRect / openDeep /
+  openBasic / setStep / イベント結線）は逐語。MATERIAL だけ差し替えてある。
+  答えと数値の台帳 = specs/binary-search.spec.md（非公開側）。
+  回の正本 = 情報Ⅰ_2学期/_ops/kai/07-nibun-tansaku-han-i.md
+  外部依存ゼロ（CDN・Webフォント・KaTeX・Chart.js 不使用）。localStorage 不使用。
+-->
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>調べ終えた中央は、範囲から外す ｜ mikikof-lab</title>
+<style>
+  :root{
+    --ink:#10161f; --muted:#6b7480; --line:#e6eaf1; --hair:#e8ecf3; --hair2:#cdd6e3;
+    --bg:#f6f7f9; --card:#ffffff;
+    --accent:#2f55d4; --orange:#cf5a18;
+    --ok:#2f55d4;  --ok-bg:#eaeffc; --ok-bd:#c6d2f4; --ok-tint:#f4f6fd;
+    --warn:#d8362e; --warn-bg:#fdecea; --warn-bd:#f3c4c1; --warn-tint:#fdf5f4;
+    --wave:#1b2330;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono","Roboto Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic","YuGothic",Meiryo,sans-serif;
+    line-height:1.65;
+  }
+  .wrap{max-width:920px; margin:0 auto; padding:0 16px 56px}
+
+  header.top{
+    position:relative;
+    padding:34px 2px 20px;
+    margin-bottom:22px;
+    border-bottom:1px solid var(--hair);
+  }
+  header.top .eyebrow{
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em;
+    color:var(--muted); display:flex; align-items:center; gap:9px; margin-bottom:16px;
+  }
+  header.top .eyebrow .dot{
+    width:7px; height:7px; border-radius:50%; flex:0 0 auto;
+    background:var(--accent); box-shadow:0 0 0 4px rgba(47,85,212,.13);
+  }
+  header.top h1{
+    margin:0; font-size:34px; line-height:1.08; font-weight:700;
+    letter-spacing:.015em; color:var(--ink);
+  }
+  header.top .enlabel{
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.28em; text-transform:uppercase;
+    color:var(--accent); margin-top:10px;
+  }
+  header.top .dek{
+    margin:15px 0 0; font-size:14px; color:var(--muted); max-width:44ch;
+  }
+  header.top .sig{ position:absolute; top:30px; right:2px; width:148px; height:48px; }
+  header.top .sig path{ stroke:var(--hair2); fill:none; }
+  header.top .sig circle{ fill:var(--accent); }
+
+  .banner{
+    border:1px solid; border-radius:10px; padding:12px 16px; margin-bottom:14px;
+    font-weight:700; font-size:15px; transition:.2s;
+  }
+  .banner small{display:block; font-weight:400; font-size:13px; margin-top:4px; line-height:1.55}
+  .banner.ok{background:var(--ok-bg); border-color:var(--ok-bd); color:var(--ok)}
+  .banner.warn{background:var(--warn-bg); border-color:var(--warn-bd); color:var(--warn)}
+
+  .canvas-box{
+    background:#fff; border:1px solid var(--line); border-radius:10px;
+    overflow:hidden; transition:background .25s; margin-bottom:16px;
+  }
+  .canvas-box.ok{background:var(--ok-tint)}
+  .canvas-box.warn{background:var(--warn-tint)}
+  canvas{display:block; width:100%; height:auto}
+
+  .panel{
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:16px 18px; margin-bottom:16px; box-shadow:0 1px 3px rgba(20,30,50,.05);
+  }
+
+  .controls{display:flex; flex-wrap:wrap; gap:16px 24px}
+  .ctrl{flex:1 1 250px}
+  .ctrl label{display:flex; justify-content:space-between; align-items:baseline; font-size:14px; font-weight:700; margin-bottom:7px}
+  .ctrl label .val{color:var(--ok); font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:14px}
+  input[type=range]{width:100%; accent-color:var(--ok); height:24px}
+
+  .presets{display:flex; flex-wrap:wrap; gap:9px; margin-top:16px}
+  .presets button{
+    border:1px solid var(--line); background:#fff; border-radius:999px;
+    padding:7px 15px; font-size:13.5px; cursor:pointer; color:var(--ink);
+    font-family:inherit; transition:.15s;
+  }
+  .presets button:hover{border-color:var(--ok); color:var(--ok); background:var(--ok-bg)}
+
+  .toggles{display:flex; flex-wrap:wrap; gap:12px 22px; margin-top:16px; padding-top:14px; border-top:1px solid var(--line); font-size:14px}
+  .toggles label{display:flex; align-items:center; gap:6px; cursor:pointer}
+  .toggles input{accent-color:var(--ok); width:16px; height:16px}
+
+  .readouts{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px}
+  .ro{background:#f7f9fc; border:1px solid var(--line); border-radius:8px; padding:10px 12px}
+  .ro .k{font-size:12px; color:var(--muted)}
+  .ro .v{font-size:18px; font-weight:700; font-family:var(--mono); font-variant-numeric:tabular-nums; margin-top:2px}
+  .ro.alias{background:var(--warn-tint); border-color:var(--warn-bd)}
+  .ro.alias .v{color:var(--warn)}
+
+  h2.sec{font-size:15px; color:var(--orange); margin:0 0 11px; border-bottom:2px solid var(--orange); padding-bottom:4px; display:inline-block}
+  .note{font-size:13.5px; font-weight:500; color:#374151; margin:0 0 12px}
+  .note b{color:var(--ink)}
+  .formula{
+    font-family:"Cambria Math","Latin Modern Math","Times New Roman",serif;
+    font-size:18px; background:#f7f9fc; border:1px solid var(--line);
+    border-radius:8px; padding:9px 16px; display:inline-block; color:var(--ink);
+  }
+
+  /* 深掘り(hosoku)チップ + ポップアウト */
+  .deep-chip{
+    display:inline-flex; align-items:center; gap:8px; margin-top:15px;
+    border:1px solid var(--ok-bd); background:var(--ok-bg); color:var(--ok);
+    border-radius:999px; padding:9px 17px; font-size:13.5px; font-weight:700;
+    font-family:inherit; cursor:pointer; transition:.15s;
+  }
+  .deep-chip:hover{background:#dde5fb; border-color:var(--accent)}
+  .deep-chip svg{width:15px; height:15px; flex:0 0 auto}
+  .deep-chip.primary{background:var(--ok); color:#fff; border-color:var(--ok); margin-top:6px}
+  .deep-chip.primary:hover{background:#244bc0; border-color:#244bc0}
+
+  .overlay{
+    position:fixed; inset:0; background:rgba(16,22,31,.55);
+    display:none; align-items:flex-start; justify-content:center;
+    padding:24px 14px; z-index:1000; overflow-y:auto;
+  }
+  .overlay.open{display:flex}
+  .modal{
+    background:#fff; border-radius:14px; max-width:660px; width:100%; margin:auto;
+    box-shadow:0 18px 60px rgba(16,22,31,.32); overflow:hidden;
+    animation:pop .18s ease-out;
+  }
+  @keyframes pop{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+  .modal > header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:17px 22px; border-bottom:1px solid var(--line);
+  }
+  .modal > header h3{margin:0; font-size:18px; font-weight:700; color:var(--ink); letter-spacing:.01em}
+  .modal .x{
+    border:none; background:none; cursor:pointer; color:var(--muted);
+    font-size:24px; line-height:1; padding:2px 8px; border-radius:8px; transition:.13s;
+  }
+  .modal .x:hover{background:var(--bg); color:var(--ink)}
+  .mbody{padding:20px 22px 24px}
+  .mblock{margin-bottom:22px}
+  .mblock:last-child{margin-bottom:0}
+  .mblock h4{margin:0 0 9px; font-size:14px; font-weight:700; color:var(--orange)}
+  .mblock p{margin:0 0 11px; font-size:14px; font-weight:500; color:#374151; line-height:1.72}
+  .mblock p:last-child{margin-bottom:0}
+  .mblock p b{color:var(--ink)}
+  .mini-box{
+    background:var(--ok-tint); border:1px solid var(--line);
+    border-radius:8px; overflow:hidden; margin:4px 0 6px;
+  }
+  .mini-box canvas{display:block; width:100%; height:auto}
+  .mini-cap{font-size:12.5px; color:var(--muted); margin:2px 0 0; font-weight:500}
+  .mini-cap b{color:var(--warn)}
+
+  /* ステップ案内 */
+  .steps{display:flex; flex-wrap:wrap; align-items:center; gap:9px}
+  .steps .slabel{font-size:13px; font-weight:700; color:var(--muted); margin-right:3px}
+  .steps button{
+    border:1px solid var(--line); background:#fff; border-radius:999px;
+    padding:7px 14px 7px 8px; font-size:13.5px; cursor:pointer; color:var(--ink);
+    font-family:inherit; transition:.15s; display:inline-flex; align-items:center; gap:7px;
+  }
+  .steps button .n{
+    display:inline-flex; align-items:center; justify-content:center; width:19px; height:19px;
+    border-radius:50%; background:var(--ok-bg); color:var(--ok);
+    font-size:11.5px; font-weight:700; font-family:var(--mono); flex:0 0 auto;
+  }
+  .steps button:hover{border-color:var(--ok); color:var(--ok)}
+  .steps button.active{background:var(--ok); border-color:var(--ok); color:#fff}
+  .steps button.active .n{background:rgba(255,255,255,.26); color:#fff}
+  .step-cap{margin:13px 0 0; font-size:13.5px; font-weight:500; color:#374151; line-height:1.62; min-height:1.6em}
+  .step-cap b{color:var(--ink)}
+  .step-cap.warn b{color:var(--warn)}
+
+  /* 用語辞典 */
+  details.glossary{
+    border:1px solid var(--line); border-radius:10px; background:var(--card);
+    margin-bottom:16px; box-shadow:0 1px 3px rgba(20,30,50,.05);
+  }
+  details.glossary>summary{
+    list-style:none; cursor:pointer; padding:14px 18px; font-size:15px; font-weight:700;
+    color:var(--orange); display:flex; align-items:center; gap:9px; user-select:none;
+  }
+  details.glossary>summary::-webkit-details-marker{display:none}
+  details.glossary>summary::before{
+    content:""; width:0; height:0; border-left:6px solid var(--muted);
+    border-top:5px solid transparent; border-bottom:5px solid transparent;
+    transition:transform .15s; flex:none;
+  }
+  details.glossary[open]>summary::before{transform:rotate(90deg)}
+  dl.gloss{margin:0; padding:2px 18px 18px}
+  dl.gloss dt{font-weight:700; color:var(--ink); font-size:13.5px; margin-top:12px}
+  dl.gloss dt:first-of-type{margin-top:0}
+  dl.gloss dt .en{color:var(--muted); font-family:var(--mono); font-size:11px; font-weight:400; margin-left:7px; letter-spacing:.02em}
+  dl.gloss dd{margin:3px 0 0; font-size:13px; font-weight:500; color:#374151; line-height:1.62}
+
+  /* 身のまわりの例（モーダル内） */
+  .wheel-wrap{
+    background:var(--ok-tint); border:1px solid var(--line); border-radius:8px;
+    padding:12px 10px 8px; margin:4px 0 10px;
+  }
+  .wheel-wrap svg{display:block; width:100%; max-width:340px; margin:0 auto}
+  .real-table{width:100%; border-collapse:collapse; margin:6px 0 6px; font-size:13px}
+  .real-table th,.real-table td{text-align:left; padding:7px 10px; border-bottom:1px solid var(--line)}
+  .real-table th{color:var(--muted); font-weight:700; font-size:12px; background:#f7f9fc}
+  .real-table td{font-weight:500; color:#374151}
+  .real-table td .big{font-family:var(--mono); font-weight:700; color:var(--ink)}
+
+  footer{font-size:12px; color:var(--muted); text-align:center; margin-top:20px}
+
+  @media (max-width:560px){
+    header.top{padding-top:26px}
+    header.top h1{font-size:26px}
+    header.top .sig{display:none}
+    .banner{font-size:14px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="eyebrow"><span class="dot"></span>MIKIKOF-LAB · 第7回 探索のアルゴリズム</div>
+    <h1>調べ終えた中央は、範囲から外す</h1>
+    <div class="enlabel">Binary Search, Range</div>
+    <p class="dek">中央を残して書くと、探す値によっては途中から範囲が縮まなくなり、終わらなくなります。</p>
+    <svg class="sig" viewBox="0 0 148 48" fill="none" aria-hidden="true">
+      <path d="M8 14 H140" stroke-width="2" stroke-linecap="round"/>
+      <path d="M40 26 H140" stroke-width="2" stroke-linecap="round"/>
+      <path d="M92 38 H140" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="74" cy="14" r="3.6"/>
+      <circle cx="100" cy="26" r="3.6"/>
+      <circle cx="126" cy="38" r="3.6"/>
+    </svg>
+  </header>
+
+  <div class="panel" id="intro">
+    <h2 class="sec">はじめに：どこを探して、どこを捨てるのか</h2>
+    <p class="note">
+      並んだデータの中から目的の値を見つけることを<b>探索</b>といいます。端から順に 1 つずつ比べる方法が<b>線形探索</b>、真ん中と比べて半分に絞る方法が<b>二分探索</b>です。二分探索は、<b>あらかじめ並んでいるときだけ</b>使えます。
+    </p>
+    <p class="note">
+      ここで気をつける点が一つあります。<b>いま調べた中央は、次の範囲から外します。</b>比べて外れたのだから、もう調べる必要がないからです。外さないとどうなるかも、下の図で確かめてみてください。
+    </p>
+    <div>
+      <button class="deep-chip primary" id="open-basic" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 4.5h6a2 2 0 0 1 2 2V20a2 2 0 0 0-2-2H4z"></path><path d="M20 4.5h-6a2 2 0 0 0-2 2V20a2 2 0 0 1 2-2h6z"></path>
+        </svg>まずはイチから図解で理解する
+      </button>
+    </div>
+  </div>
+
+  <div id="banner" class="banner ok"></div>
+
+  <div id="cbox" class="canvas-box ok">
+    <canvas id="cv" role="img" aria-label="昇順に並んだ配列から目的の値を探すようすを示す図。上段に配列の箱と添字、下限と上限と中央の印を置く。中段に手ごとの範囲を帯で積み重ね、下段で線形探索と二分探索の比較回数を並べる。中央を範囲に残す書き方にすると、帯の長さが縮まらなくなる。"></canvas>
+  </div>
+
+  <div class="panel" id="step-panel">
+    <div class="steps">
+      <span class="slabel">順を追って見る</span>
+      <button data-step="1"><span class="n">1</span>範囲を決める</button>
+      <button data-step="2"><span class="n">2</span>中央を求める</button>
+      <button data-step="3"><span class="n">3</span>中央と比べる</button>
+      <button data-step="4"><span class="n">4</span>次の範囲を決める</button>
+      <button data-step="5"><span class="n">5</span>結果を見る</button>
+    </div>
+    <p class="step-cap" id="step-cap">ボタンを順に押すと、二分探索の 1 回ぶんを 1 つずつたどれます。</p>
+  </div>
+
+  <div class="panel" id="fix-panel">
+    <div class="steps">
+      <span class="slabel">範囲の縮め方</span>
+      <button data-fix="exclude" class="active"><span class="n">1</span>調べた中央を外す</button>
+      <button data-fix="include"><span class="n">2</span>調べた中央を残す</button>
+    </div>
+    <div class="steps" style="margin-top:10px">
+      <span class="slabel">探し方</span>
+      <button data-method="binary" class="active"><span class="n">1</span>二分探索</button>
+      <button data-method="linear"><span class="n">2</span>線形探索</button>
+    </div>
+    <p class="step-cap" id="fix-cap"></p>
+  </div>
+
+  <div class="panel">
+    <div class="controls">
+      <div class="ctrl">
+        <label><span>手順を進める</span><span class="val"><span id="stpval">0</span> / <span id="stpmax">0</span></span></label>
+        <input id="stp" type="range" min="0" max="10" step="1" value="10">
+      </div>
+      <div class="ctrl">
+        <label><span>探す値</span><span class="val"><span id="tgtval">65</span></span></label>
+        <input id="tgt" type="range" min="0" max="9" step="1" value="6">
+      </div>
+    </div>
+
+    <div class="presets">
+      <button data-t="52" data-fix="exclude" data-sorted="1">中央にある値を探す</button>
+      <button data-t="97" data-fix="exclude" data-sorted="1">末尾にある値を探す</button>
+      <button data-t="51" data-fix="exclude" data-sorted="1">配列に無い値を探す</button>
+      <button data-t="51" data-fix="include" data-sorted="1">中央を残して無い値を探す</button>
+      <button data-t="97" data-fix="exclude" data-sorted="0">並んでいない配列で探す</button>
+    </div>
+
+    <div class="toggles">
+      <label><input type="checkbox" id="t-sorted" checked> 昇順に並べておく</label>
+      <label><input type="checkbox" id="t-dim" checked> 範囲の外を薄くする</label>
+      <label><input type="checkbox" id="t-bars" checked> 手ごとの範囲を帯で出す</label>
+      <label><input type="checkbox" id="t-code" checked> プログラムを出す</label>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="readouts">
+      <div class="ro"><div class="k">比較した回数</div><div class="v"><span id="ro-cnt">0</span> 回</div></div>
+      <div class="ro"><div class="k">いまの下限 i</div><div class="v"><span id="ro-i">0</span></div></div>
+      <div class="ro"><div class="k">いまの上限 j</div><div class="v"><span id="ro-j">8</span></div></div>
+      <div class="ro" id="ro-box"><div class="k">範囲に残っている個数</div><div class="v"><span id="ro-left">9</span> 個</div></div>
+      <div class="ro"><div class="k">線形探索なら</div><div class="v"><span id="ro-lin">—</span> 回</div></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2 class="sec">この図が言っていること</h2>
+    <p class="note">
+      二分探索は、範囲の<b>中央</b>と探す値を比べ、外れたほうの半分を捨てます。このとき<b>比べた中央は範囲から外します</b>。中央は比べて外れたのですから、もう調べる必要がありません。だから上限は <b>m − 1</b>、下限は <b>m + 1</b> にします。
+    </p>
+    <p class="note">
+      ここを上限も下限も <b>j = m</b>・<b>i = m</b> と書くと、範囲が 1 つ分縮まりません。それでも<b>配列にある値の多くは見つかります</b>。崩れるのは、<b>配列に無い値</b>を探したときと、<b>末尾の 97</b> を探したときです。上の「中央を残す」に切り替えて、探す値を動かしてみてください。
+    </p>
+    <span class="formula">線形探索 O(n) ／ 二分探索 O(log<sub>2</sub>n)</span>
+    <div>
+      <button class="deep-chip" id="open-deep" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle><line x1="16.2" y1="16.2" x2="21" y2="21"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line>
+        </svg>なぜ半分ずつだと速いのか — もっと詳しく
+      </button>
+    </div>
+  </div>
+
+  <details class="glossary">
+    <summary>用語のおさらい</summary>
+    <dl class="gloss">
+      <dt>探索<span class="en">search</span></dt>
+      <dd>配列などから目的の値を見つけること。</dd>
+      <dt>線形探索<span class="en">linear search</span></dt>
+      <dd>端から順に 1 つずつ値を調べて探し出す方法。並んでいなくても使えます。</dd>
+      <dt>二分探索<span class="en">binary search</span></dt>
+      <dd>探索範囲を半分に狭めることをくり返して探し出す方法。<b>並んでいるときだけ</b>使えます。</dd>
+      <dt>計算量<span class="en">order</span></dt>
+      <dd>処理を実行する大まかな回数。最大回数が n に比例するとき O(n) と表します。</dd>
+      <dt>下限 i・上限 j</dt>
+      <dd>いま調べている範囲の、いちばん小さい添字といちばん大きい添字。</dd>
+      <dt>範囲の中央の添字 m</dt>
+      <dd>下限と上限の平均の整数部分。m ＝ int((i ＋ j) / 2) で求めます。</dd>
+      <dt>昇順・降順</dt>
+      <dd>小さい順に並べることが昇順、大きい順が降順です。</dd>
+      <dt>要素数<span class="en">length</span></dt>
+      <dd>配列に入っている要素の個数。len(a) で求められます。</dd>
+    </dl>
+  </details>
+
+  <footer>mikikof-lab ／ 二分探索の範囲（単一HTML・外部ライブラリ不使用）</footer>
+</div>
+
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="deep-title">
+  <div class="modal">
+    <header>
+      <h3 id="deep-title">なぜ半分ずつだと速いのか</h3>
+      <button class="x" id="close-deep" type="button" aria-label="閉じる">×</button>
+    </header>
+    <div class="mbody">
+
+      <div class="mblock">
+        <h4>① 回数は「何回半分にしたか」＋ 1</h4>
+        <p>
+          9 個から始めると、1 回で 4 個、2 回で 2 個、3 回で 1 個になります。比較の回数は、<b>1 個になるまで半分にした回数に、残った 1 個と比べる 1 回を足した数</b>です。9 個なら 3 回半分にして、4 回になります。要素を 1 つずつ見ていく線形探索とは、増え方がまったく違います。
+        </p>
+        <div class="mini-box"><canvas id="cv2"></canvas></div>
+        <p class="mini-cap">半分にするたびに 1 回、最後に残った 1 個で 1 回。だから個数が増えても、回数はゆっくりしか増えません。</p>
+      </div>
+
+      <div class="mblock">
+        <h4>② 100 件でも 7 回、1000 件でも 10 回</h4>
+        <p>
+          2 を 7 回かけると 128 で、100 を超えます。だから 100 件なら 7 回あれば足ります。2 を 6 回かけると 64 なので、6 回では足りません。件数を 10 倍にしても、回数は 3 回か 4 回しか増えません。
+        </p>
+        <div class="mini-box"><canvas id="cv3"></canvas></div>
+        <p class="mini-cap" id="deep-cap"></p>
+      </div>
+
+      <div class="mblock">
+        <h4>③ 身のまわり：1 から 100 の数当て</h4>
+        <p>
+          相手が 1 から 100 のどれかを思い浮かべ、こちらが数を言って「もっと大きい」「もっと小さい」と答えてもらいます。真ん中の 50 から始めて半分ずつ絞れば、<b>どんなに運が悪くても 7 回で当たります</b>。下の図は 73 を当てる例で、6 回で当たりました。
+        </p>
+        <div class="mini-box"><canvas id="cvw"></canvas></div>
+        <p class="mini-cap">この例では 100 → 50 → 24 → 12 → 6 → 3 と減りました。どんな数でも、7 回半分にすれば必ず 1 つに絞れます。</p>
+        <p>
+          辞書を開くときも同じです。「さ」で始まる語を探すのに、1 ページ目からめくる人はいません。真ん中あたりを開いて、前か後ろかを決めます。<b>並んでいるから、半分に切れます。</b>
+        </p>
+        <table class="real-table">
+          <thead><tr><th>件数</th><th>線形探索の最大</th><th>二分探索の最大</th></tr></thead>
+          <tbody>
+            <tr><td>9 件</td><td><span class="big">9 回</span></td><td><span class="big">4 回</span></td></tr>
+            <tr><td>100 件</td><td><span class="big">100 回</span></td><td><span class="big">7 回</span></td></tr>
+            <tr><td>1000 件</td><td><span class="big">1000 回</span></td><td><span class="big">10 回</span></td></tr>
+          </tbody>
+        </table>
+        <p class="mini-cap">件数が 10 倍になっても、二分探索の回数は 3 回ほどしか増えません。</p>
+      </div>
+
+      <div class="mblock">
+        <span class="formula">線形探索 O(n) ／ 二分探索 O(log<sub>2</sub>n)</span>
+        <p>
+          ただし二分探索は、<b>あらかじめ並んでいる配列にだけ</b>使えます。
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay-basic" role="dialog" aria-modal="true" aria-labelledby="basic-title">
+  <div class="modal">
+    <header>
+      <h3 id="basic-title">イチから図解：2 つの探し方</h3>
+      <button class="x" id="close-basic" type="button" aria-label="閉じる">×</button>
+    </header>
+    <div class="mbody">
+
+      <div class="mblock">
+        <h4>① 探索は、たくさんの中から 1 つを見つけること</h4>
+        <p>
+          名簿から名前を探す、辞書から語を探す。どれも<b>探索</b>です。コンピュータは、決まった手順で 1 つずつ確かめていきます。
+        </p>
+        <div class="mini-box"><canvas id="cvb1"></canvas></div>
+      </div>
+
+      <div class="mblock">
+        <h4>② 線形探索は、端から順に 1 つずつ</h4>
+        <p>
+          先頭から順に「これかな」と比べます。前のほうにあれば少ない回数で見つかり、<b>後ろにあるほど回数が増えます</b>。
+        </p>
+        <div class="mini-box"><canvas id="cvb2"></canvas></div>
+        <p class="mini-cap">並んでいなくても使えます。そのかわり、数が多いと時間がかかります。</p>
+      </div>
+
+      <div class="mblock">
+        <h4>③ 二分探索は、真ん中と比べて半分を捨てる</h4>
+        <p>
+          並んでいれば、真ん中（この教材では<b>範囲の中央</b>と呼びます）と比べるだけで「前半にある」「後半にある」が分かります。<b>いらないほうの半分をまるごと捨てられます。</b>
+        </p>
+        <div class="mini-box"><canvas id="cvb3"></canvas></div>
+        <p class="mini-cap">並んでいないと、どちらの半分にあるか決められないので捨てられません。</p>
+      </div>
+
+      <div class="mblock">
+        <h4>④ 半分を捨てるとき、比べた中央は範囲から外す</h4>
+        <p>
+          中央は比べて外れました。<b>もう調べる必要はありません。</b>だから次の範囲には入れません。入れたままにすると、範囲が縮まらなくなります。
+        </p>
+        <div class="mini-box"><canvas id="cvb4"></canvas></div>
+        <p class="mini-cap">×を付けた箱が、比べて外れた中央です。次の範囲からは外れます。</p>
+      </div>
+
+      <div class="mblock">
+        <p>
+          上の図で手順を進めると、この 4 つがそのまま起きます。「中央を残す」に切り替えて、配列に無い値を探してみてください。
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const cv  = document.getElementById('cv');
+  const ctx = cv.getContext('2d');
+  let W = 0, H = 0;
+  const PADX = 16;
+
+  const el = {
+    stp:document.getElementById('stp'), tgt:document.getElementById('tgt'),
+    stpval:document.getElementById('stpval'), stpmax:document.getElementById('stpmax'),
+    tgtval:document.getElementById('tgtval'),
+    roCnt:document.getElementById('ro-cnt'), roI:document.getElementById('ro-i'),
+    roJ:document.getElementById('ro-j'), roLeft:document.getElementById('ro-left'),
+    roLin:document.getElementById('ro-lin'), roBox:document.getElementById('ro-box'),
+    banner:document.getElementById('banner'), cbox:document.getElementById('cbox'),
+    tSorted:document.getElementById('t-sorted'), tDim:document.getElementById('t-dim'),
+    tBars:document.getElementById('t-bars'), tCode:document.getElementById('t-code'),
+    fixCap:document.getElementById('fix-cap')
+  };
+  const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+  // ===== MATERIAL：数理（原本 = 学習ノート POINT 22 実習1・3・4・5）=====
+  // a = [16, 23, 31, 48, 52, 65, 79, 84, 97]（昇順・要素数 9・添字 0〜8）
+  // 実習3 の正答: ア n−1 ／ イ while ／ ウ (i+j)/2 ／ エ a[m] ／ オ j = m−1 ／ カ i = m+1
+  // 実習5 の比較回数（python で実測・解答 PDF p.16 と一致）:
+  //   16→線形1/二分3 ／ 52→5/1 ／ 97→9/4 ／ 51(無い)→9/4
+  const A_SORTED   = [16, 23, 31, 48, 52, 65, 79, 84, 97];
+  const A_SHUFFLED = [52, 16, 97, 31, 23, 84, 48, 65, 79];
+  const TARGETS    = [16, 23, 31, 48, 51, 52, 65, 79, 84, 97];   // 51 は配列に無い
+  let fixMode = 'exclude';   // exclude 中央を外す（正しい）／ include 中央を残す
+  let method  = 'binary';    // binary ／ linear
+  let wantEnd = false;
+  let run = null;
+
+  const arr = () => (el.tSorted.checked ? A_SORTED : A_SHUFFLED);
+  const tgt = () => TARGETS[parseInt(el.tgt.value, 10)];
+
+  function runBinary(){
+    const a = arr(), n = a.length, s = tgt(), fx = fixMode;
+    const fr = [], removed = [];
+    let i = 0, j = n - 1, cnt = 0, guard = 0;
+    fr.push({ ph:'start', i:i, j:j, m:-1, cnt:0, removed:[] });
+    while(i <= j && guard < 40){
+      guard++;
+      const m = Math.floor((i + j) / 2), v = a[m];
+      cnt++;
+      fr.push({ ph:'probe', i:i, j:j, m:m, v:v, cnt:cnt, removed:removed.slice() });
+      fr.push({ ph:'compare', i:i, j:j, m:m, v:v, cnt:cnt, removed:removed.slice() });
+      if(v === s){
+        fr.push({ ph:'end', i:i, j:j, m:m, cnt:cnt, removed:removed.slice(), found:m, stuck:false });
+        return { fr:fr, cnt:cnt, found:m, stuck:false };
+      }
+      const pi = i, pj = j;
+      if(v > s) j = (fx === 'exclude') ? m - 1 : m;
+      else      i = (fx === 'exclude') ? m + 1 : m;
+      if(fx === 'exclude') removed.push(m);
+      fr.push({ ph:'shrink', i:i, j:j, m:m, v:v, cnt:cnt, removed:removed.slice() });
+      if(i === pi && j === pj){    // 範囲が 1 つも縮まなかった＝同じ中央を調べ続ける
+        // ★ 紙の記入表Bは、縮まらなくなった回をもう 1 行積む。画面も同じ本数にしないと
+        //   「同じ長さの帯が並んでいます」が、画面に無いものを指すことになる
+        fr.push({ ph:'probe', i:i, j:j, m:m, v:v, cnt:cnt, removed:removed.slice() });
+        fr.push({ ph:'end', i:i, j:j, m:m, cnt:cnt, removed:removed.slice(), found:-1, stuck:true });
+        return { fr:fr, cnt:cnt, found:-1, stuck:true };
+      }
+    }
+    fr.push({ ph:'end', i:i, j:j, m:-1, cnt:cnt, removed:removed.slice(), found:-1, stuck:false });
+    return { fr:fr, cnt:cnt, found:-1, stuck:false };
+  }
+
+  function runLinear(){
+    const a = arr(), n = a.length, s = tgt();
+    const fr = []; let cnt = 0;
+    fr.push({ ph:'start', i:0, j:n - 1, m:-1, cnt:0, removed:[] });
+    for(let k = 0; k < n; k++){
+      cnt++;
+      fr.push({ ph:'probe', i:k, j:n - 1, m:k, v:a[k], cnt:cnt, removed:[] });
+      fr.push({ ph:'compare', i:k, j:n - 1, m:k, v:a[k], cnt:cnt, removed:[] });
+      if(a[k] === s){
+        fr.push({ ph:'end', i:k, j:n - 1, m:k, cnt:cnt, removed:[], found:k, stuck:false });
+        return { fr:fr, cnt:cnt, found:k, stuck:false };
+      }
+      fr.push({ ph:'shrink', i:k + 1, j:n - 1, m:k, v:a[k], cnt:cnt, removed:[] });
+    }
+    fr.push({ ph:'end', i:n, j:n - 1, m:-1, cnt:cnt, removed:[], found:-1, stuck:false });
+    return { fr:fr, cnt:cnt, found:-1, stuck:false };
+  }
+
+  const linearCount = () => { const a = arr(), k = a.indexOf(tgt()); return k >= 0 ? k + 1 : a.length; };
+  const cur  = () => run.fr[Math.min(parseInt(el.stp.value, 10), run.fr.length - 1)];
+
+  function state(){
+    const a = arr(), s = tgt();
+    const exists = a.indexOf(s) >= 0;
+    const missed = (method === 'binary') && exists && run.found < 0 && !run.stuck;  // 並んでいないのに当てた
+    const ok = !run.stuck && !missed;
+    return { a:a, s:s, exists:exists, missed:missed, ok:ok };
+  }
+
+  // ---- ハーネス（逐語）----
+  function setupMini(canvas, ratio, minH){
+    const dpr = window.devicePixelRatio || 1;
+    // ★ 高さを幅の比だけで決めると、狭い画面で行数ぶんの高さが足りず最後の行が消える
+    const cw = canvas.clientWidth || 560, ch = Math.max(Math.round(cw * ratio), minH || 0);
+    canvas.style.height = ch + 'px';
+    canvas.width = Math.round(cw * dpr); canvas.height = Math.round(ch * dpr);
+    const c = canvas.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { c:c, w:cw, h:ch };
+  }
+  function arrowHead(c, x, y, dir){
+    c.beginPath();
+    if(dir === 'up'){ c.moveTo(x,y); c.lineTo(x-4.5,y+8); c.lineTo(x+4.5,y+8); }
+    else if(dir === 'down'){ c.moveTo(x,y); c.lineTo(x-4.5,y-8); c.lineTo(x+4.5,y-8); }
+    else { c.moveTo(x,y); c.lineTo(x-8,y-4.5); c.lineTo(x-8,y+4.5); }
+    c.closePath(); c.fill();
+  }
+  function roundRect(c, x, y, w, h, r){
+    c.beginPath(); c.moveTo(x+r,y);
+    c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r);
+    c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath();
+  }
+
+  // ---- 版面（中身で高さを決める）----
+  const M_TOP = 34, BOX_TOP = 62, BOX_H = 42, IDX_DY = 15, IJ_DY = 32;
+  function codeLines(){ return method === 'linear' ? 4 : 10; }
+  function barRows(){ return Math.min(run.fr.filter(f => f.ph === 'probe').length, 9); }
+  function calcH(){
+    let y = BOX_TOP + BOX_H + IDX_DY + IJ_DY + 24;   // 「いま何をしているか」の 1 行ぶん
+    if(el.tBars.checked) y += 18 + barRows() * 17 + 14 + (run && run.stuck ? 18 : 0);
+    y += 18 + 2 * 19 + 14;                                   // 比較回数の対比
+    if(el.tCode.checked) y += 18 + 8 + (codeLines() * 17 + 14) + 8;
+    return Math.max(300, Math.round(y));
+  }
+  function setupCanvas(){
+    const dpr = window.devicePixelRatio || 1;
+    const cssW = cv.clientWidth || 600, cssH = calcH();
+    cv.style.height = cssH + 'px';
+    cv.width = Math.round(cssW * dpr); cv.height = Math.round(cssH * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    W = cssW; H = cssH;
+  }
+  function geom(){
+    const a = arr(), n = a.length, gap = 8;
+    const bw = Math.max(28, Math.min(58, Math.floor((W - PADX * 2 - gap * (n - 1)) / n)));
+    const tw = bw * n + gap * (n - 1);
+    return { a:a, n:n, gap:gap, bw:bw, tw:tw, ox:Math.round((W - tw) / 2) };
+  }
+
+  function draw(){
+    const st = state(), f = cur(), g = geom();
+    const a = g.a, n = g.n, ox = g.ox, tw = g.tw, bw = g.bw, gap = g.gap;
+    const ok = cssVar('--ok'), warn = cssVar('--warn');
+    const accent = st.ok ? ok : warn;
+    ctx.clearRect(0, 0, W, H);
+    const X = k => ox + k * (bw + gap);
+
+    ctx.fillStyle = '#5b6470'; ctx.font = 'bold 12.5px sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText(el.tSorted.checked ? '配列 a（昇順に並んでいる）' : '配列 a（並んでいない）', ox, 22);
+    if(W >= 520){
+      ctx.fillStyle = '#8b94a3'; ctx.font = '11.5px sans-serif'; ctx.textAlign = 'right';
+      ctx.fillText('探す値 ' + st.s, ox + tw, 22);
+    }
+
+    // 中央 m の印（箱の上。箱とも添字とも重ねない）
+    if(method === 'binary' && f.m >= 0 && f.ph !== 'end'){
+      const x = X(f.m) + bw / 2;
+      ctx.strokeStyle = accent; ctx.fillStyle = accent; ctx.lineWidth = 2; ctx.setLineDash([]);
+      ctx.beginPath(); ctx.moveTo(x, M_TOP + 8); ctx.lineTo(x, BOX_TOP - 10); ctx.stroke();
+      arrowHead(ctx, x, BOX_TOP - 2, 'down');
+      ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('m ＝ ' + f.m, x, M_TOP);
+    }
+
+    // 箱
+    for(let k = 0; k < n; k++){
+      const inRange = (k >= f.i && k <= f.j);
+      const dim = el.tDim.checked && !inRange;
+      const isM = (method === 'binary' && k === f.m && f.ph !== 'end');
+      const isFound = (f.ph === 'end' && run.found === k);
+      const wasRemoved = f.removed.indexOf(k) >= 0;
+      ctx.setLineDash([]);
+      ctx.fillStyle = isFound ? '#dde5fb' : (dim ? '#f4f5f7' : '#ffffff');
+      ctx.fillRect(X(k), BOX_TOP, bw, BOX_H);
+      ctx.lineWidth = (isM || isFound) ? 2.6 : 1.2;
+      ctx.strokeStyle = (isM || isFound) ? accent : (dim ? '#e0e5ee' : '#c4ccd8');
+      ctx.strokeRect(X(k), BOX_TOP, bw, BOX_H);
+      ctx.fillStyle = dim ? '#a9b2c0' : '#1b2330';
+      ctx.font = 'bold ' + (bw >= 48 ? 15 : 13) + 'px sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(String(a[k]), X(k) + bw / 2, BOX_TOP + BOX_H / 2);
+      ctx.textBaseline = 'alphabetic';
+      if(wasRemoved && !inRange){          // 比べて外した中央に × を置く
+        ctx.strokeStyle = '#9aa4b2'; ctx.lineWidth = 1.6;
+        const p = 9;
+        ctx.beginPath();
+        ctx.moveTo(X(k)+p, BOX_TOP+p); ctx.lineTo(X(k)+bw-p, BOX_TOP+BOX_H-p);
+        ctx.moveTo(X(k)+bw-p, BOX_TOP+p); ctx.lineTo(X(k)+p, BOX_TOP+BOX_H-p);
+        ctx.stroke();
+      }
+      ctx.fillStyle = dim ? '#b6bec9' : '#5b6470'; ctx.font = '11.5px sans-serif';
+      ctx.fillText(String(k), X(k) + bw / 2, BOX_TOP + BOX_H + IDX_DY);
+    }
+
+    // 下限 i・上限 j（添字の下。同じ列に来たら 1 つにまとめる）
+    const yIJ = BOX_TOP + BOX_H + IDX_DY + 18;
+    ctx.font = 'bold 11.5px sans-serif'; ctx.textAlign = 'center';
+    if(f.i <= f.j && f.i >= 0 && f.j < n){
+      if(f.i === f.j){
+        ctx.fillStyle = accent; ctx.fillText('i ＝ j ＝ ' + f.i, X(f.i) + bw / 2, yIJ);
+      } else {
+        ctx.fillStyle = accent;
+        ctx.fillText('i', X(f.i) + bw / 2, yIJ);
+        ctx.fillText('j', X(f.j) + bw / 2, yIJ);
+      }
+    } else {
+      ctx.fillStyle = warn; ctx.textAlign = 'left';
+      ctx.fillText('下限が上限を追い越しました', ox, yIJ);
+    }
+
+    // いま何をしているか（1 行。高さは常に確保するので、コマが変わっても版面は動かない）
+    const yAct = BOX_TOP + BOX_H + IDX_DY + IJ_DY + 6;
+    ctx.textAlign = 'left'; ctx.font = (W >= 560 ? 12.5 : 11) + 'px sans-serif';
+    let act = '', acol = '#374151';
+    if(f.ph === 'start') act = '範囲を決めました。配列全体が範囲です。';
+    else if(f.ph === 'probe') act = (method === 'linear')
+      ? '次に調べる要素は a[' + f.m + '] ＝ ' + f.v + ' です。'
+      : '範囲の中央は m ＝ ' + f.m + '。a[' + f.m + '] は ' + f.v + ' です。';
+    else if(f.ph === 'compare'){
+      // ★ 線形探索に前半・後半は無い。二分探索の言い方をそのまま出さない
+      act = 'a[' + f.m + '] ＝ ' + f.v + ' と 探す値 ' + st.s + ' を比べます　→　'
+          + (f.v === st.s ? '等しい。見つかりました'
+             : (method === 'linear') ? '違うので次の要素へ進みます'
+             : f.v > st.s ? '大きいので前半を残します' : '小さいので後半を残します');
+      acol = '#1b2330';
+    } else if(f.ph === 'shrink'){
+      act = (method === 'linear') ? '次の要素へ進みます。'
+          : (fixMode === 'exclude' ? '外れたほうの半分を捨て、比べた中央も外しました。'
+                                   : '外れたほうの半分を捨てました。比べた中央は範囲に残しています。');
+      acol = (method === 'binary' && fixMode === 'include') ? cssVar('--warn') : '#374151';
+    } else {
+      act = run.found >= 0 ? '見つかりました（添字 ' + run.found + '）。'
+          : (run.stuck ? '範囲が縮まないので、ここから先へ進めません。' : '範囲が空になりました。');
+      acol = st.ok ? '#374151' : cssVar('--warn');
+    }
+    ctx.fillStyle = acol; ctx.fillText(act, ox, yAct);
+
+    let y = BOX_TOP + BOX_H + IDX_DY + IJ_DY + 24;
+
+    // 手ごとの範囲の帯
+    if(el.tBars.checked){
+      ctx.textAlign = 'left'; ctx.font = 'bold 12.5px sans-serif'; ctx.fillStyle = '#5b6470';
+      ctx.fillText('手ごとの範囲', ox, y); y += 18;
+      const probes = run.fr.filter(fr => fr.ph === 'probe').slice(0, 9);
+      const shown = run.fr.indexOf(f);
+      probes.forEach((p, k) => {
+        const done = run.fr.indexOf(p) <= shown;
+        const x0 = X(p.i), x1 = X(p.j) + bw, bwid = x1 - x0;
+        ctx.fillStyle = '#eef2fd'; ctx.fillRect(ox, y, tw, 13);
+        ctx.fillStyle = done ? (st.ok ? ok : warn) : '#dde3ec';
+        ctx.fillRect(x0, y, bwid, 13);
+        const lbl = (k + 1) + ' 手目　' + (p.j - p.i + 1) + ' 個';
+        ctx.font = 'bold 11px sans-serif';
+        if(bwid >= ctx.measureText(lbl).width + 16){          // 帯の中に収まるなら中へ
+          ctx.fillStyle = done ? '#ffffff' : '#5b6470'; ctx.textAlign = 'left';
+          ctx.fillText(lbl, x0 + 8, y + 10.5);
+        } else {                                              // 収まらなければ薄い側の余白へ
+          ctx.fillStyle = '#5b6470';
+          if(x0 - ox >= ctx.measureText(lbl).width + 10){ ctx.textAlign = 'right'; ctx.fillText(lbl, x0 - 6, y + 10.5); }
+          else { ctx.textAlign = 'left'; ctx.fillText(lbl, x1 + 6, y + 10.5); }
+        }
+        y += 17;
+      });
+      if(run.stuck){
+        ctx.fillStyle = warn; ctx.font = 'bold 11.5px sans-serif'; ctx.textAlign = 'left';
+        ctx.fillText('同じ長さの帯が並んでいます。範囲が縮んでいません。', ox, y + 11);
+        y += 18;
+      }
+      y += 14;
+    }
+
+    // 比較回数の対比
+    ctx.textAlign = 'left'; ctx.font = 'bold 12.5px sans-serif'; ctx.fillStyle = '#5b6470';
+    ctx.fillText('この探し方で比べる回数（最後まで）', ox, y); y += 18;
+    // ★ run は線形の走査なので run.stuck は必ず false。二分探索側の停止判定を見に行く
+    const rb = (method === 'binary') ? run : runBinary();
+    const lin = linearCount(), bin = rb.stuck ? null : rb.cnt;
+    const maxv = Math.max(lin, bin || 1, 1);
+    const LW = 72, RW = 74;                  // 左＝名前、右＝回数。帯はその間だけに描く
+    const cmpBar = (label, val, col) => {
+      const bx = ox + LW, bwid = Math.max(30, tw - LW - RW);
+      ctx.fillStyle = '#eef2fd'; ctx.fillRect(bx, y, bwid, 13);
+      if(val != null){ ctx.fillStyle = col; ctx.fillRect(bx, y, Math.max(4, bwid * val / maxv), 13); }
+      ctx.fillStyle = '#5b6470'; ctx.font = '11px sans-serif'; ctx.textAlign = 'left';
+      ctx.fillText(label, ox, y + 10.5);
+      ctx.fillStyle = (val == null) ? warn : '#1b2330';
+      ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'right';
+      ctx.fillText(val == null ? '終わらない' : val + ' 回', ox + tw, y + 10.5);
+      y += 19;
+    };
+    cmpBar('線形探索', lin, '#9aa4b2');
+    cmpBar('二分探索', bin, st.ok ? ok : warn);
+    y += 14;
+
+    // プログラム
+    if(el.tCode.checked){
+      const lines = (method === 'linear')
+        ? ['for i in range(0, n, 1):', '    if a[i] == s:', '        print(i)', '        break']
+        : ['i = 0', 'j = n - 1', 'while i <= j:', '    m = int((i + j) / 2)',
+           '    if a[m] == s:', '        print(m)', '        break',
+           '    if a[m] > s:',
+           '        j = ' + (fixMode === 'exclude' ? 'm - 1' : 'm'),
+           '    else:'];
+      if(method === 'binary') lines.push('        i = ' + (fixMode === 'exclude' ? 'm + 1' : 'm'));
+      ctx.textAlign = 'left'; ctx.font = 'bold 12.5px sans-serif'; ctx.fillStyle = '#5b6470';
+      ctx.fillText('プログラム', ox, y);
+      const boxY = y + 8, lh = 17;
+      ctx.fillStyle = '#f7f9fc'; ctx.strokeStyle = '#e6eaf1'; ctx.lineWidth = 1;
+      roundRect(ctx, ox, boxY, tw, lines.length * lh + 14, 8); ctx.fill(); ctx.stroke();
+      ctx.font = (W >= 560 ? 12.5 : 11) + 'px ui-monospace, Menlo, Consolas, monospace';
+      lines.forEach((t, k) => {
+        const isKey = /j = m|i = m/.test(t);
+        ctx.fillStyle = isKey ? (fixMode === 'exclude' ? ok : warn) : '#374151';
+        ctx.fillText(t, ox + 12, boxY + 18 + k * lh);
+      });
+    }
+  }
+
+  function update(){
+    run = (method === 'binary') ? runBinary() : runLinear();
+    const maxIdx = run.fr.length - 1;
+    el.stp.max = String(maxIdx);
+    if(wantEnd){ el.stp.value = String(maxIdx); wantEnd = false; }
+    if(parseInt(el.stp.value, 10) > maxIdx) el.stp.value = String(maxIdx);
+    el.stpval.textContent = el.stp.value;
+    el.stpmax.textContent = String(maxIdx);
+    el.tgtval.textContent = String(tgt());
+
+    const st = state(), f = cur();
+    const left = Math.max(0, f.j - f.i + 1);
+    el.roCnt.textContent  = String(f.cnt);
+    el.roI.textContent    = String(f.i);
+    el.roJ.textContent    = String(f.j);
+    el.roLeft.textContent = String(left);
+    el.roLin.textContent  = String(linearCount());
+
+    if(st.ok){
+      el.roBox.classList.remove('alias');
+      el.cbox.className = 'canvas-box ok';
+      el.banner.className = 'banner ok';
+      const how = (method === 'binary') ? '二分探索' : '線形探索';
+      el.banner.innerHTML = (run.found >= 0
+          ? '✓ ' + run.cnt + ' 回で見つかりました（添字 ' + run.found + '）'
+          : '✓ ' + run.cnt + ' 回で、' + st.s + ' は配列に無いと分かりました')
+        + '<small>' + how + 'で比べた回数は ' + run.cnt + ' 回です。'
+        + (method === 'binary'
+           ? '同じ値を線形探索で探すと ' + runLinear().cnt + ' 回かかります。'
+           : (function(){ const rb = runBinary();
+               return rb.stuck
+                 ? '同じ値を二分探索で探すと、いまの縮め方では終わりません。'
+                 : '同じ値を二分探索で探すと ' + rb.cnt + ' 回で済みます。'; })())
+        + '</small>';
+    } else {
+      el.roBox.classList.add('alias');
+      el.cbox.className = 'canvas-box warn';
+      el.banner.className = 'banner warn';
+      const f2 = run.fr[run.fr.length - 1];
+      el.banner.innerHTML = run.stuck
+        ? '⚠ 範囲が縮みません<small>下限 ' + f2.i + '、上限 ' + f2.j + ' のまま、同じ中央 m ＝ '
+          + f2.m + ' を調べ続けます。比べて外れた中央を範囲に残しているためです。'
+          + 'このままではくり返しが終わりません。</small>'
+        : '⚠ 配列にあるのに見つかりません<small>' + st.s + ' は添字 ' + st.a.indexOf(st.s)
+          + ' にあります。並んでいない配列では、中央と比べてもどちらの半分にあるか決められません。'
+          + '二分探索は並んでいるときだけ使えます。</small>';
+    }
+
+    el.fixCap.innerHTML = (method === 'linear')
+      ? '端から順に 1 つずつ比べる書き方です。<b>並んでいなくても使えます。</b>'
+      : (fixMode === 'exclude'
+         ? '比べて外れた中央を、次の範囲から<b>外す</b>書き方です（j ＝ m − 1 ／ i ＝ m ＋ 1）。'
+         : '比べた中央を、次の範囲に<b>残す</b>書き方です（j ＝ m ／ i ＝ m）。');
+
+    setupCanvas(); draw();
+  }
+
+  // ===== 深掘り =====
+  const overlay = document.getElementById('overlay');
+  const cv2 = document.getElementById('cv2'), cv3 = document.getElementById('cv3'), cvw = document.getElementById('cvw');
+
+  function drawHalving(){
+    const o = setupMini(cv2, 0.26, 132), c = o.c, w = o.w, h = o.h;
+    c.clearRect(0, 0, w, h);
+    const ok = cssVar('--ok');
+    const rows = [[9, 'はじめ'], [4, '1 回目のあと'], [2, '2 回目のあと'], [1, '3 回目のあと']];
+    const left = 92, right = w - 54, unit = (right - left) / 9;
+    rows.forEach((r, k) => {
+      const y = 16 + k * 22;
+      c.fillStyle = '#5b6470'; c.font = '11.5px sans-serif'; c.textAlign = 'left';
+      c.fillText(r[1], 4, y + 11);
+      c.fillStyle = '#eef2fd'; c.fillRect(left, y, right - left, 13);
+      c.fillStyle = ok; c.fillRect(left, y, unit * r[0], 13);
+      c.fillStyle = '#1b2330'; c.font = 'bold 11.5px sans-serif'; c.textAlign = 'left';
+      c.fillText(r[0] + ' 個', right + 6, y + 11);
+    });
+  }
+  function drawScale(){
+    const o = setupMini(cv3, 0.30, 132), c = o.c, w = o.w, h = o.h;
+    c.clearRect(0, 0, w, h);
+    const ok = cssVar('--ok');
+    const rows = [[9, 4], [100, 7], [1000, 10]];
+    const left = 74, right = w - 66;
+    rows.forEach((r, k) => {
+      const y = 18 + k * 34;
+      c.fillStyle = '#5b6470'; c.font = 'bold 11.5px sans-serif'; c.textAlign = 'left';
+      c.fillText(r[0] + ' 件', 4, y + 10);
+      c.fillStyle = '#e6eaf1'; c.fillRect(left, y, right - left, 11);
+      c.fillStyle = '#9aa4b2'; c.font = '11px sans-serif'; c.textAlign = 'right';
+      c.fillText('線形 ' + r[0] + ' 回', right + 60, y + 10);
+      c.fillStyle = '#eef2fd'; c.fillRect(left, y + 15, right - left, 11);
+      c.fillStyle = ok; c.fillRect(left, y + 15, (right - left) * r[1] / 20, 11);
+      c.fillStyle = ok; c.font = 'bold 11px sans-serif'; c.textAlign = 'right';
+      c.fillText('二分 ' + r[1] + ' 回', right + 60, y + 25);
+    });
+    document.getElementById('deep-cap').innerHTML =
+      '青が二分探索の回数。灰色は枠で、線形探索は枠いっぱい（件数ぶん）かかります。100 件から 1000 件の 10 倍でも、二分探索は <b>7 回 → 10 回</b> です。';
+  }
+  function drawGuess(){
+    const o = setupMini(cvw, 0.34, 148), c = o.c, w = o.w, h = o.h;
+    c.clearRect(0, 0, w, h);
+    const ok = cssVar('--ok');
+    // 1..100 から 73 を当てる。50 → 75 → 62 → 68 → 71 → 73
+    const steps = [[1,100,50],[51,100,75],[51,74,62],[63,74,68],[69,74,71],[72,74,73]];
+    const left = 66, right = w - 46, sc = (right - left) / 100;
+    steps.forEach((s, k) => {
+      const y = 14 + k * 19;
+      c.fillStyle = '#5b6470'; c.font = '11px sans-serif'; c.textAlign = 'left';
+      c.fillText((k + 1) + ' 回目', 4, y + 10);
+      c.fillStyle = '#eef2fd'; c.fillRect(left, y, right - left, 12);
+      c.fillStyle = '#c9d6f7'; c.fillRect(left + (s[0] - 1) * sc, y, (s[1] - s[0] + 1) * sc, 12);
+      const gx = left + (s[2] - 0.5) * sc;
+      c.fillStyle = ok; c.fillRect(gx - 1.5, y - 2, 3, 16);
+      c.fillStyle = ok; c.font = 'bold 11px sans-serif'; c.textAlign = 'left';
+      c.fillText(String(s[2]), right + 5, y + 10);
+    });
+    c.fillStyle = '#5b6470'; c.font = '11px sans-serif'; c.textAlign = 'left';
+    c.fillText('薄い青が残っている範囲、縦線がその回で答える数', 4, h - 4);
+  }
+  function openDeep(){
+    overlay.classList.add('open'); document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => { drawHalving(); drawScale(); drawGuess(); });
+  }
+  function closeDeep(){ overlay.classList.remove('open'); document.body.style.overflow = ''; }
+
+  // ===== 基礎 =====
+  const overlayBasic = document.getElementById('overlay-basic');
+  const cvb1 = document.getElementById('cvb1'), cvb2 = document.getElementById('cvb2');
+  const cvb3 = document.getElementById('cvb3'), cvb4 = document.getElementById('cvb4');
+  const BAS = [16, 23, 31, 48, 52, 65, 79];
+  function basicRow(canvas, ratio, opt){
+    const o = setupMini(canvas, ratio), c = o.c, w = o.w, h = o.h;
+    c.clearRect(0, 0, w, h);
+    const n = BAS.length, gap = 7;
+    const bw = Math.max(26, Math.min(50, Math.floor((w - 32 - gap * (n - 1)) / n))), bh = 36;
+    const ox = Math.round((w - (bw * n + gap * (n - 1))) / 2), oy = 16;
+    const ok = cssVar('--ok'), warn = cssVar('--warn');
+    for(let k = 0; k < n; k++){
+      const x = ox + k * (bw + gap);
+      const dim = opt.dim && opt.dim.indexOf(k) >= 0;
+      c.setLineDash([]);
+      c.fillStyle = dim ? '#f4f5f7' : (opt.hit === k ? '#dde5fb' : '#fff');
+      c.fillRect(x, oy, bw, bh);
+      c.lineWidth = (opt.mid === k || opt.hit === k) ? 2.4 : 1.2;
+      c.strokeStyle = (opt.mid === k) ? ok : (opt.hit === k ? ok : (dim ? '#e0e5ee' : '#c4ccd8'));
+      c.strokeRect(x, oy, bw, bh);
+      c.fillStyle = dim ? '#a9b2c0' : '#1b2330';
+      c.font = 'bold 13px sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.fillText(String(BAS[k]), x + bw / 2, oy + bh / 2); c.textBaseline = 'alphabetic';
+      if(opt.cross === k){
+        c.strokeStyle = '#9aa4b2'; c.lineWidth = 1.6; const p = 8;
+        c.beginPath(); c.moveTo(x+p,oy+p); c.lineTo(x+bw-p,oy+bh-p);
+        c.moveTo(x+bw-p,oy+p); c.lineTo(x+p,oy+bh-p); c.stroke();
+      }
+      if(opt.order && opt.order[k]){
+        c.fillStyle = ok; c.font = 'bold 11px sans-serif'; c.textAlign = 'center';
+        c.fillText(String(opt.order[k]), x + bw / 2, oy + bh + 15);
+      }
+    }
+    return { c:c, w:w, h:h, ox:ox, oy:oy, bw:bw, bh:bh, gap:gap, n:n };
+  }
+  function drawBasic1(){
+    const g = basicRow(cvb1, 0.24, { hit:4 });
+    g.c.fillStyle = '#5b6470'; g.c.font = '11.5px sans-serif'; g.c.textAlign = 'center';
+    g.c.fillText('この中から 52 を見つけます', g.w / 2, g.oy + g.bh + 30);
+  }
+  function drawBasic2(){
+    const g = basicRow(cvb2, 0.28, { order:{0:1,1:2,2:3,3:4,4:5}, hit:4 });
+    g.c.fillStyle = '#5b6470'; g.c.font = '11.5px sans-serif'; g.c.textAlign = 'center';
+    g.c.fillText('先頭から順に比べます。5 回目で見つかりました', g.w / 2, g.oy + g.bh + 36);
+  }
+  function drawBasic3(){
+    const g = basicRow(cvb3, 0.28, { mid:3, dim:[0,1,2] });
+    g.c.fillStyle = '#5b6470'; g.c.font = '11.5px sans-serif'; g.c.textAlign = 'center';
+    g.c.fillText('真ん中の 48 と比べて、52 は大きい。小さいほうの半分を捨てます', g.w / 2, g.oy + g.bh + 30);
+  }
+  function drawBasic4(){
+    const g = basicRow(cvb4, 0.28, { cross:3, dim:[0,1,2,3] });
+    g.c.fillStyle = cssVar('--warn'); g.c.font = 'bold 11.5px sans-serif'; g.c.textAlign = 'center';
+    g.c.fillText('比べた中央も、次の範囲から外します', g.w / 2, g.oy + g.bh + 30);
+  }
+  function openBasic(){
+    overlayBasic.classList.add('open'); document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => { drawBasic1(); drawBasic2(); drawBasic3(); drawBasic4(); });
+  }
+  function closeBasic(){ overlayBasic.classList.remove('open'); document.body.style.overflow = ''; }
+
+  // ===== ステップ案内 =====
+  const stepCap = document.getElementById('step-cap');
+  const stepBtns = Array.from(document.querySelectorAll('#step-panel .steps button'));
+  const STEP_DEFAULT = 'ボタンを順に押すと、二分探索の 1 回ぶんを 1 つずつたどれます。';
+  function clearSteps(reset){
+    stepBtns.forEach(b => b.classList.remove('active'));
+    if(reset){ stepCap.classList.remove('warn'); stepCap.innerHTML = STEP_DEFAULT; }
+  }
+  function frameForStep(n){
+    if(n === 1) return 0;
+    if(n === 5) return run.fr.length - 1;
+    const want = { 2:'probe', 3:'compare', 4:'shrink' }[n];
+    for(let k = 0; k < run.fr.length; k++) if(run.fr[k].ph === want) return k;
+    return -1;                    // ★ その手を踏まずに終わる走査（1 回で当たった等）
+  }
+  function setStep(n){
+    stepBtns.forEach(b => b.classList.toggle('active', b.dataset.step === String(n)));
+    const fi = frameForStep(n), miss = (fi < 0);
+    el.stp.value = String(miss ? run.fr.length - 1 : fi); update();
+    const f = cur(), st = state();
+    stepCap.classList.remove('warn');
+    if(method === 'linear' && n === 3){
+      stepCap.innerHTML = '<b>いまの要素と比べます。</b>等しければそこで終わります。違えば次の要素へ進みます。';
+      return;
+    }
+    if(method === 'linear' && (n === 2 || n === 4)){
+      stepCap.innerHTML = '<b>この手は二分探索の手順です。</b>線形探索は先頭から順に 1 つずつ比べます。'
+        + '探し方を二分探索に戻すと、この手を追えます。';
+      return;
+    }
+    if(miss){
+      stepCap.innerHTML = '<b>この手はありません。</b>いまの探す値では、この手を踏まずに終わります。';
+      return;
+    }
+    if(n === 1){
+      stepCap.innerHTML = '<b>範囲を決めます。</b>はじめは配列全体が範囲です。下限 i は 0、上限 j は要素数 − 1 です。';
+    } else if(n === 2){
+      stepCap.innerHTML = '<b>中央を求めます。</b>下限と上限の平均の整数部分が、範囲の中央の添字 m です。いまは m ＝ '
+        + f.m + '、a[' + f.m + '] は ' + f.v + ' です。';
+    } else if(n === 3){
+      stepCap.innerHTML = '<b>中央と比べます。</b>a[' + f.m + '] は ' + f.v + '。探す値 ' + st.s
+        + ' と比べて、前半か後半かを決めます。';
+    } else if(n === 4){
+      stepCap.innerHTML = fixMode === 'exclude'
+        ? '<b>次の範囲を決めます。</b>外れたほうの半分を捨て、<b>比べた中央は範囲から外します</b>。'
+        : '<b>次の範囲を決めます。</b>いまは<b>比べた中央を範囲に残す</b>書き方です。';
+    } else if(st.ok){
+      stepCap.innerHTML = run.found >= 0
+        ? '<b>終わりました。</b>' + run.cnt + ' 回で見つかりました。'
+        : '<b>終わりました。</b>範囲が空になったので、配列に無いと分かりました。';
+    } else {
+      stepCap.classList.add('warn');
+      stepCap.innerHTML = run.stuck
+        ? '<b>終わりません。</b>範囲が縮まないので、同じ中央を調べ続けています。'
+        : '<b>終わりました。</b>並んでいないので、あるのに見つかりませんでした。';
+    }
+  }
+  stepBtns.forEach(b => b.addEventListener('click', () => setStep(parseInt(b.dataset.step, 10))));
+
+  // ===== 縮め方・探し方 =====
+  const fixBtns = Array.from(document.querySelectorAll('#fix-panel button[data-fix]'));
+  fixBtns.forEach(b => b.addEventListener('click', () => {
+    fixMode = b.dataset.fix;
+    fixBtns.forEach(o => o.classList.toggle('active', o === b));
+    clearSteps(true); wantEnd = true; update();
+  }));
+  const mBtns = Array.from(document.querySelectorAll('#fix-panel button[data-method]'));
+  mBtns.forEach(b => b.addEventListener('click', () => {
+    method = b.dataset.method;
+    mBtns.forEach(o => o.classList.toggle('active', o === b));
+    clearSteps(true); wantEnd = true; update();
+  }));
+
+  // ---- イベント ----
+  el.stp.addEventListener('input', () => { clearSteps(true); update(); });
+  el.tgt.addEventListener('input', () => { clearSteps(true); wantEnd = true; update(); });
+  ['tSorted','tDim','tBars','tCode'].forEach(k => el[k].addEventListener('change', () => { clearSteps(true); update(); }));
+  document.querySelectorAll('.presets button').forEach(b => {
+    b.addEventListener('click', () => {
+      el.tgt.value = String(TARGETS.indexOf(parseInt(b.dataset.t, 10)));
+      fixMode = b.dataset.fix;
+      fixBtns.forEach(o => o.classList.toggle('active', o.dataset.fix === fixMode));
+      method = 'binary';
+      mBtns.forEach(o => o.classList.toggle('active', o.dataset.method === 'binary'));
+      el.tSorted.checked = (b.dataset.sorted === '1');
+      clearSteps(true); wantEnd = true; update();
+    });
+  });
+  document.getElementById('open-deep').addEventListener('click', openDeep);
+  document.getElementById('close-deep').addEventListener('click', closeDeep);
+  overlay.addEventListener('click', e => { if(e.target === overlay) closeDeep(); });
+  document.getElementById('open-basic').addEventListener('click', openBasic);
+  document.getElementById('close-basic').addEventListener('click', closeBasic);
+  overlayBasic.addEventListener('click', e => { if(e.target === overlayBasic) closeBasic(); });
+  document.addEventListener('keydown', e => {
+    if(e.key !== 'Escape') return;
+    if(overlay.classList.contains('open')) closeDeep();
+    if(overlayBasic.classList.contains('open')) closeBasic();
+  });
+  window.addEventListener('resize', () => {
+    update();
+    if(overlay.classList.contains('open')){ drawHalving(); drawScale(); drawGuess(); }
+    if(overlayBasic.classList.contains('open')){ drawBasic1(); drawBasic2(); drawBasic3(); drawBasic4(); }
+  });
+
+  wantEnd = true;
+  update();
+})();
+</script>
+</body>
+</html>

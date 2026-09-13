@@ -1,0 +1,22 @@
+# 第6回 — この回だけの台帳。
+#
+# manifest.toml には書かない。回ごとに別ファイルにしてあるのは、
+# 別々のチャットで別の回を同時に作っても、同じファイルを奪い合わないため。
+# 追加・改訂するときは、この回のファイルだけを触る。
+
+
+no          = 6
+slug        = "nuketa-ato-no-soeji"
+theme       = "くり返しを抜けた添字は、1つ先を指している ― 配列と添字"
+nansho      = "配列の添字を 1 ずつ進めながらくり返すと、抜けた瞬間の添字は最後に処理した要素の 1 つ先を指している。最後に足したのは a[3] なのに i は 4 になっているので、i をそのまま表示すると範囲を 1 つ多く言ってしまう。和は正しいので、範囲の言い方だけが静かにずれる"
+nansho_type = "D"
+date        = "未定"
+status      = "done"
+anchor      = { kind = "lec", id = 20 }
+
+[artifacts]
+explainer = "array-index-trace.html"
+print     = "配列と添字のずれ"
+quiz      = { id = "joho-array-index", set_index = 9 }
+lecture   = 20
+practice  = "04-12"

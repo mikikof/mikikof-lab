@@ -12,6 +12,7 @@ push の前にこれを通す。**exit 0 でなければ push しない。**
 
 from __future__ import annotations
 
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -27,6 +28,42 @@ DENY_EXT = (".pdf", ".docx", ".pptx", ".xlsx", ".zip")
 # §2 版元著作物とみなす手がかり（リポジトリ全体）
 COPYRIGHT_HINTS = ("_source/", "学習ノート", "ベストフィット", "本文PDF", "winstep")
 COPYRIGHT_EXT = (".pdf", ".docx", ".pptx", ".xlsx")
+
+
+# §3 回の台帳の「中身」（2026-09-13 追加）
+# パスと拡張子では止まらない漏れが実際に出た。_ops/kai/*.md に解答 PDF の文が
+# 鉤括弧で引用され、出典表の値の欄に空欄の答えが式で書かれていた。
+#
+# **合格線は在庫を測ってから引いてある。** 01〜07 の 7 本を実測し、
+# 「正解は原本で裏取りする」「`while i > 1`（取り違えの型の説明）」「00・01・10・11
+# （真理値表の行の順）」のような正当な記述を FAIL にすると、ゲートが鳴りっぱなしになって
+# 読まれなくなる。だから **実際に起きた 2 つの形だけを FAIL** にし、残りは警告に留める。
+FAIL_RULES = (
+    # 鉤括弧の中が「文」のときだけ鳴らす。用語の言い換え（「下限」「上限」）や
+    # ページ参照（「p.94〜99」）は答えではないので、長さと中身で外す。
+    (re.compile(r"解答 ?PDF[^\n]*「(?![^」]*p\.)[^」]{8,}?(?:[＝=＋+−<>]|を足す|を引く|に変化|とする|になる)[^」]*」"),
+     "解答 PDF の文（式・操作）を鉤括弧で引用している"),
+    (re.compile(r"^\|[^|]*\|[^|]*[A-Za-z][^|]*[＝=][^|]*\|[^|]*(実習|類題|章末)[^|]*\|"),
+     "出典表の値の欄に、空欄の答えが式で書かれている"),
+)
+WARN_RULES = (
+    (re.compile(r"「[^」]*[＝=][^」]*」"), "鉤括弧の中に等式（答えかもしれない）"),
+    (re.compile(r"正答は|答えは|正解は(?!原本)"), "答えを名指ししている"),
+)
+
+
+def scan_kai() -> tuple[list[str], list[str]]:
+    bad: list[str] = []
+    warn: list[str] = []
+    for f in sorted((HUB / "_ops" / "kai").glob("*.md")) + sorted((HUB / "_ops" / "kai").glob("*.toml")):
+        for i, line in enumerate(f.read_text(encoding="utf-8").splitlines(), 1):
+            for rx, why in FAIL_RULES:
+                if rx.search(line):
+                    bad.append(f"{f.name}:{i}  {why}\n       {line.strip()[:96]}")
+            for rx, why in WARN_RULES:
+                if rx.search(line):
+                    warn.append(f"{f.name}:{i}  {why}")
+    return bad, warn
 
 
 def tracked() -> list[str]:
@@ -78,6 +115,21 @@ def main() -> None:
             print(f"     {n:3d}  {d}/")
         print("\n   このリポジトリは public。.gitignore は**既に追跡されているファイルには効かない**。")
         print("   外すには履歴からの除去が要る（オーナー判断・作業前に必ず確認する）。")
+
+    # ---------------------------------------------------------------- §3
+    kai_bad, kai_warn = scan_kai()
+    print(f"\n§3 回の台帳の中身（_ops/kai/）: FAIL {len(kai_bad)} 件 / 警告 {len(kai_warn)} 件")
+    if kai_bad:
+        for b in kai_bad:
+            print(f"     - {b}")
+        print("\n   台帳に解答・原本の逐語を書かない（CLAUDE.md §4）。中身は spec 側（非公開）へ。")
+        fail.extend(kai_bad)
+    else:
+        print("   OK  解答 PDF の逐語引用・出典表への式の書き込みは無い")
+    if kai_warn:
+        print(f"   警告（人が見る。自動では落とさない）:")
+        for w in kai_warn[:12]:
+            print(f"     · {w}")
 
     if fail:
         print("\n[FAIL] push しない。")

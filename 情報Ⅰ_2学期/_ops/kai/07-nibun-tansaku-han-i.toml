@@ -1,0 +1,22 @@
+# 第7回 — この回だけの台帳。
+#
+# manifest.toml には書かない。回ごとに別ファイルにしてあるのは、
+# 別々のチャットで別の回を同時に作っても、同じファイルを奪い合わないため。
+# 追加・改訂するときは、この回のファイルだけを触る。
+
+
+no          = 7
+slug        = "nibun-tansaku-han-i"
+theme       = "調べ終えた中央は、範囲から外す ― 二分探索"
+nansho      = "二分探索で、いま調べた中央 m を次の範囲に残してしまう。a[m] と比べて外れたのだから m はもう調べなくてよいのに、j = m や i = m と書くと範囲が 1 つ分縮まらない。配列にある値の多くはそれでも見つかるので気づかず、配列にない値と末尾の値を探したとき、同じ中央を何度も調べて終わらなくなる"
+nansho_type = "A"
+date        = "未定"
+status      = "done"
+anchor      = { kind = "lec", id = 22 }
+
+[artifacts]
+explainer = "binary-search.html"
+print     = "二分探索の範囲"
+quiz      = { id = "joho-binary-search", set_index = 10 }
+lecture   = 22
+practice  = "04-13"
