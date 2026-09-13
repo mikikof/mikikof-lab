@@ -15,7 +15,9 @@ status      = "done"
 anchor      = { kind = "lec", id = 17 }
 
 [artifacts]
-explainer = "instruction-execution.html"
+explainer = "instruction-execution/"   # 3ページのシリーズ（00 イチから図解 /
+                                      # 01 途中結果 / 02 READ は上書き）＋回ハブ。
+                                      # 末尾の / がディレクトリの合図。
 print     = "コンピュータの構成と動作"
 quiz      = { id = "joho-cpu-instruction", set_index = 7 }
 lecture   = 17
