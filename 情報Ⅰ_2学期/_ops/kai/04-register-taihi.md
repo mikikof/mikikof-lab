@@ -4,7 +4,7 @@ slug: "register-taihi"
 theme: "同じレジスタに読み込めば、途中結果は消える ― 命令の並びと退避"
 anchor: { kind: lec, id: 17 }
 date: "未定"
-status: building
+status: done
 ---
 
 # 第4回 同じレジスタに読み込めば、途中結果は消える

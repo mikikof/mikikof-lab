@@ -4,7 +4,7 @@ slug: "os-mokuteki-to-interface"
 theme: "装置の違いを意識せずに使えるのは誰の仕事か ― OS の目的とハードウェアインタフェース"
 anchor: { kind: lec, id: 14 }
 date: "2026-09-上旬"
-status: building
+status: done
 ---
 
 # 第1回 装置の違いを意識せずに使えるのは誰の仕事か

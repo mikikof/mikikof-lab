@@ -4,7 +4,7 @@ slug: "nibun-tansaku-han-i"
 theme: "調べ終えた中央は、範囲から外す ― 二分探索"
 anchor: { kind: lec, id: 22 }
 date: "未定"
-status: building
+status: done
 ---
 
 # 第7回 調べ終えた中央は、範囲から外す

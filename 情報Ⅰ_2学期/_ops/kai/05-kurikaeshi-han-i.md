@@ -4,7 +4,7 @@ slug: "kurikaeshi-han-i"
 theme: "繰り返しが止まる値は、処理されない ― 範囲と条件の書き方"
 anchor: { kind: lec, id: 20 }
 date: "未定"
-status: building
+status: done
 ---
 
 # 第5回 繰り返しが止まる値は、処理されない

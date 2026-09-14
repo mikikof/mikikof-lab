@@ -4,7 +4,7 @@ slug: "nuketa-ato-no-soeji"
 theme: "くり返しを抜けた添字は、1つ先を指している ― 配列と添字"
 anchor: { kind: lec, id: 20 }
 date: "未定"
-status: building
+status: done
 ---
 
 # 第6回 くり返しを抜けた添字は、1つ先を指している

@@ -4,7 +4,7 @@ slug: "osoi-hou-wo-toru"
 theme: "始めるのは、二つのうち遅いほう ― 待ち行列"
 anchor: { kind: lec, id: 26 }
 date: "未定"
-status: building
+status: done
 ---
 
 # 第9回 始めるのは、二つのうち遅いほう

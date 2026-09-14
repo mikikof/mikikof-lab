@@ -4,7 +4,7 @@ slug: "koushin-no-junjo"
 theme: "一段の中で、減らすのが先か増やすのが先か ― 確定的モデル"
 anchor: { kind: lec, id: 25 }
 date: "未定"
-status: building
+status: done
 ---
 
 # 第8回 一段の中で、減らすのが先か増やすのが先か
