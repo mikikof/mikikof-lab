@@ -1062,6 +1062,11 @@ main.page h1, main.page h2{text-wrap:balance}
    body の見出しに文節境界の ZWSP を入れてあるので、keep-all でそこだけを折り位置にする。
    overflow-wrap:anywhere は最後の逃げ道（ZWSP が無い見出しでも版面から溢れない）。 */
 main.page h1{word-break:keep-all; overflow-wrap:anywhere}
+/* ★ リードも同じ扱いにする。h1 にしか当てていなかったので、390px では
+   「…足りなくなる日がずれ／ます。」のように活用語の途中で折れていた。
+   ZWSP を入れていない文では keep-all + overflow-wrap:anywhere は既定と同じ
+   折り方に落ちるため、文節を入れていないページの見た目は変わらない。 */
+main.page .lead{word-break:keep-all; overflow-wrap:anywhere}
 @media(min-width:1280px) and (max-width:1599px){
   main.page h1{font-size:34px}
 }

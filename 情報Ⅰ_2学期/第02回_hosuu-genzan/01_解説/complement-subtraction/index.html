@@ -1057,6 +1057,11 @@ main.page h1, main.page h2{text-wrap:balance}
    body の見出しに文節境界の ZWSP を入れてあるので、keep-all でそこだけを折り位置にする。
    overflow-wrap:anywhere は最後の逃げ道（ZWSP が無い見出しでも版面から溢れない）。 */
 main.page h1{word-break:keep-all; overflow-wrap:anywhere}
+/* ★ リードも同じ扱いにする。h1 にしか当てていなかったので、390px では
+   「…足りなくなる日がずれ／ます。」のように活用語の途中で折れていた。
+   ZWSP を入れていない文では keep-all + overflow-wrap:anywhere は既定と同じ
+   折り方に落ちるため、文節を入れていないページの見た目は変わらない。 */
+main.page .lead{word-break:keep-all; overflow-wrap:anywhere}
 @media(min-width:1280px) and (max-width:1599px){
   main.page h1{font-size:34px}
 }
@@ -1804,7 +1809,7 @@ html[data-theme="dark"] .num{color:#0c1016}
 <main class="page">
   <div class="kicker"><span class="badge">情報Ⅰ 2学期</span><span class="badge">第2回 補数と桁上がり</span></div>
   <h1>引き算を足し算に変える</h1>
-  <p class="lead">コンピュータの中では、引き算を足し算に置き換えています。引く数の各桁を反転して 1 を足した数を補数といい、これを足してから 5 桁目を無視すると、引き算の答えが残ります。手順は 3 段ですが、途中の「1 を足す」を飛ばすと答えが 1 小さくなり、5 桁目を残すと 4 ビットに収まりません。</p>
+  <p class="lead">コンピュータの中では、引き算を足し算に置き換えています。引く数の各桁を反転して 1 を足した数を補数といい、これを足してから 5 桁目を無視すると、引き算の答えが残ります。手順は 3 段ですが、途中の「1 を足す」を飛ばすと答えが 1 小さくなり、5 桁目を残すと 4 ビットに収まりません。後半の 3 枚では、符号ビット・小数の扱い・浮動小数点数まで進みます。</p>
   <div class="list">
     <a class="card" href="00-hajimete.html">
       <div class="num em">00</div>
@@ -1827,6 +1832,30 @@ html[data-theme="dark"] .num{color:#0c1016}
       <div class="cbody">
         <div class="ct"><span class="ctt">なぜ 5 桁目を捨ててよいのか</span><span class="tag">深掘り</span></div>
         <p class="cd">補数を足すと 16 を余分に足しています。その 16 が 5 桁目です。16 で一周する文字盤と、桁上がりが出ない場合も見ます。</p>
+      </div>
+      <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    </a>
+    <a class="card" href="03-hosuu-keisan.html">
+      <div class="num">03</div>
+      <div class="cbody">
+        <div class="ct"><span class="ctt">補数の計算と符号ビット</span><span class="tag">発展</span><span class="tag">動かす</span></div>
+        <p class="cd">補数の 2 通りの求め方、先頭のビットで正負を決める書き方、n ビットで表せる範囲を動かして確かめます。加算だけで減算を済ませる形も見ます。</p>
+      </div>
+      <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    </a>
+    <a class="card" href="04-shousuu.html">
+      <div class="num">04</div>
+      <div class="cbody">
+        <div class="ct"><span class="ctt">2 進数の小数と終わらない小数</span><span class="tag">発展</span><span class="tag">動かす</span></div>
+        <p class="cd">小数点より下の重み、10 進から 2 進への直し方、0.1 が終わらないこと、固定小数点数の窮屈さを順に見ます。桁を増やしても誤差が残るところまで確かめます。</p>
+      </div>
+      <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    </a>
+    <a class="card" href="05-fudou-shousuu.html">
+      <div class="num wk">05</div>
+      <div class="cbody">
+        <div class="ct"><span class="ctt">32 ビットを席で分ける ― 浮動小数点数</span><span class="tag">発展</span><span class="tag">新幹線</span></div>
+        <p class="cd">1 編成 32 席を、車掌席 1・指数部 8・仮数部 23 に分けます。仮数部の作り方と、指数部に 127 の下駄をはかせる理由を、新幹線の編成でたどります。</p>
       </div>
       <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
     </a>

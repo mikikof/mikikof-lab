@@ -1062,6 +1062,11 @@ main.page h1, main.page h2{text-wrap:balance}
    body の見出しに文節境界の ZWSP を入れてあるので、keep-all でそこだけを折り位置にする。
    overflow-wrap:anywhere は最後の逃げ道（ZWSP が無い見出しでも版面から溢れない）。 */
 main.page h1{word-break:keep-all; overflow-wrap:anywhere}
+/* ★ リードも同じ扱いにする。h1 にしか当てていなかったので、390px では
+   「…足りなくなる日がずれ／ます。」のように活用語の途中で折れていた。
+   ZWSP を入れていない文では keep-all + overflow-wrap:anywhere は既定と同じ
+   折り方に落ちるため、文節を入れていないページの見た目は変わらない。 */
+main.page .lead{word-break:keep-all; overflow-wrap:anywhere}
 @media(min-width:1280px) and (max-width:1599px){
   main.page h1{font-size:34px}
 }
@@ -1874,7 +1879,7 @@ main.page h2{font-size:28px !important}
   <nav class="sernav" aria-label="ページ送り">
     <a class="sn-prev" href="01-junban.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>前：1 を足す前に進むと、答えが 1 小さい</a>
     <a class="sn-up" href="index.html">この回の一覧へ</a>
-    <span></span>
+    <a class="sn-next" href="03-hosuu-keisan.html">次：補数の計算と符号ビット<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
   </nav>
 </main>
 <div class="hk-ov" id="hk-ov" role="dialog" aria-modal="true" aria-label="補足">
@@ -2659,7 +2664,8 @@ main.page h2{font-size:28px !important}
     if(target >= 0){
       ctx.strokeStyle = K('--k-main'); ctx.lineWidth = 2;
       ctx.setLineDash([4, 4]);
-      ctx.beginPath(); ctx.moveTo(lx + u * target, y + 28); ctx.lineTo(lx + u * target, y - 30); ctx.stroke();
+      /* ★ 破線を目盛りの文字より上で止める。下まで引くと数字を横切る。 */
+      ctx.beginPath(); ctx.moveTo(lx + u * target, y + 6); ctx.lineTo(lx + u * target, y - 30); ctx.stroke();
       ctx.setLineDash([]);
       ctx.fillStyle = K('--k-main'); ctx.font = F(11.5, '800'); ctx.textAlign = 'center';
       ctx.fillText('a − b ＝ ' + target, lx + u * target, y + 42);
@@ -2690,7 +2696,7 @@ main.page h2{font-size:28px !important}
     var h1 = drawFit(n + ' で一周する輪では、' + b + ' だけ戻るのと ' + c + ' だけ進むのが同じです',
       13, 14, 26, 'left', W - 28, '800');
     var top = 26 + h1 * 21;
-    var R = Math.min((H - top - 46) / 2, W / 2 - 80, 104);
+    var R = Math.min((H - top - 54) / 2, W / 2 - 80, 104);
     var cx = W / 2, cy = top + R + 16;
 
     ctx.strokeStyle = K('--k-line2'); ctx.lineWidth = 2;
@@ -2728,7 +2734,7 @@ main.page h2{font-size:28px !important}
     drawFit(n === 12
       ? a + ' 時の ' + b + ' 時間前は、' + c + ' 時間進めて ' + goal + ' 時。12 を超えた分は読みません'
       : a + ' から ' + b + ' を引くのは、補数 ' + c + ' を足して 16 を捨てるのと同じです',
-      12, W / 2, cy + R + 34, 'center', W - 28, '800');
+      12, W / 2, cy + R + 42, 'center', W - 28, '800');
     if(window.__setHit) window.__setHit(HIT);
   }
 
@@ -2739,7 +2745,7 @@ main.page h2{font-size:28px !important}
     var hh0;
     if(stage === 1)      hh0 = narrow ? 268 : 254;
     else if(stage === 2) hh0 = narrow ? 268 : 250;
-    else                 hh0 = narrow ? 330 : 312;
+    else                 hh0 = narrow ? 338 : 320;
     var d = window.SETUP(cv, hh0);
     W = d.w; H = d.h;
     ctx.clearRect(0, 0, W, H);

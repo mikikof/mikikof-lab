@@ -1,9 +1,9 @@
 <!doctype html>
 <!--
-  情報 解説Webツール — イチから図解：引き算を足し算でする
-  第2回 補数と桁上がり（00）。
+  情報 解説Webツール — 2 進数の小数と終わらない小数
+  第2回 補数と桁上がり（04）。
   ★ このファイルは生成物。手で直さない。
-    中身  = dist/complement-subtraction/_src/00-hajimete.body.html ＋ 00-hajimete.mat.js
+    中身  = dist/complement-subtraction/_src/04-shousuu.body.html ＋ 04-shousuu.mat.js
     外枠  = _series/engine.css ＋ _series/engine.js
     組む  = python3 _series/build_series.py complement-subtraction
   外部依存ゼロ（CDN・Webフォント・KaTeX・Chart.js 不使用）。localStorage 不使用。
@@ -12,7 +12,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>イチから図解：引き算を足し算でする ｜ mikikof-lab</title>
+<title>2 進数の小数と終わらない小数 ｜ mikikof-lab</title>
 <style>
 /* ============================================================================
    情報 解説Webツール — シリーズ engine（共有の外枠）
@@ -1791,103 +1791,123 @@ main.page h2{font-size:28px !important}
 <main class="page">
   <div class="kicker">
     <span class="badge">第2回 補数と桁上がり</span>
-    <span class="badge em">いちばんやさしい</span>
-    <span>用語をほとんど使いません</span>
+    <span class="badge wk">発展</span>
+    <span>講義スライド 3-7〜3-11</span>
   </div>
 
-  <h1>イチから図解：​引き算を足し算でする</h1>
-  <p class="lead">4&nbsp;つの桁に入るのは 0 と 1 だけです。<span class="mk">足すと桁が 1 つ増える相手を作って、それを足します</span>。</p>
+  <h1>2 進数の小数と​<span class="hi">終わらない小数</span></h1>
+  <p class="lead">0.1 を 2&nbsp;進数で書くと、桁が終わりません。<span class="mk">桁を増やしても、ぴったりにはなりません</span>。</p>
 
-  <div class="figbox" id="fig-basic">
+  <div class="figbox" id="fig-shousuu">
     <div class="zoomrow">
-      <button class="fig-zoom" type="button" data-fig="fig-basic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>拡大して見る</button>
+      <button class="fig-zoom" type="button" data-fig="fig-shousuu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>拡大して見る</button>
     </div>
 
     <div class="panel stagebar">
       <div class="qrow">
-        <button class="qbtn qstage active" type="button" data-stage="1"><span class="n">1</span>4 つの桁で 16 個</button>
-        <button class="qbtn qstage" type="button" data-stage="2"><span class="n">2</span>桁が増える相手</button>
-        <button class="qbtn qstage" type="button" data-stage="3"><span class="n">3</span>相手の作り方</button>
-        <button class="qbtn qstage" type="button" data-stage="4"><span class="n">4</span>足して、捨てる</button>
+        <button class="qbtn qstage active" type="button" data-stage="1"><span class="n">1</span>小数点より下の重み</button>
+        <button class="qbtn qstage" type="button" data-stage="2"><span class="n">2</span>2 倍して拾う</button>
+        <button class="qbtn qstage" type="button" data-stage="3"><span class="n">3</span>終わらない小数</button>
+        <button class="qbtn qstage" type="button" data-stage="4"><span class="n">4</span>固定小数点数</button>
       </div>
     </div>
 
     <div id="banner" class="banner ok"></div>
 
     <div id="cbox" class="canvas-box ok">
-      <canvas id="cv" role="img" aria-label="場面ごとに入れ替わる図。4 つの桁に 0 と 1 を並べると 16 通りあり、0 から 15 までを表すようす。ある数と、足すと桁が 1 つ増える相手を、2 本の帯で並べて示すようす。各桁の 0 と 1 を入れ替えてから 1 を足すと、その相手ができあがるようす。7 に相手を足して 5 桁になり、いちばん上の桁を捨てると 4 が残るようす。桁の箱をタップすると 0 と 1 が入れ替わります。"></canvas>
+      <canvas id="cv" role="img" aria-label="段階で入れ替わる図。小数点より下の重みでは、各桁の下に 2 の何乗かと、その 10 進の値を並べ、1 が立っている桁だけを足し合わせて合計を出す。2 倍して拾うでは、小数を 2 倍して整数部を取り出す計算を上から順に並べ、取り出した 0 と 1 が 2 進数の桁になるようすを示す。終わらない小数では、桁数を増やしたときの値と誤差を棒で並べ、0 にならないまま小さくなり続けるようすを示す。固定小数点数では、8 つの桁の途中に小数点を置き、位置を動かすと整数部の広さときざみの細かさが入れ替わるようすを示す。桁をタップすると 0 と 1 が入れ替わります。"></canvas>
     </div>
 
     <div class="panel" id="ctlpanel">
-      <div class="ctl-row" id="row-num">
-        <label class="sl" for="nb"><svg class="lbi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16M13 4v16M18 4v16"/></svg>数を選ぶ</label>
-        <input id="nb" type="range" min="1" max="15" step="1" value="3" aria-label="数を選ぶ">
-        <span class="sl-out" id="nbval">3</span>
+      <div class="qrow" id="row-ex4">
+        <span class="qcap"><svg class="lbi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>例</span>
+        <button class="qbtn active" type="button" data-v="10.1101">10.1101</button>
+        <button class="qbtn" type="button" data-v="0.1101">0.1101</button>
+        <button class="qbtn" type="button" data-v="1.01">1.01</button>
       </div>
-      <div class="qrow" id="row-view">
-        <span class="qcap"><svg class="lbi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>見せ方</span>
-        <button class="qbtn active" type="button" data-v="bits">4 つの桁で</button>
-        <button class="qbtn" type="button" data-v="num">ふつうの数で</button>
+      <div class="qrow" id="row-frac">
+        <span class="qcap"><svg class="lbi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9 15l6-6"/><circle cx="9.5" cy="9.5" r="1.2" fill="currentColor"/><circle cx="14.5" cy="14.5" r="1.2" fill="currentColor"/></svg>10 進の小数</span>
+        <button class="qbtn active" type="button" data-f="0.1875">0.1875</button>
+        <button class="qbtn" type="button" data-f="0.75">0.75</button>
+        <button class="qbtn" type="button" data-f="0.1">0.1</button>
+        <button class="qbtn" type="button" data-f="0.3">0.3</button>
       </div>
-      <div class="ctl-row" id="row-step0">
-        <label class="sl" for="stp0"><svg class="lbi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>手順を送る</label>
-        <input id="stp0" type="range" min="1" max="4" step="1" value="2" aria-label="手順を送る">
-        <span class="sl-out"><span id="stp0val">2</span>/4</span>
+      <div class="ctl-row" id="row-step4">
+        <label class="sl" for="stp4"><svg class="lbi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>手順を送る</label>
+        <input id="stp4" type="range" min="1" max="8" step="1" value="4" aria-label="手順を送る">
+        <span class="sl-out"><span id="stp4val">4</span>/8</span>
+      </div>
+      <div class="ctl-row" id="row-len">
+        <label class="sl" for="flen"><svg class="lbi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h18M3 16h18M7 4v16M17 4v16"/></svg>小数の桁数</label>
+        <input id="flen" type="range" min="2" max="20" step="1" value="8" aria-label="小数の桁数">
+        <span class="sl-out" id="flenval">8</span>
+      </div>
+      <div class="ctl-row" id="row-pt">
+        <label class="sl" for="ptp"><svg class="lbi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16"/><circle cx="12" cy="12" r="2.4" fill="currentColor"/></svg>小数点の位置</label>
+        <input id="ptp" type="range" min="1" max="7" step="1" value="4" aria-label="小数点の位置">
+        <span class="sl-out" id="ptpval">4</span>
       </div>
     </div>
 
-    <div class="legend" id="leg">
-      <span><i class="sw-key" style="background:var(--navy)"></i>1 が立っている桁</span>
-      <span><i class="sw-key" style="background:var(--line-2)"></i>0 の桁</span>
-      <span><i class="sw-key" style="background:var(--warn)"></i>桁が増えたところ</span>
-    </div>
+    <div class="legend" id="leg"></div>
 
-    <div class="metrics">
-      <div class="mcard hl"><p class="mlab" id="lab-l">選んだ数</p><p class="mval" id="ro-l">0011</p></div>
-      <div class="mcard"><p class="mlab" id="lab-r">桁が増える相手</p><p class="mval" id="ro-r">1101</p></div>
-      <div class="mcard"><p class="mlab" id="lab-s">2 つを足すと</p><p class="mval" id="ro-s">1 0000</p></div>
-    </div>
-
+    <div class="metrics" id="mets"></div>
     <p class="cap" id="stage-cap"></p>
   </div>
 
   <div class="steps" id="stages">
-    <div class="step on" data-stage="1"><span class="sno">1</span><div class="sbody"><div class="smath">4 つの桁で 16 個</div><div class="snote">桁が 4 つあり、どの桁も 0 か 1 です。並べ方は 2 を 4 回かけた 16 通りで、0 から 15 までを表せます。</div></div></div>
-    <div class="step" data-stage="2"><span class="sno">2</span><div class="sbody"><div class="smath">桁が増える相手</div><div class="snote">ある数に足すと、4 つの桁では書ききれなくなって桁が 1 つ増える。そうなる相手が、どの数にも 1 つずつあります。</div></div></div>
-    <div class="step" data-stage="3"><span class="sno">3</span><div class="sbody"><div class="smath">相手の作り方</div><div class="snote">各桁の 0 と 1 を入れ替えます。もとの数と足すとどの桁も 1 になり、あと 1 で桁が増えます。だから 1 を足せば相手です。</div></div></div>
-    <div class="step" data-stage="4"><span class="sno">4</span><div class="sbody"><div class="smath">足して、捨てる</div><div class="snote">引きたい数の相手を足すと、桁が 1 つ増えます。増えた分を捨てると、引き算をしたのと同じ数が残ります。</div></div></div>
+    <div class="step on" data-stage="1"><span class="sno">1</span><div class="sbody"><div class="smath">小数点より下の重み</div><div class="snote">小数点の右へ 1 つ進むごとに、重みが半分になります。0.5、0.25、0.125 と続きます。</div></div></div>
+    <div class="step" data-stage="2"><span class="sno">2</span><div class="sbody"><div class="smath">2 倍して拾う</div><div class="snote">小数部を 2 倍して、出てきた整数部を上の桁から順に並べます。小数部が 0 になったら終わりです。</div></div></div>
+    <div class="step" data-stage="3"><span class="sno">3</span><div class="sbody"><div class="smath">終わらない小数</div><div class="snote">0.1 は同じ並びをくり返します。桁を増やすと誤差は小さくなりますが、0 にはなりません。</div></div></div>
+    <div class="step" data-stage="4"><span class="sno">4</span><div class="sbody"><div class="smath">固定小数点数</div><div class="snote">小数点の位置を先に決める形です。位置を右へ動かすと広い数まで表せますが、きざみは粗くなります。</div></div></div>
   </div>
 
-  <h2><span class="bar"></span>場面の説明</h2>
+  <h2><span class="bar"></span>小数点の右へ進むと、重みが半分になります</h2>
 
-  <p>桁が 4&nbsp;つあり、どの桁も 0 か 1 です。並べ方は <b>2 を 4&nbsp;回かけた 16&nbsp;通り</b>で、0 から 15 までを表せます。<span class="mk">16 そのものは、この 4&nbsp;つの桁には入りません。</span>書くには桁がもう 1&nbsp;つ要ります。<button class="hk-chip" type="button" data-hk="juuroku"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.5a2.4 2.4 0 1 1 3.3 2.2c-.6.3-.9.7-.9 1.3v.5M12 16.5v.01"/></svg>16 はどう書きますか</button></p>
+  <p>整数の桁が左へ 2&nbsp;倍ずつ増えるのと同じで、小数の桁は右へ<b>半分ずつ</b>減ります。2<sup>−1</sup> が 0.5、2<sup>−2</sup> が 0.25、2<sup>−3</sup> が 0.125、2<sup>−4</sup> が 0.0625 です。<span class="mk">10.1101 は、2 ＋ 0.5 ＋ 0.25 ＋ 0.0625 で 2.8125 になります。</span><button class="hk-chip" type="button" data-hk="omomi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.5a2.4 2.4 0 1 1 3.3 2.2c-.6.3-.9.7-.9 1.3v.5M12 16.5v.01"/></svg>重みが半分になる理由</button></p>
 
-  <p>どの数にも、<b>足すと桁が 1&nbsp;つ増える相手</b>が 1&nbsp;つずつあります。3 なら 13、5 なら 11 です。足すとちょうど 16 になり、4&nbsp;つの桁からあふれます。<button class="hk-chip" type="button" data-hk="aite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.5a2.4 2.4 0 1 1 3.3 2.2c-.6.3-.9.7-.9 1.3v.5M12 16.5v.01"/></svg>相手はいつもありますか</button></p>
+  <h2><span class="bar"></span>10 進の小数は、2 倍して整数部を拾います</h2>
 
-  <p>相手は 2&nbsp;段で作れます。まず<b>各桁の 0 と 1 を入れ替え</b>ます。もとの数と足すと、どの桁も 0 と 1 の組になるので、全部の桁が 1 になります。<span class="mk">あと 1 増えれば桁が上がるので、1 を足せば相手です。</span><button class="hk-chip" type="button" data-hk="nidan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.5a2.4 2.4 0 1 1 3.3 2.2c-.6.3-.9.7-.9 1.3v.5M12 16.5v.01"/></svg>なぜ 1 を足すのですか</button></p>
+  <p>0.1875 を 2&nbsp;進数にするには、<b>2 倍して整数部を取り出す</b>ことをくり返します。0.375、0.75、1.5、1.0 と進み、取り出した 0・0・1・1 が小数点以下の桁になります。<span class="mk">小数部が 0 になったところで終わりです。</span><button class="hk-chip" type="button" data-hk="nibai"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.5a2.4 2.4 0 1 1 3.3 2.2c-.6.3-.9.7-.9 1.3v.5M12 16.5v.01"/></svg>2 倍して拾うと桁が出る理由</button></p>
 
-  <p>引きたい数の相手を足すと、桁が 1&nbsp;つ増えます。<b>増えた分を捨てる</b>と、引き算をしたのと同じ数が残ります。次のページで、この 3&nbsp;つの手順を 1&nbsp;つずつ通します。<button class="hk-chip" type="button" data-hk="suteru0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.5a2.4 2.4 0 1 1 3.3 2.2c-.6.3-.9.7-.9 1.3v.5M12 16.5v.01"/></svg>捨ててよいのですか</button></p>
+  <h2><span class="bar"></span>0.1 は、いくら桁を増やしても終わりません</h2>
 
-  <p>この「足すと桁が 1&nbsp;つ上がる最も小さい数」を<b>補数</b>といいます。各桁を入れ替えることを<b>反転</b>、桁が 1&nbsp;つ増えることを<b>桁上がり</b>といいます。次のページから、この 3&nbsp;つの語を使います。</p>
+  <p>0.1 で同じ計算をすると、0.2、0.4、0.8、1.6、1.2、0.4 と進み、<b>0.4 に戻って同じ並びをくり返します</b>。2&nbsp;進数では 0.00011001100… と続き、小数部が 0 になりません。<span class="mk p">桁をいくら増やしても、ぴったりの値にはなりません。</span>この、有限の桁で打ち切ったときのずれを<b>打切り誤差</b>といいます。<button class="hk-chip" type="button" data-hk="owaranai"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.5a2.4 2.4 0 1 1 3.3 2.2c-.6.3-.9.7-.9 1.3v.5M12 16.5v.01"/></svg>0.1 だけ終わらない理由</button></p>
+
+  <h2><span class="bar"></span>固定小数点数は、位置を先に決めます</h2>
+
+  <p>実数を表す方法の 1&nbsp;つに、<b>何桁目が小数点かをあらかじめ決めておく</b>形があります。2&nbsp;進数の 11.01 を 8&nbsp;ビットで表すとき、4&nbsp;桁目の後を小数点と決めると 00110100 になります。</p>
+
+  <p>この形では、<span class="mk">表せる範囲ときざみの細かさが引き換えになります</span>。小数点を右へ動かせば大きい数まで届きますが、そのぶんきざみは粗くなります。桁数が多い科学計算や金融計算では、この窮屈さが問題になります。<button class="hk-chip" type="button" data-hk="kotei"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.5a2.4 2.4 0 1 1 3.3 2.2c-.6.3-.9.7-.9 1.3v.5M12 16.5v.01"/></svg>位置を動かすと何が入れ替わるか</button></p>
+
+  <div class="pointbox">
+    <p class="ph">POINT</p>
+    <dl>
+      <dt>小数の重み</dt><dd>小数点の右へ 1 つ進むごとに半分になります。0.5、0.25、0.125、0.0625 と続きます。</dd>
+      <dt>10 進から 2 進へ</dt><dd>小数部を 2 倍し、出てきた整数部を上の桁から並べます。小数部が 0 になれば終わりです。</dd>
+      <dt>打切り誤差</dt><dd>有限の桁で打ち切ったときに残るずれです。0.1 のように、2 進数で終わらない小数で起こります。</dd>
+      <dt>固定小数点数</dt><dd>小数点の位置を先に決める形です。範囲ときざみの細かさが引き換えになります。</dd>
+    </dl>
+  </div>
 
   <details class="glossary">
     <summary>用語のおさらい</summary>
     <div style="padding:2px 18px 18px">
       <dl class="gloss">
-        <dt>2 進数<span class="en">binary number</span></dt><dd>0 と 1 の 2 つだけで数を表す書き方です。桁が 4 つなら 0 から 15 までを表せます。</dd>
-        <dt>ビット<span class="en">bit</span></dt><dd>2 進数の 1 桁ぶんです。4 ビットなら桁が 4 つあります。</dd>
-        <dt>補数<span class="en">complement</span></dt><dd>ある数に足すと桁が 1 つ上がる、最も小さい数です。この頁の「桁が増える相手」がこれにあたります。</dd>
-        <dt>反転</dt><dd>0 を 1 に、1 を 0 に置き換えることです。</dd>
-        <dt>桁上がり</dt><dd>足し算で上の桁へ 1 が移ることです。</dd>
+        <dt>2 進数の小数</dt><dd>小数点の右の桁が 0.5、0.25、0.125 と、半分ずつの重みを持つ書き方です。</dd>
+        <dt>打切り誤差<span class="en">truncation error</span></dt><dd>有限の桁で打ち切ったときに残るずれです。桁を増やすと小さくなりますが、0 にはなりません。</dd>
+        <dt>丸め誤差<span class="en">rounding error</span></dt><dd>表せる桁に丸めたときに生じるずれです。</dd>
+        <dt>固定小数点数<span class="en">fixed-point number</span></dt><dd>小数点の位置をあらかじめ決めておく表し方です。</dd>
+        <dt>オーバーフロー</dt><dd>表せる範囲を超えることです。逆に小さすぎて表せなくなることをアンダーフローといいます。</dd>
       </dl>
     </div>
   </details>
 
-  <p class="foot">4 つの桁に入るのは 0 から 15 までです。16 は桁が 1 つ増えます。</p>
+  <p class="foot">2 進数で終わらない小数があります。桁を増やしても誤差は残ります。</p>
   <nav class="sernav" aria-label="ページ送り">
-    <span></span>
+    <a class="sn-prev" href="03-hosuu-keisan.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>前：補数の計算と符号ビット</a>
     <a class="sn-up" href="index.html">この回の一覧へ</a>
-    <a class="sn-next" href="01-junban.html">次：1 を足す前に進むと、答えが 1 小さい<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    <a class="sn-next" href="05-fudou-shousuu.html">次：32 ビットを席で分ける ― 浮動小数点数<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
   </nav>
 </main>
 <div class="hk-ov" id="hk-ov" role="dialog" aria-modal="true" aria-label="補足">
@@ -2511,18 +2531,21 @@ main.page h2{font-size:28px !important}
 
 </script>
 <script>
-/* ===================== MATERIAL — イチから図解：引き算を足し算でする ==========
+/* ===================== MATERIAL — 2 進数の小数と終わらない小数 ===============
    4 つの場面を 1 枚の canvas で切り替える。
 
    数の正本 = specs/complement-subtraction.spec.md（非公開）。独立検算済み（python）。
-     4 ビット。表せるのは 0〜15 の 16 個。16 は 5 桁目に移る。
-     反転 = 15 − x。補数 = 反転 + 1 = 16 − x。x + 補数(x) = 16（1〜15 の全部で確認）。
-     主例 7 − 3 は 0111 + 1101 = 1 0100 → 0100（4）。
-   原本 = 学習ノート POINT 15 実習1・2 ／ ベストフィット 3章09。
+     小数点の右へ 1 つで重みが半分。2^-1=0.5 / 2^-2=0.25 / 2^-3=0.125 / 2^-4=0.0625。
+     10.1101(2) = 2.8125 ／ 0.1101(2) = 0.8125 ／ 1.01(2) = 1.25。
+     0.1875 -> 0.0011（4 桁で終わる）／0.75 -> 0.11 ／ 0.1 -> 0.000110011…（1100 がくり返す）
+     0.3 -> 0.010011001100…（同じく終わらない）。
+     8 ビット・整数部 p 桁の固定小数点は、きざみ 1/2^(8-p)、最大 255/2^(8-p)。
+     p=4 なら きざみ 0.0625・最大 15.9375。11.01(2)=3.25 は 00110100。
+   原本 = 講義スライド 2_3.pdf 3-7〜3-11（追加ソース）。
 
-   ★ この頁では「補数」「反転」「桁上がり」をまだ前面に出さない。
-     桁が増える相手・入れ替える・桁が 1 つ増える、の言い方で通し、
-     本文の最後でだけ名前を渡す。01 から正式な語に移る。
+   ★ 誤差は**分数のまま**計算する。0.1 は double でも正確に持てないので、
+     double で引き算すると「誤差 0」と出てしまい、この頁の主張が自分の実装に
+     裏切られる。num/den の整数演算で出す。
    ============================================================================ */
 (function(){
   "use strict";
@@ -2534,15 +2557,14 @@ main.page h2{font-size:28px !important}
 
   var el = {
     banner:document.getElementById('banner'), cbox:document.getElementById('cbox'),
-    cap:document.getElementById('stage-cap'), leg:document.getElementById('leg'),
-    nb:document.getElementById('nb'), nbval:document.getElementById('nbval'),
-    stp0:document.getElementById('stp0'), stp0val:document.getElementById('stp0val'),
-    rowNum:document.getElementById('row-num'), rowView:document.getElementById('row-view'),
-    rowStep:document.getElementById('row-step0'),
-    roL:document.getElementById('ro-l'), roR:document.getElementById('ro-r'),
-    roS:document.getElementById('ro-s'),
-    labL:document.getElementById('lab-l'), labR:document.getElementById('lab-r'),
-    labS:document.getElementById('lab-s')
+    cap:document.getElementById('stage-cap'), mets:document.getElementById('mets'),
+    leg:document.getElementById('leg'),
+    stp4:document.getElementById('stp4'), stp4val:document.getElementById('stp4val'),
+    flen:document.getElementById('flen'), flenval:document.getElementById('flenval'),
+    ptp:document.getElementById('ptp'),   ptpval:document.getElementById('ptpval'),
+    rowEx:document.getElementById('row-ex4'),   rowFrac:document.getElementById('row-frac'),
+    rowStep:document.getElementById('row-step4'), rowLen:document.getElementById('row-len'),
+    rowPt:document.getElementById('row-pt')
   };
 
   function MF(px){ return Math.round(px * (window.ZOOM || 1) * 10) / 10; }
@@ -2552,7 +2574,6 @@ main.page h2{font-size:28px !important}
   function FM(px){ return '700 ' + MF(Math.max(15, Math.round(px * 1.35)))
     + 'px ' + window.MONOFONT; }
 
-  /* 器の幅に収めて描く。収まらなければ級数を下げ、それでも無理なら文字単位で折る。 */
   function drawFit(t, px, x, y, align, maxW, w, lh){
     var p = px, wt = w || '700';
     ctx.textAlign = align;
@@ -2570,9 +2591,6 @@ main.page h2{font-size:28px !important}
       else { cur += c1; }
     }
     if(cur) lines.push(cur);
-    /* ★ 行頭の約物を前の行へ繰り上げるとき、**繰り上げた結果その行が器幅を
-       超えないか**を見る。見ないと、右揃えのラベルで超えた分がそのまま左へ出る
-       （820px で「1 を足す（補数）」が −10px まで出ていた）。 */
     for(var q = 1; q < lines.length; q++){
       while(lines[q] && '。、」）'.indexOf(lines[q].charAt(0)) >= 0
             && ctx.measureText(lines[q - 1] + lines[q].charAt(0)).width <= maxW){
@@ -2583,317 +2601,493 @@ main.page h2{font-size:28px !important}
     return lines.length;
   }
 
-  /* ===== 数理 ===== */
-  var M = 16;
-  function b4(x, w){ var s = (x >>> 0).toString(2); w = w || 4;
-    while(s.length < w) s = '0' + s; return s; }
-  function inv(x){ return (~x) & (M - 1); }
-  function comp(x){ return (inv(x) + 1) & (M - 1); }
+  /* ===== 数理（分数のまま持つ） ===== */
+  var FR = {
+    '0.1875': {n:3, d:16, label:'0.1875'},
+    '0.75':   {n:3, d:4,  label:'0.75'},
+    '0.1':    {n:1, d:10, label:'0.1'},
+    '0.3':    {n:3, d:10, label:'0.3'}
+  };
+  var EX1 = { '10.1101':['10','1101'], '0.1101':['0','1101'], '1.01':['1','01'] };
 
-  var stage = 1, view = 'bits';
+  var stage = 1, exKey = '10.1101', frKey = '0.1875';
+  var cur = ['10', '1101'];                      /* 場面①でタップして書き換わる */
   var HIT = [];
 
-  function nb(){ return Math.max(1, Math.min(15, parseInt(el.nb.value, 10))); }
-  function st0(){ return Math.max(1, Math.min(4, parseInt(el.stp0.value, 10))); }
+  /* 分数 n/d を 2 進小数に展開する。終われば bits.length < maxN。 */
+  function expand(n, d, maxN){
+    var bits = [], num = n;
+    for(var i = 0; i < maxN; i++){
+      num *= 2;
+      var b = (num >= d) ? 1 : 0;
+      bits.push(b);
+      if(b) num -= d;
+      if(num === 0) break;
+    }
+    return {bits:bits, rest:num};
+  }
+  /* 先頭 k 桁で打ち切ったときの値と誤差を、整数演算で正確に出す */
+  function trunc(n, d, k){
+    var e = expand(n, d, k), bits = e.bits;
+    var V = 0;
+    for(var i = 0; i < k; i++) V = V * 2 + (bits[i] || 0);
+    var p = Math.pow(2, k);
+    return {V:V, pow:p, val:V / p, err:Math.abs(n * p - V * d) / (d * p), bits:bits};
+  }
+  function curVal(){
+    var ip = parseInt(cur[0], 2) || 0, s = 0;
+    for(var i = 0; i < cur[1].length; i++) s += (cur[1].charAt(i) === '1') ? Math.pow(2, -(i + 1)) : 0;
+    return ip + s;
+  }
+  /* ★ canvas に上付きは描けない。Unicode の上付き文字で書く。
+     '2^' + k から ^ を消すやり方だと「2¹」が「21」、「2⁰」が「20」になり、
+     生徒には二十一・二十と読めてしまう（実機の目視で見つけた）。 */
+  var SUP = {'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴',
+             '5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};
+  function sup(k){
+    return String(k).split('').map(function(c){ return SUP[c] || c; }).join('');
+  }
 
-  /* ===== 部品：4 桁（または 5 桁）の箱の列 ===== */
-  function bits(x, cx, y, bw, bh, n, hiLast, dim){
-    n = n || 4;
-    var s = b4(x, n), tot = bw * n + 4 * (n - 1), ox = cx - tot / 2;
-    for(var i = 0; i < n; i++){
-      var on = s.charAt(i) === '1';
-      var isTop = (n === 5 && i === 0);
-      var xx = ox + (bw + 4) * i;
-      ctx.fillStyle = dim ? K('--k-dim')
-        : (isTop && hiLast ? K('--k-warn') : (on ? K('--k-tint') : K('--k-paper')));
+  function flen(){ return Math.max(2, Math.min(20, parseInt(el.flen.value, 10) || 8)); }
+  function stp4(){ return Math.max(1, Math.min(8, parseInt(el.stp4.value, 10) || 4)); }
+  function ptp(){ return Math.max(1, Math.min(7, parseInt(el.ptp.value, 10) || 4)); }
+
+  function cells(str, x0, y, bw, bh, opts){
+    opts = opts || {};
+    var gap = Math.max(3, Math.round(bw * 0.13));
+    for(var i = 0; i < str.length; i++){
+      var ch = str.charAt(i), on = (ch === '1');
+      var dim = opts.dimFrom !== undefined && i >= opts.dimFrom;
+      var cyc = opts.cycFrom !== undefined && i >= opts.cycFrom
+                && (Math.floor((i - opts.cycFrom) / opts.cycLen) % 2 === 1);
+      var xx = x0 + (bw + gap) * i;
+      ctx.fillStyle = dim ? K('--k-dim') : (cyc ? K('--k-subtle') : (on ? K('--k-tint') : K('--k-paper')));
       window.roundRect(ctx, xx, y, bw, bh, 4); ctx.fill();
       ctx.lineWidth = 1.6;
-      ctx.strokeStyle = dim ? K('--k-dimbd')
-        : (isTop && hiLast ? K('--k-warn') : (on ? K('--k-tintbd') : K('--k-line2')));
+      ctx.strokeStyle = dim ? K('--k-dimbd') : (on ? K('--k-tintbd') : K('--k-line2'));
       window.roundRect(ctx, xx, y, bw, bh, 4); ctx.stroke();
-      ctx.fillStyle = dim ? K('--k-dimink')
-        : (isTop && hiLast ? K('--k-paper') : (on ? K('--k-main') : K('--k-inksoft')));
-      ctx.font = FM(13); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(s.charAt(i), xx + bw / 2, y + bh / 2 + 1);
+      ctx.fillStyle = dim ? K('--k-dimink') : (on ? K('--k-main') : K('--k-inksoft'));
+      ctx.font = FM(Math.max(11, Math.round(bw * 0.42)));
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(ch, xx + bw / 2, y + bh / 2 + 1);
       ctx.textBaseline = 'alphabetic';
-      HIT.push({x:xx, y:y, w:bw, h:bh, bit:(n - 1 - i)});
+      HIT.push({x:xx, y:y, w:bw, h:bh, idx:(opts.key ? i : undefined), part:opts.key});
     }
-    return {x0:ox, x1:ox + tot};
+    return x0 + (bw + gap) * str.length - gap;
   }
 
-  function rowLabel(t, x, y, maxW){
-    ctx.fillStyle = K('--k-inkfaint');
-    drawFit(t, 11.5, x, y, 'right', maxW, '700', 14);
-  }
-
-  /* ===== 場面① 4 つの桁で 16 個 ===== */
+  /* ===== 場面① 小数点より下の重み ===== */
   function drawStage1(){
-    var v = nb();
+    var ip = cur[0], fp = cur[1], all = ip + fp;
     ctx.fillStyle = K('--k-deep');
-    var h1 = drawFit('桁が 4 つ。どの桁も 0 か 1 なので、並べ方は 16 通りです',
+    var h1 = drawFit('小数点の右へ 1 つ進むごとに、重みが半分になります',
       13, 14, 26, 'left', W - 28, '800');
     var top = 26 + h1 * 21;
 
-    if(view === 'num'){
-      /* 0〜15 を 1 列に並べ、選んだ数を強調する */
-      var cols = W < 560 ? 4 : 8, rows = 16 / cols;
-      var cw = Math.min(64, (W - 32) / cols), ch = Math.min(34, (H - top - 46) / rows);
-      var ox = (W - cw * cols) / 2, oy = top + 8;
-      for(var i = 0; i < 16; i++){
-        var cx = ox + cw * (i % cols), cy = oy + ch * Math.floor(i / cols);
-        var sel = (i === v);
-        ctx.fillStyle = sel ? K('--k-tint') : K('--k-paper');
-        window.roundRect(ctx, cx + 2, cy + 2, cw - 4, ch - 4, 4); ctx.fill();
-        ctx.lineWidth = sel ? 2 : 1.2;
-        ctx.strokeStyle = sel ? K('--k-main') : K('--k-line');
-        window.roundRect(ctx, cx + 2, cy + 2, cw - 4, ch - 4, 4); ctx.stroke();
-        ctx.fillStyle = sel ? K('--k-main') : K('--k-inksoft');
-        ctx.font = F(12.5, '800'); ctx.textAlign = 'center';
-        ctx.fillText(String(i), cx + cw / 2, cy + ch / 2 + 5);
-        HIT.push({x:cx, y:cy, w:cw, h:ch, n:i});
-      }
-      ctx.fillStyle = K('--k-deep');
-      drawFit('0 から 15 までの 16 個です。16 はこの中にありません',
-        12, W / 2, oy + ch * rows + 22, 'center', W - 28, '800');
-      if(window.__setHit) window.__setHit(HIT);
-      return;
-    }
-    var bw = Math.min(46, (W - 60) / 5), bh = Math.min(42, bw);
-    var lw = W < 560 ? 62 : 96;
-    var cx2 = lw + (W - lw - 14 - bw * 4) / 2 + bw * 2;
-    var y1 = top + 14;
-    rowLabel('選んだ数', lw - 8, y1 + bh / 2 + 4, lw - 12);
-    bits(v, cx2, y1, bw, bh, 4, false, false);
-    /* ★ 箱の右へ直書きすると、狭い幅で器の外へ出る。残り幅を測ってから置く。 */
-    var rgt = cx2 + bw * 2 + 12, room = W - rgt - 10;
-    if(room > 34){
-      ctx.fillStyle = K('--k-main');
-      drawFit('＝ ' + v, 14, rgt, y1 + bh / 2 + 5, 'left', room, '800');
-    }
+    var n = all.length;
+    var bw = Math.min(36, Math.max(16, Math.floor((W - 44) / n) - 4));
+    var gap = Math.max(3, Math.round(bw * 0.13));
+    var tot = bw * n + gap * (n - 1), x0 = (W - tot) / 2;
+    var y = top + 14, bh = Math.round(bw * 0.98);
 
-    var y2 = y1 + bh + 22;
-    rowLabel('16 は', lw - 8, y2 + bh / 2 + 4, lw - 12);
-    bits(16, cx2, y2, bw, bh, 5, true, false);
-    var rgt2 = cx2 + bw * 2.5 + 12, room2 = W - rgt2 - 10;
-    var noteY = y2 + bh + 26;
-    ctx.fillStyle = K('--k-warn');
-    if(room2 > 60){
-      drawFit('桁が 1 つ増える', 11.5, rgt2, y2 + bh / 2 + 4, 'left', room2, '800', 13);
-    } else {
-      /* ★ 右へ置けないぶんを下へ逃がすときは、下の文との間隔も取り直す。
-         取らないと 2 つの文が同じ行に重なる（390px でそうなっていた）。 */
-      drawFit('16 は桁が 1 つ増えます', 11.5, 14, y2 + bh + 18, 'left', W - 28, '800', 13);
-      noteY = y2 + bh + 42;
-    }
+    cells(ip, x0, y, bw, bh, {key:'ip'});
+    cells(fp, x0 + (bw + gap) * ip.length, y, bw, bh, {key:'fp'});
 
+    /* 小数点（箱と箱のすきま。文字と重ねない） */
+    var dotX = x0 + (bw + gap) * ip.length - gap / 2;
+    ctx.beginPath(); ctx.arc(dotX, y + bh + 5, 3.4, 0, Math.PI * 2);
+    ctx.fillStyle = K('--k-warn'); ctx.fill();
+
+    /* 重みの目盛り */
+    var wy = y + bh + 22;
+    ctx.textAlign = 'center';
+    for(var i = 0; i < n; i++){
+      var k = ip.length - 1 - i;
+      var cx = x0 + (bw + gap) * i + bw / 2;
+      ctx.fillStyle = K('--k-inkfaint'); ctx.font = F(11, '700');
+      ctx.fillText('2' + sup(k), cx, wy);
+      ctx.fillStyle = all.charAt(i) === '1' ? K('--k-main') : K('--k-inkfaint');
+      ctx.font = F(11, '700');
+      /* ★ 10 進の重みは箱の幅より広い（0.0625 は 6 文字）。そのまま並べると隣と
+         くっついて「0.1250.0625」と読めるので、1 つおきに段を下げる。 */
+      var sw = String(Math.pow(2, k));
+      ctx.fillText(sw, window.clampX(ctx, sw, cx, W, 11), wy + 17 + (i % 2) * 15);
+    }
+    ctx.fillStyle = K('--k-inkfaint'); ctx.font = F(11, '700'); ctx.textAlign = 'left';
+    ctx.fillText('2 の何乗', 14, wy);
+    ctx.fillText('10 進で', 14, wy + 17);
+
+    /* 合計 */
+    var terms = [];
+    for(var j = 0; j < n; j++){
+      if(all.charAt(j) === '1') terms.push(String(Math.pow(2, ip.length - 1 - j)));
+    }
     ctx.fillStyle = K('--k-deep');
-    drawFit('4 つの桁に入るのは 0 から 15 まで。16 は入りません',
-      12, 14, noteY, 'left', W - 28, '800');
-    if(window.__setHit) window.__setHit(HIT);
+    drawFit((terms.length ? terms.join(' ＋ ') : '0') + ' ＝ ' + curVal(),
+      12.5, W / 2, wy + 62, 'center', W - 28, '800', 19);
   }
 
-  /* ===== 場面②③ 相手／相手の作り方 ===== */
-  function drawPair(){
-    var v = nb(), iv = inv(v), c = comp(v);
-    var mk = (stage === 3);
+  /* ===== 場面② 2 倍して整数部を拾う ===== */
+  function drawStage2(){
+    var f = FR[frKey];
+    var rows = [], num = f.n, i;
+    for(i = 0; i < 8; i++){
+      var before = num;
+      num *= 2;
+      var b = (num >= f.d) ? 1 : 0;
+      if(b) num -= f.d;
+      rows.push({before:before / f.d, after:(num / f.d) + b, bit:b, done:(num === 0)});
+      if(num === 0) break;
+    }
+    var shown = Math.min(stp4(), rows.length);
     ctx.fillStyle = K('--k-deep');
-    var h1 = drawFit(mk ? '各桁を入れ替えて、1 を足すと相手になります'
-                        : '足すと桁が 1 つ増える相手が、どの数にも 1 つあります',
+    var h1 = drawFit('2 倍して、出てきた整数部を上の桁から並べます',
       13, 14, 26, 'left', W - 28, '800');
     var top = 26 + h1 * 21;
-    var bw = Math.min(44, (W - 64) / 5), bh = Math.min(38, bw);
-    var lw = W < 560 ? 66 : 104;
-    var cx2 = lw + (W - lw - 16 - bw * 4) / 2 + bw * 2;
-    var pitch = bh + 16;
-    var rows = mk
-      ? [['選んだ数', v, 4, false], ['入れ替える', iv, 4, false],
-         ['1 を足す', c, 4, false], ['足すと', M, 5, true]]
-      : [['選んだ数', v, 4, false], ['相手', c, 4, false], ['足すと', M, 5, true]];
-    var y = top + 10;
-    for(var i = 0; i < rows.length; i++){
+
+    var y = top + 10, pitch = 26;
+    ctx.textAlign = 'left';
+    for(i = 0; i < shown; i++){
       var r = rows[i];
-      rowLabel(r[0], lw - 8, y + bh / 2 + 4, lw - 12);
-      bits(r[1], cx2, y, bw, bh, r[2], r[3], false);
-      ctx.fillStyle = r[3] ? K('--k-warn') : K('--k-inksoft');
-      var rg = cx2 + bw * 2.5 + 10, rm = W - rg - 8;
-      if(rm > 30) drawFit('＝ ' + r[1], 12.5, rg, y + bh / 2 + 5, 'left', rm, '800');
-      if(i < rows.length - 1){
-        ctx.strokeStyle = K('--k-line2'); ctx.lineWidth = 1.4;
-        ctx.beginPath(); ctx.moveTo(cx2 - bw * 2, y + bh + 8);
-        ctx.lineTo(cx2 + bw * 2, y + bh + 8); ctx.stroke();
-      }
-      y += pitch;
+      ctx.fillStyle = K('--k-inksoft'); ctx.font = FM(12);
+      ctx.fillText('2 × ' + r.before.toFixed(4).replace(/0+$/, '').replace(/\.$/, '.0'),
+        18, y + i * pitch);
+      ctx.fillStyle = K('--k-deep'); ctx.font = FM(12);
+      ctx.fillText('＝ ' + r.after.toFixed(4).replace(/0+$/, '').replace(/\.$/, '.0'),
+        18 + Math.min(150, W * 0.40), y + i * pitch);
+      /* 拾ったビットは右端の箱へ */
+      var bx = W - 40;
+      ctx.fillStyle = r.bit ? K('--k-tint') : K('--k-paper');
+      window.roundRect(ctx, bx, y + i * pitch - 14, 22, 20, 4); ctx.fill();
+      ctx.strokeStyle = r.bit ? K('--k-tintbd') : K('--k-line2'); ctx.lineWidth = 1.5;
+      window.roundRect(ctx, bx, y + i * pitch - 14, 22, 20, 4); ctx.stroke();
+      ctx.fillStyle = r.bit ? K('--k-main') : K('--k-inksoft'); ctx.font = FM(11);
+      ctx.textAlign = 'center';
+      ctx.fillText(String(r.bit), bx + 11, y + i * pitch - 1);
+      ctx.textAlign = 'left';
+      HIT.push({x:bx, y:y + i * pitch - 14, w:22, h:20, step:i + 1});
     }
+    var by = y + shown * pitch + 8;
+    var got = rows.slice(0, shown).map(function(r){ return r.bit; }).join('');
     ctx.fillStyle = K('--k-deep');
-    drawFit(mk ? '入れ替えるとどの桁も 1 になり、あと 1 で桁が増えます'
-               : v + ' と ' + c + ' を足すと 16 になり、4 つの桁からあふれます',
-      12, 14, y + 6, 'left', W - 28, '800');
-    if(window.__setHit) window.__setHit(HIT);
+    drawFit('ここまでで 0.' + got, 12.5, W / 2, by + 6, 'center', W - 28, '800');
+    var fin = rows[shown - 1] && rows[shown - 1].done;
+    ctx.fillStyle = fin ? K('--k-ok') : K('--k-second');
+    drawFit(fin ? '小数部が 0 になったので終わりです'
+                : (shown >= rows.length ? '同じ並びに戻り、この先もくり返します'
+                                        : '小数部がまだ 0 ではありません'),
+      12, W / 2, by + 26, 'center', W - 28, '800');
   }
 
-  /* ===== 場面④ 足して、捨てる（主例 7 − 3） ===== */
-  function drawStage4(){
-    var n = st0(), a = 7, b = 3, c = comp(b), sum = a + c;
+  /* ===== 場面③ 終わらない小数 ===== */
+  function drawStage3(){
+    var f = FR[frKey], k = flen();
+    var t = trunc(f.n, f.d, k);
+    var e = expand(f.n, f.d, k);
+    var ends = (e.bits.length < k) || (e.rest === 0);
     ctx.fillStyle = K('--k-deep');
-    var h1 = drawFit('7 から 3 を引く代わりに、3 の相手を足します',
+    var h1 = drawFit(ends ? f.label + ' は、有限の桁で書き切れます'
+                          : f.label + ' は、同じ並びをくり返して終わりません',
       13, 14, 26, 'left', W - 28, '800');
     var top = 26 + h1 * 21;
-    var bw = Math.min(44, (W - 64) / 5), bh = Math.min(38, bw);
-    var lw = W < 560 ? 68 : 106;
-    var cx2 = lw + (W - lw - 16 - bw * 4) / 2 + bw * 2;
-    var pitch = bh + 15, y = top + 10;
-    var rows = [
-      ['7 は',       a,         4, false, 1],
-      ['3 の相手',   c,         4, false, 2],
-      ['足すと',     sum,       5, true,  3],
-      ['捨てると',   sum & 15,  4, false, 4]
+
+    var str = '';
+    for(var i = 0; i < k; i++) str += String(e.bits[i] === undefined ? 0 : e.bits[i]);
+    var bw = Math.min(26, Math.max(13, Math.floor((W - 40) / k) - 4));
+    var gap = Math.max(3, Math.round(bw * 0.13));
+    var tot = bw * k + gap * (k - 1), x0 = (W - tot) / 2;
+    var y = top + 12, bh = Math.round(bw * 1.0);
+    var opt = ends ? {dimFrom:e.bits.length} : {cycFrom:(f.d === 10 && f.n === 1) ? 1 : 0, cycLen:4};
+    cells(str, x0, y, bw, bh, opt);
+    ctx.fillStyle = K('--k-inkfaint'); ctx.font = F(11, '700'); ctx.textAlign = 'center';
+    ctx.fillText('0.', Math.max(14, x0 - 12), y + bh / 2 + 4);
+
+    /* 値・ねらい・誤差 */
+    var ty = y + bh + 26;
+    ctx.textAlign = 'left';
+    var lines = [
+      ['この桁数での値', t.val.toFixed(Math.min(12, k + 2))],
+      ['ねらいの値',     (f.n / f.d).toFixed(Math.min(12, k + 2))],
+      ['残っている誤差', t.err === 0 ? '0（ぴったり）' : t.err.toFixed(12)]
     ];
-    for(var i = 0; i < rows.length; i++){
-      var r = rows[i], live = (n >= r[4]);
-      rowLabel(r[0], lw - 8, y + bh / 2 + 4, lw - 12);
-      bits(r[1], cx2, y, bw, bh, r[2], r[3] && live, !live);
-      if(live){
-        ctx.fillStyle = r[3] ? K('--k-warn')
-          : (r[4] === 4 ? K('--k-main') : K('--k-inksoft'));
-        var rg2 = cx2 + bw * 2.5 + 10, rm2 = W - rg2 - 8;
-        if(rm2 > 30) drawFit('＝ ' + r[1], 12.5, rg2, y + bh / 2 + 5, 'left', rm2, '800');
-      }
-      y += pitch;
+    lines.forEach(function(L, i){
+      ctx.fillStyle = K('--k-inksoft'); ctx.font = F(11.5, '700');
+      ctx.fillText(L[0], 18, ty + i * 21);
+      ctx.fillStyle = (i === 2 && t.err > 0) ? K('--k-warn') : K('--k-deep');
+      ctx.font = FM(11.5);
+      ctx.fillText(L[1], 18 + Math.min(150, W * 0.42), ty + i * 21);
+    });
+
+    /* 拡大した数直線。誤差の幅に合わせて自分で倍率を変える */
+    var ly = ty + 3 * 21 + 22;
+    var lx = 34, rx = W - 34;
+    if(t.err > 0){
+      var half = t.err * 2.2, mid = (t.val + f.n / f.d) / 2;
+      var lo = mid - half, hi = mid + half, u = (rx - lx) / (hi - lo);
+      ctx.strokeStyle = K('--k-line2'); ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(rx, ly); ctx.stroke();
+      var xv = lx + u * (t.val - lo), xt = lx + u * (f.n / f.d - lo);
+      ctx.beginPath(); ctx.arc(xv, ly, 5.5, 0, Math.PI * 2);
+      ctx.fillStyle = K('--k-main'); ctx.fill();
+      ctx.beginPath(); ctx.arc(xt, ly, 5.5, 0, Math.PI * 2);
+      ctx.fillStyle = K('--k-warn'); ctx.fill();
+      window.plate(ctx, 'この桁数での値', window.clampX(ctx, 'この桁数での値', xv, W, 11),
+        ly - 17, K('--k-main'), 11);
+      window.plate(ctx, 'ねらい', window.clampX(ctx, 'ねらい', xt, W, 11),
+        ly + 18, K('--k-warn'), 11);
+      ctx.fillStyle = K('--k-inkfaint'); ctx.font = F(11, '700'); ctx.textAlign = 'center';
+      ctx.fillText('桁を増やすたびに、拡大しないと見えないほど近づきます', W / 2, ly + 40);
+    } else {
+      ctx.fillStyle = K('--k-ok'); ctx.font = F(12, '800'); ctx.textAlign = 'center';
+      ctx.fillText('この桁数でぴったり表せています', W / 2, ly + 4);
     }
+  }
+
+  /* ===== 場面④ 固定小数点数 ===== */
+  function drawStage4(){
+    var p = ptp(), fr = 8 - p;
+    var step = Math.pow(2, -fr), max = 255 / Math.pow(2, fr);
     ctx.fillStyle = K('--k-deep');
-    var cap = ['', '7 をそのまま置きます',
-               '3 の相手は 13 です', '足すと桁が 1 つ増えました',
-               '増えた分を捨てると 4 が残ります'][n];
-    drawFit(cap, 12, 14, y + 6, 'left', W - 28, '800');
-    if(window.__setHit) window.__setHit(HIT);
+    var h1 = drawFit('小数点の位置を先に決めます。8 つの桁は増えません',
+      13, 14, 26, 'left', W - 28, '800');
+    var top = 26 + h1 * 21;
+
+    var bw = Math.min(36, Math.max(18, Math.floor((W - 44) / 8) - 4));
+    var gap = Math.max(3, Math.round(bw * 0.13));
+    var tot = bw * 8 + gap * 7, x0 = (W - tot) / 2;
+    var y = top + 22, bh = Math.round(bw * 0.98);
+
+    for(var i = 0; i < 8; i++){
+      var isInt = (i < p);
+      var xx = x0 + (bw + gap) * i;
+      ctx.fillStyle = isInt ? K('--k-tint') : K('--k-subtle');
+      window.roundRect(ctx, xx, y, bw, bh, 4); ctx.fill();
+      ctx.strokeStyle = isInt ? K('--k-tintbd') : K('--k-line2'); ctx.lineWidth = 1.6;
+      window.roundRect(ctx, xx, y, bw, bh, 4); ctx.stroke();
+      ctx.fillStyle = isInt ? K('--k-main') : K('--k-inksoft');
+      ctx.font = F(11, '700'); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      /* ★ 箱の中は指数だけにする。10 進の重み（0.0625 など）は箱より広く、
+         入れると隣の箱や枠の線に文字が乗る。重みは箱の外へ出す。 */
+      ctx.fillText('2' + sup(isInt ? (p - 1 - i) : -(i - p + 1)),
+        xx + bw / 2, y + bh / 2);
+      ctx.textBaseline = 'alphabetic';
+      HIT.push({x:xx, y:y, w:bw, h:bh, pt:i + 1});
+    }
+    /* 小数点は箱のすきまの下。箱の上に字を重ねない */
+    var dotX = x0 + (bw + gap) * p - gap / 2;
+    ctx.beginPath(); ctx.arc(dotX, y + bh + 7, 4, 0, Math.PI * 2);
+    ctx.fillStyle = K('--k-warn'); ctx.fill();
+
+    /* 10 進の重みは箱の外。長いので 2 段に千鳥で置き、隣と重ならないようにする */
+    var wy4 = y + bh + 26;
+    for(var w2 = 0; w2 < 8; w2++){
+      var iw = (w2 < p);
+      var wv2 = iw ? Math.pow(2, p - 1 - w2) : Math.pow(2, -(w2 - p + 1));
+      var sw2 = String(wv2);
+      ctx.fillStyle = iw ? K('--k-main') : K('--k-inksoft');
+      ctx.font = F(11, '700'); ctx.textAlign = 'center';
+      ctx.fillText(sw2, window.clampX(ctx, sw2, x0 + (bw + gap) * w2 + bw / 2, W, 11),
+        wy4 + (w2 % 2) * 17);
+    }
+
+    /* 上に 2 本の括り */
+    ctx.strokeStyle = K('--k-main'); ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(x0, y - 10); ctx.lineTo(x0 + (bw + gap) * p - gap, y - 10); ctx.stroke();
+    ctx.strokeStyle = K('--k-inkfaint');
+    ctx.beginPath(); ctx.moveTo(x0 + (bw + gap) * p, y - 10); ctx.lineTo(x0 + tot, y - 10); ctx.stroke();
+    ctx.fillStyle = K('--k-main'); ctx.font = F(11, '800'); ctx.textAlign = 'center';
+    ctx.fillText('整数部 ' + p + ' 桁', x0 + ((bw + gap) * p - gap) / 2, y - 16);
+    ctx.fillStyle = K('--k-inkfaint');
+    ctx.fillText('小数部 ' + fr + ' 桁', x0 + (bw + gap) * p + ((bw + gap) * fr - gap) / 2, y - 16);
+
+    /* 範囲ときざみ */
+    var by = y + bh + 69;
+    ctx.textAlign = 'left';
+    [['表せる最大', max.toFixed(4).replace(/0+$/, '').replace(/\.$/, '')],
+     ['きざみの細かさ', step.toFixed(7).replace(/0+$/, '').replace(/\.$/, '')]
+    ].forEach(function(L, i){
+      ctx.fillStyle = K('--k-inksoft'); ctx.font = F(11.5, '700');
+      ctx.fillText(L[0], 18, by + i * 22);
+      ctx.fillStyle = K('--k-deep'); ctx.font = FM(12);
+      ctx.fillText(L[1], 18 + Math.min(150, W * 0.42), by + i * 22);
+    });
+    ctx.fillStyle = K('--k-deep');
+    drawFit(p === 4
+      ? '4 桁目の後を小数点と決めると、11.01 は 00110100 になります'
+      : '小数点を右へ動かすと広い数まで届き、きざみは粗くなります',
+      12, W / 2, by + 58, 'center', W - 28, '800');
   }
 
   /* ===== 組み立て ===== */
   function draw(){
-    /* ★ 高さは内容から見積もる。幅の比で決めると、段の数が少ない場面で
-       器の下半分が白のまま残る。 */
     var cw0 = cv.clientWidth || cv.parentNode.clientWidth || 600;
     var narrow = cw0 < 560;
     var hh0;
-    if(stage === 1)      hh0 = (view === 'num') ? (narrow ? 268 : 244) : (narrow ? 262 : 228);
-    else if(stage === 3) hh0 = narrow ? 324 : 290;
-    else if(stage === 4) hh0 = narrow ? 300 : 290;
-    else                 hh0 = narrow ? 270 : 242;
+    if(stage === 1)      hh0 = narrow ? 308 : 290;
+    else if(stage === 2) hh0 = narrow ? 330 : 312;
+    else if(stage === 3) hh0 = narrow ? 340 : 320;
+    else                 hh0 = narrow ? 300 : 284;
     var d = window.SETUP(cv, hh0);
     W = d.w; H = d.h;
     ctx.clearRect(0, 0, W, H);
     ctx.textBaseline = 'alphabetic';
     HIT = [];
     if(stage === 1) drawStage1();
-    else if(stage === 4) drawStage4();
-    else drawPair();
+    else if(stage === 2) drawStage2();
+    else if(stage === 3) drawStage3();
+    else drawStage4();
+    if(window.__setHit) window.__setHit(HIT);
   }
 
   function showRow(node, on){ if(node) node.style.display = on ? '' : 'none'; }
+  function met(lab, val, hl){
+    return '<div class="mcard' + (hl ? ' hl' : '') + '"><p class="mlab">' + lab
+      + '</p><p class="mval">' + val + '</p></div>';
+  }
+
+  function metrics(){
+    if(stage === 1){
+      el.mets.innerHTML = met('2 進数', cur[0] + '.' + cur[1], true)
+        + met('10 進で', String(curVal()))
+        + met('小数の桁数', cur[1].length + ' 桁');
+    } else if(stage === 2){
+      var f = FR[frKey], e2 = expand(f.n, f.d, 8);
+      var got = e2.bits.slice(0, Math.min(stp4(), e2.bits.length)).join('');
+      el.mets.innerHTML = met('10 進の小数', f.label, true)
+        + met('ここまでの桁', '0.' + got)
+        + met('終わったか', (e2.bits.length < 8 || e2.rest === 0) ? '終わる' : '終わらない');
+    } else if(stage === 3){
+      var f3 = FR[frKey], t3 = trunc(f3.n, f3.d, flen());
+      el.mets.innerHTML = met('桁数', flen() + ' 桁', true)
+        + met('この桁数での値', t3.val.toFixed(8))
+        + met('誤差', t3.err === 0 ? '0' : t3.err.toExponential(2).replace('e', ' × 10^').replace('+', ''))
+        + met('ねらい', String(f3.label));
+    } else {
+      var p = ptp(), fr = 8 - p;
+      el.mets.innerHTML = met('整数部', p + ' 桁', true)
+        + met('小数部', fr + ' 桁')
+        + met('きざみ', String(Math.pow(2, -fr)))
+        + met('表せる最大', String(255 / Math.pow(2, fr)));
+    }
+  }
+
+  function legend(){
+    var sw = function(v, t){
+      return '<span><i class="sw-key" style="background:var(' + v + ')"></i>' + t + '</span>';
+    };
+    el.leg.innerHTML = (stage === 1)
+      ? sw('--navy', '1 が立っている桁') + sw('--line-2', '0 の桁') + sw('--warn', '小数点')
+      : (stage === 2
+        ? sw('--navy', '拾った 1') + sw('--line-2', '拾った 0')
+        : (stage === 3
+          ? sw('--navy', 'この桁数での値') + sw('--warn', 'ねらいの値') + sw('--line-2', 'くり返す並び')
+          : sw('--navy', '整数部') + sw('--line-2', '小数部') + sw('--warn', '小数点')));
+  }
 
   function update(){
-    showRow(el.rowNum,  stage !== 4);
-    showRow(el.rowView, stage === 1);
-    showRow(el.rowStep, stage === 4);
-    showRow(el.leg,     true);
-    el.nbval.textContent = String(nb());
-    el.stp0val.textContent = String(st0());
+    el.stp4val.textContent = String(stp4());
+    el.flenval.textContent = String(flen());
+    el.ptpval.textContent = String(ptp());
 
-    var v = nb(), c = comp(v);
-    if(stage === 4){
-      var n = st0(), a = 7, cb = comp(3);
-      el.labL.textContent = 'いまの手';
-      el.roL.textContent = n + ' / 4';
-      el.labR.textContent = '足す数';
-      el.roR.textContent = (n >= 2) ? (b4(cb) + '（' + cb + '）') : 'まだ';
-      el.labS.textContent = '残る答え';
-      el.roS.textContent = (n >= 4) ? (b4((a + cb) & 15) + '（' + ((a + cb) & 15) + '）') : 'まだ';
-    } else if(stage === 1){
-      el.labL.textContent = '選んだ数';
-      el.roL.textContent = b4(v) + '（' + v + '）';
-      el.labR.textContent = '桁の数';
-      el.roR.textContent = '4';
-      el.labS.textContent = '表せる個数';
-      el.roS.textContent = '16';
-    } else {
-      el.labL.textContent = '選んだ数';
-      el.roL.textContent = b4(v) + '（' + v + '）';
-      el.labR.textContent = '桁が増える相手';
-      el.roR.textContent = b4(c) + '（' + c + '）';
-      el.labS.textContent = '2 つを足すと';
-      el.roS.textContent = '1 0000（16）';
-    }
+    showRow(el.rowEx,   stage === 1);
+    showRow(el.rowFrac, stage === 2 || stage === 3);
+    showRow(el.rowStep, stage === 2);
+    showRow(el.rowLen,  stage === 3);
+    showRow(el.rowPt,   stage === 4);
 
+    var f = FR[frKey];
     if(stage === 1){
-      el.banner.innerHTML = '✓ 4 つの桁で 16 通りです'
-        + '<small>0 から 15 までが 1 つずつ入ります。'
-        + '16 を書くには桁がもう 1 つ要ります。</small>';
+      el.banner.innerHTML = '✓ ' + cur[0] + '.' + cur[1] + ' は 10 進で ' + curVal() + ' です'
+        + '<small>小数点の右の桁は、左から 0.5、0.25、0.125、0.0625 と半分ずつになります。'
+        + '1 が立っている桁の重みを足すと、10 進の値になります。</small>';
     } else if(stage === 2){
-      el.banner.innerHTML = '✓ ' + v + ' の相手は ' + c + ' です'
-        + '<small>足すと 16 になり、4 つの桁からあふれて桁が 1 つ増えます。'
-        + 'つまみで数を替えても、相手は必ず 1 つあります。</small>';
+      var e2 = expand(f.n, f.d, 8);
+      var fin = (e2.bits.length < 8 || e2.rest === 0);
+      el.banner.innerHTML = (fin ? '✓ ' + f.label + ' は ' + e2.bits.length + ' 桁で書き切れます'
+                                 : '✓ ' + f.label + ' は書き切れません')
+        + '<small>小数部を 2 倍し、出てきた整数部を上の桁から並べます。'
+        + (fin ? '小数部が 0 になったところで終わりです。'
+               : '小数部が 0 にならず、同じ並びに戻ってしまいます。') + '</small>';
     } else if(stage === 3){
-      el.banner.innerHTML = '✓ 入れ替えて 1 を足すと ' + c + ' になります'
-        + '<small>入れ替えただけでは ' + inv(v) + ' で、どの桁も 1 の 1111 まであと少しです。'
-        + '1 を足して、はじめて桁が増える相手になります。</small>';
+      var t3 = trunc(f.n, f.d, flen());
+      el.banner.innerHTML = (t3.err === 0
+        ? '✓ ' + flen() + ' 桁でぴったり表せています'
+        : '✓ ' + flen() + ' 桁でも、まだ誤差が残ります')
+        + '<small>' + flen() + ' 桁での値は ' + t3.val.toFixed(10)
+        + (t3.err === 0 ? '。ねらいの値と一致します。'
+                        : '。ねらいより小さいままで、桁を増やしても 0 にはなりません。') + '</small>';
     } else {
-      var n2 = st0();
-      el.banner.innerHTML = (n2 >= 4)
-        ? '✓ 4 が残りました'
-          + '<small>7 − 3 の答えと同じです。'
-          + '引き算をせずに、足して捨てただけです。</small>'
-        : '✓ ' + ['', '7 を置きました', '3 の相手は 13 です',
-                  '足すと桁が 1 つ増えました'][n2]
-          + '<small>つまみを最後まで送ると、増えた分を捨てた答えが出ます。</small>';
+      var p = ptp(), fr = 8 - p;
+      el.banner.innerHTML = '✓ 整数部 ' + p + ' 桁、小数部 ' + fr + ' 桁'
+        + '<small>きざみは ' + Math.pow(2, -fr) + '、表せる最大は ' + (255 / Math.pow(2, fr))
+        + ' です。桁の数は 8 のままなので、片方を広げると片方が狭くなります。</small>';
     }
+    el.cbox.className = 'canvas-box ok';
+    el.banner.className = 'banner ok';
 
     el.cap.innerHTML = ['',
-      'つまみで数を替えると、どこに入るかが分かります。',
-      'つまみで数を替えても、相手は必ず 1 つあります。',
-      '入れ替えた行と、1 を足した行を見比べてみてください。',
-      'つまみで手順を送ると、1 段ずつ増えていきます。'][stage];
+      '桁の箱をタップすると 0 と 1 が入れ替わり、合計が変わります。',
+      'つまみで手順を送ると、拾ったビットが 1 つずつ増えます。',
+      'つまみで桁数を増やして、誤差がどこまで小さくなるかを見てみてください。',
+      'つまみで小数点の位置を動かすと、範囲ときざみが入れ替わります。'][stage];
 
-    draw();
-    document.querySelectorAll('.qstage').forEach(function(b){
-      b.classList.toggle('active', +b.dataset.stage === stage);
+    legend(); metrics(); draw();
+    document.querySelectorAll('.qstage').forEach(function(x){
+      x.classList.toggle('active', +x.dataset.stage === stage);
     });
-    document.querySelectorAll('#stages .step').forEach(function(s2){
-      s2.classList.toggle('on', +s2.dataset.stage === stage);
+    document.querySelectorAll('#stages .step').forEach(function(x){
+      x.classList.toggle('on', +x.dataset.stage === stage);
     });
-    document.querySelectorAll('.qbtn[data-v]').forEach(function(b){
-      b.classList.toggle('active', b.dataset.v === view);
+    document.querySelectorAll('.qbtn[data-v]').forEach(function(x){
+      x.classList.toggle('active', x.dataset.v === exKey);
+    });
+    document.querySelectorAll('.qbtn[data-f]').forEach(function(x){
+      x.classList.toggle('active', x.dataset.f === frKey);
     });
   }
 
   /* ===== 結線 ===== */
-  document.querySelectorAll('.qstage').forEach(function(b){
-    b.addEventListener('click', function(){ stage = +b.dataset.stage; update(); });
+  document.querySelectorAll('.qstage').forEach(function(x){
+    x.addEventListener('click', function(){ stage = +x.dataset.stage; update(); });
   });
-  document.querySelectorAll('#stages .step').forEach(function(s2){
-    s2.style.cursor = 'pointer';
-    s2.addEventListener('click', function(){ stage = +s2.dataset.stage; update(); });
+  document.querySelectorAll('#stages .step').forEach(function(x){
+    x.style.cursor = 'pointer';
+    x.addEventListener('click', function(){ stage = +x.dataset.stage; update(); });
   });
-  document.querySelectorAll('.qbtn[data-v]').forEach(function(b){
-    b.addEventListener('click', function(){ view = b.dataset.v; update(); });
+  document.querySelectorAll('.qbtn[data-v]').forEach(function(x){
+    x.addEventListener('click', function(){
+      exKey = x.dataset.v;
+      cur = [EX1[exKey][0], EX1[exKey][1]];
+      update();
+    });
   });
-  el.nb.addEventListener('input', update);
-  el.stp0.addEventListener('input', update);
+  document.querySelectorAll('.qbtn[data-f]').forEach(function(x){
+    x.addEventListener('click', function(){ frKey = x.dataset.f; update(); });
+  });
+  el.stp4.addEventListener('input', update);
+  el.flen.addEventListener('input', update);
+  el.ptp.addEventListener('input', update);
 
-  /* 図の桁を直接押して 0 と 1 を入れ替える。数の格子なら、その数を選ぶ。 */
   window.__setHit = function(l){ HIT = l; };
   cv.style.cursor = 'pointer';
   cv.addEventListener('click', function(ev){
-    if(!HIT.length || stage === 4) return;
+    if(!HIT.length) return;
     var r = cv.getBoundingClientRect();
     var x = (ev.clientX - r.left) * (cv.clientWidth / r.width);
     var y = (ev.clientY - r.top)  * (cv.clientHeight / r.height);
     for(var k = 0; k < HIT.length; k++){
       var h = HIT[k];
       if(x >= h.x - 3 && x <= h.x + h.w + 3 && y >= h.y - 3 && y <= h.y + h.h + 3){
-        if(h.n !== undefined && h.n >= 1){ el.nb.value = String(h.n); update(); }
-        else if(h.bit !== undefined && k < 4){
-          var nv = nb() ^ (1 << h.bit);
-          if(nv >= 1 && nv <= 15){ el.nb.value = String(nv); update(); }
+        if(h.part === 'ip' || h.part === 'fp'){
+          var s = (h.part === 'ip') ? cur[0] : cur[1];
+          var t = s.substring(0, h.idx) + (s.charAt(h.idx) === '1' ? '0' : '1')
+                + s.substring(h.idx + 1);
+          if(h.part === 'ip') cur[0] = t; else cur[1] = t;
+          update();
+        } else if(h.step !== undefined){
+          el.stp4.value = String(h.step); update();
+        } else if(h.pt !== undefined){
+          el.ptp.value = String(Math.max(1, Math.min(7, h.pt))); update();
         }
         return;
       }
@@ -2905,155 +3099,94 @@ main.page h2{font-size:28px !important}
 
   /* ===== 補足（hosoku）— 中に操作子を入れる ===== */
   window.HK = {
-    juuroku: {
-      k:'補足 ・ 16 の書き方', title:'16 は 5 つめの桁に移ります',
-      html:'<p>4 つの桁で書けるのは 15 までです。'
-        + '15 は <b>1111</b> で、どの桁も 1 が立っています。'
-        + '<span class="mk">ここへ 1 を足すと、どの桁も置けなくなって 1 つ上へ移ります。</span>'
-        + 'つまみで 13・14・15・16 と送って、桁が変わる瞬間を見てみてください。</p>'
-        + '<div class="hk-ctl"><label class="sl" for="hk16">数</label>'
-        + '<input id="hk16" type="range" min="13" max="16" step="1" value="14" aria-label="数">'
+    omomi: {
+      k:'補足 ・ 重みが半分になる', title:'左へ 2 倍なら、右は半分です',
+      html:'<p>整数の桁は、左へ 1&nbsp;つ進むごとに <b>2 倍</b>になります。1、2、4、8 です。'
+        + '同じ決まりを右へ延ばすと、<b>半分ずつ</b>になります。'
+        + '<span class="mk">1 の右どなりは 0.5、その右は 0.25 です。</span>'
+        + '小数点は、この並びのどこが 1 の位かを示す印にすぎません。'
+        + 'つまみで桁数を替えて、重みがどこまで小さくなるかを見てみてください。</p>'
+        + '<div class="hk-ctl"><label class="sl" for="hkom">見る桁数</label>'
+        + '<input id="hkom" type="range" min="3" max="8" step="1" value="6" aria-label="見る桁数">'
         + '</div>'
-        + window.FW('13 から 16 までを 4 つの桁の箱で並べ、16 だけ 5 つめの箱が増える図')
-        + '<div class="hk-num">15 は 1111。1 を足すと 1 0000 になり、桁が 4 つから 5 つへ増えます。'
-        + '4 ビットで表せるのは 0 から 15 までの 16 個です。</div>'
+        + window.FW('桁の重みを棒の長さで並べ、左から右へ半分ずつ短くなっていくようすを示した図')
+        + '<div class="hk-num">2、1、0.5、0.25、0.125、0.0625。右へ 1 つで半分、'
+        + '4 つ進むと 16 分の 1 になります。</div>'
         + '<div class="hk-key">' + window.BULB
-        + '<div>16 は<b>桁からあふれる最初の数</b>です。この性質をあとで使います。</div></div>',
+        + '<div>整数と小数で<b>別の決まり</b>があるのではありません。同じ並びの続きです。</div></div>',
       fig:function(cv2, B2){
         var root = cv2.closest('.hk-card');
-        var sl = root ? root.querySelector('#hk16') : null;
+        var sl = root ? root.querySelector('#hkom') : null;
         function paint(){
-          var v2 = sl ? +sl.value : 14;
-          var d = B2.setupMini(cv2, 0.46, 168), c = d.c, Wd = d.w, Hd = d.h;
-          c.clearRect(0, 0, Wd, Hd);
-          c.fillStyle = v2 >= 16 ? B2.WARN : B2.DEEP;
-          c.font = '800 ' + B2.fs(12.5) + 'px ' + B2.font; c.textAlign = 'center';
-          c.fillText(v2 >= 16 ? '16 — 桁が 1 つ増えました' : v2 + ' — まだ 4 つの桁',
-            Wd / 2, 24);
-          var n2 = v2 >= 16 ? 5 : 4;
-          var bw = Math.min(44, (Wd - 60) / 5), bh = 42;
-          var tot = bw * n2 + 5 * (n2 - 1), ox = (Wd - tot) / 2, oy = Hd / 2 - bh / 2 + 6;
-          var s = v2.toString(2);
-          while(s.length < n2) s = '0' + s;
-          for(var i = 0; i < n2; i++){
-            var on = s.charAt(i) === '1';
-            var top5 = (n2 === 5 && i === 0);
-            var xx = ox + (bw + 5) * i;
-            c.fillStyle = top5 ? B2.WARN : (on ? B2.TINT : B2.PAPER);
-            c.fillRect(xx, oy, bw, bh);
-            c.lineWidth = 1.6;
-            c.strokeStyle = top5 ? B2.WARN : (on ? B2.MAIN : B2.LINE2);
-            c.strokeRect(xx, oy, bw, bh);
-            c.fillStyle = top5 ? B2.PAPER : (on ? B2.MAIN : B2.INKSOFT);
-            c.font = '700 ' + B2.fs(13) + 'px ' + B2.mono;
-            c.fillText(s.charAt(i), xx + bw / 2, oy + bh / 2 + 5);
+          var n = sl ? +sl.value : 6;
+          var d = B2.setupMini(cv2, 0.52, 190), c2 = d.c, Wd = d.w, Hd = d.h;
+          c2.clearRect(0, 0, Wd, Hd);
+          c2.fillStyle = B2.DEEP; c2.font = '800 ' + B2.fs(12.5) + 'px ' + B2.font;
+          c2.textAlign = 'center';
+          c2.fillText('右へ 1 つで半分になります', Wd / 2, 20);
+          var lw = 74, barW = Wd - lw - 24;
+          var oy = 38, bh = 16, pitch = Math.min(24, (Hd - oy - 26) / n);
+          for(var i = 0; i < n; i++){
+            var k = 1 - i, wv = Math.pow(2, k);
+            var y = oy + i * pitch;
+            c2.fillStyle = B2.INKSOFT; c2.font = '700 ' + B2.fs(11) + 'px ' + B2.font;
+            c2.textAlign = 'right';
+            c2.fillText(String(wv), lw - 8, y + bh / 2 + 4);
+            c2.fillStyle = (k >= 0) ? B2.MAIN : B2.SECOND;
+            c2.fillRect(lw, y, Math.max(2, barW * wv / 2), bh);
           }
-          c.fillStyle = B2.INKSOFT; c.font = '700 ' + B2.fs(11) + 'px ' + B2.font;
-          c.fillText(v2 >= 16 ? '5 つめの桁に 1 が立っています'
-                              : 'どの桁も 0 か 1 です', Wd / 2, Hd - 12);
+          c2.fillStyle = B2.INKSOFT; c2.font = '700 ' + B2.fs(11) + 'px ' + B2.font;
+          c2.textAlign = 'center';
+          c2.fillText('棒の長さが、その桁の重みです', Wd / 2, Hd - 10);
         }
         if(sl) sl.addEventListener('input', paint);
         paint();
       }
     },
-    aite: {
-      k:'補足 ・ 相手はいつもある', title:'どの数にも、相手が 1 つずつあります',
-      html:'<p>1 から 15 までのどの数にも、<b>足すと 16 になる相手</b>が 1 つだけあります。'
-        + '1 の相手は 15、3 の相手は 13、8 の相手は 8 です。'
-        + '<span class="mk">相手の相手は、もとの数に戻ります。</span>'
-        + 'つまみで数を替えて、2 本の帯が合わせて 16 になるのを見てみてください。</p>'
-        + '<div class="hk-ctl"><label class="sl" for="hkai">数</label>'
-        + '<input id="hkai" type="range" min="1" max="15" step="1" value="5" aria-label="数">'
-        + '</div>'
-        + window.FW('選んだ数の帯と相手の帯を横に並べ、合わせるとちょうど 16 の幅になる図')
-        + '<div class="hk-num">5 の相手は 11、11 の相手は 5。8 だけは相手も 8 です。'
-        + 'どの組も足すと 16 になります。</div>'
+    nibai: {
+      k:'補足 ・ 2 倍して拾う', title:'2 倍すると、次の桁が整数部へ繰り上がります',
+      html:'<p>2&nbsp;進小数の最初の桁の重みは 0.5 です。<b>2 倍すると、その桁がちょうど 1 になります</b>。'
+        + '<span class="mk">だから 2 倍したときの整数部が、そのまま最初の桁です。</span>'
+        + '整数部を捨てて残りをまた 2 倍すると、次の桁が上がってきます。'
+        + 'ボタンで数を替えて、拾える桁を見てみてください。</p>'
+        + '<div class="hk-qrow"><button class="hk-qbtn active" type="button" data-k="0.1875">0.1875</button>'
+        + '<button class="hk-qbtn" type="button" data-k="0.75">0.75</button>'
+        + '<button class="hk-qbtn" type="button" data-k="0.1">0.1</button></div>'
+        + window.FW('数直線の上で、小数を 2 倍すると位置が右へ伸び、1 を超えたかどうかで桁が決まるようすを示した図')
+        + '<div class="hk-num">0.1875 を 2 倍すると 0.375 で 1 未満なので桁は 0。'
+        + '0.75 を 2 倍すると 1.5 で 1 を超えるので桁は 1。残りの 0.5 をまた 2 倍します。</div>'
         + '<div class="hk-key">' + window.BULB
-        + '<div>相手は <b>16 から引いた数</b>です。ここが次の頁の入口になります。</div></div>',
+        + '<div>2 倍は<b>ものさしを半分にする</b>のと同じです。1 を超えたら、その桁に 1 が立ちます。</div></div>',
       fig:function(cv2, B2){
-        var root = cv2.closest('.hk-card');
-        var sl = root ? root.querySelector('#hkai') : null;
+        var root = cv2.closest('.hk-card'), key = '0.1875';
         function paint(){
-          var v2 = sl ? +sl.value : 5, c2 = 16 - v2;
-          var d = B2.setupMini(cv2, 0.44, 158), c = d.c, Wd = d.w, Hd = d.h;
-          c.clearRect(0, 0, Wd, Hd);
-          c.fillStyle = B2.DEEP; c.font = '800 ' + B2.fs(12.5) + 'px ' + B2.font;
-          c.textAlign = 'center';
-          c.fillText(v2 + ' ＋ ' + c2 + ' ＝ 16', Wd / 2, 24);
-          var bw = (Wd - 40) / 16, y = Hd / 2 - 12, bh = 30;
-          for(var i = 0; i < 16; i++){
-            var isA = (i < v2);
-            c.fillStyle = isA ? B2.MAIN : B2.SECOND;
-            c.fillRect(20 + bw * i + 1, y, bw - 2, bh);
+          var f = {'0.1875':[3,16], '0.75':[3,4], '0.1':[1,10]}[key];
+          var d = B2.setupMini(cv2, 0.5, 186), c2 = d.c, Wd = d.w, Hd = d.h;
+          c2.clearRect(0, 0, Wd, Hd);
+          c2.fillStyle = B2.DEEP; c2.font = '800 ' + B2.fs(12.5) + 'px ' + B2.font;
+          c2.textAlign = 'center';
+          c2.fillText(key + ' を 2 倍していきます', Wd / 2, 20);
+          var lx = 30, rx = Wd - 30, u = (rx - lx) / 2, num = f[0], den = f[1];
+          var oy = 44, pitch = Math.min(34, (Hd - oy - 26) / 4);
+          for(var i = 0; i < 4; i++){
+            var y = oy + i * pitch;
+            c2.strokeStyle = B2.LINE2; c2.lineWidth = 1.4;
+            c2.beginPath(); c2.moveTo(lx, y); c2.lineTo(rx, y); c2.stroke();
+            c2.strokeStyle = B2.WARN; c2.lineWidth = 1.6;
+            c2.beginPath(); c2.moveTo(lx + u, y - 5); c2.lineTo(lx + u, y + 5); c2.stroke();
+            var doubled = num * 2 / den;
+            var over = doubled >= 1;
+            c2.fillStyle = over ? B2.WARN : B2.MAIN;
+            c2.fillRect(lx, y - 3, Math.min(u * 2, u * doubled), 6);
+            c2.fillStyle = over ? B2.WARN : B2.MAIN;
+            c2.font = '800 ' + B2.fs(11) + 'px ' + B2.font; c2.textAlign = 'left';
+            c2.fillText((over ? '1 を超えた → 1' : '1 未満 → 0'), lx + 2, y - 9);
+            num = num * 2; if(num >= den) num -= den;
+            if(num === 0){ break; }
           }
-          c.strokeStyle = B2.LINE2; c.lineWidth = 1.4;
-          c.strokeRect(20, y, bw * 16, bh);
-          c.fillStyle = B2.PAPER; c.font = '800 ' + B2.fs(11.5) + 'px ' + B2.font;
-          if(v2 >= 3) c.fillText(String(v2), 20 + bw * v2 / 2, y + bh / 2 + 4);
-          if(c2 >= 3) c.fillText(String(c2), 20 + bw * (v2 + c2 / 2), y + bh / 2 + 4);
-          c.fillStyle = B2.INKSOFT; c.font = '700 ' + B2.fs(11) + 'px ' + B2.font;
-          c.fillText('この帯の長さがちょうど 16 です', Wd / 2, Hd - 12);
-        }
-        if(sl) sl.addEventListener('input', paint);
-        paint();
-      }
-    },
-    nidan: {
-      k:'補足 ・ なぜ 1 を足すのか', title:'入れ替えただけでは、あと 1 足りません',
-      html:'<p>各桁を入れ替えると、もとの数と入れ替えた数は<b>どの桁も 0 と 1 の組</b>になります。'
-        + 'だから足すとどの桁も 1 になり、<b>1111</b> です。'
-        + '<span class="mk">1111 はあと 1 で 1 0000 なので、入れ替えた数に 1 を足せば相手になります。</span>'
-        + 'ボタンで途中の段を出して、足りない 1 を確かめてみてください。</p>'
-        + '<div class="hk-qrow"><button class="hk-qbtn active" type="button" data-k="inv">入れ替えるまで</button>'
-        + '<button class="hk-qbtn" type="button" data-k="one">1 を足したあと</button></div>'
-        + window.FW('もとの数と入れ替えた数を足すと 1111 になり、さらに 1 を足すと 1 0000 になる図')
-        + '<div class="hk-num">3 は 0011、入れ替えると 1100。足すと 1111 で、あと 1 で 1 0000。'
-        + 'だから 3 の相手は 1100 に 1 を足した 1101（13）です。</div>'
-        + '<div class="hk-key">' + window.BULB
-        + '<div>この <b>1</b> を忘れると、答えが 1 小さくなります。次の頁の山場です。</div></div>',
-      fig:function(cv2, B2){
-        var root = cv2.closest('.hk-card'), key = 'inv';
-        function paint(){
-          var v2 = 3, iv2 = 15 - v2;
-          var d = B2.setupMini(cv2, 0.56, 196), c = d.c, Wd = d.w, Hd = d.h;
-          c.clearRect(0, 0, Wd, Hd);
-          c.fillStyle = B2.DEEP; c.font = '800 ' + B2.fs(12.5) + 'px ' + B2.font;
-          c.textAlign = 'center';
-          c.fillText(key === 'inv' ? '足すと 1111。あと 1 で桁が増えます'
-                                   : '1 を足すと 1 0000 になりました', Wd / 2, 22);
-          var rows = (key === 'inv')
-            ? [['3 は', v2, 4], ['入れ替え', iv2, 4], ['足すと', 15, 4]]
-            : [['入れ替え', iv2, 4], ['1 を足す', iv2 + 1, 4], ['3 と足すと', 16, 5]];
-          var bw = Math.min(34, (Wd - 150) / 5), bh = 28;
-          var lw = 78, oy = 44, pitch = bh + 13;
-          rows.forEach(function(r, i){
-            var n2 = r[2], s = r[1].toString(2);
-            while(s.length < n2) s = '0' + s;
-            var tot = bw * n2 + 4 * (n2 - 1);
-            var ox = lw + (Wd - lw - 70 - tot) / 2;
-            c.fillStyle = B2.INKSOFT; c.font = '700 ' + B2.fs(11) + 'px ' + B2.font;
-            c.textAlign = 'right'; c.fillText(r[0], lw - 8, oy + i * pitch + bh / 2 + 4);
-            for(var j = 0; j < n2; j++){
-              var on = s.charAt(j) === '1';
-              var top5 = (n2 === 5 && j === 0);
-              var xx = ox + (bw + 4) * j, yy = oy + i * pitch;
-              c.fillStyle = top5 ? B2.WARN : (on ? B2.TINT : B2.PAPER);
-              c.fillRect(xx, yy, bw, bh);
-              c.lineWidth = 1.4;
-              c.strokeStyle = top5 ? B2.WARN : (on ? B2.MAIN : B2.LINE2);
-              c.strokeRect(xx, yy, bw, bh);
-              c.fillStyle = top5 ? B2.PAPER : (on ? B2.MAIN : B2.INKSOFT);
-              c.font = '700 ' + B2.fs(12) + 'px ' + B2.mono; c.textAlign = 'center';
-              c.fillText(s.charAt(j), xx + bw / 2, yy + bh / 2 + 4);
-            }
-            c.fillStyle = B2.INKSOFT; c.font = '700 ' + B2.fs(11) + 'px ' + B2.font;
-            c.textAlign = 'left';
-            c.fillText('＝ ' + r[1], ox + tot + 8, oy + i * pitch + bh / 2 + 4);
-          });
-          c.fillStyle = key === 'inv' ? B2.SECOND : B2.MAIN;
-          c.font = '700 ' + B2.fs(11.5) + 'px ' + B2.font; c.textAlign = 'center';
-          c.fillText(key === 'inv' ? 'あと 1 足りません' : 'これで相手になりました',
-            Wd / 2, Hd - 12);
+          c2.fillStyle = B2.INKSOFT; c2.font = '700 ' + B2.fs(11) + 'px ' + B2.font;
+          c2.textAlign = 'center';
+          c2.fillText('縦の赤い線が 1 の位置です', Wd / 2, Hd - 10);
         }
         if(root) root.querySelectorAll('.hk-qbtn').forEach(function(b2){
           b2.addEventListener('click', function(){
@@ -3066,60 +3199,117 @@ main.page h2{font-size:28px !important}
         paint();
       }
     },
-    suteru0: {
-      k:'補足 ・ 捨ててよい理由', title:'増えた 1 つは、余分に足した 16 です',
-      html:'<p>引きたい数の相手を足すと、<b>16 を余分に足している</b>ことになります。'
-        + '3 の相手 13 は 16 から 3 を引いた数なので、7 に 13 を足すのは'
-        + '「7 から 3 を引いて、16 を足す」のと同じです。'
-        + '<span class="mk">その 16 が、増えた 5 つめの桁です。</span>'
-        + 'つまみで、増えた桁を捨てる前と後を見てみてください。</p>'
-        + '<div class="hk-ctl"><label class="sl" for="hksu">どこまで</label>'
-        + '<input id="hksu" type="range" min="1" max="2" step="1" value="1" aria-label="どこまで">'
-        + '</div>'
-        + window.FW('和の 5 つの桁のうち、いちばん上の桁に打ち消し線を引いて捨て、4 つの桁だけが残る図')
-        + '<div class="hk-num">7 に 13 を足すと 20 で、これは (7 − 3) に 16 を足した数です。'
-        + '20 は 1 0100、5 つめの桁を捨てると 0100 で 4 になります。</div>'
+    owaranai: {
+      k:'補足 ・ 終わらない理由', title:'分母が 2 だけで作れるかどうかで決まります',
+      html:'<p>2&nbsp;進小数で書き切れるのは、分母が <b>2 を掛け合わせた数</b>のときだけです。'
+        + '0.1875 は 16 分の 3、0.75 は 4 分の 3 なので、どちらも書き切れます。'
+        + '<span class="mk">0.1 は 10 分の 1 で、分母に 5 が入っています。</span>'
+        + '2 をいくら掛けても 5 は消せないので、桁が終わりません。'
+        + '10 進数で 3 分の 1 が 0.333… と続くのと、同じ事情です。'
+        + 'ボタンで分数を替えて、分母の作りを見てみてください。</p>'
+        + '<div class="hk-qrow"><button class="hk-qbtn active" type="button" data-k="16">16 分の 3</button>'
+        + '<button class="hk-qbtn" type="button" data-k="4">4 分の 3</button>'
+        + '<button class="hk-qbtn" type="button" data-k="10">10 分の 1</button></div>'
+        + window.FW('分母を素因数に分けて箱で並べ、2 だけでできているかどうかを見比べる図')
+        + '<div class="hk-num">16 ＝ 2×2×2×2、4 ＝ 2×2 で、2 だけでできています。'
+        + '10 ＝ 2×5 で、5 が残ります。だから 10 分の 1 は終わりません。</div>'
         + '<div class="hk-key">' + window.BULB
-        + '<div>捨てているのは<b>余分に足した分</b>です。くわしくは 02 の頁で扱います。</div></div>',
+        + '<div>終わるかどうかは<b>分母だけ</b>で決まります。桁数を増やしても変わりません。</div></div>',
+      fig:function(cv2, B2){
+        var root = cv2.closest('.hk-card'), den = 16;
+        function paint(){
+          var fac = [], d0 = den;
+          while(d0 % 2 === 0){ fac.push(2); d0 /= 2; }
+          if(d0 > 1) fac.push(d0);
+          var ok = (d0 === 1);
+          var d = B2.setupMini(cv2, 0.44, 172), c2 = d.c, Wd = d.w, Hd = d.h;
+          c2.clearRect(0, 0, Wd, Hd);
+          c2.fillStyle = B2.DEEP; c2.font = '800 ' + B2.fs(12.5) + 'px ' + B2.font;
+          c2.textAlign = 'center';
+          c2.fillText('分母 ' + den + ' を分けると', Wd / 2, 22);
+          var bw = 42, gap = 26, tot = fac.length * bw + (fac.length - 1) * gap;
+          var x0 = (Wd - tot) / 2, y = Hd / 2 - 24;
+          fac.forEach(function(v, i){
+            var xx = x0 + (bw + gap) * i;
+            var two = (v === 2);
+            c2.fillStyle = two ? B2.TINT : B2.WARN;
+            B2.roundRect(c2, xx, y, bw, 40, 7); c2.fill();
+            c2.strokeStyle = two ? B2.MAIN : B2.WARN; c2.lineWidth = 1.8;
+            B2.roundRect(c2, xx, y, bw, 40, 7); c2.stroke();
+            c2.fillStyle = two ? B2.MAIN : B2.PAPER;
+            c2.font = '800 ' + B2.fs(13) + 'px ' + B2.font;
+            c2.textAlign = 'center'; c2.textBaseline = 'middle';
+            c2.fillText(String(v), xx + bw / 2, y + 21);
+            c2.textBaseline = 'alphabetic';
+            if(i < fac.length - 1){
+              c2.fillStyle = B2.INKSOFT; c2.font = '700 ' + B2.fs(12) + 'px ' + B2.font;
+              c2.fillText('×', xx + bw + gap / 2, y + 26);
+            }
+          });
+          c2.fillStyle = ok ? B2.OK : B2.WARN;
+          c2.font = '800 ' + B2.fs(12) + 'px ' + B2.font; c2.textAlign = 'center';
+          c2.fillText(ok ? '2 だけでできています。書き切れます'
+                         : '2 以外が残ります。書き切れません', Wd / 2, y + 66);
+          c2.fillStyle = B2.INKSOFT; c2.font = '700 ' + B2.fs(11) + 'px ' + B2.font;
+          c2.fillText('赤い箱が、2 で割り切れずに残った数です', Wd / 2, Hd - 10);
+        }
+        if(root) root.querySelectorAll('.hk-qbtn').forEach(function(b2){
+          b2.addEventListener('click', function(){
+            den = +b2.dataset.k;
+            root.querySelectorAll('.hk-qbtn').forEach(function(o){
+              o.classList.toggle('active', o === b2); });
+            paint();
+          });
+        });
+        paint();
+      }
+    },
+    kotei: {
+      k:'補足 ・ 範囲ときざみ', title:'桁は増えないので、片方を広げると片方が狭くなります',
+      html:'<p>固定小数点数では、使える桁の数が先に決まっています。'
+        + '小数点を右へ 1&nbsp;つ動かすと、<b>整数部が 2 倍の広さ</b>になり、'
+        + '同時に<b>きざみも 2 倍粗く</b>なります。'
+        + '<span class="mk">広さと細かさは、片方を取れば片方を手放す関係です。</span>'
+        + '8&nbsp;ビットで 0.000168 のような小さい値と 12345 のような大きい値を'
+        + '同時に扱おうとすると、どちらかがあふれます。'
+        + 'つまみで位置を動かして、2 本の棒が逆に動くのを見てみてください。</p>'
+        + '<div class="hk-ctl"><label class="sl" for="hkkt">小数点の位置</label>'
+        + '<input id="hkkt" type="range" min="1" max="7" step="1" value="4" aria-label="小数点の位置">'
+        + '</div>'
+        + window.FW('表せる最大ときざみの細かさを 2 本の棒で並べ、小数点の位置を動かすと逆向きに伸び縮みする図')
+        + '<div class="hk-num">整数部 2 桁なら 最大 3.984375・きざみ 0.015625。'
+        + '整数部 4 桁なら 最大 15.9375・きざみ 0.0625。'
+        + '整数部 6 桁なら 最大 63.75・きざみ 0.25 です。</div>'
+        + '<div class="hk-key">' + window.BULB
+        + '<div>この窮屈さを解くのが<b>浮動小数点数</b>です。小数点の位置を数ごとに変えます。</div></div>',
       fig:function(cv2, B2){
         var root = cv2.closest('.hk-card');
-        var sl = root ? root.querySelector('#hksu') : null;
+        var sl = root ? root.querySelector('#hkkt') : null;
         function paint(){
-          var n2 = sl ? +sl.value : 1;
-          var d = B2.setupMini(cv2, 0.46, 168), c = d.c, Wd = d.w, Hd = d.h;
-          c.clearRect(0, 0, Wd, Hd);
-          c.fillStyle = B2.DEEP; c.font = '800 ' + B2.fs(12.5) + 'px ' + B2.font;
-          c.textAlign = 'center';
-          c.fillText(n2 === 1 ? '7 ＋ 13 ＝ 20（5 つの桁）' : '5 つめを捨てると 4', Wd / 2, 24);
-          var s = '10100', bw = Math.min(42, (Wd - 60) / 5), bh = 42;
-          var tot = bw * 5 + 5 * 4, ox = (Wd - tot) / 2, oy = Hd / 2 - bh / 2 + 4;
-          for(var i = 0; i < 5; i++){
-            var on = s.charAt(i) === '1', top5 = (i === 0);
-            var xx = ox + (bw + 5) * i;
-            var gone = (top5 && n2 === 2);
-            c.fillStyle = gone ? B2.DIM : (top5 ? B2.WARN : (on ? B2.TINT : B2.PAPER));
-            c.fillRect(xx, oy, bw, bh);
-            c.lineWidth = 1.6;
-            c.strokeStyle = gone ? B2.DIMBD : (top5 ? B2.WARN : (on ? B2.MAIN : B2.LINE2));
-            c.strokeRect(xx, oy, bw, bh);
-            c.fillStyle = gone ? B2.DIMINK
-              : (top5 ? B2.PAPER : (on ? B2.MAIN : B2.INKSOFT));
-            c.font = '700 ' + B2.fs(13) + 'px ' + B2.mono; c.textAlign = 'center';
-            c.fillText(s.charAt(i), xx + bw / 2, oy + bh / 2 + 5);
-            if(gone){
-              c.strokeStyle = B2.WARN; c.lineWidth = 2.4;
-              c.beginPath(); c.moveTo(xx + 5, oy + 5);
-              c.lineTo(xx + bw - 5, oy + bh - 5); c.stroke();
-            }
-            if(top5){
-              c.fillStyle = B2.WARN; c.font = '700 ' + B2.fs(11) + 'px ' + B2.font;
-              c.fillText('16', xx + bw / 2, oy - 8);
-            }
-          }
-          c.fillStyle = n2 === 2 ? B2.MAIN : B2.INKSOFT;
-          c.font = '700 ' + B2.fs(11.5) + 'px ' + B2.font;
-          c.fillText(n2 === 2 ? '残った 4 つの桁が 0100 ＝ 4 です'
-                              : 'いちばん上の桁が、余分な 16 です', Wd / 2, Hd - 12);
+          var p = sl ? +sl.value : 4, fr = 8 - p;
+          var mx = 255 / Math.pow(2, fr), st = Math.pow(2, -fr);
+          var d = B2.setupMini(cv2, 0.46, 176), c2 = d.c, Wd = d.w, Hd = d.h;
+          c2.clearRect(0, 0, Wd, Hd);
+          c2.fillStyle = B2.DEEP; c2.font = '800 ' + B2.fs(12.5) + 'px ' + B2.font;
+          c2.textAlign = 'center';
+          c2.fillText('整数部 ' + p + ' 桁　小数部 ' + fr + ' 桁', Wd / 2, 22);
+          var lw = 110, barW = Wd - lw - 26, oy = 50, bh = 26, pitch = 50;
+          var rows = [['表せる最大', mx / 127.5, mx.toString(), B2.MAIN],
+                      ['きざみの細かさ', (1 / st) / 128, st.toString(), B2.SECOND]];
+          rows.forEach(function(r, i){
+            var y = oy + i * pitch;
+            c2.fillStyle = B2.INKSOFT; c2.font = '700 ' + B2.fs(11) + 'px ' + B2.font;
+            c2.textAlign = 'right'; c2.fillText(r[0], lw - 8, y + bh / 2 + 4);
+            c2.strokeStyle = B2.LINE2; c2.lineWidth = 1.2;
+            c2.strokeRect(lw, y, barW, bh);
+            c2.fillStyle = r[3];
+            c2.fillRect(lw, y, Math.max(4, Math.min(barW, barW * r[1])), bh);
+            c2.fillStyle = B2.DEEP; c2.font = '800 ' + B2.fs(11) + 'px ' + B2.font;
+            c2.textAlign = 'left'; c2.fillText(r[2], lw + 6, y + bh + 15);
+          });
+          c2.fillStyle = B2.INKSOFT; c2.font = '700 ' + B2.fs(11) + 'px ' + B2.font;
+          c2.textAlign = 'center';
+          c2.fillText('上が伸びると、下の細かさは落ちます', Wd / 2, Hd - 10);
         }
         if(sl) sl.addEventListener('input', paint);
         paint();

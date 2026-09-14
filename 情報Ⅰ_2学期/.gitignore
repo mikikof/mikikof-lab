@@ -37,3 +37,9 @@ __pycache__/
 _preview-series
 **/_preview-series
 _preview/
+
+# --- 追加ソース（講義スライドの原本 Keynote/PDF・スクリーンショット） ---
+# 原本由来なので public リポに追跡しない（CLAUDE.md §4）。
+# *.pdf は上で外しているが .key と画像は素通りするため、フォルダごと外す。
+追加ソース/
+**/追加ソース/
