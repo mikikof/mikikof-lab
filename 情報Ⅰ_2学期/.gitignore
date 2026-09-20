@@ -38,6 +38,12 @@ _preview-series
 **/_preview-series
 _preview/
 
+# /jugyo の B4 配布プリントへの入口（シンボリックリンク・本体は my-company 側の
+# education/high-school/資料/配布用_情報Ⅰ_2学期/）。生成器と spec が原本の逐語を抱える。
+# git はリンクをファイルとして扱うので、末尾に / を付けると一致しない。
+配布用_B4
+**/配布用_B4
+
 # --- 追加ソース（講義スライドの原本 Keynote/PDF・スクリーンショット） ---
 # 原本由来なので public リポに追跡しない（CLAUDE.md §4）。
 # *.pdf は上で外しているが .key と画像は素通りするため、フォルダごと外す。

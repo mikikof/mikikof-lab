@@ -31,6 +31,7 @@ company_root       = "../../../.."
 explainer_dist     = "media/webツール/情報/edu-explainer-kit/dist"
 print_dist         = "media/webツール/情報/印刷教材/dist"
 print_examples     = "media/webツール/情報/印刷教材/examples"
+jugyo_dist         = "education/high-school/資料/配布用_情報Ⅰ_2学期"   # /jugyo の B4（回ごとに 第NN回_<slug>/）
 quiz_data          = "media/webツール/情報/スピードクイズ/data/questions.js"
 lectures_articles  = "../lectures/articles"    # 情報Ⅰ_2学期/ からの相対（同一リポ）
 practices_articles = "../practices/articles"   # 同上

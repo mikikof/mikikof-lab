@@ -76,6 +76,8 @@ GitHub Pages が配信するかどうかとは別の話で、リポジトリを�
 - **解答**（プリント解答 HTML・PDF）
 - **原本由来のもの**（教科書・学習ノート・ベストフィット・winstep の問題文全文、そこから抽出した画像）
 - 生成器のコピー、配布 ZIP、配布リンク（クラス別 `?g=` 付き）、集計シートの URL
+- `/jugyo` の B4 配布プリント一式（生成器と spec が原本の逐語を抱える）。実体は my-company の
+  `education/high-school/資料/配布用_情報Ⅰ_2学期/` に置き、ここには入口のリンク `配布用_B4` だけを置く（非追跡）
 
 これらは `_teacher/` と `02_プリント/` に入れ、`.gitignore` で外す。**手元には残る**ので、
 授業当日に回フォルダを開けば一式そろっている状態は変わらない。
@@ -104,6 +106,11 @@ python3 _ops/check_public.py
 | スピードテスト | `media/webツール/情報/スピードクイズ/data/questions.js` | 同 `CLAUDE.md` + `reference/reproduction-regime.md` | `/joho-speed-quiz` | 設問=常体「選べ／答えよ」 |
 | lectures | `mikikof-lab/lectures/articles/` | `lectures/CLAUDE.md` + `skills/interactive-lecture/NEW-LECTURE-PLAYBOOK.md` | — | 丁寧体 |
 | practices | `mikikof-lab/practices/articles/` | `practices/CLAUDE.md` + `skills/interactive-practice/SKILL.md` | — | 丁寧体 |
+| B4 配布プリント | `education/high-school/資料/配布用_情報Ⅰ_2学期/第NN回_<slug>/` | `education/_jugyo-print/CLAUDE.md` + 同フォルダの `README.md` | `/jugyo` | 常体 |
+
+**B4 配布プリントだけは正本が公開リポジトリの外にある。** 正本のフォルダ名を回フォルダと同じ
+`第NN回_<slug>` にしておくと、`build_kai.py` が `*_B5.pdf`・`*_B4面付け.pdf` と `README.md` を
+回フォルダの `02_プリント/B4配布/`（非追跡）へ写す。作っていない回は黙って飛ばす。
 
 **それぞれの作り方はそのディレクトリの指示書が持つ。ここでは決めない。**
 ここが決めるのは「1回ぶんとして何をそろえるか」と「3点が同じ難所を指しているか」だけ。
@@ -234,10 +241,11 @@ Phase 0 で先に `_ops/kai/NN-<slug>.toml` を置いてから中身を作る。
 ├── _templates/
 │   ├── kai.template.toml  _ops/kai/ の台帳の雛形
 │   └── kai.template.md    _ops/kai/ の進行台本の雛形
+├── 配布用_B4 → ../../資料/配布用_情報Ⅰ_2学期/   /jugyo の B4 配布プリント（リンク・非追跡）
 └── 第NN回_<slug>/         ← build_kai.py が組む。手で育てない
     ├── index.html         回のランディング（生徒向け）
     ├── 01_解説/           解説ツール HTML
-    ├── 02_プリント/       問題 + 解答         ← 非追跡
+    ├── 02_プリント/       問題 + 解答（B4配布/ ＝ /jugyo の B4）← 非追跡
     ├── 03_速テスト/       公開 URL の案内
     ├── 04_個人学習/       lectures / practices の URL
     └── _teacher/          進行カンペ・配布リンク・集計 ← 非追跡

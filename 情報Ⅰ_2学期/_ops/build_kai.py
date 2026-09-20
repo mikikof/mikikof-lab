@@ -323,6 +323,28 @@ def build_kai(m: dict, k: dict) -> list[str]:
             else:
                 warn.append(f"プリント({suffix}): 正本が無い → {p['print_dist']}/{fn}")
 
+    # ②' B4 配布プリント（/jugyo）。解答解説を含むので 02_プリント/ の中へ置く（非追跡）。
+    #     正本は my-company の 資料/配布用_情報Ⅰ_2学期/第NN回_<slug>/。回フォルダと同じ名前にしてある。
+    #     作っていない回のほうが多いので、フォルダが無いときは黙って飛ばす。
+    jugyo_src = root / p["jugyo_dist"] / kai_dirname(k)
+    jugyo_dst = d / "02_プリント" / "B4配布"
+    if jugyo_dst.exists():
+        shutil.rmtree(jugyo_dst)        # 入れ替え。前の版を残さない
+    if jugyo_src.is_dir():
+        pdfs = sorted(x for x in jugyo_src.iterdir()
+                      if x.is_file() and x.name.endswith(("_B5.pdf", "_B4面付け.pdf")))
+        if pdfs:
+            jugyo_dst.mkdir(parents=True, exist_ok=True)
+            for x in pdfs:
+                shutil.copy2(x, jugyo_dst / x.name)
+            # 印刷のしかたと変更点（A／B／C 群）。当日そばに無いと B4 両面・短辺とじを間違える
+            if (readme := jugyo_src / "README.md").exists():
+                shutil.copy2(readme, jugyo_dst / "README.md")
+            print(f"[写した] {kai_dirname(k)}/02_プリント/B4配布/ ← PDF {len(pdfs)} 本")
+        else:
+            warn.append(f"B4 配布プリント: {p['jugyo_dist']}/{kai_dirname(k)}/ に "
+                        "*_B5.pdf / *_B4面付け.pdf が無い（/jugyo の build.sh を通す）")
+
     # 進行台本（設計の正本は _ops/kai/。ここへは複製を置く）
     src_md = KAI_SRC / f"{k['no']:02d}-{k['slug']}.md"
     if src_md.exists():
