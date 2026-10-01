@@ -49,3 +49,9 @@ _preview/
 # *.pdf は上で外しているが .key と画像は素通りするため、フォルダごと外す。
 追加ソース/
 **/追加ソース/
+
+# --- python特講（2026-10-01）---
+# ChatGPT 製の旧教材（作り変えの元。Next/Vite の作業木と学習ノートの抜き出しを抱える）は公開しない。
+# 公開するのは組んだ index.html だけ（正本は my-company の education/high-school/python特講/_build/01-web/）。
+python特講/python-flow-teaching-kit/
+python特講/.DS_Store
