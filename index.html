@@ -32,6 +32,7 @@
   --tool-practices: #c95b40;
   --tool-quiz: #1f6148;
   --tool-flashcards: #4338ca;
+  --tool-python: #1f6db0;
   --tool-coming: #8594ae;
 
   --f-jp-display: 'Zen Old Mincho', 'Noto Serif JP', serif;
@@ -203,6 +204,7 @@ a { color: inherit; text-decoration: none; }
 .tool-card.practices    { --tool-accent: var(--tool-practices); }
 .tool-card.quiz         { --tool-accent: var(--tool-quiz); }
 .tool-card.flashcards   { --tool-accent: var(--tool-flashcards); }
+.tool-card.python       { --tool-accent: var(--tool-python); }
 .tool-card.coming    { --tool-accent: var(--tool-coming); }
 
 .tool-card:hover {
@@ -451,9 +453,24 @@ a { color: inherit; text-decoration: none; }
       <div class="tool-cta">enter the lab →</div>
     </a>
 
+    <!-- Tool 7: Python（情報Ⅰ 特講。正本は my-company の education/high-school/python特講。ここは組んだ 1 本の写し） -->
+    <a href="情報Ⅰ_2学期/python特講/" class="tool-card python">
+      <div class="tool-meta">
+        <span class="tool-num">07</span>
+        <span class="tool-status live">live</span>
+      </div>
+      <div class="tool-name">Python Lab</div>
+      <div class="tool-en">Type the code, run it, and trace each line</div>
+      <p class="tool-desc">
+        学習ノート 第4章の Python を、IDLE に似せた実行画面で1行ずつ確かめるスライド教材。
+        フローチャートから2次元配列までを扱い、型と演算子の早見表を付けています。
+      </p>
+      <div class="tool-cta">enter the lab →</div>
+    </a>
+
     <!--
       新しいツールを追加する場合、上記の tool-card をコピーして調整してください。
-      カテゴリクラス: column / daisu-column / lectures / practices / quiz / flashcards / coming
+      カテゴリクラス: column / daisu-column / lectures / practices / quiz / flashcards / python / coming
       ステータスクラス: live / coming
     -->
 

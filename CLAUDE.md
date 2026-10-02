@@ -17,6 +17,7 @@
 | **Quiz Form Kit**(Google フォーム小テスト作成キット / GAS) | `quiz/` | `/quiz/` | [quiz/CLAUDE.md](quiz/CLAUDE.md) |
 | **Flashcards**(HTML 単一ファイルの一問一答 / 単語帳) | `flashcards/` | `/flashcards/` | [flashcards/CLAUDE.md](flashcards/CLAUDE.md) |
 | **情報Ⅰ 2学期**(50分授業1回ぶんの集約ハブ) | `情報Ⅰ_2学期/` | `/情報Ⅰ_2学期/` | [情報Ⅰ_2学期/CLAUDE.md](情報Ⅰ_2学期/CLAUDE.md) |
+| **Python Lab**(情報Ⅰ Python 特講。ポータルのカード 07) | `情報Ⅰ_2学期/python特講/` | `/情報Ⅰ_2学期/python特講/` | 正本は my-company の `education/high-school/python特講/CLAUDE.md`。ここの `index.html` は組んだ 1 本の写しで、直接直さない |
 | (将来) その他ツール | — | — | — |
 
 > `情報Ⅰ_2学期/` だけは**教材を作る場所ではなく、授業1回ぶんを組み立てる場所**。
