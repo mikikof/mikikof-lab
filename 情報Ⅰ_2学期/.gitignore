@@ -55,3 +55,10 @@ _preview/
 # 公開するのは組んだ index.html だけ（正本は my-company の education/high-school/python特講/_build/01-web/）。
 python特講/python-flow-teaching-kit/
 python特講/.DS_Store
+
+# --- web資料（2026-10-12）---
+# 本人が置いた素材（旧版の zip と、オリジナルキャラの元絵 PNG）は公開しない。
+# 公開するのは組んだ index.html だけ（正本は my-company の education/high-school/情報Ⅰ_web資料/）。
+web資料/ソース/
+web資料/絵/
+web資料/.DS_Store

@@ -75,6 +75,7 @@ GitHub Pages が配信するかどうかとは別の話で、リポジトリを�
 
 - **解答**（プリント解答 HTML・PDF）
 - **原本由来のもの**（教科書・学習ノート・ベストフィット・winstep の問題文全文、そこから抽出した画像）
+  - 例外: `web資料/<NN>-<題>/index.html`（Web 資料の公開の写し）は、学習ノートとベストフィットの問いと選択肢と正答を原文で載せてよい。本人の許可（学習ノート 2026-10-01「教材はそのまま許可をとってるので、オープンで良い。」・ベストフィット 2026-10-12「BFも許可済み、原文でよい」）。原本の docx・pdf そのもの・誌面の画像・解説の全文は、ここでも追跡しない。`check_public.py` は HTML の中身を読まないので、写しの中身は正本側（`education/high-school/情報Ⅰ_web資料/`）の検査で確かめる
 - 生成器のコピー、配布 ZIP、配布リンク（クラス別 `?g=` 付き）、集計シートの URL
 - `/jugyo` の B4 配布プリント一式（生成器と spec が原本の逐語を抱える）。実体は my-company の
   `education/high-school/資料/配布用_情報Ⅰ_2学期/` に置き、ここには入口のリンク `配布用_B4` だけを置く（非追跡）
@@ -107,6 +108,7 @@ python3 _ops/check_public.py
 | lectures | `mikikof-lab/lectures/articles/` | `lectures/CLAUDE.md` + `skills/interactive-lecture/NEW-LECTURE-PLAYBOOK.md` | — | 丁寧体 |
 | practices | `mikikof-lab/practices/articles/` | `practices/CLAUDE.md` + `skills/interactive-practice/SKILL.md` | — | 丁寧体 |
 | B4 配布プリント | `education/high-school/資料/配布用_情報Ⅰ_2学期/第NN回_<slug>/` | `education/_jugyo-print/CLAUDE.md` + 同フォルダの `README.md` | `/jugyo` | 常体 |
+| Web 資料（1 枚ずつ送る単体 HTML・POINT ごと） | `education/high-school/情報Ⅰ_web資料/_build/<NN>-web/`（公開の写しは `web資料/<NN>-<題>/index.html` に cp するだけ） | 同フォルダの `CLAUDE.md` + `/designslide` | `/designslide` | 丁寧体 |
 
 **B4 配布プリントだけは正本が公開リポジトリの外にある。** 正本のフォルダ名を回フォルダと同じ
 `第NN回_<slug>` にしておくと、`build_kai.py` が `*_B5.pdf`・`*_B4面付け.pdf` と `README.md` を
